@@ -12,7 +12,7 @@ namespace osum
     {
         /// <summary>Creates a 800x600 window with the specified title.</summary>
         public Game()
-            : base(800, 600, GraphicsMode.Default, "osu!m")
+            : base(1024, 768, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
         }
@@ -23,7 +23,7 @@ namespace osum
         {
             base.OnLoad(e);
 
-            GL.ClearColor(0.1f, 0.2f, 0.5f, 0.0f);
+            GL.ClearColor(0,0,0,0);
             GL.Enable(EnableCap.DepthTest);
         }
 
@@ -37,9 +37,9 @@ namespace osum
         {
             base.OnResize(e);
 
-            GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
+            GL.Viewport(0, 0, 1024, 768);
 
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, Width / (float)Height, 1.0f, 64.0f);
+            Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, -1, 1);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
         }
@@ -68,15 +68,9 @@ namespace osum
 
             Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelview);
+            GL.LoadIdentity();
 
-            GL.Begin(BeginMode.Triangles);
-
-            GL.Color3(1.0f, 1.0f, 0.0f); GL.Vertex3(-1.0f, -1.0f, 4.0f);
-            GL.Color3(1.0f, 0.0f, 0.0f); GL.Vertex3(1.0f, -1.0f, 4.0f);
-            GL.Color3(0.2f, 0.9f, 1.0f); GL.Vertex3(0.0f, 1.0f, 4.0f);
-
-            GL.End();
+            //draw code goes here
 
             SwapBuffers();
         }
