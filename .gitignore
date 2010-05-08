@@ -1,0 +1,11 @@
+osu!.tmproj
+*.pfx
+*.user
+*DS_Store*
+*/bin/*
+*/obj/*
+*ReSharper*
+*resharper*
+*.suo
+
+osu!installer/output/*
