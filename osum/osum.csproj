@@ -36,6 +36,9 @@
     <StartupObject>osum.Game</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ArcEngine">
+      <HintPath>..\..\ArcEngine-0.3\Debug\ArcEngine.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OpenTK.dll</HintPath>
@@ -44,6 +47,8 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\pTexture.cs" />
+    <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Main.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
