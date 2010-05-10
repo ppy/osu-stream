@@ -1,10 +1,10 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using OpenTK.Graphics.OpenGL;
+using osum.Helpers;
 
-namespace osu.Graphics.OpenGl
+namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
@@ -21,7 +21,7 @@ namespace osu.Graphics.OpenGl
             textureWidth = width;
             textureHeight = height;
 
-            if (SURFACE_TYPE == GL._TEXTURE_2D)
+            if (SURFACE_TYPE == TextureTarget.Texture2D)
             {
                 potWidth = GetPotDimension(width);
                 potHeight = GetPotDimension(height);
@@ -47,7 +47,7 @@ namespace osu.Graphics.OpenGl
 
             try
             {
-                if (GL.IsTexture(textureId) > 0)
+                if (GL.IsTexture(textureId))
                 {
                     int[] textures = new[] {textureId};
                     GL.DeleteTextures(1, textures);
@@ -90,18 +90,18 @@ namespace osu.Graphics.OpenGl
             bool verticalFlip = (effect & SpriteEffects.FlipVertically) > 0;
             bool horizontalFlip = (effect & SpriteEffects.FlipHorizontally) > 0;
             
-            GL.Color4ub(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
+            GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
 
             GL.BindTexture(SURFACE_TYPE, textureId);
 
             GL.PushMatrix();
             GL.LoadIdentity();
 
-            GL.Translatef(currentPos.X, currentPos.Y, 0);
-            GL.Rotatef(MathHelper.ToDegrees(rotation), 0, 0, 1.0f);
-            GL.Translatef(-originVector.X, -originVector.Y, 0);
+            GL.Translate(currentPos.X, currentPos.Y, 0);
+            GL.Rotate(MathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+            GL.Translate(-originVector.X, -originVector.Y, 0);
 
-            GL.Begin(GL._QUADS);
+            GL.Begin(BeginMode.Quads);
 
             if (SURFACE_TYPE == TextureTarget.Texture2D)
             {
@@ -156,18 +156,18 @@ namespace osu.Graphics.OpenGl
 
         public void SetData(byte[] data)
         {
-            SetData(data, 0, GL._BGRA);
+            SetData(data, 0, PixelFormat.Bgra);
         }
 
         public void SetData(byte[] data, int level)
         {
-            SetData(data, level, GL.);
+            SetData(data, level, PixelFormat.Bgra);
         }
 
         /// <summary>
         /// Load texture data from a raw byte array (BGRA 32bit format)
         /// </summary>
-        public void SetData(byte[] data, int level, int format)
+        public void SetData(byte[] data, int level, PixelFormat format)
         {
             GCHandle h0 = GCHandle.Alloc(data, GCHandleType.Pinned);
             SetData(h0.AddrOfPinnedObject(), level, format);
@@ -187,10 +187,10 @@ namespace osu.Graphics.OpenGl
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
         /// </summary>
-        public void SetData(IntPtr dataPointer, int level, int format)
+        public void SetData(IntPtr dataPointer, int level, PixelFormat format)
         {
             if (format == 0)
-                format = GL._BGRA;
+                format = PixelFormat.Bgra;
 
             GL.GetError(); //Clear errors.
 
@@ -211,40 +211,41 @@ namespace osu.Graphics.OpenGl
             //GL.Enable(EnableCap.Text);
 
             GL.BindTexture(SURFACE_TYPE, textureId);
-            GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMinFilter, new int[]{(int)TextureMinFilter.Linear});
-            GL.TexParameteri(SURFACE_TYPE, GL._TEXTURE_MAG_FILTER, (int) GL._LINEAR);
+            GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMinFilter, new int[] {(int)TextureMinFilter.Linear});
+            GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMagFilter, new int[] {(int)TextureMinFilter.Linear});
 
             if (newTexture)
             {
-                if (SURFACE_TYPE == GL._TEXTURE_2D)
+                if (SURFACE_TYPE == TextureTarget.Texture2D)
                 {
                     if (potWidth == textureWidth && potHeight == textureHeight)
                     {
-                        GL.TexImage2D(SURFACE_TYPE, level, GL._RGBA, potWidth, potHeight, 0, format,
-                                        GL._UNSIGNED_BYTE, dataPointer);
+                        GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                                        PixelType.UnsignedByte, ref dataPointer);
                     }
                     else
                     {
                         byte[] temp = new byte[potWidth*potHeight*4];
                         GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
-                        GL.TexImage2D(SURFACE_TYPE, level, GL._RGBA, potWidth, potHeight, 0, format,
-                                        GL._UNSIGNED_BYTE, h0.AddrOfPinnedObject());
+                        IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
+                        GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                                        PixelType.UnsignedByte, ref pinnedDataPointer);
                         h0.Free();
 
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                           GL._UNSIGNED_BYTE, dataPointer);
+                                           PixelType.UnsignedByte, ref dataPointer);
                     }
                 }
                 else
                 {
-                    GL.TexImage2D(SURFACE_TYPE, level, GL._RGBA, textureWidth, textureHeight, 0, format,
-                                    GL._UNSIGNED_BYTE, dataPointer);
+                    GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
+                                    PixelType.UnsignedByte, ref dataPointer);
                 }
             }
             else
             {
                 GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                   GL._UNSIGNED_BYTE, dataPointer);
+                                   PixelType.UnsignedByte, ref dataPointer);
             }
 
             //GL.Disable(SURFACE_TYPE);

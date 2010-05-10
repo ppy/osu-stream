@@ -4,13 +4,11 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using osu.Graphics.OpenGl;
-using osu.Graphics.Skinning;
-using osu_common;
-using osudata;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
-namespace osu.Graphics
+// [!] watch for collision between System.Drawing.Imaging.PixelFormat and OpenTK.Graphics.OpenGL.PixelFormat
+
+namespace osum.Graphics
 {
     public class pTexture : IDisposable
     {
@@ -24,22 +22,7 @@ namespace osu.Graphics
         internal int id;
         internal static int staticid = 1;
 #endif
-        public SkinSource Source;
-
-        /// <summary>
-        /// Temporary helper to transfer xna to gl texture
-        /// </summary>
-        /// <param name="xnaTexture">The xna texture.</param>
-        public pTexture(Texture2D xnaTexture)
-        {
-            Width = xnaTexture.Width;
-            Height = xnaTexture.Height;
-#if DEBUG
-            id = staticid++;
-#endif
-
-            TextureXna = xnaTexture;
-        }
+        //public SkinSource Source;
 
         ~pTexture()
         {
@@ -49,9 +32,8 @@ namespace osu.Graphics
             Dispose(false);
         }
 
-        public pTexture(Texture2D textureXna, TextureGl textureGl, int width, int height)
+        public pTexture(TextureGl textureGl, int width, int height)
         {
-            TextureXna = textureXna;
             TextureGl = textureGl;
             Width = width;
             Height = height;
@@ -71,14 +53,16 @@ namespace osu.Graphics
         internal TextureGl TextureGl;
         internal bool TrackAccessTime;
 
-        internal Texture2D TextureXna;
+        //internal Texture2D TextureXna;
 
         public bool IsDisposed
         {
             get
             {
+
                 if (TrackAccessTime)
-                    LastAccess = GameBase.Time;
+                    //LastAccess = GameBase.Time;
+                    LastAccess = -1;
                 return isDisposed;
             }
             set { isDisposed = value; }
@@ -101,11 +85,6 @@ namespace osu.Graphics
         {
             isDisposed = true;
 
-            if (TextureXna != null)
-            {
-                TextureXna.Dispose();
-                TextureXna = null;
-            }
             if (TextureGl != null)
             {
                 TextureGl.Dispose();
@@ -118,11 +97,6 @@ namespace osu.Graphics
             if (isDisposed) return;
             isDisposed = true;
 
-            if (TextureXna != null)
-            {
-                TextureXna.Dispose();
-                TextureXna = null;
-            }
             if (TextureGl != null)
             {
                 TextureGl.Dispose();
@@ -137,11 +111,9 @@ namespace osu.Graphics
             SetData(data, 0, 0);
         }
 
-        public void SetData(byte[] data, int level, int format)
+        public void SetData(byte[] data, int level, PixelFormat format)
         {
-            if (GameBase.D3D && TextureXna != null)
-                TextureXna.SetData(level, null, data, 0, data.Length, SetDataOptions.None);
-            if (GameBase.OGL && TextureGl != null)
+            if (TextureGl != null)
             {
                 if (format != 0)
                     TextureGl.SetData(data, level, format);
@@ -155,7 +127,8 @@ namespace osu.Graphics
         /// </summary>
         public static pTexture FromResourceStore(string filename)
         {
-            byte[] bytes = ResourcesStore.ResourceManager.GetObject(filename) as byte[];
+            //byte[] bytes = ResourcesStore.ResourceManager.GetObject(filename) as byte[];
+            byte[] bytes = null;
 
             if (bytes == null)
                 return null;
@@ -181,17 +154,12 @@ namespace osu.Graphics
                     br.Read7BitEncodedInt();
                     //And that's the header dealt with.
 
-                    SurfaceFormat format = (SurfaceFormat) br.ReadInt32();
+                    br.ReadInt32(); // skip SurfaceFormat
                     pt.Width = br.ReadInt32();
                     pt.Height = br.ReadInt32();
                     int numberLevels = br.ReadInt32();
 
-                    if (GameBase.D3D)
-                        pt.TextureXna = new Texture2D(GameBase.graphics.GraphicsDevice, pt.Width, pt.Height,
-                                                      numberLevels,
-                                                      ResourceUsage.None, format, ResourceManagementMode.Automatic);
-                    if (GameBase.OGL)
-                        pt.TextureGl = new TextureGl(pt.Width, pt.Height);
+                    pt.TextureGl = new TextureGl(pt.Width, pt.Height);
 
                     for (int i = 0; i < numberLevels; i++)
                     {
@@ -238,7 +206,7 @@ namespace osu.Graphics
                 using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
-                                                 PixelFormat.Format32bppArgb);
+                                                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
                     if (saveToFile)
                     {
                         byte[] bitmap = new byte[b.Width * b.Height * 4];
@@ -278,23 +246,10 @@ namespace osu.Graphics
 
             try
             {
-                if (GameBase.D3D)
-                {
-                    pt.TextureXna = new Texture2D(GameBase.graphics.GraphicsDevice, pt.Width, pt.Height, 1,
-                                                  ResourceUsage.None, SurfaceFormat.Color,
-                                                  ResourceManagementMode.Automatic);
-                    byte[] bitmap = new byte[width*height*4];
-                    Marshal.Copy(location, bitmap, 0, bitmap.Length);
+                //OpenGL outperforms XNA in this case as we can remain in native unsafe territory.
+                pt.TextureGl = new TextureGl(pt.Width, pt.Height);
+                pt.TextureGl.SetData(location, 0, 0);
 
-                    pt.TextureXna.SetData(bitmap, 0, bitmap.Length, SetDataOptions.Discard);
-                }
-
-                if (GameBase.OGL)
-                {
-                    //OpenGL outperforms XNA in this case as we can remain in native unsafe territory.
-                    pt.TextureGl = new TextureGl(pt.Width, pt.Height);
-                    pt.TextureGl.SetData(location, 0, 0);
-                }
             }
             catch
             {
@@ -311,12 +266,7 @@ namespace osu.Graphics
 
             try
             {
-                if (GameBase.D3D)
-                    pt.TextureXna = new Texture2D(GameBase.graphics.GraphicsDevice, pt.Width, pt.Height, 1,
-                                                  ResourceUsage.None, SurfaceFormat.Color,
-                                                  ResourceManagementMode.Automatic);
-                if (GameBase.OGL)
-                    pt.TextureGl = new TextureGl(pt.Width, pt.Height);
+                pt.TextureGl = new TextureGl(pt.Width, pt.Height);
                 pt.SetData(bitmap);
             }
             catch
