@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using osum.Helpers;
 
@@ -77,7 +78,7 @@ namespace osum.Graphics
             if (textureId < 0)
                 return;
 
-            //GL.Enable(SURFACE_TYPE);
+            //GL.Enable(EnableCap.Texture2D);
 
             Rectangle drawRect = srcRect == null ? new Rectangle(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
@@ -98,7 +99,7 @@ namespace osum.Graphics
             GL.LoadIdentity();
 
             GL.Translate(currentPos.X, currentPos.Y, 0);
-            GL.Rotate(MathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+            GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
             GL.Translate(-originVector.X, -originVector.Y, 0);
 
             GL.Begin(BeginMode.Quads);
@@ -145,7 +146,7 @@ namespace osum.Graphics
 
             GL.PopMatrix();
 
-            //GL.Disable(SURFACE_TYPE);
+            //GL.Disable(EnableCap.Texture2D);
         }
 
 
@@ -182,7 +183,7 @@ namespace osum.Graphics
             return pot;
         }
 
-        const TextureTarget SURFACE_TYPE = TextureTarget.TextureRectangle;
+        const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
 
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
@@ -208,7 +209,7 @@ namespace osum.Graphics
             if (level > 0)
                 return;
 
-            //GL.Enable(EnableCap.Text);
+            //GL.Enable(EnableCap.Texture2D);
 
             GL.BindTexture(SURFACE_TYPE, textureId);
             GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMinFilter, new int[] {(int)TextureMinFilter.Linear});
@@ -221,7 +222,7 @@ namespace osum.Graphics
                     if (potWidth == textureWidth && potHeight == textureHeight)
                     {
                         GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, ref dataPointer);
+                                        PixelType.UnsignedByte, dataPointer);
                     }
                     else
                     {
@@ -229,26 +230,26 @@ namespace osum.Graphics
                         GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
                         IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
                         GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, ref pinnedDataPointer);
+                                        PixelType.UnsignedByte, pinnedDataPointer);
                         h0.Free();
 
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                           PixelType.UnsignedByte, ref dataPointer);
+                                           PixelType.UnsignedByte, dataPointer);
                     }
                 }
                 else
                 {
                     GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
-                                    PixelType.UnsignedByte, ref dataPointer);
+                                    PixelType.UnsignedByte, dataPointer);
                 }
             }
             else
             {
                 GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                   PixelType.UnsignedByte, ref dataPointer);
+                                   PixelType.UnsignedByte, dataPointer);
             }
 
-            //GL.Disable(SURFACE_TYPE);
+            //GL.Disable(EnableCap.Texture2D);
 
             if (GL.GetError() != 0)
             {

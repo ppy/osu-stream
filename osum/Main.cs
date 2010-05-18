@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
+using osum.Graphics;
 
 namespace osum
 {
     class Game : GameWindow
     {
-        /// <summary>Creates a 800x600 window with the specified title.</summary>
+        private pTexture tex;
+
+        /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public Game()
             : base(1024, 768, GraphicsMode.Default, "osu!m")
         {
@@ -23,8 +27,16 @@ namespace osum
         {
             base.OnLoad(e);
 
-            GL.ClearColor(0,0,0,0);
+            GL.ClearColor(0.4f, 0.2f, 0.8f, 0f);
             GL.Enable(EnableCap.DepthTest);
+            //GL.Enable(EnableCap.Texture2D);
+
+            // enabling and disabling the following block changes nothing
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.ColorMaterial);
+            GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
+
+            tex = pTexture.FromFile(@"C:\Users\Echo\Desktop\osulogo.png");
         }
 
         /// <summary>
@@ -71,6 +83,7 @@ namespace osum
             GL.LoadIdentity();
 
             //draw code goes here
+            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.White, Vector2.One, 0, null, SpriteEffects.None);
 
             SwapBuffers();
         }

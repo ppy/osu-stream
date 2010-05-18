@@ -52,8 +52,7 @@
     </Compile>
     <Compile Include="Graphics\SpriteEffects.cs" />
     <Compile Include="Graphics\TextureGl.cs" />
-    <Compile Include="Graphics\Vector2.cs" />
-    <Compile Include="Helpers\MathHelper.cs" />
+    <Compile Include="Helpers\OsumMathHelper.cs" />
     <Compile Include="Main.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

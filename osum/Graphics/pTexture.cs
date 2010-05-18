@@ -207,6 +207,7 @@ namespace osum.Graphics
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
                                                  System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
                     if (saveToFile)
                     {
                         byte[] bitmap = new byte[b.Width * b.Height * 4];
