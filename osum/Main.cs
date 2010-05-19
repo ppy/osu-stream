@@ -28,15 +28,14 @@ namespace osum
             base.OnLoad(e);
 
             GL.ClearColor(0.4f, 0.2f, 0.8f, 0f);
-            GL.Enable(EnableCap.DepthTest);
-            //GL.Enable(EnableCap.Texture2D);
+            //GL.Enable(EnableCap.DepthTest);
 
             // enabling and disabling the following block changes nothing
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.ColorMaterial);
-            GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
+            GL.Disable(EnableCap.Lighting);
+            //GL.Enable(EnableCap.ColorMaterial);
+            //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            tex = pTexture.FromFile(@"C:\Users\Echo\Desktop\osulogo.png");
+            tex = pTexture.FromFile(@"C:\Users\peppy\Desktop\puush.png");
         }
 
         /// <summary>
@@ -82,8 +81,12 @@ namespace osum
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
+            TextureGl.EnableTexture();
+
             //draw code goes here
-            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.White, Vector2.One, 0, null, SpriteEffects.None);
+            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.FromArgb(128,255,255,255), Vector2.One, 0, null, SpriteEffects.None);
+
+            TextureGl.DisableTexture();
 
             SwapBuffers();
         }
