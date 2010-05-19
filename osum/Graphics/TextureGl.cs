@@ -91,19 +91,18 @@ namespace osum.Graphics
             
             GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
 
-            GL.PushMatrix();
+            //GL.PushMatrix();
             GL.LoadIdentity();
 
             GL.Translate(currentPos.X, currentPos.Y, 0);
             GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
-            GL.Translate(-originVector.X, -originVector.Y, 0);
-
+            
+            if (originVector.X != 0 || originVector.Y != 0)
+                GL.Translate(-originVector.X, -originVector.Y, 0);
 
             GL.BindTexture(SURFACE_TYPE, textureId);
 
             GL.Begin(BeginMode.Quads);
-
-            
 
             if (SURFACE_TYPE == TextureTarget.Texture2D)
             {
@@ -145,7 +144,7 @@ namespace osum.Graphics
 
             GL.End();
 
-            GL.PopMatrix();
+            //GL.PopMatrix();
         }
 
         internal static void DisableTexture()
@@ -154,6 +153,9 @@ namespace osum.Graphics
             {
                 case TextureTarget.Texture2D:
                     GL.Disable(EnableCap.Texture2D);
+                    break;
+                case TextureTarget.TextureRectangle:
+                    GL.Disable(EnableCap.TextureRectangleArb);
                     break;
             }
         }
@@ -164,6 +166,9 @@ namespace osum.Graphics
             {
                 case TextureTarget.Texture2D:
                     GL.Enable(EnableCap.Texture2D);
+                    break;
+                case TextureTarget.TextureRectangle:
+                    GL.Enable(EnableCap.TextureRectangleArb);
                     break;
             }
         }
@@ -202,7 +207,7 @@ namespace osum.Graphics
             return pot;
         }
 
-        const TextureTarget SURFACE_TYPE = TextureTarget.TextureRectangleArb;
+        const TextureTarget SURFACE_TYPE = TextureTarget.TextureRectangle;
 
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
@@ -228,16 +233,9 @@ namespace osum.Graphics
             if (level > 0)
                 return;
 
-            //GL.Enable(EnableCap.Texture2D);
-
             GL.BindTexture(SURFACE_TYPE, textureId);
-            //GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMinFilter, new int[] {(int)TextureMinFilter.Linear});
-            //GL.TexParameterI(SURFACE_TYPE, TextureParameterName.TextureMagFilter, new int[] {(int)TextureMinFilter.Linear});
 
-            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
-
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+            //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
 
             if (newTexture)
             {
@@ -272,6 +270,9 @@ namespace osum.Graphics
                 GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
                                    PixelType.UnsignedByte, dataPointer);
             }
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
 
             if (GL.GetError() != 0)
             {

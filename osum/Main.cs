@@ -27,15 +27,17 @@ namespace osum
         {
             base.OnLoad(e);
 
-            GL.ClearColor(0.4f, 0.2f, 0.8f, 0f);
             //GL.Enable(EnableCap.DepthTest);
+
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
 
             // enabling and disabling the following block changes nothing
             GL.Disable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Blend);
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            tex = pTexture.FromFile(@"C:\Users\peppy\Desktop\puush.png");
+            tex = pTexture.FromFile(@"puush.png");
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace osum
 
             GL.Viewport(0, 0, 1024, 768);
 
-            Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, -1, 1);
+            Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
         }
@@ -75,18 +77,35 @@ namespace osum
         {
             base.OnRenderFrame(e);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            MakeCurrent();
+            //ensures the gl context is in the current thread.
 
-            Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(Color.MidnightBlue);
+
+            //GL.Viewport(0, 0, Size.Width, Size.Height);
+            //Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
+            //GL.LoadIdentity();
+            //unnecessary?
+
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            
 
             TextureGl.EnableTexture();
+            //best to enable once here, rather than constantly switching in and out.  should be once per spritemanager draw call, really.
+
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            //have to set the blend method (and enable blend in the init)
+            //this gets set in spritemanager eventually.
 
             //draw code goes here
-            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.FromArgb(128,255,255,255), Vector2.One, 0, null, SpriteEffects.None);
+            
+            tex.TextureGl.Draw(new Vector2(110, 110), Vector2.Zero, Color.FromArgb(50, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
+            tex.TextureGl.Draw(new Vector2(80, 80), Vector2.Zero, Color.FromArgb(128, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
+            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
 
             TextureGl.DisableTexture();
+            //as above (enable call).
 
             SwapBuffers();
         }
