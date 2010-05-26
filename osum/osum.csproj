@@ -44,6 +44,9 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\IDrawable.cs" />
+    <Compile Include="Graphics\pSprite.cs" />
+    <Compile Include="Graphics\pSpriteCollection.cs" />
     <Compile Include="Graphics\pTexture.cs">
       <SubType>Code</SubType>
     </Compile>

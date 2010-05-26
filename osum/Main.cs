@@ -12,7 +12,7 @@ namespace osum
 {
     class Game : GameWindow
     {
-        private pTexture tex;
+        private pSpriteCollection sprites;
 
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public Game()
@@ -37,7 +37,13 @@ namespace osum
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            tex = pTexture.FromFile(@"puush.png");
+            pTexture texture = pTexture.FromFile(@"puush.png");
+            // see note in pSprite.ctor
+
+            sprites = new pSpriteCollection();
+            sprites.AddSprite(new pSprite(texture, new Vector2(110, 110), Vector2.Zero, Color.FromArgb(50, 255, 255, 255), Vector2.One, 0));
+            sprites.AddSprite(new pSprite(texture, new Vector2(80, 80), Vector2.Zero, Color.FromArgb(128, 255, 255, 255), Vector2.One, 0));
+            sprites.AddSprite(new pSprite(texture, new Vector2(50, 50), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0));
         }
 
         /// <summary>
@@ -99,10 +105,9 @@ namespace osum
             //this gets set in spritemanager eventually.
 
             //draw code goes here
-            
-            tex.TextureGl.Draw(new Vector2(110, 110), Vector2.Zero, Color.FromArgb(50, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
-            tex.TextureGl.Draw(new Vector2(80, 80), Vector2.Zero, Color.FromArgb(128, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
-            tex.TextureGl.Draw(new Vector2(50, 50), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0, null, SpriteEffects.None);
+            IDrawable d = (IDrawable)sprites;
+            d.Draw();
+            // this will be handled by a sprite manager
 
             TextureGl.DisableTexture();
             //as above (enable call).
