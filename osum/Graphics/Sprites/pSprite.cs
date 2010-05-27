@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using osum.Graphics;
 using osum.Graphics.Skins;
@@ -16,27 +16,27 @@ namespace osum.Graphics.Sprites
 
         private pTexture texture;
         private Vector2 position, origin, scale;
-        private Color colour;
+        private Color4 colour;
         private float rotation;
         private SpriteEffect effect;
         private BlendingFactorDest blending;
 
-        public pSprite(string path, Vector2 position, Vector2 origin, Color colour, Vector2 scale, float rotation, float alpha)
-            : this(SkinManager.LoadTexture(path), position, origin, Color.FromArgb((int)(alpha*255), colour.R, colour.G, colour.B), scale, rotation)
+        public pSprite(string path, Vector2 position, Vector2 origin, Color4 colour, Vector2 scale, float rotation, float alpha)
+            : this(SkinManager.LoadTexture(path), position, origin, new Color4(colour.R, colour.G, colour.B, alpha), scale, rotation)
         {
         }
 
-        public pSprite(string path, Vector2 position, Vector2 origin, Color colour, Vector2 scale, float rotation)
+        public pSprite(string path, Vector2 position, Vector2 origin, Color4 colour, Vector2 scale, float rotation)
             : this(SkinManager.LoadTexture(path), position, origin, colour, scale, rotation)
         {
         }
 
-        public pSprite(pTexture texture, Vector2 position, Vector2 origin, Color colour, Vector2 scale, float rotation, float alpha)
-            : this(texture, position, origin, Color.FromArgb((int)(alpha * 255), colour.R, colour.G, colour.B), scale, rotation)
+        public pSprite(pTexture texture, Vector2 position, Vector2 origin, Color4 colour, Vector2 scale, float rotation, float alpha)
+            : this(texture, position, origin, new Color4(colour.R, colour.G, colour.B, alpha), scale, rotation)
         {
         }
 
-        public pSprite(pTexture texture, Vector2 position, Vector2 origin, Color colour, Vector2 scale, float rotation)
+        public pSprite(pTexture texture, Vector2 position, Vector2 origin, Color4 colour, Vector2 scale, float rotation)
         {
             this.texture = texture;
             this.position = position;
@@ -56,7 +56,7 @@ namespace osum.Graphics.Sprites
 
         public void Update()
         {
-            // furui henka he "sayounara" tte
+            // remove old transformations
             for (int i = 0; i < transformations.Count; i++)
             {
                 if (transformations[i].Terminated)
@@ -77,11 +77,12 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformType.Colour:
-                            colour = t.CurrentColour;
+                            Color4 c = t.CurrentColour;
+                            colour = new Color4(c.R, c.G, c.B, colour.A);
                             break;
 
                         case TransformType.Fade:
-                            colour = Color.FromArgb((int)(t.CurrentFloat * 255), colour.R, colour.G, colour.B);
+                            colour = new Color4(colour.R, colour.G, colour.B, t.CurrentFloat);
                             break;
 
                         case TransformType.Movement:

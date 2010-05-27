@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using osum.Helpers;
 using osum.Graphics.Sprites;
@@ -73,13 +73,13 @@ namespace osum.Graphics
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
-        public void Draw(Vector2 currentPos, Vector2 origin, Color drawColour, Vector2 scaleVector, float rotation,
-                         Rectangle? srcRect, SpriteEffect effect)
+        public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
+                         Box2? srcRect, SpriteEffect effect)
         {
             if (textureId < 0)
                 return;
 
-            Rectangle drawRect = srcRect == null ? new Rectangle(0, 0, textureWidth, textureHeight) : srcRect.Value;
+            Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
 
             float drawHeight = drawRect.Height*scaleVector.Y;
@@ -90,7 +90,7 @@ namespace osum.Graphics
             bool verticalFlip = (effect & SpriteEffect.FlipVertically) > 0;
             bool horizontalFlip = (effect & SpriteEffect.FlipHorizontally) > 0;
             
-            GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
+            GL.Color4(drawColour);
 
             //GL.PushMatrix();
             GL.LoadIdentity();

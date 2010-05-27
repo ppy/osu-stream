@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using OpenTK.Graphics;
 using osum.Helpers;
 
 namespace osum.Graphics.Sprites
@@ -13,11 +13,11 @@ namespace osum.Graphics.Sprites
         public EasingType Easing { get; private set; }
 
         public Vector2 StartVector { get; private set; }
-        public Color StartColour { get; private set; }
+        public Color4 StartColour { get; private set; }
         public float StartFloat { get; private set; }
 
         public Vector2 EndVector { get; private set; }
-        public Color EndColour { get; private set; }
+        public Color4 EndColour { get; private set; }
         public float EndFloat { get; private set; }
 
         public int StartTime { get; private set; }
@@ -48,9 +48,6 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (StartVector == default(Vector2) || EndVector == default(Vector2))
-                    return default(Vector2);
-
                 if (Clock.Time <= StartTime)
                     return StartVector;
 
@@ -64,23 +61,21 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public Color CurrentColour
+        public Color4 CurrentColour
         {
             get
             {
-                if (StartColour == default(Color) || EndColour == default(Color))
-                    return default(Color);
-
                 if (Clock.Time <= StartTime)
                     return StartColour;
 
                 if (Clock.Time >= EndTime)
                     return EndColour;
 
-                return Color.FromArgb(
-                    (int)CalculateCurrent(StartColour.R, EndColour.R),
-                    (int)CalculateCurrent(StartColour.G, EndColour.G),
-                    (int)CalculateCurrent(StartColour.B, EndColour.B)
+                return new Color4(
+                    CalculateCurrent(StartColour.R, EndColour.R),
+                    CalculateCurrent(StartColour.G, EndColour.G),
+                    CalculateCurrent(StartColour.B, EndColour.B),
+                    1
                 );
             }
         }
@@ -89,9 +84,6 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (StartTime == 0 || EndTime == 0)
-                    return 0;
-
                 if (Clock.Time <= StartTime)
                     return StartFloat;
 
@@ -143,12 +135,12 @@ namespace osum.Graphics.Sprites
             Easing = easing;
         }
 
-        public Transform(Color source, Color destination, int start, int end)
+        public Transform(Color4 source, Color4 destination, int start, int end)
             : this(source, destination, start, end, EasingType.None)
         {
         }
 
-        public Transform(Color source, Color destination, int start, int end, EasingType easing)
+        public Transform(Color4 source, Color4 destination, int start, int end, EasingType easing)
         {
             Type = TransformType.Colour;
             StartColour = source;

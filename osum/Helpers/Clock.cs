@@ -7,17 +7,20 @@ namespace osum.Helpers
 {
     public static class Clock
     {
-        // measured in milliseconds
-        private static int time = 0;
+        // measured in seconds
+        private static double time = 0;
 
+        /// <summary>
+        /// Get the current game time in milliseconds.
+        /// </summary>
         public static int Time
         {
-            get { return time; }
+            get { return (int)(time * 1000); }
         }
 
-        public static void Update(double elasped)
+        public static void Update(double elapsed)
         {
-            time += (int)(elasped * 1000);
+            time += elapsed;
         }
     }
 }

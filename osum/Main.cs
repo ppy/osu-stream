@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -39,9 +38,11 @@ namespace osum
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            pSprite sprite = new pSprite(@"puush.png", new Vector2(50, 200), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0);
+            pSprite sprite = new pSprite(@"puush.png", new Vector2(50, 200), Vector2.Zero, new Color4(255, 255, 255, 255), Vector2.One, 0);
             sprite.Add(new Transform(new Vector2(50, 200), new Vector2(370, 115), 0, 1000, EasingType.Out));
             sprite.Add(new Transform(new Vector2(370,115), new Vector2(350, 120), 1000, 1500, EasingType.In));
+            sprite.Add(new Transform(TransformType.Fade, 0, 1, 0, 1500));
+            sprite.Add(new Transform(Color4.Black, Color4.White, 0, 1000, EasingType.In));
 
             sm.Add(sprite);
         }
@@ -92,7 +93,7 @@ namespace osum
             MakeCurrent();
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(Color.MidnightBlue);
+            GL.ClearColor(Color4.MidnightBlue);
 
             GL.MatrixMode(MatrixMode.Modelview);
 

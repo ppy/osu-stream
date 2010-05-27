@@ -4,9 +4,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
-
-// [!] watch for collision between System.Drawing.Imaging.PixelFormat and OpenTK.Graphics.OpenGL.PixelFormat
 
 namespace osum.Graphics
 {
