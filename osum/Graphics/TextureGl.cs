@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using osum.Helpers;
+using osum.Graphics.Sprites;
 
 namespace osum.Graphics
 {
@@ -73,7 +74,7 @@ namespace osum.Graphics
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color drawColour, Vector2 scaleVector, float rotation,
-                         Rectangle? srcRect, SpriteEffects effect)
+                         Rectangle? srcRect, SpriteEffect effect)
         {
             if (textureId < 0)
                 return;
@@ -86,8 +87,8 @@ namespace osum.Graphics
 
             Vector2 originVector = new Vector2(origin.X*drawWidth/drawRect.Width, origin.Y*drawHeight/drawRect.Height);
 
-            bool verticalFlip = (effect & SpriteEffects.FlipVertically) > 0;
-            bool horizontalFlip = (effect & SpriteEffects.FlipHorizontally) > 0;
+            bool verticalFlip = (effect & SpriteEffect.FlipVertically) > 0;
+            bool horizontalFlip = (effect & SpriteEffect.FlipHorizontally) > 0;
             
             GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
 

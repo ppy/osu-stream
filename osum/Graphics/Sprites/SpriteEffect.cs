@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace osum.Graphics
+namespace osum.Graphics.Sprites
 {
     [Flags]
-    public enum SpriteEffects
+    public enum SpriteEffect
     {
         FlipHorizontally = 1,
         FlipVertically = 0x100,

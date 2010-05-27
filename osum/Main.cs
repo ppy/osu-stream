@@ -6,13 +6,15 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
-using osum.Graphics;
+using osum.Graphics.Skins;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum
 {
     class Game : GameWindow
     {
-        private pSpriteCollection sprites;
+        private SpriteManager sm = new SpriteManager();
 
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public Game()
@@ -37,13 +39,11 @@ namespace osum
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            pTexture texture = pTexture.FromFile(@"puush.png");
-            // see note in pSprite.ctor
+            pSprite sprite = new pSprite(@"puush.png", new Vector2(50, 200), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0);
+            sprite.Add(new Transform(new Vector2(50, 200), new Vector2(370, 115), 0, 1000, EasingType.Out));
+            sprite.Add(new Transform(new Vector2(370,115), new Vector2(350, 120), 1000, 1500, EasingType.In));
 
-            sprites = new pSpriteCollection();
-            sprites.AddSprite(new pSprite(texture, new Vector2(110, 110), Vector2.Zero, Color.FromArgb(50, 255, 255, 255), Vector2.One, 0));
-            sprites.AddSprite(new pSprite(texture, new Vector2(80, 80), Vector2.Zero, Color.FromArgb(128, 255, 255, 255), Vector2.One, 0));
-            sprites.AddSprite(new pSprite(texture, new Vector2(50, 50), Vector2.Zero, Color.FromArgb(255, 255, 255, 255), Vector2.One, 0));
+            sm.Add(sprite);
         }
 
         /// <summary>
@@ -73,6 +73,11 @@ namespace osum
 
             if (Keyboard[Key.Escape])
                 Exit();
+
+            // global clock
+            Clock.Update(e.Time);
+
+            sm.Update();
         }
 
         /// <summary>
@@ -83,35 +88,22 @@ namespace osum
         {
             base.OnRenderFrame(e);
 
+            //ensure the gl context is in the current thread.
             MakeCurrent();
-            //ensures the gl context is in the current thread.
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Color.MidnightBlue);
+
+            GL.MatrixMode(MatrixMode.Modelview);
 
             //GL.Viewport(0, 0, Size.Width, Size.Height);
             //Matrix4 modelview = Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, Vector3.UnitY);
             //GL.LoadIdentity();
             //unnecessary?
 
-            GL.MatrixMode(MatrixMode.Modelview);
+            sm.Draw();
             
-
-            TextureGl.EnableTexture();
-            //best to enable once here, rather than constantly switching in and out.  should be once per spritemanager draw call, really.
-
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            //have to set the blend method (and enable blend in the init)
-            //this gets set in spritemanager eventually.
-
-            //draw code goes here
-            IDrawable d = (IDrawable)sprites;
-            d.Draw();
-            // this will be handled by a sprite manager
-
-            TextureGl.DisableTexture();
-            //as above (enable call).
-
+            // display
             SwapBuffers();
         }
 

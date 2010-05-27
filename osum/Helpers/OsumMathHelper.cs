@@ -16,5 +16,10 @@ namespace osum.Helpers
         {
             return (degrees * 0.01745329f);
         }
+
+        public static float Lerp(float start, float end, float amount)
+        {
+            return start + ((end - start) * amount);
+        }
     }
 }

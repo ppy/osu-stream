@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace osum.Graphics
+namespace osum.Graphics.Sprites
 {
-    public interface IDrawable
+    public interface ISpriteable
     {
+        void Update();
         void Draw();
     }
 }
