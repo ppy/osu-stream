@@ -38,9 +38,6 @@ namespace osum.Graphics.Sprites
         {
             TextureGl.EnableTexture();
 
-            //have to set the blend method (and enable blend in the init)
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
             for (int i = 0; i < sprites.Count; i++)
             {
                 sprites[i].Draw();

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using osum.Graphics;
 using osum.Graphics.Skins;
 
@@ -18,6 +19,7 @@ namespace osum.Graphics.Sprites
         private Color colour;
         private float rotation;
         private SpriteEffect effect;
+        private BlendingFactorDest blending;
 
         public pSprite(string path, Vector2 position, Vector2 origin, Color colour, Vector2 scale, float rotation, float alpha)
             : this(SkinManager.LoadTexture(path), position, origin, Color.FromArgb((int)(alpha*255), colour.R, colour.G, colour.B), scale, rotation)
@@ -43,6 +45,7 @@ namespace osum.Graphics.Sprites
             this.scale = scale;
             this.rotation = rotation;
             this.effect = SpriteEffect.None;
+            this.blending = BlendingFactorDest.OneMinusSrcAlpha;
         }
 
         public void Add(Transform transform)
@@ -65,7 +68,9 @@ namespace osum.Graphics.Sprites
             {
                 Transform t = transformations[i];
 
+                // reset some values
                 effect = SpriteEffect.None;
+                blending = BlendingFactorDest.OneMinusSrcAlpha;
 
                 if (t.Initiated)
                 {
@@ -92,7 +97,7 @@ namespace osum.Graphics.Sprites
                             break;
 
                         case TransformType.ParameterAdditive:
-                            // i'm not sure what this does
+                            blending = BlendingFactorDest.One;
                             break;
 
                         case TransformType.ParameterFlipHorizontal:
@@ -121,6 +126,7 @@ namespace osum.Graphics.Sprites
 
         public void Draw()
         {
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
             texture.TextureGl.Draw(position, origin, colour, scale, rotation, null, effect);
         }
     }
