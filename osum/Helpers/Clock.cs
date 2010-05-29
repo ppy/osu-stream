@@ -5,10 +5,17 @@ using System.Text;
 
 namespace osum.Helpers
 {
+    public enum ClockType
+    {
+        Game,
+        Audio
+    }
+
     public static class Clock
     {
         // measured in seconds
         private static double time = 0;
+        private static double zero = 0;
 
         /// <summary>
         /// Get the current game time in milliseconds.
@@ -16,6 +23,29 @@ namespace osum.Helpers
         public static int Time
         {
             get { return (int)(time * 1000); }
+        }
+
+        public static int AudioTime
+        {
+            get { return (int)((time - zero) * 1000); }
+        }
+
+        public static int GetTime(ClockType clock)
+        {
+            switch (clock)
+            {
+                case ClockType.Audio:
+                    return Clock.AudioTime;
+
+                default:
+                case ClockType.Game:
+                    return Clock.Time;
+            }
+        }
+
+        public static void ResetAudioTime()
+        {
+            zero = time;
         }
 
         public static void Update(double elapsed)

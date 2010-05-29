@@ -6,27 +6,27 @@ using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Sprites
 {
-    public class SpriteManager
+    internal class SpriteManager
     {
         private List<ISpriteable> sprites;
 
-        public SpriteManager()
+        internal SpriteManager()
         {
             this.sprites = new List<ISpriteable>();
         }
 
-        public SpriteManager(IEnumerable<ISpriteable> sprites)
+        internal SpriteManager(IEnumerable<ISpriteable> sprites)
         {
             this.sprites = new List<ISpriteable>(sprites);
         }
 
-        public void Add(ISpriteable sprite)
+        internal void Add(ISpriteable sprite)
         {
             if (!sprites.Contains(sprite))
                 sprites.Add(sprite);
         }
 
-        public void Update()
+        internal void Update()
         {
             for (int i = 0; i < sprites.Count; i++)
             {
@@ -34,7 +34,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public void Draw()
+        internal void Draw()
         {
             TextureGl.EnableTexture();
 

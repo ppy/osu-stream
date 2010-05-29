@@ -5,47 +5,33 @@ using System.Text;
 
 namespace osum.Graphics.Sprites
 {
-    public class pSpriteCollection : ISpriteable
+    internal class pSpriteCollection : ISpriteable
     {
-        private List<pSprite> sprites;
+        internal List<pSprite> SpriteCollection;
 
-        public pSpriteCollection()
+        internal pSpriteCollection()
         {
-            this.sprites = new List<pSprite>();
+            this.SpriteCollection = new List<pSprite>();
         }
 
-        public pSpriteCollection(IEnumerable<pSprite> sprites)
+        internal pSpriteCollection(IEnumerable<pSprite> sprites)
         {
-            this.sprites = new List<pSprite>(sprites);
+            this.SpriteCollection = new List<pSprite>(sprites);
         }
 
-        public void Add(pSprite sprite)
+        internal void Update()
         {
-            if (!sprites.Contains(sprite))
-                sprites.Add(sprite);
-        }
-
-        public void Add(Transform transform)
-        {
-            for (int i = 0; i < sprites.Count; i++)
+            for (int i = 0; i < SpriteCollection.Count; i++)
             {
-                sprites[i].Add(transform);
+                SpriteCollection[i].Update();
             }
         }
 
-        public void Update()
+        internal void Draw()
         {
-            for (int i = 0; i < sprites.Count; i++)
+            for (int i = 0; i < SpriteCollection.Count; i++)
             {
-                sprites[i].Update();
-            }
-        }
-
-        public void Draw()
-        {
-            for (int i = 0; i < sprites.Count; i++)
-            {
-                sprites[i].Draw();
+                SpriteCollection[i].Draw();
             }
         }
     }

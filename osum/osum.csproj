@@ -44,6 +44,8 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameplayElements\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObject.cs" />
     <Compile Include="Graphics\Sprites\ISpriteable.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />
     <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osum.Graphics.Sprites
 {
-    public interface ISpriteable
+    internal interface ISpriteable
     {
         void Update();
         void Draw();
