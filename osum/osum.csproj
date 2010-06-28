@@ -44,20 +44,26 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="GameplayElements\BeatmapManager.cs" />
+    <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="GameplayElements\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObject.cs" />
     <Compile Include="Graphics\Sprites\ISpriteable.cs" />
+    <Compile Include="Graphics\Sprites\pAnimation.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />
     <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
     <Compile Include="Graphics\pTexture.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Graphics\Skins\SkinManager.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteText.cs" />
     <Compile Include="Graphics\Sprites\SpriteEffect.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
     <Compile Include="Graphics\Sprites\Transform.cs" />
     <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Helpers\Clock.cs" />
+    <Compile Include="Helpers\Delegates.cs" />
     <Compile Include="Helpers\OsumMathHelper.cs" />
     <Compile Include="Main.cs" />
   </ItemGroup>

@@ -102,26 +102,62 @@ namespace osum.Graphics.Sprites
 
     internal class pSprite : ISpriteable
     {
-        private List<Transform> transformations;
+        protected List<Transform> transformations;
 
-        private pTexture texture;
-        private Vector2 originVector;
-        private Color4 colour;
-        private float rotation;
-        private SpriteEffect effect;
-        private BlendingFactorDest blending;
+        internal Color4 OriginalColour;
+        internal Vector2 OriginalPosition;
+
+        protected pTexture texture;
+        protected Vector2 originVector;
+        protected Color4 colour;
+        protected float rotation;
+        protected SpriteEffect effect;
+        protected BlendingFactorDest blending;
+        protected float depth;
 
         internal Vector2 Position, Scale;
         internal FieldType Field;
         internal OriginType Origin;
         internal ClockType Clocking;
+        internal bool AlwaysDraw;
+        internal bool Reverse;
+
+        internal float ScaleScalar
+        {
+            set { Scale = new Vector2(value, value); }
+        }
+
+        internal virtual pTexture Texture
+        {
+            get { return texture; }
+            set
+            {
+                if (value == texture)
+                    return;
+
+                if (texture != null) // && Disposable)
+                    texture.Dispose();
+
+                texture = value;
+                //UpdateTextureSize();
+                //UpdateTextureAlignment();
+            }
+        }
 
         internal pSprite(pTexture texture, OriginType origin, Vector2 position, Color4 colour)
-            : this(texture, origin, FieldType.Standard, ClockType.Game, position, colour, Vector2.One, 0)
+            : this(texture, FieldType.Standard, origin, ClockType.Game, position, 1, false, Color4.White)
         {
         }
 
-        internal pSprite(pTexture texture, OriginType origin, FieldType field, ClockType clocking, Vector2 position, Color4 colour, Vector2 scale, float rotation)
+        /// <summary>
+        /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
+        /// </summary>
+        public List<Transform> Transformations
+        {
+            get { return transformations; }
+        }
+
+        internal pSprite(pTexture texture, FieldType field, OriginType origin, ClockType clocking, Vector2 position, float depth, bool alwaysDraw, Color4 colour)
         {
             this.transformations = new List<Transform>();
 
@@ -131,46 +167,48 @@ namespace osum.Graphics.Sprites
             this.Clocking = clocking;
             this.Position = position;
             this.colour = colour;
-            this.Scale = scale;
-            this.rotation = rotation;
+            this.Scale = Vector2.One;
+            this.rotation = 0;
             this.effect = SpriteEffect.None;
             this.blending = BlendingFactorDest.OneMinusSrcAlpha;
             this.Clocking = ClockType.Game;
+            this.depth = depth;
 
-            switch (origin)
+            if (texture != null)
+                UpdateTextureAlignment();
+        }
+
+        internal void UpdateTextureAlignment()
+        {
+            //if (Type == SpriteTypes.NativeText || Type == SpriteTypes.SpriteText)
+            //    return;
+
+            switch (Origin)
             {
                 case OriginType.TopLeft:
-                    originVector = new Vector2(0, 0);
+                    originVector = Vector2.Zero;
                     break;
-
                 case OriginType.TopCentre:
                     originVector = new Vector2(texture.Width / 2, 0);
                     break;
-
                 case OriginType.TopRight:
                     originVector = new Vector2(texture.Width, 0);
                     break;
-
                 case OriginType.CentreLeft:
                     originVector = new Vector2(0, texture.Height / 2);
                     break;
-
                 case OriginType.Centre:
                     originVector = new Vector2(texture.Width / 2, texture.Height / 2);
                     break;
-
                 case OriginType.CentreRight:
                     originVector = new Vector2(texture.Width, texture.Height / 2);
                     break;
-
                 case OriginType.BottomLeft:
                     originVector = new Vector2(0, texture.Height);
                     break;
-
                 case OriginType.BottomCentre:
                     originVector = new Vector2(texture.Width / 2, texture.Height);
                     break;
-
                 case OriginType.BottomRight:
                     originVector = new Vector2(texture.Width, texture.Height);
                     break;
@@ -189,7 +227,7 @@ namespace osum.Graphics.Sprites
                 this.Transform(t);
         }
 
-        internal void Update()
+        public void Update()
         {
             // remove old transformations
             for (int i = 0; i < transformations.Count; i++)
@@ -260,10 +298,39 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal void Draw()
+        public void Draw()
         {
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-            texture.TextureGl.Draw(Position, originVector, colour, Scale, rotation, null, effect);
+            if (texture != null)
+                texture.TextureGl.Draw(Position, originVector, colour, Scale, rotation, null, effect);
+        }
+
+        public virtual pSprite Clone()
+        {
+            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, OriginalPosition, depth, AlwaysDraw, OriginalColour);
+            clone.Position = Position;
+            /*
+            clone.DrawLeft = DrawLeft;
+            clone.DrawTop = DrawTop;
+            clone.DrawWidth = DrawWidth;
+            clone.DrawHeight = DrawHeight;
+            */
+            clone.Scale = Scale;
+
+            foreach (Transform t in Transformations)
+                //if (!t.IsLoopStatic) 
+                clone.Transformations.Add(t.Clone());
+
+            /*
+            if (Loops != null)
+            {
+                clone.Loops = new List<TransformationLoop>(Loops.Count);
+                foreach (TransformationLoop tl in Loops)
+                    clone.Loops.Add(tl.Clone());
+            }
+            */
+
+            return clone;
         }
     }
 }

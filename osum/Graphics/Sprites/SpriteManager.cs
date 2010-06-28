@@ -45,5 +45,35 @@ namespace osum.Graphics.Sprites
 
             TextureGl.DisableTexture();
         }
+
+        /// <summary>
+        ///   Used by spinners.  Has a range of 0-0.2
+        /// </summary>
+        /// <param name = "number"></param>
+        /// <returns></returns>
+        internal static float drawOrderFwdLowPrio(float number)
+        {
+            return (number % 200000) / 1000000;
+        }
+
+        /// <summary>
+        ///   Used by hit values.  Has a range of 0.8-1 and loops every 10000 seconds (over 1 hour).
+        /// </summary>
+        /// <param name = "number"></param>
+        /// <returns></returns>
+        internal static float drawOrderFwdPrio(float number)
+        {
+            return 0.8F + (number % 6000000) / 30000000;
+        }
+
+        /// <summary>
+        ///   Used by hitcircles.  Has a range of 0.8-0.2 and loops every 6000 seconds (1 hour).
+        /// </summary>
+        /// <param name = "number"></param>
+        /// <returns></returns>
+        internal static float drawOrderBwd(float number)
+        {
+            return 0.8F - (number % 6000000) / 10000000;
+        }
     }
 }

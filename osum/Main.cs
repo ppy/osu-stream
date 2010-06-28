@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
+using osum.GameplayElements;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
@@ -38,13 +39,16 @@ namespace osum
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.ColorMaterial(MaterialFace.FrontAndBack, ColorMaterialParameter.Emission);
 
-            pSprite sprite = new pSprite(SkinManager.LoadFromFile("puush.png"), OriginType.TopLeft, new Vector2(50, 200), new Color4(255, 255, 255, 255));
+            /*
+            pSprite sprite = new pSprite(SkinManager.Load("puush"), OriginType.TopLeft, new Vector2(50, 200), new Color4(255, 255, 255, 255));
             sprite.Transform(new Transform(new Vector2(50, 200), new Vector2(370, 115), 0, 1000, EasingType.Out));
             sprite.Transform(new Transform(new Vector2(370, 115), new Vector2(350, 120), 1000, 1500, EasingType.In));
             sprite.Transform(new Transform(TransformType.Fade, 0, 1, 0, 1500));
             sprite.Transform(new Transform(Color4.Black, Color4.White, 0, 1000, EasingType.In));
+            */
 
-            sm.Add(sprite);
+            HitCircle h = new HitCircle(new Vector2(200, 200), 3000, true);
+            sm.Add(h);
         }
 
         /// <summary>

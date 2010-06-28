@@ -75,14 +75,12 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
+        //private bool IsSelected; // editor
+
         internal bool IsHit;
-
-        private bool IsSelected;
         internal double MaxHp;
-
         internal int StartTime;
         internal HitObjectType Type;
-
         internal int EndTime;
 
         internal virtual bool NewCombo
@@ -97,6 +95,7 @@ namespace osum.GameplayElements
             }
         }
 
+        /*
         internal bool Selected
         {
             get { return IsSelected; }
@@ -113,6 +112,7 @@ namespace osum.GameplayElements
                 }
             }
         }
+        */
 
         internal abstract void SetColour(Color4 color);
         internal abstract IncreaseScoreType Hit();
@@ -123,11 +123,14 @@ namespace osum.GameplayElements
 
         internal abstract HitObject Clone();
 
+        /* // editor?
         internal abstract void Select();
         internal abstract void Deselect();
         internal abstract void ModifyTime(int newTime);
         internal abstract void ModifyPosition(Vector2 newPosition);
+        */
 
+        /*
         internal virtual void Update()
         {
             return;
@@ -137,7 +140,7 @@ namespace osum.GameplayElements
         {
             return;
         }
-
+        */
         #endregion
 
         #region Drawing
@@ -283,8 +286,8 @@ namespace osum.GameplayElements
         internal virtual bool HitTest(Vector2 testPosition, bool hittableRangeOnly, float radius)
         {
             return ((!hittableRangeOnly && IsVisible) ||
-                  (StartTime - HitObjectManager.PreEmpt <= Clock.AudioTime &&
-                   StartTime + HitObjectManager.hitWindow50 >= Clock.AudioTime && !IsHit)) &&
+                  (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
+                   StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
                  (OsumMathHelper.DistanceSquared(testPosition, Position) <= radius * radius ||
                   (!hittableRangeOnly && OsumMathHelper.DistanceSquared(testPosition, Position2) <= radius * radius));
         }
@@ -293,7 +296,7 @@ namespace osum.GameplayElements
         {
             foreach (pSprite p in SpriteCollection)
             {
-                Transform previousShake = p.transformations.FindLast(t => t.Type == TransformType.Movement);
+                Transform previousShake = p.Transformations.FindLast(t => t.Type == TransformType.Movement);
 
                 Vector2 startPos = previousShake != null ? previousShake.EndVector : p.Position;
 

@@ -202,7 +202,7 @@ namespace osum.Graphics.Sprites
 
         #region IComparable<Transformation> Members
 
-        internal int CompareTo(Transform other)
+        public int CompareTo(Transform other)
         {
             int compare;
 
