@@ -4,6 +4,7 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Sprites
 {
@@ -15,12 +16,12 @@ namespace osum.Graphics.Sprites
         internal bool TextConstantSpacing;
         internal string TextFont = "default";
 
+        internal int SpacingOverlap;
+
         // pushed from pSprite
         internal string Text;
         internal bool TextChanged;
         internal Vector2 lastMeasure;
-
-        internal int SpacingOverlap;
 
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldType fieldType, OriginType originType, ClockType clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
@@ -39,7 +40,33 @@ namespace osum.Graphics.Sprites
             if (TextChanged)
                 refreshRenderArray();
 
+            UpdateTextureAlignment();
+
             return lastMeasure;
+        }
+
+        internal override void UpdateTextureAlignment()
+        {
+            switch (Origin)
+            {
+                case OriginType.Centre:
+                    originVector = lastMeasure * 0.5F;
+                    break;
+                case OriginType.TopCentre:
+                    originVector.X = lastMeasure.X * 0.5F;
+                    break;
+                case OriginType.TopRight:
+                    originVector.X = lastMeasure.X;
+                    break;
+                case OriginType.BottomCentre:
+                    originVector.X = lastMeasure.X / 2;
+                    originVector.Y = lastMeasure.Y;
+                    break;
+                case OriginType.BottomRight:
+                    originVector.X = lastMeasure.X;
+                    originVector.Y = lastMeasure.Y;
+                    break;
+            }
         }
 
         private void refreshRenderArray()
@@ -100,7 +127,7 @@ namespace osum.Graphics.Sprites
 
             if (TextConstantSpacing)
             {
-                float last = 0;
+                //float last = 0;
                 int charWidth = SkinManager.Load(TextFont + "-5").Width;
 
                 currentX = 0;
@@ -128,6 +155,32 @@ namespace osum.Graphics.Sprites
 
             //DrawWidth = (int)Math.Round(lastMeasure.X);
             //DrawHeight = (int)Math.Round(lastMeasure.Y);
+        }
+
+        public override void Draw()
+        {
+            // either call base.Draw() or duplicate code here
+
+            /*
+            Vector2 tmp = Position;
+            for (int i = 0; i < renderCoordinates.Count; i++)
+            {
+                texture = renderTextures[i];
+                Position = tmp + renderCoordinates[i];
+                base.Draw();
+            }
+            Position = tmp;
+            texture = null;
+            */
+
+            if (AlwaysDraw)
+            {
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                for (int i = 0; i < renderCoordinates.Count; i++)
+                {
+                    renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, colour, Scale, rotation, null, SpriteEffect.None);
+                }
+            }
         }
     }
 }

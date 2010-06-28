@@ -165,8 +165,12 @@ namespace osum.Graphics.Sprites
             this.Field = field;
             this.Origin = origin;
             this.Clocking = clocking;
+
             this.Position = position;
+            this.OriginalPosition = position;
             this.colour = colour;
+            this.OriginalColour = colour;
+
             this.Scale = Vector2.One;
             this.rotation = 0;
             this.effect = SpriteEffect.None;
@@ -174,14 +178,15 @@ namespace osum.Graphics.Sprites
             this.Clocking = ClockType.Game;
             this.depth = depth;
 
-            if (texture != null)
-                UpdateTextureAlignment();
+            UpdateTextureAlignment();
         }
 
-        internal void UpdateTextureAlignment()
+        internal virtual void UpdateTextureAlignment()
         {
             //if (Type == SpriteTypes.NativeText || Type == SpriteTypes.SpriteText)
             //    return;
+            if (texture == null)
+                return;
 
             switch (Origin)
             {
@@ -227,35 +232,85 @@ namespace osum.Graphics.Sprites
                 this.Transform(t);
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            // remove old transformations
-            for (int i = 0; i < transformations.Count; i++)
-            {
-                if (transformations[i].Terminated)
-                    transformations.RemoveAt(i);
-            }
-
-            // modify variables based on transformations
             for (int i = 0; i < transformations.Count; i++)
             {
                 Transform t = transformations[i];
+
+                // remove old transformations
+                if (t.Terminated)
+                {
+                    switch (t.Type)
+                    {
+                        case TransformType.Colour:
+                            float a = colour.A;
+                            colour = t.EndColour;
+                            colour.A = a;
+                            break;
+
+                        case TransformType.Fade:
+                            colour.A = t.EndFloat;
+                            break;
+
+                        case TransformType.Movement:
+                            Position = t.EndVector;
+                            break;
+
+                        case TransformType.MovementX:
+                            Position.X = t.EndFloat;
+                            break;
+
+                        case TransformType.MovementY:
+                            Position.Y = t.EndFloat;
+                            break;
+
+                        case TransformType.ParameterAdditive:
+                            blending = BlendingFactorDest.One;
+                            break;
+
+                        case TransformType.ParameterFlipHorizontal:
+                            effect |= SpriteEffect.FlipHorizontally;
+                            break;
+
+                        case TransformType.ParameterFlipVertical:
+                            effect |= SpriteEffect.FlipVertically;
+                            break;
+
+                        case TransformType.Rotation:
+                            rotation = t.EndFloat;
+                            break;
+
+                        case TransformType.Scale:
+                            Scale = new Vector2(t.EndFloat, t.EndFloat);
+                            break;
+
+                        case TransformType.VectorScale:
+                            Scale = t.EndVector;
+                            break;
+                    }
+
+                    transformations.RemoveAt(i);
+                    continue;
+                }
 
                 // reset some values
                 effect = SpriteEffect.None;
                 blending = BlendingFactorDest.OneMinusSrcAlpha;
 
+                // update current transformations
                 if (t.Initiated)
                 {
                     switch (t.Type)
                     {
                         case TransformType.Colour:
-                            Color4 c = t.CurrentColour;
-                            colour = new Color4(c.R, c.G, c.B, colour.A);
+                            float a = colour.A;
+                            colour = t.CurrentColour;
+                            colour.A = a;
                             break;
 
                         case TransformType.Fade:
-                            colour = new Color4(colour.R, colour.G, colour.B, t.CurrentFloat);
+                            colour.A = t.CurrentFloat;
                             break;
 
                         case TransformType.Movement:
@@ -296,13 +351,18 @@ namespace osum.Graphics.Sprites
                     }
                 }
             }
+
+            // not sure how this is supposed to work
+            AlwaysDraw = transformations.Count != 0;
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-            if (texture != null)
+            if (AlwaysDraw && texture != null)
+            {
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                 texture.TextureGl.Draw(Position, originVector, colour, Scale, rotation, null, effect);
+            }
         }
 
         public virtual pSprite Clone()

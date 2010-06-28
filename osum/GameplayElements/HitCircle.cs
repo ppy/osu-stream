@@ -69,12 +69,13 @@ namespace osum.GameplayElements
             SpriteHitCircle2.frameSkip = 30;
             SpriteCollection.Add(SpriteHitCircle2);
             DimCollection.Add(SpriteHitCircle2);
-            SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
+            SpriteHitCircleText = new pSpriteText("1234", "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
                                                     FieldType.Gamefield512x384, OriginType.Centre,
                                                     ClockType.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
-                                                    false, Color4.White);
+                                                    false, white);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
+            SpriteHitCircleText.MeasureText();
             if (ShowCircleText)
             {
                 SpriteCollection.Add(SpriteHitCircleText);
