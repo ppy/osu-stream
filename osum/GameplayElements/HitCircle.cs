@@ -317,9 +317,9 @@ namespace osum.GameplayElements
         {
             if (colour != Colour)
             {
-                SpriteHitCircle1.OriginalColour = colour;
+                SpriteHitCircle1.StartColour = colour;
 
-                SpriteApproachCircle.OriginalColour = colour;
+                SpriteApproachCircle.StartColour = colour;
 
                 /*
                 if (GameBase.Mode == OsuModes.Edit)

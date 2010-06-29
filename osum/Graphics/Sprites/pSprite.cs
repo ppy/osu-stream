@@ -104,8 +104,8 @@ namespace osum.Graphics.Sprites
     {
         protected List<Transformation> transformations;
 
-        internal Color4 OriginalColour;
-        internal Vector2 OriginalPosition;
+        internal Color4 StartColour;
+        internal Vector2 StartPosition;
 
         protected pTexture texture;
         protected Vector2 originVector;
@@ -117,7 +117,7 @@ namespace osum.Graphics.Sprites
         internal OriginTypes Origin;
         internal ClockTypes Clocking;
         internal Color4 Colour;
-        protected float Depth;
+        protected float DrawDepth;
         internal float Rotation;
         internal bool AlwaysDraw;
         internal bool Reverse;
@@ -177,16 +177,17 @@ namespace osum.Graphics.Sprites
             this.Clocking = clocking;
 
             this.Position = position;
-            this.OriginalPosition = position;
+            this.StartPosition = position;
             this.Colour = colour;
-            this.OriginalColour = colour;
+            this.StartColour = colour;
 
             this.Scale = Vector2.One;
             this.Rotation = 0;
             this.effect = SpriteEffect.None;
             this.blending = BlendingFactorDest.OneMinusSrcAlpha;
             this.Clocking = ClockTypes.Game;
-            this.Depth = depth;
+            this.DrawDepth = depth;
+            this.AlwaysDraw = alwaysDraw;
 
             this.Texture = texture;
         }
@@ -369,9 +370,6 @@ namespace osum.Graphics.Sprites
                     }
                 }
             }
-
-            // not sure how this is supposed to work
-            AlwaysDraw = transformations.Count != 0;
         }
 
         public virtual void Draw()
@@ -379,11 +377,14 @@ namespace osum.Graphics.Sprites
             if (texture == null)
                 return;
 
-            if (AlwaysDraw)
+            if (transformations.Count != 0 || AlwaysDraw)
             {
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-                Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
-                texture.TextureGl.Draw(Position, originVector, Colour, Scale, Rotation, rect, effect);
+                if (Alpha != 0)
+                {
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                    Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
+                    texture.TextureGl.Draw(Position, originVector, Colour, Scale, Rotation, rect, effect);
+                }
             }
 
         }
@@ -409,7 +410,7 @@ namespace osum.Graphics.Sprites
 
             int now = Clock.GetTime(Clocking);
             this.Transform(new Transformation(TransformationType.Fade, 
-                            (float)Alpha, (OriginalColour.A != 0 ? (float)OriginalColour.A : 1),
+                            (float)Alpha, (StartColour.A != 0 ? (float)StartColour.A : 1),
                             now, now + duration));
         }
 
@@ -419,7 +420,7 @@ namespace osum.Graphics.Sprites
 
             int now = Clock.GetTime(Clocking);
             this.Transform(new Transformation(TransformationType.Fade, 
-                            0, (OriginalColour.A != 0 ? (float)OriginalColour.A : 1),
+                            0, (StartColour.A != 0 ? (float)StartColour.A : 1),
                             now, now + duration));
         }
 
@@ -456,7 +457,7 @@ namespace osum.Graphics.Sprites
 
         public virtual pSprite Clone()
         {
-            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, OriginalPosition, Depth, AlwaysDraw, OriginalColour);
+            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, StartColour);
             clone.Position = Position;
             
             clone.DrawLeft = DrawLeft;

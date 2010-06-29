@@ -173,13 +173,16 @@ namespace osum.Graphics.Sprites
             texture = null;
             */
 
-            if (AlwaysDraw)
+            if (transformations.Count != 0 || AlwaysDraw)
             {
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-                for (int i = 0; i < renderCoordinates.Count; i++)
+                if (Alpha != 0)
                 {
-                    // note: no srcRect calculation
-                    renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, Colour, Scale, Rotation, null, SpriteEffect.None);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                    for (int i = 0; i < renderCoordinates.Count; i++)
+                    {
+                        // note: no srcRect calculation
+                        renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, Colour, Scale, Rotation, null, SpriteEffect.None);
+                    }
                 }
             }
         }
