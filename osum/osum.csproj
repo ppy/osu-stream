@@ -49,6 +49,7 @@
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="GameplayElements\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObject.cs" />
+    <Compile Include="GameplayElements\Spinner.cs" />
     <Compile Include="Graphics\Sprites\ISpriteable.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />

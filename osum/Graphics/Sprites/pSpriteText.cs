@@ -23,7 +23,7 @@ namespace osum.Graphics.Sprites
         internal bool TextChanged;
         internal Vector2 lastMeasure;
 
-        internal pSpriteText(string text, string fontname, int spacingOverlap, FieldType fieldType, OriginType originType, ClockType clockType,
+        internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(null, fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
@@ -49,20 +49,20 @@ namespace osum.Graphics.Sprites
         {
             switch (Origin)
             {
-                case OriginType.Centre:
+                case OriginTypes.Centre:
                     originVector = lastMeasure * 0.5F;
                     break;
-                case OriginType.TopCentre:
+                case OriginTypes.TopCentre:
                     originVector.X = lastMeasure.X * 0.5F;
                     break;
-                case OriginType.TopRight:
+                case OriginTypes.TopRight:
                     originVector.X = lastMeasure.X;
                     break;
-                case OriginType.BottomCentre:
+                case OriginTypes.BottomCentre:
                     originVector.X = lastMeasure.X / 2;
                     originVector.Y = lastMeasure.Y;
                     break;
-                case OriginType.BottomRight:
+                case OriginTypes.BottomRight:
                     originVector.X = lastMeasure.X;
                     originVector.Y = lastMeasure.Y;
                     break;
@@ -178,7 +178,8 @@ namespace osum.Graphics.Sprites
                 GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                 for (int i = 0; i < renderCoordinates.Count; i++)
                 {
-                    renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, colour, Scale, rotation, null, SpriteEffect.None);
+                    // note: no srcRect calculation
+                    renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, Colour, Scale, Rotation, null, SpriteEffect.None);
                 }
             }
         }

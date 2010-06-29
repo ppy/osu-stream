@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osum.Helpers
 {
-    public enum ClockType
+    public enum ClockTypes
     {
         Game,
         Audio
@@ -30,15 +30,15 @@ namespace osum.Helpers
             get { return (int)((time - zero) * 1000); }
         }
 
-        public static int GetTime(ClockType clock)
+        public static int GetTime(ClockTypes clock)
         {
             switch (clock)
             {
-                case ClockType.Audio:
+                case ClockTypes.Audio:
                     return Clock.AudioTime;
 
                 default:
-                case ClockType.Game:
+                case ClockTypes.Game:
                     return Clock.Time;
             }
         }

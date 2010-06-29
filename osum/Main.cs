@@ -18,7 +18,7 @@ namespace osum
 
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public Game()
-            : base(1024, 768, GraphicsMode.Default, "osu!m")
+            : base(Constants.GamefieldDefaultWidth, Constants.GamefieldDefaultHeight, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
         }
@@ -47,7 +47,8 @@ namespace osum
             sprite.Transform(new Transform(Color4.Black, Color4.White, 0, 1000, EasingType.In));
             */
 
-            HitCircle h = new HitCircle(new Vector2(200, 200), 3000, true);
+            //HitCircle h = new HitCircle(new Vector2(512, 384), 2500, true);
+            Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
             sm.Add(h);
         }
 

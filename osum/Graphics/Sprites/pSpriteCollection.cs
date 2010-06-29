@@ -19,7 +19,7 @@ namespace osum.Graphics.Sprites
             this.SpriteCollection = new List<pSprite>(sprites);
         }
 
-        public void Update()
+        public virtual void Update()
         {
             for (int i = 0; i < SpriteCollection.Count; i++)
             {
@@ -27,7 +27,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
             for (int i = 0; i < SpriteCollection.Count; i++)
             {

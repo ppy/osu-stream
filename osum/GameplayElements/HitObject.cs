@@ -296,21 +296,21 @@ namespace osum.GameplayElements
         {
             foreach (pSprite p in SpriteCollection)
             {
-                Transform previousShake = p.Transformations.FindLast(t => t.Type == TransformType.Movement);
+                Transformation previousShake = p.Transformations.FindLast(t => t.Type == TransformationType.Movement);
 
                 Vector2 startPos = previousShake != null ? previousShake.EndVector : p.Position;
 
-                p.Transform(new Transform(startPos, startPos + new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos, startPos + new Vector2(8, 0), 
                     Clock.AudioTime, Clock.AudioTime + 20));
-                p.Transform(new Transform(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
                     Clock.AudioTime + 20, Clock.AudioTime + 40));
-                p.Transform(new Transform(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0), 
                     Clock.AudioTime + 40, Clock.AudioTime + 60));
-                p.Transform(new Transform(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
                     Clock.AudioTime + 60, Clock.AudioTime + 80));
-                p.Transform(new Transform(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
                     Clock.AudioTime + 80, Clock.AudioTime + 100));
-                p.Transform(new Transform(startPos + new Vector2(8, 0), startPos, 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos, 
                     Clock.AudioTime + 100, Clock.AudioTime + 120));
             }
         }

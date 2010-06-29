@@ -8,7 +8,7 @@ using osum.Helpers;
 
 namespace osum.Graphics.Sprites
 {
-    internal enum EasingType
+    internal enum EasingTypes
     {
         None,
         In,
@@ -16,7 +16,7 @@ namespace osum.Graphics.Sprites
     }
 
     [Flags]
-    internal enum TransformType
+    internal enum TransformationType
     {
         None = 0,
         Movement = 1,
@@ -32,9 +32,9 @@ namespace osum.Graphics.Sprites
         ParameterAdditive = 1024
     }
 
-    internal class Transform : IComparable<Transform>
+    internal class Transformation : IComparable<Transformation>
     {
-        internal EasingType Easing { get; private set; }
+        internal EasingTypes Easing { get; private set; }
 
         internal Vector2 StartVector { get; private set; }
         internal Color4 StartColour { get; private set; }
@@ -46,9 +46,9 @@ namespace osum.Graphics.Sprites
 
         internal int StartTime { get; private set; }
         internal int EndTime { get; private set; }
-        internal TransformType Type { get; private set; }
+        internal TransformationType Type { get; private set; }
 
-        internal ClockType Clocking { get; set; }
+        internal ClockTypes Clocking { get; set; }
 
         internal int Duration
         {
@@ -65,7 +65,7 @@ namespace osum.Graphics.Sprites
             get { return Clock.GetTime(Clocking) >= EndTime; }
         }
 
-        internal bool Is(TransformType type)
+        internal bool Is(TransformationType type)
         {
             return (Type & type) > 0;
         }
@@ -126,34 +126,34 @@ namespace osum.Graphics.Sprites
 
             switch (Easing)
             {
-                case EasingType.In:
+                case EasingTypes.In:
                     return OsumMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 2));
 
-                case EasingType.Out:
+                case EasingTypes.Out:
                     return OsumMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 2));
 
                 default:
-                case EasingType.None:
+                case EasingTypes.None:
                     return OsumMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
             }
         }
 
-        internal Transform(Vector2 source, Vector2 destination, int start, int end)
-            : this(TransformType.Movement, source, destination, start, end, EasingType.None)
+        internal Transformation(Vector2 source, Vector2 destination, int start, int end)
+            : this(TransformationType.Movement, source, destination, start, end, EasingTypes.None)
         {
         }
 
-        internal Transform(Vector2 source, Vector2 destination, int start, int end, EasingType easing)
-            : this(TransformType.Movement, source, destination, start, end, easing)
+        internal Transformation(Vector2 source, Vector2 destination, int start, int end, EasingTypes easing)
+            : this(TransformationType.Movement, source, destination, start, end, easing)
         {
         }
 
-        internal Transform(TransformType type, Vector2 source, Vector2 destination, int start, int end)
-            : this(type, source, destination, start, end, EasingType.None)
+        internal Transformation(TransformationType type, Vector2 source, Vector2 destination, int start, int end)
+            : this(type, source, destination, start, end, EasingTypes.None)
         {
         }
 
-        internal Transform(TransformType type, Vector2 source, Vector2 destination, int start, int end, EasingType easing)
+        internal Transformation(TransformationType type, Vector2 source, Vector2 destination, int start, int end, EasingTypes easing)
         {
             Type = type;
             StartVector = source;
@@ -161,31 +161,31 @@ namespace osum.Graphics.Sprites
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockType.Game;
+            Clocking = ClockTypes.Game;
         }
 
-        internal Transform(Color4 source, Color4 destination, int start, int end)
-            : this(source, destination, start, end, EasingType.None)
+        internal Transformation(Color4 source, Color4 destination, int start, int end)
+            : this(source, destination, start, end, EasingTypes.None)
         {
         }
 
-        internal Transform(Color4 source, Color4 destination, int start, int end, EasingType easing)
+        internal Transformation(Color4 source, Color4 destination, int start, int end, EasingTypes easing)
         {
-            Type = TransformType.Colour;
+            Type = TransformationType.Colour;
             StartColour = source;
             EndColour = destination;
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockType.Game;
+            Clocking = ClockTypes.Game;
         }
 
-        internal Transform(TransformType type, float source, float destination, int start, int end)
-            : this(type, source, destination, start, end, EasingType.None)
+        internal Transformation(TransformationType type, float source, float destination, int start, int end)
+            : this(type, source, destination, start, end, EasingTypes.None)
         {
         }
 
-        internal Transform(TransformType type, float source, float destination, int start, int end, EasingType easing)
+        internal Transformation(TransformationType type, float source, float destination, int start, int end, EasingTypes easing)
         {
             Type = type;
             StartFloat = source;
@@ -193,16 +193,16 @@ namespace osum.Graphics.Sprites
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockType.Game;
+            Clocking = ClockTypes.Game;
         }
 
-        private Transform()
+        private Transformation()
         {
         }
 
         #region IComparable<Transformation> Members
 
-        public int CompareTo(Transform other)
+        public int CompareTo(Transformation other)
         {
             int compare;
 
@@ -217,9 +217,9 @@ namespace osum.Graphics.Sprites
 
         #endregion
 
-        internal Transform Clone()
+        internal Transformation Clone()
         {
-            Transform t = new Transform();
+            Transformation t = new Transformation();
             t.StartFloat = StartFloat;
             t.StartColour = StartColour;
             t.StartVector = StartVector;
@@ -234,9 +234,9 @@ namespace osum.Graphics.Sprites
             return t;
         }
 
-        internal Transform CloneReverse()
+        internal Transformation CloneReverse()
         {
-            Transform t = new Transform();
+            Transformation t = new Transformation();
             t.StartFloat = EndFloat;
             t.StartColour = EndColour;
             t.StartVector = EndVector;
@@ -249,14 +249,14 @@ namespace osum.Graphics.Sprites
 
             switch (Easing)
             {
-                case EasingType.In:
-                    t.Easing = EasingType.Out;
+                case EasingTypes.In:
+                    t.Easing = EasingTypes.Out;
                     break;
-                case EasingType.Out:
-                    t.Easing = EasingType.In;
+                case EasingTypes.Out:
+                    t.Easing = EasingTypes.In;
                     break;
                 default:
-                    t.Easing = EasingType.None;
+                    t.Easing = EasingTypes.None;
                     break;
             }
 

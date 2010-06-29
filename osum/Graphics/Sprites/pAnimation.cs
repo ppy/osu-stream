@@ -25,7 +25,7 @@ namespace osum.Graphics.Sprites
 
         internal int TextureCount;
 
-        internal pAnimation(pTexture[] textures, FieldType fieldType, OriginType originType, ClockType clockType,
+        internal pAnimation(pTexture[] textures, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                             Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(textures == null || textures.Length == 0 ? null : textures[0], fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
@@ -118,7 +118,7 @@ namespace osum.Graphics.Sprites
 
             double elapsed = spriteTime - lastFrameTime;
 
-            currentFrameSkip = currentFrameSkip + elapsed / Constant.SIXTY_FRAME_TIME;
+            currentFrameSkip = currentFrameSkip + elapsed / Constants.SIXTY_FRAME_TIME;
 
             lastFrameTime = spriteTime;
 
@@ -166,7 +166,7 @@ namespace osum.Graphics.Sprites
                 {
                     //if (!DrawDimensionsManualOverride)
                     //    UpdateTextureSize();
-                    if (Origin != OriginType.TopLeft)
+                    if (Origin != OriginTypes.TopLeft)
                         UpdateTextureAlignment();
                 }
             }
@@ -207,9 +207,9 @@ namespace osum.Graphics.Sprites
 
         public override pSprite Clone()
         {
-            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, OriginalPosition, depth, AlwaysDraw, OriginalColour);
+            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, OriginalPosition, Depth, AlwaysDraw, OriginalColour);
             clone.frameSkip = frameSkip;
-            foreach (Transform t in Transformations)
+            foreach (Transformation t in Transformations)
                 clone.Transformations.Add(t.Clone());
             return clone;
         }

@@ -81,7 +81,6 @@ namespace osum.Graphics
 
             Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
-
             float drawHeight = drawRect.Height*scaleVector.Y;
             float drawWidth = drawRect.Width*scaleVector.X;
 

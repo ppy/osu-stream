@@ -51,27 +51,27 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new pSprite(SkinManager.Load("approachcircle"), FieldType.Gamefield512x384, OriginType.Centre, ClockType.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
+            SpriteApproachCircle = new pSprite(SkinManager.Load("approachcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
             //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
             SpriteCollection.Add(SpriteApproachCircle);
 
             SpriteHitCircle1 =
-                new pSprite(SkinManager.Load(SpriteNameHitCircle), FieldType.Gamefield512x384, OriginType.Centre, ClockType.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
+                new pSprite(SkinManager.Load(SpriteNameHitCircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             SpriteCollection.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
             DimCollection.Add(SpriteHitCircle1);
 
 
             SpriteHitCircle2 =
-                new pAnimation(SkinManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldType.Gamefield512x384,
-                            OriginType.Centre, ClockType.Audio, Position,
+                new pAnimation(SkinManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
+                            OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             SpriteHitCircle2.frameSkip = 30;
             SpriteCollection.Add(SpriteHitCircle2);
             DimCollection.Add(SpriteHitCircle2);
-            SpriteHitCircleText = new pSpriteText("1234", "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
-                                                    FieldType.Gamefield512x384, OriginType.Centre,
-                                                    ClockType.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
+            SpriteHitCircleText = new pSpriteText("1", "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
+                                                    FieldTypes.Gamefield512x384, OriginTypes.Centre,
+                                                    ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
                                                     false, white);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
@@ -82,10 +82,10 @@ namespace osum.GameplayElements
                 DimCollection.Add(SpriteHitCircleText);
             }
 
-            SpriteApproachCircle.Transform(new Transform(TransformType.Fade, 0, 0.9F, 
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F, 
                 startTime - DifficultyManager.PreEmpt, Math.Min(startTime, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn * 2)));
 
-            SpriteApproachCircle.Transform(new Transform(TransformType.Scale, 4, 1, 
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 4, 1, 
                 startTime - DifficultyManager.PreEmpt, startTime));
             
             /*
@@ -114,22 +114,22 @@ namespace osum.GameplayElements
             //else
             //{
 
-            SpriteHitCircle1.Transform(new Transform(TransformType.Fade, 0, 1,
+            SpriteHitCircle1.Transform(new Transformation(TransformationType.Fade, 0, 1,
                 startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
 
-            SpriteHitCircle2.Transform(new Transform(TransformType.Fade, 0, 1, 
+            SpriteHitCircle2.Transform(new Transformation(TransformationType.Fade, 0, 1, 
                 startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
 
-            SpriteHitCircleText.Transform(new Transform(TransformType.Fade, 0, 1, 
+            SpriteHitCircleText.Transform(new Transformation(TransformationType.Fade, 0, 1, 
                 startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
 
-            SpriteHitCircle1.Transform(new Transform(TransformType.Fade, 1, 0,
+            SpriteHitCircle1.Transform(new Transformation(TransformationType.Fade, 1, 0,
                 startTime, startTime + DifficultyManager.HitWindow50));
 
-            SpriteHitCircle2.Transform(new Transform(TransformType.Fade, 1, 0,
+            SpriteHitCircle2.Transform(new Transformation(TransformationType.Fade, 1, 0,
                 startTime, startTime + DifficultyManager.HitWindow50));
 
-            SpriteHitCircleText.Transform(new Transform(TransformType.Fade, 1, 0,
+            SpriteHitCircleText.Transform(new Transformation(TransformationType.Fade, 1, 0,
                 startTime, startTime + DifficultyManager.HitWindow50));
 
             //}
@@ -228,38 +228,38 @@ namespace osum.GameplayElements
             if (isHit)
             {
                 //Fade out the actual hit circle
-                Transform circleScaleOut = new Transform(TransformType.Scale, 1.1F, 1.9F, 
-                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingType.In);
+                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.9F, 
+                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
 
-                Transform circleScaleOut2 = new Transform(TransformType.Scale, 1.9F, 2F,
+                Transformation circleScaleOut2 = new Transformation(TransformationType.Scale, 1.9F, 2F,
                     (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
 
-                Transform textScaleOut = new Transform(TransformType.Scale, TEXT_SIZE * 1.1F, TEXT_SIZE * 1.9F,
-                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingType.In);
+                Transformation textScaleOut = new Transformation(TransformationType.Scale, TEXT_SIZE * 1.1F, TEXT_SIZE * 1.9F,
+                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
 
-                Transform textScaleOut2 = new Transform(TransformType.Scale, TEXT_SIZE * 1.9F, TEXT_SIZE * 2F,
+                Transformation textScaleOut2 = new Transformation(TransformationType.Scale, TEXT_SIZE * 1.9F, TEXT_SIZE * 2F,
                     (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
 
-                Transform circleFadeOut = new Transform(TransformType.Fade, 1, 0, 
+                Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0, 
                     Clock.Time, Clock.Time + DifficultyManager.FadeOut);
 
                 //SpriteHitCircle1.Depth = SpriteManager.drawOrderFwd(StartTime + 1);
                 SpriteHitCircle1.Transformations.Clear();
-                SpriteHitCircle1.Clocking = ClockType.Game;
+                SpriteHitCircle1.Clocking = ClockTypes.Game;
                 SpriteHitCircle1.Transform(circleScaleOut);
                 SpriteHitCircle1.Transform(circleScaleOut2);
                 SpriteHitCircle1.Transform(circleFadeOut);
 
                 //SpriteHitCircle2.Depth = SpriteManager.drawOrderFwd(StartTime + 2);
                 SpriteHitCircle2.Transformations.Clear();
-                SpriteHitCircle2.Clocking = ClockType.Game;
+                SpriteHitCircle2.Clocking = ClockTypes.Game;
                 SpriteHitCircle2.Transform(circleScaleOut);
                 SpriteHitCircle2.Transform(circleScaleOut2);
                 SpriteHitCircle2.Transform(circleFadeOut);
 
                 //SpriteHitCircleText.Depth = SpriteManager.drawOrderFwd(StartTime + 2);
                 SpriteHitCircleText.Transformations.Clear();
-                SpriteHitCircleText.Clocking = ClockType.Game;
+                SpriteHitCircleText.Clocking = ClockTypes.Game;
                 SpriteHitCircleText.Transform(textScaleOut);
                 SpriteHitCircleText.Transform(textScaleOut2);
                 SpriteHitCircleText.Transform(circleFadeOut);
