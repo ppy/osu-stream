@@ -9,6 +9,7 @@ using osum.GameplayElements;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Input;
 
 namespace osum
 {
@@ -48,8 +49,16 @@ namespace osum
             */
 
             //HitCircle h = new HitCircle(new Vector2(512, 384), 2500, true);
-            Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
-            sm.Add(h);
+            //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
+            //sm.Add(h);
+
+            InputManager.Initialise(Mouse);
+            InputManager.MouseClick += mc;
+        }
+
+        void mc(object sender, MouseButtonEventArgs e)
+        {
+            sm.Add(new HitCircle(new Vector2(e.X, e.Y), Clock.Time + 1500, true));
         }
 
         /// <summary>

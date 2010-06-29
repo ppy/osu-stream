@@ -66,6 +66,7 @@
     <Compile Include="Helpers\Clock.cs" />
     <Compile Include="Helpers\Delegates.cs" />
     <Compile Include="Helpers\OsumMathHelper.cs" />
+    <Compile Include="Input\InputManager.cs" />
     <Compile Include="Main.cs" />
   </ItemGroup>
   <ItemGroup>
