@@ -33,60 +33,62 @@ namespace OpenTK.Input
 {
     /// <summary>
     /// Enumerates all possible mouse buttons.
+    /// Modified to flags.
     /// </summary>
+    [Flags]
     public enum MouseButton
     {
         /// <summary>
         /// The left mouse button.
         /// </summary>
-        Left = 0,
+        Left = 1,
         /// <summary>
         /// The middle mouse button.
         /// </summary>
-        Middle,
+        Middle = 2,
         /// <summary>
         /// The right mouse button.
         /// </summary>
-        Right,
+        Right = 4,
         /// <summary>
         /// The first extra mouse button.
         /// </summary>
-        Button1,
+        Button1 = 8,
         /// <summary>
         /// The second extra mouse button.
         /// </summary>
-        Button2,
+        Button2 = 0x10,
         /// <summary>
         /// The third extra mouse button.
         /// </summary>
-        Button3,
+        Button3 = 0x20,
         /// <summary>
         /// The fourth extra mouse button.
         /// </summary>
-        Button4,
+        Button4 = 0x40,
         /// <summary>
         /// The fifth extra mouse button.
         /// </summary>
-        Button5,
+        Button5 = 0x80,
         /// <summary>
         /// The sixth extra mouse button.
         /// </summary>
-        Button6,
+        Button6 = 0x100,
         /// <summary>
         /// The seventh extra mouse button.
         /// </summary>
-        Button7,
+        Button7 = 0x200,
         /// <summary>
         /// The eigth extra mouse button.
         /// </summary>
-        Button8,
+        Button8 = 0x400,
         /// <summary>
         /// The ninth extra mouse button.
         /// </summary>
-        Button9,
+        Button9 = 0x800,
         /// <summary>
         /// Indicates the last available mouse button.
         /// </summary>
-        LastButton
+        LastButton = 0x1000
     }
 }
