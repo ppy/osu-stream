@@ -28,10 +28,17 @@ namespace osum.Graphics.Skins
 			
 			if (File.Exists(path))
             {
+#if DEBUG
+				Console.WriteLine("OK");
+#endif
 				texture = pTexture.FromFile(path);
                 SpriteCache.Add(name, texture);
                 return texture;
             }
+			
+#if DEBUG
+			Console.WriteLine("FAIL");
+#endif
 
             return null;
         }
