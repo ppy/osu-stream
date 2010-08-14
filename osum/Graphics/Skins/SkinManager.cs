@@ -18,7 +18,13 @@ namespace osum.Graphics.Skins
             if (SpriteCache.TryGetValue(name, out texture))
                 return texture;
 
-            string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/{0}.png", name) : @"Skins/" + name;
+			
+			
+            string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/Default/{0}.png", name) : @"Skins/Default/" + name;
+	
+#if DEBUG
+			Console.Write("loading texture " + path + "... ");
+#endif
 			
 			if (File.Exists(path))
             {
