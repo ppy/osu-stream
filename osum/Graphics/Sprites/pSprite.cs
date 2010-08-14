@@ -142,7 +142,7 @@ namespace osum.Graphics.Sprites
         protected SpriteEffect effect;
         protected BlendingFactorDest blending;
 
-        internal Vector2 Position, Scale;
+        internal Vector2 Position, FieldPosition, Scale;
         internal FieldTypes Field;
         internal OriginTypes Origin;
         internal ClockTypes Clocking;
@@ -257,6 +257,16 @@ namespace osum.Graphics.Sprites
                     break;
                 case OriginTypes.BottomRight:
                     originVector = new Vector2(Width, Height);
+                    break;
+            }
+
+            switch (Field)
+            {
+                case FieldTypes.StandardSnapCentre:
+                    FieldPosition = new Vector2(GameBase.StandardSize.Width / 2 + Position.X, GameBase.StandardSize.Height / 2 + Position.Y);
+                    break;
+                default:
+                    FieldPosition = Position;
                     break;
             }
         }
@@ -413,7 +423,7 @@ namespace osum.Graphics.Sprites
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                     Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
-                    texture.TextureGl.Draw(Position, originVector, Colour, Scale, Rotation, rect, effect);
+                    texture.TextureGl.Draw(FieldPosition, originVector, Colour, Scale, Rotation, rect, effect);
                 }
             }
 
