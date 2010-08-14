@@ -2,9 +2,41 @@ using System;
 using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using osum.Helpers;
 using osum.Graphics.Sprites;
+
+#if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
+
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using ErrorCode = OpenTK.Graphics.ES11.All;
+#else
+using OpenTK.Input;
+using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using osum.Input;
+#endif
 
 namespace osum.Graphics
 {
@@ -51,7 +83,7 @@ namespace osum.Graphics
             {
                 if (GL.IsTexture(textureId))
                 {
-                    int[] textures = new[] {textureId};
+                    int[] textures = new[] { textureId };
                     GL.DeleteTextures(1, textures);
                 }
             }
@@ -70,33 +102,95 @@ namespace osum.Graphics
             }
         }
 
+        private void checkGlError()
+        {
+            ErrorCode error = GL.GetError();
+            if (error != ErrorCode.NoError)
+            {
+                Console.WriteLine("GL Error: " + error);
+            }
+        }
+
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
                          Box2? srcRect, SpriteEffect effect)
         {
-            if (textureId < 0)
+			if (textureId < 0)
                 return;
+                
+			GL.PushMatrix();
 
             Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
-            float drawHeight = drawRect.Height*scaleVector.Y;
-            float drawWidth = drawRect.Width*scaleVector.X;
+            float drawHeight = drawRect.Height * scaleVector.Y;
+            float drawWidth = drawRect.Width * scaleVector.X;
 
-            Vector2 originVector = new Vector2(origin.X*drawWidth/drawRect.Width, origin.Y*drawHeight/drawRect.Height);
+            Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
 
             bool verticalFlip = (effect & SpriteEffect.FlipVertically) > 0;
             bool horizontalFlip = (effect & SpriteEffect.FlipHorizontally) > 0;
+
+#if IPHONE
+            GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
+			
+			//GL.LoadIdentity();
+			
+			GL.EnableClientState(All.VertexArray);
+			GL.EnableClientState(All.TextureCoordArray);
+			GL.Enable(All.Texture2D);
+			GL.BlendFunc(All.BlendSrc, All.BlendDst);
+			
+			GL.Translate(currentPos.X, currentPos.Y, 0);
+            GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+
+            if (originVector.X != 0 || originVector.Y != 0)
+                GL.Translate(-originVector.X, -originVector.Y, 0);
+			
+			float left = (float)drawRect.Left / potWidth;
+            float right = (float)drawRect.Right / potWidth;
+            float top = (float)drawRect.Top / potHeight;
+            float bottom = (float)drawRect.Bottom / potHeight;
+			
+			//Console.WriteLine("left: {0} right: {1} top: {2} bottom: {3}", left, right, top, bottom);
+			
+            float[] coordinates = { left, top,
+									right, top,
+									right, bottom,
+									left, bottom };
+            /*float[] vertices = {drawRect.Left, drawRect.Top, 0,
+							drawRect.Right, drawRect.Top, 0,
+							drawRect.Right, drawRect.Bottom, 0,
+							drawRect.Left, drawRect.Bottom, 0 };*/
+			float[] vertices = {0, 0, 0,
+							drawWidth, 0, 0,
+							drawWidth, drawHeight, 0,
+							0, drawHeight, 0 };
+
             
+			GL.BindTexture(TextureTarget.Texture2D, textureId);
+						
+			GL.VertexPointer (3, All.Float, 0, vertices);
+			GL.TexCoordPointer(2, All.Float, 0, coordinates);
+			
+			GL.DrawArrays (All.TriangleFan, 0, 4);
+			
+			GL.Disable(All.Texture2D);
+			GL.DisableClientState(All.VertexArray);
+			GL.DisableClientState(All.TextureCoordArray);
+			
+#else
             GL.Color4(drawColour);
+
+            checkGlError();
 
             //GL.PushMatrix();
             GL.LoadIdentity();
 
             GL.Translate(currentPos.X, currentPos.Y, 0);
             GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
-            
+
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);
 
@@ -106,10 +200,10 @@ namespace osum.Graphics
 
             if (SURFACE_TYPE == TextureTarget.Texture2D)
             {
-                float left = (float) drawRect.Left/potWidth;
-                float right = (float) drawRect.Right/potWidth;
-                float top = (float) drawRect.Top/potHeight;
-                float bottom = (float) drawRect.Bottom/potHeight;
+                float left = (float)drawRect.Left / potWidth;
+                float right = (float)drawRect.Right / potWidth;
+                float top = (float)drawRect.Top / potHeight;
+                float bottom = (float)drawRect.Bottom / potHeight;
 
                 GL.TexCoord2(horizontalFlip ? right : left, verticalFlip ? top : bottom);
                 GL.Vertex2(0, drawHeight);
@@ -144,7 +238,10 @@ namespace osum.Graphics
 
             GL.End();
 
-            //GL.PopMatrix();
+            checkGlError();
+#endif
+
+            GL.PopMatrix();
         }
 
         internal static void DisableTexture()
@@ -154,9 +251,11 @@ namespace osum.Graphics
                 case TextureTarget.Texture2D:
                     GL.Disable(EnableCap.Texture2D);
                     break;
+#if !IPHONE
                 case TextureTarget.TextureRectangle:
-                    GL.Disable(EnableCap.TextureRectangleArb);
+                    GL.Disable(EnableCap.Texture2D);
                     break;
+#endif
             }
         }
 
@@ -167,9 +266,11 @@ namespace osum.Graphics
                 case TextureTarget.Texture2D:
                     GL.Enable(EnableCap.Texture2D);
                     break;
+#if !IPHONE
                 case TextureTarget.TextureRectangle:
-                    GL.Enable(EnableCap.TextureRectangleArb);
+                    GL.Enable(EnableCap.Texture2D);
                     break;
+#endif
             }
         }
 
@@ -186,17 +287,20 @@ namespace osum.Graphics
 
         public void SetData(byte[] data, int level)
         {
-            SetData(data, level, PixelFormat.Bgra);
+#if IPHONE
+			SetData(data, level, PixelFormat.Rgba);
+#else
+			SetData(data, level, PixelFormat.Bgra);
+#endif
         }
 
         /// <summary>
         /// Load texture data from a raw byte array (BGRA 32bit format)
         /// </summary>
-        public void SetData(byte[] data, int level, PixelFormat format)
+        public unsafe void SetData(byte[] data, int level, PixelFormat format)
         {
-            GCHandle h0 = GCHandle.Alloc(data, GCHandleType.Pinned);
-            SetData(h0.AddrOfPinnedObject(), level, format);
-            h0.Free();
+            fixed (byte* dataPtr = data)
+				SetData((IntPtr)dataPtr, level, format);
         }
 
         internal static int GetPotDimension(int size)
@@ -207,7 +311,7 @@ namespace osum.Graphics
             return pot;
         }
 
-        const TextureTarget SURFACE_TYPE = TextureTarget.TextureRectangle;
+        const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
 
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
@@ -228,6 +332,7 @@ namespace osum.Graphics
                 int[] textures = new int[1];
                 GL.GenTextures(1, textures);
                 textureId = textures[0];
+				Console.WriteLine("TextureGl assigned: " + textureId);
             }
 
             if (level > 0)
@@ -243,26 +348,41 @@ namespace osum.Graphics
                 {
                     if (potWidth == textureWidth && potHeight == textureHeight)
                     {
+#if IPHONE
+                        GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                                        PixelType.UnsignedByte, dataPointer);
+#else
                         GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, dataPointer);
+#endif
                     }
                     else
                     {
-                        byte[] temp = new byte[potWidth*potHeight*4];
+                        byte[] temp = new byte[potWidth * potHeight * 4];
                         GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
                         IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
+#if IPHONE
+                        GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                                        PixelType.UnsignedByte, pinnedDataPointer);
+#else
                         GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, pinnedDataPointer);
+#endif
                         h0.Free();
 
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                           PixelType.UnsignedByte, dataPointer);
+                                          PixelType.UnsignedByte, dataPointer);
                     }
                 }
                 else
                 {
+#if IPHONE
+                    GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
+                                    PixelType.UnsignedByte, dataPointer);
+#else
                     GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
                                     PixelType.UnsignedByte, dataPointer);
+#endif
                 }
             }
             else
@@ -271,11 +391,12 @@ namespace osum.Graphics
                                    PixelType.UnsignedByte, dataPointer);
             }
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
 
             if (GL.GetError() != 0)
             {
+                Console.WriteLine("something go wrong!");
                 //error occurred - rollback texture
                 Delete();
             }

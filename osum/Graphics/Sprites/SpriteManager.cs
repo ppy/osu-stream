@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Sprites
 {

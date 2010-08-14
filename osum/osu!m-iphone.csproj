@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}</ProjectGuid>
+    <ProjectTypeGuids>{E613F3A2-FE9C-494F-B74E-F63BCB86FEA6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>openglproject</RootNamespace>
+    <SupportedDevices>IPhoneAndIPad</SupportedDevices>
+    <MainNibFile>MainWindow.nib</MainNibFile>
+    <AssemblyName>openglproject</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>IPHONE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchI18n />
+    <MtouchDebug>True</MtouchDebug>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <MtouchMinimumOS>3.1</MtouchMinimumOS>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <additionalargs>/unsafe</additionalargs>
+    <MtouchSdkVersion>4.0</MtouchSdkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchMinimumOS>3.0</MtouchMinimumOS>
+    <MtouchDebug>False</MtouchDebug>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchSdkVersion>3.2</MtouchSdkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchI18n />
+    <MtouchDebug>True</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchMinimumOS>3.2</MtouchMinimumOS>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <additionalargs>/unsafe</additionalargs>
+    <Externalconsole>true</Externalconsole>
+    <MtouchSdkVersion>3.2</MtouchSdkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchMinimumOS>3.0</MtouchMinimumOS>
+    <MtouchDebug>False</MtouchDebug>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchSdkVersion>3.2</MtouchSdkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+    <Reference Include="OpenTK" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="GameBase.cs" />
+    <Compile Include="Helpers\OsumMathHelper.cs" />
+    <Compile Include="Helpers\Delegates.cs" />
+    <Compile Include="Helpers\Clock.cs" />
+    <Compile Include="Graphics\pTexture.cs" />
+    <Compile Include="Graphics\TextureGl.cs" />
+    <Compile Include="Graphics\Sprites\Transform.cs" />
+    <Compile Include="Graphics\Sprites\SpriteManager.cs" />
+    <Compile Include="Graphics\Sprites\SpriteEffect.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteText.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
+    <Compile Include="Graphics\Sprites\pSprite.cs" />
+    <Compile Include="Graphics\Sprites\pAnimation.cs" />
+    <Compile Include="Graphics\Sprites\ISpriteable.cs" />
+    <Compile Include="Graphics\Skins\SkinManager.cs" />
+    <Compile Include="GameplayElements\BeatmapManager.cs" />
+    <Compile Include="GameplayElements\Spinner.cs" />
+    <Compile Include="GameplayElements\HitObject.cs" />
+    <Compile Include="GameplayElements\HitCircle.cs" />
+    <Compile Include="GameplayElements\DifficultyManager.cs" />
+    <Compile Include="Graphics\Color4.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Graphics\Texture2D.cs" />
+    <Compile Include="Support\iPhone\MainWindow.xib.designer.cs">
+      <DependentUpon>..\..\iPhone\MainWindow.xib</DependentUpon>
+    </Compile>
+    <Compile Include="Support\iPhone\GameBaseIphone.cs" />
+    <Compile Include="Support\iPhone\GameWindowIphone.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Input\" />
+    <Folder Include="Skins\" />
+    <Folder Include="Support\" />
+    <Folder Include="Support\iPhone\" />
+    <Folder Include="Skins\Default\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Support\iPhone\MainWindow.xib" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties InternalTargetFrameworkVersion="IPhone" />
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

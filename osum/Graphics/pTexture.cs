@@ -1,12 +1,46 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Drawing;
+
+#if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
+
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using MonoTouch.UIKit;
+using MonoTouch.CoreGraphics;
+#else
+using OpenTK.Input;
+using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using System.Drawing.Imaging;
+using osum.Input;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+#endif
+
 using System.Text;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace osum.Graphics
 {
@@ -115,7 +149,7 @@ namespace osum.Graphics
         {
             if (TextureGl != null)
             {
-                if (format != 0)
+                if ((int)format != 0)
                     TextureGl.SetData(data, level, format);
                 else
                     TextureGl.SetData(data, level);
@@ -178,16 +212,16 @@ namespace osum.Graphics
         /// </summary>
         public static pTexture FromFile(string filename)
         {
-            if (!File.Exists(filename)) return null;
+			if (!File.Exists(filename)) return null;
 
             try
             {
-                using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+				using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     return FromStream(stream, filename);
             }
             catch
             {
-                return null;
+				return null;
             }
         }
 
@@ -199,10 +233,42 @@ namespace osum.Graphics
         /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
-        public static pTexture FromStream(Stream stream, string assetname, bool saveToFile)
+        public unsafe static pTexture FromStream(Stream stream, string assetname, bool saveToFile)
         {
-            try
+			try
             {
+#if IPHONE
+				UIImage textureImage = UIImage.LoadFromData(NSData.FromStream(stream));
+
+                if (textureImage == null)
+                    return null;
+
+                int texWidth = (int)textureImage.Size.Width;
+
+                int texHeight = (int)textureImage.Size.Height;
+
+                byte[] textureData = new byte[texWidth * texHeight * 4];
+
+                CGBitmapContext textureContext;
+
+                fixed (byte* pTextureData = textureData) {
+
+                    textureContext = new CGBitmapContext((IntPtr) pTextureData,
+                            texWidth, texHeight, 8, texWidth * 4,
+                            textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast);
+
+                    textureContext.DrawImage(new RectangleF (0, 0, texWidth, texHeight), textureImage.CGImage);
+
+                    textureContext.Dispose ();
+
+                }
+				
+				//todo: we can call this using the fixed context above and pass on an IntPtr for loading?
+                pTexture tex = FromRawBytes(textureData,(int)texWidth, (int)texHeight);
+				tex.assetName = assetname;
+				return tex;
+				
+#else
                 using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
@@ -220,10 +286,12 @@ namespace osum.Graphics
                     b.UnlockBits(data);
                     return tex;
                 }
+#endif
             }
-            catch
+            catch (Exception e)
             {
-                return null;
+                Console.WriteLine(e.ToString());
+				return null;
             }
         }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>openglprojectmono</RootNamespace>
+    <AssemblyName>openglproject-mono</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG MONO</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="GameBase.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="GameBaseMono.cs" />
+    <Compile Include="GameWindowMono.cs" />
+    <Compile Include="GameplayElements\BeatmapManager.cs" />
+    <Compile Include="GameplayElements\DifficultyManager.cs" />
+    <Compile Include="GameplayElements\HitCircle.cs" />
+    <Compile Include="GameplayElements\Spinner.cs" />
+    <Compile Include="Helpers\Clock.cs" />
+    <Compile Include="Helpers\Delegates.cs" />
+    <Compile Include="Helpers\OsumMathHelper.cs" />
+    <Compile Include="Graphics\pTexture.cs" />
+    <Compile Include="Graphics\TextureGl.cs" />
+    <Compile Include="Graphics\Skins\SkinManager.cs" />
+    <Compile Include="Graphics\Sprites\SpriteManager.cs" />
+    <Compile Include="Graphics\Sprites\ISpriteable.cs" />
+    <Compile Include="Graphics\Sprites\pAnimation.cs" />
+    <Compile Include="Graphics\Sprites\pSprite.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteText.cs" />
+    <Compile Include="Graphics\Sprites\SpriteEffect.cs" />
+    <Compile Include="Graphics\Sprites\Transform.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="GameplayElements\HitObject.cs" />
+    <Compile Include="Constants.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\opentk-1.0.0-rc1\Binaries\OpenTK\Debug\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Data" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup />
+</Project>
