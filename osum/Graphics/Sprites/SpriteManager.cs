@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osum.Graphics.Sprites
 {
-    internal class SpriteManager
+    internal class SpriteManager : IDisposable
     {
         private List<ISpriteable> sprites;
 
@@ -73,6 +73,11 @@ namespace osum.Graphics.Sprites
         internal static float drawOrderBwd(float number)
         {
             return 0.8F - (number % 6000000) / 10000000;
+        }
+
+        public void Dispose()
+        {
+            sprites = null;
         }
     }
 }
