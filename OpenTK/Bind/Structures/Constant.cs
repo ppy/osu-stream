@@ -175,8 +175,15 @@ namespace Bind.Structures
             translator.Remove(0, translator.Length);
 
             // Translate the constant's name to match .Net naming conventions
-            bool name_is_all_caps = s.AsEnumerable().All(c => Char.IsLetter(c) ? Char.IsUpper(c) : true);
-            bool name_contains_underscore = s.Contains("_");
+            bool name_is_all_caps = true;
+			
+            foreach (char c in s)
+				if (!Char.IsLetter(c) || !Char.IsUpper(c))
+				{
+					name_is_all_caps = false;
+					break;
+				}
+			bool name_contains_underscore = s.Contains("_");
             if ((Settings.Compatibility & Settings.Legacy.NoAdvancedEnumProcessing) == Settings.Legacy.None &&
                 (name_is_all_caps || name_contains_underscore))
             {

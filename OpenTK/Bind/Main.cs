@@ -65,14 +65,14 @@ namespace Bind
                             case "help":
                                 ShowHelp();
                                 return;
-                            case "in":
+                            /*case "in":
                             case "input":
                                 Settings.InputPath = string.Join(Path.DirectorySeparatorChar.ToString(), b.Skip(1).ToArray());
                                 break;
                             case "out":
                             case "output":
                                 Settings.OutputPath = string.Join(Path.DirectorySeparatorChar.ToString(), b.Skip(1).ToArray());
-                                break;
+                                break;*/
                             case "mode":
                                 string arg = b[1].ToLower();
                                 if (arg == "gl" || arg == "gl2")
