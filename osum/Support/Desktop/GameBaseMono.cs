@@ -1,7 +1,7 @@
 using System;
 
 
-namespace openglproject
+namespace osum
 {
 	public class GameBaseMono : GameBase
 	{
@@ -12,6 +12,8 @@ namespace openglproject
 		override public void MainLoop()
 		{
 			GameWindowMono window = new GameWindowMono();
+            WindowSize = window.ClientSize;
+            window.Run();
 		}
 	}
 }

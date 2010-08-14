@@ -39,9 +39,9 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 using System.Drawing;
 
-namespace openglproject
+namespace osum
 {
-	public partial class EAGLView : iPhoneOSGameView
+	public partial class GameWindowIphone : iPhoneOSGameView
 	{
 		[Export("layerClass")]
 		static Class LayerClass ()
@@ -50,7 +50,7 @@ namespace openglproject
 		}
 
 		[Export("initWithCoder:")]
-		public EAGLView (NSCoder coder) : base(coder)
+		public GameWindowIphone (NSCoder coder) : base(coder)
 		{
 			LayerRetainsBacking = false;
 			LayerColorFormat = EAGLColorFormat.RGBA8;
@@ -71,7 +71,7 @@ namespace openglproject
 			GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             
-			GL.Ortho(0, 768, 1024, 0, 0, 1);
+			GL.Ortho(0, GameBase.StandardSize.Height, GameBase.StandardSize.Width, 0, 0, 1);
             
 			GL.MatrixMode(All.Modelview);
 			GL.LoadIdentity();
@@ -125,8 +125,8 @@ namespace openglproject
 			
 			
 			
-			float width = 768;
-			float height = 1024;
+			float width = GameBase.StandardSize.Height;
+			float height = GameBase.StandardSize.Width;
 			
 			GL.LoadIdentity();
 			GL.Translate(width / 2, height / 2, 0);

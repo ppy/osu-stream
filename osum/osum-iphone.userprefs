@@ -1,6 +1,14 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ctype="Workbench" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" ctype="Workspace" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Support/iPhone/MainWindow.xib.designer.cs" ctype="Workbench">
+    <Files>
+      <File FileName="GameBase.cs" Line="79" Column="25" />
+      <File FileName="Support/iPhone/GameBaseIphone.cs" Line="90" Column="3" />
+      <File FileName="GameModes/MainMenu.cs" Line="20" Column="43" />
+      <File FileName="Graphics/Skins/SkinManager.cs" Line="40" Column="30" />
+      <File FileName="Support/iPhone/MainWindow.xib.designer.cs" Line="48" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

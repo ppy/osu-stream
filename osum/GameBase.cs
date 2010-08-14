@@ -1,10 +1,15 @@
 using System;
-
 using OpenTK.Platform;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
+using osum.GameplayElements;
+using osum.Graphics.Skins;
+using osum.Graphics.Sprites;
+using osum.Graphics;
+using osum.Helpers;
+using System.Drawing;
 
 #if IPHONE
 using OpenTK.Graphics.ES11;
@@ -40,58 +45,73 @@ using OpenTK.Graphics.OpenGL;
 using osum.Input;
 #endif
 
-
-using osum.GameplayElements;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
-using osum.Graphics;
-using osum.Helpers;
+using osum.GameModes;
 
 
-
-using System.Drawing;
-
-	
-namespace openglproject
+namespace osum
 {
-	public abstract class GameBase
-	{
-		public static GameBase Instance;
-		
-		private SpriteManager spriteManager = new SpriteManager();
-		
-		public GameBase()
-		{
-			Instance = this;
+    public abstract class GameBase
+    {
+        public static GameBase Instance;
+
+        /// <summary>
+        /// Top-level sprite manager. Draws above everything else.
+        /// </summary>
+        private SpriteManager spriteManager = new SpriteManager();
+
+        internal GameMode CurrentMode;
+
+        internal static Size WindowSize;
+		internal static Size StandardSize = new Size(1024,768);
+
+
+        internal bool ChangeMode(GameMode newMode, bool instant)
+        {
+            if (newMode == null) return false;
+
+            if (CurrentMode != null)
+            {
+                CurrentMode.Dispose();
+            }
+
+            newMode.Initialize();
+            CurrentMode = newMode;
+
+            return true;
+        }
+
+
+        public GameBase()
+        {
+            Instance = this;
             MainLoop();
         }
-		
-		/// <summary>
-		/// MainLoop runs, starts the main loop and calls Initialize when ready.
-		/// </summary>
+
+        /// <summary>
+        /// MainLoop runs, starts the main loop and calls Initialize when ready.
+        /// </summary>
         public abstract void MainLoop();
 
-		private pSprite test2;
-		
         public virtual void Initialize()
         {
-            Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
-            spriteManager.Add(h);
-			
-            Console.WriteLine("initialize started");
-            
-            Console.WriteLine("initialize ended!");
+            ChangeMode(new MainMenu(),true);
+
+            //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
+            //spriteManager.Add(h);
         }
-		
-		public void Draw(FrameEventArgs e)
-		{
+
+        public void Draw(FrameEventArgs e)
+        {
             Clock.Update(e.Time);
 
             spriteManager.Update();
-            
-            GL.ClearColor(0,0,0,1);
-			spriteManager.Draw();
-		}
-	}
+            CurrentMode.Update();
+
+            GL.ClearColor(0, 0, 0, 1);
+
+            CurrentMode.Draw();
+            spriteManager.Draw();
+        }
+    }
 }
 

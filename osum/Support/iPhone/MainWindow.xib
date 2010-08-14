@@ -167,7 +167,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>AppDelegate</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>EAGLView</string>
+					<string>GameWindowIphone</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>
 			</object>
@@ -204,7 +204,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>EAGLView</string>
+							<string>GameWindowIphone</string>
 							<string>UIWindow</string>
 						</object>
 					</object>
@@ -219,7 +219,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">glView</string>
-								<string key="candidateClassName">EAGLView</string>
+								<string key="candidateClassName">GameWindowIphone</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">window</string>

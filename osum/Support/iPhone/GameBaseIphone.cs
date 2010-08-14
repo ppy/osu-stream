@@ -31,17 +31,17 @@ using MonoTouch.CoreGraphics;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using System.Drawing.Imaging;
 using osum.Input;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
 
+using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 
-namespace openglproject
+namespace osum
 {
 	public class GameBaseIphone : GameBase
 	{
@@ -58,8 +58,8 @@ namespace openglproject
 	
 	
 	// Base type probably should be MonoTouch.UIKit.UIView or subclass
-	[MonoTouch.Foundation.Register("EAGLView")]
-	public partial class EAGLView
+	[MonoTouch.Foundation.Register("GameWindowIphone")]
+	public partial class GameWindowIphone
 	{
 	}	
 	
@@ -95,6 +95,8 @@ namespace openglproject
 			
 			if (glView.EAGLContext != null)
     			glView.Stop ();
+			
+			GameBase.WindowSize = new Size((int)glView.Bounds.Width, (int)glView.Bounds.Height);
 			
 			//GameBase.ReadyToInitialize = true;
 			glView.Run (60.0);

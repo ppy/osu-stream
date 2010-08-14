@@ -6,7 +6,7 @@ using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
 
-namespace openglproject
+namespace osum
 {
     class GameWindowMono : GameWindow
     {
@@ -16,8 +16,11 @@ namespace openglproject
             : base(1024,768, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
-			
-			Run(60);
+        }
+
+        public void Run()
+        {
+            Run(60);
         }
 
         /// <summary>Load resources here.</summary>
