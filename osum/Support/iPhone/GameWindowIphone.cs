@@ -41,6 +41,7 @@ using System.Drawing;
 
 namespace osum
 {
+	[MonoTouch.Foundation.Register("GameWindowIphone")]
 	public partial class GameWindowIphone : iPhoneOSGameView
 	{
 		[Export("layerClass")]
@@ -59,7 +60,7 @@ namespace osum
 
 		protected override void ConfigureLayer (CAEAGLLayer eaglLayer)
 		{
-			eaglLayer.Opaque = true;
+			//eaglLayer.Opaque = true;
 		}
 		
 		protected override void OnLoad (EventArgs e)
@@ -77,15 +78,6 @@ namespace osum
 			base.OnResize(e);
 		}
 		
-		/*protected override void OnResize (EventArgs e)
-		{
-			base.OnResize(e);
-			
-			Console.WriteLine("resized to {0}x{1}",Size.Width,Size.Height);
-			
-            SetViewport();
-		}*/
-		
 		protected override void OnUpdateFrame (FrameEventArgs e)
 		{
 			base.OnUpdateFrame (e);
@@ -97,10 +89,6 @@ namespace osum
 
 			MakeCurrent();
 			
-			//GL.Rotate(5f, 0.0f, 0.0f, 1.0f);
-			GL.Viewport(0,0,Size.Width,Size.Height);
-			
-			
 			GL.PushMatrix();
 			
 			float width = GameBase.StandardSize.Height;
@@ -110,7 +98,6 @@ namespace osum
 			GL.Translate(width / 2, height / 2, 0);
 			GL.Rotate(90, 0, 0, 1);
 			GL.Translate(-height / 2, -width / 2, 0);
-			
 			
 			GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 			

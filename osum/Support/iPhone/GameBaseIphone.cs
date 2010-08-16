@@ -76,9 +76,7 @@ namespace osum
 			UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight,false);
 			
 			Console.WriteLine("+++FinishedLaunching");
-			//GameBase.ReadyToInitialize = true;
 			Instance = this;
-			//glView.Run (60.0);
 		}
 		
 		public override void OnResignActivation (UIApplication app)
@@ -96,13 +94,10 @@ namespace osum
 		{
 			Console.WriteLine("+++OnActivated");
 			
-			if (glView.EAGLContext != null)
-    			glView.Stop ();
-			
 			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
 			
-			//GameBase.ReadyToInitialize = true;
-			glView.Run (60.0);
+			//start the run loop.
+			glView.Run(60.0);
 		}
 	}
 }
