@@ -340,6 +340,9 @@ namespace osum.Graphics
 
             GL.BindTexture(SURFACE_TYPE, textureId);
 
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
 
             if (newTexture)
@@ -391,8 +394,7 @@ namespace osum.Graphics
                                    PixelType.UnsignedByte, dataPointer);
             }
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
+            
 
             if (GL.GetError() != 0)
             {
