@@ -111,11 +111,13 @@ namespace osum
 			GL.LoadIdentity();
 		}
 
-        public virtual void Initialize()
+        public virtual void Initialize ()
         {
-			SetupScreen();
-			
-			ChangeMode(new MainMenu(),true);
+        	SetupScreen ();
+   
+			ChangeMode (new MainMenu (), true);
+   
+			backgroundAudioPlayer.Play ();
 			
             //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
             //spriteManager.Add(h);

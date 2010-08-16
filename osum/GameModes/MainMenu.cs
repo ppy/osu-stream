@@ -14,6 +14,8 @@ namespace osum.GameModes
 {
     class MainMenu : GameMode
     {
+		pSprite osuLogo;
+		
 		internal override void Initialize()
         {
             pSprite menuBackground =
@@ -21,10 +23,10 @@ namespace osum.GameModes
                             ClockTypes.Game, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(menuBackground);
 
-            pSprite osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
+            osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
 			
-			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,100,0,100000));
+			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
 			
 			//osuLogo.Transform(new Transformation(new Vector2(0,0),new Vector2(1024,768),0,5000));
         }
@@ -37,6 +39,8 @@ namespace osum.GameModes
         public override void Draw()
         {
             base.Draw();
+			
+			osuLogo.ScaleScalar = 1+GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
         }
     }
 }

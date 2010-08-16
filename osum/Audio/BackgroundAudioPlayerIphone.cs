@@ -28,12 +28,25 @@ namespace osum
 			NSError error;
 			player = AVAudioPlayer.FromUrl(url,out error);
 			
+			player.MeteringEnabled = true;
+		}
 		
-			if (player != null)
-			{
-				player.Play();
-				Console.WriteLine("playing");
+		public float CurrentVolume {
+			get {
+				player.UpdateMeters();
+				return player.AveragePower(0);
 			}
+		}
+		
+
+		public bool Play ()
+		{
+			if (player == null)
+				return false;
+			
+			player.Play();
+			
+			return true;
 		}
 
 	}
