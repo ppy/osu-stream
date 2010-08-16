@@ -12,7 +12,6 @@
     <MainNibFile>MainWindow.nib</MainNibFile>
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <newfilesearch>OnLoad</newfilesearch>
     <BundleIdentifier>osu</BundleIdentifier>
     <BundleVersion>1000</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
@@ -119,7 +118,8 @@
     <Compile Include="Support\iPhone\GameWindowIphone.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
     <Compile Include="GameModes\GameMode.cs" />
-    <Compile Include="Audio\BackgroundAudioPlayer.cs" />
+    <Compile Include="Audio\BackgroundAudioPlayerIphone.cs" />
+    <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -140,949 +140,634 @@
   </ProjectExtensions>
   <ItemGroup>
     <Content Include="Skins\Default\osu.png">
-
     </Content>
     <Content Include="Skins\Default\playfield.png">
-
     </Content>
     <Content Include="Skins\Default\search-background.png">
-
     </Content>
     <Content Include="Skins\Default\matchsetup-background.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-circle.png">
-
     </Content>
     <Content Include="Skins\Default\worldmap.png">
-
     </Content>
     <Content Include="Skins\Default\comboburst.png">
-
     </Content>
     <Content Include="Skins\Default\options-background.png">
-
     </Content>
     <Content Include="Skins\Default\special-fruits.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-background-overlay.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-B.png">
-
     </Content>
     <Content Include="Skins\Default\section-pass.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-X.png">
-
     </Content>
     <Content Include="Skins\Default\go.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-background.png">
-
     </Content>
     <Content Include="Skins\Default\section-fail.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear6.png">
-
     </Content>
     <Content Include="Skins\Default\special-taiko.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonkiai0.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear7.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear5.png">
-
     </Content>
     <Content Include="Skins\Default\count2.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonkiai1.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-A.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonfail2.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear2.png">
-
     </Content>
     <Content Include="Skins\Default\ready.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear0.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear8.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear4.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonidle1.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-C.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonidle0.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonfail1.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonfail0.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-D.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-XH.png">
-
     </Content>
     <Content Include="Skins\Default\count1.png">
-
     </Content>
     <Content Include="Skins\Default\menu-osu.png">
-
     </Content>
     <Content Include="Skins\Default\count3.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-perfect.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-slider.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-S.png">
-
     </Content>
     <Content Include="Skins\Default\sliderfollowcircle.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-SH.png">
-
     </Content>
     <Content Include="Skins\Default\special-background.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-background.png">
-
     </Content>
     <Content Include="Skins\Default\menu-background.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear1.png">
-
     </Content>
     <Content Include="Skins\Default\pause-back.png">
-
     </Content>
     <Content Include="Skins\Default\unpause.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-panel.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-clear.png">
-
     </Content>
     <Content Include="Skins\Default\pippidonclear3.png">
-
     </Content>
     <Content Include="Skins\Default\hit300g.png">
-
     </Content>
     <Content Include="Skins\Default\hit300k.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-back.png">
-
     </Content>
     <Content Include="Skins\Default\pause-continue.png">
-
     </Content>
     <Content Include="Skins\Default\hit100k.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-replay.png">
-
     </Content>
     <Content Include="Skins\Default\searching.png">
-
     </Content>
     <Content Include="Skins\Default\pause-retry.png">
-
     </Content>
     <Content Include="Skins\Default\hit300.png">
-
     </Content>
     <Content Include="Skins\Default\epilepsy.png">
-
     </Content>
     <Content Include="Skins\Default\mode-osu.png">
-
     </Content>
     <Content Include="Skins\Default\hit100.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-pippy2.png">
-
     </Content>
     <Content Include="Skins\Default\songselect-background.png">
-
     </Content>
     <Content Include="Skins\Default\selection-drop.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-pippy.png">
-
     </Content>
     <Content Include="Skins\Default\hit50.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-multiplayer-over.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-approachcircle.png">
-
     </Content>
     <Content Include="Skins\Default\menu-osu-shockwave.png">
-
     </Content>
     <Content Include="Skins\Default\songselect-top.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-retry.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-special-over.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-j.png">
-
     </Content>
     <Content Include="Skins\Default\menu-copyright.png">
-
     </Content>
     <Content Include="Skins\Default\beatmapimport-top.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-options-over.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-freeplay-over.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-play-over.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-spin.png">
-
     </Content>
     <Content Include="Skins\Default\FireOpacity.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-edit-over.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-title.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-osu.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-back-over.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-ryuuta.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-glow.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-multiplayer.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-exit-over.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb7.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-play.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb8.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-options.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb9.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-special.png">
-
     </Content>
     <Content Include="Skins\Default\menu-back.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-grapes-overlay.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb5.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb4.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-orange.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb2.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb0.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-freeplay.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb3.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-edit.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb6.png">
-
     </Content>
     <Content Include="Skins\Default\sliderb1.png">
-
     </Content>
     <Content Include="Skins\Default\play-skip.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-metre.png">
-
     </Content>
     <Content Include="Skins\Default\taikobigcircleoverlay-1.png">
-
     </Content>
     <Content Include="Skins\Default\sliderball.png">
-
     </Content>
     <Content Include="Skins\Default\topmenu-text.png">
-
     </Content>
     <Content Include="Skins\Default\hit0.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-back.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-exit.png">
-
     </Content>
     <Content Include="Skins\Default\hitcircleselect.png">
-
     </Content>
     <Content Include="Skins\Default\taikobigcircleoverlay-0.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-bar-left.png">
-
     </Content>
     <Content Include="Skins\Default\topmenu-bg.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-3.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-5.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-4.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-0.png">
-
     </Content>
     <Content Include="Skins\Default\lighting.png">
-
     </Content>
     <Content Include="Skins\Default\menu-idle.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-pear-overlay.png">
-
     </Content>
     <Content Include="Skins\Default\taikohitcircleoverlay-1.png">
-
     </Content>
     <Content Include="Skins\Default\flashlight.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-2.png">
-
     </Content>
     <Content Include="Skins\Default\mode-fruits.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-6.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-relax2.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-kidanger2.png">
-
     </Content>
     <Content Include="Skins\Default\taikohitcircleoverlay-0.png">
-
     </Content>
     <Content Include="Skins\Default\songselect-bottom.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-dialog-left.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-apple.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-pear.png">
-
     </Content>
     <Content Include="Skins\Default\mode-taiko.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-ki.png">
-
     </Content>
     <Content Include="Skins\Default\spinner-rpm.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-flower-1.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-relax.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-graph.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-suddendeath.png">
-
     </Content>
     <Content Include="Skins\Default\menu-bat.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-kidanger.png">
-
     </Content>
     <Content Include="Skins\Default\beatmapimport-spinner.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-drop.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-maxcombo.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-apple-overlay.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-bg.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-grapes.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-spunout.png">
-
     </Content>
     <Content Include="Skins\Default\selection-options-over.png">
-
     </Content>
     <Content Include="Skins\Default\hitcircleoverlay.png">
-
     </Content>
     <Content Include="Skins\Default\menu-subscriber.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-taiko.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-doubletime.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-autoplay.png">
-
     </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-hardrock.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-nofail.png">
-
     </Content>
     <Content Include="Skins\Default\menu-osudirect-over.png">
-
     </Content>
     <Content Include="Skins\Default\play-warningarrow.png">
-
     </Content>
     <Content Include="Skins\Default\selection-selectoptions-over.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-winner.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-halftime.png">
-
     </Content>
     <Content Include="Skins\Default\options-offset-tick.png">
-
     </Content>
     <Content Include="Skins\Default\selection-bottom-button.png">
-
     </Content>
     <Content Include="Skins\Default\selection-random-over.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mods-over.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-novideo.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-orange-overlay.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-hidden.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-accuracy.png">
-
     </Content>
     <Content Include="Skins\Default\approachcircle.png">
-
     </Content>
     <Content Include="Skins\Default\selection-filters.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-easy.png">
-
     </Content>
     <Content Include="Skins\Default\score-percent.png">
-
     </Content>
     <Content Include="Skins\Default\reversearrow.png">
-
     </Content>
     <Content Include="Skins\Default\fruit-plate.png">
-
     </Content>
     <Content Include="Skins\Default\volume-bg.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mod-flashlight.png">
-
     </Content>
     <Content Include="Skins\Default\cursor.png">
-
     </Content>
     <Content Include="Skins\Default\menu-osudirect.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-drum-outer.png">
-
     </Content>
     <Content Include="Skins\Default\taikohitcircle.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-X-small.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-background.png">
-
     </Content>
     <Content Include="Skins\Default\play-unranked.png">
-
     </Content>
     <Content Include="Skins\Default\menu-np.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-XH-small.png">
-
     </Content>
     <Content Include="Skins\Default\score-3.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-ticker2.png">
-
     </Content>
     <Content Include="Skins\Default\score-8.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-discussion2.png">
-
     </Content>
     <Content Include="Skins\Default\score-9.png">
-
     </Content>
     <Content Include="Skins\Default\hitcircle.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-hidemode2.png">
-
     </Content>
     <Content Include="Skins\Default\menu-button-background.png">
-
     </Content>
     <Content Include="Skins\Default\selection-options.png">
-
     </Content>
     <Content Include="Skins\Default\selection-notranked.png">
-
     </Content>
     <Content Include="Skins\Default\score-6.png">
-
     </Content>
     <Content Include="Skins\Default\selection-selectoptions.png">
-
     </Content>
     <Content Include="Skins\Default\user-border.png">
-
     </Content>
     <Content Include="Skins\Default\selection-tab-add.png">
-
     </Content>
     <Content Include="Skins\Default\score-2.png">
-
     </Content>
     <Content Include="Skins\Default\score-0.png">
-
     </Content>
     <Content Include="Skins\Default\score-5.png">
-
     </Content>
     <Content Include="Skins\Default\sliderpoint30.png">
-
     </Content>
     <Content Include="Skins\Default\selection-norecords.png">
-
     </Content>
     <Content Include="Skins\Default\selection-latestranked.png">
-
     </Content>
     <Content Include="Skins\Default\selection-mods.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-B-small.png">
-
     </Content>
     <Content Include="Skins\Default\multi-skipped.png">
-
     </Content>
     <Content Include="Skins\Default\selection-update.png">
-
     </Content>
     <Content Include="Skins\Default\sliderpoint10.png">
-
     </Content>
     <Content Include="Skins\Default\score-x.png">
-
     </Content>
     <Content Include="Skins\Default\selection-random.png">
-
     </Content>
     <Content Include="Skins\Default\default-x.png">
-
     </Content>
     <Content Include="Skins\Default\scoreboard-explosion-1.png">
-
     </Content>
     <Content Include="Skins\Default\star3.png">
-
     </Content>
     <Content Include="Skins\Default\score-4.png">
-
     </Content>
     <Content Include="Skins\Default\taikobigcircle.png">
-
     </Content>
     <Content Include="Skins\Default\selection-notsubmitted.png">
-
     </Content>
     <Content Include="Skins\Default\default-percent.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-drum-inner.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-SH-small.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-A-small.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-S-small.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-endreplay.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-2x.png">
-
     </Content>
     <Content Include="Skins\Default\star.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-roll-end.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-D-small.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-online.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-C-small.png">
-
     </Content>
     <Content Include="Skins\Default\score-7.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-show.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-1x.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-crown.png">
-
     </Content>
     <Content Include="Skins\Default\notification.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-ticker.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-hide.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-dialog-right.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-discussion.png">
-
     </Content>
     <Content Include="Skins\Default\selection-approved.png">
-
     </Content>
     <Content Include="Skins\Default\overlay-hidemode.png">
-
     </Content>
     <Content Include="Skins\Default\commentbox.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-unlock.png">
-
     </Content>
     <Content Include="Skins\Default\mode-osu-small.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-bar-right-glow.png">
-
     </Content>
     <Content Include="Skins\Default\selection-unknown.png">
-
     </Content>
     <Content Include="Skins\Default\selection-ranked.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-lock.png">
-
     </Content>
     <Content Include="Skins\Default\star2.png">
-
     </Content>
     <Content Include="Skins\Default\followpoint.png">
-
     </Content>
     <Content Include="Skins\Default\scoreboard-explosion-2.png">
-
     </Content>
     <Content Include="Skins\Default\cursortrail.png">
-
     </Content>
     <Content Include="Skins\Default\circularmetre.png">
-
     </Content>
     <Content Include="Skins\Default\score-1.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-boot.png">
-
     </Content>
     <Content Include="Skins\Default\selection-question.png">
-
     </Content>
     <Content Include="Skins\Default\selection-tab-close.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-bar-right.png">
-
     </Content>
     <Content Include="Skins\Default\default-2.png">
-
     </Content>
     <Content Include="Skins\Default\default-5.png">
-
     </Content>
     <Content Include="Skins\Default\default-6.png">
-
     </Content>
     <Content Include="Skins\Default\mode-taiko-small.png">
-
     </Content>
     <Content Include="Skins\Default\default-3.png">
-
     </Content>
     <Content Include="Skins\Default\rank-online.png">
-
     </Content>
     <Content Include="Skins\Default\default-9.png">
-
     </Content>
     <Content Include="Skins\Default\default-4.png">
-
     </Content>
     <Content Include="Skins\Default\default-8.png">
-
     </Content>
     <Content Include="Skins\Default\score-comma.png">
-
     </Content>
     <Content Include="Skins\Default\mode-fruits-small.png">
-
     </Content>
     <Content Include="Skins\Default\score-dot.png">
-
     </Content>
     <Content Include="Skins\Default\default-7.png">
-
     </Content>
     <Content Include="Skins\Default\default-0.png">
-
     </Content>
     <Content Include="Skins\Default\selection-tab.png">
-
     </Content>
     <Content Include="Skins\Default\menu-flash.png">
-
     </Content>
     <Content Include="Skins\Default\rank-refresh.png">
-
     </Content>
     <Content Include="Skins\Default\rank-next.png">
-
     </Content>
     <Content Include="Skins\Default\button-middle.png">
-
     </Content>
     <Content Include="Skins\Default\rank-prev.png">
-
     </Content>
     <Content Include="Skins\Default\seekbar-over.png">
-
     </Content>
     <Content Include="Skins\Default\sliderscorepoint.png">
-
     </Content>
     <Content Include="Skins\Default\rank-offline.png">
-
     </Content>
     <Content Include="Skins\Default\rank-forum.png">
-
     </Content>
     <Content Include="Skins\Default\button-left.png">
-
     </Content>
     <Content Include="Skins\Default\button-right.png">
-
     </Content>
     <Content Include="Skins\Default\user-bg.png">
-
     </Content>
     <Content Include="Skins\Default\default-1.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-colour-1.png">
-
     </Content>
     <Content Include="Skins\Default\default-dot.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-colour-2.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-colour-0.png">
-
     </Content>
     <Content Include="Skins\Default\scorebar-colour-3.png">
-
     </Content>
     <Content Include="Skins\Default\levelbar-bg.png">
-
     </Content>
     <Content Include="Skins\Default\default-comma.png">
-
     </Content>
     <Content Include="Skins\Default\checkbox-unchecked.png">
-
     </Content>
     <Content Include="Skins\Default\white.png">
-
     </Content>
     <Content Include="Skins\Default\volume-bar.png">
-
     </Content>
     <Content Include="Skins\Default\levelbar.png">
-
     </Content>
     <Content Include="Skins\Default\topmenu-selection.png">
-
     </Content>
     <Content Include="Skins\Default\checkbox-checked.png">
-
     </Content>
     <Content Include="Skins\Default\lobby-avatar.png">
-
     </Content>
     <Content Include="Skins\Default\ranking-dialog-middle.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-roll-middle.png">
-
     </Content>
     <Content Include="Skins\Default\taiko-barline.png">
-
     </Content>
     <Content Include="test.mp3" />
   </ItemGroup>

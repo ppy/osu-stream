@@ -63,6 +63,8 @@ namespace osum
 
         internal static Size WindowSize;
 		internal static Size StandardSize = new Size(1024,768);
+		
+		internal IBackgroundAudioPlayer backgroundAudioPlayer;
 
 
         internal bool ChangeMode(GameMode newMode, bool instant)
@@ -114,7 +116,7 @@ namespace osum
 			SetupScreen();
 			
 			ChangeMode(new MainMenu(),true);
-
+			
             //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
             //spriteManager.Add(h);
         }

@@ -53,16 +53,16 @@ namespace osum
 		override public void MainLoop()
 		{
 			MonoTouch.UIKit.UIApplication.Main(new string[]{});
-			//GlView = AppDelegate.Instance.glView;
+		}
+		
+		public override void Initialize()
+		{
+			//only initialise the first time (we may be here from a resume operation)
+			if (backgroundAudioPlayer == null) backgroundAudioPlayer = new BackgroundAudioPlayerIphone();
+			
+			base.Initialize ();
 		}
 	}
-	
-	
-	// Base type probably should be MonoTouch.UIKit.UIView or subclass
-	[MonoTouch.Foundation.Register("GameWindowIphone")]
-	public partial class GameWindowIphone
-	{
-	}	
 	
 	// The name AppDelegate is referenced in the MainWindow.xib file.
 	public partial class AppDelegate : UIApplicationDelegate

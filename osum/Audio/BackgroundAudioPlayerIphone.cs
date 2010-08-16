@@ -7,11 +7,11 @@ using System.IO;
 
 namespace osum
 {
-	public class BackgroundAudioPlayer
+	public class BackgroundAudioPlayerIphone : IBackgroundAudioPlayer
 	{
 		AVAudioPlayer player;
 		
-		public BackgroundAudioPlayer()
+		public BackgroundAudioPlayerIphone()
 		{
 #if !SIMULATOR
 			AudioSession.Initialize();
@@ -35,6 +35,7 @@ namespace osum
 				Console.WriteLine("playing");
 			}
 		}
+
 	}
 }
 

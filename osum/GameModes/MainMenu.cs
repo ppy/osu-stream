@@ -14,8 +14,6 @@ namespace osum.GameModes
 {
     class MainMenu : GameMode
     {
-        BackgroundAudioPlayer music;
-		
 		internal override void Initialize()
         {
             pSprite menuBackground =
@@ -29,8 +27,6 @@ namespace osum.GameModes
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,10,0,100000));
 			
 			//osuLogo.Transform(new Transformation(new Vector2(0,0),new Vector2(1024,768),0,5000));
-			
-			music = new BackgroundAudioPlayer();
         }
 
         public override void Update()
