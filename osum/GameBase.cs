@@ -91,10 +91,29 @@ namespace osum
         /// MainLoop runs, starts the main loop and calls Initialize when ready.
         /// </summary>
         public abstract void MainLoop();
+		
+		public virtual void SetupScreen()
+		{
+			StandardSize = new Size(1024,(int)(1024 * (float)WindowSize.Height/WindowSize.Width));
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            
+#if IPHONE
+			GL.Ortho(0, GameBase.StandardSize.Height, GameBase.StandardSize.Width, 0, 0, 1);
+#else
+			GL.Ortho(0, GameBase.StandardSize.Width, GameBase.StandardSize.Height, 0, 0, 1);
+#endif
+            
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.LoadIdentity();
+		}
 
         public virtual void Initialize()
         {
-            ChangeMode(new MainMenu(),true);
+			SetupScreen();
+			
+			ChangeMode(new MainMenu(),true);
 
             //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
             //spriteManager.Add(h);

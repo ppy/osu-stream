@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
+using System.Drawing;
 
 namespace osum
 {
@@ -13,9 +14,10 @@ namespace osum
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public GameWindowMono()
 //            : base(Constants.GamefieldDefaultWidth, Constants.GamefieldDefaultHeight, GraphicsMode.Default, "osu!m")
-            : base(1024,768, GraphicsMode.Default, "osu!m")
+            : base(960,640, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
+            GameBase.WindowSize = new Size(960,640);
         }
 
         public void Run()
@@ -47,11 +49,6 @@ namespace osum
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, 1024, 768);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.Ortho(0, 1024, 768, 0, 0, 1);
-            GL.MatrixMode(MatrixMode.Modelview);
-            
             /*Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);*/
             
             //GL.LoadMatrix(ref projection);

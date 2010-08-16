@@ -40,6 +40,7 @@ using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
+using osum.Graphics.Skins;
 
 namespace osum
 {
@@ -83,9 +84,11 @@ namespace osum
 		public override void OnResignActivation (UIApplication app)
 		{
 			Console.WriteLine("+++ResignActivation");
+			
+			SkinManager.UnloadAll();
+			
 			if (glView.EAGLContext != null)
-			    glView.Stop ();
-			glView.Run (5.0);
+			    glView.Stop();
 		}
 		
 		// This method is required in iPhoneOS 3.0
@@ -96,7 +99,7 @@ namespace osum
 			if (glView.EAGLContext != null)
     			glView.Stop ();
 			
-			GameBase.WindowSize = new Size((int)glView.Bounds.Width, (int)glView.Bounds.Height);
+			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
 			
 			//GameBase.ReadyToInitialize = true;
 			glView.Run (60.0);

@@ -62,24 +62,6 @@ namespace osum
 			eaglLayer.Opaque = true;
 		}
 		
-		private void SetViewport()
-		{
-
-            RectangleF bounds = UIScreen.MainScreen.Bounds;
-            
-		
-			GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            
-			GL.Ortho(0, GameBase.StandardSize.Height, GameBase.StandardSize.Width, 0, 0, 1);
-            
-			GL.MatrixMode(All.Modelview);
-			GL.LoadIdentity();
-			
-			
-			//Console.WriteLine("set viewport ({0}x{1}", Size.Width, Size.Height);
-	    }
-		
 		protected override void OnLoad (EventArgs e)
 		{
 			GL.Disable(EnableCap.Lighting);
@@ -93,8 +75,6 @@ namespace osum
 		protected override void OnResize (EventArgs e)
 		{
 			base.OnResize(e);
-			
-			SetViewport();
 		}
 		
 		/*protected override void OnResize (EventArgs e)
@@ -122,8 +102,6 @@ namespace osum
 			
 			
 			GL.PushMatrix();
-			
-			
 			
 			float width = GameBase.StandardSize.Height;
 			float height = GameBase.StandardSize.Width;
