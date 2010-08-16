@@ -1,16 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Support/iPhone/MainWindow.xib.designer.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" ctype="Workspace" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Audio/BackgroundAudioPlayer.cs" ctype="Workbench">
     <Files>
-      <File FileName="GameBase.cs" Line="79" Column="25" />
-      <File FileName="Support/iPhone/GameBaseIphone.cs" Line="90" Column="3" />
-      <File FileName="GameModes/MainMenu.cs" Line="20" Column="43" />
-      <File FileName="Graphics/Skins/SkinManager.cs" Line="40" Column="30" />
-      <File FileName="Support/iPhone/MainWindow.xib.designer.cs" Line="48" Column="1" />
+      <File FileName="Graphics/Sprites/pSprite.cs" Line="415" Column="1" />
+      <File FileName="Support/iPhone/GameWindowIphone.cs" Line="106" Column="1" />
+      <File FileName="Support/iPhone/GameBaseIphone.cs" Line="53" Column="4" />
+      <File FileName="GameModes/MainMenu.cs" Line="39" Column="10" />
+      <File FileName="Audio/BackgroundAudioPlayer.cs" Line="26" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/peppy/Desktop/osum/osum/osum/Audio/BackgroundAudioPlayer.cs" line="30" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches ctype="PinnedWatchStore" />
 </Properties>
