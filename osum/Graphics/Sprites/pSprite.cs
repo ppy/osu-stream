@@ -259,16 +259,6 @@ namespace osum.Graphics.Sprites
                     originVector = new Vector2(Width, Height);
                     break;
             }
-
-            switch (Field)
-            {
-                case FieldTypes.StandardSnapCentre:
-                    FieldPosition = new Vector2(GameBase.StandardSize.Width / 2 + Position.X, GameBase.StandardSize.Height / 2 + Position.Y);
-                    break;
-                default:
-                    FieldPosition = Position;
-                    break;
-            }
         }
 
         internal virtual void UpdateTextureSize()
@@ -409,6 +399,16 @@ namespace osum.Graphics.Sprites
                             break;
                     }
                 }
+            }
+
+            switch (Field)
+            {
+                case FieldTypes.StandardSnapCentre:
+                    FieldPosition = new Vector2(GameBase.StandardSize.Width / 2 + Position.X, GameBase.StandardSize.Height / 2 + Position.Y);
+                    break;
+                default:
+                    FieldPosition = Position;
+                    break;
             }
         }
 
