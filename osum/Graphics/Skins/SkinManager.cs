@@ -8,7 +8,17 @@ namespace osum.Graphics.Skins
 {
     internal static class SkinManager
     {
-        internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
+		
+		public static void UnloadAll()
+		{
+			foreach (pTexture p in SpriteCache.Values)
+				p.Dispose();
+			
+			SpriteCache.Clear();
+			AnimationCache.Clear();
+		}
+
+    	internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
 
         internal static pTexture Load(string name)
