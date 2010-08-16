@@ -9,3 +9,8 @@ osu!.tmproj
 *.suo
 
 osu!installer/output/*
+OpenTK/GLControl/GLControl.resources
+OpenTK/OpenTK.pidb
+OpenTK/OpenTK/Properties/Resources.resources
+osum/osum.pidb
+osum/osum-iphone.userprefs
