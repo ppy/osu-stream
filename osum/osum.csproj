@@ -140,1264 +140,949 @@
   </ProjectExtensions>
   <ItemGroup>
     <Content Include="Skins\Default\osu.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\playfield.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\search-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\matchsetup-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-circle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\worldmap.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\comboburst.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\options-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\special-fruits.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-background-overlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-B.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\section-pass.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-X.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\go.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\section-fail.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear6.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\special-taiko.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonkiai0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear7.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear5.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\count2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonkiai1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-A.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonfail2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ready.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear8.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear4.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonidle1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-C.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonidle0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonfail1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonfail0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-D.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-XH.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\count1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-osu.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\count3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-perfect.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-slider.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-S.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderfollowcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-SH.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\special-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pause-back.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\unpause.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-panel.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-clear.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pippidonclear3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit300g.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit300k.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-back.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pause-continue.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit100k.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-replay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\searching.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\pause-retry.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit300.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\epilepsy.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-osu.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit100.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-pippy2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\songselect-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-drop.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-pippy.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit50.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-multiplayer-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-approachcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-osu-shockwave.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\songselect-top.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-retry.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-special-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-j.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-copyright.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\beatmapimport-top.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-options-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-freeplay-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-play-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-spin.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\FireOpacity.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-edit-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-title.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-osu.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-back-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-ryuuta.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-glow.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-multiplayer.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-exit-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb7.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-play.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb8.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-options.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb9.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-special.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-back.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-grapes-overlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb5.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb4.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-orange.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-freeplay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-edit.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb6.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderb1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\play-skip.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-metre.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikobigcircleoverlay-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderball.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\topmenu-text.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hit0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-back.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-exit.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hitcircleselect.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikobigcircleoverlay-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-bar-left.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\topmenu-bg.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-5.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-4.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lighting.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-idle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-pear-overlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikohitcircleoverlay-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\flashlight.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-fruits.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-6.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-relax2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-kidanger2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikohitcircleoverlay-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\songselect-bottom.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-dialog-left.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-apple.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-pear.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-taiko.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-ki.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\spinner-rpm.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-flower-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-relax.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-graph.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-suddendeath.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-bat.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-kidanger.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\beatmapimport-spinner.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-drop.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-maxcombo.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-apple-overlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-bg.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-grapes.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-spunout.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-options-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hitcircleoverlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-subscriber.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-taiko.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-doubletime.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-autoplay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-hardrock.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-nofail.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-osudirect-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\play-warningarrow.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-selectoptions-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-winner.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-halftime.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\options-offset-tick.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-bottom-button.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-random-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mods-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-novideo.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-orange-overlay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-hidden.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-accuracy.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\approachcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-filters.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-easy.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-percent.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\reversearrow.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\fruit-plate.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\volume-bg.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mod-flashlight.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\cursor.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-osudirect.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-drum-outer.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikohitcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-X-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\play-unranked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-np.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-XH-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-ticker2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-8.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-discussion2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-9.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\hitcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-hidemode2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-button-background.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-options.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-notranked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-6.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-selectoptions.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\user-border.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-tab-add.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-5.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderpoint30.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-norecords.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-latestranked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-mods.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-B-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\multi-skipped.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-update.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderpoint10.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-x.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-random.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-x.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scoreboard-explosion-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\star3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-4.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taikobigcircle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-notsubmitted.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-percent.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-drum-inner.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-SH-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-A-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-S-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-endreplay.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-2x.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\star.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-roll-end.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-D-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-online.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-C-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-7.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-show.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-1x.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-crown.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\notification.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-ticker.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-hide.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-dialog-right.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-discussion.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-approved.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\overlay-hidemode.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\commentbox.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-unlock.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-osu-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-bar-right-glow.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-unknown.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-ranked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-lock.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\star2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\followpoint.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scoreboard-explosion-2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\cursortrail.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\circularmetre.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-boot.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-question.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-tab-close.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-bar-right.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-5.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-6.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-taiko-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-online.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-9.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-4.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-8.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-comma.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\mode-fruits-small.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\score-dot.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-7.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\selection-tab.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\menu-flash.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-refresh.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-next.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\button-middle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-prev.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\seekbar-over.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\sliderscorepoint.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-offline.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\rank-forum.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\button-left.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\button-right.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\user-bg.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-colour-1.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-dot.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-colour-2.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-colour-0.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\scorebar-colour-3.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\levelbar-bg.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\default-comma.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\checkbox-unchecked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\white.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\volume-bar.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\levelbar.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\topmenu-selection.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\checkbox-checked.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\lobby-avatar.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\ranking-dialog-middle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-roll-middle.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="Skins\Default\taiko-barline.png">
-      <DeployService-Deploy>true</DeployService-Deploy>
-      <DeployService-UseProjectRelativePath>true</DeployService-UseProjectRelativePath>
+
     </Content>
     <Content Include="test.mp3" />
   </ItemGroup>
