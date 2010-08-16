@@ -24,7 +24,7 @@ namespace osum.GameModes
             pSprite osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
 			
-			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,10,0,100000));
+			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,100,0,100000));
 			
 			//osuLogo.Transform(new Transformation(new Vector2(0,0),new Vector2(1024,768),0,5000));
         }
