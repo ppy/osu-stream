@@ -14,15 +14,23 @@ namespace osum.GameModes
 {
     class MainMenu : GameMode
     {
-        internal override void Initialize()
+        BackgroundAudioPlayer music;
+		
+		internal override void Initialize()
         {
             pSprite menuBackground =
                 new pSprite(SkinManager.Load("menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Game, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(menuBackground);
-            
+
             pSprite osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
+			
+			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,10,0,100000));
+			
+			//osuLogo.Transform(new Transformation(new Vector2(0,0),new Vector2(1024,768),0,5000));
+			
+			music = new BackgroundAudioPlayer();
         }
 
         public override void Update()
