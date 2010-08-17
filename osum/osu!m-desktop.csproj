@@ -37,13 +37,14 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Audio\BackgroundAudioPlayerMono.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
-    <Compile Include="Input\InputSourceWindows.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
+    <Compile Include="Input\Sources\InputSourceMouse.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
