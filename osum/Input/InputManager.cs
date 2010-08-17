@@ -62,7 +62,15 @@ namespace osum
 			Console.WriteLine("input: move");
 			MainPointerPosition = source.trackingPoints[0].GamePosition;
 		}
-	}
+
+        public static bool IsPressed
+        {
+            get
+            {
+                return RegisteredSources[0].IsPressed;
+            }
+        }
+    }
 	
 	
 }

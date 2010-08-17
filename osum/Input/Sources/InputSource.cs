@@ -11,18 +11,25 @@ namespace osum
 		{
 			
 		}
+
+        public bool IsPressed { get { return PressedCount > 0; } }
+        public int PressedCount;
 		
 		public event InputHandler OnDown;
 		protected void TriggerOnDown()
 		{
-			if (OnDown != null)
+            PressedCount++;
+
+            if (OnDown != null)
 				OnDown(this);
 		}
 		
 		public event InputHandler OnUp;
 		protected void TriggerOnUp()
 		{
-			if (OnUp != null)
+            PressedCount--;
+
+            if (OnUp != null)
 				OnUp(this);
 		}
 		
