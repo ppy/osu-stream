@@ -37,6 +37,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
@@ -66,9 +67,10 @@
     <Compile Include="Support\Desktop\GameWindowMono.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\opentk-1.0.0-rc1\Binaries\OpenTK\Debug\OpenTK.dll</HintPath>
+      <HintPath>.\OpenTK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />
