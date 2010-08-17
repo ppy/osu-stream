@@ -33,8 +33,8 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            if (InputManager.IsTracking)
-				osuLogo.Position = InputManager.MainPointerPosition;
+            if (InputManager.IsTracking && InputManager.IsPressed)
+				osuLogo.MoveTo(InputManager.MainPointerPosition,500,EasingTypes.In);
 			
 			base.Update();
         }
@@ -42,8 +42,8 @@ namespace osum.GameModes
         public override void Draw()
         {
             base.Draw();
-			
-			osuLogo.ScaleScalar = 1+GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
+
+            osuLogo.ScaleScalar = 1+GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
         }
     }
 }

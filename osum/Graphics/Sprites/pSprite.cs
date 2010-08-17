@@ -495,6 +495,27 @@ namespace osum.Graphics.Sprites
             this.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
+        internal void MoveTo(Vector2 destination, int duration)
+        {
+            MoveTo(destination, duration, EasingTypes.None);
+        }
+
+        internal void MoveTo(Vector2 destination, int duration, EasingTypes easing)
+        {
+            Transformations.RemoveAll(t => (t.Type & TransformationType.Movement) > 0);
+
+            if (destination == Position)
+                return;
+
+            int now = Clock.GetTime(Clocking);
+
+            Transformation tr =
+                new Transformation(Position, destination,
+                                   now - (int)Math.Max(1, GameBase.ElapsedMilliseconds),
+                                   now + duration,easing);
+            Transformations.Add(tr);
+        }
+
         public virtual pSprite Clone()
         {
             pSprite clone = new pSprite(Texture, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, StartColour);
