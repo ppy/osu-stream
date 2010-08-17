@@ -44,32 +44,40 @@ using osum.Graphics.Skins;
 
 namespace osum
 {
-	public class GameBaseIphone : GameBase
+	// The name AppDelegate is referenced in the MainWindow.xib file.
+	public partial class AppDelegate : UIApplicationDelegate
 	{
-		GameWindowIphone gameWindow;
+		public static AppDelegate Instance;
 		
-		public GameBaseIphone()
-		{
+		// This method is invoked when the application has loaded its UI and is ready to run
+		public override void FinishedLaunching (UIApplication app)
+		{	
+			UIApplication.SharedApplication.StatusBarHidden = true;
+			UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight,false);
+			
+			Console.WriteLine("+++FinishedLaunching");
+			Instance = this;
 		}
 		
-		override public void MainLoop()
+		public override void OnResignActivation (UIApplication app)
 		{
-			MonoTouch.UIKit.UIApplication.Main(new string[]{});
+			Console.WriteLine("+++ResignActivation");
+			
+			SkinManager.UnloadAll();
+			
+			if (glView.EAGLContext != null)
+			    glView.Stop();
 		}
 		
-		public override void Initialize()
+		// This method is required in iPhoneOS 3.0
+		public override void OnActivated (UIApplication app)
 		{
-			gameWindow = GameWindowIphone.Instance;
+			Console.WriteLine("+++OnActivated");
 			
-			//only initialise the first time (we may be here from a resume operation)
-			if (backgroundAudioPlayer == null) backgroundAudioPlayer = new BackgroundAudioPlayerIphone();
+			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
 			
-			base.Initialize();
-			
-			InputSource source = new InputSourceIphone(gameWindow);
-			
-			gameWindow.SetInputHandler(source);
-			InputManager.AddSource(source);
+			//start the run loop.
+			glView.Run(60.0);
 		}
 	}
 }

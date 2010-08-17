@@ -44,6 +44,8 @@ namespace osum
 	[MonoTouch.Foundation.Register("GameWindowIphone")]
 	public partial class GameWindowIphone : iPhoneOSGameView
 	{
+		public static GameWindowIphone Instance;
+		
 		[Export("layerClass")]
 		static Class LayerClass ()
 		{
@@ -56,6 +58,10 @@ namespace osum
 			LayerRetainsBacking = false;
 			LayerColorFormat = EAGLColorFormat.RGBA8;
 			ContextRenderingApi = EAGLRenderingAPI.OpenGLES1;
+			UserInteractionEnabled = true;
+			ExclusiveTouch = true;
+			
+			Instance = this;
 		}
 
 		protected override void ConfigureLayer (CAEAGLLayer eaglLayer)
@@ -111,6 +117,52 @@ namespace osum
 			GL.PopMatrix();
 			
 			SwapBuffers();
+		}
+		
+		
+		InputSourceIphone inputHandler;
+		
+		public void SetInputHandler(InputSource source)
+		{
+			InputSourceIphone addableSource = source as InputSourceIphone;
+			
+			if (addableSource == null)
+				return;
+			
+			inputHandler = addableSource;
+		}
+		
+		public override void TouchesBegan (NSSet touches, UIEvent evt)
+		{
+			base.TouchesBegan(touches, evt);
+			
+			if (inputHandler != null)
+				inputHandler.HandleTouchesBegan(touches,evt);
+			
+		}
+		
+		public override void TouchesMoved (NSSet touches, UIEvent evt)
+		{
+			base.TouchesMoved (touches, evt);
+			
+			if (inputHandler != null)
+				inputHandler.HandleTouchesMoved(touches,evt);
+		}
+		
+		public override void TouchesEnded (NSSet touches, UIEvent evt)
+		{
+			base.TouchesEnded (touches, evt);
+			
+			if (inputHandler != null)
+				inputHandler.HandleTouchesEnded(touches,evt);
+		}
+		
+		public override void TouchesCancelled (NSSet touches, UIEvent evt)
+		{
+			base.TouchesCancelled (touches, evt);
+			
+			if (inputHandler != null)
+				inputHandler.HandleTouchesCancelled(touches,evt);
 		}
 	}
 }
