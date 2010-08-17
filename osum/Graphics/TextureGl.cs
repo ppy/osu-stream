@@ -140,7 +140,7 @@ namespace osum.Graphics
 			GL.Translate(currentPos.X, currentPos.Y, 0);
 			
 			if (rotation != 0)
-		        GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+		        GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
 
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);
@@ -175,7 +175,7 @@ namespace osum.Graphics
             GL.LoadIdentity();
 
             GL.Translate(currentPos.X, currentPos.Y, 0);
-            GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+            GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
 
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);

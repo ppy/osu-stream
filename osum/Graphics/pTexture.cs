@@ -216,6 +216,10 @@ namespace osum.Graphics
 
             try
             {
+#if IPHONE
+				return FromUIImage(UIImage.FromFile(filename),filename);
+#endif
+				
 				using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     return FromStream(stream, filename);
             }
@@ -229,6 +233,37 @@ namespace osum.Graphics
         {
             return FromStream(stream, assetname, false);
         }
+		
+		public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
+		{
+            if (textureImage == null)
+                return null;
+
+            int texWidth = (int)textureImage.Size.Width;
+
+            int texHeight = (int)textureImage.Size.Height;
+
+            byte[] textureData = new byte[texWidth * texHeight * 4];
+
+            CGBitmapContext textureContext;
+
+            fixed (byte* pTextureData = textureData) {
+
+                textureContext = new CGBitmapContext((IntPtr) pTextureData,
+                        texWidth, texHeight, 8, texWidth * 4,
+                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast);
+
+                textureContext.DrawImage(new RectangleF (0, 0, texWidth, texHeight), textureImage.CGImage);
+
+                textureContext.Dispose ();
+
+            }
+			
+			//todo: we can call this using the fixed context above and pass on an IntPtr for loading?
+            pTexture tex = FromRawBytes(textureData,(int)texWidth, (int)texHeight);
+			tex.assetName = assetname;
+			return tex;
+		}
         
         /// <summary>
         /// Read a pTexture from an arbritrary file.
@@ -238,38 +273,9 @@ namespace osum.Graphics
 			try
             {
 #if IPHONE
-				UIImage textureImage = UIImage.LoadFromData(NSData.FromStream(stream));
-
-                if (textureImage == null)
-                    return null;
-
-                int texWidth = (int)textureImage.Size.Width;
-
-                int texHeight = (int)textureImage.Size.Height;
-
-                byte[] textureData = new byte[texWidth * texHeight * 4];
-
-                CGBitmapContext textureContext;
-
-                fixed (byte* pTextureData = textureData) {
-
-                    textureContext = new CGBitmapContext((IntPtr) pTextureData,
-                            texWidth, texHeight, 8, texWidth * 4,
-                            textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast);
-
-                    textureContext.DrawImage(new RectangleF (0, 0, texWidth, texHeight), textureImage.CGImage);
-
-                    textureContext.Dispose ();
-
-                }
-				
-				//todo: we can call this using the fixed context above and pass on an IntPtr for loading?
-                pTexture tex = FromRawBytes(textureData,(int)texWidth, (int)texHeight);
-				tex.assetName = assetname;
-				return tex;
-				
+				return FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
-                using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
+				using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
                                                  System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -306,8 +312,8 @@ namespace osum.Graphics
             using (MemoryStream ms = new MemoryStream(data))
                 return FromStream(ms, filename, true);
         }
-
-        public static pTexture FromRawBytes(IntPtr location, int width, int height)
+		
+		public static pTexture FromRawBytes(IntPtr location, int width, int height)
         {
             pTexture pt = new pTexture();
             pt.Width = width;
@@ -327,23 +333,68 @@ namespace osum.Graphics
             return pt;
         }
 
-        public static pTexture FromRawBytes(byte[] bitmap, int width, int height)
+        public static pTexture FromRawBytes (byte[] bitmap, int width, int height)
         {
-            pTexture pt = new pTexture();
-            pt.Width = width;
-            pt.Height = height;
+        	pTexture pt = new pTexture ();
+        	pt.Width = width;
+        	pt.Height = height;
 
             try
             {
-                pt.TextureGl = new TextureGl(pt.Width, pt.Height);
-                pt.SetData(bitmap);
-            }
+        		pt.TextureGl = new TextureGl (pt.Width, pt.Height);
+        		pt.SetData (bitmap);
+        	}
             catch
             {
-            }
+        	}
 
             return pt;
         }
+		
+		/*public static pTexture FromText(string text, SizeF dim, UITextAlignment alignment, string fontName, float fontSize) {
+			UIFont font = UIFont.FromName(fontName, fontSize);
+			
+			int width = (int)dim.Width;
+			if (width != 1 && (width & (width - 1)) != 0) {
+				int i = 1;
+				while (i < width) {
+					i *= 2;
+				}
+				
+				width = i;
+			}
+			
+			int height = (int)dim.Height;
+			if (height != 1 && (height & (height - 1)) != 0) {
+				int i = 1;
+				while (i < height) {
+					i *= 2;
+				}
+				height = i;
+			}
+			
+			CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB(); //CGColorSpace.CreateDeviceGray();
+			
+			byte[] data = new byte[width * height];
+			
+			unsafe {
+				fixed (byte* dataPb = data) {
+					using (CGContext context = new CGBitmapContext((IntPtr)dataPb, width, height, 8, width, colorSpace, CGImageAlphaInfo.None)) {
+						context.SetGrayFillColor(1f, 1f);
+						context.TranslateCTM(0f, height);
+						context.ScaleCTM(1f, -1f);
+						UIGraphics.PushContext(context);
+						//text.DrawInRect(new RectangleF(0, 0, dim.Width, dim.Height), font, UILineBreakMode.WordWrap, alignment);
+						UIGraphics.PopContext();
+					}
+				}
+			}
+			colorSpace.Dispose();
+			
+			return null;
+			//FromRawBytes(
+			//InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
+		}*/
     }
 
     /// <summary>
