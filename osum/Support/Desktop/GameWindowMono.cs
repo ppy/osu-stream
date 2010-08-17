@@ -17,7 +17,7 @@ namespace osum
             : base(960,640, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
-            GameBase.WindowSize = new Size(960,640);
+            //GameBase.WindowSize = new Size(960,640);
         }
 
         public void Run()
@@ -48,6 +48,8 @@ namespace osum
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+
+            GameBase.Instance.SetupScreen();
 
             /*Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);*/
             
