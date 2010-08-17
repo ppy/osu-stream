@@ -15,6 +15,16 @@ namespace osum
             WindowSize = window.ClientSize;
             window.Run();
 		}
-	}
+
+        protected override void InitializeBackgroundAudio()
+        {
+            
+        }
+
+        protected override void InitializeInput()
+        {
+            
+        }
+    }
 }
 

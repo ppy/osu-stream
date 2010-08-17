@@ -234,6 +234,7 @@ namespace osum.Graphics
             return FromStream(stream, assetname, false);
         }
 		
+#if IPHONE
 		public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
 		{
             if (textureImage == null)
@@ -264,6 +265,7 @@ namespace osum.Graphics
 			tex.assetName = assetname;
 			return tex;
 		}
+#endif
         
         /// <summary>
         /// Read a pTexture from an arbritrary file.

@@ -122,11 +122,11 @@ namespace osum
 			InputManager.Initialize();
 			InitializeInput();
 			if (InputManager.RegisteredSources.Count == 0)
-				throw new Exception("No input manager registered");
+				throw new Exception("No input sources registered");
 			
 			InitializeBackgroundAudio();
 			if (backgroundAudioPlayer == null)
-				throw new Exception("No input manager registered");
+				throw new Exception("No background audio manager registered");
    
 			ChangeMode (new MainMenu (), true);
    
