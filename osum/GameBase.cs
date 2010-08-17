@@ -117,20 +117,36 @@ namespace osum
    
 			ChangeMode (new MainMenu (), true);
    
-			backgroundAudioPlayer.Play ();
+			if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play ();
 			
             //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
             //spriteManager.Add(h);
         }
 
-        public void Draw(FrameEventArgs e)
+		int frameCount;
+		int frameTime;
+		
+        public void Draw (FrameEventArgs e)
         {
-            Clock.Update(e.Time);
-
+        	int lastTime = Clock.Time;
+   
+			Clock.Update (e.Time);
+   
+			frameTime += (Clock.Time - lastTime);
+        	frameCount++;
+   
+			if (frameTime > 1000)
+			{
+        		Console.WriteLine (frameCount + " frames in " + frameTime + "ms");
+        		frameTime = 0;
+        		frameCount = 0;
+			}
+			
             spriteManager.Update();
             CurrentMode.Update();
 
-            GL.ClearColor(0, 0, 0, 1);
+			//not necessary when drawing background.
+            //GL.ClearColor(0, 0, 0, 1);
 
             CurrentMode.Draw();
             spriteManager.Draw();
