@@ -31,6 +31,8 @@ using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
+using TextureEnvParameter = OpenTK.Graphics.ES11.All;
+using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -102,15 +104,15 @@ namespace osum.Graphics
             }
         }
 
-        private void checkGlError()
+        private void checkGlError ()
         {
-            ErrorCode error = GL.GetError();
-            if (error != ErrorCode.NoError)
+        	ErrorCode error = GL.GetError ();
+        	if (error != ErrorCode.NoError)
             {
-                Console.WriteLine("GL Error: " + error);
-            }
+        		Console.WriteLine ("GL Error: " + error);
+        	}
         }
-
+		
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
@@ -135,15 +137,10 @@ namespace osum.Graphics
 #if IPHONE
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
 			
-			//GL.LoadIdentity();
-			
-			GL.EnableClientState(All.VertexArray);
-			GL.EnableClientState(All.TextureCoordArray);
-			GL.Enable(All.Texture2D);
-			GL.BlendFunc(All.BlendSrc, All.BlendDst);
-			
 			GL.Translate(currentPos.X, currentPos.Y, 0);
-            GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+			
+			if (rotation != 0)
+		        GL.Rotate(OsumMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
 
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);
@@ -153,33 +150,22 @@ namespace osum.Graphics
             float top = (float)drawRect.Top / potHeight;
             float bottom = (float)drawRect.Bottom / potHeight;
 			
-			//Console.WriteLine("left: {0} right: {1} top: {2} bottom: {3}", left, right, top, bottom);
-			
             float[] coordinates = { left, top,
 									right, top,
 									right, bottom,
 									left, bottom };
-            /*float[] vertices = {drawRect.Left, drawRect.Top, 0,
-							drawRect.Right, drawRect.Top, 0,
-							drawRect.Right, drawRect.Bottom, 0,
-							drawRect.Left, drawRect.Bottom, 0 };*/
+
 			float[] vertices = {0, 0, 0,
 							drawWidth, 0, 0,
 							drawWidth, drawHeight, 0,
 							0, drawHeight, 0 };
 
-            
 			GL.BindTexture(TextureTarget.Texture2D, textureId);
 						
-			GL.VertexPointer (3, All.Float, 0, vertices);
+			GL.VertexPointer(3, All.Float, 0, vertices);
 			GL.TexCoordPointer(2, All.Float, 0, coordinates);
 			
 			GL.DrawArrays (All.TriangleFan, 0, 4);
-			
-			GL.Disable(All.Texture2D);
-			GL.DisableClientState(All.VertexArray);
-			GL.DisableClientState(All.TextureCoordArray);
-			
 #else
             GL.Color4(drawColour);
 
@@ -312,38 +298,47 @@ namespace osum.Graphics
         }
 
         const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
-
+		
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
         /// </summary>
-        public void SetData(IntPtr dataPointer, int level, PixelFormat format)
+        public void SetData (IntPtr dataPointer, int level, PixelFormat format)
         {
-            if (format == 0)
-                format = PixelFormat.Bgra;
+        	if (format == 0)
+        		format = PixelFormat.Bgra;
 
-            GL.GetError(); //Clear errors.
+            GL.GetError ();
+        	//Clear errors.
 
             bool newTexture = false;
 
             if (level == 0 && textureId < 0)
             {
-                Delete();
-                newTexture = true;
-                int[] textures = new int[1];
-                GL.GenTextures(1, textures);
-                textureId = textures[0];
-				Console.WriteLine("TextureGl assigned: " + textureId);
-            }
+        		Delete ();
+        		newTexture = true;
+        		int[] textures = new int[1];
+        		GL.GenTextures (1, textures);
+        		textureId = textures[0];
+#if DEBUG
+        		Console.WriteLine ("TextureGl assigned: " + textureId);
+#endif
+        	}
 
             if (level > 0)
-                return;
+        		return;
 
-            GL.BindTexture(SURFACE_TYPE, textureId);
+       		GL.BindTexture (SURFACE_TYPE, textureId);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+			//Nearest gives ~30% more draw performance, but looks a bit shitty.
+            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
+        	GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
+			
+			//can't determine if this helps
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
 
-            //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
+			//doesn't seem to help much at all? maybe best to test once more...
+            //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
             if (newTexture)
             {
