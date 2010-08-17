@@ -81,6 +81,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchSdkVersion>3.2</MtouchSdkVersion>
     <DefineConstants>IPHONE</DefineConstants>
+    <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -639,5 +640,8 @@
     <Content Include="Skins\Default\ranking-dialog-middle.png">
     </Content>
     <Content Include="test.mp3" />
+    <Content Include="Support\iPhone\loading.png" />
+    <Content Include="Support\iPhone\loading%402x.png" />
+    <Content Include="Support\iPhone\loading-Landscape.png" />
   </ItemGroup>
 </Project>
