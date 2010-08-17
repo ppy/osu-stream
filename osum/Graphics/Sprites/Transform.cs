@@ -127,14 +127,14 @@ namespace osum.Graphics.Sprites
             switch (Easing)
             {
                 case EasingTypes.In:
-                    return OsumMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 2));
+                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 2));
 
                 case EasingTypes.Out:
-                    return OsumMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 2));
+                    return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 2));
 
                 default:
                 case EasingTypes.None:
-                    return OsumMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
+                    return pMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
             }
         }
 

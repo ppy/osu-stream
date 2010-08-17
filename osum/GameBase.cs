@@ -64,6 +64,9 @@ namespace osum
         internal static Size WindowSize;
 		internal static Size StandardSize = new Size(1024,768);
 		
+		internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width/2, StandardSize.Height/2);}}
+		
+		
 		internal IBackgroundAudioPlayer backgroundAudioPlayer;
 
 
@@ -111,16 +114,14 @@ namespace osum
 			GL.LoadIdentity();
 		}
 
-        public virtual void Initialize ()
+        public virtual void Initialize()
         {
-        	SetupScreen ();
+        	SetupScreen();
+			InputManager.Initialize();
    
 			ChangeMode (new MainMenu (), true);
    
 			if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play ();
-			
-            //Spinner h = new Spinner(1500, 6000, HitObjectSoundType.Normal);
-            //spriteManager.Add(h);
         }
 
 		int frameCount;

@@ -288,8 +288,8 @@ namespace osum.GameplayElements
             return ((!hittableRangeOnly && IsVisible) ||
                   (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
-                 (OsumMathHelper.DistanceSquared(testPosition, Position) <= radius * radius ||
-                  (!hittableRangeOnly && OsumMathHelper.DistanceSquared(testPosition, Position2) <= radius * radius));
+                 (pMathHelper.DistanceSquared(testPosition, Position) <= radius * radius ||
+                  (!hittableRangeOnly && pMathHelper.DistanceSquared(testPosition, Position2) <= radius * radius));
         }
 
         internal virtual void Shake()
