@@ -60,17 +60,23 @@ namespace osum
 		public override void Initialize()
 		{
 			gameWindow = GameWindowIphone.Instance;
-			
-			//only initialise the first time (we may be here from a resume operation)
-			if (backgroundAudioPlayer == null) backgroundAudioPlayer = new BackgroundAudioPlayerIphone();
-			
 			base.Initialize();
-			
+		}
+		
+		protected override void InitializeBackgroundAudio ()
+		{
+			//only initialise the first time (we may be here from a resume operation)
+			if (backgroundAudioPlayer == null) backgroundAudioPlayer = new BackgroundAudioPlayerIphone();			
+		}
+		
+		protected override void InitializeInput ()
+		{
 			InputSource source = new InputSourceIphone(gameWindow);
-			
 			gameWindow.SetInputHandler(source);
 			InputManager.AddSource(source);
 		}
+		
+		
 	}
 }
 

@@ -8,7 +8,7 @@ namespace osum
 	
 	public static class InputManager
 	{
-		static List<InputSource> RegisteredSources = new List<InputSource>();
+		public static List<InputSource> RegisteredSources = new List<InputSource>();
 		
 		public static Vector2 MainPointerPosition;
 		

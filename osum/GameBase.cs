@@ -117,12 +117,25 @@ namespace osum
         public virtual void Initialize()
         {
         	SetupScreen();
+			
+			
 			InputManager.Initialize();
+			InitializeInput();
+			if (InputManager.RegisteredSources.Count == 0)
+				throw new Exception("No input manager registered");
+			
+			InitializeBackgroundAudio();
+			if (backgroundAudioPlayer == null)
+				throw new Exception("No input manager registered");
    
 			ChangeMode (new MainMenu (), true);
    
 			if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play ();
         }
+		
+		protected abstract void InitializeBackgroundAudio();
+		
+		protected abstract void InitializeInput();
 
 		int frameCount;
 		int frameTime;

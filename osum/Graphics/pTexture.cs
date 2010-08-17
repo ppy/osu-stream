@@ -273,6 +273,7 @@ namespace osum.Graphics
 			try
             {
 #if IPHONE
+				//todo: implement saveToFile?
 				return FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
 				using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
