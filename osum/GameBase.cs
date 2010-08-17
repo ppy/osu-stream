@@ -62,12 +62,14 @@ namespace osum
         internal GameMode CurrentMode;
 
         internal static Size WindowSize;
-		internal static Size StandardSize = new Size(1024,768);
-		
-		internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width/2, StandardSize.Height/2);}}
-		
-		
-		internal IBackgroundAudioPlayer backgroundAudioPlayer;
+        internal static Size StandardSize = new Size(1024, 768);
+
+        internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width / 2, StandardSize.Height / 2); } }
+
+        public static float ElapsedMilliseconds = 1000/60f;
+
+
+        internal IBackgroundAudioPlayer backgroundAudioPlayer;
 
 
         internal bool ChangeMode(GameMode newMode, bool instant)
@@ -96,70 +98,71 @@ namespace osum
         /// MainLoop runs, starts the main loop and calls Initialize when ready.
         /// </summary>
         public abstract void MainLoop();
-		
-		public virtual void SetupScreen()
-		{
-			StandardSize = new Size(1024,(int)(1024 * (float)WindowSize.Height/WindowSize.Width));
+
+        public virtual void SetupScreen()
+        {
+            StandardSize = new Size(1024, (int)(1024 * (float)WindowSize.Height / WindowSize.Width));
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            
+
 #if IPHONE
 			GL.Ortho(0, GameBase.StandardSize.Height, GameBase.StandardSize.Width, 0, 0, 1);
 #else
-			GL.Ortho(0, GameBase.StandardSize.Width, GameBase.StandardSize.Height, 0, 0, 1);
+            GL.Ortho(0, GameBase.StandardSize.Width, GameBase.StandardSize.Height, 0, 0, 1);
 #endif
-            
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadIdentity();
-		}
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+        }
 
         public virtual void Initialize()
         {
-        	SetupScreen();
-			
-			
-			InputManager.Initialize();
-			InitializeInput();
-			if (InputManager.RegisteredSources.Count == 0)
-				throw new Exception("No input sources registered");
-			
-			InitializeBackgroundAudio();
-			if (backgroundAudioPlayer == null)
-				throw new Exception("No background audio manager registered");
-   
-			ChangeMode (new MainMenu (), true);
-   
-			if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play ();
-        }
-		
-		protected abstract void InitializeBackgroundAudio();
-		
-		protected abstract void InitializeInput();
+            SetupScreen();
 
-		int frameCount;
-		int frameTime;
-		
-        public void Draw (FrameEventArgs e)
+
+            InputManager.Initialize();
+            InitializeInput();
+            if (InputManager.RegisteredSources.Count == 0)
+                throw new Exception("No input sources registered");
+
+            InitializeBackgroundAudio();
+            if (backgroundAudioPlayer == null)
+                throw new Exception("No background audio manager registered");
+
+            ChangeMode(new MainMenu(), true);
+
+            if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play();
+        }
+
+        protected abstract void InitializeBackgroundAudio();
+
+        protected abstract void InitializeInput();
+
+        int frameCount;
+        int frameTime;
+        
+
+        public void Draw(FrameEventArgs e)
         {
-        	int lastTime = Clock.Time;
-   
-			Clock.Update (e.Time);
-   
-			frameTime += (Clock.Time - lastTime);
-        	frameCount++;
-   
-			if (frameTime > 1000)
-			{
-        		Console.WriteLine (frameCount + " frames in " + frameTime + "ms");
-        		frameTime = 0;
-        		frameCount = 0;
-			}
-			
+            int lastTime = Clock.Time;
+
+            Clock.Update(e.Time);
+
+            frameTime += (Clock.Time - lastTime);
+            frameCount++;
+
+            if (frameTime > 1000)
+            {
+                Console.WriteLine(frameCount + " frames in " + frameTime + "ms");
+                frameTime = 0;
+                frameCount = 0;
+            }
+
             spriteManager.Update();
             CurrentMode.Update();
 
-			//not necessary when drawing background.
+            //not necessary when drawing background.
             //GL.ClearColor(0, 0, 0, 1);
 
             CurrentMode.Draw();
