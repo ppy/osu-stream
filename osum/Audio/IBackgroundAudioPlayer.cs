@@ -1,7 +1,8 @@
 using System;
+using osum.Support;
 namespace osum
 {
-	public interface IBackgroundAudioPlayer
+	public interface IBackgroundAudioPlayer : IUpdateable
 	{
 		float CurrentVolume
 		{

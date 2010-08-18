@@ -21,5 +21,10 @@ namespace osum.Audio
         {
             return false;
         }
+
+        public void Update()
+        {
+            
+        }
     }
 }

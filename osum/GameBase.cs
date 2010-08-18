@@ -46,6 +46,8 @@ using osum.Input;
 #endif
 
 using osum.GameModes;
+using osum.Support;
+using System.Collections.Generic;
 
 
 namespace osum
@@ -66,11 +68,13 @@ namespace osum
 
         internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width / 2, StandardSize.Height / 2); } }
 
-        public static float ElapsedMilliseconds = 1000/60f;
+        public static double ElapsedMilliseconds = 1000/60f;
 
 
         internal IBackgroundAudioPlayer backgroundAudioPlayer;
+        internal SoundEffectPlayer soundEffectPlayer;
 
+        public static List<IUpdateable> Components = new List<IUpdateable>();
 
         internal bool ChangeMode(GameMode newMode, bool instant)
         {
@@ -129,10 +133,21 @@ namespace osum
             InitializeBackgroundAudio();
             if (backgroundAudioPlayer == null)
                 throw new Exception("No background audio manager registered");
+            Components.Add(backgroundAudioPlayer);
+
+            InitializeSoundEffects();
+            if (soundEffectPlayer == null)
+                throw new Exception("No sound effect player registered");
+            Components.Add(soundEffectPlayer);
 
             ChangeMode(new MainMenu(), true);
 
             if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play();
+        }
+
+        protected virtual void InitializeSoundEffects()
+        {
+            soundEffectPlayer = new SoundEffectPlayer();
         }
 
         protected abstract void InitializeBackgroundAudio();
@@ -140,16 +155,18 @@ namespace osum
         protected abstract void InitializeInput();
 
         int frameCount;
-        int frameTime;
-        
+        double frameTime;
 
-        public void Draw(FrameEventArgs e)
+        public void Update(FrameEventArgs e)
         {
-            int lastTime = Clock.Time;
+            double lastTime = Clock.TimeAccurate;
 
             Clock.Update(e.Time);
 
-            frameTime += (Clock.Time - lastTime);
+            //todo: make more accurate
+            ElapsedMilliseconds = Clock.TimeAccurate - lastTime;
+
+            frameTime += ElapsedMilliseconds;
             frameCount++;
 
             if (frameTime > 1000)
@@ -158,6 +175,14 @@ namespace osum
                 frameTime = 0;
                 frameCount = 0;
             }
+
+            Components.ForEach(c => c.Update());
+        }
+
+        public void Draw(FrameEventArgs e)
+        {
+            //todo: make update actually update on iphone and call from game architecture
+            Update(e);
 
             spriteManager.Update();
             CurrentMode.Update();

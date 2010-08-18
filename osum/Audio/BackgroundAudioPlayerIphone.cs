@@ -48,7 +48,11 @@ namespace osum
 			
 			return true;
 		}
-
+		
+		public void Update()
+		{
+			
+		}
 	}
 }
 
