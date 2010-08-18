@@ -31,36 +31,41 @@ namespace osum
 		    if (RegisteredSources.Contains(source))
     		    return false;
     		    
-		    source.OnDown += OnDown;
-			source.OnUp += OnUp;
-			source.OnClick += OnClick;
-			source.OnMove += OnMove;
+		    source.OnDown += ReceiveDown;
+			source.OnUp += ReceiveUp;
+			source.OnClick += ReceiveClick;
+			source.OnMove += ReceiveMove;
 		    
 		    RegisteredSources.Add(source);
 			
 			return true;
 	    }
 		
-		private static void OnDown(InputSource source)
+		private static void ReceiveDown(InputSource source)
 		{
 			Console.WriteLine("input: down");
 			MainPointerPosition = source.trackingPoints[0].GamePosition;
+
+            TriggerOnDown(source);
 		}
-		
-		private static void OnUp(InputSource source)
+        		
+		private static void ReceiveUp(InputSource source)
 		{
 			Console.WriteLine("input: up");
+            TriggerOnUp(source);
 		}
 		
-		private static void OnClick(InputSource source)
+		private static void ReceiveClick(InputSource source)
 		{
 			Console.WriteLine("input: click");
+            TriggerOnClick(source);
 		}
 		
-		private static void OnMove(InputSource source)
+		private static void ReceiveMove(InputSource source)
 		{
 			Console.WriteLine("input: move");
 			MainPointerPosition = source.trackingPoints[0].GamePosition;
+            TriggerOnMove(source);
 		}
 
         public static bool IsPressed
@@ -69,6 +74,34 @@ namespace osum
             {
                 return RegisteredSources[0].IsPressed;
             }
+        }
+
+        public static event InputHandler OnDown;
+        private static void TriggerOnDown(InputSource source)
+        {
+            if (OnDown != null)
+                OnDown(source);
+        }
+
+        public static event InputHandler OnUp;
+        private static void TriggerOnUp(InputSource source)
+        {
+            if (OnUp != null)
+                OnUp(source);
+        }
+
+        public static event InputHandler OnClick;
+        private static void TriggerOnClick(InputSource source)
+        {
+            if (OnClick != null)
+                OnClick(source);
+        }
+
+        public static event InputHandler OnMove;
+        private static void TriggerOnMove(InputSource source)
+        {
+            if (OnMove != null)
+                OnMove(source);
         }
     }
 	
