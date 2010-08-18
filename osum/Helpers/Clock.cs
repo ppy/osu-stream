@@ -25,6 +25,11 @@ namespace osum.Helpers
             get { return (int)(time * 1000); }
         }
 
+        public static double TimeAccurate
+        {
+            get { return (time * 1000); }
+        }
+
         public static int AudioTime
         {
             get { return (int)((time - zero) * 1000); }
