@@ -39,9 +39,16 @@
   <ItemGroup>
     <Compile Include="Audio\BackgroundAudioPlayerMono.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
+    <Compile Include="Audio\SoundEffectPlayer.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
+    <Compile Include="Helpers\Audio\AudioReader.cs" />
+    <Compile Include="Helpers\Audio\AudioReaderException.cs" />
+    <Compile Include="Helpers\Audio\Sound.cs" />
+    <Compile Include="Helpers\Audio\SoundData.cs" />
+    <Compile Include="Helpers\Audio\SoundFormat.cs" />
+    <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
@@ -69,6 +76,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Support\Desktop\GameBaseMono.cs" />
     <Compile Include="Support\Desktop\GameWindowMono.cs" />
+    <Compile Include="Support\IUpdateable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -336,6 +344,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\multi-skipped.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\normal-hitclap.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\normal-hitfinish.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\normal-hitnormal.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\normal-hitwhistle.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\notification.png">

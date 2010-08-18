@@ -74,14 +74,15 @@
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchMinimumOS>3.0</MtouchMinimumOS>
+    <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <MtouchDebug>False</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchSdkVersion>3.2</MtouchSdkVersion>
+    <MtouchSdkVersion>4.0</MtouchSdkVersion>
     <DefineConstants>IPHONE</DefineConstants>
     <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
+    <MtouchI18n />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -135,6 +136,14 @@
     <Compile Include="Support\iPhone\AppDelegate.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
     <Compile Include="Input\TrackingPointIphone.cs" />
+    <Compile Include="Audio\SoundEffectPlayer.cs" />
+    <Compile Include="Helpers\Audio\AudioReader.cs" />
+    <Compile Include="Helpers\Audio\AudioReaderException.cs" />
+    <Compile Include="Helpers\Audio\Sound.cs" />
+    <Compile Include="Helpers\Audio\SoundData.cs" />
+    <Compile Include="Helpers\Audio\SoundFormat.cs" />
+    <Compile Include="Helpers\Audio\WaveReader.cs" />
+    <Compile Include="Support\IUpdateable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -144,6 +153,8 @@
     <Folder Include="Skins\Default\" />
     <Folder Include="Audio\" />
     <Folder Include="Input\Sources\" />
+    <Folder Include="Helpers\Audio\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
@@ -643,5 +654,9 @@
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
     <Content Include="Support\iPhone\loading-Landscape.png" />
+    <Content Include="Skins\Default\normal-hitclap.wav" />
+    <Content Include="Skins\Default\normal-hitfinish.wav" />
+    <Content Include="Skins\Default\normal-hitnormal.wav" />
+    <Content Include="Skins\Default\normal-hitwhistle.wav" />
   </ItemGroup>
 </Project>
