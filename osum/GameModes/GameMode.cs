@@ -6,7 +6,14 @@ using osum.Graphics.Sprites;
 
 namespace osum.GameModes
 {
-    internal abstract class GameMode : ISpriteable, IDisposable
+    public enum OsuMode
+	{
+		Unknown = 0,
+		MainMenu,
+		SongSelect
+	}
+	
+	public abstract class GameMode : ISpriteable, IDisposable
     {
         internal abstract void Initialize();
 
@@ -17,22 +24,10 @@ namespace osum.GameModes
             spriteManager = new SpriteManager();
         }
 
-        ~GameMode()
+        public virtual void Dispose()
         {
-            this.Dispose(false);
+            //GC.SuppressFinalize(this);
         }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            spriteManager.Dispose();
-        }
-
 
         public virtual void Update()
         {
