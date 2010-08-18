@@ -3,7 +3,10 @@ using osum.GameModes;
 using osum.Graphics.Sprites;
 
 namespace osum
-{	
+{
+    /// <summary>
+    /// Handles display and transitioning of game modes.
+    /// </summary>
 	public static class Director
 	{
         internal static GameMode CurrentMode {get; private set;}
@@ -13,7 +16,7 @@ namespace osum
 		
 		internal static bool ChangeMode(OsuMode mode, Transition transition)
         {
-            if (mode == null) return false;
+            if (mode == OsuMode.Unknown) return false;
 
             if (CurrentMode != null)
                 CurrentMode.Dispose();

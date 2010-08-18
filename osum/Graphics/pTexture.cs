@@ -87,15 +87,11 @@ namespace osum.Graphics
         internal TextureGl TextureGl;
         internal bool TrackAccessTime;
 
-        //internal Texture2D TextureXna;
-
         public bool IsDisposed
         {
             get
             {
-
                 if (TrackAccessTime)
-                    //LastAccess = GameBase.Time;
                     LastAccess = -1;
                 return isDisposed;
             }
@@ -109,7 +105,6 @@ namespace osum.Graphics
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
 
         /// <summary>
         /// Disposes of textures but leaves the GC finalizer in place.
@@ -212,20 +207,20 @@ namespace osum.Graphics
         /// </summary>
         public static pTexture FromFile(string filename)
         {
-			if (!File.Exists(filename)) return null;
+            if (!File.Exists(filename)) return null;
 
             try
             {
 #if IPHONE
 				return FromUIImage(UIImage.FromFile(filename),filename);
 #endif
-				
-				using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+
+                using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     return FromStream(stream, filename);
             }
             catch
             {
-				return null;
+                return null;
             }
         }
 
@@ -233,7 +228,7 @@ namespace osum.Graphics
         {
             return FromStream(stream, assetname, false);
         }
-		
+
 #if IPHONE
 		public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
 		{
@@ -266,19 +261,19 @@ namespace osum.Graphics
 			return tex;
 		}
 #endif
-        
+
         /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
         public unsafe static pTexture FromStream(Stream stream, string assetname, bool saveToFile)
         {
-			try
+            try
             {
 #if IPHONE
 				//todo: implement saveToFile?
 				return FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
-				using (Bitmap b = (Bitmap) Image.FromStream(stream, false, false))
+                using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
                                                  System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -287,7 +282,7 @@ namespace osum.Graphics
                     {
                         byte[] bitmap = new byte[b.Width * b.Height * 4];
                         Marshal.Copy(data.Scan0, bitmap, 0, bitmap.Length);
-                        File.WriteAllBytes(assetname,bitmap);
+                        File.WriteAllBytes(assetname, bitmap);
                     }
 
                     pTexture tex = FromRawBytes(data.Scan0, b.Width, b.Height);
@@ -300,7 +295,7 @@ namespace osum.Graphics
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-				return null;
+                return null;
             }
         }
 
@@ -315,8 +310,8 @@ namespace osum.Graphics
             using (MemoryStream ms = new MemoryStream(data))
                 return FromStream(ms, filename, true);
         }
-		
-		public static pTexture FromRawBytes(IntPtr location, int width, int height)
+
+        public static pTexture FromRawBytes(IntPtr location, int width, int height)
         {
             pTexture pt = new pTexture();
             pt.Width = width;
@@ -336,68 +331,68 @@ namespace osum.Graphics
             return pt;
         }
 
-        public static pTexture FromRawBytes (byte[] bitmap, int width, int height)
+        public static pTexture FromRawBytes(byte[] bitmap, int width, int height)
         {
-        	pTexture pt = new pTexture ();
-        	pt.Width = width;
-        	pt.Height = height;
+            pTexture pt = new pTexture();
+            pt.Width = width;
+            pt.Height = height;
 
             try
             {
-        		pt.TextureGl = new TextureGl (pt.Width, pt.Height);
-        		pt.SetData (bitmap);
-        	}
+                pt.TextureGl = new TextureGl(pt.Width, pt.Height);
+                pt.SetData(bitmap);
+            }
             catch
             {
-        	}
+            }
 
             return pt;
         }
-		
-		/*public static pTexture FromText(string text, SizeF dim, UITextAlignment alignment, string fontName, float fontSize) {
-			UIFont font = UIFont.FromName(fontName, fontSize);
+
+        /*public static pTexture FromText(string text, SizeF dim, UITextAlignment alignment, string fontName, float fontSize) {
+            UIFont font = UIFont.FromName(fontName, fontSize);
 			
-			int width = (int)dim.Width;
-			if (width != 1 && (width & (width - 1)) != 0) {
-				int i = 1;
-				while (i < width) {
-					i *= 2;
-				}
+            int width = (int)dim.Width;
+            if (width != 1 && (width & (width - 1)) != 0) {
+                int i = 1;
+                while (i < width) {
+                    i *= 2;
+                }
 				
-				width = i;
-			}
+                width = i;
+            }
 			
-			int height = (int)dim.Height;
-			if (height != 1 && (height & (height - 1)) != 0) {
-				int i = 1;
-				while (i < height) {
-					i *= 2;
-				}
-				height = i;
-			}
+            int height = (int)dim.Height;
+            if (height != 1 && (height & (height - 1)) != 0) {
+                int i = 1;
+                while (i < height) {
+                    i *= 2;
+                }
+                height = i;
+            }
 			
-			CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB(); //CGColorSpace.CreateDeviceGray();
+            CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB(); //CGColorSpace.CreateDeviceGray();
 			
-			byte[] data = new byte[width * height];
+            byte[] data = new byte[width * height];
 			
-			unsafe {
-				fixed (byte* dataPb = data) {
-					using (CGContext context = new CGBitmapContext((IntPtr)dataPb, width, height, 8, width, colorSpace, CGImageAlphaInfo.None)) {
-						context.SetGrayFillColor(1f, 1f);
-						context.TranslateCTM(0f, height);
-						context.ScaleCTM(1f, -1f);
-						UIGraphics.PushContext(context);
-						//text.DrawInRect(new RectangleF(0, 0, dim.Width, dim.Height), font, UILineBreakMode.WordWrap, alignment);
-						UIGraphics.PopContext();
-					}
-				}
-			}
-			colorSpace.Dispose();
+            unsafe {
+                fixed (byte* dataPb = data) {
+                    using (CGContext context = new CGBitmapContext((IntPtr)dataPb, width, height, 8, width, colorSpace, CGImageAlphaInfo.None)) {
+                        context.SetGrayFillColor(1f, 1f);
+                        context.TranslateCTM(0f, height);
+                        context.ScaleCTM(1f, -1f);
+                        UIGraphics.PushContext(context);
+                        //text.DrawInRect(new RectangleF(0, 0, dim.Width, dim.Height), font, UILineBreakMode.WordWrap, alignment);
+                        UIGraphics.PopContext();
+                    }
+                }
+            }
+            colorSpace.Dispose();
 			
-			return null;
-			//FromRawBytes(
-			//InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
-		}*/
+            return null;
+            //FromRawBytes(
+            //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
+        }*/
     }
 
     /// <summary>
@@ -405,11 +400,13 @@ namespace osum.Graphics
     /// </summary>
     internal class HaxBinaryReader : BinaryReader
     {
-        public HaxBinaryReader(Stream input) : base(input)
+        public HaxBinaryReader(Stream input)
+            : base(input)
         {
         }
 
-        public HaxBinaryReader(Stream input, Encoding encoding) : base(input, encoding)
+        public HaxBinaryReader(Stream input, Encoding encoding)
+            : base(input, encoding)
         {
         }
 

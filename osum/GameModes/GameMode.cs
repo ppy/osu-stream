@@ -12,11 +12,20 @@ namespace osum.GameModes
 		MainMenu,
 		SongSelect
 	}
-	
+
+    /// <summary>
+    /// A specific scene/screen that is to be displayed in the game.
+    /// </summary>
 	public abstract class GameMode : ISpriteable, IDisposable
     {
+        /// <summary>
+        /// Do all initialization here.
+        /// </summary>
         internal abstract void Initialize();
 
+        /// <summary>
+        /// A spriteManager provided free of charge.
+        /// </summary>
         internal SpriteManager spriteManager;
 
         internal GameMode()
@@ -24,16 +33,25 @@ namespace osum.GameModes
             spriteManager = new SpriteManager();
         }
 
+        /// <summary>
+        /// Clean-up this instance.
+        /// </summary>
         public virtual void Dispose()
         {
             //GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Updates this instance. Called every frame when loaded as a component.
+        /// </summary>
         public virtual void Update()
         {
             spriteManager.Update();
         }
 
+        /// <summary>
+        /// Draws this object to screen.
+        /// </summary>
         public virtual void Draw()
         {
             spriteManager.Draw();

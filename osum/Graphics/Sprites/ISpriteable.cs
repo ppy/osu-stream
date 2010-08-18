@@ -8,6 +8,9 @@ namespace osum.Graphics.Sprites
 {
     internal interface ISpriteable : IUpdateable
     {
+        /// <summary>
+        /// Draws this object to screen.
+        /// </summary>
         void Draw();
     }
 }

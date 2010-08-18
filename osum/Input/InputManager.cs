@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
+using osum.Helpers;
 namespace osum
 {
-    public delegate void InputHandler(InputSource source);
-	
 	public static class InputManager
 	{
 		public static List<InputSource> RegisteredSources = new List<InputSource>();

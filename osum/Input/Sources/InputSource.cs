@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using osum.Helpers;
 namespace osum
 {
 	public class InputSource
