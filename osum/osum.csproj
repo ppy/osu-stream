@@ -144,6 +144,9 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Support\IUpdateable.cs" />
+    <Compile Include="GameModes\SongSelect.cs" />
+    <Compile Include="Director.cs" />
+    <Compile Include="Support\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

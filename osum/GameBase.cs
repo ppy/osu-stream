@@ -61,8 +61,6 @@ namespace osum
         /// </summary>
         private SpriteManager spriteManager = new SpriteManager();
 
-        internal GameMode CurrentMode;
-
         internal static Size WindowSize;
         internal static Size StandardSize = new Size(1024, 768);
 
@@ -75,22 +73,6 @@ namespace osum
         internal SoundEffectPlayer soundEffectPlayer;
 
         public static List<IUpdateable> Components = new List<IUpdateable>();
-
-        internal bool ChangeMode(GameMode newMode, bool instant)
-        {
-            if (newMode == null) return false;
-
-            if (CurrentMode != null)
-            {
-                CurrentMode.Dispose();
-            }
-
-            newMode.Initialize();
-            CurrentMode = newMode;
-
-            return true;
-        }
-
 
         public GameBase()
         {
@@ -123,8 +105,7 @@ namespace osum
         public virtual void Initialize()
         {
             SetupScreen();
-
-
+			
             InputManager.Initialize();
             InitializeInput();
             if (InputManager.RegisteredSources.Count == 0)
@@ -140,9 +121,9 @@ namespace osum
                 throw new Exception("No sound effect player registered");
             Components.Add(soundEffectPlayer);
 
-            ChangeMode(new MainMenu(), true);
+            Director.ChangeMode(OsuMode.MainMenu, null);
 
-            if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play();
+            //if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play();
         }
 
         protected virtual void InitializeSoundEffects()
@@ -175,8 +156,12 @@ namespace osum
                 frameTime = 0;
                 frameCount = 0;
             }
+			
+			Director.Update();
 
             Components.ForEach(c => c.Update());
+			
+			spriteManager.Update();
         }
 
         public void Draw(FrameEventArgs e)
@@ -184,13 +169,10 @@ namespace osum
             //todo: make update actually update on iphone and call from game architecture
             Update(e);
 
-            spriteManager.Update();
-            CurrentMode.Update();
-
             //not necessary when drawing background.
-            //GL.ClearColor(0, 0, 0, 1);
+            
 
-            CurrentMode.Draw();
+            Director.Draw();
             spriteManager.Draw();
         }
     }

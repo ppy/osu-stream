@@ -40,9 +40,11 @@
     <Compile Include="Audio\BackgroundAudioPlayerMono.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayer.cs" />
+    <Compile Include="Director.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
+    <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Support\Desktop\GameBaseMono.cs" />
     <Compile Include="Support\Desktop\GameWindowMono.cs" />
     <Compile Include="Support\IUpdateable.cs" />
+    <Compile Include="Support\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">

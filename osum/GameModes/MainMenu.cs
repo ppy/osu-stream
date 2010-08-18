@@ -29,22 +29,30 @@ namespace osum.GameModes
             spriteManager.Add(osuLogo);
 			
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
-			
-			//osuLogo.Transform(new Transformation(new Vector2(0,0),new Vector2(1024,768),0,5000));
 
+			
             sampleTest = GameBase.Instance.soundEffectPlayer.Load("Skins/Default/normal-hitclap.wav");
 
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
         }
-
+		
+		public override void Dispose ()
+		{
+			InputManager.OnDown -= new InputHandler(InputManager_OnDown);
+			
+			base.Dispose();
+		}
+		
         void InputManager_OnDown(InputSource source)
         {
             GameBase.Instance.soundEffectPlayer.PlayBuffer(sampleTest);
+			
+			Director.ChangeMode(OsuMode.SongSelect, new Transition());
         }
 
         public override void Update()
         {
-            if (InputManager.IsTracking)
+            if (InputManager.IsTracking && InputManager.IsPressed)
 				osuLogo.Position = InputManager.MainPointerPosition;
 			
 			base.Update();
@@ -54,7 +62,7 @@ namespace osum.GameModes
         {
             base.Draw();
 			
-			osuLogo.ScaleScalar = 1+GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
+			osuLogo.ScaleScalar = 1 + GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
         }
     }
 }
