@@ -105,12 +105,12 @@ namespace osum
 			GL.Rotate(90, 0, 0, 1);
 			GL.Translate(-height / 2, -width / 2, 0);
 			
-			//GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
-			
 			GL.EnableClientState (All.VertexArray);
 			GL.EnableClientState (All.TextureCoordArray);
 			GL.Enable (All.Texture2D);
 			GL.BlendFunc (All.BlendSrc, All.BlendDst);
+			
+			GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
 			GameBase.Instance.Draw(e);
 			
