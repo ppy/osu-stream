@@ -9,17 +9,30 @@ namespace osum
     /// </summary>
 	public static class Director
 	{
+        /// <summary>
+        /// The active game mode, which is being drawn to screen.
+        /// </summary>
         internal static GameMode CurrentMode {get; private set;}
+
+        /// <summary>
+        /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
+        /// </summary>
 		internal static OsuMode PendingMode {get; private set;}
-		
+
+        /// <summary>
+        /// The transition being used to introduce a pending mode.
+        /// </summary>
 		private static Transition ActiveTransition;
-		
+
+        /// <summary>
+        /// Changes the active game mode to a new requested mode, with a possible transition.
+        /// </summary>
+        /// <param name="mode">The new mode.</param>
+        /// <param name="transition">The transition (null for instant switching).</param>
+        /// <returns></returns>
 		internal static bool ChangeMode(OsuMode mode, Transition transition)
         {
             if (mode == OsuMode.Unknown) return false;
-
-            if (CurrentMode != null)
-                CurrentMode.Dispose();
 
 			if (transition == null)
 			{
@@ -31,12 +44,15 @@ namespace osum
 			ActiveTransition = transition;
             return true;
         }
-		
+
+        /// <summary>
+        /// Handles switching to a new OsuMode. Acts as a fatory to create the material GameMode instance and dispose of any previous mode.
+        /// </summary>
+        /// <param name="newMode">The new mode specification.</param>
 		private static void changeMode(OsuMode newMode)
 		{
             //Create the actual mode
 			GameMode mode = null;
-			
 			
 			switch (newMode)
 			{
@@ -48,16 +64,23 @@ namespace osum
 					break;
 			}
 			
-			if (mode != null)
+			//Can we ever fail to create a mode?
+            if (mode != null)
 			{
-				PendingMode = OsuMode.Unknown;
-				ActiveTransition = null;
+                if (CurrentMode != null)
+                    CurrentMode.Dispose();
+
 				CurrentMode = mode;
-				
 				CurrentMode.Initialize();
 			}
+
+            ActiveTransition = null;
+            PendingMode = OsuMode.Unknown;
 		}
-		
+
+        /// <summary>
+        /// Updates the director, along with current game mode.
+        /// </summary>
 		internal static void Update()
 		{
 			if (ActiveTransition != null)
@@ -70,7 +93,10 @@ namespace osum
 			
 			CurrentMode.Update();
 		}
-		
+
+        /// <summary>
+        /// Draws the current game mode.
+        /// </summary>
 		internal static void Draw()
 		{
 			CurrentMode.Draw();

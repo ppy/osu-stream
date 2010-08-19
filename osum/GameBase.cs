@@ -68,10 +68,12 @@ namespace osum
 
         public static double ElapsedMilliseconds = 1000/60f;
 
-
         internal IBackgroundAudioPlayer backgroundAudioPlayer;
         internal SoundEffectPlayer soundEffectPlayer;
 
+        /// <summary>
+        /// A list of components which get updated every frame.
+        /// </summary>
         public static List<IUpdateable> Components = new List<IUpdateable>();
 
         public GameBase()
@@ -85,6 +87,9 @@ namespace osum
         /// </summary>
         public abstract void MainLoop();
 
+        /// <summary>
+        /// Setup viewport and projection matrix. Should be called after a resolution/orientation change.
+        /// </summary>
         public virtual void SetupScreen()
         {
             StandardSize = new Size(1024, (int)(1024 * (float)WindowSize.Height / WindowSize.Width));
@@ -102,6 +107,9 @@ namespace osum
             GL.LoadIdentity();
         }
 
+        /// <summary>
+        /// This is where the magic happens.
+        /// </summary>
         public virtual void Initialize()
         {
             SetupScreen();
@@ -121,23 +129,34 @@ namespace osum
                 throw new Exception("No sound effect player registered");
             Components.Add(soundEffectPlayer);
 
+            //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
-
-            //if (backgroundAudioPlayer != null) backgroundAudioPlayer.Play();
         }
 
+        /// <summary>
+        /// Initializes the sound effects engine.
+        /// </summary>
         protected virtual void InitializeSoundEffects()
         {
             soundEffectPlayer = new SoundEffectPlayer();
         }
 
+        /// <summary>
+        /// Initializes the background audio playback engine.
+        /// </summary>
         protected abstract void InitializeBackgroundAudio();
 
+        /// <summary>
+        /// Initializes the input management subsystem.
+        /// </summary>
         protected abstract void InitializeInput();
 
         int frameCount;
         double frameTime;
 
+        /// <summary>
+        /// Main update cycle.
+        /// </summary>
         public void Update(FrameEventArgs e)
         {
             double lastTime = Clock.TimeAccurate;
@@ -164,6 +183,9 @@ namespace osum
 			spriteManager.Update();
         }
 
+        /// <summary>
+        /// Main draw cycle.
+        /// </summary>
         public void Draw(FrameEventArgs e)
         {
             //todo: make update actually update on iphone and call from game architecture

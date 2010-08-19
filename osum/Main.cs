@@ -10,7 +10,6 @@ namespace osum
 		
 		static void Main (string[] args)
 		{
-			
 #if IPHONE
 			game = new GameBaseIphone();
 #else
