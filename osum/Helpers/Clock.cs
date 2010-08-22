@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using osum.Support;
 
 namespace osum.Helpers
 {
@@ -33,12 +34,14 @@ namespace osum.Helpers
             get { return (time * 1000); }
         }
 
+        static double currentFrameAudioTime;
+
         /// <summary>
         /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
         /// </summary>
         public static int AudioTime
         {
-            get { return (int)((time - zero) * 1000); }
+            get { return (int)(currentFrameAudioTime*1000); }
         }
 
         /// <summary>
@@ -59,15 +62,13 @@ namespace osum.Helpers
             }
         }
 
-        public static void ResetAudioTime()
-        {
-            //todo: this shouldn't really happen. audio time is never really reset.
-            zero = time;
-        }
-
         public static void Update(double elapsed)
         {
             time += elapsed;
+
+            currentFrameAudioTime = AudioTimeSource.CurrentTime;
         }
+
+        public static ITimeSource AudioTimeSource { private get; set; }
     }
 }

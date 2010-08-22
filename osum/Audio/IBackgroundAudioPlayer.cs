@@ -5,7 +5,7 @@ namespace osum
     /// <summary>
     /// Interface for a class which plays music. Provides access to specific information during playback such as time, levels etc.
     /// </summary>
-    public interface IBackgroundAudioPlayer : IUpdateable
+    public interface IBackgroundAudioPlayer : IUpdateable, ITimeSource
     {
         /// <summary>
         /// Gets the current volume.
@@ -15,6 +15,11 @@ namespace osum
         {
             get;
         }
+
+        /// <summary>
+        /// Loads an audio track.
+        /// </summary>
+        bool Load(string filename);
 
         /// <summary>
         /// Plays the loaded audio.

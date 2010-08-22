@@ -13,7 +13,7 @@ namespace osum
 #if IPHONE
 			game = new GameBaseIphone();
 #else
-			game = new GameBaseMono();
+			game = new GameBaseDesktop();
 #endif			
 		}
 	}

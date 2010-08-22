@@ -6,24 +6,24 @@ using OpenTK.Graphics.OpenGL;
 
 namespace osum
 {
-	public class GameBaseMono : GameBase
+	public class GameBaseDesktop : GameBase
 	{
-        GameWindowMono gameWindow;
+        GameWindowDesktop gameWindow;
 
-        public GameBaseMono()
+        public GameBaseDesktop()
 		{
 		}
 		
 		override public void MainLoop()
 		{
-			gameWindow = new GameWindowMono();
+			gameWindow = new GameWindowDesktop();
             WindowSize = gameWindow.ClientSize;
             gameWindow.Run();
 		}
 
         protected override void InitializeBackgroundAudio()
         {
-            backgroundAudioPlayer = new BackgroundAudioPlayerMono();
+            backgroundAudioPlayer = new BackgroundAudioPlayerDesktop();
         }
 
         protected override void InitializeInput()

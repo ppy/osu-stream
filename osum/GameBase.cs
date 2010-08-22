@@ -66,7 +66,7 @@ namespace osum
 
         internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width / 2, StandardSize.Height / 2); } }
 
-        public static double ElapsedMilliseconds = 1000/60f;
+        public static double ElapsedMilliseconds = 1000 / 60f;
 
         internal IBackgroundAudioPlayer backgroundAudioPlayer;
         internal SoundEffectPlayer soundEffectPlayer;
@@ -113,7 +113,7 @@ namespace osum
         public virtual void Initialize()
         {
             SetupScreen();
-			
+
             InputManager.Initialize();
             InitializeInput();
             if (InputManager.RegisteredSources.Count == 0)
@@ -122,6 +122,7 @@ namespace osum
             InitializeBackgroundAudio();
             if (backgroundAudioPlayer == null)
                 throw new Exception("No background audio manager registered");
+            Clock.AudioTimeSource = backgroundAudioPlayer;
             Components.Add(backgroundAudioPlayer);
 
             InitializeSoundEffects();
@@ -175,12 +176,12 @@ namespace osum
                 frameTime = 0;
                 frameCount = 0;
             }
-			
-			Director.Update();
+
+            Director.Update();
 
             Components.ForEach(c => c.Update());
-			
-			spriteManager.Update();
+
+            spriteManager.Update();
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace osum
             Update(e);
 
             //not necessary when drawing background.
-            
+
 
             Director.Draw();
             spriteManager.Draw();

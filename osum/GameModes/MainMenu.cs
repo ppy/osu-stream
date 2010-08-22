@@ -33,6 +33,8 @@ namespace osum.GameModes
 			
             sampleTest = GameBase.Instance.soundEffectPlayer.Load("Skins/Default/normal-hitclap.wav");
 
+            GameBase.Instance.backgroundAudioPlayer.Load("test.mp3");
+
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
         }
 		
@@ -48,6 +50,8 @@ namespace osum.GameModes
             GameBase.Instance.soundEffectPlayer.PlayBuffer(sampleTest);
 			
 			Director.ChangeMode(OsuMode.SongSelect, new Transition());
+
+            GameBase.Instance.backgroundAudioPlayer.Play();
         }
 
         public override void Update()

@@ -9,10 +9,10 @@ using System.Drawing;
 
 namespace osum
 {
-    class GameWindowMono : GameWindow
+    class GameWindowDesktop : GameWindow
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
-        public GameWindowMono() : base(960, 640, GraphicsMode.Default, "osu!m")
+        public GameWindowDesktop() : base(960, 640, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
             //GameBase.WindowSize = new Size(960,640);

@@ -37,7 +37,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Audio\BackgroundAudioPlayerMono.cs" />
+    <Compile Include="Audio\BackgroundAudioPlayerDesktop.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayer.cs" />
     <Compile Include="Director.cs" />
@@ -76,8 +76,9 @@
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="GameplayElements\HitObject.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Support\Desktop\GameBaseMono.cs" />
-    <Compile Include="Support\Desktop\GameWindowMono.cs" />
+    <Compile Include="Support\Desktop\GameBaseDesktop.cs" />
+    <Compile Include="Support\Desktop\GameWindowDesktop.cs" />
+    <Compile Include="Support\ITimeSource.cs" />
     <Compile Include="Support\IUpdateable.cs" />
     <Compile Include="Support\Transition.cs" />
   </ItemGroup>
@@ -92,8 +93,19 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\BassNet\BassNet.csproj">
+      <Project>{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}</Project>
+      <Name>BassNet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bass.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bass_fx.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

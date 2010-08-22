@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BassNet</RootNamespace>
+    <AssemblyName>BassNet</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BassFx.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASSFXBpm.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASSFXBpmTrans.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASSFXChan.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASSFXReverse.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_APF.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_AUTOWAH.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_CHORUS.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_COMPRESSOR.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_DAMP.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_DISTORTION.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_ECHO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_ECHO2.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_ECHO3.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_FLANGER.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_LPF.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_MIX.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_PEAKEQ.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_PHASER.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_REVERB.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BASS_BFX_VOLUME.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BPMBEATPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BPMPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Fx\BPMPROCESSPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\BassTags.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\ID3v1Genre.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\ID3v2Reader.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\IWMHeaderInfo3.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\IWMMetadataEditor.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\Tag.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\TAG_INFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\WMT_ATTR_DATATYPE.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\AddOn\Tags\WMT_CODEC_INFO_TYPE.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Bass.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS3DAlgorithm.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS3DMode.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSActive.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSAttribute.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSBuffer.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSChannelType.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSConfig.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSData.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSDeviceInfo.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSDirectSound.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSError.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSFlag.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSFXPhase.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSFXType.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSInfo.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSInit.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSInput.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSInputType.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSMode.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BassNet.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSRecordFormat.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSRecordInfo.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSStreamFilePosition.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSStreamProc.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSStreamSystem.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSSync.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSTag.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSTimer.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASSVam.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_3DVECTOR.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_CHANNELINFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_CHANNELINFO_INTERNAL.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_DEVICEINFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_DEVICEINFO_INTERNAL.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_FILEPROCS.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_INFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_PLUGINFORM.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_PLUGININFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_RECORDINFO.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\BASS_SAMPLE.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\DOWNLOADPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\DSPPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\FILECLOSEPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\FILELENPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\FILEREADPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\FILESEEKPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Misc\BaseDSP.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Misc\DSP_BufferStream.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Misc\DSP_Gain.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Misc\DSP_Pan.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Misc\HiPerfTimer.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\RECORDPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\STREAMPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\SYNCPROC.cs" />
+    <Compile Include="Bass.Net\Un4seen\Bass\Utils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
