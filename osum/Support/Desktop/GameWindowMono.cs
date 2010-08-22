@@ -12,9 +12,7 @@ namespace osum
     class GameWindowMono : GameWindow
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
-        public GameWindowMono()
-//            : base(Constants.GamefieldDefaultWidth, Constants.GamefieldDefaultHeight, GraphicsMode.Default, "osu!m")
-            : base(960,640, GraphicsMode.Default, "osu!m")
+        public GameWindowMono() : base(960, 640, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
             //GameBase.WindowSize = new Size(960,640);
@@ -30,12 +28,12 @@ namespace osum
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
+            
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-
+            
             GL.Disable(EnableCap.Lighting);
             GL.Enable(EnableCap.Blend);
-
+            
             GameBase.Instance.Initialize();
         }
 
@@ -48,13 +46,13 @@ namespace osum
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-
-            GameBase.Instance.SetupScreen();
-
-            /*Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);*/
             
-            //GL.LoadMatrix(ref projection);
+            GameBase.Instance.SetupScreen();
+            
         }
+        /*Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);*/
+
+        //GL.LoadMatrix(ref projection);
 
         /// <summary>
         /// Called when it is time to setup the next frame. Add you game logic here.
@@ -63,13 +61,13 @@ namespace osum
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
-
+            
             if (Keyboard[Key.Escape])
                 Exit();
-
+            
             // global clock
             //Clock.Update(e.Time);
-
+            
             //sm.Update();
         }
 
@@ -80,13 +78,13 @@ namespace osum
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
+            
             //ensure the gl context is in the current thread.
             MakeCurrent();
-			
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			
-			GameBase.Instance.Draw(e);
+            
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            
+            GameBase.Instance.Draw(e);
             
             // display
             SwapBuffers();

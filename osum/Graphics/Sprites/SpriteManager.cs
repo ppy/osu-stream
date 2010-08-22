@@ -21,27 +21,30 @@ namespace osum.Graphics.Sprites
 
         internal void Add(ISpriteable sprite)
         {
+            //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
             if (!sprites.Contains(sprite))
                 sprites.Add(sprite);
         }
 
+        /// <summary>
+        ///   Update all sprites managed by this sprite manager.
+        /// </summary>
         internal void Update()
         {
             for (int i = 0; i < sprites.Count; i++)
-            {
                 sprites[i].Update();
-            }
         }
 
+        /// <summary>
+        ///   Draw all sprites managed by this sprite manager.
+        /// </summary>
         internal void Draw()
         {
             TextureGl.EnableTexture();
-
+            
             for (int i = 0; i < sprites.Count; i++)
-            {
                 sprites[i].Draw();
-            }
-
+            
             TextureGl.DisableTexture();
         }
 
@@ -50,7 +53,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        internal static float drawOrderFwdLowPrio(float number)
+        static internal float drawOrderFwdLowPrio(float number)
         {
             return (number % 200000) / 1000000;
         }
@@ -60,9 +63,9 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        internal static float drawOrderFwdPrio(float number)
+        static internal float drawOrderFwdPrio(float number)
         {
-            return 0.8F + (number % 6000000) / 30000000;
+            return 0.8f + (number % 6000000) / 30000000;
         }
 
         /// <summary>
@@ -70,13 +73,14 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        internal static float drawOrderBwd(float number)
+        static internal float drawOrderBwd(float number)
         {
-            return 0.8F - (number % 6000000) / 10000000;
+            return 0.8f - (number % 6000000) / 10000000;
         }
 
         public void Dispose()
         {
+            //todo: do we want to dispose of sprites being managed by this manager? possibly.
             sprites = null;
         }
     }
