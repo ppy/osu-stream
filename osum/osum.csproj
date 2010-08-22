@@ -15,7 +15,7 @@
     <BundleIdentifier>osu</BundleIdentifier>
     <BundleVersion>1000</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
-    <BundleIcon>icon.png</BundleIcon>
+    <BundleIcon>Support\iPhone\icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
     <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
@@ -93,8 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="icon%402x.png" />
-    <None Include="icon.png" />
+    <None Include="Support\iPhone\icon.png" />
+    <None Include="Support\iPhone\icon%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
