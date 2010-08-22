@@ -50,9 +50,6 @@ namespace osum
             GameBase.Instance.SetupScreen();
             
         }
-        /*Matrix4 projection = Matrix4.CreateOrthographicOffCenter(0, 1024, 768, 0, 0, 1);*/
-
-        //GL.LoadMatrix(ref projection);
 
         /// <summary>
         /// Called when it is time to setup the next frame. Add you game logic here.
@@ -65,10 +62,7 @@ namespace osum
             if (Keyboard[Key.Escape])
                 Exit();
             
-            // global clock
-            //Clock.Update(e.Time);
-            
-            //sm.Update();
+            //todo: make update happen from here.
         }
 
         /// <summary>
