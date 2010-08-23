@@ -12,8 +12,8 @@ namespace osum
 		public override OpenTK.Vector2 GamePosition {
 			get
 			{
-				return new Vector2((Location.Y / GameBase.WindowSize.Width) * GameBase.StandardSize.Width,
-				                   GameBase.StandardSize.Height - ((Location.X / GameBase.WindowSize.Height) * GameBase.StandardSize.Height));
+				return new Vector2((Location.Y / GameBase.WindowSize.Width) * GameBase.WindowBaseSize.Width,
+				                   GameBase.WindowBaseSize.Height - ((Location.X / GameBase.WindowSize.Height) * GameBase.WindowBaseSize.Height));
 			}
 		}
 	}

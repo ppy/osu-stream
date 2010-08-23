@@ -124,7 +124,7 @@ namespace osum
             //Setup window...
             WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
 
-            GL.Viewport(new Rectangle(0,0,GameBase.WindowSize.Width,GameBase.WindowSize.Height));
+            //GL.Viewport(0,0,GameBase.WindowSize.Width,GameBase.WindowSize.Height);
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();

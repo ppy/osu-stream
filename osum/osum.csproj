@@ -110,7 +110,6 @@
     <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
-    <Compile Include="Graphics\Sprites\ISpriteable.cs" />
     <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
@@ -154,6 +153,8 @@
     <Compile Include="GameplayElements\HitFactory.cs" />
     <Compile Include="GameplayElements\HitObjects\Slider.cs" />
     <Compile Include="GameModes\Play.cs" />
+    <Compile Include="Support\IDrawable.cs" />
+    <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
