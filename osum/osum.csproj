@@ -16,7 +16,7 @@
     <BundleVersion>1000</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>Support\iPhone\icon.png</BundleIcon>
-    <BundleIconHigh>icon@2x.png</BundleIconHigh>
+    <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
     <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
   </PropertyGroup>
@@ -66,7 +66,7 @@
     <additionalargs>/unsafe</additionalargs>
     <Externalconsole>true</Externalconsole>
     <MtouchSdkVersion>4.0</MtouchSdkVersion>
-    <CodesignProvision>30956048-014D-4C71-8C2F-FD9ADA9D08F0</CodesignProvision>
+    <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -113,9 +113,6 @@
     <Compile Include="Graphics\Sprites\ISpriteable.cs" />
     <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
-    <Compile Include="GameplayElements\Spinner.cs" />
-    <Compile Include="GameplayElements\HitObject.cs" />
-    <Compile Include="GameplayElements\HitCircle.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Constants.cs" />
@@ -147,6 +144,16 @@
     <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="Director.cs" />
     <Compile Include="Support\Transition.cs" />
+    <Compile Include="Support\ITimeSource.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
+    <Compile Include="GameplayElements\HitObjects\Spinner.cs" />
+    <Compile Include="GameplayElements\HitObjectManager.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitFactoryOsu.cs" />
+    <Compile Include="GameplayElements\HitFactory.cs" />
+    <Compile Include="GameplayElements\HitObjects\Slider.cs" />
+    <Compile Include="GameModes\Play.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -158,6 +165,9 @@
     <Folder Include="Input\Sources\" />
     <Folder Include="Helpers\Audio\" />
     <Folder Include="Helpers\" />
+    <Folder Include="GameplayElements\HitObjects\" />
+    <Folder Include="GameplayElements\" />
+    <Folder Include="GameplayElements\Beatmaps\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
@@ -661,5 +671,18 @@
     <Content Include="Skins\Default\normal-hitfinish.wav" />
     <Content Include="Skins\Default\normal-hitnormal.wav" />
     <Content Include="Skins\Default\normal-hitwhistle.wav" />
+    <Content Include="Beatmaps\bcl\background.png" />
+    <Content Include="Beatmaps\bcl\babycruisingedit.mp3" />
+    <Content Include="Beatmaps\bcl\background-real.png" />
+    <Content Include="Beatmaps\bcl\beatmap.osu" />
+    <Content Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29 [Normal].osu" />
+    <Content Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29.osb" />
+    <Content Include="Beatmaps\bcl\play-skip.png" />
+    <Content Include="Beatmaps\bcl\play-warningarrow.png" />
+    <Content Include="Beatmaps\bcl\section-fail.png" />
+    <Content Include="Beatmaps\bcl\section-pass.png" />
+    <Content Include="Beatmaps\bcl\spinner-circle.png" />
+    <Content Include="Beatmaps\bcl\spinner-metre.png" />
+    <Content Include="Beatmaps\bcl\spinnerspin.mp3" />
   </ItemGroup>
 </Project>

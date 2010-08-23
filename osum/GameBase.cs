@@ -48,6 +48,7 @@ using osum.Input;
 using osum.GameModes;
 using osum.Support;
 using System.Collections.Generic;
+using System.Globalization;
 
 
 namespace osum
@@ -65,6 +66,8 @@ namespace osum
         internal static Size StandardSize = new Size(1024, 768);
 
         internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width / 2, StandardSize.Height / 2); } }
+
+        internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public static double ElapsedMilliseconds = 1000 / 60f;
 

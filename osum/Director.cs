@@ -62,6 +62,9 @@ namespace osum
 				case OsuMode.SongSelect:
 					mode = new SongSelect();
 					break;
+                case OsuMode.Play:
+                    mode = new Play();
+                    break;
 			}
 			
 			//Can we ever fail to create a mode?

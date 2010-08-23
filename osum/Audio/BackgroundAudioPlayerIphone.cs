@@ -18,22 +18,13 @@ namespace osum
 			AudioSession.Category = AudioSessionCategory.SoloAmbientSound;
 			AudioSession.SetActive(true);
 #endif
-
-			string path = NSBundle.MainBundle.BundlePath + "/test.mp3";
-			
-			Console.WriteLine("ca find file ("+path+"):" + File.Exists(path));
-			
-			NSUrl url = NSUrl.FromFilename(path);
-			
-			NSError error;
-			player = AVAudioPlayer.FromUrl(url,out error);
-			
-			player.MeteringEnabled = true;
 		}
 		
 		public float CurrentVolume {
 			get {
-				player.UpdateMeters();
+                if (player == null) return 0;
+
+                player.UpdateMeters();
 				return player.AveragePower(0);
 			}
 		}
@@ -53,6 +44,30 @@ namespace osum
 		{
 			
 		}
+
+        public bool Load(string filename)
+        {
+            if (player != null)
+                player.Dispose();
+
+            string path = filename;//NSBundle.MainBundle.BundlePath + "/test.mp3";
+            NSError error;
+
+            NSUrl url = NSUrl.FromFilename(path);
+
+            player = AVAudioPlayer.FromUrl(url,out error);
+            player.MeteringEnabled = true;
+
+            return error == null;
+        }
+
+        public double CurrentTime
+        {
+            get
+            {
+                return player == null ? 0 : player.CurrentTime;
+            }
+        }
 	}
 }
 

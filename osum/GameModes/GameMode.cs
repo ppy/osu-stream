@@ -10,7 +10,8 @@ namespace osum.GameModes
 	{
 		Unknown = 0,
 		MainMenu,
-		SongSelect
+		SongSelect,
+        Play
 	}
 
     /// <summary>

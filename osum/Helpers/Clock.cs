@@ -66,7 +66,12 @@ namespace osum.Helpers
         {
             time += elapsed;
 
-            currentFrameAudioTime = AudioTimeSource.CurrentTime;
+            currentFrameAudioTime += elapsed;
+
+            double sourceTime = AudioTimeSource.CurrentTime;
+
+            if (Math.Abs(currentFrameAudioTime - sourceTime) > 0.01)
+                currentFrameAudioTime = sourceTime;
         }
 
         public static ITimeSource AudioTimeSource { private get; set; }

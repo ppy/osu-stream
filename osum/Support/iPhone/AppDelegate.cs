@@ -42,7 +42,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 
-namespace osum
+namespace osum.Support.iPhone
 {
 	// The name AppDelegate is referenced in the MainWindow.xib file.
 	public partial class AppDelegate : UIApplicationDelegate

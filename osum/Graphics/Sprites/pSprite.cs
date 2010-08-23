@@ -215,9 +215,11 @@ namespace osum.Graphics.Sprites
             this.Rotation = 0;
             this.effect = SpriteEffect.None;
             this.blending = BlendingFactorDest.OneMinusSrcAlpha;
-            this.Clocking = ClockTypes.Game;
             this.DrawDepth = depth;
             this.AlwaysDraw = alwaysDraw;
+
+            if (!alwaysDraw)
+                this.Alpha = 0;
 
             this.Texture = texture;
         }
