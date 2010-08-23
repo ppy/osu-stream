@@ -25,7 +25,7 @@ namespace osum.GameModes
                             ClockTypes.Game, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(menuBackground);
 
-            osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, new Vector2(GameBase.StandardSizeHalf.Width,GameBase.StandardSizeHalf.Height), 1, true, Color4.White);
+            osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
 			
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));

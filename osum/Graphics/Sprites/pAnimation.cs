@@ -207,7 +207,7 @@ namespace osum.Graphics.Sprites
 
         public override pSprite Clone()
         {
-            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, StartColour);
+            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
             clone.frameSkip = frameSkip;
             foreach (Transformation t in Transformations)
                 clone.Transformations.Add(t.Clone());

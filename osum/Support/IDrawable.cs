@@ -6,7 +6,7 @@ using osum.Support;
 
 namespace osum.Graphics.Sprites
 {
-    internal interface ISpriteable : IUpdateable
+    internal interface IDrawable : IUpdateable
     {
         /// <summary>
         /// Draws this object to screen.

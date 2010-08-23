@@ -21,7 +21,7 @@ namespace osum
 		{
 			get
 			{
-				return new Vector2(Location.X/GameBase.WindowSize.Width * GameBase.StandardSize.Width, Location.Y/GameBase.WindowSize.Height * GameBase.StandardSize.Height);	
+				return new Vector2(Location.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, Location.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
 			}
 		}
 	}

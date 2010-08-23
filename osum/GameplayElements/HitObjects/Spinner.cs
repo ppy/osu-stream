@@ -48,7 +48,7 @@ namespace osum.GameplayElements
 
         internal Spinner(int startTime, int endTime, HitObjectSoundType soundType, bool spinnerStuff)
         {
-            Position = new Vector2(Constants.GamefieldDefaultWidth / 2, Constants.GamefieldDefaultHeight / 2);
+            Position = new Vector2(GameBase.WindowBaseSize.Width / 2, GameBase.WindowBaseSize.Height / 2);
             StartTime = startTime;
             EndTime = endTime;
             Type = HitObjectType.Spinner | HitObjectType.NewCombo;
@@ -107,7 +107,7 @@ namespace osum.GameplayElements
             spriteCircle =
                 new pSprite(SkinManager.Load("spinner-circle"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                            new Vector2(Constants.GamefieldDefaultWidth/2, (SPINNER_TOP + Constants.GamefieldDefaultHeight)/2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
+                            new Vector2(GameBase.WindowBaseSize.Width/2, (SPINNER_TOP + GameBase.WindowBaseSize.Height)/2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
             SpriteCollection.Add(spriteCircle);
 
             spriteScoreMetre =
@@ -148,14 +148,14 @@ namespace osum.GameplayElements
                 SpriteApproachCircle =
                     new pSprite(SkinManager.Load("spinner-approachcircle"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(Constants.GamefieldDefaultWidth / 2, (SPINNER_TOP + Constants.GamefieldDefaultHeight) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
+                                new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             }
             else
             {
                 SpriteApproachCircle =
                     new pSprite(SkinManager.Load("approachcircle"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(Constants.GamefieldDefaultWidth / 2, (SPINNER_TOP + Constants.GamefieldDefaultHeight) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade); //SkinManager.LoadColour("SpinnerApproachCircle"));
+                                new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade); //SkinManager.LoadColour("SpinnerApproachCircle"));
             }
 
             //if (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden))
@@ -163,7 +163,7 @@ namespace osum.GameplayElements
 
             spriteBonus = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                          new Vector2(Constants.GamefieldDefaultWidth / 2, (Constants.GamefieldDefaultHeight - SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
+                                          new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height - SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteCollection.Add(spriteBonus);
 
             UpdateDraw();
@@ -173,7 +173,7 @@ namespace osum.GameplayElements
                 SpriteSpin = 
                     new pSprite(SkinManager.Load("spinner-spin"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(Constants.GamefieldDefaultWidth / 2, (Constants.GamefieldDefaultHeight + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
+                                new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
                 SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
                 SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
                 SpriteCollection.Add(SpriteSpin);
@@ -181,7 +181,7 @@ namespace osum.GameplayElements
                 SpriteClear =
                     new pSprite(SkinManager.Load("spinner-clear"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(Constants.GamefieldDefaultWidth / 2, (Constants.GamefieldDefaultHeight + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
+                                new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
                 SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
                 SpriteCollection.Add(SpriteClear);
             }

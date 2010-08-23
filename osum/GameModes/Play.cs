@@ -25,9 +25,27 @@ namespace osum.GameModes
 
             GameBase.Instance.backgroundAudioPlayer.Load("Beatmaps/bcl/babycruisingedit.mp3");
             GameBase.Instance.backgroundAudioPlayer.Play();
+        }
 
-            foreach (HitObject h in hitObjectManager.hitObjects)
-                spriteManager.Add(h);
+        public override void Dispose()
+        {
+            hitObjectManager.Dispose();
+
+            base.Dispose();
+        }
+
+        public override void Draw()
+        {
+            hitObjectManager.Draw();
+
+            base.Draw();
+        }
+
+        public override void Update()
+        {
+            hitObjectManager.Update();
+
+            base.Update();
         }
         
         

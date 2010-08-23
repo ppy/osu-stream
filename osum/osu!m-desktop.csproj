@@ -44,7 +44,17 @@
     <Compile Include="GameBase.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
+    <Compile Include="GameModes\Play.cs" />
     <Compile Include="GameModes\SongSelect.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
+    <Compile Include="GameplayElements\HitFactory.cs" />
+    <Compile Include="GameplayElements\HitObjectManager.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitFactoryOsu.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
+    <Compile Include="GameplayElements\HitObjects\Slider.cs" />
+    <Compile Include="GameplayElements\HitObjects\Spinner.cs" />
+    <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
@@ -58,15 +68,13 @@
     <Compile Include="Main.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
-    <Compile Include="GameplayElements\HitCircle.cs" />
-    <Compile Include="GameplayElements\Spinner.cs" />
     <Compile Include="Helpers\Clock.cs" />
     <Compile Include="Helpers\Delegates.cs" />
     <Compile Include="Graphics\pTexture.cs" />
     <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
-    <Compile Include="Graphics\Sprites\ISpriteable.cs" />
+    <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />
     <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
@@ -74,7 +82,6 @@
     <Compile Include="Graphics\Sprites\SpriteEffect.cs" />
     <Compile Include="Graphics\Sprites\Transform.cs" />
     <Compile Include="Input\InputManager.cs" />
-    <Compile Include="GameplayElements\HitObject.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Support\Desktop\GameBaseDesktop.cs" />
     <Compile Include="Support\Desktop\GameWindowDesktop.cs" />
@@ -104,6 +111,36 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="bass_fx.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\babycruisingedit.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\background-real.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\play-skip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\play-warningarrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\section-fail.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\section-pass.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\spinner-circle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\spinner-metre.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Beatmaps\bcl\spinnerspin.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
@@ -844,5 +881,16 @@
     <Content Include="Skins\Default\worldmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Beatmaps\bcl\beatmap.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29 [Normal].osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29.osb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

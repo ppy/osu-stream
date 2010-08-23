@@ -130,11 +130,10 @@ namespace osum.Graphics.Sprites
         BottomRight
     }
 
-    internal class pSprite : ISpriteable
+    internal class pSprite : IDrawable
     {
         protected List<Transformation> transformations;
 
-        internal Color4 StartColour;
         internal Vector2 StartPosition;
 
         protected pTexture texture;
@@ -142,7 +141,7 @@ namespace osum.Graphics.Sprites
         protected SpriteEffect effect;
         protected BlendingFactorDest blending;
 
-        internal Vector2 Position, FieldPosition, Scale;
+        internal Vector2 Position, Scale;
         internal FieldTypes Field;
         internal OriginTypes Origin;
         internal ClockTypes Clocking;
@@ -162,11 +161,7 @@ namespace osum.Graphics.Sprites
 
         internal float ScaleScalar { set { Scale = new Vector2(value, value); } }
 
-        internal float Alpha
-        {
-            get { return Colour.A; }
-            set { Colour.A = value; }
-        }
+        internal float Alpha;
 
         internal virtual pTexture Texture
         {
@@ -209,7 +204,7 @@ namespace osum.Graphics.Sprites
             this.Position = position;
             this.StartPosition = position;
             this.Colour = colour;
-            this.StartColour = colour;
+            this.Colour = colour;
 
             this.Scale = Vector2.One;
             this.Rotation = 0;
@@ -219,7 +214,9 @@ namespace osum.Graphics.Sprites
             this.AlwaysDraw = alwaysDraw;
 
             if (!alwaysDraw)
-                this.Alpha = 0;
+                Alpha = 0;
+            else
+                Alpha = 1;
 
             this.Texture = texture;
         }
@@ -295,13 +292,11 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            float a = Colour.A;
                             Colour = t.EndColour;
-                            Colour.A = a;
                             break;
 
                         case TransformationType.Fade:
-                            Colour.A = t.EndFloat;
+                            Alpha = t.EndFloat;
                             break;
 
                         case TransformationType.Movement:
@@ -355,13 +350,11 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            float a = Colour.A;
                             Colour = t.CurrentColour;
-                            Colour.A = a;
                             break;
 
                         case TransformationType.Fade:
-                            Colour.A = t.CurrentFloat;
+                            Alpha = t.CurrentFloat;
                             break;
 
                         case TransformationType.Movement:
@@ -402,15 +395,51 @@ namespace osum.Graphics.Sprites
                     }
                 }
             }
+        }
 
-            switch (Field)
+        protected Vector2 FieldPosition
+        {
+            get
             {
-                case FieldTypes.StandardSnapCentre:
-                    FieldPosition = new Vector2(GameBase.StandardSize.Width / 2 + Position.X, GameBase.StandardSize.Height / 2 + Position.Y);
-                    break;
-                default:
-                    FieldPosition = Position;
-                    break;
+                Vector2 fieldPosition;
+
+                switch (Field)
+                {
+                    case FieldTypes.StandardSnapCentre:
+                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width / 2 + Position.X, GameBase.WindowBaseSize.Height / 2 + Position.Y);
+                        break;
+                    case FieldTypes.Gamefield512x384:
+                        fieldPosition = Position;
+                        GameBase.GamefieldToDisplay(ref fieldPosition);
+                        break;
+                    default:
+                        fieldPosition = Position;
+                        break;
+                }
+
+                return fieldPosition;
+            }
+        }
+
+        protected Vector2 FieldScale
+        {
+            get
+            {
+                switch (Field)
+                {
+                    case FieldTypes.Gamefield512x384:
+                        return Scale * GameBase.SpriteRatio;
+                    default:
+                        return Scale * GameBase.SpriteRatio;
+                }
+            }
+        }
+
+        protected Color4 AlphaAppliedColour
+        {
+            get
+            {
+                return Alpha < 1 ? new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A) : Colour;
             }
         }
 
@@ -425,7 +454,8 @@ namespace osum.Graphics.Sprites
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                     Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
-                    texture.TextureGl.Draw(FieldPosition, originVector, Colour, Scale, Rotation, rect, effect);
+
+                    texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
                 }
             }
 
@@ -451,8 +481,8 @@ namespace osum.Graphics.Sprites
                 return;
 
             int now = Clock.GetTime(Clocking);
-            this.Transform(new Transformation(TransformationType.Fade, 
-                            (float)Alpha, (StartColour.A != 0 ? (float)StartColour.A : 1),
+            this.Transform(new Transformation(TransformationType.Fade,
+                            (float)Alpha, (Colour.A != 0 ? (float)Colour.A : 1),
                             now, now + duration));
         }
 
@@ -461,8 +491,8 @@ namespace osum.Graphics.Sprites
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             int now = Clock.GetTime(Clocking);
-            this.Transform(new Transformation(TransformationType.Fade, 
-                            0, (StartColour.A != 0 ? (float)StartColour.A : 1),
+            this.Transform(new Transformation(TransformationType.Fade,
+                            0, (Colour.A != 0 ? (float)Colour.A : 1),
                             now, now + duration));
         }
 
@@ -514,20 +544,20 @@ namespace osum.Graphics.Sprites
             Transformation tr =
                 new Transformation(Position, destination,
                                    now - (int)Math.Max(1, GameBase.ElapsedMilliseconds),
-                                   now + duration,easing);
+                                   now + duration, easing);
             Transformations.Add(tr);
         }
 
         public virtual pSprite Clone()
         {
-            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, StartColour);
+            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
             clone.Position = Position;
-            
+
             clone.DrawLeft = DrawLeft;
             clone.DrawTop = DrawTop;
             clone.DrawWidth = DrawWidth;
             clone.DrawHeight = DrawHeight;
-            
+
             clone.Scale = Scale;
 
             foreach (Transformation t in Transformations)

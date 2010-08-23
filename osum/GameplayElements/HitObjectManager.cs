@@ -7,17 +7,37 @@ using System.IO;
 using OpenTK;
 using osu.GameplayElements.HitObjects;
 using osu.GameplayElements.HitObjects.Osu;
+using osum.Graphics.Skins;
+using osum.Graphics.Sprites;
 
 #endregion
 
 namespace osum.GameplayElements
 {
-    internal class HitObjectManager
+    /// <summary>
+    /// Class that handles loading of content from a Beatmap, and general handling of anything that involves hitObjects as a group.
+    /// </summary>
+    internal class HitObjectManager : IDrawable, IDisposable
     {
+        /// <summary>
+        /// The loaded beatmap.
+        /// </summary>
         Beatmap beatmap;
+
+        /// <summary>
+        /// A factory to create necessary hitObjects.
+        /// </summary>
         HitFactory hitFactory;
 
+        /// <summary>
+        /// The complete list of hitObjects.
+        /// </summary>
         internal List<HitObject> hitObjects = new List<HitObject>();
+
+        /// <summary>
+        /// Internal spriteManager for drawing all hitObject related content.
+        /// </summary>
+        internal SpriteManager spriteManager = new SpriteManager();
 
         public HitObjectManager(Beatmap beatmap)
         {
@@ -25,9 +45,39 @@ namespace osum.GameplayElements
             hitFactory = new HitFactoryOsu(this);
         }
 
+        public void Dispose()
+        {
+            spriteManager.Dispose();
+        }
+
+        /// <summary>
+        /// Counter for assigning combo numbers to hitObjects during load-time.
+        /// </summary>
+        int currentComboNumber = 1;
+
+        /// <summary>
+        /// Index counter for assigning combo colours during load-time.
+        /// </summary>
+        int colourIndex = 0;
+
+        /// <summary>
+        /// Adds a new hitObject to be managed by this manager.
+        /// </summary>
+        /// <param name="h">The hitObject to manage.</param>
         void Add(HitObject h)
         {
+            if (h.NewCombo)
+            {
+                currentComboNumber = 1;
+                colourIndex = (colourIndex + 1) % SkinManager.DefaultColours.Length;
+            }
+
+            h.ComboNumber = currentComboNumber++;
+            h.SetColour(SkinManager.DefaultColours[colourIndex]);
+
             hitObjects.Add(h);
+
+            spriteManager.Add(h);
         }
 
         public void LoadFile()
@@ -196,19 +246,19 @@ namespace osum.GameplayElements
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[1], GameBase.nfi)));
                                 Vector2 pos = new Vector2(x, y);
                                 int time = (int)Decimal.Parse(split[2], GameBase.nfi);
-                                          //+ BeatmapManager.Current.VersionOffset;
+                                //+ BeatmapManager.Current.VersionOffset;
 
                                 int combo_offset = (Convert.ToInt32(split[3], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 bool new_combo = (type & HitObjectType.NewCombo) > 0;
 
+                                HitObject h = null;
+
                                 if ((type & HitObjectType.Normal) > 0)
                                 {
-                                    HitCircle h = hitFactory.CreateHitCircle(pos, time,
+                                    h = hitFactory.CreateHitCircle(pos, time,
                                                                              lastAddedSpinner ||
                                                                              new_combo,
                                                                              soundType, new_combo ? combo_offset : 0);
-                                    Add(h);
-
                                     lastAddedSpinner = false;
                                 }
                                 else if ((type & HitObjectType.Slider) > 0)
@@ -282,10 +332,16 @@ namespace osum.GameplayElements
                                 }
                                 else if ((type & HitObjectType.Spinner) > 0)
                                 {
-                                    Spinner s = hitFactory.CreateSpinner(time,Convert.ToInt32(split[5], GameBase.nfi), soundType);
-                                    Add(s);
+                                    h = hitFactory.CreateSpinner(time, Convert.ToInt32(split[5], GameBase.nfi), soundType);
                                     lastAddedSpinner = true;
                                 }
+
+                                if (h != null)
+                                {
+                                    Add(h);
+                                }
+
+
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.
@@ -298,6 +354,24 @@ namespace osum.GameplayElements
             }
         }
 
+
+        #region IDrawable Members
+
+        public void Draw()
+        {
+            spriteManager.Draw();
+        }
+
+        #endregion
+
+        #region IUpdateable Members
+
+        public void Update()
+        {
+            spriteManager.Update();
+        }
+
+        #endregion
     }
 
     internal enum FileSection

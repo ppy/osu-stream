@@ -17,7 +17,7 @@ namespace osum.GameModes
     /// <summary>
     /// A specific scene/screen that is to be displayed in the game.
     /// </summary>
-	public abstract class GameMode : ISpriteable, IDisposable
+	public abstract class GameMode : IDrawable, IDisposable
     {
         /// <summary>
         /// Do all initialization here.

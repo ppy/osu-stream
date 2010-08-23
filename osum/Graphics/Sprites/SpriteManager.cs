@@ -7,19 +7,19 @@ namespace osum.Graphics.Sprites
 {
     internal class SpriteManager : IDisposable
     {
-        private List<ISpriteable> sprites;
+        private List<IDrawable> sprites;
 
         internal SpriteManager()
         {
-            this.sprites = new List<ISpriteable>();
+            this.sprites = new List<IDrawable>();
         }
 
-        internal SpriteManager(IEnumerable<ISpriteable> sprites)
+        internal SpriteManager(IEnumerable<IDrawable> sprites)
         {
-            this.sprites = new List<ISpriteable>(sprites);
+            this.sprites = new List<IDrawable>(sprites);
         }
 
-        internal void Add(ISpriteable sprite)
+        internal void Add(IDrawable sprite)
         {
             //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
             if (!sprites.Contains(sprite))

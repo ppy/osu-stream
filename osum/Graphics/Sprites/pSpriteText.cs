@@ -52,7 +52,19 @@ namespace osum.Graphics.Sprites
         internal int SpacingOverlap;
 
         // pushed from pSprite
-        internal string Text;
+        private string text;
+        internal string Text
+        {
+            get { return text; }
+            set
+            {
+                if (text == value) return;
+                
+                text = value;
+                refreshRenderArray();
+            }
+        }
+
         internal bool TextChanged;
         internal Vector2 lastMeasure;
 
@@ -142,7 +154,7 @@ namespace osum.Graphics.Sprites
                         currentX += tex.Width;
                         break;
                     default:
-						tex = SkinManager.Load(TextFont + "-" + text[i]);
+                        tex = SkinManager.Load(TextFont + "-" + text[i]);
                         if (!TextConstantSpacing)
                             currentX += tex.Width;
                         break;
@@ -186,6 +198,8 @@ namespace osum.Graphics.Sprites
 
             lastMeasure = new Vector2(width, height);
 
+            UpdateTextureAlignment();
+
             //DrawWidth = (int)Math.Round(lastMeasure.X);
             //DrawHeight = (int)Math.Round(lastMeasure.Y);
         }
@@ -214,7 +228,7 @@ namespace osum.Graphics.Sprites
                     for (int i = 0; i < renderCoordinates.Count; i++)
                     {
                         // note: no srcRect calculation
-                        renderTextures[i].TextureGl.Draw(Position + renderCoordinates[i], originVector, Colour, Scale, Rotation, null, SpriteEffect.None);
+                        renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i], originVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
                     }
                 }
             }

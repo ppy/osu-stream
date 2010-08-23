@@ -17,7 +17,6 @@ namespace osum
 		override public void MainLoop()
 		{
 			gameWindow = new GameWindowDesktop();
-            WindowSize = gameWindow.ClientSize;
             gameWindow.Run();
 		}
 
@@ -34,9 +33,7 @@ namespace osum
 
         public override void SetupScreen()
         {
-            GameBase.WindowSize = gameWindow.Size;
-
-            GL.Viewport(GameBase.WindowSize);
+            WindowSize = gameWindow.ClientSize;
 
             base.SetupScreen();
         }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pSpriteCollection : ISpriteable
+    internal class pSpriteCollection : IDrawable
     {
         internal List<pSprite> SpriteCollection;
 

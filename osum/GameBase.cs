@@ -62,10 +62,36 @@ namespace osum
         /// </summary>
         private SpriteManager spriteManager = new SpriteManager();
 
-        internal static Size WindowSize;
-        internal static Size StandardSize = new Size(1024, 768);
+        internal static Size WindowBaseSize = new Size(640, 480);
+        internal static Size WindowBaseHalf { get { return new Size(WindowBaseSize.Width / 2, WindowBaseSize.Height / 2); } }
+        internal static Size GamefieldBaseSize =  new Size(512,384);
 
-        internal static Size StandardSizeHalf { get { return new Size(StandardSize.Width / 2, StandardSize.Height / 2); } }
+        internal static int SpriteResolution = 1024;
+
+        /// <summary>
+        /// Ratio of sprite size compared to their default habitat (SpriteResolution)
+        /// </summary>
+        internal static float SpriteRatio;
+        
+        internal static Size WindowSize;
+        internal static Size GamefieldSize;
+        
+        /// <summary>
+        /// The ratio of actual-pixel window size in relation to the base resolution used internally.
+        /// </summary>
+        internal static float WindowRatio;
+
+        /// <summary>
+        /// The ratio of the actual-pixel gamefield compared to the base resolution.
+        /// </summary>
+        internal static float GamefieldRatio;
+        
+        internal static Vector2 GamefieldOffsetVector1;
+        internal static void GamefieldToDisplay(ref Vector2 vec)
+        {
+            //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
+            Vector2.Add(ref vec, ref GamefieldOffsetVector1, out vec);
+        }
 
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
@@ -95,19 +121,39 @@ namespace osum
         /// </summary>
         public virtual void SetupScreen()
         {
-            StandardSize = new Size(1024, (int)(1024 * (float)WindowSize.Height / WindowSize.Width));
+            //Setup window...
+            WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
+
+            GL.Viewport(new Rectangle(0,0,GameBase.WindowSize.Width,GameBase.WindowSize.Height));
 
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
 #if IPHONE
-			GL.Ortho(0, GameBase.StandardSize.Height, GameBase.StandardSize.Width, 0, 0, 1);
+			GL.Ortho(0, GameBase.WindowBaseSize.Height, GameBase.WindowBaseSize.Width, 0, 0, 1);
 #else
-            GL.Ortho(0, GameBase.StandardSize.Width, GameBase.StandardSize.Height, 0, 0, 1);
+            GL.Ortho(0, GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height, 0, 0, 1);
 #endif
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
+
+            int size = 1;
+            
+            WindowRatio = (float)WindowSize.Height / WindowBaseSize.Height;
+
+            //Setup gamefield...
+            GamefieldSize = new Size(
+                (int)Math.Round(GamefieldBaseSize.Width * WindowRatio),
+                (int)Math.Round(GamefieldBaseSize.Height * WindowRatio)
+            );
+
+            GamefieldOffsetVector1 = new Vector2((float)(WindowBaseSize.Width - GamefieldBaseSize.Width) / 2,
+                                                 (float)(WindowBaseSize.Height - GamefieldBaseSize.Height) / 4 * 3);
+
+            GamefieldRatio = (float)GamefieldSize.Height / GamefieldBaseSize.Height;
+
+            SpriteRatio = (float)WindowBaseSize.Width / SpriteResolution;
         }
 
         /// <summary>
