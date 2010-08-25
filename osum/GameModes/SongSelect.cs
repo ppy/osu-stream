@@ -14,9 +14,6 @@ namespace osum
 		
 		internal override void Initialize ()
 		{
-
-            HitCircle c = new HitCircle(new Vector2(150, 150), 1000, false, HitObjectSoundType.Clap);
-            spriteManager.Add(c);
 		}
 		
 		public override void Draw ()

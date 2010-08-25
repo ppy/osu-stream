@@ -14,12 +14,6 @@ namespace osum.GameplayElements.HitObjects
 
     internal class Slider : HitObject
     {
-        internal override void SetColour(OpenTK.Graphics.Color4 color)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
         internal override IncreaseScoreType Hit()
         {
             throw new System.NotImplementedException();
@@ -33,16 +27,6 @@ namespace osum.GameplayElements.HitObjects
 
 
         internal override int ComboNumber {
-            get {
-                throw new System.NotImplementedException();
-            }
-            set {
-                throw new System.NotImplementedException();
-            }
-        }
-
-
-        internal override OpenTK.Vector2 EndPosition {
             get {
                 throw new System.NotImplementedException();
             }

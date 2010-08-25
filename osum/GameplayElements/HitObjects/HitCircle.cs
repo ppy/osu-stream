@@ -14,40 +14,22 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
-        private int comboNumber;
         private const float TEXT_SIZE = 0.8f;
-
-        internal IncreaseScoreType hitValue;
 
         internal virtual string SpriteNameHitCircle { get { return "hitcircle"; } }
 
-        internal HitCircle(Vector2 startPosition, int startTime, bool newCombo)
-            : this(startPosition, startTime, newCombo, false, false, false)
-        {
-        }
-
-        internal HitCircle(Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType)
-            : this(startPosition, startTime, newCombo, (soundType & HitObjectSoundType.Whistle) > 0, (soundType & HitObjectSoundType.Finish) > 0, (soundType & HitObjectSoundType.Clap) > 0)
-        {
-        }
-
-        internal HitCircle(Vector2 pos, int startTime, bool newCombo, bool addWhistle, bool addFinish, bool addClap)
+        internal HitCircle(Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
+            : base()
         {
             Position = pos;
             StartTime = startTime;
             EndTime = startTime;
 
-            Type = HitObjectType.Normal;
-            SoundType = HitObjectSoundType.Normal;
+            Type = HitObjectType.Circle;
 
-            if (newCombo)
-                Type |= HitObjectType.NewCombo;
-            if (addWhistle)
-                SoundType |= HitObjectSoundType.Whistle;
-            if (addFinish)
-                SoundType |= HitObjectSoundType.Finish;
-            if (addClap)
-                SoundType |= HitObjectSoundType.Clap;
+            NewCombo = newCombo;
+
+            SoundType = soundType;
 
             Color4 white = Color4.White;
 
@@ -152,57 +134,20 @@ namespace osum.GameplayElements
 
         internal override HitObject Clone()
         {
-            HitCircle h = new HitCircle(Position, StartTime, (Type & HitObjectType.NewCombo) > 0,
-                                              (SoundType & HitObjectSoundType.Whistle) > 0,
-                                              (SoundType & HitObjectSoundType.Finish) > 0,
-                                              (SoundType & HitObjectSoundType.Clap) > 0
-                );
-            h.SetColour(Colour);
+            HitCircle h = new HitCircle(Position, StartTime, NewCombo,SoundType);
+            h.Colour = Colour;
             h.ComboNumber = ComboNumber;
             //h.Selected = Selected;
 
             return h;
         }
 
-        /* // editor?
-        internal void ModifyPosition(Vector2 newPosition)
-        {
-            Position = newPosition;
-
-            for (int i = 0; i<SpriteCollection.Count; i++)
-                SpriteCollection[i].Position = newPosition;
-        }
-        */
-
-        /* // editor?
-        internal override void ModifyTime(int newTime)
-        {
-            int difference = newTime - StartTime;
-            StartTime = newTime;
-            EndTime = StartTime;
-            SpriteApproachCircle.TimeWarp(difference);
-            SpriteHitCircle1.TimeWarp(difference);
-            SpriteHitCircle2.TimeWarp(difference);
-            SpriteHitCircleText.TimeWarp(difference);
-            SpriteSelectionCircle.TimeWarp(difference);
-        }
-        */
-
-        /*
-        internal override void Select()
-        {
-            SpriteSelectionCircle.FadeIn(100);
-        }
-
-        internal override void Deselect()
-        {
-            SpriteSelectionCircle.FadeOut(100);
-        }
-        */
-
         internal override IncreaseScoreType Hit()
         {
-            IsHit = true;
+            if (IsHit) return base.Hit();
+            
+            base.Hit();
+
             int hitTime = Clock.AudioTime;
             int accuracy = Math.Abs(hitTime - StartTime);
 
@@ -270,6 +215,7 @@ namespace osum.GameplayElements
             {
                 foreach (pSprite p in SpriteCollection)
                     p.Transformations.Clear();
+
             }
         }
 
@@ -281,27 +227,22 @@ namespace osum.GameplayElements
         internal pSprite SpriteHitCircle1;
         internal pAnimation SpriteHitCircle2;
         internal pSpriteText SpriteHitCircleText;
-        //internal pSprite SpriteSelectionCircle; // editor
 
+        private int comboNumber;
         internal override int ComboNumber
         {
             get { return comboNumber; }
             set
             {
+                if (value == comboNumber) return;
+
                 if (value > 0)
                     SpriteHitCircleText.Text = value.ToString();
                 else
                     SpriteHitCircleText.Text = string.Empty;
-                //SpriteHitCircleText.OriginPosition = GameBase.HitCircleFont.MeasureString(value.ToString())*0.5F -
-                //                                     new Vector2(0, 4);
+
                 comboNumber = value;
             }
-        }
-
-        internal override Vector2 EndPosition
-        {
-            get { return Position; }
-            set { }
         }
 
         internal override bool IsVisible
@@ -309,32 +250,22 @@ namespace osum.GameplayElements
             get
             {
                 return Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
-                     Clock.AudioTime <= EndTime + DifficultyManager.FadeOut; // + DifficultyManager.ForceFadeOut; // used in editor only?
+                     Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
             }
         }
 
-        internal override void SetColour(Color4 colour)
+        internal override Color4 Colour
         {
-            if (colour != Colour)
+            get
             {
-                SpriteHitCircle1.Colour = colour;
-
-                SpriteApproachCircle.Colour = colour;
-
-                /*
-                if (GameBase.Mode == OsuModes.Edit)
-                {
-                    SpriteHitCircle1.Transformations.RemoveAll(
-                        delegate(Transformation t) { return (t.Type & TransformationType.Colour) > 0; });
-                    SpriteHitCircle1.Transform(
-                        new Transformation(colour, Color4.White, StartTime - 5, EndTime - 5));
-                }
-                */
-
-                Colour = colour;
-                ColourDim =
-                    new Color4((byte)Math.Max(0, colour.R * 0.75F), (byte)Math.Max(0, colour.G * 0.75F),
-                              (byte)Math.Max(0, colour.B * 0.75F), 255);
+                return base.Colour;
+            }
+            set
+            {
+                SpriteHitCircle1.Colour = value;
+                SpriteApproachCircle.Colour = value;
+                
+                base.Colour = value;
             }
         }
 

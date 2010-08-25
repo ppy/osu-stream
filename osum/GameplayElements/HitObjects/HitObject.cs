@@ -7,6 +7,7 @@ using OpenTK.Graphics;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Support;
+using osum.Audio;
 
 namespace osum.GameplayElements
 {
@@ -15,7 +16,7 @@ namespace osum.GameplayElements
     [Flags]
     internal enum HitObjectType
     {
-        Normal = 1,
+        Circle = 1,
         Slider = 2,
         NewCombo = 4,
         NormalNewCombo = 5,
@@ -76,50 +77,44 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
-        //private bool IsSelected; // editor
-
-        internal bool IsHit;
-        internal double MaxHp;
         internal int StartTime;
-        internal HitObjectType Type;
         internal int EndTime;
 
+        internal IncreaseScoreType hitValue;
+
+        internal HitObjectType Type;
+
         public virtual void Update()
-        {}
-
-        internal virtual bool NewCombo
         {
-            get { return (Type & HitObjectType.NewCombo) > 0; }
-            set
-            {
-                if (value)
-                    Type |= HitObjectType.NewCombo;
-                else
-                    Type &= ~HitObjectType.NewCombo;
-            }
         }
 
-        /*
-        internal bool Selected
+        internal virtual bool NewCombo { get; set; }
+
+        private Color4 colour;
+        internal virtual Color4 Colour
         {
-            get { return IsSelected; }
+            get
+            {
+                return colour;
+            }
 
             set
             {
-                if (IsSelected != value)
-                {
-                    IsSelected = value;
-                    if (IsSelected)
-                        Select();
-                    else
-                        Deselect();
-                }
+                colour = value;
+
+                float dimFactor = 0.75f;
+                ColourDim = new Color4(colour.R * dimFactor, colour.G * dimFactor, colour.B * dimFactor, 255);
             }
         }
-        */
 
-        internal abstract void SetColour(Color4 color);
-        internal abstract IncreaseScoreType Hit();
+
+        internal bool IsHit { get; private set; }
+        
+        internal virtual IncreaseScoreType Hit()
+        {
+            IsHit = true;
+            return IncreaseScoreType.Ignore;
+        }
 
         internal virtual void Dispose()
         {
@@ -127,48 +122,24 @@ namespace osum.GameplayElements
 
         internal abstract HitObject Clone();
 
-        /* // editor?
-        internal abstract void Select();
-        internal abstract void Deselect();
-        internal abstract void ModifyTime(int newTime);
-        internal abstract void ModifyPosition(Vector2 newPosition);
-        */
-
-        /*
-        internal virtual void Update()
-        {
-            return;
-        }
-
-        internal virtual void Draw()
-        {
-            return;
-        }
-        */
         #endregion
 
         #region Drawing
 
-        internal Color4 Colour;
+        /// <summary>
+        /// Sprites which should be dimmed when not the active object.
+        /// </summary>
         protected internal List<pSprite> DimCollection = new List<pSprite>();
+
         internal Vector2 Position;
         internal int StackCount;
 
         internal abstract int ComboNumber { get; set; }
-        internal abstract Vector2 EndPosition { get; set; }
 
+        /// <summary>
+        /// Id this hitObject visible at the current audio time?
+        /// </summary>
         internal abstract bool IsVisible { get; }
-
-        internal virtual Vector2 Position2
-        {
-            get { return Position; }
-            set { }
-        }
-
-        internal pSprite[] Sprites
-        {
-            get { return SpriteCollection.ToArray(); }
-        }
 
         #endregion
 
@@ -226,21 +197,22 @@ namespace osum.GameplayElements
 
         internal virtual void PlaySound()
         {
-            /*
-            HitObjectManager.OnHitSound(SoundType);
+            
+            //HitObjectManager.OnHitSound(SoundType);
 
             if ((SoundType & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
+                AudioEngine.PlaySample(OsuSamples.HitFinish);
+                //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
 
             if ((SoundType & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(AudioEngine.s_HitWhistle, (int)(AudioEngine.VolumeSample * 0.85), 0, PositionalSound);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle);
 
             if ((SoundType & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(AudioEngine.s_HitClap, (int)(AudioEngine.VolumeSample * 0.85), 0, PositionalSound);
+                AudioEngine.PlaySample(OsuSamples.HitClap);
 
-            if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)
-                AudioEngine.PlaySample(AudioEngine.s_HitNormal, (int)(AudioEngine.VolumeSample * 0.8), 0, PositionalSound);
-            */
+            //if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)
+            AudioEngine.PlaySample(OsuSamples.HitNormal);
+            
         }
 
         protected virtual float PositionalSound { get { return Position.X / 512f - 0.5f; } }
@@ -294,8 +266,8 @@ namespace osum.GameplayElements
             return (IsVisible ||
                   (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
-                 (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius ||
-                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
+                 (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius
+                 //||                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
                   );
         }
 
@@ -307,17 +279,17 @@ namespace osum.GameplayElements
 
                 Vector2 startPos = previousShake != null ? previousShake.EndVector : p.Position;
 
-                p.Transform(new Transformation(startPos, startPos + new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos, startPos + new Vector2(8, 0),
                     Clock.AudioTime, Clock.AudioTime + 20));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
                     Clock.AudioTime + 20, Clock.AudioTime + 40));
-                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0),
                     Clock.AudioTime + 40, Clock.AudioTime + 60));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
                     Clock.AudioTime + 60, Clock.AudioTime + 80));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0), 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
                     Clock.AudioTime + 80, Clock.AudioTime + 100));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos, 
+                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos,
                     Clock.AudioTime + 100, Clock.AudioTime + 120));
             }
         }

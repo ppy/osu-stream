@@ -199,12 +199,6 @@ namespace osum.GameplayElements
             set { }
         }
 
-        internal override Vector2 EndPosition
-        {
-            get { return Position; }
-            set { Position = value; }
-        }
-
         internal override bool IsVisible
         {
             get
@@ -409,15 +403,12 @@ namespace osum.GameplayElements
             //spriteScoreMetre.Height = (int)(43.25 * (10 - barCount));
         }
 
-        internal override void SetColour(Color4 color)
-        {
-        }
-
         internal override IncreaseScoreType Hit()
         {
             StopSound();
 
-            IsHit = true;
+            base.Hit();
+
             IncreaseScoreType val = IncreaseScoreType.Miss;
             if (scoringRotationCount > rotationRequirement + 1)
                 val = IncreaseScoreType.Hit300;

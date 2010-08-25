@@ -73,7 +73,7 @@ namespace osum.GameplayElements
             }
 
             h.ComboNumber = currentComboNumber++;
-            h.SetColour(SkinManager.DefaultColours[colourIndex]);
+            h.Colour = SkinManager.DefaultColours[colourIndex];
 
             hitObjects.Add(h);
 
@@ -253,7 +253,7 @@ namespace osum.GameplayElements
 
                                 HitObject h = null;
 
-                                if ((type & HitObjectType.Normal) > 0)
+                                if ((type & HitObjectType.Circle) > 0)
                                 {
                                     h = hitFactory.CreateHitCircle(pos, time,
                                                                              lastAddedSpinner ||
