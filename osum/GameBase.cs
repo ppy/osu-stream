@@ -124,14 +124,13 @@ namespace osum
             //Setup window...
             WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
 
-            //GL.Viewport(0,0,GameBase.WindowSize.Width,GameBase.WindowSize.Height);
-
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
 #if IPHONE
 			GL.Ortho(0, GameBase.WindowBaseSize.Height, GameBase.WindowBaseSize.Width, 0, 0, 1);
 #else
+            GL.Viewport(0, 0, GameBase.WindowSize.Width, GameBase.WindowSize.Height);
             GL.Ortho(0, GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height, 0, 0, 1);
 #endif
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pSpriteCollection : IDrawable
+    internal class pSpriteCollection
     {
         internal List<pSprite> SpriteCollection;
 
@@ -17,22 +17,6 @@ namespace osum.Graphics.Sprites
         internal pSpriteCollection(IEnumerable<pSprite> sprites)
         {
             this.SpriteCollection = new List<pSprite>(sprites);
-        }
-
-        public virtual void Update()
-        {
-            for (int i = 0; i < SpriteCollection.Count; i++)
-            {
-                SpriteCollection[i].Update();
-            }
-        }
-
-        public virtual void Draw()
-        {
-            for (int i = 0; i < SpriteCollection.Count; i++)
-            {
-                SpriteCollection[i].Draw();
-            }
         }
     }
 }

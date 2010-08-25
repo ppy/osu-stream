@@ -6,6 +6,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Support;
 
 namespace osum.GameplayElements
 {
@@ -71,7 +72,7 @@ namespace osum.GameplayElements
         NonScoreModifiers = TaikoLargeHitBoth | TaikoLargeHitFirst | TaikoLargeHitSecond
     }
 
-    internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>
+    internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         #region General & Timing
 
@@ -82,6 +83,9 @@ namespace osum.GameplayElements
         internal int StartTime;
         internal HitObjectType Type;
         internal int EndTime;
+
+        public virtual void Update()
+        {}
 
         internal virtual bool NewCombo
         {
