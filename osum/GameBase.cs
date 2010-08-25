@@ -87,10 +87,23 @@ namespace osum
         internal static float GamefieldRatio;
         
         internal static Vector2 GamefieldOffsetVector1;
-        internal static void GamefieldToDisplay(ref Vector2 vec)
+        internal static void GamefieldToStandard(ref Vector2 vec)
         {
             //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
             Vector2.Add(ref vec, ref GamefieldOffsetVector1, out vec);
+        }
+
+        internal static Vector2 StandardToGamefield(Vector2 vec)
+        {
+            Vector2 newPosition = vec;
+            StandardToGamefield(ref newPosition);
+            return newPosition;
+        }
+
+        internal static void StandardToGamefield(ref Vector2 vec)
+        {
+            //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
+            Vector2.Subtract(ref vec, ref GamefieldOffsetVector1, out vec);
         }
 
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;

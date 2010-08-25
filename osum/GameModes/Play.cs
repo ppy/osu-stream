@@ -21,7 +21,10 @@ namespace osum.GameModes
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             //check with the hitObjectManager for a relevant hitObject...
-            //hitObjectManager.FindObjectAt(
+            HitObject found = hitObjectManager.FindObjectAt(point);
+
+            if (found != null)
+                found.Hit();
         }
 
         internal override void Initialize()

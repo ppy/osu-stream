@@ -372,6 +372,22 @@ namespace osum.GameplayElements
         }
 
         #endregion
+
+        /// <summary>
+        /// Finds an object at the specified window-space location.
+        /// </summary>
+        /// <returns>Found object, null on no object found.</returns>
+        internal HitObject FindObjectAt(TrackingPoint tracking)
+        {
+            foreach (HitObject h in hitObjects)
+            {
+                if (h.HitTest(tracking))
+                    return h;
+            }
+
+
+            return null;
+        }
     }
 
     internal enum FileSection

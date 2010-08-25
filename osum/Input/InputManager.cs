@@ -43,7 +43,7 @@ namespace osum
 		private static void ReceiveDown(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: down");
-			MainPointerPosition = source.trackingPoints[0].GamePosition;
+			MainPointerPosition = source.trackingPoints[0].WindowPosition;
 
             TriggerOnDown(source, point);
 		}
@@ -63,7 +63,7 @@ namespace osum
         private static void ReceiveMove(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: move");
-			MainPointerPosition = source.trackingPoints[0].GamePosition;
+			MainPointerPosition = source.trackingPoints[0].WindowPosition;
             TriggerOnMove(source, point);
 		}
 
@@ -85,6 +85,9 @@ namespace osum
         public static event InputHandler OnUp;
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
+            //tracking is no longer valid.
+            point.Invalidate();
+
             if (OnUp != null)
                 OnUp(source, point);
         }

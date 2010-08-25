@@ -410,7 +410,7 @@ namespace osum.Graphics.Sprites
                         break;
                     case FieldTypes.Gamefield512x384:
                         fieldPosition = Position;
-                        GameBase.GamefieldToDisplay(ref fieldPosition);
+                        GameBase.GamefieldToStandard(ref fieldPosition);
                         break;
                     default:
                         fieldPosition = Position;

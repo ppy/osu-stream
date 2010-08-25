@@ -287,13 +287,16 @@ namespace osum.GameplayElements
             return EndTime.CompareTo(other);
         }
 
-        internal virtual bool HitTest(Vector2 testPosition, bool hittableRangeOnly, float radius)
+        internal virtual bool HitTest(TrackingPoint tracking)
         {
-            return ((!hittableRangeOnly && IsVisible) ||
+            float radius = 50;
+
+            return (IsVisible ||
                   (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
-                 (pMathHelper.DistanceSquared(testPosition, Position) <= radius * radius ||
-                  (!hittableRangeOnly && pMathHelper.DistanceSquared(testPosition, Position2) <= radius * radius));
+                 (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius ||
+                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
+                  );
         }
 
         internal virtual void Shake()
