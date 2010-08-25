@@ -40,31 +40,31 @@ namespace osum
 			return true;
 	    }
 		
-		private static void ReceiveDown(InputSource source)
+		private static void ReceiveDown(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: down");
 			MainPointerPosition = source.trackingPoints[0].GamePosition;
 
-            TriggerOnDown(source);
+            TriggerOnDown(source, point);
 		}
-        		
-		private static void ReceiveUp(InputSource source)
+
+        private static void ReceiveUp(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: up");
-            TriggerOnUp(source);
+            TriggerOnUp(source, point);
 		}
-		
-		private static void ReceiveClick(InputSource source)
+
+        private static void ReceiveClick(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: click");
-            TriggerOnClick(source);
+            TriggerOnClick(source, point);
 		}
-		
-		private static void ReceiveMove(InputSource source)
+
+        private static void ReceiveMove(InputSource source, TrackingPoint point)
 		{
 			Console.WriteLine("input: move");
 			MainPointerPosition = source.trackingPoints[0].GamePosition;
-            TriggerOnMove(source);
+            TriggerOnMove(source, point);
 		}
 
         public static bool IsPressed
@@ -76,31 +76,31 @@ namespace osum
         }
 
         public static event InputHandler OnDown;
-        private static void TriggerOnDown(InputSource source)
+        private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
             if (OnDown != null)
-                OnDown(source);
+                OnDown(source, point);
         }
 
         public static event InputHandler OnUp;
-        private static void TriggerOnUp(InputSource source)
+        private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             if (OnUp != null)
-                OnUp(source);
+                OnUp(source, point);
         }
 
         public static event InputHandler OnClick;
-        private static void TriggerOnClick(InputSource source)
+        private static void TriggerOnClick(InputSource source, TrackingPoint point)
         {
             if (OnClick != null)
-                OnClick(source);
+                OnClick(source, point);
         }
 
         public static event InputHandler OnMove;
-        private static void TriggerOnMove(InputSource source)
+        private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
             if (OnMove != null)
-                OnMove(source);
+                OnMove(source, point);
         }
     }
 	

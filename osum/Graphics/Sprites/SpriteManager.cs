@@ -23,7 +23,7 @@ namespace osum.Graphics.Sprites
         {
             //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
             //if (!sprites.Contains(sprite))
-                sprites.Add(sprite);
+            sprites.Add(sprite);
         }
 
         internal void Add(pSpriteCollection collection)

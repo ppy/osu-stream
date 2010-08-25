@@ -32,7 +32,7 @@ namespace osum.Input.Sources
         {
             updateTrackingPosition(e.Position);
 
-            TriggerOnMove();
+            TriggerOnMove(trackingPoints[0]);
         }
 
         List<MouseButton> pressedButtons = new List<MouseButton>();
@@ -41,14 +41,14 @@ namespace osum.Input.Sources
         {
             pressedButtons.Remove(e.Button);
 
-            TriggerOnUp();
+            TriggerOnUp(trackingPoints[0]);
         }
 
         void mouse_ButtonDown(object sender, MouseButtonEventArgs e)
         {
             pressedButtons.Add(e.Button);
 
-            TriggerOnDown();
+            TriggerOnDown(trackingPoints[0]);
         }
     }
 }

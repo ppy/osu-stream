@@ -17,35 +17,35 @@ namespace osum
         public int PressedCount;
 		
 		public event InputHandler OnDown;
-		protected void TriggerOnDown()
+		protected void TriggerOnDown(TrackingPoint trackingPoint)
 		{
             PressedCount++;
 
             if (OnDown != null)
-				OnDown(this);
+				OnDown(this,trackingPoint);
 		}
 		
 		public event InputHandler OnUp;
-		protected void TriggerOnUp()
+        protected void TriggerOnUp(TrackingPoint trackingPoint)
 		{
             PressedCount--;
 
             if (OnUp != null)
-				OnUp(this);
+                OnUp(this, trackingPoint);
 		}
 		
 		public event InputHandler OnClick;
-		protected void TriggerOnClick()
+        protected void TriggerOnClick(TrackingPoint trackingPoint)
 		{
 			if (OnClick != null)
-				OnClick(this);
+                OnClick(this, trackingPoint);
 		}
 		
 		public event InputHandler OnMove;
-		protected void TriggerOnMove()
+        protected void TriggerOnMove(TrackingPoint trackingPoint)
 		{
 			if (OnMove != null)
-				OnMove(this);
+                OnMove(this, trackingPoint);
 		}
 	}
 }

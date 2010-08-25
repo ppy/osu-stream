@@ -4,6 +4,7 @@
 using System;
 using osum.GameplayElements;
 using osum.GameplayElements.Beatmaps;
+using osum.Helpers;
 
 namespace osum.GameModes
 
@@ -14,6 +15,13 @@ namespace osum.GameModes
 
         public Play() : base()
         {
+            InputManager.OnDown += new InputHandler(InputManager_OnDown);
+        }
+
+        void InputManager_OnDown(InputSource source, TrackingPoint point)
+        {
+            //check with the hitObjectManager for a relevant hitObject...
+            //hitObjectManager.FindObjectAt(
         }
 
         internal override void Initialize()
@@ -29,6 +37,8 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            InputManager.OnDown -= new InputHandler(InputManager_OnDown);
+
             hitObjectManager.Dispose();
 
             base.Dispose();

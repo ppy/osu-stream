@@ -45,7 +45,7 @@ namespace osum.GameModes
 			base.Dispose();
 		}
 		
-        void InputManager_OnDown(InputSource source)
+        void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             GameBase.Instance.soundEffectPlayer.PlayBuffer(sampleTest);
 			
