@@ -155,6 +155,7 @@
     <Compile Include="GameModes\Play.cs" />
     <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
+    <Compile Include="Audio\AudioEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

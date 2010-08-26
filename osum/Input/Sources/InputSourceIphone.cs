@@ -32,45 +32,60 @@ namespace osum
 		public void HandleTouchesBegan (NSSet touches, UIEvent evt)
 		{
 			Console.WriteLine("touch began");
-			
+
+            TrackingPoint newPoint = null;
+
 			foreach (UITouch u in NSSetToList(touches))
-				trackingPoints.Add(new TrackingPointIphone(u.LocationInView(gameWindow), u));
+            {
+                newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
+                trackingPoints.Add(newPoint);
+            }
 			
 			Console.WriteLine("total touches: " + trackingPoints.Count);
 			
 			if (trackingPoints.Count == 1)
-				TriggerOnDown();
+				TriggerOnDown(newPoint);
 		}
 		
 		public void HandleTouchesMoved (NSSet touches, UIEvent evt)
 		{
-			
-			
+			TrackingPoint point = null;
+
 			foreach (UITouch u in NSSetToList(touches))
-				trackingPoints.Find(t => t.Tag == u).Location = u.LocationInView(gameWindow);
+            {
+				point = trackingPoints.Find(t => t.Tag == u);
+                if (point != null) point.Location = u.LocationInView(gameWindow);
+            }
 			
 			Console.WriteLine("touch moved");
 			Console.WriteLine("total touches: " + trackingPoints.Count);
 			
-			TriggerOnMove();
+			TriggerOnMove(point);
 		}
 		
 		public void HandleTouchesEnded (NSSet touches, UIEvent evt)
 		{
-			foreach (UITouch u in NSSetToList(touches))
-				trackingPoints.RemoveAll(t => t.Tag == u);
+            TrackingPoint point = null;
+
+            foreach (UITouch u in NSSetToList(touches))
+            {
+				point = trackingPoints.Find(t => t.Tag == u);
+                if (point != null) trackingPoints.Remove(point);
+            }
 			
 			Console.WriteLine("touch ended");
 			Console.WriteLine("total touches: " + trackingPoints.Count);
 			
 			if (trackingPoints.Count == 0)
-				TriggerOnUp();
+				TriggerOnUp(point);
 			
 		}
 		
 		public void HandleTouchesCancelled (NSSet touches, UIEvent evt)
 		{
-			foreach (UITouch u in NSSetToList(touches))
+            //todo: do we actually need to implement this?
+
+            /*foreach (UITouch u in NSSetToList(touches))
 				trackingPoints.RemoveAll(t => t.Tag == u);
 			
 			Console.WriteLine("touch cancelled");
@@ -78,6 +93,7 @@ namespace osum
 			
 			if (trackingPoints.Count == 0)
 				TriggerOnUp();
+            */
 		}
 
 	}
