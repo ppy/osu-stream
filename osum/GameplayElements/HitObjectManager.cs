@@ -353,6 +353,10 @@ namespace osum.GameplayElements
         public void Update()
         {
             spriteManager.Update();
+
+            //todo: optimise for only visible
+            foreach (HitObject h in hitObjects)
+                h.Update();
         }
 
         #endregion
