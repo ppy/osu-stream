@@ -146,7 +146,7 @@ namespace osum.Graphics.Sprites
         internal OriginTypes Origin;
         internal ClockTypes Clocking;
         internal Color4 Colour;
-        protected float DrawDepth;
+        internal float DrawDepth;
         internal float Rotation;
         internal bool AlwaysDraw;
         internal bool Reverse;
@@ -578,5 +578,17 @@ namespace osum.Graphics.Sprites
 
             return clone;
         }
+    }
+
+    internal class pSpriteDepthComparer : IComparer<pSprite>
+    {
+        #region IComparer<pSprite> Members
+
+        public int Compare(pSprite x, pSprite y)
+        {
+            return x.DrawDepth.CompareTo(y.DrawDepth);
+        }
+
+        #endregion
     }
 }

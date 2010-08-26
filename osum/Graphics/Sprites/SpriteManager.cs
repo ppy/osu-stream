@@ -19,11 +19,18 @@ namespace osum.Graphics.Sprites
             this.sprites = new List<pSprite>(sprites);
         }
 
+        pSpriteDepthComparer depth = new pSpriteDepthComparer();
+
         internal void Add(pSprite sprite)
         {
             //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
             //if (!sprites.Contains(sprite))
-            sprites.Add(sprite);
+
+            int pos = sprites.BinarySearch(sprite, depth);
+
+            if (pos < 0) pos = ~pos;
+
+            sprites.Insert(pos, sprite);
         }
 
         internal void Add(pSpriteCollection collection)
