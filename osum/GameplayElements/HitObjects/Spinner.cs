@@ -403,11 +403,9 @@ namespace osum.GameplayElements
             //spriteScoreMetre.Height = (int)(43.25 * (10 - barCount));
         }
 
-        internal override IncreaseScoreType Hit()
+        protected override IncreaseScoreType HitAction()
         {
             StopSound();
-
-            base.Hit();
 
             IncreaseScoreType val = IncreaseScoreType.Miss;
             if (scoringRotationCount > rotationRequirement + 1)

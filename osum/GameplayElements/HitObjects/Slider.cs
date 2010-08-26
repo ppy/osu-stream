@@ -14,7 +14,7 @@ namespace osum.GameplayElements.HitObjects
 
     internal class Slider : HitObject
     {
-        internal override IncreaseScoreType Hit()
+        protected override IncreaseScoreType HitAction()
         {
             throw new System.NotImplementedException();
         }

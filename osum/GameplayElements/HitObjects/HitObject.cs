@@ -68,6 +68,7 @@ namespace osum.GameplayElements
         TaikoDenDenComplete = 2097152,
         TaikoLargeHitFirst = 4194304,
         TaikoLargeHitSecond = 8388608,
+        Shake = 16777216,
         HitValuesOnly = Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
         ComboAddition = MuAddition | KatuAddition | GekiAddition,
         NonScoreModifiers = TaikoLargeHitBoth | TaikoLargeHitFirst | TaikoLargeHitSecond
@@ -110,11 +111,38 @@ namespace osum.GameplayElements
 
         internal bool IsHit { get; private set; }
         
-        internal virtual IncreaseScoreType Hit()
+        /// <summary>
+        /// This will cause the hitObject to get hit and scored.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="IncreaseScoreType"/> representing what action was taken.
+        /// </returns>
+        internal IncreaseScoreType Hit()
         {
-            IsHit = true;
-            return IncreaseScoreType.Ignore;
+            if (Clock.AudioTime < StartTime - 400)
+            {
+                Shake();
+                return IncreaseScoreType.Shake;
+            }
+
+            if (IsHit)
+                return IncreaseScoreType.Ignore;
+
+            IncreaseScoreType action = HitAction();
+
+            if (action != IncreaseScoreType.Ignore)
+                IsHit = true;
+
+            return action;
         }
+
+        /// <summary>
+        /// Internal judging of a Hit() call. Is only called after preliminary checks have been completed.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="IncreaseScoreType"/>
+        /// </returns>
+        protected abstract IncreaseScoreType HitAction();
 
         internal virtual void Dispose()
         {

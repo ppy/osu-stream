@@ -142,12 +142,8 @@ namespace osum.GameplayElements
             return h;
         }
 
-        internal override IncreaseScoreType Hit()
+        protected override IncreaseScoreType HitAction()
         {
-            if (IsHit) return base.Hit();
-            
-            base.Hit();
-
             int hitTime = Clock.AudioTime;
             int accuracy = Math.Abs(hitTime - StartTime);
 
