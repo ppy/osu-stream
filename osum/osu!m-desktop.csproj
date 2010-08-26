@@ -55,13 +55,16 @@
     <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
     <Compile Include="GameplayElements\HitObjects\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Spinner.cs" />
+    <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
     <Compile Include="Helpers\Audio\SoundData.cs" />
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
+    <Compile Include="Helpers\ColourHelper.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
@@ -118,30 +121,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Beatmaps\bcl\background-real.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\background.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\play-skip.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\play-warningarrow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\section-fail.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\section-pass.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\spinner-circle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\spinner-metre.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\spinnerspin.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
@@ -885,12 +864,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Beatmaps\bcl\beatmap.osu">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29 [Normal].osu">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29.osb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

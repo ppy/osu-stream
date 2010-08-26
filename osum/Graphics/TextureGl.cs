@@ -48,12 +48,12 @@ namespace osum.Graphics
         private readonly int potWidth;
         private readonly int textureHeight;
         private readonly int textureWidth;
-        private int textureId;
-        public bool Loaded { get { return textureId > 0; } }
+        public int Id;
+        public bool Loaded { get { return Id > 0; } }
 
         public TextureGl(int width, int height)
         {
-            textureId = -1;
+            Id = -1;
             textureWidth = width;
             textureHeight = height;
 
@@ -78,14 +78,14 @@ namespace osum.Graphics
         /// </summary>
         public void Delete()
         {
-            if (textureId == -1)
+            if (Id == -1)
                 return;
 
             try
             {
-                if (GL.IsTexture(textureId))
+                if (GL.IsTexture(Id))
                 {
-                    int[] textures = new[] { textureId };
+                    int[] textures = new[] { Id };
                     GL.DeleteTextures(1, textures);
                 }
             }
@@ -93,7 +93,7 @@ namespace osum.Graphics
             {
             }
 
-            textureId = -1;
+            Id = -1;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -119,7 +119,7 @@ namespace osum.Graphics
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
                          Box2? srcRect, SpriteEffect effect)
         {
-			if (textureId < 0)
+			if (Id < 0)
                 return;
                 
 			GL.PushMatrix();
@@ -180,7 +180,7 @@ namespace osum.Graphics
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);
 
-            GL.BindTexture(SURFACE_TYPE, textureId);
+            GL.BindTexture(SURFACE_TYPE, Id);
 
             GL.Begin(BeginMode.Quads);
 
@@ -263,7 +263,7 @@ namespace osum.Graphics
 
         public void SetData(int textureId)
         {
-            this.textureId = textureId;
+            this.Id = textureId;
         }
 
         public void SetData(byte[] data)
@@ -297,7 +297,7 @@ namespace osum.Graphics
             return pot;
         }
 
-        const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
+        public const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
 		
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
@@ -312,22 +312,22 @@ namespace osum.Graphics
 
             bool newTexture = false;
 
-            if (level == 0 && textureId < 0)
+            if (level == 0 && Id < 0)
             {
         		Delete ();
         		newTexture = true;
         		int[] textures = new int[1];
         		GL.GenTextures (1, textures);
-        		textureId = textures[0];
+        		Id = textures[0];
 #if DEBUG
-        		Console.WriteLine ("TextureGl assigned: " + textureId);
+        		Console.WriteLine ("TextureGl assigned: " + Id);
 #endif
         	}
 
             if (level > 0)
         		return;
 
-       		GL.BindTexture (SURFACE_TYPE, textureId);
+       		GL.BindTexture (SURFACE_TYPE, Id);
 
 			//Nearest gives ~30% more draw performance, but looks a bit shitty.
             GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
