@@ -9,6 +9,7 @@ using osu.GameplayElements.HitObjects;
 using osu.GameplayElements.HitObjects.Osu;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
+using osum.GameplayElements.HitObjects;
 
 #endregion
 
@@ -114,8 +115,6 @@ namespace osum.GameplayElements
             //The second file is the .osb for now.
             for (int fn = 0; fn < readableFiles.Count; fn++)
             {
-                StreamReader baseReader = null;
-
                 if (fn > 0)
                 {
                     break;
@@ -248,22 +247,21 @@ namespace osum.GameplayElements
                                 int time = (int)Decimal.Parse(split[2], GameBase.nfi);
                                 //+ BeatmapManager.Current.VersionOffset;
 
-                                int combo_offset = (Convert.ToInt32(split[3], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
-                                bool new_combo = (type & HitObjectType.NewCombo) > 0;
+                                int comboOffset = (Convert.ToInt32(split[3], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
+                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner;
 
                                 HitObject h = null;
 
+                                //used for new combo forcing after a spinner.
+                                lastAddedSpinner = h is Spinner;
+
                                 if ((type & HitObjectType.Circle) > 0)
                                 {
-                                    h = hitFactory.CreateHitCircle(pos, time,
-                                                                             lastAddedSpinner ||
-                                                                             new_combo,
-                                                                             soundType, new_combo ? combo_offset : 0);
-                                    lastAddedSpinner = false;
+                                    h = hitFactory.CreateHitCircle(pos, time, newCombo, soundType, newCombo ? comboOffset : 0);
                                 }
                                 else if ((type & HitObjectType.Slider) > 0)
                                 {
-                                    /*CurveTypes curveType = CurveTypes.Catmull;
+                                    CurveTypes curveType = CurveTypes.Catmull;
                                     int repeatCount = 0;
                                     double length = 0;
                                     List<Vector2> points = new List<Vector2>();
@@ -291,10 +289,7 @@ namespace osum.GameplayElements
 
                                         string[] temp = pointsplit[i].Split(':');
                                         Vector2 v = new Vector2((int)Convert.ToDouble(temp[0], GameBase.nfi),
-                                                                (int)
-                                                                (verticalFlip
-                                                                     ? 384 - Convert.ToDouble(temp[1], GameBase.nfi)
-                                                                     : Convert.ToDouble(temp[1], GameBase.nfi)));
+                                                                (int)Convert.ToDouble(temp[1], GameBase.nfi));
                                         //if (i > 1 || v != points[0]) fixed with new constructor
                                         //old maps stored the start point of a slider in this list.
                                         //newer ones don't but we should check anyway.
@@ -322,24 +317,16 @@ namespace osum.GameplayElements
                                         }
                                     }
 
-                                    //todo: implement sliders
-                                    Slider s = hitFactory.CreateSlider(pos, time,
-                                                                       lastAddedSpinner ||
-                                                                       new_combo, soundType,
-                                                                       curveType, repeatCount, length, points, sounds, new_combo ? combo_offset : 0);
-                                    lastAddedSpinner = false;
-                                    AddSlider(s);*/
+                                    h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0);
                                 }
                                 else if ((type & HitObjectType.Spinner) > 0)
                                 {
                                     h = hitFactory.CreateSpinner(time, Convert.ToInt32(split[5], GameBase.nfi), soundType);
-                                    lastAddedSpinner = true;
                                 }
 
+                                //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
-                                {
                                     Add(h);
-                                }
 
 
                                 break;
@@ -348,9 +335,6 @@ namespace osum.GameplayElements
                         }
                     }
                 }
-
-                if (baseReader != null)
-                    baseReader.Dispose(); //clumsy stream cleanup (osq)
             }
         }
 

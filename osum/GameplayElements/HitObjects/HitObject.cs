@@ -79,7 +79,7 @@ namespace osum.GameplayElements
         #region General & Timing
 
         internal int StartTime;
-        internal int EndTime;
+        internal virtual int EndTime { get { return StartTime; } set {} }
 
         internal IncreaseScoreType hitValue;
 
@@ -110,7 +110,7 @@ namespace osum.GameplayElements
 
 
         internal bool IsHit { get; private set; }
-        
+
         /// <summary>
         /// This will cause the hitObject to get hit and scored.
         /// </summary>
@@ -225,12 +225,12 @@ namespace osum.GameplayElements
 
         internal virtual void PlaySound()
         {
-            
+
             //HitObjectManager.OnHitSound(SoundType);
 
             if ((SoundType & HitObjectSoundType.Finish) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitFinish);
-                //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
+            //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
 
             if ((SoundType & HitObjectSoundType.Whistle) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitWhistle);
@@ -240,10 +240,10 @@ namespace osum.GameplayElements
 
             //if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)
             AudioEngine.PlaySample(OsuSamples.HitNormal);
-            
+
         }
 
-        protected virtual float PositionalSound { get { return Position.X / 512f - 0.5f; } }
+        protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }
 
         /// <summary>
         /// Gets the hittable end time (valid active object time for sliders etc. - used in taiko to extend when hits are valid).
@@ -272,19 +272,15 @@ namespace osum.GameplayElements
             return EndTime.CompareTo(other.EndTime);
         }
 
-        #endregion
+        public int CompareTo(int time)
+        {
+            return EndTime.CompareTo(time);
+        }
 
-        internal abstract IncreaseScoreType GetScorePoints(Vector2 currentMousePos);
+        #endregion
 
         internal virtual void StopSound()
         {
-        }
-
-        internal abstract void SetEndTime(int time);
-
-        public int CompareTo(int other)
-        {
-            return EndTime.CompareTo(other);
         }
 
         internal virtual bool HitTest(TrackingPoint tracking)
@@ -295,7 +291,7 @@ namespace osum.GameplayElements
                   (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius
-                 //||                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
+                //||                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
                   );
         }
 
@@ -326,7 +322,5 @@ namespace osum.GameplayElements
         {
             return this.Type + ": " + this.StartTime + "-" + this.EndTime + " stack:" + this.StackCount;
         }
-
-        public int Length { get { return EndTime - StartTime; } }
     }
 }

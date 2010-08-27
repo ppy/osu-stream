@@ -5,6 +5,12 @@ using System;
 using osum.GameplayElements;
 using osum.GameplayElements.Beatmaps;
 using osum.Helpers;
+using osu.Graphics.Renderers;
+using osu.Graphics.Primitives;
+using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using System.Drawing;
 
 namespace osum.GameModes
 
@@ -12,10 +18,10 @@ namespace osum.GameModes
     public class Play : GameMode
     {
         HitObjectManager hitObjectManager;
+        private SliderTrackRenderer sliderTest;
 
         public Play() : base()
         {
-            InputManager.OnDown += new InputHandler(InputManager_OnDown);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
@@ -31,11 +37,15 @@ namespace osum.GameModes
         {
             Beatmap beatmap = new Beatmap("Beatmaps/bcl/");
 
+            InputManager.OnDown += new InputHandler(InputManager_OnDown);
+
             hitObjectManager = new HitObjectManager(beatmap);
             hitObjectManager.LoadFile();
 
             GameBase.Instance.backgroundAudioPlayer.Load("Beatmaps/bcl/babycruisingedit.mp3");
             GameBase.Instance.backgroundAudioPlayer.Play();
+
+            //sliderTest = new SliderTrackRenderer();
         }
 
         public override void Dispose()
@@ -50,6 +60,10 @@ namespace osum.GameModes
         public override void Draw()
         {
             hitObjectManager.Draw();
+
+            //List<Line> list = new List<Line>();
+            //list.Add(new Line(new Vector2(20,20),new Vector2(400,400)));
+            //sliderTest.Draw(list, 100, Color4.White, Color4.Black, null, new Rectangle(0,0,1024,768));
 
             base.Draw();
         }

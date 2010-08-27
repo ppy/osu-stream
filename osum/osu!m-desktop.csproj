@@ -50,11 +50,12 @@
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
     <Compile Include="GameplayElements\HitObjectManager.cs" />
-    <Compile Include="GameplayElements\HitObjects\HitCircle.cs" />
-    <Compile Include="GameplayElements\HitObjects\HitFactoryOsu.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
-    <Compile Include="GameplayElements\HitObjects\Slider.cs" />
-    <Compile Include="GameplayElements\HitObjects\Spinner.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />

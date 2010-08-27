@@ -23,7 +23,6 @@ namespace osum.GameplayElements
         {
             Position = pos;
             StartTime = startTime;
-            EndTime = startTime;
 
             Type = HitObjectType.Circle;
 
@@ -217,8 +216,6 @@ namespace osum.GameplayElements
 
         #endregion
 
-        #region Drawing
-
         internal pSprite SpriteApproachCircle;
         internal pSprite SpriteHitCircle1;
         internal pAnimation SpriteHitCircle2;
@@ -265,12 +262,6 @@ namespace osum.GameplayElements
             }
         }
 
-        #endregion
-
-        internal override IncreaseScoreType GetScorePoints(Vector2 currentMousePos)
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }

@@ -163,6 +163,9 @@ namespace osum.Graphics.Sprites
 
         internal float Alpha;
 
+        public object Tag;
+        public int TagNumeric;
+
         internal virtual pTexture Texture
         {
             get { return texture; }
