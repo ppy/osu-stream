@@ -105,7 +105,7 @@ namespace osu.Graphics.Renderers
 
                 Color grey1, grey2;
                 ComputeSliderColour(Color.Gray, out grey1, out grey2);
-                grey_ogl = glRenderSliderTexture(border_colour, grey1, grey2);
+                //grey_ogl = glRenderSliderTexture(border_colour, grey1, grey2);
                 multi_ogl = textures_ogl[0]; // Should be unneeded if things go right.
 
                 am_initted_tex = true;
@@ -182,14 +182,17 @@ namespace osu.Graphics.Renderers
         private TextureGl glRenderSliderTexture(Color shadow, Color border, Color InnerColour, Color OuterColour, float aa_width, bool toon)
         {
             GL.PushAttrib(AttribMask.EnableBit);
+            
 
             GL.Viewport(0, 0, TEX_WIDTH, 1);
             GL.Disable(EnableCap.DepthTest);
 
             GL.MatrixMode(MatrixMode.Modelview);
+
             GL.LoadIdentity();
 
             GL.MatrixMode(MatrixMode.Projection);
+
             GL.LoadIdentity();
             GL.Ortho(0.0d, 1.0d, 1.0d, 0.0d, -1.0d, 1.0d);
 
@@ -234,9 +237,8 @@ namespace osu.Graphics.Renderers
 
             GL.PopAttrib();
 
-            //todo: reset viewport
-
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            //restore viewport (can make this more efficient but not much point?)
+            GameBase.Instance.SetupScreen();
 
             return result;
         }
