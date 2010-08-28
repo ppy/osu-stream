@@ -23,8 +23,7 @@ namespace osu.GameplayElements.HitObjects.Osu
         internal override Slider CreateSlider(Vector2 startPosition, int startTime, bool newCombo,
                                               HitObjectSoundType soundType, CurveTypes curveType, int repeatCount, double sliderLength, List<Vector2> sliderPoints, List<HitObjectSoundType> soundTypes, int comboOffset)
         {
-            return null;
-            //return new SliderOsu(startPosition, startTime, newCombo, soundType, curveType, repeatCount, sliderLength, sliderPoints, soundTypes, hitObjectManager, comboOffset);
+            return new Slider(startPosition, startTime, newCombo, soundType, curveType, repeatCount, sliderLength, sliderPoints, soundTypes);
         }
 
         internal override Spinner CreateSpinner(int startTime, int endTime, HitObjectSoundType soundType)

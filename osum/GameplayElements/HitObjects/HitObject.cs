@@ -76,10 +76,18 @@ namespace osum.GameplayElements
 
     internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
+        public HitObject(Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
+        {
+            Position = position;
+            StartTime = startTime;
+            SoundType = soundType;
+            NewCombo = newCombo;
+        }
+
         #region General & Timing
 
         internal int StartTime;
-        internal virtual int EndTime { get { return StartTime; } set {} }
+        internal virtual int EndTime { get { return StartTime; } set { } }
 
         internal IncreaseScoreType hitValue;
 
@@ -148,8 +156,6 @@ namespace osum.GameplayElements
         {
         }
 
-        internal abstract HitObject Clone();
-
         #endregion
 
         #region Drawing
@@ -162,7 +168,7 @@ namespace osum.GameplayElements
         internal Vector2 Position;
         internal int StackCount;
 
-        internal abstract int ComboNumber { get; set; }
+        internal virtual int ComboNumber { get; set; }
 
         /// <summary>
         /// Id this hitObject visible at the current audio time?
@@ -177,7 +183,6 @@ namespace osum.GameplayElements
         internal bool Dimmed;
         internal bool Sounded;
         internal HitObjectSoundType SoundType;
-        internal bool Drawable;
         /// <summary>
         /// Whether to add this object's score to the counters (hit300 count etc.)
         /// </summary>
@@ -287,12 +292,11 @@ namespace osum.GameplayElements
         {
             float radius = 50;
 
-            return (IsVisible ||
-                  (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
-                   StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime && !IsHit)) &&
-                 (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius
-                //||                  (pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position2) <= radius * radius)
-                  );
+            return (IsVisible &&
+                    StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
+                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime &&
+                    !IsHit &&
+                    pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
 
         internal virtual void Shake()

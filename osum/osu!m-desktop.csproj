@@ -745,34 +745,34 @@
     <Content Include="Skins\Default\selection-update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb0.png">
+    <Content Include="Skins\Default\sliderb-0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb1.png">
+    <Content Include="Skins\Default\sliderb-1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb2.png">
+    <Content Include="Skins\Default\sliderb-2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb3.png">
+    <Content Include="Skins\Default\sliderb-3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb4.png">
+    <Content Include="Skins\Default\sliderb-4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb5.png">
+    <Content Include="Skins\Default\sliderb-5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb6.png">
+    <Content Include="Skins\Default\sliderb-6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb7.png">
+    <Content Include="Skins\Default\sliderb-7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb8.png">
+    <Content Include="Skins\Default\sliderb-8.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Skins\Default\sliderb9.png">
+    <Content Include="Skins\Default\sliderb-9.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\sliderball.png">

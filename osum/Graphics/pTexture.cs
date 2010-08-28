@@ -207,6 +207,7 @@ namespace osum.Graphics
         /// </summary>
         public static pTexture FromFile(string filename)
         {
+            //todo: this is a redundant check?
             if (!File.Exists(filename)) return null;
 
             try

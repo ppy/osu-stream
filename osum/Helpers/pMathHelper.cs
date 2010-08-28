@@ -35,5 +35,34 @@ namespace osum.Helpers
 		{
 			return new Vector2(point.X, point.Y);	
 		}
+
+        internal static List<Vector2> CreateBezier(List<Vector2> input, int detailLevel)
+        {
+            int count = input.Count;
+
+            Vector2[] working = new Vector2[count];
+            List<Vector2> output = new List<Vector2>();
+
+            //todo: make detail based on line length rather than point count?
+            int points = detailLevel * count;
+
+            for (int iteration = 0; iteration < points; iteration++)
+            {
+                for (int i = 0; i < count; i++)
+                    working[i] = input[i];
+
+                for (int level = 0; level < count; level++)
+                    for (int i = 0; i < count - level - 1; i++)
+                        Vector2.Lerp(ref working[i], ref working[i + 1], (float)iteration / points, out working[i]);
+                output.Add(working[0]);
+            }
+
+            return output;
+        }
+
+        internal static float ClampToOne(float p)
+        {
+            return Math.Max(0, Math.Min(1, p));
+        }
     }
 }

@@ -54,8 +54,9 @@ namespace osum.Graphics.Sprites
         {
             TextureGl.EnableTexture();
             
-            for (int i = 0; i < sprites.Count; i++)
-                sprites[i].Draw();
+            foreach(pSprite p in sprites)
+                //todo: consider case updates need to happen even when not visible (ie. animations)
+                if (p.Alpha > 0) p.Draw();
             
             TextureGl.DisableTexture();
         }

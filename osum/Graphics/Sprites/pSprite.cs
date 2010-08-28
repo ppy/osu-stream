@@ -130,7 +130,7 @@ namespace osum.Graphics.Sprites
         BottomRight
     }
 
-    internal class pSprite : IDrawable
+    internal class pSprite : IDrawable, IDisposable
     {
         protected List<Transformation> transformations;
 
@@ -578,6 +578,15 @@ namespace osum.Graphics.Sprites
 
             return clone;
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            //todo: kill texture if possible
+        }
+
+        #endregion
     }
 
     internal class pSpriteDepthComparer : IComparer<pSprite>

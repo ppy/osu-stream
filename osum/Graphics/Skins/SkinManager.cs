@@ -32,24 +32,13 @@ namespace osum.Graphics.Skins
 			
             string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/Default/{0}.png", name) : @"Skins/Default/" + name;
 	
-#if DEBUG
-			Console.Write("loading texture " + path + "... ");
-#endif
-			
 			if (File.Exists(path))
             {
-#if DEBUG
-				Console.WriteLine("OK");
-#endif
 				texture = pTexture.FromFile(path);
                 SpriteCache.Add(name, texture);
                 return texture;
             }
 			
-#if DEBUG
-			Console.WriteLine("FAIL");
-#endif
-
             return null;
         }
 
@@ -64,7 +53,7 @@ namespace osum.Graphics.Skins
             texture = Load(name + "-0");
 
             // if the texture is found, load all subsequent textures
-            if (textures != null)
+            if (texture != null)
             {
                 List<pTexture> list = new List<pTexture>();
                 list.Add(texture);

@@ -39,7 +39,6 @@ namespace osum.Graphics.Sprites
             set
             {
                 currentFrame = value;
-                UpdateFrame();
             }
         }
 
@@ -91,6 +90,18 @@ namespace osum.Graphics.Sprites
             currentFrame = 0;
         }
 
+        public override void Update()
+        {
+            UpdateFrame();
+
+            base.Update();
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+        }
+
         internal void UpdateFrame()
         {
             if ((!RunAnimation && lastFrame == currentFrame))
@@ -102,12 +113,13 @@ namespace osum.Graphics.Sprites
 
             double spriteTime = Clock.GetTime(Clocking);
 
-            if (Transformations.Count > 0 && Transformations[0].StartTime > spriteTime)
+            /*if (Transformations.Count > 0 && Transformations[0].StartTime > spriteTime)
             {
                 resetAnimation();
 
                 return;
-            }
+            }*/
+
 
             if (firstFrame)
             {

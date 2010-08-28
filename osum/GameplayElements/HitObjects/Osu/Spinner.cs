@@ -6,10 +6,11 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.GameplayElements.HitObjects;
 
 namespace osum.GameplayElements
 {
-    internal class Spinner : HitObject
+    internal class Spinner : HitObjectSpannable
     {
         private readonly Random randomizer = new Random();
 
@@ -41,17 +42,12 @@ namespace osum.GameplayElements
         private const int SPINNER_CIRCLE_WIDTH = 666;
         private int SPINNER_TOP = 76;
 
-        internal Spinner(int startTime, int endTime, HitObjectSoundType soundType)
-            : this(startTime, endTime, soundType, true)
-        {
-        }
-
-        internal Spinner(int startTime, int endTime, HitObjectSoundType soundType, bool spinnerStuff)
+        internal Spinner(int startTime, int endTime, HitObjectSoundType soundType) : base(Vector2.Zero,startTime,soundType,true)
         {
             Position = new Vector2(GameBase.WindowBaseSize.Width / 2, GameBase.WindowBaseSize.Height / 2);
             StartTime = startTime;
             EndTime = endTime;
-            Type = HitObjectType.Spinner | HitObjectType.NewCombo;
+            Type = HitObjectType.Spinner;
             SoundType = soundType;
             Colour = Color4.Gray;
 
@@ -168,8 +164,6 @@ namespace osum.GameplayElements
 
             UpdateDraw();
 
-            if (spinnerStuff) // && GameBase.Mode != OsuModes.Edit)
-            {
                 SpriteSpin = 
                     new pSprite(SkinManager.Load("spinner-spin"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
@@ -184,13 +178,6 @@ namespace osum.GameplayElements
                                 new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
                 SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
                 SpriteCollection.Add(SpriteClear);
-            }
-        }
-
-        internal override bool NewCombo
-        {
-            get { return (HitObjectType.NewCombo & Type) > 0; }
-            set { return; }
         }
 
         internal override int ComboNumber
@@ -205,12 +192,6 @@ namespace osum.GameplayElements
             {
                 return Clock.AudioTime >= StartTime - DifficultyManager.FadeIn && Clock.AudioTime <= EndTime;
             }
-        }
-
-        internal override void SetEndTime(int time)
-        {
-            EndTime = Math.Max(StartTime, time);
-            UpdateDraw();
         }
 
         private void UpdateDraw()
@@ -419,13 +400,6 @@ namespace osum.GameplayElements
             return val;
         }
 
-        internal override HitObject Clone()
-        {
-            HitObject s = new Spinner(StartTime, EndTime, SoundType);
-            //s.Selected = Selected;
-            return s;
-        }
-
         /*
         internal override void Select()
         {
@@ -451,8 +425,7 @@ namespace osum.GameplayElements
         */
 
         // scoring stuff
-        internal override IncreaseScoreType GetScorePoints(Vector2 currentMousePos)
-        {
+        //internal override IncreaseScoreType GetScorePoints(Vector2 currentMousePos)
             /*
             if (!InputManager.ScorableFrame)
                 return 0;
@@ -512,8 +485,6 @@ namespace osum.GameplayElements
 
             return GetActualScore();
             */
-            return 0;
-        }
         /*
         internal IncreaseScoreType GetActualScore()
         {

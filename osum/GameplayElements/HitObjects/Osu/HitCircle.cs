@@ -19,16 +19,9 @@ namespace osum.GameplayElements
         internal virtual string SpriteNameHitCircle { get { return "hitcircle"; } }
 
         internal HitCircle(Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
-            : base()
+            : base(pos, startTime, soundType, newCombo)
         {
-            Position = pos;
-            StartTime = startTime;
-
             Type = HitObjectType.Circle;
-
-            NewCombo = newCombo;
-
-            SoundType = soundType;
 
             Color4 white = Color4.White;
 
@@ -124,21 +117,6 @@ namespace osum.GameplayElements
         protected virtual bool ShowApproachCircle
         {
             get { return true; }
-        }
-
-        internal override void SetEndTime(int time)
-        {
-            throw new Exception();
-        }
-
-        internal override HitObject Clone()
-        {
-            HitCircle h = new HitCircle(Position, StartTime, NewCombo,SoundType);
-            h.Colour = Colour;
-            h.ComboNumber = ComboNumber;
-            //h.Selected = Selected;
-
-            return h;
         }
 
         protected override IncreaseScoreType HitAction()

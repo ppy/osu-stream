@@ -8,6 +8,7 @@ namespace osum.GameplayElements
     internal static class DifficultyManager
     {
         public static float HitObjectRadius = 128; //todo: implement/fix
+        public static int SliderVelocity = 300;
 
         internal static int PreEmpt { get { return 1500; } }
         internal static int HitWindow50 { get { return 150; } }
@@ -16,5 +17,6 @@ namespace osum.GameplayElements
         internal static int FadeIn { get { return 400; } }
         internal static int FadeOut { get { return 380; } }
         internal static int SpinnerRotationRatio { get { return 5; } }
+        internal static int DistanceBetweenTicks { get { return 30; } }
     }
 }
