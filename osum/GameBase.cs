@@ -49,6 +49,7 @@ using osum.GameModes;
 using osum.Support;
 using System.Collections.Generic;
 using System.Globalization;
+using osum.Audio;
 
 
 namespace osum
@@ -109,9 +110,6 @@ namespace osum
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public static double ElapsedMilliseconds = 1000 / 60f;
-
-        internal IBackgroundAudioPlayer backgroundAudioPlayer;
-        internal SoundEffectPlayer soundEffectPlayer;
 
         /// <summary>
         /// A list of components which get updated every frame.
@@ -180,16 +178,18 @@ namespace osum
             if (InputManager.RegisteredSources.Count == 0)
                 throw new Exception("No input sources registered");
 
-            InitializeBackgroundAudio();
-            if (backgroundAudioPlayer == null)
+            IBackgroundAudioPlayer music = InitializeBackgroundAudio();
+            if (music == null)
                 throw new Exception("No background audio manager registered");
-            Clock.AudioTimeSource = backgroundAudioPlayer;
-            Components.Add(backgroundAudioPlayer);
+            Clock.AudioTimeSource = music;
+            Components.Add(music);
 
-            InitializeSoundEffects();
-            if (soundEffectPlayer == null)
+            ISoundEffectPlayer effect = InitializeSoundEffects();
+            if (effect == null)
                 throw new Exception("No sound effect player registered");
-            Components.Add(soundEffectPlayer);
+            Components.Add(effect);
+
+            AudioEngine.Initialize(effect, music);
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
@@ -198,15 +198,16 @@ namespace osum
         /// <summary>
         /// Initializes the sound effects engine.
         /// </summary>
-        protected virtual void InitializeSoundEffects()
+        protected virtual ISoundEffectPlayer InitializeSoundEffects()
         {
-            soundEffectPlayer = new SoundEffectPlayer();
+            //currently openAL implementation is used across the board.
+            return new SoundEffectPlayer();
         }
 
         /// <summary>
         /// Initializes the background audio playback engine.
         /// </summary>
-        protected abstract void InitializeBackgroundAudio();
+        protected abstract IBackgroundAudioPlayer InitializeBackgroundAudio();
 
         /// <summary>
         /// Initializes the input management subsystem.

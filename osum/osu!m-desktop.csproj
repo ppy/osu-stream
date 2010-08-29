@@ -40,6 +40,7 @@
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerDesktop.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
+    <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayer.cs" />
     <Compile Include="Director.cs" />
     <Compile Include="GameBase.cs" />

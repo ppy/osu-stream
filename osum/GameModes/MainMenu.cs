@@ -9,6 +9,7 @@ using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
+using osum.Audio;
 
 namespace osum.GameModes
 {
@@ -31,9 +32,9 @@ namespace osum.GameModes
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
 
 			
-            sampleTest = GameBase.Instance.soundEffectPlayer.Load("Skins/Default/normal-hitclap.wav");
+            sampleTest = AudioEngine.Effect.Load("Skins/Default/normal-hitclap.wav");
 
-            //GameBase.Instance.backgroundAudioPlayer.Load("test.mp3");
+            //AudioEngine.Music.Load("test.mp3");
 
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
         }
@@ -47,11 +48,11 @@ namespace osum.GameModes
 		
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            GameBase.Instance.soundEffectPlayer.PlayBuffer(sampleTest);
+            AudioEngine.Effect.PlayBuffer(sampleTest);
 			
 			Director.ChangeMode(OsuMode.Play, new Transition());
 
-            GameBase.Instance.backgroundAudioPlayer.Play();
+            AudioEngine.Music.Play();
         }
 
         public override void Update()
@@ -66,7 +67,7 @@ namespace osum.GameModes
         {
             base.Draw();
 			
-			osuLogo.ScaleScalar = 1 + GameBase.Instance.backgroundAudioPlayer.CurrentVolume/100;
+			osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
         }
     }
 }

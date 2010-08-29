@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
+using osum.Audio;
 
 namespace osum.GameModes
 
@@ -42,8 +43,8 @@ namespace osum.GameModes
             hitObjectManager = new HitObjectManager(beatmap);
             hitObjectManager.LoadFile();
 
-            GameBase.Instance.backgroundAudioPlayer.Load("Beatmaps/bcl/babycruisingedit.mp3");
-            GameBase.Instance.backgroundAudioPlayer.Play();
+            AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
+            AudioEngine.Music.Play();
 
             //sliderTest = new SliderTrackRenderer();
         }

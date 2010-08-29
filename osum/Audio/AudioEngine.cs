@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using osum.Support;
 
 namespace osum.Audio
 {
@@ -16,6 +17,21 @@ namespace osum.Audio
     internal static class AudioEngine
     {
         static Dictionary<OsuSamples, int> loadedSamples = new Dictionary<OsuSamples, int>();
+        
+        internal static ISoundEffectPlayer Effect;
+        internal static IBackgroundAudioPlayer Music;
+
+
+        /// <summary>
+        /// Initializes the audio subsystem using specific implementations for sound effects and music modules.
+        /// </summary>
+        /// <param name="effect">The effect player.</param>
+        /// <param name="music">The music player.</param>
+        internal static void Initialize(ISoundEffectPlayer effect, IBackgroundAudioPlayer music)
+        {
+            Effect = effect;
+            Music = music;
+        }
 
         internal static void PlaySample(OsuSamples sample)
         {
@@ -23,11 +39,13 @@ namespace osum.Audio
 
             if (!loadedSamples.TryGetValue(sample, out buffer))
             {
-                buffer = GameBase.Instance.soundEffectPlayer.Load("Skins/Default/normal-" + sample.ToString().ToLower() + ".wav");
+                buffer = AudioEngine.Effect.Load("Skins/Default/normal-" + sample.ToString().ToLower() + ".wav");
                 loadedSamples.Add(sample, buffer);
             }
 
-            GameBase.Instance.soundEffectPlayer.PlayBuffer(buffer);
+            AudioEngine.Effect.PlayBuffer(buffer);
         }
+
     }
 }
+    

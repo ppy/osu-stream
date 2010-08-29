@@ -9,7 +9,7 @@ namespace osum
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
     /// </summary>
-    public class SoundEffectPlayer : IUpdateable
+    public class SoundEffectPlayer : IUpdateable, osum.Audio.ISoundEffectPlayer
     {
         /// <summary>
         /// Extension which provides more control over how buffers are stored.
