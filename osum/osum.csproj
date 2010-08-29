@@ -115,7 +115,6 @@
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Graphics\Texture2D.cs" />
     <Compile Include="Support\iPhone\MainWindow.xib.designer.cs">
       <DependentUpon>..\..\iPhone\MainWindow.xib</DependentUpon>
     </Compile>
@@ -144,18 +143,20 @@
     <Compile Include="Director.cs" />
     <Compile Include="Support\Transition.cs" />
     <Compile Include="Support\ITimeSource.cs" />
-    <Compile Include="GameplayElements\HitObjects\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
-    <Compile Include="GameplayElements\HitObjects\Spinner.cs" />
     <Compile Include="GameplayElements\HitObjectManager.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
-    <Compile Include="GameplayElements\HitObjects\HitFactoryOsu.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
-    <Compile Include="GameplayElements\HitObjects\Slider.cs" />
     <Compile Include="GameModes\Play.cs" />
     <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
+    <Compile Include="Graphics\Primitives\Line.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -170,6 +171,7 @@
     <Folder Include="GameplayElements\HitObjects\" />
     <Folder Include="GameplayElements\" />
     <Folder Include="GameplayElements\Beatmaps\" />
+    <Folder Include="Graphics\Renderers\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
@@ -313,37 +315,17 @@
     </Content>
     <Content Include="Skins\Default\menu-button-exit-over.png">
     </Content>
-    <Content Include="Skins\Default\sliderb7.png">
-    </Content>
     <Content Include="Skins\Default\menu-button-play.png">
     </Content>
-    <Content Include="Skins\Default\sliderb8.png">
-    </Content>
     <Content Include="Skins\Default\menu-button-options.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb9.png">
     </Content>
     <Content Include="Skins\Default\menu-button-special.png">
     </Content>
     <Content Include="Skins\Default\menu-back.png">
     </Content>
-    <Content Include="Skins\Default\sliderb5.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb4.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb2.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb0.png">
-    </Content>
     <Content Include="Skins\Default\menu-button-freeplay.png">
     </Content>
-    <Content Include="Skins\Default\sliderb3.png">
-    </Content>
     <Content Include="Skins\Default\menu-button-edit.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb6.png">
-    </Content>
-    <Content Include="Skins\Default\sliderb1.png">
     </Content>
     <Content Include="Skins\Default\play-skip.png">
     </Content>
@@ -686,5 +668,15 @@
     <Content Include="Beatmaps\bcl\spinner-circle.png" />
     <Content Include="Beatmaps\bcl\spinner-metre.png" />
     <Content Include="Beatmaps\bcl\spinnerspin.mp3" />
+    <Content Include="Skins\Default\sliderb-0.png" />
+    <Content Include="Skins\Default\sliderb-1.png" />
+    <Content Include="Skins\Default\sliderb-2.png" />
+    <Content Include="Skins\Default\sliderb-3.png" />
+    <Content Include="Skins\Default\sliderb-4.png" />
+    <Content Include="Skins\Default\sliderb-5.png" />
+    <Content Include="Skins\Default\sliderb-6.png" />
+    <Content Include="Skins\Default\sliderb-7.png" />
+    <Content Include="Skins\Default\sliderb-8.png" />
+    <Content Include="Skins\Default\sliderb-9.png" />
   </ItemGroup>
 </Project>

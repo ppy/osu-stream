@@ -160,7 +160,7 @@ namespace osum.Graphics
 							drawWidth, drawHeight, 0,
 							0, drawHeight, 0 };
 
-			GL.BindTexture(TextureTarget.Texture2D, textureId);
+			GL.BindTexture(TextureTarget.Texture2D, Id);
 						
 			GL.VertexPointer(3, All.Float, 0, vertices);
 			GL.TexCoordPointer(2, All.Float, 0, coordinates);

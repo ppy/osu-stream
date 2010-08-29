@@ -5,7 +5,7 @@ using System;
 using osum.GameplayElements;
 using osum.GameplayElements.Beatmaps;
 using osum.Helpers;
-using osu.Graphics.Renderers;
+//using osu.Graphics.Renderers;
 using osu.Graphics.Primitives;
 using System.Collections.Generic;
 using OpenTK;
@@ -18,7 +18,7 @@ namespace osum.GameModes
     public class Play : GameMode
     {
         HitObjectManager hitObjectManager;
-        private SliderTrackRenderer sliderTest;
+        //private SliderTrackRenderer sliderTest;
 
         public Play() : base()
         {
