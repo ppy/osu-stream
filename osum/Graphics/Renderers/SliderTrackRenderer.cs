@@ -33,16 +33,21 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using osum.Graphics;
-using osu.Graphics.Primitives;
-using System.Collections.Generic;
-using System.Drawing;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
-using osum.Input;
 #endif
+
+using osum.Input;
+using osu.Graphics.Primitives;
+using osum.Graphics;
+using osum;
+using System.Collections.Generic;
+using osu.Helpers;
+using osum.GameplayElements;
+using osum.Graphics.Skins;
+
 
 namespace osu.Graphics.Renderers
 {
