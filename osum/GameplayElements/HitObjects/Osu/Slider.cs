@@ -89,10 +89,10 @@ namespace osu.GameplayElements.HitObjects.Osu
         
         HitCircle hitCircleStart;
 
-        internal Slider(HitObjectManager hit_object_manager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
+        internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
                         List<HitObjectSoundType> soundTypes)
-            : base(hit_object_manager, startPosition, startTime, soundType, newCombo)
+            : base(hitObjectManager, startPosition, startTime, soundType, newCombo)
         {
             CurveType = curveType;
 
@@ -327,7 +327,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
-                hitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
+                m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
                                                           DifficultyManager.HitObjectRadius, 0, prev);
 
                 GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
