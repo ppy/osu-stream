@@ -14,10 +14,33 @@ namespace osu.GameplayElements.HitObjects.Osu
 {
     internal class Slider : HitObjectSpannable
     {
+        #region Sprites
+
+        /// <summary>
+        /// Sprite for the animated ball (visible during active time).
+        /// </summary>
         internal readonly pAnimation spriteFollowBall;
+
+        /// <summary>
+        /// Sprite for the follow-circle (visible during tracking).
+        /// </summary>
         internal readonly pAnimation spriteFollowCircle;
 
+        /// <summary>
+        /// Sprite for slider body (path).
+        /// </summary>
+        internal pSprite spriteSliderBody;
+
+        #endregion
+
+        /// <summary>
+        /// Type of curve generation.
+        /// </summary>
         internal CurveTypes CurveType;
+
+        /// <summary>
+        /// Total length of this slider in gamefield pixels.
+        /// </summary>
         internal double PathLength;
 
         /// <summary>
@@ -25,15 +48,27 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// </summary>
         internal int RepeatCount;
 
+        /// <summary>
+        /// A list of soundTypes for each end-point on the slider.
+        /// </summary>
         private List<HitObjectSoundType> SoundTypeList;
 
+        /// <summary>
+        /// The raw control points as read from the beatmap file.
+        /// </summary>
         internal List<Vector2> controlPoints;
-        private bool fullyDrawn;
+
+        /// <summary>
+        /// Points after smoothing/curve-generation has been applied.
+        /// </summary>
         internal List<Vector2> smoothPoints;
+
+        /// <summary>
+        /// Line segments which are to be drawn to the screen (based on smoothPoints).
+        /// </summary>
         internal List<Line> drawableSegments;
 
-        internal pSprite spriteSliderBody;
-
+        
         HitCircle hitCircleStart;
 
         internal Slider(Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
@@ -82,7 +117,7 @@ namespace osu.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowCircle);
 
             hitCircleStart = new HitCircle(Position, StartTime, newCombo, soundType);
-            
+
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
         }
 
