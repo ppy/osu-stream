@@ -20,7 +20,6 @@ namespace osum.GameModes
     public class Play : GameMode
     {
         HitObjectManager hitObjectManager;
-        internal SliderTrackRenderer sliderTest;
 
         public Play() : base()
         {
@@ -46,8 +45,6 @@ namespace osum.GameModes
 
             AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
             AudioEngine.Music.Play();
-
-            sliderTest = new SliderTrackRenderer();
         }
 
         public override void Dispose()

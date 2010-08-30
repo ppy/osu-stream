@@ -9,6 +9,7 @@ using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
+using osum.Graphics.Renderers;
 
 #endregion
 
@@ -39,7 +40,13 @@ namespace osum.GameplayElements
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
 
-        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRenderer();
+
+        //todo: pull this from a support class or something, not #if
+#if IPHONE
+        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererIphone();
+#else
+        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererDesktop();
+#endif
 
 
         public HitObjectManager(Beatmap beatmap)

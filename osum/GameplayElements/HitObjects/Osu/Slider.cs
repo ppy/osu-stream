@@ -10,7 +10,13 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using Color = OpenTK.Graphics.Color4;
 using osum;
+
+#if IPHONE
+
+#else
 using OpenTK.Graphics.OpenGL;
+#endif
+
 using osu.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Drawing;
@@ -269,6 +275,7 @@ namespace osu.GameplayElements.HitObjects.Osu
                 lengthDrawn = 0;
                 lastSegmentIndex = -1;
 
+#if !IPHONE
                 int newtexid = GL.GenTexture();
                 TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
                 gl.SetData(newtexid);
@@ -276,6 +283,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
                 spriteSliderBody.Texture = trackTexture;
                 spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
+#endif
             }
 
             if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
@@ -316,7 +324,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             if (lastSegmentIndex >= FirstSegmentIndex)
             {
-
+#if !IPHONE
                 GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
                 GL.MatrixMode(MatrixMode.Projection);
 
@@ -340,7 +348,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
                 //restore viewport (can make this more efficient but not much point?)
                 GameBase.Instance.SetupScreen();
-
+#endif
                 
             }
 

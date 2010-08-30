@@ -49,7 +49,7 @@ namespace osum.Support
         {
             get
             {
-                return SpriteManager.UniversalDim == 0;
+                return SpriteManager.UniversalDim == 0 && fadeState == FadeState.FadeIn;
             }
         }
 
@@ -57,7 +57,7 @@ namespace osum.Support
         {
             get
             {
-                return SpriteManager.UniversalDim == 1; ;
+                return SpriteManager.UniversalDim == 1;
             }
         }
     }
