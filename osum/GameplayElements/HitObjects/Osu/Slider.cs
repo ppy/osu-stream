@@ -9,6 +9,10 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 using Color = OpenTK.Graphics.Color4;
+using osum;
+using OpenTK.Graphics.OpenGL;
+using osu.Graphics.Renderers;
+using OpenTK.Graphics;
 
 namespace osu.GameplayElements.HitObjects.Osu
 {
@@ -68,6 +72,20 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// </summary>
         internal List<Line> drawableSegments;
 
+        internal pTexture trackTexture;
+
+        internal double lengthDrawn;
+        internal int lastSegmentIndex;
+
+        /// <summary>
+        /// Cumulative list of curve lengths up to AND INCLUDING a given DrawableSegment.
+        /// </summary>
+        internal List<double> cumuLengths;
+
+        /// <summary>
+        /// Track bounding rectangle measured in SCREEN COORDINATES
+        /// </summary>
+        internal System.Drawing.Rectangle trackBounds;
         
         HitCircle hitCircleStart;
 
@@ -116,7 +134,7 @@ namespace osu.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
 
-            hitCircleStart = new HitCircle(Position, StartTime, newCombo, soundType);
+            hitCircleStart = new HitCircle(hitObjectManager, Position, StartTime, newCombo, soundType);
 
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
         }
@@ -149,9 +167,10 @@ namespace osu.GameplayElements.HitObjects.Osu
             smoothPoints = pMathHelper.CreateBezier(controlPoints, 30);
 
             //adjust the line to be of maximum length specified...
-            float currentLength = 0;
+            double currentLength = 0;
 
             drawableSegments = new List<Line>();
+            cumuLengths = new List<double>();
 
             for (int i = 1; i < smoothPoints.Count; i++)
             {
@@ -165,17 +184,47 @@ namespace osu.GameplayElements.HitObjects.Osu
                     l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1) * (float)(l.rho - (PathLength - currentLength)));
                     l.Recalc();
 
-                    currentLength += l.rho;
-                    break; //we are done.
+                    //currentLength += l.rho;
+                    //break; //we are done. // Just fall through ~mm
                 }
 
                 currentLength += l.rho;
+                cumuLengths.Add(currentLength);
             }
 
             PathLength = currentLength;
             EndTime = StartTime + (int)(1000 * PathLength / DifficultyManager.SliderVelocity);
         }
 
+        /// <summary>
+        /// Find the extreme values of the given curve in the form of a box.
+        /// </summary>
+        private static System.Drawing.RectangleF FindBoundingBox(List<Line> curve, float radius)
+        {
+            if (curve.Count == 0) throw new ArgumentException("Curve must have at least one segment.");
+
+            float Left = (int)curve[0].p1.X;
+            float Top = (int)curve[0].p1.Y;
+            float Right = (int)curve[0].p1.X;
+            float Bottom = (int)curve[0].p1.Y;
+
+            foreach (Line l in curve)
+            {
+                Left = Math.Min(Left, l.p1.X - radius);
+                Left = Math.Min(Left, l.p2.X - radius);
+
+                Top = Math.Min(Top, l.p1.Y - radius);
+                Top = Math.Min(Top, l.p2.Y - radius);
+
+                Right = Math.Max(Right, l.p1.X + radius);
+                Right = Math.Max(Right, l.p2.X + radius);
+
+                Bottom = Math.Max(Bottom, l.p1.Y + radius);
+                Bottom = Math.Max(Bottom, l.p2.Y + radius);
+            }
+
+            return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
+        }
 
         /// <summary>
         /// Updates this instance. Called every frame when loaded as a component.
@@ -190,6 +239,100 @@ namespace osu.GameplayElements.HitObjects.Osu
             int currentSegmentIndex = (int)(drawableSegments.Count * progress);
 
             Line currentSegment = drawableSegments[Math.Min(drawableSegments.Count - 1, currentSegmentIndex)];
+
+            if (trackTexture == null) // Perform setup to begin drawing the slider track.
+            {
+                // Allocate the track's texture resources.
+                System.Drawing.RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
+                trackBounds.X = (int)(rectf.X * GameBase.WindowRatio);
+                trackBounds.Y = (int)(rectf.Y * GameBase.WindowRatio);
+
+                // Round these up so nothing gets clipped.
+                trackBounds.Width = (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
+                trackBounds.Height = (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
+
+                TextureGl theTextureGl = new TextureGl(trackBounds.Width, trackBounds.Height);
+                trackTexture = new pTexture(theTextureGl, trackBounds.Width, trackBounds.Height);
+                spriteSliderBody = new pSprite(trackTexture, OriginTypes.TopLeft, new Vector2(trackBounds.X, trackBounds.Y), Color.White);
+
+                // todo: Move some of this crap back to the constructor I guess
+                Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
+                    StartTime, StartTime);
+                Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
+                    EndTime, EndTime + DifficultyManager.HitWindow50);
+
+                spriteSliderBody.Transform(fadeIn);
+
+                SpriteCollection.Add(spriteSliderBody);
+
+
+                lengthDrawn = 0;
+                lastSegmentIndex = -1;
+            }
+
+            if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
+            {
+                // Snaking animation is IN PROGRESS
+#if FBO
+                int FirstSegmentIndex = lastSegmentIndex + 1;
+
+                throw new NotImplementedException();
+#else
+                int FirstSegmentIndex = 0;
+
+                // Length of the curve we're drawing up to.
+                double TargetLength = PathLength *
+                                      (double)(Clock.AudioTime - StartTime - DifficultyManager.PreEmptSnakeStart) /
+                                      (double)(DifficultyManager.PreEmptSnakeEnd - DifficultyManager.PreEmptSnakeStart);
+
+                int LastSegmentIndex = cumuLengths.FindLastIndex(d => d < TargetLength);
+                if (LastSegmentIndex == -1) LastSegmentIndex = drawableSegments.Count - 1;
+
+                Line prev = null;
+                if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
+
+                if (LastSegmentIndex >= FirstSegmentIndex)
+                {
+
+                    GL.PushAttrib(AttribMask.EnableBit);
+
+                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
+                    GL.Enable(EnableCap.DepthTest);
+
+                    GL.MatrixMode(MatrixMode.Modelview);
+
+                    GL.LoadIdentity();
+
+                    GL.MatrixMode(MatrixMode.Projection);
+
+                    GL.LoadIdentity();
+                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Bottom, trackBounds.Top, -1.0d, 2.0d);
+
+                    GL.Clear(ClearBufferMask.ColorBufferBit);
+
+                    hitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, LastSegmentIndex - FirstSegmentIndex + 1),
+                                                              DifficultyManager.HitObjectRadius, 0, prev);
+
+                    GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBounds.Width, trackBounds.Height, 0);
+                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                    //trackTexture.SetData(trackTexture.Id);
+
+                    GL.PopAttrib();
+                }
+
+                //restore viewport (can make this more efficient but not much point?)
+                GameBase.Instance.SetupScreen();
+
+#endif
+
+            }
 
             spriteFollowBall.Position = currentSegment.p1;
             spriteFollowBall.Rotation = currentSegment.theta + (float)Math.PI;

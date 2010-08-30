@@ -27,7 +27,8 @@ namespace osum.GameplayElements.HitObjects
 
         protected override IncreaseScoreType HitAction()
         {
-            throw new NotImplementedException();
+            return IncreaseScoreType.Hit300;
+            //throw new NotImplementedException();
         }
 
         internal override bool IsVisible

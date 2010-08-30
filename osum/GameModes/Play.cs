@@ -12,6 +12,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
+using osu.Graphics.Renderers;
+using OpenTK.Graphics.OpenGL;
 
 namespace osum.GameModes
 
@@ -46,7 +48,7 @@ namespace osum.GameModes
             AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
             AudioEngine.Music.Play();
 
-            //sliderTest = new SliderTrackRenderer();
+            sliderTest = new SliderTrackRenderer();
         }
 
         public override void Dispose()
@@ -62,9 +64,9 @@ namespace osum.GameModes
         {
             hitObjectManager.Draw();
 
-            //List<Line> list = new List<Line>();
-            //list.Add(new Line(new Vector2(20,20),new Vector2(400,400)));
-            //sliderTest.Draw(list, 100, Color4.White, Color4.Black, null, new Rectangle(0,0,1024,768));
+            List<Line> list = new List<Line>();
+            list.Add(new Line(new Vector2(20,20),new Vector2(400,400)));
+
             //sliderTest.Draw(list, 80, Color4.White, Color4.Black, null, new Rectangle(0,0,640,480));
 
             base.Draw();

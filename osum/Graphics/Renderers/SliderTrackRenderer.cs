@@ -179,7 +179,7 @@ namespace osu.Graphics.Renderers
             GL.Vertex3(-QUAD_OVERLAP_FUDGE, -1.0f, 0.0f);
             GL.Vertex3(1.0f + QUAD_OVERLAP_FUDGE, -1.0f, 0.0f);
 
-            GL.TexCoord2((float)TEX_WIDTH, 0.0f);
+            GL.TexCoord2(1.0f, 0.0f);
             GL.Vertex3(-QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1.0f);
             GL.Vertex3(1.0f + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1.0f);
 
@@ -198,7 +198,7 @@ namespace osu.Graphics.Renderers
 
                 GL.Begin(BeginMode.TriangleFan);
 
-                GL.TexCoord2((float)TEX_WIDTH, 0.0f);
+                GL.TexCoord2(1.0f, 0.0f);
                 GL.Vertex3(0.0f, 0.0f, 1.0f);
 
                 GL.TexCoord2(0.0f, 0.0f);
@@ -257,19 +257,19 @@ namespace osu.Graphics.Renderers
             }
 
             TextureGl result = new TextureGl(TEX_WIDTH, 1);
-            int[] textures = new int[1];
+            int textures;
 
-            GL.GenTextures(1, textures);
+            GL.GenTextures(1, out textures);
             GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
 
-            GL.BindTexture(TextureGl.SURFACE_TYPE, textures[0]);
+            GL.BindTexture(TextureGl.SURFACE_TYPE, textures);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
             GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, TEX_WIDTH, 1, 0);
             GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
-            result.SetData(textures[0]);
+            result.SetData(textures);
 
             GL.PopAttrib();
 
@@ -437,6 +437,8 @@ namespace osu.Graphics.Renderers
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
             int count = lineList.Count;
+
+            GL.Color3((byte)255, (byte)255, (byte)255);
 
             for (int x = 1; x < count; x++)
             {

@@ -17,9 +17,9 @@ namespace osu.Helpers
         internal static Color Lighten(Color color, float amount)
         {
             return new Color(
-                (byte)Math.Min(1, color.R * (1+amount)),
-                (byte)Math.Min(1, color.G * (1+amount)),
-                (byte)Math.Min(1, color.B * (1+amount)),
+                Math.Min(1.0f, color.R * (1+amount)),
+                Math.Min(1.0f, color.G * (1+amount)),
+                Math.Min(1.0f, color.B * (1+amount)),
                 color.A);
         }
 
@@ -30,9 +30,9 @@ namespace osu.Helpers
         {
             amount *= 0.5f;
             return new Color(
-                (byte)Math.Min(1, color.R * (1 + 0.5f * amount) + amount),
-                (byte)Math.Min(1, color.G * (1 + 0.5f * amount) + amount),
-                (byte)Math.Min(1, color.B * (1 + 0.5f * amount) + amount),
+                Math.Min(1.0f, color.R * (1 + 0.5f * amount) + amount),
+                Math.Min(1.0f, color.G * (1 + 0.5f * amount) + amount),
+                Math.Min(1.0f, color.B * (1 + 0.5f * amount) + amount),
                 color.A);
         }
 
@@ -45,9 +45,9 @@ namespace osu.Helpers
         internal static Color Darken(Color color, float amount)
         {
             return new Color(
-                (byte)Math.Min(1, color.R * (1-amount)),
-                (byte)Math.Min(1, color.G * (1-amount)),
-                (byte)Math.Min(1, color.B * (1-amount)),
+                Math.Min(1.0f, color.R * (1-amount)),
+                Math.Min(1.0f, color.G * (1-amount)),
+                Math.Min(1.0f, color.B * (1-amount)),
                 color.A);
         }
 
