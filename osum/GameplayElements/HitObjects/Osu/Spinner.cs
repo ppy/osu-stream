@@ -23,7 +23,6 @@ namespace osum.GameplayElements
         private readonly pSpriteText spriteRpmText;
         private readonly pSprite spriteScoreMetre;
         private readonly pSprite SpriteSpin;
-        private Transformation circleRotation;
         private int framecount;
         private double lastMouseAngle;
         private int lastRotationCount;
@@ -34,77 +33,35 @@ namespace osum.GameplayElements
         private double rpm;
         private int scoringRotationCount;
         private bool spinstarted;
-        protected pSprite spriteBonus;
+        protected pSpriteText spriteBonus;
         protected pSprite spriteCircle;
         internal double velocityCurrent;
-        protected double velocityTheoretical;
+        protected double velocityFromInput;
         private int zeroCount;
         private const int SPINNER_CIRCLE_WIDTH = 666;
-        private int SPINNER_TOP = 76;
+        private int SPINNER_TOP = - GameBase.WindowBaseSize.Height / 40;
 
-        internal Spinner(HitObjectManager hit_object_manager, int startTime, int endTime, HitObjectSoundType soundType)
-            : base(hit_object_manager, Vector2.Zero, startTime, soundType, true)
+        internal Spinner(int startTime, int endTime, HitObjectSoundType soundType)
+            : base(Vector2.Zero, startTime, soundType, true)
         {
             Position = new Vector2(GameBase.WindowBaseSize.Width / 2, GameBase.WindowBaseSize.Height / 2);
-            StartTime = startTime;
             EndTime = endTime;
             Type = HitObjectType.Spinner;
-            SoundType = soundType;
             Colour = Color4.Gray;
 
-            // is this necessary?
-            //if (GameBase.GamefieldCorrectionOffsetActive)
-            //    SPINNER_TOP -= 16;
-
-            /*
-            Color4 fade = (GameBase.Mode == OsuModes.Play &&
-                          (ModManager.CheckActive(Player.currentScore.enabledMods, Mods.SpunOut) || Player.Relaxing2)
-                              ? Color4.Gray
-                              : Color4.White);
-            */
             Color4 fade = Color4.White;
-
-            /*
-            if (GameBase.Mode == OsuModes.Play && SkinManager.Current.SpinnerFadePlayfield)
-            {
-                pSprite black = new pSprite(GameBase.WhitePixel, FieldTypes.Standard, OriginTypes.TopLeft,
-                ClockTypes.Audio, new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, Color.Black);
-
-                black.CurrentScale = 1.6f;
-
-                black.UseVectorScale = true;
-                black.VectorScale = new Vector2(640, SPINNER_TOP);
-
-                SpriteCollection.Add(black);
-
-                if (GameBase.GamefieldCorrectionOffsetActive)
-                {
-                    black = new pSprite(GameBase.WhitePixel, FieldTypes.Standard, OriginTypes.TopLeft,
-    ClockTypes.Audio, new Vector2(0, 480 - 19), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, Color.Black);
-
-                    black.CurrentScale = 1.6f;
-
-                    black.UseVectorScale = true;
-                    black.VectorScale = new Vector2(640, 19);
-                    //Use 19 here instead of 16 as the spinner-background graphic seems a little short...
-
-                    SpriteCollection.Add(black);
-                }
-
-            }
-            */
 
             //Check for a jpg background for beatmap-based skins (used to reduce filesize), then fallback to png.
             spriteBackground =
                 new pSprite(SkinManager.Load("spinner-background.jpg") ?? SkinManager.Load("spinner-background"),
-                            FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Audio,
+                            FieldTypes.StandardSnapCentre, OriginTypes.Centre , ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, fade);
             SpriteCollection.Add(spriteBackground);
 
             spriteCircle =
                 new pSprite(SkinManager.Load("spinner-circle"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                            new Vector2(GameBase.WindowBaseSize.Width/2, (SPINNER_TOP + GameBase.WindowBaseSize.Height)/2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
+                            new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
             SpriteCollection.Add(spriteCircle);
 
             spriteScoreMetre =
@@ -114,27 +71,17 @@ namespace osum.GameplayElements
             spriteScoreMetre.DrawHeight = 0;
             SpriteCollection.Add(spriteScoreMetre);
 
-            // TODO: change these two sprites to calculated positions instead of constants
-
             spriteRpmBackground =
                 new pSprite(SkinManager.Load("spinner-rpm"),
-                            FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Audio,
-                            new Vector2(233, 445), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
+                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
+                            Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteCollection.Add(spriteRpmBackground);
 
-            spriteRpmText = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
-                                            FieldTypes.Standard, OriginTypes.TopRight, ClockTypes.Audio,
-                                            new Vector2(400, 448), SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, fade);
+            spriteRpmText = new pSpriteText("100", "score", 3,
+                                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
+                                            Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, fade);
             spriteRpmText.ScaleScalar = 0.9f;
             SpriteCollection.Add(spriteRpmText);
-
-            /*
-            if (GameBase.Mode != OsuModes.Edit && spinnerStuff)
-            {
-                SpriteCollection.Add(spriteRpmText);
-                SpriteCollection.Add(spriteRpmBackground);
-            }
-            */
 
             pTexture highRes = SkinManager.Load("spinner-approachcircle");
 
@@ -152,10 +99,9 @@ namespace osum.GameplayElements
                 SpriteApproachCircle =
                     new pSprite(SkinManager.Load("approachcircle"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade); //SkinManager.LoadColour("SpinnerApproachCircle"));
+                                new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             }
 
-            //if (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden))
             SpriteCollection.Add(SpriteApproachCircle);
 
             spriteBonus = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
@@ -163,40 +109,21 @@ namespace osum.GameplayElements
                                           new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height - SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteCollection.Add(spriteBonus);
 
-            UpdateDraw();
+            SpriteSpin =
+                new pSprite(SkinManager.Load("spinner-spin"),
+                            FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
+                            new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
+            SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
+            SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
+            SpriteCollection.Add(SpriteSpin);
 
-                SpriteSpin = 
-                    new pSprite(SkinManager.Load("spinner-spin"),
-                                FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
-                SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
-                SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
-                SpriteCollection.Add(SpriteSpin);
+            SpriteClear =
+                new pSprite(SkinManager.Load("spinner-clear"),
+                            FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
+                            new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
+            SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
+            SpriteCollection.Add(SpriteClear);
 
-                SpriteClear =
-                    new pSprite(SkinManager.Load("spinner-clear"),
-                                FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
-                SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
-                SpriteCollection.Add(SpriteClear);
-        }
-
-        internal override int ComboNumber
-        {
-            get { return 1; }
-            set { }
-        }
-
-        internal override bool IsVisible
-        {
-            get
-            {
-                return Clock.AudioTime >= StartTime - DifficultyManager.FadeIn && Clock.AudioTime <= EndTime;
-            }
-        }
-
-        private void UpdateDraw()
-        {
             foreach (pSprite p in SpriteCollection)
             {
                 p.Transformations.Clear();
@@ -214,9 +141,6 @@ namespace osum.GameplayElements
                 SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 6, 0.1f, StartTime, EndTime));
             }
 
-            circleRotation = new Transformation(TransformationType.Rotation, 0, 0, StartTime, EndTime);
-            spriteCircle.Transform(circleRotation);
-
             spriteRpmText.Transform(new Transformation(
                 spriteRpmText.Position + new Vector2(0, 50), spriteRpmText.Position,
                 StartTime - DifficultyManager.FadeIn, StartTime, EasingTypes.In));
@@ -229,18 +153,92 @@ namespace osum.GameplayElements
             maxAccel = 0.00008 + Math.Max(0, (5000 - (double)(EndTime - StartTime)) / 1000 / 2000);
         }
 
+        internal override int ComboNumber
+        {
+            get { return 1; }
+            set { }
+        }
+
+        internal override bool IsVisible
+        {
+            get
+            {
+                return Clock.AudioTime >= StartTime - DifficultyManager.FadeIn && Clock.AudioTime <= EndTime;
+            }
+        }
+
         internal override void Shake()
         {
             return;
         }
 
-#if ARCADE
-        const int RELAX_BONUS_ACCEL = 12;
-        const int RELAX_BONUS_VELOCITY = 2;
-#else
-        const int RELAX_BONUS_ACCEL = 4;
-        const int RELAX_BONUS_VELOCITY = 1;
-#endif
+        TrackingPoint cursorTrackingPoint;
+        Vector2 cursorTrackingPosition;
+        internal override IncreaseScoreType CheckScoring()
+        {
+            //Update the angles
+            velocityFromInput = 0;
+            
+            if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
+            {
+                cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
+                return IncreaseScoreType.Ignore;
+            }
+
+            if (cursorTrackingPoint == null || !InputManager.IsPressed)
+                return IncreaseScoreType.Ignore;
+
+            Vector2 oldPos = cursorTrackingPosition - spriteCircle.Position;
+
+            //Update to the new mouse position.
+            cursorTrackingPosition = InputManager.PrimaryTrackingPoint.WindowPosition;
+
+            Vector2 newPos = cursorTrackingPosition - spriteCircle.Position;
+
+            double oldAngle = Math.Atan2(oldPos.Y, oldPos.X);
+            double newAngle = Math.Atan2(newPos.Y, newPos.X);
+
+            double angleDiff = newAngle - oldAngle;
+
+            if (angleDiff < -Math.PI)
+                angleDiff = (2 * Math.PI) + angleDiff;
+            else if (oldAngle - newAngle < -Math.PI)
+                angleDiff = (-2 * Math.PI) - angleDiff;
+
+            velocityFromInput = angleDiff / Constants.SIXTY_FRAME_TIME;
+
+            IncreaseScoreType score = IncreaseScoreType.Ignore;
+
+            //Update the rotation count
+            if (rotationCount != lastRotationCount)
+            {
+                scoringRotationCount++;
+                
+                if (scoringRotationCount > rotationRequirement + 3 &&
+                    (scoringRotationCount - (rotationRequirement + 3)) % 2 == 0)
+                {
+                    score = IncreaseScoreType.SpinnerBonus;
+                    //AudioEngine.PlaySample(AudioEngine.s_SpinnerBonus, AudioEngine.VolumeSample);
+                    spriteBonus.Text = (1000 * (scoringRotationCount - (rotationRequirement + 3)) / 2).ToString();
+                    spriteBonus.Transformations.Clear();
+                    spriteBonus.Transform(
+                        new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
+                    spriteBonus.Transform(
+                        new Transformation(TransformationType.Scale, 1.28F, 2f, Clock.AudioTime, Clock.AudioTime + 800,EasingTypes.In));
+                    //Ensure we don't recycle this too early.
+                    spriteBonus.Transform(
+                        new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
+                }
+                else if (scoringRotationCount > 1 && scoringRotationCount % 2 == 0)
+                    score = IncreaseScoreType.SpinnerSpinPoints;
+                else if (scoringRotationCount > 1)
+                    score = IncreaseScoreType.SpinnerSpin;
+            }
+
+            lastRotationCount = rotationCount;
+
+            return score;
+        }
 
         public override void Update()
         {
@@ -249,58 +247,28 @@ namespace osum.GameplayElements
             if (IsHit || Clock.AudioTime < StartTime) // || (!InputManager.ScorableFrame))
                 return;
 
-            framecount++;
-
-            //float rpm = (float)scoringRotationCount / (Clock.AudioTime - StartTime) * 60000;
             rpm = rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * Constants.SIXTY_FRAME_TIME * 60) / (Math.PI * 2) * 60;
 
             spriteRpmText.Text = string.Format("{0:#,0}", rpm);
 
             SetScoreMeter((int)((float)scoringRotationCount / rotationRequirement * 100));
 
-            /*
-            if (GameBase.Mode == OsuModes.Edit)
+            if (IsActive)
             {
-                circleRotation.EndFloat = (float)(rotationRequirement * Math.PI);
-                rotationCount =
-                    (int)((float)(Clock.AudioTime - StartTime) / 1000 * HitObjectManager.SpinnerRotationRatio);
-            }
-            */
-            //else 
-            if (Clock.AudioTime < EndTime && Clock.AudioTime > StartTime) // && !Player.Recovering)
-            {
-                if (spriteCircle.Transformations.Contains(circleRotation))
-                    spriteCircle.Transformations.Remove(circleRotation);
-
                 double maxAccelPerSec = maxAccel * Constants.SIXTY_FRAME_TIME;
-                /*
-                if (GameBase.Mode == OsuModes.Play &&
-                    ModManager.CheckActive(Player.currentScore.enabledMods, Mods.SpunOut) || Player.Relaxing2)
-                    velocityCurrent = 0.03;
-                */
-                //else
-                if (velocityTheoretical > velocityCurrent)
+                
+                if (velocityFromInput > velocityCurrent)
                 {
                     velocityCurrent = velocityCurrent +
-                        Math.Min(velocityTheoretical * RELAX_BONUS_VELOCITY - velocityCurrent,
-                        velocityCurrent < 0
-#if !ARCADE
-                        //&& Player.Relaxing
-#endif
-                        ? maxAccelPerSec / RELAX_BONUS_ACCEL : maxAccelPerSec);
+                        Math.Min(velocityFromInput - velocityCurrent/4, maxAccelPerSec);
                 }
                 else
                 {
                     velocityCurrent = velocityCurrent +
-                        Math.Max(velocityTheoretical * RELAX_BONUS_VELOCITY - velocityCurrent,
-                        velocityCurrent > 0
-#if !ARCADE
-                        //&& Player.Relaxing
-#endif
-                        ? -maxAccelPerSec / RELAX_BONUS_ACCEL : -maxAccelPerSec);
+                        Math.Max(velocityFromInput - velocityCurrent/4, -maxAccelPerSec);
                 }
 
-
+                //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
                 spriteCircle.Rotation = spriteCircle.Rotation + (float)(velocityCurrent * Constants.SIXTY_FRAME_TIME);
@@ -401,91 +369,67 @@ namespace osum.GameplayElements
             return val;
         }
 
-        /*
-        internal override void Select()
-        {
-            spriteCircle.OriginalColour = Color4.BlueViolet;
-        }
-
-        internal override void Deselect()
-        {
-            spriteCircle.OriginalColour = Color4.White;
-        }
-
-        internal override void ModifyTime(int newTime)
-        {
-            int diff = newTime - StartTime;
-            StartTime += diff;
-            SetEndTime(EndTime + diff);
-        }
-
-        internal override void ModifyPosition(Vector2 newPosition)
-        {
-            return;
-        }
-        */
-
         // scoring stuff
         //internal override IncreaseScoreType GetScorePoints(Vector2 currentMousePos)
-            /*
-            if (!InputManager.ScorableFrame)
-                return 0;
+        /*
+        if (!InputManager.ScorableFrame)
+            return 0;
 
-            Vector2 calc = currentMousePos - spriteCircle.CurrentPositionScaled;
-            double newMouseAngle = Math.Atan2(calc.Y, calc.X);
+        Vector2 calc = currentMousePos - spriteCircle.CurrentPositionScaled;
+        double newMouseAngle = Math.Atan2(calc.Y, calc.X);
 
-            double angleDiff = newMouseAngle - lastMouseAngle;
+        double angleDiff = newMouseAngle - lastMouseAngle;
 
-            if (newMouseAngle - lastMouseAngle < -Math.PI)
-                angleDiff = (2 * Math.PI) + newMouseAngle - lastMouseAngle;
-            else if (lastMouseAngle - newMouseAngle < -Math.PI)
-                angleDiff = (-2 * Math.PI) - lastMouseAngle + newMouseAngle;
+        if (newMouseAngle - lastMouseAngle < -Math.PI)
+            angleDiff = (2 * Math.PI) + newMouseAngle - lastMouseAngle;
+        else if (lastMouseAngle - newMouseAngle < -Math.PI)
+            angleDiff = (-2 * Math.PI) - lastMouseAngle + newMouseAngle;
 
-            if (angleDiff == 0)
-            {
-                if (zeroCount++ < 1)
-                    velocityTheoretical = velocityTheoretical / 3;
-                else
-                    velocityTheoretical = 0;
-            }
+        if (angleDiff == 0)
+        {
+            if (zeroCount++ < 1)
+                velocityTheoretical = velocityTheoretical / 3;
             else
-            {
-                zeroCount = 0;
+                velocityTheoretical = 0;
+        }
+        else
+        {
+            zeroCount = 0;
 
-                if (!Player.Relaxing &&
-                    (
+            if (!Player.Relaxing &&
+                (
 #if !ARCADE
 (InputManager.leftButton == ButtonState.Released && InputManager.rightButton == ButtonState.Released) ||
 #endif
- Clock.AudioTime < StartTime ||
-                    Clock.AudioTime > EndTime))
-                    angleDiff = 0;
-                else
+Clock.AudioTime < StartTime ||
+                Clock.AudioTime > EndTime))
+                angleDiff = 0;
+            else
+            {
+                double pyth = Vector2.Distance(currentMousePos, spriteCircle.CurrentPositionScaled);
+
+                if (pyth > GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2 && !InputManager.ReplayMode &&
+                    !GameBase.graphics.IsFullScreen)
                 {
-                    double pyth = Vector2.Distance(currentMousePos, spriteCircle.CurrentPositionScaled);
+                    Vector2 mousePos = spriteCircle.CurrentPositionScaled +
+                                       calc * (float)((GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2) / pyth);
 
-                    if (pyth > GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2 && !InputManager.ReplayMode &&
-                        !GameBase.graphics.IsFullScreen)
-                    {
-                        Vector2 mousePos = spriteCircle.CurrentPositionScaled +
-                                           calc * (float)((GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2) / pyth);
-
-                        MouseHandler.MousePosition = mousePos;
-                        MouseHandler.MousePoint = new Point((int)mousePos.X, (int)mousePos.Y);
-                        Mouse.SetPosition((int)mousePos.X, (int)mousePos.Y);
-                    }
+                    MouseHandler.MousePosition = mousePos;
+                    MouseHandler.MousePoint = new Point((int)mousePos.X, (int)mousePos.Y);
+                    Mouse.SetPosition((int)mousePos.X, (int)mousePos.Y);
                 }
-
-                if (Math.Abs(angleDiff) < Math.PI && GameBase.SixtyFramesPerSecondLength > 0)
-                    velocityTheoretical = angleDiff / GameBase.SIXTY_FRAME_TIME;
-                else
-                    velocityTheoretical = 0;
             }
 
-            lastMouseAngle = newMouseAngle;
+            if (Math.Abs(angleDiff) < Math.PI && GameBase.SixtyFramesPerSecondLength > 0)
+                velocityTheoretical = angleDiff / GameBase.SIXTY_FRAME_TIME;
+            else
+                velocityTheoretical = 0;
+        }
 
-            return GetActualScore();
-            */
+        lastMouseAngle = newMouseAngle;
+
+        return GetActualScore();
+        */
         /*
         internal IncreaseScoreType GetActualScore()
         {

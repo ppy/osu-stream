@@ -9,7 +9,16 @@ namespace osum
     {
         public static List<InputSource> RegisteredSources = new List<InputSource>();
 
+        /// <summary>
+        /// Last standard window position of cursor.
+        /// </summary>
         public static Vector2 MainPointerPosition;
+
+        /// <summary>
+        /// Active tracking point (first pressed). When more than one touches are present, will take the oldest still-valid touch.
+        /// When using to track movement, check changes in reference to avoid sudden jumps between tracking points.
+        /// </summary>
+        public static TrackingPoint PrimaryTrackingPoint;
 
         public static bool IsTracking
         {
@@ -125,7 +134,6 @@ namespace osum
         }
 
         public static event InputHandler OnMove;
-        private static TrackingPoint PrimaryTrackingPoint;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
             if (OnMove != null)

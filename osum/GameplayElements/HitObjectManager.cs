@@ -360,7 +360,14 @@ namespace osum.GameplayElements
 
             //todo: optimise for only visible
             foreach (HitObject h in hitObjects)
-                if (h.IsVisible) h.Update();
+                if (h.IsVisible)
+                {
+                    h.Update();
+
+                    HitObjectSpannable s = h as HitObjectSpannable;
+                    if (s != null)
+                        s.CheckScoring(); //todo: do this in another loop maybe?
+                }
         }
 
         #endregion
@@ -376,7 +383,6 @@ namespace osum.GameplayElements
                 if (h.HitTest(tracking))
                     return h;
             }
-
 
             return null;
         }
