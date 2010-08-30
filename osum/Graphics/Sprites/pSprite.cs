@@ -41,95 +41,6 @@ using osum.Input;
 
 namespace osum.Graphics.Sprites
 {
-    internal enum FieldTypes
-    {
-        /// <summary>
-        ///   The gamefield resolution.  Used for hitobjects and anything which needs to align with gameplay elements.
-        ///   This is scaled in proportion to the native resolution and aligned accordingly.
-        /// </summary>
-        Gamefield512x384,
-        /// <summary>
-        ///   Gamefield "container" resolution.  This is where storyboard and background events sits, and is the same
-        ///   scaling/positioning as Standard when in play mode.  It differs in editor design mode where this field
-        ///   will be shrunk to allow for editing.
-        /// </summary>
-        Gamefield640x480,
-
-        /// <summary>
-        ///   The standard 640x480 window resolution.  Sprites are scaled down from 1024x768 at a ratio of 5/8, then scaled
-        ///   back up to native.
-        /// </summary>
-        Standard,
-
-        /// <summary>
-        ///   Standard window resolution, but ignoring sprite rescaling.  Sprites will be displayed at their raw dimensions
-        ///   no matter what client resolution.
-        /// </summary>
-        StandardNoScale,
-
-        /// <summary>
-        ///   Aligns from the right-hand side of the screen, where an X position of 0 is translated to Standard(640).
-        /// </summary>
-        StandardSnapRight,
-
-        /// <summary>
-        ///   Aligns from the exact centre, where a position of 0 is translated to Standard(320,240).
-        /// </summary>
-        StandardSnapCentre,
-
-        /// <summary>
-        ///   Aligns from the bottom centre, where a position of 0 is translated to Standard(320,480).
-        /// </summary>
-        StandardSnapBottomCentre,
-
-        /// <summary>
-        ///   Aligns from the centre-right point of the screen, where a position of 0 is translated to Standard(640,320).
-        /// </summary>
-        StandardSnapCentreRight,
-
-        /// <summary>
-        ///   Aligns from the right-hand side of the screen but ignores scaling, rendering at raw dimensions (used for pText when
-        ///   rendering native resolution text).
-        /// </summary>
-        StandardNoScaleSnapRight,
-
-        /// <summary>
-        ///   Standard 640x480 field at raw dimensions rounded to nearest int to avoid interpolation artifacts.
-        /// </summary>
-        StandardNoScaleExactCoordinates,
-
-        StandardGamefieldScale,
-
-        /// <summary>
-        ///   Native screen resolution.
-        /// </summary>
-        Native,
-
-        /// <summary>
-        ///   Native screen resolution with 1024x768-native sprite scaling.
-        /// </summary>
-        NativeStandardScale,
-
-        /// <summary>
-        ///   Native screen resolution aligned from the right-hand side of the screen, where an X position of 0 is translated to Standard(WindowWidth).
-        /// </summary>
-        NativeSnapRight,
-    }
-
-    internal enum OriginTypes
-    {
-        TopLeft,
-        Centre,
-        CentreLeft,
-        TopRight,
-        BottomCentre,
-        TopCentre,
-        Custom,
-        CentreRight,
-        BottomLeft,
-        BottomRight
-    }
-
     internal class pSprite : IDrawable, IDisposable
     {
         protected List<Transformation> transformations;
@@ -285,6 +196,11 @@ namespace osum.Graphics.Sprites
 
         public virtual void Update()
         {
+            bool hasColour = false;
+            bool hasAlpha = false;
+            bool hasRotation = false;
+            bool hasScale = false;
+
             for (int i = 0; i < transformations.Count; i++)
             {
                 Transformation t = transformations[i];
@@ -296,10 +212,12 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.EndColour;
+                            hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.EndFloat;
+                            hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
@@ -328,14 +246,17 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Rotation:
                             Rotation = t.EndFloat;
+                            hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.EndFloat, t.EndFloat);
+                            hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.EndVector;
+                            hasScale = true;
                             break;
                     }
 
@@ -354,10 +275,12 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.CurrentColour;
+                            hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.CurrentFloat;
+                            hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
@@ -386,16 +309,88 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Rotation:
                             Rotation = t.CurrentFloat;
+                            hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
+                            hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.CurrentVector;
+                            hasScale = true;
                             break;
                     }
+
+                    continue;
+                }
+
+                switch (t.Type)
+                {
+                    case TransformationType.Colour:
+                        if (!hasColour)
+                        {
+                            hasColour = true;
+                            Colour = t.CurrentColour;
+                        }
+                        break;
+
+                    case TransformationType.Fade:
+                        if (!hasAlpha)
+                        {
+                            hasAlpha = true;
+                            Alpha = t.CurrentFloat;
+                        }
+                        break;
+
+                    case TransformationType.Movement:
+                        Position = t.CurrentVector;
+                        break;
+
+                    case TransformationType.MovementX:
+                        Position.X = t.CurrentFloat;
+                        break;
+
+                    case TransformationType.MovementY:
+                        Position.Y = t.CurrentFloat;
+                        break;
+
+                    case TransformationType.ParameterAdditive:
+                        blending = BlendingFactorDest.One;
+                        break;
+
+                    case TransformationType.ParameterFlipHorizontal:
+                        effect |= SpriteEffect.FlipHorizontally;
+                        break;
+
+                    case TransformationType.ParameterFlipVertical:
+                        effect |= SpriteEffect.FlipVertically;
+                        break;
+
+                    case TransformationType.Rotation:
+                        if (!hasRotation)
+                        {
+                            hasRotation = true;
+                            Rotation = t.CurrentFloat;
+                        }
+                        break;
+
+                    case TransformationType.Scale:
+                        if (!hasScale)
+                        {
+                            hasScale = true;
+                            Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
+                        }
+                        break;
+
+                    case TransformationType.VectorScale:
+                        if (!hasScale)
+                        {
+                            hasScale = true;
+                            Scale = t.CurrentVector;
+                        }
+                        break;
                 }
             }
         }
@@ -607,4 +602,94 @@ namespace osum.Graphics.Sprites
 
         #endregion
     }
+
+    internal enum FieldTypes
+    {
+        /// <summary>
+        ///   The gamefield resolution.  Used for hitobjects and anything which needs to align with gameplay elements.
+        ///   This is scaled in proportion to the native resolution and aligned accordingly.
+        /// </summary>
+        Gamefield512x384,
+        /// <summary>
+        ///   Gamefield "container" resolution.  This is where storyboard and background events sits, and is the same
+        ///   scaling/positioning as Standard when in play mode.  It differs in editor design mode where this field
+        ///   will be shrunk to allow for editing.
+        /// </summary>
+        Gamefield640x480,
+
+        /// <summary>
+        ///   The standard 640x480 window resolution.  Sprites are scaled down from 1024x768 at a ratio of 5/8, then scaled
+        ///   back up to native.
+        /// </summary>
+        Standard,
+
+        /// <summary>
+        ///   Standard window resolution, but ignoring sprite rescaling.  Sprites will be displayed at their raw dimensions
+        ///   no matter what client resolution.
+        /// </summary>
+        StandardNoScale,
+
+        /// <summary>
+        ///   Aligns from the right-hand side of the screen, where an X position of 0 is translated to Standard(640).
+        /// </summary>
+        StandardSnapRight,
+
+        /// <summary>
+        ///   Aligns from the exact centre, where a position of 0 is translated to Standard(320,240).
+        /// </summary>
+        StandardSnapCentre,
+
+        /// <summary>
+        ///   Aligns from the bottom centre, where a position of 0 is translated to Standard(320,480).
+        /// </summary>
+        StandardSnapBottomCentre,
+
+        /// <summary>
+        ///   Aligns from the centre-right point of the screen, where a position of 0 is translated to Standard(640,320).
+        /// </summary>
+        StandardSnapCentreRight,
+
+        /// <summary>
+        ///   Aligns from the right-hand side of the screen but ignores scaling, rendering at raw dimensions (used for pText when
+        ///   rendering native resolution text).
+        /// </summary>
+        StandardNoScaleSnapRight,
+
+        /// <summary>
+        ///   Standard 640x480 field at raw dimensions rounded to nearest int to avoid interpolation artifacts.
+        /// </summary>
+        StandardNoScaleExactCoordinates,
+
+        StandardGamefieldScale,
+
+        /// <summary>
+        ///   Native screen resolution.
+        /// </summary>
+        Native,
+
+        /// <summary>
+        ///   Native screen resolution with 1024x768-native sprite scaling.
+        /// </summary>
+        NativeStandardScale,
+
+        /// <summary>
+        ///   Native screen resolution aligned from the right-hand side of the screen, where an X position of 0 is translated to Standard(WindowWidth).
+        /// </summary>
+        NativeSnapRight,
+    }
+
+    internal enum OriginTypes
+    {
+        TopLeft,
+        Centre,
+        CentreLeft,
+        TopRight,
+        BottomCentre,
+        TopCentre,
+        Custom,
+        CentreRight,
+        BottomLeft,
+        BottomRight
+    }
 }
+
