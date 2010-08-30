@@ -12,33 +12,81 @@ namespace osum.GameplayElements
 {
     internal class Spinner : HitObjectSpannable
     {
+        /// <summary>
+        /// Used for the flicker effects on the score metre.
+        /// </summary>
         private readonly Random randomizer = new Random();
 
+        #region Sprites
         private readonly bool HighResApproachCircle;
+       
         private readonly pSprite SpriteApproachCircle;
-
         private readonly pSprite spriteBackground;
         private readonly pSprite SpriteClear;
         private readonly pSprite spriteRpmBackground;
         private readonly pSpriteText spriteRpmText;
         private readonly pSprite spriteScoreMetre;
         private readonly pSprite SpriteSpin;
-        private int framecount;
-        private double lastMouseAngle;
-        private int lastRotationCount;
-        private double maxAccel;
-        private bool passed;
-        internal int rotationCount;
-        internal int rotationRequirement;
-        private double rpm;
-        private int scoringRotationCount;
-        private bool spinstarted;
         protected pSpriteText spriteBonus;
         protected pSprite spriteCircle;
+
+        #endregion
+
+        /// <summary>
+        /// The fastest acceleration that is allowed (depends on length of spinner).
+        /// </summary>
+        private double AccelerationCap;
+
+        /// <summary>
+        /// Have we cleared the spinner?
+        /// </summary>
+        private bool Cleared;
+        
+        /// <summary>
+        /// Number of rotations currently spun.
+        /// </summary>
+        internal int currentRotationCount;
+
+
+        /// <summary>
+        /// Number of scored rotations (last scoring update).
+        /// </summary>
+        private int lastRotationCount;
+
+        /// <summary>
+        /// Number of scored rotations.
+        /// </summary>
+        private int scoringRotationCount;
+
+
+        /// <summary>
+        /// Number of rotations are required for a "clear".
+        /// </summary>
+        internal int rotationRequirement;
+
+        /// <summary>
+        /// Weighted RPM value (used for display).
+        /// </summary>
+        private double Rpm;
+        
+        /// <summary>
+        /// Has the spinner started spinning? (used for hiding SPIN! graphic).
+        /// </summary>
+        private bool StartedSpinning;
+        
+        /// <summary>
+        /// Velocity the spinner is visually spinning at.
+        /// </summary>
         internal double velocityCurrent;
+
+        /// <summary>
+        /// Velocity the cursor is "spinning" at.
+        /// </summary>
         protected double velocityFromInput;
-        private int zeroCount;
-        private const int SPINNER_CIRCLE_WIDTH = 666;
+
+        /// <summary>
+        /// Offset to align background with spinner circle.
+        /// </summary>
         private int SPINNER_TOP = - GameBase.WindowBaseSize.Height / 40;
 
         internal Spinner(int startTime, int endTime, HitObjectSoundType soundType)
@@ -148,9 +196,9 @@ namespace osum.GameplayElements
                 spriteRpmBackground.Position + new Vector2(0, 50), spriteRpmBackground.Position,
                 StartTime - DifficultyManager.FadeIn, StartTime, EasingTypes.In));
 
-            rotationCount = 0;
+            currentRotationCount = 0;
             rotationRequirement = (int)((float)(EndTime - StartTime) / 1000 * DifficultyManager.SpinnerRotationRatio);
-            maxAccel = 0.00008 + Math.Max(0, (5000 - (double)(EndTime - StartTime)) / 1000 / 2000);
+            AccelerationCap = 0.00008 + Math.Max(0, (5000 - (double)(EndTime - StartTime)) / 1000 / 2000);
         }
 
         internal override int ComboNumber
@@ -210,7 +258,7 @@ namespace osum.GameplayElements
             IncreaseScoreType score = IncreaseScoreType.Ignore;
 
             //Update the rotation count
-            if (rotationCount != lastRotationCount)
+            if (currentRotationCount != lastRotationCount)
             {
                 scoringRotationCount++;
                 
@@ -235,7 +283,7 @@ namespace osum.GameplayElements
                     score = IncreaseScoreType.SpinnerSpin;
             }
 
-            lastRotationCount = rotationCount;
+            lastRotationCount = currentRotationCount;
 
             return score;
         }
@@ -247,15 +295,15 @@ namespace osum.GameplayElements
             if (IsHit || Clock.AudioTime < StartTime) // || (!InputManager.ScorableFrame))
                 return;
 
-            rpm = rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * Constants.SIXTY_FRAME_TIME * 60) / (Math.PI * 2) * 60;
+            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * Constants.SIXTY_FRAME_TIME * 60) / (Math.PI * 2) * 60;
 
-            spriteRpmText.Text = string.Format("{0:#,0}", rpm);
+            spriteRpmText.Text = string.Format("{0:#,0}", Rpm);
 
             SetScoreMeter((int)((float)scoringRotationCount / rotationRequirement * 100));
 
             if (IsActive)
             {
-                double maxAccelPerSec = maxAccel * Constants.SIXTY_FRAME_TIME;
+                double maxAccelPerSec = AccelerationCap * Constants.SIXTY_FRAME_TIME;
                 
                 if (velocityFromInput > velocityCurrent)
                 {
@@ -288,12 +336,12 @@ namespace osum.GameplayElements
                     rotationCount = (int)((spriteCircle.CurrentRotation / Math.PI) * 0.75);
                 else
                 */
-                rotationCount = (int)(spriteCircle.Rotation / Math.PI);
+                currentRotationCount = (int)(spriteCircle.Rotation / Math.PI);
             }
 
-            if (scoringRotationCount >= rotationRequirement && !passed)
+            if (scoringRotationCount >= rotationRequirement && !Cleared)
             {
-                passed = true;
+                Cleared = true;
                 if (SpriteSpin != null)
                 {
                     SpriteSpin.FadeOut(100);
@@ -306,14 +354,14 @@ namespace osum.GameplayElements
                 }
             }
 
-            if (scoringRotationCount > 0 && !spinstarted)
+            if (scoringRotationCount > 0 && !StartedSpinning)
             {
                 if (SpriteSpin != null)
                 {
                     if (Clock.AudioTime > StartTime + 500)
                     {
                         SpriteSpin.FadeOut(300);
-                        spinstarted = true;
+                        StartedSpinning = true;
                     }
                 }
             }
