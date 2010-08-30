@@ -56,40 +56,40 @@ namespace osu.Graphics.Renderers
     /// </summary>
     internal abstract class SliderTrackRenderer
     {
-        private const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
-        private const int TEX_WIDTH = 128; // Please keep power of two
+        protected const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
+        protected const int TEX_WIDTH = 128; // Please keep power of two
 
         // Make the quad overhang just slightly to avoid 1px holes between a quad and a wedge from rounding errors.
-        private const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
+        protected const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
 
         // If the peak vertex of a quad is at exactly 0, we get a crack running down the center of horizontal linear sliders.
         // We shift the vertex slightly off to the side to avoid this.
-        private const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
+        protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
-        private const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
+        protected const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
 
-        private int bytesPerVertex;
-        private int numIndices_quad;
-        private int numIndices_cap;
-        private int numPrimitives_quad;
-        private int numPrimitives_cap;
-        private int numVertices_quad;
-        private int numVertices_cap;
+        protected int bytesPerVertex;
+        protected int numIndices_quad;
+        protected int numIndices_cap;
+        protected int numPrimitives_quad;
+        protected int numPrimitives_cap;
+        protected int numVertices_quad;
+        protected int numVertices_cap;
 
-        private TextureGl[] textures_ogl;
+        protected TextureGl[] textures_ogl;
 
-        private TextureGl grey_ogl;
+        protected TextureGl grey_ogl;
 
-        private TextureGl multi_ogl;
+        protected TextureGl multi_ogl;
 
-        private bool toon;
-        private Color border_colour;
+        protected bool toon;
+        protected Color border_colour;
 
-        private Vector3[] vertices_ogl;
+        protected Vector3[] vertices_ogl;
 
-        private bool am_initted_geom = false;
-        private bool am_initted_tex = false;
+        protected bool am_initted_geom = false;
+        protected bool am_initted_tex = false;
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.

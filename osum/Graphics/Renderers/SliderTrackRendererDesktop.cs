@@ -3,6 +3,8 @@ using osu.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Collections.Generic;
 using osu.Graphics.Primitives;
+using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace osum.Graphics.Renderers
 {
