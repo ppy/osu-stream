@@ -51,6 +51,7 @@
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
     <Compile Include="GameplayElements\HitObjectManager.cs" />
+    <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRendererDesktop.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
+    <Compile Include="Support\FadeTransition.cs" />
     <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />

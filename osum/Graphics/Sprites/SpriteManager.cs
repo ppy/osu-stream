@@ -20,6 +20,7 @@ namespace osum.Graphics.Sprites
         }
 
         pSpriteDepthComparer depth = new pSpriteDepthComparer();
+        public static float UniversalDim;
 
         internal void Add(pSprite sprite)
         {
@@ -35,7 +36,8 @@ namespace osum.Graphics.Sprites
 
         internal void Add(pSpriteCollection collection)
         {
-            sprites.AddRange(collection.SpriteCollection);
+            foreach (pSprite p in collection.SpriteCollection)
+                Add(p); //todo: can optimise this when they are already sorted in depth order.
         }
 
         /// <summary>

@@ -63,10 +63,10 @@ namespace osum
 			base.Initialize();
 		}
 		
-		protected override void InitializeBackgroundAudio ()
+		protected override IBackgroundAudioPlayer InitializeBackgroundAudio ()
 		{
 			//only initialise the first time (we may be here from a resume operation)
-			if (backgroundAudioPlayer == null) backgroundAudioPlayer = new BackgroundAudioPlayerIphone();			
+			return new BackgroundAudioPlayerIphone();
 		}
 		
 		protected override void InitializeInput ()

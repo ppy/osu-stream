@@ -88,6 +88,15 @@ namespace osum
         internal static float GamefieldRatio;
         
         internal static Vector2 GamefieldOffsetVector1;
+
+
+        internal static Vector2 GamefieldToStandard(Vector2 vec)
+        {
+            Vector2 newPosition = vec;
+            GamefieldToStandard(ref newPosition);
+            return newPosition;
+        }
+
         internal static void GamefieldToStandard(ref Vector2 vec)
         {
             //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
@@ -192,7 +201,7 @@ namespace osum
             AudioEngine.Initialize(effect, music);
 
             //Load the main menu initially.
-            Director.ChangeMode(OsuMode.MainMenu, null);
+            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
         }
 
         /// <summary>

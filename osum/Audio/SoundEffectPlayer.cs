@@ -3,13 +3,14 @@ using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using System.Collections.Generic;
 using osum.Support;
+using osum.Audio;
 
 namespace osum
 {
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
     /// </summary>
-    public class SoundEffectPlayer : IUpdateable, osum.Audio.ISoundEffectPlayer
+    public class SoundEffectPlayer : IUpdateable, ISoundEffectPlayer
     {
         /// <summary>
         /// Extension which provides more control over how buffers are stored.

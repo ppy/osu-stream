@@ -165,13 +165,6 @@ namespace osum.GameplayElements
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             SpriteCollection.Add(SpriteSpin);
 
-            SpriteClear =
-                new pSprite(SkinManager.Load("spinner-clear"),
-                            FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                            new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
-            SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
-            SpriteCollection.Add(SpriteClear);
-
             foreach (pSprite p in SpriteCollection)
             {
                 p.Transformations.Clear();
@@ -179,6 +172,13 @@ namespace osum.GameplayElements
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
                 p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut));
             }
+
+            SpriteClear =
+                new pSprite(SkinManager.Load("spinner-clear"),
+                            FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
+                            new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
+            SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
+            SpriteCollection.Add(SpriteClear);
 
             if (HighResApproachCircle)
             {

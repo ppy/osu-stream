@@ -157,6 +157,12 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Audio\ISoundEffectPlayer.cs" />
+    <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Support\FadeTransition.cs" />
+    <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRendererIphone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

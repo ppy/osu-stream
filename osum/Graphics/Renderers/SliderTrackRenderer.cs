@@ -39,14 +39,14 @@ using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 #endif
 
-using osum.Input;
-using osu.Graphics.Primitives;
 using osum.Graphics;
 using osum;
 using System.Collections.Generic;
 using osu.Helpers;
 using osum.GameplayElements;
 using osum.Graphics.Skins;
+using osu.Graphics.Primitives;
+using System.Drawing;
 
 
 namespace osu.Graphics.Renderers
@@ -54,42 +54,42 @@ namespace osu.Graphics.Renderers
     /// <summary>
     /// Class to handle drawing of Greg's enhanced sliders.
     /// </summary>
-    internal class SliderTrackRenderer
+    internal abstract class SliderTrackRenderer
     {
-        private const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
-        private const int TEX_WIDTH = 128; // Please keep power of two
+        protected const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
+        protected const int TEX_WIDTH = 128; // Please keep power of two
 
         // Make the quad overhang just slightly to avoid 1px holes between a quad and a wedge from rounding errors.
-        private const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
+        protected const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
 
         // If the peak vertex of a quad is at exactly 0, we get a crack running down the center of horizontal linear sliders.
         // We shift the vertex slightly off to the side to avoid this.
-        private const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
+        protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
-        private const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
+        protected const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
 
-        private int bytesPerVertex;
-        private int numIndices_quad;
-        private int numIndices_cap;
-        private int numPrimitives_quad;
-        private int numPrimitives_cap;
-        private int numVertices_quad;
-        private int numVertices_cap;
+        protected int bytesPerVertex;
+        protected int numIndices_quad;
+        protected int numIndices_cap;
+        protected int numPrimitives_quad;
+        protected int numPrimitives_cap;
+        protected int numVertices_quad;
+        protected int numVertices_cap;
 
-        private TextureGl[] textures_ogl;
+        protected TextureGl[] textures_ogl;
 
-        private TextureGl grey_ogl;
+        protected TextureGl grey_ogl;
 
-        private TextureGl multi_ogl;
+        protected TextureGl multi_ogl;
 
-        private bool toon;
-        private Color border_colour;
+        protected bool toon;
+        protected Color border_colour;
 
-        private Vector3[] vertices_ogl;
+        protected Vector3[] vertices_ogl;
 
-        private bool am_initted_geom = false;
-        private bool am_initted_tex = false;
+        protected bool am_initted_geom = false;
+        protected bool am_initted_tex = false;
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.
@@ -169,115 +169,15 @@ namespace osu.Graphics.Renderers
             vertices_ogl[MAXRES] = new Vector3(0.0f, 1.0f, 0.0f);
         }
 
-        private void glDrawQuad()
-        {
-            // Todo: vertex buffers
+        protected abstract void glDrawQuad();
 
-            GL.Begin(BeginMode.TriangleStrip);
-
-            GL.TexCoord2(0.0f, 0.0f);
-            GL.Vertex3(-QUAD_OVERLAP_FUDGE, -1.0f, 0.0f);
-            GL.Vertex3(1.0f + QUAD_OVERLAP_FUDGE, -1.0f, 0.0f);
-
-            GL.TexCoord2(1.0f, 0.0f);
-            GL.Vertex3(-QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1.0f);
-            GL.Vertex3(1.0f + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1.0f);
-
-            GL.TexCoord2(0.0f, 0.0f);
-            GL.Vertex3(-QUAD_OVERLAP_FUDGE, 1.0f, 0.0f);
-            GL.Vertex3(1.0f + QUAD_OVERLAP_FUDGE, 1.0f, 0.0f);
-
-            GL.End();
-        }
-
-        private void glDrawHalfCircle(int count)
-        {
-            if (count > 0)
-            {
-                // Todo: vertex buffers
-
-                GL.Begin(BeginMode.TriangleFan);
-
-                GL.TexCoord2(1.0f, 0.0f);
-                GL.Vertex3(0.0f, 0.0f, 1.0f);
-
-                GL.TexCoord2(0.0f, 0.0f);
-                for (int x = 0; x <= count; x++)
-                {
-                    Vector3 v = vertices_ogl[x];
-                    GL.Vertex3(v.X, v.Y, v.Z);
-                }
-
-                GL.End();
-            }
-        }
+        protected abstract void glDrawHalfCircle(int count);
 
         /// <summary>
         /// Render a gradient into a 256x1 texture.
         /// </summary>
-        private TextureGl glRenderSliderTexture(Color shadow, Color border, Color InnerColour, Color OuterColour, float aa_width, bool toon)
-        {
-            GL.PushAttrib(AttribMask.EnableBit);
-            
+        protected abstract TextureGl glRenderSliderTexture(Color shadow, Color border, Color InnerColour, Color OuterColour, float aa_width, bool toon);
 
-            GL.Viewport(0, 0, TEX_WIDTH, 1);
-            GL.Disable(EnableCap.DepthTest);
-
-            GL.MatrixMode(MatrixMode.Modelview);
-
-            GL.LoadIdentity();
-
-            GL.MatrixMode(MatrixMode.Projection);
-
-            GL.LoadIdentity();
-            GL.Ortho(0.0d, 1.0d, 1.0d, 0.0d, -1.0d, 1.0d);
-
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            {
-                GL.Begin(BeginMode.LineStrip);
-
-                GL.Color4(0, 0, 0, 0);
-                GL.Vertex2(0.0f, 0.0f);
-
-                GL.Color4(shadow.R, shadow.G, shadow.B, shadow.A);
-                GL.Vertex2(0.078125f - aa_width, 0.0f);
-
-                GL.Color4(border.R, border.G, border.B, border.A);
-                GL.Vertex2(0.078125f + aa_width, 0.0f);
-                GL.Vertex2(0.1875f - aa_width, 0.0f);
-
-                GL.Color4(OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A);
-                GL.Vertex2(0.1875f + aa_width, 0.0f);
-
-                GL.Color4(InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A);
-                GL.Vertex2(1.0f, 0.0f);
-
-                GL.End();
-            }
-
-            TextureGl result = new TextureGl(TEX_WIDTH, 1);
-            int textures;
-
-            GL.GenTextures(1, out textures);
-            GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
-
-            GL.BindTexture(TextureGl.SURFACE_TYPE, textures);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, TEX_WIDTH, 1, 0);
-            GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
-
-            result.SetData(textures);
-
-            GL.PopAttrib();
-
-            //restore viewport (can make this more efficient but not much point?)
-            GameBase.Instance.SetupScreen();
-
-            return result;
-        }
 
         /// <summary>
         /// This overload computes the outer/inner colours and AA widths, and has a hardcoded shadow colour.
@@ -414,132 +314,9 @@ namespace osu.Graphics.Renderers
         /// <param name="globalRadius">Width of the slider</param>
         /// <param name="texture">Texture used for the track</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
-        private void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev)
-        {
-            GL.PushAttrib(AttribMask.EnableBit);
+        protected abstract void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev);
 
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.Blend);
-            //GL.Enable(EnableCap.DepthTest);
-            GL.DepthMask(true);
-            GL.DepthFunc(DepthFunction.Lequal);
+        protected abstract void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius);
 
-            GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
-            GL.Color3(255, 255, 255);
-
-            // Select The Modelview Matrix
-            GL.MatrixMode(MatrixMode.Modelview);
-            // Reset The Modelview Matrix
-            GL.LoadIdentity();
-
-            GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            int count = lineList.Count;
-
-            GL.Color3((byte)255, (byte)255, (byte)255);
-
-            for (int x = 1; x < count; x++)
-            {
-                DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius);
-
-                prev = lineList[x - 1];
-            }
-
-            DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
-
-            GL.LoadIdentity();
-
-            GL.PopAttrib();
-        }
-
-        private void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius)
-        {
-            // Quad
-            Matrix4 matrix = new Matrix4(curr.rho, 0, 0, 0, // Scale-X
-                                        0, globalRadius, 0, 0, // Scale-Y
-                                        0, 0, 1, 0,
-                                        0, 0, 0, 1) * curr.WorldMatrix();
-
-            GL.LoadMatrix(ref matrix);
-
-            glDrawQuad();
-
-            int end_triangles;
-            bool flip;
-            if (next == null)
-            {
-                flip = false; // totally irrelevant
-                end_triangles = numPrimitives_cap;
-            }
-            else
-            {
-                float theta = next.theta - curr.theta;
-
-                // keep on the +- pi/2 range.
-                if (theta > Math.PI) theta -= (float)(Math.PI * 2);
-                if (theta < -Math.PI) theta += (float)(Math.PI * 2);
-
-                if (theta < 0)
-                {
-                    flip = true;
-                    end_triangles = (int)Math.Ceiling((-theta) * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
-                }
-                else if (theta > 0)
-                {
-                    flip = false;
-                    end_triangles = (int)Math.Ceiling(theta * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
-                }
-                else
-                {
-                    flip = false; // totally irrelevant
-                    end_triangles = 0;
-                }
-            }
-            end_triangles = Math.Min(end_triangles, numPrimitives_cap);
-
-            // Cap on end
-            if (flip)
-            {
-                matrix = new Matrix4(globalRadius, 0, 0, 0,
-                                    0, -globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix();
-
-                GL.LoadMatrix(ref matrix);
-
-            }
-            else
-            {
-                matrix = new Matrix4(globalRadius, 0, 0, 0,
-                                    0, globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix();
-                GL.LoadMatrix(ref matrix);
-            }
-
-            glDrawHalfCircle(end_triangles);
-
-            // Cap on start
-            bool hasStartCap = false;
-
-            if (prev == null) hasStartCap = true;
-            else if (curr.p1 != prev.p2) hasStartCap = true;
-
-            if (hasStartCap)
-            {
-                // Catch for Darrinub and other slider inconsistencies. (Redpoints seem to be causing some.)
-                // Render a complete beginning cap if this Line isn't connected to the end of the previous line.
-
-                matrix = new Matrix4(-globalRadius, 0, 0, 0,
-                                    0, -globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.WorldMatrix();
-
-                GL.LoadMatrix(ref matrix);
-                glDrawHalfCircle(numPrimitives_cap);
-            }
-        }
     }
 }
