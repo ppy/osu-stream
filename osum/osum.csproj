@@ -157,6 +157,9 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Audio\ISoundEffectPlayer.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="Helpers\ColourHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

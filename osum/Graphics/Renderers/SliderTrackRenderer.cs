@@ -39,14 +39,14 @@ using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 #endif
 
-using osum.Input;
-using osu.Graphics.Primitives;
 using osum.Graphics;
 using osum;
 using System.Collections.Generic;
 using osu.Helpers;
 using osum.GameplayElements;
 using osum.Graphics.Skins;
+using osu.Graphics.Primitives;
+using System.Drawing;
 
 
 namespace osu.Graphics.Renderers

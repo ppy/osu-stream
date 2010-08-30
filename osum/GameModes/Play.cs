@@ -13,7 +13,6 @@ using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
 using osu.Graphics.Renderers;
-using OpenTK.Graphics.OpenGL;
 
 namespace osum.GameModes
 
