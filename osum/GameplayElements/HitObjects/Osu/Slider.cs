@@ -251,87 +251,33 @@ namespace osu.GameplayElements.HitObjects.Osu
                 trackBounds.Width = (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
                 trackBounds.Height = (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
 
-                TextureGl theTextureGl = new TextureGl(trackBounds.Width, trackBounds.Height);
-                trackTexture = new pTexture(theTextureGl, trackBounds.Width, trackBounds.Height);
-                spriteSliderBody = new pSprite(trackTexture, OriginTypes.TopLeft, new Vector2(trackBounds.X, trackBounds.Y), Color.White);
-
-                // todo: Move some of this crap back to the constructor I guess
-                Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
-                    StartTime, StartTime);
-                Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                    EndTime, EndTime + DifficultyManager.HitWindow50);
-
-                spriteSliderBody.Transform(fadeIn);
-
-                SpriteCollection.Add(spriteSliderBody);
-
-
                 lengthDrawn = 0;
                 lastSegmentIndex = -1;
+
+                int newtexid = GL.GenTexture();
+                TextureGl gl = new TextureGl(trackBounds.Width, trackBounds.Height);
+                gl.SetData(newtexid);
+                trackTexture = new pTexture(gl, trackBounds.Width, trackBounds.Height);
+
+                spriteSliderBody = new pSprite(trackTexture, FieldTypes.Native, OriginTypes.TopLeft,
+                                   ClockTypes.Audio, new Vector2(trackBounds.X, trackBounds.Y), SpriteManager.drawOrderBwd(EndTime + 10),
+                                   false, Color.White);
+
+                spriteSliderBody.Transformations.Clear();
+
+                spriteSliderBody.Transformations.Add(
+                    new Transformation(TransformationType.Fade, 0, 0.97F, StartTime - DifficultyManager.PreEmpt,
+                                       StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
+                spriteSliderBody.Transformations.Add(
+                    new Transformation(TransformationType.Fade, 0.97F, 0, EndTime,
+                                       EndTime + DifficultyManager.FadeOut));
+
+                SpriteCollection.Add(spriteSliderBody);
             }
 
             if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
             {
-                // Snaking animation is IN PROGRESS
-#if FBO
-                int FirstSegmentIndex = lastSegmentIndex + 1;
-
-                throw new NotImplementedException();
-#else
-                int FirstSegmentIndex = 0;
-
-                // Length of the curve we're drawing up to.
-                double TargetLength = PathLength *
-                                      (double)(Clock.AudioTime - StartTime - DifficultyManager.PreEmptSnakeStart) /
-                                      (double)(DifficultyManager.PreEmptSnakeEnd - DifficultyManager.PreEmptSnakeStart);
-
-                int LastSegmentIndex = cumuLengths.FindLastIndex(d => d < TargetLength);
-                if (LastSegmentIndex == -1) LastSegmentIndex = drawableSegments.Count - 1;
-
-                Line prev = null;
-                if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
-
-                if (LastSegmentIndex >= FirstSegmentIndex)
-                {
-
-                    GL.PushAttrib(AttribMask.EnableBit);
-
-                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
-                    GL.Enable(EnableCap.DepthTest);
-
-                    GL.MatrixMode(MatrixMode.Modelview);
-
-                    GL.LoadIdentity();
-
-                    GL.MatrixMode(MatrixMode.Projection);
-
-                    GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Bottom, trackBounds.Top, -1.0d, 2.0d);
-
-                    GL.Clear(ClearBufferMask.ColorBufferBit);
-
-                    hitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, LastSegmentIndex - FirstSegmentIndex + 1),
-                                                              DifficultyManager.HitObjectRadius, 0, prev);
-
-                    GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
-
-                    GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBounds.Width, trackBounds.Height, 0);
-                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
-
-                    //trackTexture.SetData(trackTexture.Id);
-
-                    GL.PopAttrib();
-                }
-
-                //restore viewport (can make this more efficient but not much point?)
-                GameBase.Instance.SetupScreen();
-
-#endif
-
+                Draw();
             }
 
             spriteFollowBall.Position = currentSegment.p1;
@@ -339,7 +285,69 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Position = currentSegment.p1;
         }
+
+        internal void Draw()
+        {
+            // Snaking animation is IN PROGRESS
+#if FBO
+                int FirstSegmentIndex = lastSegmentIndex + 1;
+
+                throw new NotImplementedException();
+#else
+            int FirstSegmentIndex = 0;
+
+            // Length of the curve we're drawing up to.
+            lengthDrawn = PathLength *
+                          (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
+                          (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
+
+            lastSegmentIndex = cumuLengths.FindLastIndex(d => d < lengthDrawn);
+            if (lastSegmentIndex == -1)
+            {
+                lengthDrawn = PathLength;
+                lastSegmentIndex = drawableSegments.Count - 1;
+            }
+
+            Line prev = null;
+            if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
+
+            if (lastSegmentIndex >= FirstSegmentIndex)
+            {
+
+                GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
+
+                GL.MatrixMode(MatrixMode.Modelview);
+
+                GL.LoadIdentity();
+
+                GL.MatrixMode(MatrixMode.Projection);
+
+                GL.LoadIdentity();
+                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Bottom, trackBounds.Top, -1.0d, 2.0d);
+
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+
+                hitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
+                                                          DifficultyManager.HitObjectRadius, 0, prev);
+
+                GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+                GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBounds.Width, trackBounds.Height, 0);
+                GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                //restore viewport (can make this more efficient but not much point?)
+                GameBase.Instance.SetupScreen();
+
+            }
+
+#endif
+        }
     }
+
 
     internal enum CurveTypes
     {

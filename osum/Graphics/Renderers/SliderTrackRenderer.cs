@@ -420,7 +420,7 @@ namespace osu.Graphics.Renderers
 
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.Blend);
-            GL.Enable(EnableCap.DepthTest);
+            //GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -500,8 +500,6 @@ namespace osu.Graphics.Renderers
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
             // Cap on end
-
-
             if (flip)
             {
                 matrix = new Matrix4(globalRadius, 0, 0, 0,
