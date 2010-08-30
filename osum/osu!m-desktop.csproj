@@ -51,6 +51,7 @@
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
     <Compile Include="GameplayElements\HitObjectManager.cs" />
+    <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
