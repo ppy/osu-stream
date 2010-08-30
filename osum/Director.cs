@@ -77,7 +77,6 @@ namespace osum
                 CurrentMode.Initialize();
             }
 
-            ActiveTransition = null;
             PendingMode = OsuMode.Unknown;
         }
 
@@ -89,12 +88,24 @@ namespace osum
             if (ActiveTransition != null)
             {
                 ActiveTransition.Update();
+
+                if (ActiveTransition.FadeOutDone)
+                {
+                    if (PendingMode != OsuMode.Unknown)
+                    {
+                        changeMode(PendingMode);
+                        ActiveTransition.FadeIn();
+                    }
+                }
                 
-                if (ActiveTransition.IsDone)
-                    changeMode(PendingMode);
+                if (ActiveTransition.FadeInDone)
+                {
+                    ActiveTransition = null;
+                }
             }
             
-            CurrentMode.Update();
+            if (CurrentMode != null)
+                CurrentMode.Update();
         }
 
         /// <summary>
@@ -102,7 +113,8 @@ namespace osum
         /// </summary>
         internal static void Draw()
         {
-            CurrentMode.Draw();
+            if (CurrentMode != null)
+                CurrentMode.Draw();
         }
     }
 }

@@ -10,6 +10,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
+using osum.Support;
 
 namespace osum.GameModes
 {
@@ -49,17 +50,16 @@ namespace osum.GameModes
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             AudioEngine.Effect.PlayBuffer(sampleTest);
+
+            osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 2f, Clock.Time, Clock.Time + 1000, EasingTypes.In));
 			
-			Director.ChangeMode(OsuMode.Play, new Transition());
+			Director.ChangeMode(OsuMode.Play, new FadeTransition());
 
             AudioEngine.Music.Play();
         }
 
         public override void Update()
         {
-            if (InputManager.IsTracking && InputManager.IsPressed)
-				osuLogo.Position = InputManager.MainPointerPosition;
-			
 			base.Update();
         }
 

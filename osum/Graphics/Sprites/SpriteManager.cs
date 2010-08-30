@@ -20,6 +20,7 @@ namespace osum.Graphics.Sprites
         }
 
         pSpriteDepthComparer depth = new pSpriteDepthComparer();
+        public static float UniversalDim;
 
         internal void Add(pSprite sprite)
         {

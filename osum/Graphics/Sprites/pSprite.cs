@@ -37,6 +37,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
+using osu.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -444,6 +445,9 @@ namespace osum.Graphics.Sprites
         {
             get
             {
+                if (SpriteManager.UniversalDim > 0)
+                    return ColourHelper.Darken(new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A), SpriteManager.UniversalDim);
+
                 return Alpha < 1 ? new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A) : Colour;
             }
         }
