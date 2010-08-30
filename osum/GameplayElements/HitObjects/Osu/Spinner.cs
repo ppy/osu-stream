@@ -42,7 +42,8 @@ namespace osum.GameplayElements
         private const int SPINNER_CIRCLE_WIDTH = 666;
         private int SPINNER_TOP = 76;
 
-        internal Spinner(int startTime, int endTime, HitObjectSoundType soundType) : base(Vector2.Zero,startTime,soundType,true)
+        internal Spinner(HitObjectManager hit_object_manager, int startTime, int endTime, HitObjectSoundType soundType)
+            : base(hit_object_manager, Vector2.Zero, startTime, soundType, true)
         {
             Position = new Vector2(GameBase.WindowBaseSize.Width / 2, GameBase.WindowBaseSize.Height / 2);
             StartTime = startTime;

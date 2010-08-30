@@ -76,13 +76,16 @@ namespace osum.GameplayElements
 
     internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
-        public HitObject(Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
+        public HitObject(HitObjectManager hit_object_manager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
         {
+            hitObjectManager = hit_object_manager;
             Position = position;
             StartTime = startTime;
             SoundType = soundType;
             NewCombo = newCombo;
         }
+
+        protected HitObjectManager hitObjectManager;
 
         #region General & Timing
 

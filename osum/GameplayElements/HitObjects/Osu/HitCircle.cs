@@ -18,8 +18,8 @@ namespace osum.GameplayElements
 
         internal virtual string SpriteNameHitCircle { get { return "hitcircle"; } }
 
-        internal HitCircle(Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
-            : base(pos, startTime, soundType, newCombo)
+        internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
+            : base(hit_object_manager, pos, startTime, soundType, newCombo)
         {
             Type = HitObjectType.Circle;
 

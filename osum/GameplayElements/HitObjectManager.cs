@@ -10,6 +10,7 @@ using osu.GameplayElements.HitObjects.Osu;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.GameplayElements.HitObjects;
+using osu.Graphics.Renderers;
 
 #endregion
 
@@ -39,6 +40,9 @@ namespace osum.GameplayElements
         /// Internal spriteManager for drawing all hitObject related content.
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
+
+        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRenderer();
+
 
         public HitObjectManager(Beatmap beatmap)
         {

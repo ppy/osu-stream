@@ -71,10 +71,10 @@ namespace osu.GameplayElements.HitObjects.Osu
         
         HitCircle hitCircleStart;
 
-        internal Slider(Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
+        internal Slider(HitObjectManager hit_object_manager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
                         List<HitObjectSoundType> soundTypes)
-            : base(startPosition, startTime, soundType, newCombo)
+            : base(hit_object_manager, startPosition, startTime, soundType, newCombo)
         {
             CurveType = curveType;
 

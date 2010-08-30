@@ -19,7 +19,7 @@ namespace osum.GameModes
     public class Play : GameMode
     {
         HitObjectManager hitObjectManager;
-        //private SliderTrackRenderer sliderTest;
+        internal SliderTrackRenderer sliderTest;
 
         public Play() : base()
         {
@@ -65,6 +65,7 @@ namespace osum.GameModes
             //List<Line> list = new List<Line>();
             //list.Add(new Line(new Vector2(20,20),new Vector2(400,400)));
             //sliderTest.Draw(list, 100, Color4.White, Color4.Black, null, new Rectangle(0,0,1024,768));
+            //sliderTest.Draw(list, 80, Color4.White, Color4.Black, null, new Rectangle(0,0,640,480));
 
             base.Draw();
         }

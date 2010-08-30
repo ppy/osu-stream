@@ -9,8 +9,8 @@ namespace osum.GameplayElements.HitObjects
 {
     class HitObjectSpannable : HitObject
     {
-        public HitObjectSpannable(Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
-            : base(position, startTime, soundType, newCombo)
+        public HitObjectSpannable(HitObjectManager hit_object_manager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
+            : base(hit_object_manager, position, startTime, soundType, newCombo)
         {
         }
 
