@@ -86,7 +86,7 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// Track bounding rectangle measured in SCREEN COORDINATES
         /// </summary>
         internal System.Drawing.Rectangle trackBounds;
-        
+
         HitCircle hitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
@@ -125,6 +125,14 @@ namespace osu.GameplayElements.HitObjects.Osu
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
+            spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
+                                   ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
+                                   false, Color.White);
+
+
+            spriteSliderBody.Transform(fadeIn);
+            spriteSliderBody.Transform(fadeOut);
+
             spriteFollowBall.Transform(fadeIn);
             spriteFollowBall.Transform(fadeOut);
 
@@ -133,6 +141,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
+            SpriteCollection.Add(spriteSliderBody);
 
             hitCircleStart = new HitCircle(hitObjectManager, Position, StartTime, newCombo, soundType);
 
@@ -259,20 +268,8 @@ namespace osu.GameplayElements.HitObjects.Osu
                 gl.SetData(newtexid);
                 trackTexture = new pTexture(gl, trackBounds.Width, trackBounds.Height);
 
-                spriteSliderBody = new pSprite(trackTexture, FieldTypes.Native, OriginTypes.TopLeft,
-                                   ClockTypes.Audio, new Vector2(trackBounds.X, trackBounds.Y), SpriteManager.drawOrderBwd(EndTime + 10),
-                                   false, Color.White);
-
-                spriteSliderBody.Transformations.Clear();
-
-                spriteSliderBody.Transformations.Add(
-                    new Transformation(TransformationType.Fade, 0, 0.97F, StartTime - DifficultyManager.PreEmpt,
-                                       StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
-                spriteSliderBody.Transformations.Add(
-                    new Transformation(TransformationType.Fade, 0.97F, 0, EndTime,
-                                       EndTime + DifficultyManager.FadeOut));
-
-                SpriteCollection.Add(spriteSliderBody);
+                spriteSliderBody.Texture = trackTexture;
+                spriteSliderBody.Position = new Vector2(rectf.X, rectf.Y);
             }
 
             if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
@@ -315,17 +312,10 @@ namespace osu.GameplayElements.HitObjects.Osu
             {
 
                 GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
-
-                GL.MatrixMode(MatrixMode.Modelview);
-
-                GL.LoadIdentity();
-
                 GL.MatrixMode(MatrixMode.Projection);
 
                 GL.LoadIdentity();
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Bottom, trackBounds.Top, -1.0d, 2.0d);
-
-                GL.Clear(ClearBufferMask.ColorBufferBit);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
                                                           DifficultyManager.HitObjectRadius, 0, prev);
@@ -339,9 +329,12 @@ namespace osu.GameplayElements.HitObjects.Osu
                 GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBounds.Width, trackBounds.Height, 0);
                 GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
+                GL.Clear(ClearBufferMask.ColorBufferBit);
+
                 //restore viewport (can make this more efficient but not much point?)
                 GameBase.Instance.SetupScreen();
 
+                
             }
 
 #endif
