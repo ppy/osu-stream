@@ -360,7 +360,7 @@ namespace osum.GameplayElements
 
             //todo: optimise for only visible
             foreach (HitObject h in hitObjects)
-                h.Update();
+                if (h.IsVisible) h.Update();
         }
 
         #endregion

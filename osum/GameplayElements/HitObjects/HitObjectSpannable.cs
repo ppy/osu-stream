@@ -25,10 +25,33 @@ namespace osum.GameplayElements.HitObjects
             get; set;
         }
 
+        /// <summary>
+        /// Internal judging of a Hit() call. Is only called after preliminary checks have been completed.
+        /// </summary>
+        /// <returns>A <see cref="IncreaseScoreType"/></returns>
         protected override IncreaseScoreType HitAction()
         {
-            return IncreaseScoreType.Hit300;
-            //throw new NotImplementedException();
+            return IncreaseScoreType.Ignore;
+        }
+
+        /// <summary>
+        /// Is this object currently within an active range?
+        /// </summary>
+        internal virtual bool IsActive
+        {
+            get
+            {
+                return StartTime < Clock.AudioTime && EndTime > Clock.AudioTime;
+            }
+        }
+
+        /// <summary>
+        /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
+        /// </summary>
+        /// <returns></returns>
+        internal virtual IncreaseScoreType CheckScoring()
+        {
+            return IncreaseScoreType.Ignore;
         }
 
         internal override bool IsVisible

@@ -96,6 +96,9 @@ namespace osum.GameplayElements
 
         internal HitObjectType Type;
 
+        /// <summary>
+        /// Do any arbitrary updates for this hitObject.
+        /// </summary>
         public virtual void Update()
         {
         }
