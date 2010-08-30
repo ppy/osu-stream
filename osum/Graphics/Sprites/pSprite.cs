@@ -418,6 +418,8 @@ namespace osum.Graphics.Sprites
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
                         break;
+                    case FieldTypes.Native:
+                        return Position / GameBase.WindowRatio;
                     default:
                         fieldPosition = Position;
                         break;
@@ -435,6 +437,8 @@ namespace osum.Graphics.Sprites
                 {
                     case FieldTypes.Gamefield512x384:
                         return Scale * GameBase.SpriteRatio;
+                    case FieldTypes.Native:
+                        return Scale;
                     default:
                         return Scale * GameBase.SpriteRatio;
                 }

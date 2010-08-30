@@ -13,6 +13,7 @@ using osum;
 using OpenTK.Graphics.OpenGL;
 using osu.Graphics.Renderers;
 using OpenTK.Graphics;
+using System.Drawing;
 
 namespace osu.GameplayElements.HitObjects.Osu
 {
@@ -85,7 +86,8 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Track bounding rectangle measured in SCREEN COORDINATES
         /// </summary>
-        internal System.Drawing.Rectangle trackBounds;
+        internal Rectangle trackBounds;
+        internal Rectangle trackBoundsNative;
 
         HitCircle hitCircleStart;
 
@@ -125,6 +127,8 @@ namespace osu.GameplayElements.HitObjects.Osu
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
+            hitCircleStart = new HitCircle(hitObjectManager, Position, StartTime, newCombo, soundType);
+
             spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
                                    false, Color.White);
@@ -142,8 +146,6 @@ namespace osu.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
-
-            hitCircleStart = new HitCircle(hitObjectManager, Position, StartTime, newCombo, soundType);
 
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
         }
@@ -173,7 +175,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
         private void CalculateSplines()
         {
-            smoothPoints = pMathHelper.CreateBezier(controlPoints, 30);
+            smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
 
             //adjust the line to be of maximum length specified...
             double currentLength = 0;
@@ -252,24 +254,28 @@ namespace osu.GameplayElements.HitObjects.Osu
             if (trackTexture == null) // Perform setup to begin drawing the slider track.
             {
                 // Allocate the track's texture resources.
-                System.Drawing.RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
-                trackBounds.X = (int)(rectf.X * GameBase.WindowRatio);
-                trackBounds.Y = (int)(rectf.Y * GameBase.WindowRatio);
+                RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
 
-                // Round these up so nothing gets clipped.
-                trackBounds.Width = (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
-                trackBounds.Height = (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
+                trackBounds.X = (int)(rectf.X);
+                trackBounds.Y = (int)(rectf.Y);
+                trackBounds.Width = (int)rectf.Width + 1;// (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
+                trackBounds.Height = (int)rectf.Height + 1;// (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
+
+                trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
+                trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
+                trackBoundsNative.Width = (int)(rectf.Width * GameBase.WindowRatio) + 1;
+                trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
 
                 lengthDrawn = 0;
                 lastSegmentIndex = -1;
 
                 int newtexid = GL.GenTexture();
-                TextureGl gl = new TextureGl(trackBounds.Width, trackBounds.Height);
+                TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
                 gl.SetData(newtexid);
-                trackTexture = new pTexture(gl, trackBounds.Width, trackBounds.Height);
+                trackTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
 
                 spriteSliderBody.Texture = trackTexture;
-                spriteSliderBody.Position = new Vector2(rectf.X, rectf.Y);
+                spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
             }
 
             if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
@@ -315,18 +321,19 @@ namespace osu.GameplayElements.HitObjects.Osu
                 GL.MatrixMode(MatrixMode.Projection);
 
                 GL.LoadIdentity();
-                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Bottom, trackBounds.Top, -1.0d, 2.0d);
+                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
                                                           DifficultyManager.HitObjectRadius, 0, prev);
 
-                GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                 GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
                 GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
                 GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
-                GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBounds.Width, trackBounds.Height, 0);
+                GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBoundsNative.Width, trackBoundsNative.Height, 0);
                 GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                 GL.Clear(ClearBufferMask.ColorBufferBit);
