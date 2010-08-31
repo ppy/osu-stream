@@ -684,5 +684,6 @@
     <Content Include="Skins\Default\sliderb-7.png" />
     <Content Include="Skins\Default\sliderb-8.png" />
     <Content Include="Skins\Default\sliderb-9.png" />
+    <Content Include="Skins\Default\menuhit.wav" />
   </ItemGroup>
 </Project>
