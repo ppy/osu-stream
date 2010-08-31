@@ -11,7 +11,8 @@ namespace osum.Audio
         HitNormal,
         HitWhistle,
         HitClap,
-        HitFinish
+        HitFinish,
+        MenuHit
     }
 
     internal static class AudioEngine
@@ -37,9 +38,32 @@ namespace osum.Audio
         {
             int buffer;
 
+            string filename = null;
+
+            switch (sample)
+            {
+                case OsuSamples.HitClap:
+                    filename = "normal-hitclap";
+                    break;
+                case OsuSamples.HitFinish:
+                    filename = "normal-hitfinish";
+                    break;
+                case OsuSamples.HitNormal:
+                    filename = "normal-hitnormal";
+                    break;
+                case OsuSamples.HitWhistle:
+                    filename = "normal-hitwhistle";
+                    break;
+                case OsuSamples.MenuHit:
+                    filename = "menuhit";
+                    break;
+            }
+
+            if (filename == null) return;
+
             if (!loadedSamples.TryGetValue(sample, out buffer))
             {
-                buffer = AudioEngine.Effect.Load("Skins/Default/normal-" + sample.ToString().ToLower() + ".wav");
+                buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
                 loadedSamples.Add(sample, buffer);
             }
 

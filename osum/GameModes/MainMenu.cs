@@ -18,8 +18,6 @@ namespace osum.GameModes
     {
 		pSprite osuLogo;
 
-        int sampleTest;
-		
 		internal override void Initialize()
         {
             pSprite menuBackground =
@@ -33,8 +31,6 @@ namespace osum.GameModes
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
 
 			
-            sampleTest = AudioEngine.Effect.Load("Skins/Default/normal-hitclap.wav");
-
             //AudioEngine.Music.Load("test.mp3");
 
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
@@ -49,7 +45,7 @@ namespace osum.GameModes
 		
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            AudioEngine.Effect.PlayBuffer(sampleTest);
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.Time, Clock.Time + 1000, EasingTypes.In));
 			
