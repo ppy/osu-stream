@@ -173,6 +173,8 @@ namespace osum.GameplayElements
         /// <param name="action">The ssociated score change action.</param>
         protected virtual void HitAnimation(ScoreChange action)
         {
+            if (m_HitObjectManager == null) return; //is the case for sliders, where we don't want to display this stuff.
+            
             float depth;
             //todo: should this be changed?
             if (this is Spinner)

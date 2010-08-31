@@ -133,7 +133,7 @@ namespace osu.GameplayElements.HitObjects.Osu
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
-            hitCircleStart = new HitCircle(hitObjectManager, Position, StartTime, newCombo, soundType);
+            hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, soundType);
 
             spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
@@ -177,6 +177,21 @@ namespace osu.GameplayElements.HitObjects.Osu
                 base.Colour = value;
                 hitCircleStart.Colour = value;
             }
+        }
+
+        internal override bool HitTest(TrackingPoint tracking)
+        {
+            return hitCircleStart.HitTest(tracking);
+        }
+
+        protected override ScoreChange HitAction()
+        {
+            //triggered on the first hit
+            if (hitCircleStart.Hit() > 0)
+                return ScoreChange.SliderEnd;
+
+            //todo: have to do something better here
+            return ScoreChange.Ignore;
         }
 
         internal override ScoreChange CheckScoring()
@@ -279,8 +294,6 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Position = TrackingPosition;
         }
-
-
 
         internal void UpdatePathTexture()
         {

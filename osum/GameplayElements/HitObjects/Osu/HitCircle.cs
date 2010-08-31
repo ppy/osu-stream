@@ -136,14 +136,12 @@ namespace osum.GameplayElements
             if (hitValue > 0)
                 PlaySound();
 
-            HitAnimation(hitValue > 0);
-
             return hitValue;
         }
 
-        internal void HitAnimation(bool isHit)
+        protected override void HitAnimation(ScoreChange action)
         {
-            if (isHit)
+            if (action > 0)
             {
                 //Fade out the actual hit circle
                 Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.9F, 
@@ -188,8 +186,9 @@ namespace osum.GameplayElements
             {
                 foreach (pSprite p in SpriteCollection)
                     p.Transformations.Clear();
-
             }
+
+            base.HitAnimation(action);
         }
 
         #endregion
