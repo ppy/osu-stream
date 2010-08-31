@@ -27,11 +27,8 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            //check with the hitObjectManager for a relevant hitObject...
-            HitObject found = hitObjectManager.FindObjectAt(point);
-
-            if (found != null)
-                found.Hit();
+            //pass on the event to hitObjectManager for handling.
+            hitObjectManager.HandlePressAt(point);
         }
 
         internal override void Initialize()
@@ -41,10 +38,17 @@ namespace osum.GameModes
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
 
             hitObjectManager = new HitObjectManager(beatmap);
+            hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
+            
             hitObjectManager.LoadFile();
 
             AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
             AudioEngine.Music.Play();
+        }
+
+        void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
+        {
+            
         }
 
         public override void Dispose()

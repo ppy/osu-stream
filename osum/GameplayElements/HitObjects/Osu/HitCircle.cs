@@ -119,19 +119,19 @@ namespace osum.GameplayElements
             get { return true; }
         }
 
-        protected override IncreaseScoreType HitAction()
+        protected override ScoreChange HitAction()
         {
             int hitTime = Clock.AudioTime;
             int accuracy = Math.Abs(hitTime - StartTime);
 
             if (accuracy < DifficultyManager.HitWindow300)
-                hitValue = IncreaseScoreType.Hit300;
+                hitValue = ScoreChange.Hit300;
             else if (accuracy < DifficultyManager.HitWindow100)
-                hitValue = IncreaseScoreType.Hit100;
+                hitValue = ScoreChange.Hit100;
             else if (accuracy < DifficultyManager.HitWindow50)
-                hitValue = IncreaseScoreType.Hit50;
+                hitValue = ScoreChange.Hit50;
             else
-                hitValue = IncreaseScoreType.Miss;
+                hitValue = ScoreChange.Miss;
 
             if (hitValue > 0)
                 PlaySound();

@@ -58,6 +58,9 @@ namespace osum
     {
         public static GameBase Instance;
 
+
+        public static Random Random = new Random();
+
         /// <summary>
         /// Top-level sprite manager. Draws above everything else.
         /// </summary>

@@ -222,7 +222,7 @@ namespace osum.GameplayElements
 
         TrackingPoint cursorTrackingPoint;
         Vector2 cursorTrackingPosition;
-        internal override IncreaseScoreType CheckScoring()
+        internal override ScoreChange CheckScoring()
         {
             //Update the angles
             velocityFromInput = 0;
@@ -230,11 +230,11 @@ namespace osum.GameplayElements
             if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
             {
                 cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
-                return IncreaseScoreType.Ignore;
+                return ScoreChange.Ignore;
             }
 
             if (cursorTrackingPoint == null || !InputManager.IsPressed)
-                return IncreaseScoreType.Ignore;
+                return ScoreChange.Ignore;
 
             Vector2 oldPos = cursorTrackingPosition - spriteCircle.Position;
 
@@ -255,7 +255,7 @@ namespace osum.GameplayElements
 
             velocityFromInput = angleDiff / Constants.SIXTY_FRAME_TIME;
 
-            IncreaseScoreType score = IncreaseScoreType.Ignore;
+            ScoreChange score = ScoreChange.Ignore;
 
             //Update the rotation count
             if (currentRotationCount != lastRotationCount)
@@ -265,7 +265,7 @@ namespace osum.GameplayElements
                 if (scoringRotationCount > rotationRequirement + 3 &&
                     (scoringRotationCount - (rotationRequirement + 3)) % 2 == 0)
                 {
-                    score = IncreaseScoreType.SpinnerBonus;
+                    score = ScoreChange.SpinnerBonus;
                     //AudioEngine.PlaySample(AudioEngine.s_SpinnerBonus, AudioEngine.VolumeSample);
                     spriteBonus.Text = (1000 * (scoringRotationCount - (rotationRequirement + 3)) / 2).ToString();
                     spriteBonus.Transformations.Clear();
@@ -278,9 +278,9 @@ namespace osum.GameplayElements
                         new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
                 }
                 else if (scoringRotationCount > 1 && scoringRotationCount % 2 == 0)
-                    score = IncreaseScoreType.SpinnerSpinPoints;
+                    score = ScoreChange.SpinnerSpinPoints;
                 else if (scoringRotationCount > 1)
-                    score = IncreaseScoreType.SpinnerSpin;
+                    score = ScoreChange.SpinnerSpin;
             }
 
             lastRotationCount = currentRotationCount;
@@ -401,17 +401,17 @@ namespace osum.GameplayElements
             //spriteScoreMetre.Height = (int)(43.25 * (10 - barCount));
         }
 
-        protected override IncreaseScoreType HitAction()
+        protected override ScoreChange HitAction()
         {
             StopSound();
 
-            IncreaseScoreType val = IncreaseScoreType.Miss;
+            ScoreChange val = ScoreChange.Miss;
             if (scoringRotationCount > rotationRequirement + 1)
-                val = IncreaseScoreType.Hit300;
+                val = ScoreChange.Hit300;
             else if (scoringRotationCount > rotationRequirement)
-                val = IncreaseScoreType.Hit100;
+                val = ScoreChange.Hit100;
             else if (scoringRotationCount > rotationRequirement - 1)
-                val = IncreaseScoreType.Hit50;
+                val = ScoreChange.Hit50;
             if (val > 0)
                 PlaySound();
             return val;

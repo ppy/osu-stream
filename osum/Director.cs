@@ -116,6 +116,8 @@ namespace osum
             if (CurrentMode != null)
                 CurrentMode.Draw();
         }
+
+        public static bool IsTransitioning { get { return ActiveTransition != null; } }
     }
 }
 

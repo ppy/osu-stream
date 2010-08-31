@@ -10,6 +10,7 @@ using osum.GameplayElements.HitObjects;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Graphics.Renderers;
+using osum.Helpers;
 
 #endregion
 
@@ -111,9 +112,7 @@ namespace osum.GameplayElements
                 {
                     h.Update();
 
-                    HitObjectSpannable s = h as HitObjectSpannable;
-                    if (s != null)
-                        s.CheckScoring(); //todo: do this in another loop maybe?
+                    TriggerScoreChange(h.CheckScoring(),h);
                 }
         }
 
@@ -132,6 +131,22 @@ namespace osum.GameplayElements
             }
 
             return null;
+        }
+
+        internal void HandlePressAt(TrackingPoint point)
+        {
+            HitObject found = FindObjectAt(point);
+            if (found != null)
+                TriggerScoreChange(found.Hit(),found);
+        }
+
+        public event ScoreChangeDelegate OnScoreChanged;
+        private void TriggerScoreChange(ScoreChange change, HitObject hitObject)
+        {
+            if (change == ScoreChange.Ignore) return;
+
+            if (OnScoreChanged != null)
+                OnScoreChanged(change, hitObject);
         }
     }
 

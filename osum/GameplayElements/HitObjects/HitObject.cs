@@ -8,6 +8,7 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Support;
 using osum.Audio;
+using osum.Graphics.Skins;
 
 namespace osum.GameplayElements
 {
@@ -35,7 +36,7 @@ namespace osum.GameplayElements
     }
 
     [Flags]
-    internal enum IncreaseScoreType
+    internal enum ScoreChange
     {
         MissHpOnlyNoCombo = -524288,
         MissHpOnly = -262144,
@@ -92,7 +93,7 @@ namespace osum.GameplayElements
         internal int StartTime;
         internal virtual int EndTime { get { return StartTime; } set { } }
 
-        internal IncreaseScoreType hitValue;
+        internal ScoreChange hitValue;
 
         internal HitObjectType Type;
 
@@ -129,34 +130,147 @@ namespace osum.GameplayElements
         /// This will cause the hitObject to get hit and scored.
         /// </summary>
         /// <returns>
-        /// A <see cref="IncreaseScoreType"/> representing what action was taken.
+        /// A <see cref="ScoreChange"/> representing what action was taken.
         /// </returns>
-        internal IncreaseScoreType Hit()
+        internal ScoreChange Hit()
         {
             if (Clock.AudioTime < StartTime - 400)
             {
                 Shake();
-                return IncreaseScoreType.Shake;
+                return ScoreChange.Shake;
             }
 
             if (IsHit)
-                return IncreaseScoreType.Ignore;
+                return ScoreChange.Ignore;
 
-            IncreaseScoreType action = HitAction();
+            ScoreChange action = HitAction();
 
-            if (action != IncreaseScoreType.Ignore)
+            if (action != ScoreChange.Ignore)
+            {
                 IsHit = true;
+                HitAnimation(action);
+            }
 
             return action;
+        }
+
+        /// <summary>
+        /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
+        /// </summary>
+        /// <returns></returns>
+        internal virtual ScoreChange CheckScoring()
+        {
+            //check for miss
+            if (Clock.AudioTime > HittableEndTime)
+                return Hit(); //force a "hit" if we haven't yet.
+            
+            return ScoreChange.Ignore;
+        }
+
+        /// <summary>
+        /// Trigger a hit animation showing the score overlay above the object.
+        /// </summary>
+        /// <param name="action">The ssociated score change action.</param>
+        protected virtual void HitAnimation(ScoreChange action)
+        {
+            float depth;
+            //todo: should this be changed?
+            if (this is Spinner)
+                depth = SpriteManager.drawOrderBwd(EndTime - 4);
+            else
+                depth = SpriteManager.drawOrderFwdPrio(EndTime - 4);
+
+            string spriteName;
+            string specialAddition = "";
+
+            switch (hitValue & ScoreChange.HitValuesOnly)
+            {
+                case ScoreChange.Hit100:
+                    spriteName = "hit100";
+                    break;
+                case ScoreChange.Hit300:
+                    spriteName = "hit300";
+                    break;
+                case ScoreChange.Hit50:
+                    spriteName = "hit50";
+                    break;
+                case ScoreChange.Hit100k:
+                    spriteName = "hit100k";
+                    break;
+                case ScoreChange.Hit300g:
+                    spriteName = "hit300g";
+                    break;
+                case ScoreChange.Hit300k:
+                    spriteName = "hit300k";
+                    break;
+                case ScoreChange.Miss:
+                    spriteName = "hit0";
+                    break;
+                default:
+                    spriteName = string.Empty;
+                    break;
+            }
+
+            if (hitValue < 0)
+                spriteName = "hit0"; //todo: this sounds bad
+
+            //Draw the hit value
+            pSprite p =
+                new pSprite(SkinManager.Load(spriteName + specialAddition),
+                            FieldTypes.Gamefield512x384,
+                            OriginTypes.Centre,
+                            ClockTypes.Game, Position, depth, false, Color4.White);
+            m_HitObjectManager.spriteManager.Add(p);
+
+            int HitFadeIn = 120;
+            int HitFadeOut = 600;
+            int PostEmpt = 500;
+
+            if (hitValue > 0)
+            {
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Scale, 0.6F, 1.1F, Clock.Time,
+                                       (int)(Clock.Time + (HitFadeIn * 0.8))));
+
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Fade, 0, 1, Clock.Time,
+                                       Clock.Time + HitFadeIn));
+
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Scale, 1.1F, 0.9F, Clock.Time + HitFadeIn,
+                                       (int)(Clock.Time + (HitFadeIn * 1.2))));
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Scale, 0.9F, 1F, Clock.Time + HitFadeIn,
+                                       (int)(Clock.Time + (HitFadeIn * 1.4))));
+
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Fade, 1, 0,
+                                       Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));
+            }
+            else
+            {
+                p.Transformations.Add(
+                            new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
+                                               Clock.Time + HitFadeIn));
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Fade, 1, 0, Clock.Time + PostEmpt,
+                                       Clock.Time + PostEmpt + HitFadeOut));
+
+                p.Transformations.Add(
+                    new Transformation(TransformationType.Rotation, 0,
+                                       (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
+                                       Clock.Time + HitFadeIn));
+            }
+
         }
 
         /// <summary>
         /// Internal judging of a Hit() call. Is only called after preliminary checks have been completed.
         /// </summary>
         /// <returns>
-        /// A <see cref="IncreaseScoreType"/>
+        /// A <see cref="ScoreChange"/>
         /// </returns>
-        protected abstract IncreaseScoreType HitAction();
+        protected abstract ScoreChange HitAction();
 
         internal virtual void Dispose()
         {
@@ -262,7 +376,7 @@ namespace osum.GameplayElements
         /// <value>The hittable end time.</value>
         internal virtual int HittableEndTime
         {
-            get { return EndTime; }
+            get { return EndTime + DifficultyManager.HitWindow50; }
         }
 
         /// <summary>

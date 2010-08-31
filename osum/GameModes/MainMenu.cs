@@ -51,7 +51,7 @@ namespace osum.GameModes
         {
             AudioEngine.Effect.PlayBuffer(sampleTest);
 
-            osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 2f, Clock.Time, Clock.Time + 1000, EasingTypes.In));
+            osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.Time, Clock.Time + 1000, EasingTypes.In));
 			
 			Director.ChangeMode(OsuMode.Play, new FadeTransition());
 
@@ -67,7 +67,8 @@ namespace osum.GameModes
         {
             base.Draw();
 			
-			osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
+            if (!Director.IsTransitioning)
+			    osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
         }
     }
 }
