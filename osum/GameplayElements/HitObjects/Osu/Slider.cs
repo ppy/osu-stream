@@ -87,7 +87,7 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Cumulative list of curve lengths up to AND INCLUDING a given DrawableSegment.
         /// </summary>
-        internal List<double> cumuLengths;
+        internal List<double> cumulativeLengths;
 
         /// <summary>
         /// Track bounding rectangle measured in SCREEN COORDINATES
@@ -179,6 +179,12 @@ namespace osu.GameplayElements.HitObjects.Osu
             }
         }
 
+        internal override ScoreChange CheckScoring()
+        {
+            
+            return base.CheckScoring();
+        }
+
         private void CalculateSplines()
         {
             smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
@@ -187,7 +193,7 @@ namespace osu.GameplayElements.HitObjects.Osu
             double currentLength = 0;
 
             drawableSegments = new List<Line>();
-            cumuLengths = new List<double>();
+            cumulativeLengths = new List<double>();
 
             for (int i = 1; i < smoothPoints.Count; i++)
             {
@@ -206,7 +212,7 @@ namespace osu.GameplayElements.HitObjects.Osu
                 }
 
                 currentLength += l.rho;
-                cumuLengths.Add(currentLength);
+                cumulativeLengths.Add(currentLength);
             }
 
             PathLength = currentLength;
@@ -243,6 +249,8 @@ namespace osu.GameplayElements.HitObjects.Osu
             return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
         }
 
+        internal Vector2 TrackingPosition;
+
         /// <summary>
         /// Updates this instance. Called every frame when loaded as a component.
         /// </summary>
@@ -253,52 +261,32 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             float progress = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime));
 
-            int currentSegmentIndex = (int)(drawableSegments.Count * progress);
+            //length we are looking to achieve based on time progress through slider
+            double aimLength = PathLength * progress;
 
-            Line currentSegment = drawableSegments[Math.Min(drawableSegments.Count - 1, currentSegmentIndex)];
+            int index = Math.Max(0,cumulativeLengths.FindIndex(l => l >= aimLength) - 1);
+            double lengthAtIndex = cumulativeLengths[index];
 
-            if (trackTexture == null) // Perform setup to begin drawing the slider track.
-            {
-                // Allocate the track's texture resources.
-                RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
-
-                trackBounds.X = (int)(rectf.X);
-                trackBounds.Y = (int)(rectf.Y);
-                trackBounds.Width = (int)rectf.Width + 1;// (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
-                trackBounds.Height = (int)rectf.Height + 1;// (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
-
-                trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
-                trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
-                trackBoundsNative.Width = (int)(rectf.Width * GameBase.WindowRatio) + 1;
-                trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
-
-                lengthDrawn = 0;
-                lastSegmentIndex = -1;
-
-#if !IPHONE
-                int newtexid = GL.GenTexture();
-                TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
-                gl.SetData(newtexid);
-                trackTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
-
-                spriteSliderBody.Texture = trackTexture;
-                spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
-#endif
-            }
+            //we need to finish off the current position using a bit of the line length
+            Line currentLine = drawableSegments[index];
+            TrackingPosition = currentLine.p1 + Vector2.Normalize((currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - (aimLength - lengthAtIndex)));
 
             if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
-            {
-                Draw();
-            }
+                UpdatePathTexture();
 
-            spriteFollowBall.Position = currentSegment.p1;
-            spriteFollowBall.Rotation = currentSegment.theta + (float)Math.PI;
+            spriteFollowBall.Position = TrackingPosition;
+            spriteFollowBall.Rotation = currentLine.theta + (float)Math.PI;
 
-            spriteFollowCircle.Position = currentSegment.p1;
+            spriteFollowCircle.Position = TrackingPosition;
         }
 
-        internal void Draw()
+
+
+        internal void UpdatePathTexture()
         {
+            if (trackTexture == null) // Perform setup to begin drawing the slider track.
+                CreatePathTexture();
+            
             // Snaking animation is IN PROGRESS
 #if FBO
                 int FirstSegmentIndex = lastSegmentIndex + 1;
@@ -312,7 +300,7 @@ namespace osu.GameplayElements.HitObjects.Osu
                           (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
 
-            lastSegmentIndex = cumuLengths.FindLastIndex(d => d < lengthDrawn);
+            lastSegmentIndex = cumulativeLengths.FindLastIndex(d => d < lengthDrawn);
             if (lastSegmentIndex == -1)
             {
                 lengthDrawn = PathLength;
@@ -352,6 +340,35 @@ namespace osu.GameplayElements.HitObjects.Osu
                 
             }
 
+#endif
+        }
+
+        private void CreatePathTexture()
+        {
+            // Allocate the track's texture resources.
+            RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
+
+            trackBounds.X = (int)(rectf.X);
+            trackBounds.Y = (int)(rectf.Y);
+            trackBounds.Width = (int)rectf.Width + 1;// (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
+            trackBounds.Height = (int)rectf.Height + 1;// (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
+
+            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
+            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
+            trackBoundsNative.Width = (int)(rectf.Width * GameBase.WindowRatio) + 1;
+            trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
+
+            lengthDrawn = 0;
+            lastSegmentIndex = -1;
+
+#if !IPHONE
+            int newtexid = GL.GenTexture();
+            TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
+            gl.SetData(newtexid);
+            trackTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
+
+            spriteSliderBody.Texture = trackTexture;
+            spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
 #endif
         }
     }
