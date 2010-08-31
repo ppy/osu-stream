@@ -27,14 +27,6 @@ namespace osum
             Valid = true;
 		}
 
-        /// <summary>
-        /// Call when this tracking point is no longer valid (ie. when the user is no longer in control of it).
-        /// </summary>
-        public void Invalidate()
-        {
-            Valid = false;
-        }
-		
 		public virtual Vector2 WindowPosition
 		{
 			get

@@ -20,6 +20,8 @@ namespace osum
         /// </summary>
         public static TrackingPoint PrimaryTrackingPoint;
 
+        public static List<TrackingPoint> TrackingPoints = new List<TrackingPoint>();
+
         public static bool IsTracking
         {
             get
@@ -64,6 +66,10 @@ namespace osum
         {
             if (PrimaryTrackingPoint == point)
                 MainPointerPosition = point.WindowPosition;
+
+            TrackingPoints.Clear();
+            foreach (InputSource source in RegisteredSources)
+                TrackingPoints.AddRange(source.trackingPoints);
         }
 
         private static void ReceiveDown(InputSource source, TrackingPoint point)
@@ -99,8 +105,6 @@ namespace osum
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
-            Console.WriteLine("input: move");
-
             UpdatePointerPosition(point);
             TriggerOnMove(source, point);
         }
@@ -112,6 +116,8 @@ namespace osum
         public static event InputHandler OnDown;
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
+            point.Valid = true;
+
             if (OnDown != null)
                 OnDown(source, point);
         }
@@ -120,7 +126,7 @@ namespace osum
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             //tracking is no longer valid.
-            point.Invalidate();
+            point.Valid = false;
 
             if (OnUp != null)
                 OnUp(source, point);

@@ -145,10 +145,7 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             spriteFollowBall.Transform(fadeIn);
             spriteFollowBall.Transform(fadeOut);
-
-            spriteFollowCircle.Transform(fadeIn);
-            spriteFollowCircle.Transform(fadeOut);
-
+            
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
@@ -194,8 +191,62 @@ namespace osu.GameplayElements.HitObjects.Osu
             return ScoreChange.Ignore;
         }
 
+        TrackingPoint trackingPoint;
+        bool isTracking;
+
         internal override ScoreChange CheckScoring()
         {
+            if (!IsActive)
+                return ScoreChange.Ignore;
+
+            if (trackingPoint == null)
+            {
+                if (InputManager.IsPressed)
+                {
+                    //todo: isPressed should *probably* be an attribute of a trackingPoint.
+                    //this is only required at the moment with  mouse, an will always WORK correctly even with multiple touches, but logically doesn't make much sense.
+
+                    //check each tracking point to find if any are usable
+                    foreach (TrackingPoint p in InputManager.TrackingPoints)
+                    {
+                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
+                        {
+                            trackingPoint = p;
+                            Console.WriteLine("got point");
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
+            {
+                trackingPoint = null;
+                Console.WriteLine("lost point");
+            }
+
+            if (trackingPoint != null)
+                Console.WriteLine(trackingPoint.GamefieldPosition);
+
+
+            if (trackingPoint == null && isTracking)
+            {
+                isTracking = false;
+
+                spriteFollowCircle.Transformations.Clear();
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 2, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+
+            }
+            else if (trackingPoint != null && !isTracking)
+            {
+                isTracking = true;
+
+                spriteFollowCircle.Transformations.Clear();
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.5f, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 200, EndTime));
+
+            }
             
             return base.CheckScoring();
         }
