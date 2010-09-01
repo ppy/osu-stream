@@ -282,7 +282,7 @@ namespace osu.GameplayElements.HitObjects.Osu
             }
 
             PathLength = currentLength;
-            EndTime = StartTime + (int)(1000 * PathLength / DifficultyManager.SliderVelocity);
+            EndTime = StartTime + (int)(1000 * PathLength / DifficultyManager.SliderVelocity) * RepeatCount;
         }
 
         /// <summary>
@@ -325,7 +325,21 @@ namespace osu.GameplayElements.HitObjects.Osu
             if (!IsVisible)
                 return;
 
-            float progress = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime));
+            float progress = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
+            float actualProgress = progress;
+
+            bool backwards = false;
+            
+            while (progress > 1)
+            {
+                backwards = !backwards;
+                progress -= 1;
+            }
+
+            if (backwards)
+                progress = 1 - progress;
+
+            spriteFollowBall.Reverse = backwards;
 
             //length we are looking to achieve based on time progress through slider
             double aimLength = PathLength * progress;
