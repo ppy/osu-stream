@@ -201,7 +201,6 @@ namespace osum.Graphics.Renderers
                     flip = false; // totally irrelevant
                     end_triangles = 0;
                 }
-                end_triangles = 0;
             }
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
@@ -225,13 +224,13 @@ namespace osum.Graphics.Renderers
                 GL.LoadMatrix(ref matrix);
             }
 
-            //glDrawHalfCircle(end_triangles);
+            glDrawHalfCircle(end_triangles);
 
             // Cap on start
             bool hasStartCap = false;
 
             if (prev == null) hasStartCap = true;
-            //else if (curr.p1 != prev.p2) hasStartCap = true; // This is always true for some reason AAAAAAAAAHH
+            else if (curr.p1 != prev.p2) hasStartCap = true;
 
             if (hasStartCap)
             {
