@@ -44,10 +44,10 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
-        private readonly int potHeight;
-        private readonly int potWidth;
-        private readonly int textureHeight;
-        private readonly int textureWidth;
+        internal readonly int potHeight;
+        internal readonly int potWidth;
+        internal readonly int textureHeight;
+        internal readonly int textureWidth;
         public int Id;
         public bool Loaded { get { return Id > 0; } }
 
