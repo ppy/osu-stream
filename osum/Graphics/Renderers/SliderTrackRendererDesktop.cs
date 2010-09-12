@@ -201,6 +201,7 @@ namespace osum.Graphics.Renderers
                     flip = false; // totally irrelevant
                     end_triangles = 0;
                 }
+                end_triangles = 0;
             }
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
@@ -224,7 +225,7 @@ namespace osum.Graphics.Renderers
                 GL.LoadMatrix(ref matrix);
             }
 
-            glDrawHalfCircle(end_triangles);
+            //glDrawHalfCircle(end_triangles);
 
             // Cap on start
             bool hasStartCap = false;

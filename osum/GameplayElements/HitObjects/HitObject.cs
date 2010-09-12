@@ -123,6 +123,20 @@ namespace osum.GameplayElements
             }
         }
 
+        private int colour_index;
+        internal virtual int ColourIndex
+        {
+            get
+            {
+                return colour_index;
+            }
+            set
+            {
+                if (value >= 4) throw new ArgumentOutOfRangeException();
+                colour_index = value;
+                Colour = SkinManager.DefaultColours[value];
+            }
+        }
 
         internal bool IsHit { get; private set; }
 

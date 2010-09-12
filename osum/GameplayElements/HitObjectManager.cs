@@ -84,7 +84,7 @@ namespace osum.GameplayElements
             }
 
             h.ComboNumber = currentComboNumber++;
-            h.Colour = SkinManager.DefaultColours[colourIndex];
+            h.ColourIndex = colourIndex;
 
             hitObjects.Add(h);
 

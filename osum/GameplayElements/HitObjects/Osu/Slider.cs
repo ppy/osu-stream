@@ -408,7 +408,7 @@ namespace osu.GameplayElements.HitObjects.Osu
                          -1, 1);*/
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
-                                                          DifficultyManager.HitObjectRadius, 0, prev);
+                                                          DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
 
                 GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
