@@ -465,7 +465,15 @@ namespace osum.Graphics.Sprites
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                     Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
 
-                    texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    if (Field == FieldTypes.Native)
+                    {
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    }
+                    else
+                    {
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    }
+
                 }
             }
 

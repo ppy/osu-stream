@@ -68,7 +68,7 @@ namespace osum.Graphics.Renderers
             GL.MatrixMode(MatrixMode.Projection);
             
             GL.LoadIdentity();
-            GL.Ortho(0.0d, 1.0d, 1.0d, 0.0d, -1.0d, 1.0d);
+            GL.Ortho(0.0d, 1.0d, 1.0d, -1.0d, -1.0d, 1.0d);
             
             GL.Clear(ClearBufferMask.ColorBufferBit);
             
@@ -123,7 +123,7 @@ namespace osum.Graphics.Renderers
 
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.Blend);
-            //GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
 
@@ -134,11 +134,13 @@ namespace osum.Graphics.Renderers
             GL.MatrixMode(MatrixMode.Modelview);
             // Reset The Modelview Matrix
             GL.LoadIdentity();
-            
+
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+
             int count = lineList.Count;
 
             GL.Color3((byte)255, (byte)255, (byte)255);
@@ -228,7 +230,7 @@ namespace osum.Graphics.Renderers
             bool hasStartCap = false;
 
             if (prev == null) hasStartCap = true;
-            else if (curr.p1 != prev.p2) hasStartCap = true;
+            //else if (curr.p1 != prev.p2) hasStartCap = true; // This is always true for some reason AAAAAAAAAHH
 
             if (hasStartCap)
             {

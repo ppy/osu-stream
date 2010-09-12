@@ -60,14 +60,14 @@ namespace osu.Graphics.Renderers
         protected const int TEX_WIDTH = 128; // Please keep power of two
 
         // Make the quad overhang just slightly to avoid 1px holes between a quad and a wedge from rounding errors.
-        protected const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
+        protected const float QUAD_OVERLAP_FUDGE = 6.0e-4f;
 
         // If the peak vertex of a quad is at exactly 0, we get a crack running down the center of horizontal linear sliders.
         // We shift the vertex slightly off to the side to avoid this.
         protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
-        protected const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
+        protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m
 
         protected int bytesPerVertex;
         protected int numIndices_quad;

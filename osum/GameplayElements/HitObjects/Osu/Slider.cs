@@ -130,6 +130,8 @@ namespace osu.GameplayElements.HitObjects.Osu
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
                 startTime, startTime);
+            Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
+                startTime - DifficultyManager.PreEmpt - DifficultyManager.HitWindow50, startTime - DifficultyManager.PreEmpt);
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
@@ -139,8 +141,8 @@ namespace osu.GameplayElements.HitObjects.Osu
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
                                    false, Color.White);
 
-
-            spriteSliderBody.Transform(fadeIn);
+            spriteSliderBody.ScaleScalar = 1.0f / 1.5f;
+            spriteSliderBody.Transform(fadeInTrack);
             spriteSliderBody.Transform(fadeOut);
 
             spriteFollowBall.Transform(fadeIn);
@@ -273,8 +275,9 @@ namespace osu.GameplayElements.HitObjects.Osu
                     l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1) * (float)(l.rho - (PathLength - currentLength)));
                     l.Recalc();
 
-                    //currentLength += l.rho;
-                    //break; //we are done. // Just fall through ~mm
+                    currentLength += l.rho;
+                    cumulativeLengths.Add(currentLength);
+                    break; //we are done.
                 }
 
                 currentLength += l.rho;
@@ -290,6 +293,8 @@ namespace osu.GameplayElements.HitObjects.Osu
         /// </summary>
         private static System.Drawing.RectangleF FindBoundingBox(List<Line> curve, float radius)
         {
+            // TODO: FIX this to use SCREEN coordinates instead of osupixels.
+
             if (curve.Count == 0) throw new ArgumentException("Curve must have at least one segment.");
 
             float Left = (int)curve[0].p1.X;
@@ -391,11 +396,16 @@ namespace osu.GameplayElements.HitObjects.Osu
             if (lastSegmentIndex >= FirstSegmentIndex)
             {
 #if !IPHONE
-                GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
+                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.MatrixMode(MatrixMode.Projection);
 
                 GL.LoadIdentity();
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                /*GL.Ortho(-GameBase.GamefieldOffsetVector1.X,
+                         1024 / GameBase.WindowRatio - GameBase.GamefieldOffsetVector1.X,
+                         -GameBase.GamefieldOffsetVector1.Y,
+                         1024 / GameBase.WindowRatio - GameBase.GamefieldOffsetVector1.Y,
+                         -1, 1);*/
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
                                                           DifficultyManager.HitObjectRadius, 0, prev);
@@ -404,8 +414,8 @@ namespace osu.GameplayElements.HitObjects.Osu
                 GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                 GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
                 GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackBoundsNative.Width, trackBoundsNative.Height, 0);
                 GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);

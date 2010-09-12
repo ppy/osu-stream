@@ -10,10 +10,13 @@ namespace osum.GameplayElements
         /// <summary>
         /// Radius of hitObjects in a gamefield.
         /// </summary>
-        public static float HitObjectRadius = 128 * GameBase.SpriteRatio;
+        public static float HitObjectRadius = 64 * GameBase.SpriteRatio;
         public static int SliderVelocity = 300;
 
         internal static int PreEmpt { get { return 1500; } }
+        // TODO: PreEmptSnakeStart should depend on the slider length.
+        // For very short sliders, it should be around 50% of PreEmpt,
+        // whereas for long ones, it should be as large as (but never larger than) PreEmpt.
         internal static int PreEmptSnakeStart { get { return 1000; } }
         internal static int PreEmptSnakeEnd { get { return 500; } }
         internal static int HitWindow50 { get { return 150; } }
