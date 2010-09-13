@@ -34,7 +34,7 @@ namespace osum.Graphics.Sprites
 
     internal class Transformation : IComparable<Transformation>
     {
-        internal EasingTypes Easing { get; private set; }
+        internal EasingTypes Easing { get; set; }
 
         internal Vector2 StartVector { get; private set; }
         internal Color4 StartColour { get; private set; }

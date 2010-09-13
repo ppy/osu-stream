@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using System.Drawing;
+using osum.Graphics.Primitives;
 
 namespace osum.Helpers
 {
@@ -60,9 +61,70 @@ namespace osum.Helpers
             return output;
         }
 
+        public static Vector2 CatmullRom(Vector2 value1, Vector2 value2, Vector2 value3, Vector2 value4, float amount)
+        {
+            Vector2 vector;
+            float num = amount * amount;
+            float num2 = amount * num;
+            vector.X = 0.5f * ((((2f * value2.X) + ((-value1.X + value3.X) * amount)) + (((((2f * value1.X) - (5f * value2.X)) + (4f * value3.X)) - value4.X) * num)) + ((((-value1.X + (3f * value2.X)) - (3f * value3.X)) + value4.X) * num2));
+            vector.Y = 0.5f * ((((2f * value2.Y) + ((-value1.Y + value3.Y) * amount)) + (((((2f * value1.Y) - (5f * value2.Y)) + (4f * value3.Y)) - value4.Y) * num)) + ((((-value1.Y + (3f * value2.Y)) - (3f * value3.Y)) + value4.Y) * num2));
+            return vector;
+        }
+
+
+        internal static List<Vector2> CreateCatmull(List<Vector2> controlPoints, int detailLevel)
+        {
+            List<Vector2> output = new List<Vector2>();
+
+            for (int j = 0; j < controlPoints.Count - 1; j++)
+            {
+                Vector2 v1 = (j - 1 >= 0 ? controlPoints[j - 1] : controlPoints[j]);
+                Vector2 v2 = controlPoints[j];
+                Vector2 v3 = (j + 1 < controlPoints.Count
+                                  ? controlPoints[j + 1]
+                                  : v2 + (v2 - v1));
+                Vector2 v4 = (j + 2 < controlPoints.Count
+                                  ? controlPoints[j + 2]
+                                  : v3 + (v3 - v2));
+
+                for (int k = 0; k < detailLevel; k++)
+                {
+                    Vector2 vector;
+                    
+                    float amount = (float) k / detailLevel;
+                    float num = amount * amount;
+                    float num2 = amount * num;
+
+                    vector.X = 0.5f * ((((2f * v2.X) + ((-v1.X + v3.X) * amount)) + (((((2f * v1.X) - (5f * v2.X)) + (4f * v3.X)) - v4.X) * num)) + ((((-v1.X + (3f * v2.X)) - (3f * v3.X)) + v4.X) * num2));
+                    vector.Y = 0.5f * ((((2f * v2.Y) + ((-v1.Y + v3.Y) * amount)) + (((((2f * v1.Y) - (5f * v2.Y)) + (4f * v3.Y)) - v4.Y) * num)) + ((((-v1.Y + (3f * v2.Y)) - (3f * v3.Y)) + v4.Y) * num2));
+
+                    output.Add(vector);
+                }
+            }
+
+            return output;
+        }
+
+        internal static List<Vector2> CreateLinear(List<Vector2> controlPoints, int detailLevel)
+        {
+            List<Vector2> output = new List<Vector2>();
+
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                Line l = new Line(controlPoints[i - 1], controlPoints[i]);
+                int segments = (int)(l.rho / detailLevel);
+                for (int j = 0; j < segments; j++)
+                    output.Add(l.p1 + (l.p2 - l.p1) * ((float)j / segments));
+            }
+
+            return output;
+        }
+
         internal static float ClampToOne(float p)
         {
             return Math.Max(0, Math.Min(1, p));
         }
+
+
     }
 }

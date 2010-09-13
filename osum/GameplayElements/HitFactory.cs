@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using osu.GameplayElements.HitObjects.Osu;
+using osum.GameplayElements.HitObjects.Osu;
 using OpenTK;
 using osum.GameplayElements;
 using osum.GameplayElements.HitObjects;
 
-namespace osu.GameplayElements.HitObjects
+namespace osum.GameplayElements.HitObjects
 {
     internal abstract class HitFactory
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using OpenTK;
-using osu.Graphics.Primitives;
+using osum.Graphics.Primitives;
 using osum.GameplayElements;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics;
@@ -17,11 +17,11 @@ using osum;
 using OpenTK.Graphics.OpenGL;
 #endif
 
-using osu.Graphics.Renderers;
+using osum.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Drawing;
 
-namespace osu.GameplayElements.HitObjects.Osu
+namespace osum.GameplayElements.HitObjects.Osu
 {
     internal class Slider : HitObjectSpannable
     {
@@ -105,6 +105,9 @@ namespace osu.GameplayElements.HitObjects.Osu
             CurveType = curveType;
 
             controlPoints = sliderPoints;
+
+            if (sliderPoints[0] != startPosition)
+                sliderPoints.Insert(0,startPosition);
 
             RepeatCount = Math.Max(1, repeatCount);
 
@@ -255,7 +258,18 @@ namespace osu.GameplayElements.HitObjects.Osu
 
         private void CalculateSplines()
         {
-            smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
+            switch (CurveType)
+            {
+                case CurveTypes.Bezier:
+                    smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
+                    break;
+                case CurveTypes.Catmull:
+                    smoothPoints = pMathHelper.CreateCatmull(controlPoints, 10);
+                    break;
+                case CurveTypes.Linear:
+                    smoothPoints = pMathHelper.CreateLinear(controlPoints, 10);
+                    break;
+            }
 
             //adjust the line to be of maximum length specified...
             double currentLength = 0;
@@ -285,13 +299,13 @@ namespace osu.GameplayElements.HitObjects.Osu
             }
 
             PathLength = currentLength;
-            EndTime = StartTime + (int)(1000 * PathLength / DifficultyManager.SliderVelocity) * RepeatCount;
+            EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);
         }
 
         /// <summary>
         /// Find the extreme values of the given curve in the form of a box.
         /// </summary>
-        private static System.Drawing.RectangleF FindBoundingBox(List<Line> curve, float radius)
+        private static RectangleF FindBoundingBox(List<Line> curve, float radius)
         {
             // TODO: FIX this to use SCREEN coordinates instead of osupixels.
 

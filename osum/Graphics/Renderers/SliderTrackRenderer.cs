@@ -42,14 +42,14 @@ using System.Drawing;
 using osum.Graphics;
 using osum;
 using System.Collections.Generic;
-using osu.Helpers;
+using osum.Helpers;
 using osum.GameplayElements;
 using osum.Graphics.Skins;
-using osu.Graphics.Primitives;
+using osum.Graphics.Primitives;
 using System.Drawing;
 
 
-namespace osu.Graphics.Renderers
+namespace osum.Graphics.Renderers
 {
     /// <summary>
     /// Class to handle drawing of Greg's enhanced sliders.

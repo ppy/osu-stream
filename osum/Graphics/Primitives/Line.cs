@@ -7,7 +7,7 @@ using osum.Helpers;
 
 #endregion
 
-namespace osu.Graphics.Primitives
+namespace osum.Graphics.Primitives
 {
     /// <summary>
     /// Represents a single line segment.  Drawing is handled by the LineManager class.

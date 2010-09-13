@@ -5,7 +5,8 @@ using System.Text;
 using osum.Graphics.Sprites;
 using System.IO;
 using OpenTK;
-using osu.GameplayElements.HitObjects.Osu;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements
 {
@@ -16,6 +17,8 @@ namespace osum.GameplayElements
     {
         public void LoadFile()
         {
+            beatmap.ControlPoints.Clear();
+            
             FileSection currentSection = FileSection.Unknown;
 
             //Check file just before load -- ensures no modifications have occurred.
@@ -110,30 +113,27 @@ namespace osum.GameplayElements
 
                         switch (currentSection)
                         {
+                            case FileSection.TimingPoints:
+                                if (split.Length > 2)
+                                    beatmap.ControlPoints.Add(
+                                        new ControlPoint(Double.Parse(split[0].Trim(), GameBase.nfi),
+                                                         Double.Parse(split[1].Trim(), GameBase.nfi),
+                                                         split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
+                                                         (TimeSignatures)Int32.Parse(split[2]),
+                                                         (SampleSet)Int32.Parse(split[3]),
+                                                         split.Length > 4
+                                                             ? (CustomSampleSet)Int32.Parse(split[4])
+                                                             : CustomSampleSet.Default,
+                                                         Int32.Parse(split[5]),
+                                                         split.Length > 6 ? split[6][0] == '1' : true,
+                                                         split.Length > 7 ? split[7][0] == '1' : false));
+                                break;
                             case FileSection.General:
                                 //todo: reimplement?
-                                /*switch (key)
+                                switch (key)
                                 {
-                                    case "EditorBookmarks":
-                                        string[] strlist = val.Split(',');
-                                        foreach (string s in strlist)
-                                            if (s.Length > 0)
-                                            {
-                                                int bm = Int32.Parse(s);
-                                                if (!Bookmarks.Contains(bm))
-                                                    Bookmarks.Add(bm);
-                                            }
-                                        break;
-                                    case "EditorDistanceSpacing":
-                                        ConfigManager.sDistanceSpacing = Convert.ToDouble(val, GameBase.nfi);
-                                        break;
-                                    case "StoryFireInFront":
-                                        BeatmapManager.Current.StoryFireInFront = val[0] == '1';
-                                        break;
-                                    case "UseSkinSprites":
-                                        BeatmapManager.Current.UseSkinSpritesInSB = val[0] == '1';
-                                        break;
-                                }*/
+                                    
+                                }
                                 break;
                             case FileSection.Editor:
                                 //We only need to read this section if we are in the editor.
@@ -160,6 +160,33 @@ namespace osum.GameplayElements
                                 break;
                             case FileSection.Events:
                                 //todo: implement this
+                                break;
+                            case FileSection.Difficulty:
+                                switch (key)
+                                {
+                                    case "HPDrainRate":
+                                        beatmap.DifficultyHpDrainRate = Math.Min((byte)10, Math.Max((byte)0, byte.Parse(val)));
+                                        break;
+                                    case "CircleSize":
+                                        beatmap.DifficultyCircleSize = Math.Min((byte)10, Math.Max((byte)0, byte.Parse(val)));
+                                        break;
+                                    case "OverallDifficulty":
+                                        beatmap.DifficultyOverall = Math.Min((byte)10, Math.Max((byte)0, byte.Parse(val)));
+                                        //if (!hasApproachRate) DifficultyApproachRate = DifficultyOverall;
+                                        break;
+                                    case "SliderMultiplier":
+                                        beatmap.DifficultySliderMultiplier =
+                                            Math.Max(0.4, Math.Min(3.6, Double.Parse(val, GameBase.nfi)));
+                                        break;
+                                    case "SliderTickRate":
+                                        beatmap.DifficultySliderTickRate =
+                                            Math.Max(0.5, Math.Min(8, Double.Parse(val, GameBase.nfi)));
+                                        break;
+                                    /*case "ApproachRate":
+                                        beatmap.DifficultyApproachRate = Math.Min((byte)10, Math.Max((byte)0, byte.Parse(val)));
+                                        hasApproachRate = true;
+                                        break;*/
+                                }
                                 break;
                             case FileSection.HitObjects:
                                 if (fn > 0)
@@ -260,8 +287,6 @@ namespace osum.GameplayElements
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
                                     Add(h);
-
-
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.

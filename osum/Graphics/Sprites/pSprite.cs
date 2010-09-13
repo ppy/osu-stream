@@ -38,7 +38,7 @@ using osu.Helpers;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
-using osu.Helpers;
+using osum.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -87,10 +87,8 @@ namespace osum.Graphics.Sprites
                 if (value == texture)
                     return;
 
-                if (texture != null) // && Disposable)
-                    texture.Dispose();
-
                 texture = value;
+
                 UpdateTextureSize();
                 UpdateTextureAlignment();
             }
@@ -455,7 +453,7 @@ namespace osum.Graphics.Sprites
 
         public virtual void Draw()
         {
-            if (texture == null)
+            if (texture == null || texture.TextureGl == null)
                 return;
 
             if (transformations.Count != 0 || AlwaysDraw)

@@ -4,7 +4,7 @@ using System.Text;
 using Color = OpenTK.Graphics.Color4;
 using osum.Helpers;
 
-namespace osu.Helpers
+namespace osum.Helpers
 {
     internal static class ColourHelper
     {

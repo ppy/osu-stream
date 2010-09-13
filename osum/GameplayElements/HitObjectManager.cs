@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using osu.GameplayElements.HitObjects;
-using osu.GameplayElements.HitObjects.Osu;
-using osu.Graphics.Renderers;
+using osum.GameplayElements.HitObjects;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics.Renderers;
 using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics.Skins;
@@ -112,7 +112,7 @@ namespace osum.GameplayElements
                 {
                     h.Update();
 
-                    TriggerScoreChange(h.CheckScoring(),h);
+                    TriggerScoreChange(h.CheckScoring(), h);
                 }
         }
 
@@ -137,7 +137,7 @@ namespace osum.GameplayElements
         {
             HitObject found = FindObjectAt(point);
             if (found != null)
-                TriggerScoreChange(found.Hit(),found);
+                TriggerScoreChange(found.Hit(), found);
         }
 
         public event ScoreChangeDelegate OnScoreChanged;
@@ -147,6 +147,21 @@ namespace osum.GameplayElements
 
             if (OnScoreChanged != null)
                 OnScoreChanged(change, hitObject);
+        }
+
+        internal double SliderScoringPointDistance
+        {
+            get
+            {
+                return ((100 * beatmap.DifficultySliderMultiplier) / beatmap.DifficultySliderTickRate);
+            }
+
+        }
+
+
+        internal double VelocityAt(int time)
+        {
+            return (SliderScoringPointDistance * beatmap.DifficultySliderTickRate * (1000F / beatmap.beatLengthAt(time)));
         }
     }
 
