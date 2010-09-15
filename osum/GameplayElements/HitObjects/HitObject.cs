@@ -78,12 +78,13 @@ namespace osum.GameplayElements
     internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         protected HitObjectManager m_HitObjectManager;
-        
+
         public HitObject(HitObjectManager hitObjectManager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
         {
             m_HitObjectManager = hitObjectManager;
-            Position = position;
+            this.position = position;
             StartTime = startTime;
+            EndTime = StartTime;
             SoundType = soundType;
             NewCombo = newCombo;
         }
@@ -91,7 +92,7 @@ namespace osum.GameplayElements
         #region General & Timing
 
         internal int StartTime;
-        internal virtual int EndTime { get { return StartTime; } set { } }
+        internal int EndTime;
 
         internal ScoreChange hitValue;
 
@@ -123,6 +124,20 @@ namespace osum.GameplayElements
             }
         }
 
+        private int colour_index;
+        internal virtual int ColourIndex
+        {
+            get
+            {
+                return colour_index;
+            }
+            set
+            {
+                if (value >= 4) throw new ArgumentOutOfRangeException();
+                colour_index = value;
+                Colour = SkinManager.DefaultColours[value];
+            }
+        }
 
         internal bool IsHit { get; private set; }
 
@@ -163,7 +178,7 @@ namespace osum.GameplayElements
             //check for miss
             if (Clock.AudioTime > HittableEndTime)
                 return Hit(); //force a "hit" if we haven't yet.
-            
+
             return ScoreChange.Ignore;
         }
 
@@ -174,7 +189,7 @@ namespace osum.GameplayElements
         protected virtual void HitAnimation(ScoreChange action)
         {
             if (m_HitObjectManager == null) return; //is the case for sliders, where we don't want to display this stuff.
-            
+
             float depth;
             //todo: should this be changed?
             if (this is Spinner)
@@ -230,35 +245,35 @@ namespace osum.GameplayElements
 
             if (hitValue > 0)
             {
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 0.6F, 1.1F, Clock.Time,
                                        (int)(Clock.Time + (HitFadeIn * 0.8))));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 0, 1, Clock.Time,
                                        Clock.Time + HitFadeIn));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 1.1F, 0.9F, Clock.Time + HitFadeIn,
                                        (int)(Clock.Time + (HitFadeIn * 1.2))));
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 0.9F, 1F, Clock.Time + HitFadeIn,
                                        (int)(Clock.Time + (HitFadeIn * 1.4))));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));
             }
             else
             {
-                p.Transformations.Add(
+                p.Transform(
                             new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
                                                Clock.Time + HitFadeIn));
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0, Clock.Time + PostEmpt,
                                        Clock.Time + PostEmpt + HitFadeOut));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Rotation, 0,
                                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
                                        Clock.Time + HitFadeIn));
@@ -287,7 +302,23 @@ namespace osum.GameplayElements
         /// </summary>
         protected internal List<pSprite> DimCollection = new List<pSprite>();
 
-        internal Vector2 Position;
+        protected Vector2 position;
+        internal virtual Vector2 Position
+        {
+            get { return position; }
+            set
+            {
+                position = value;
+                SpriteCollection.ForEach(s => { s.StartPosition = value; s.Position = value; });
+            }
+        }
+
+        internal virtual Vector2 EndPosition
+        {
+            get { return Position; }
+            set { throw new NotImplementedException(); }
+        }
+
         internal int StackCount;
 
         internal virtual int ComboNumber { get; set; }

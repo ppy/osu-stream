@@ -38,7 +38,7 @@ using osu.Helpers;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
-using osu.Helpers;
+using osum.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -87,10 +87,8 @@ namespace osum.Graphics.Sprites
                 if (value == texture)
                     return;
 
-                if (texture != null) // && Disposable)
-                    texture.Dispose();
-
                 texture = value;
+
                 UpdateTextureSize();
                 UpdateTextureAlignment();
             }
@@ -119,7 +117,6 @@ namespace osum.Graphics.Sprites
 
             this.Position = position;
             this.StartPosition = position;
-            this.Colour = colour;
             this.Colour = colour;
 
             this.Scale = Vector2.One;
@@ -187,7 +184,7 @@ namespace osum.Graphics.Sprites
         internal void Transform(Transformation transform)
         {
             transform.Clocking = this.Clocking;
-            transformations.Add(transform);
+            Transformations.Add(transform);
         }
 
         internal void Transform(IEnumerable<Transformation> transforms)
@@ -433,11 +430,11 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     case FieldTypes.Gamefield512x384:
-                        return Scale * GameBase.SpriteRatio;
+                        return Scale * GameBase.SpriteRatioToWindowBase;
                     case FieldTypes.Native:
-                        return Scale;
+                        return Scale / GameBase.WindowRatio;
                     default:
-                        return Scale * GameBase.SpriteRatio;
+                        return Scale * GameBase.SpriteRatioToWindowBase;
                 }
             }
         }
@@ -455,7 +452,7 @@ namespace osum.Graphics.Sprites
 
         public virtual void Draw()
         {
-            if (texture == null)
+            if (texture == null || texture.TextureGl == null)
                 return;
 
             if (transformations.Count != 0 || AlwaysDraw)
@@ -465,7 +462,15 @@ namespace osum.Graphics.Sprites
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
                     Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
 
-                    texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    if (Field == FieldTypes.Native)
+                    {
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    }
+                    else
+                    {
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                    }
+
                 }
             }
 
@@ -555,7 +560,7 @@ namespace osum.Graphics.Sprites
                 new Transformation(Position, destination,
                                    now - (int)Math.Max(1, GameBase.ElapsedMilliseconds),
                                    now + duration, easing);
-            Transformations.Add(tr);
+            Transform(tr);
         }
 
         public virtual pSprite Clone()
@@ -572,7 +577,7 @@ namespace osum.Graphics.Sprites
 
             foreach (Transformation t in Transformations)
                 //if (!t.IsLoopStatic) 
-                clone.Transformations.Add(t.Clone());
+                clone.Transform(t.Clone());
 
             /*
             if (Loops != null)

@@ -75,7 +75,9 @@ namespace osum
         /// <summary>
         /// Ratio of sprite size compared to their default habitat (SpriteResolution)
         /// </summary>
-        internal static float SpriteRatio;
+        internal static float SpriteRatioToWindowBase;
+
+        internal static float SpriteRatioToWindow;
         
         internal static Size WindowSize;
         internal static Size GamefieldSize;
@@ -139,14 +141,11 @@ namespace osum
         /// </summary>
         public abstract void MainLoop();
 
-        /// <summary>
-        /// Setup viewport and projection matrix. Should be called after a resolution/orientation change.
-        /// </summary>
-        public virtual void SetupScreen()
-        {
-            //Setup window...
-            WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
 
+        public static event VoidDelegate OnScreenLayoutChanged;
+
+        public void SetViewport()
+        {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
@@ -159,6 +158,17 @@ namespace osum
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
+        }
+
+        /// <summary>
+        /// Setup viewport and projection matrix. Should be called after a resolution/orientation change.
+        /// </summary>
+        public virtual void SetupScreen()
+        {
+            //Setup window...
+            WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
+
+            SetViewport();
 
             int size = 1;
             
@@ -175,7 +185,12 @@ namespace osum
 
             GamefieldRatio = (float)GamefieldSize.Height / GamefieldBaseSize.Height;
 
-            SpriteRatio = (float)WindowBaseSize.Width / SpriteResolution;
+            SpriteRatioToWindowBase = (float)WindowBaseSize.Width / SpriteResolution;
+
+            SpriteRatioToWindow = (float)WindowSize.Width / SpriteResolution;
+
+            if (OnScreenLayoutChanged != null)
+                OnScreenLayoutChanged();
         }
 
         /// <summary>

@@ -42,32 +42,32 @@ using System.Drawing;
 using osum.Graphics;
 using osum;
 using System.Collections.Generic;
-using osu.Helpers;
+using osum.Helpers;
 using osum.GameplayElements;
 using osum.Graphics.Skins;
-using osu.Graphics.Primitives;
+using osum.Graphics.Primitives;
 using System.Drawing;
 
 
-namespace osu.Graphics.Renderers
+namespace osum.Graphics.Renderers
 {
     /// <summary>
     /// Class to handle drawing of Greg's enhanced sliders.
     /// </summary>
-    internal abstract class SliderTrackRenderer
+    internal abstract class SliderTrackRenderer : IDisposable
     {
         protected const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
         protected const int TEX_WIDTH = 128; // Please keep power of two
 
         // Make the quad overhang just slightly to avoid 1px holes between a quad and a wedge from rounding errors.
-        protected const float QUAD_OVERLAP_FUDGE = 3.0e-4f;
+        protected const float QUAD_OVERLAP_FUDGE = 6.0e-4f;
 
         // If the peak vertex of a quad is at exactly 0, we get a crack running down the center of horizontal linear sliders.
         // We shift the vertex slightly off to the side to avoid this.
         protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
-        protected const float WEDGE_COUNT_FUDGE = 0.0f; // Seems this fudge is unneeded YIPEE
+        protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m
 
         protected int bytesPerVertex;
         protected int numIndices_quad;
@@ -109,19 +109,22 @@ namespace osu.Graphics.Renderers
             if (outer_colours.Length != iColours) throw new ArgumentException("Outer colours and inner colours must match!");
 
             {
-                if (!am_initted_geom) // TODO: Vertex buffers
+                numVertices_quad = 6;
+                numPrimitives_quad = 4;
+                numIndices_quad = 6;
+
+                numVertices_cap = MAXRES + 2;
+                numPrimitives_cap = MAXRES;
+                numIndices_cap = 3 * MAXRES;
+
+                glCalculateCapMesh();
+
+                am_initted_geom = true;
+
+                if (textures_ogl != null)
                 {
-                    numVertices_quad = 6;
-                    numPrimitives_quad = 4;
-                    numIndices_quad = 6;
-
-                    numVertices_cap = MAXRES + 2;
-                    numPrimitives_cap = MAXRES;
-                    numIndices_cap = 3 * MAXRES;
-
-                    glCalculateCapMesh();
-
-                    am_initted_geom = true;
+                    foreach (TextureGl t in textures_ogl)
+                        t.Dispose();
                 }
 
                 if (iColours == 0) // Temporary catch for i332-triggered hard crash
@@ -188,7 +191,7 @@ namespace osu.Graphics.Renderers
             // In most cases, it's set to equal a nice ratio of screen pixels, but it's constrained to within two values.
             // When circles are very large, the hitcircle(overlay).png textures become a bit fuzzy, so sharp sliders would look unnatural.
             // When they are tiny, we get the opposite problem. I confine it at 1/16th of a circle-radius, which is almost as wide as its border.
-            float aa_width = Math.Min(Math.Max(0.25f / (DifficultyManager.HitObjectRadius * GameBase.GamefieldRatio), 0.015625f), 0.0625f);
+            float aa_width = Math.Min(Math.Max(0.25f / DifficultyManager.HitObjectRadius, 0.015625f), 0.0625f);
 
             Color shadow = new Color(0, 0, 0, 128);
 
@@ -214,7 +217,7 @@ namespace osu.Graphics.Renderers
         /// <param name="OuterColour">Track edges</param>
         internal static void ComputeSliderColour(Color colour, out Color InnerColour, out Color OuterColour)
         {
-            Color col = new Color(colour.R, colour.G, colour.B, 230/255f); // Weird opengl transparency issue
+            Color col = new Color(colour.R, colour.G, colour.B, 230 / 255f); // Weird opengl transparency issue
             InnerColour = ColourHelper.Lighten2(col, 0.5f);
             OuterColour = ColourHelper.Darken(col, 0.1f);
         }
@@ -228,50 +231,52 @@ namespace osu.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         internal void Draw(List<Line> lineList, float globalRadius, int ColourIndex, Line prev)
         {
-            if (!am_initted_tex || !am_initted_geom) initialize();
-
+            switch (ColourIndex)
             {
-                switch (ColourIndex)
-                {
-                    case -1: // Grey
-                        DrawOGL(lineList, globalRadius, grey_ogl, prev);
-                        break;
-                    case -2: // Multi custom
-                        DrawOGL(lineList, globalRadius, multi_ogl, prev);
-                        break;
-                    default:
-                        if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
-                        {
+                case -1: // Grey
+                    DrawOGL(lineList, globalRadius, grey_ogl, prev);
+                    break;
+                case -2: // Multi custom
+                    DrawOGL(lineList, globalRadius, multi_ogl, prev);
+                    break;
+                default:
+                    if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
+                    {
 #if DEBUG
-                            throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
+                        throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
 #else
                             DrawOGL(lineList, globalRadius, grey_ogl, prev);
 #endif
-                        }
-                        else DrawOGL(lineList, globalRadius, textures_ogl[ColourIndex], prev);
-                        break;
-                }
+                    }
+                    else DrawOGL(lineList, globalRadius, textures_ogl[ColourIndex], prev);
+                    break;
             }
         }
 
-        private void initialize()
+        bool boundEvents;
+
+        internal void Initialize()
         {
-            List<Color> innerColours, outerColours;
-            
+            if (!boundEvents)
             {
-                innerColours = new List<Color>(5);
-                outerColours = new List<Color>(5);
+                GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
+                boundEvents = true;
+            }
 
-                // Automatically calculate some lighter/darker shades to use for the slider track.
-                // In the long-term, I'd like these colours to be made skinnable.
-                foreach (Color col in SkinManager.DefaultColours)
-                {
-                    Color Inner, Outer;
-                    ComputeSliderColour(col, out Inner, out Outer);
+            List<Color> innerColours, outerColours;
 
-                    innerColours.Add(Inner);
-                    outerColours.Add(Outer);
-                }
+            innerColours = new List<Color>(5);
+            outerColours = new List<Color>(5);
+
+            // Automatically calculate some lighter/darker shades to use for the slider track.
+            // In the long-term, I'd like these colours to be made skinnable.
+            foreach (Color col in SkinManager.DefaultColours)
+            {
+                Color Inner, Outer;
+                ComputeSliderColour(col, out Inner, out Outer);
+
+                innerColours.Add(Inner);
+                outerColours.Add(Outer);
             }
 
             Init(outerColours.ToArray(), innerColours.ToArray(), Color.White);
@@ -288,8 +293,6 @@ namespace osu.Graphics.Renderers
         /// <param name="viewport">(OpenGL only) The rectangle we restore the projection matrix to.</param>
         internal void Draw(List<Line> lineList, float globalRadius, Color colour, Color BorderColour, Line prev, Rectangle projection)
         {
-            if (!am_initted_tex || !am_initted_geom) initialize();
-
             Color Inner, Outer;
             ComputeSliderColour(colour, out Inner, out Outer);
 
@@ -318,5 +321,19 @@ namespace osu.Graphics.Renderers
 
         protected abstract void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius);
 
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
+        }
+
+        void GameBase_OnScreenLayoutChanged()
+        {
+            Initialize();
+        }
+
+        #endregion
     }
 }

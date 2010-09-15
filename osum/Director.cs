@@ -63,7 +63,7 @@ namespace osum
                     mode = new SongSelect();
                     break;
                 case OsuMode.Play:
-                    mode = new Play();
+                    mode = new Player();
                     break;
             }
             

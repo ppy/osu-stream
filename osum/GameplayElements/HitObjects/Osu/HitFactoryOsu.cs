@@ -6,7 +6,7 @@ using osum.GameplayElements;
 using OpenTK;
 using osum.GameplayElements.HitObjects;
 
-namespace osu.GameplayElements.HitObjects.Osu
+namespace osum.GameplayElements.HitObjects.Osu
 {
     internal class HitFactoryOsu : HitFactory
     {

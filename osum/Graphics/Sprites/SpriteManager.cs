@@ -7,16 +7,16 @@ namespace osum.Graphics.Sprites
 {
     internal class SpriteManager : IDisposable
     {
-        private List<pSprite> sprites;
+        internal List<pSprite> Sprites;
 
         internal SpriteManager()
         {
-            this.sprites = new List<pSprite>();
+            this.Sprites = new List<pSprite>();
         }
 
         internal SpriteManager(IEnumerable<pSprite> sprites)
         {
-            this.sprites = new List<pSprite>(sprites);
+            this.Sprites = new List<pSprite>(sprites);
         }
 
         pSpriteDepthComparer depth = new pSpriteDepthComparer();
@@ -27,11 +27,11 @@ namespace osum.Graphics.Sprites
             //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
             //if (!sprites.Contains(sprite))
 
-            int pos = sprites.BinarySearch(sprite, depth);
+            int pos = Sprites.BinarySearch(sprite, depth);
 
             if (pos < 0) pos = ~pos;
 
-            sprites.Insert(pos, sprite);
+            Sprites.Insert(pos, sprite);
         }
 
         internal void Add(pSpriteCollection collection)
@@ -45,8 +45,8 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal void Update()
         {
-            for (int i = 0; i < sprites.Count; i++)
-                sprites[i].Update();
+            for (int i = 0; i < Sprites.Count; i++)
+                Sprites[i].Update();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace osum.Graphics.Sprites
         {
             TextureGl.EnableTexture();
             
-            foreach(pSprite p in sprites)
+            foreach(pSprite p in Sprites)
                 //todo: consider case updates need to happen even when not visible (ie. animations)
                 if (p.Alpha > 0) p.Draw();
             
@@ -96,7 +96,7 @@ namespace osum.Graphics.Sprites
         public void Dispose()
         {
             //todo: do we want to dispose of sprites being managed by this manager? possibly.
-            sprites = null;
+            Sprites = null;
         }
     }
 }

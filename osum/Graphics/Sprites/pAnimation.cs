@@ -222,7 +222,7 @@ namespace osum.Graphics.Sprites
             pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
             clone.frameSkip = frameSkip;
             foreach (Transformation t in Transformations)
-                clone.Transformations.Add(t.Clone());
+                clone.Transform(t.Clone());
             return clone;
         }
 

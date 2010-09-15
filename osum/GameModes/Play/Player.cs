@@ -6,22 +6,25 @@ using osum.GameplayElements;
 using osum.GameplayElements.Beatmaps;
 using osum.Helpers;
 //using osu.Graphics.Renderers;
-using osu.Graphics.Primitives;
+using osum.Graphics.Primitives;
 using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
-using osu.Graphics.Renderers;
+using osum.Graphics.Renderers;
+using osum.GameplayElements.Scoring;
 
 namespace osum.GameModes
-
 {
-    public class Play : GameMode
+    public class Player : GameMode
     {
         HitObjectManager hitObjectManager;
 
-        public Play() : base()
+        HealthBar healthBar;
+
+        public Player()
+            : base()
         {
         }
 
@@ -39,8 +42,10 @@ namespace osum.GameModes
 
             hitObjectManager = new HitObjectManager(beatmap);
             hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
-            
+
             hitObjectManager.LoadFile();
+
+            healthBar = new HealthBar();
 
             AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
             AudioEngine.Music.Play();
@@ -48,7 +53,15 @@ namespace osum.GameModes
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
-            
+            switch (change)
+            {
+                case ScoreChange.Miss:
+                    healthBar.ReduceCurrentHp(20);
+                    break;
+                default:
+                    healthBar.IncreaseCurrentHp(10);
+                    break;
+            }
         }
 
         public override void Dispose()
@@ -64,10 +77,7 @@ namespace osum.GameModes
         {
             hitObjectManager.Draw();
 
-            List<Line> list = new List<Line>();
-            list.Add(new Line(new Vector2(20,20),new Vector2(400,400)));
-
-            //sliderTest.Draw(list, 80, Color4.White, Color4.Black, null, new Rectangle(0,0,640,480));
+            healthBar.Draw();
 
             base.Draw();
         }
@@ -76,10 +86,12 @@ namespace osum.GameModes
         {
             hitObjectManager.Update();
 
+            healthBar.Update();
+
             base.Update();
         }
-        
-        
+
+
     }
 }
 

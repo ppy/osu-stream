@@ -7,7 +7,7 @@ using osum.Helpers;
 
 #endregion
 
-namespace osu.Graphics.Primitives
+namespace osum.Graphics.Primitives
 {
     /// <summary>
     /// Represents a single line segment.  Drawing is handled by the LineManager class.
@@ -105,9 +105,16 @@ namespace osu.Graphics.Primitives
 
         internal Matrix4 WorldMatrix()
         {
+            // todo: Optimize. There should be no trig here.
             Matrix4 rotate = Matrix4.CreateRotationZ(theta);
             Matrix4 translate = Matrix4.CreateTranslation(p1.X, p1.Y, 0);
-            return rotate*translate;
+            // For some reason, in osu!m, I'm getting flipped results with the same world matrix as before.
+            // Probably related to peppy's flipping the ortho matrix?
+            Matrix4 flip = new Matrix4(-1, 0, 0, 0,
+                                       0, -1, 0, 0,
+                                       0, 0, 1, 0,
+                                       0, 0, 0, 1);
+            return flip * rotate * translate;
         }
 
         /// <summary>
@@ -115,7 +122,14 @@ namespace osu.Graphics.Primitives
         /// </summary>
         internal Matrix4 EndWorldMatrix()
         {
-            return Matrix4.CreateRotationZ(theta) * Matrix4.CreateTranslation(p2.X, p2.Y, 0);
+            // todo: ^
+            Matrix4 rotate = Matrix4.CreateRotationZ(theta);
+            Matrix4 translate = Matrix4.CreateTranslation(p2.X, p2.Y, 0);
+            Matrix4 flip = new Matrix4(-1, 0, 0, 0,
+                                       0, -1, 0, 0,
+                                       0, 0, 1, 0,
+                                       0, 0, 0, 1);
+            return flip * rotate * translate;
         }
 
     } ;

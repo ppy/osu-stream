@@ -12,10 +12,16 @@ namespace osum
         /// </summary>
 		public PointF Location;
 
+
+        /// <summary>
+        /// Increased for every press that is associated with the tracking point.
+        /// </summary>
+        int validity;
+        
         /// <summary>
         /// Is this point still valid (active)?
         /// </summary>
-        public bool Valid;
+        public bool Valid { get { return validity > 0; } }
 		
 		public TrackingPoint(PointF location) : this(location,null)
 		{}
@@ -24,7 +30,6 @@ namespace osum
 		{
 			Location = location;
 			Tag = tag;
-            Valid = true;
 		}
 
 		public virtual Vector2 WindowPosition
@@ -44,6 +49,16 @@ namespace osum
         }
 
 
-	}
+
+        internal void IncreaseValidity()
+        {
+            validity++;
+        }
+
+        internal void DecreaseValidity()
+        {
+            validity--;
+        }
+    }
 }
 

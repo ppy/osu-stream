@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using osu.GameplayElements.HitObjects;
-using osu.GameplayElements.HitObjects.Osu;
-using osu.Graphics.Renderers;
+using osum.GameplayElements.HitObjects;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics.Renderers;
 using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics.Skins;
@@ -35,12 +35,12 @@ namespace osum.GameplayElements
         /// The complete list of hitObjects.
         /// </summary>
         internal List<HitObject> hitObjects = new List<HitObject>();
+        private int hitObjectsCount;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
-
 
         //todo: pull this from a support class or something, not #if
 #if IPHONE
@@ -49,16 +49,27 @@ namespace osum.GameplayElements
         internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererDesktop();
 #endif
 
-
         public HitObjectManager(Beatmap beatmap)
         {
             this.beatmap = beatmap;
             hitFactory = new HitFactoryOsu(this);
+
+            sliderTrackRenderer.Initialize();
+
+            GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
+        }
+
+        void GameBase_OnScreenLayoutChanged()
+        {
+            foreach (HitObject h in hitObjects.FindAll(h => h is Slider))
+                ((Slider)h).DisposePathTexture();
         }
 
         public void Dispose()
         {
             spriteManager.Dispose();
+
+            GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
         }
 
         /// <summary>
@@ -84,7 +95,7 @@ namespace osum.GameplayElements
             }
 
             h.ComboNumber = currentComboNumber++;
-            h.Colour = SkinManager.DefaultColours[colourIndex];
+            h.ColourIndex = colourIndex;
 
             hitObjects.Add(h);
 
@@ -112,7 +123,13 @@ namespace osum.GameplayElements
                 {
                     h.Update();
 
-                    TriggerScoreChange(h.CheckScoring(),h);
+                    TriggerScoreChange(h.CheckScoring(), h);
+                }
+                else
+                {
+                    Slider s = h as Slider;
+                    if (s != null)
+                        s.DisposePathTexture();
                 }
         }
 
@@ -137,7 +154,7 @@ namespace osum.GameplayElements
         {
             HitObject found = FindObjectAt(point);
             if (found != null)
-                TriggerScoreChange(found.Hit(),found);
+                TriggerScoreChange(found.Hit(), found);
         }
 
         public event ScoreChangeDelegate OnScoreChanged;
@@ -147,6 +164,21 @@ namespace osum.GameplayElements
 
             if (OnScoreChanged != null)
                 OnScoreChanged(change, hitObject);
+        }
+
+        internal double SliderScoringPointDistance
+        {
+            get
+            {
+                return ((100 * beatmap.DifficultySliderMultiplier) / beatmap.DifficultySliderTickRate);
+            }
+
+        }
+
+
+        internal double VelocityAt(int time)
+        {
+            return (SliderScoringPointDistance * beatmap.DifficultySliderTickRate * (1000F / beatmap.beatLengthAt(time)));
         }
     }
 
