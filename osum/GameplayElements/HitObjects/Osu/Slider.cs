@@ -276,8 +276,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 isTracking = false;
 
                 spriteFollowCircle.Transformations.Clear();
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 2, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.None));
 
             }
             else if (trackingPoint != null && !isTracking)
@@ -285,7 +285,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 isTracking = true;
 
                 spriteFollowCircle.Transformations.Clear();
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.5f, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.6f, 1.05f, Clock.AudioTime, Clock.AudioTime + 230, EasingTypes.InHalf));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 230, Clock.AudioTime + 270, EasingTypes.OutHalf));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 200, EndTime));
 
