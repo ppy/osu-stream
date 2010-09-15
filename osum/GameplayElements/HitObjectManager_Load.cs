@@ -12,6 +12,7 @@ using osum.Helpers;
 using osum.Graphics.Skins;
 using osum.GameplayElements.HitObjects;
 using OpenTK.Graphics;
+using osum.GameplayElements.Events;
 
 namespace osum.GameplayElements
 {
@@ -164,7 +165,31 @@ namespace osum.GameplayElements
                                 Variables.Add(varSplit[0], varSplit[1]);*/
                                 break;
                             case FileSection.Events:
-                                //todo: implement this
+                                EventType eType;
+                                Event e = null;
+
+                                try
+                                {
+                                    eType = (EventType)Enum.Parse(typeof(EventType), split[0]);
+                                }
+                                catch
+                                {
+                                    continue;
+                                }
+
+                                switch (eType)
+                                {
+                                    case EventType.Video:
+                                    case EventType.Background:
+                                        string filename = split[2].Trim(new[] { '"' });
+                                        spriteManager.Add(
+                                            new pSprite(pTexture.FromFile(beatmap.ContainerFilename + filename),
+                                                           FieldTypes.StandardSnapCentre,
+                                                           OriginTypes.Centre, ClockTypes.Audio,
+                                                           Vector2.Zero, 0, true, Color4.White));
+                                        break;
+                                    //todo: implement this
+                                }
                                 break;
                             case FileSection.Difficulty:
                                 switch (key)
@@ -439,7 +464,7 @@ namespace osum.GameplayElements
                         pAnimation dot =
                             new pAnimation(fptextures,
                                            FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                           0, false, Color4.White);
+                                           0.1f, false, Color4.White);
                         dot.SetFramerateFromSkin();
 
                         dot.Transform(

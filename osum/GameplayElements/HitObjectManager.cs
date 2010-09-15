@@ -55,11 +55,21 @@ namespace osum.GameplayElements
             hitFactory = new HitFactoryOsu(this);
 
             sliderTrackRenderer.Initialize();
+
+            GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
+        }
+
+        void GameBase_OnScreenLayoutChanged()
+        {
+            foreach (HitObject h in hitObjects.FindAll(h => h is Slider))
+                ((Slider)h).DisposePathTexture();
         }
 
         public void Dispose()
         {
             spriteManager.Dispose();
+
+            GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
         }
 
         /// <summary>
@@ -114,6 +124,12 @@ namespace osum.GameplayElements
                     h.Update();
 
                     TriggerScoreChange(h.CheckScoring(), h);
+                }
+                else
+                {
+                    Slider s = h as Slider;
+                    if (s != null)
+                        s.DisposePathTexture();
                 }
         }
 
