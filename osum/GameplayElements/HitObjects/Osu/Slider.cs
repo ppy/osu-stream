@@ -210,7 +210,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             get
             {
-                return drawableSegments[drawableSegments.Count - 1].p2;
+                return RepeatCount % 2 == 0 ? position : drawableSegments[drawableSegments.Count - 1].p2;
             }
             set
             {
