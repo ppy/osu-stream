@@ -78,7 +78,7 @@ namespace osum.GameplayElements.Scoring
 
         internal float CurrentXPosition
         {
-            get { return s_barFill.Position.X + s_barFill.DrawWidth * GameBase.SpriteRatio; }
+            get { return s_barFill.Position.X + s_barFill.DrawWidth * GameBase.SpriteRatioToWindowBase; }
         }
 
         internal HealthBar()

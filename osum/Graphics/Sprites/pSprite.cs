@@ -431,11 +431,11 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     case FieldTypes.Gamefield512x384:
-                        return Scale * GameBase.SpriteRatio;
+                        return Scale * GameBase.SpriteRatioToWindowBase;
                     case FieldTypes.Native:
                         return Scale;
                     default:
-                        return Scale * GameBase.SpriteRatio;
+                        return Scale * GameBase.SpriteRatioToWindowBase;
                 }
             }
         }

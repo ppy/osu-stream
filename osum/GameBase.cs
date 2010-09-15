@@ -75,7 +75,9 @@ namespace osum
         /// <summary>
         /// Ratio of sprite size compared to their default habitat (SpriteResolution)
         /// </summary>
-        internal static float SpriteRatio;
+        internal static float SpriteRatioToWindowBase;
+
+        internal static float SpriteRatioToWindow;
         
         internal static Size WindowSize;
         internal static Size GamefieldSize;
@@ -175,7 +177,9 @@ namespace osum
 
             GamefieldRatio = (float)GamefieldSize.Height / GamefieldBaseSize.Height;
 
-            SpriteRatio = (float)WindowBaseSize.Width / SpriteResolution;
+            SpriteRatioToWindowBase = (float)WindowBaseSize.Width / SpriteResolution;
+
+            SpriteRatioToWindow = (float)WindowSize.Width / SpriteResolution;
         }
 
         /// <summary>
