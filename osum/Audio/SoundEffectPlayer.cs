@@ -99,9 +99,11 @@ namespace osum
         /// </summary>
         public void Update()
         {
-            foreach (int id in Sources)
+
+            foreach (int id in Sources.FindAll(i => AL.GetSourceState(i) != ALSourceState.Playing))
             {
-                //dispose of old sources
+                AL.DeleteSource(id);
+                Sources.Remove(id);
             }
         }
     }
