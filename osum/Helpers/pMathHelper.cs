@@ -25,6 +25,14 @@ namespace osum.Helpers
             return start + ((end - start) * amount);
         }
 
+        public static float Distance(Vector2 value1, Vector2 value2)
+        {
+            float num2 = value1.X - value2.X;
+            float num = value1.Y - value2.Y;
+            float num3 = (num2 * num2) + (num * num);
+            return (float)Math.Sqrt((double)num3);
+        }
+
         public static float DistanceSquared(Vector2 value1, Vector2 value2)
         {
             float num2 = value1.X - value2.X;

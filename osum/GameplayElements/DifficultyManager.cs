@@ -27,5 +27,15 @@ namespace osum.GameplayElements
         internal static int FadeOut { get { return 380; } }
         internal static int SpinnerRotationRatio { get { return 5; } }
         internal static int DistanceBetweenTicks { get { return 30; } }
+
+        /// <summary>
+        /// Distance between consecutive follow-line sprites.
+        /// </summary>
+        internal static int FollowLineDistance = 32;
+
+        /// <summary>
+        /// Number of milliseconds to preempt the follow line.  Higher will make the line appear earlier.
+        /// </summary>
+        internal static int FollowLinePreEmpt = 800;
     }
 }

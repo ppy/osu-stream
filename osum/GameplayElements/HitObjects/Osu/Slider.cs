@@ -70,11 +70,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal List<Vector2> controlPoints;
 
         /// <summary>
-        /// Points after smoothing/curve-generation has been applied.
-        /// </summary>
-        internal List<Vector2> smoothPoints;
-
-        /// <summary>
         /// Line segments which are to be drawn to the screen (based on smoothPoints).
         /// </summary>
         internal List<Line> drawableSegments;
@@ -193,6 +188,36 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
+        internal override Vector2 Position
+        {
+            get
+            {
+                return base.Position;
+            }
+            set
+            {
+                Vector2 change = value - position;
+
+                base.Position = value;
+
+                drawableSegments.ForEach(d => { d.Move(d.p1 + change, d.p2 + change); });
+
+                hitCircleStart.Position = value;
+            }
+        }
+
+        internal override Vector2 EndPosition
+        {
+            get
+            {
+                return drawableSegments[drawableSegments.Count - 1].p2;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         internal override bool HitTest(TrackingPoint tracking)
         {
             return hitCircleStart.HitTest(tracking);
@@ -272,9 +297,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         private void CalculateSplines()
         {
+            List<Vector2> smoothPoints;
+
             switch (CurveType)
             {
                 case CurveTypes.Bezier:
+                default:
                     smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
                     break;
                 case CurveTypes.Catmull:

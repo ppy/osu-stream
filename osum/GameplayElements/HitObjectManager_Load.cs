@@ -7,6 +7,11 @@ using System.IO;
 using OpenTK;
 using osum.GameplayElements.HitObjects.Osu;
 using osum.GameplayElements.Beatmaps;
+using osum.Graphics;
+using osum.Helpers;
+using osum.Graphics.Skins;
+using osum.GameplayElements.HitObjects;
+using OpenTK.Graphics;
 
 namespace osum.GameplayElements
 {
@@ -18,7 +23,7 @@ namespace osum.GameplayElements
         public void LoadFile()
         {
             beatmap.ControlPoints.Clear();
-            
+
             FileSection currentSection = FileSection.Unknown;
 
             //Check file just before load -- ensures no modifications have occurred.
@@ -132,7 +137,7 @@ namespace osum.GameplayElements
                                 //todo: reimplement?
                                 switch (key)
                                 {
-                                    
+
                                 }
                                 break;
                             case FileSection.Editor:
@@ -291,6 +296,158 @@ namespace osum.GameplayElements
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.
                         }
+                    }
+                }
+            }
+
+            PostProcessing();
+        }
+
+        protected virtual void PostProcessing()
+        {
+            float StackOffset = DifficultyManager.HitObjectRadius / 10;
+            
+            pTexture[] fptextures = SkinManager.LoadAll("followpoint");
+
+            Vector2 stackVector = new Vector2(StackOffset, StackOffset);
+
+            hitObjectsCount = hitObjects.Count;
+
+            const int STACK_LENIENCE = 3;
+
+            //Reverse pass for stack calculation.
+            for (int i = hitObjectsCount - 1; i > 0; i--)
+            {
+                int n = i;
+                /* We should check every note which has not yet got a stack.
+                 * Consider the case we have two interwound stacks and this will make sense.
+                 * 
+                 * o <-1      o <-2
+                 *  o <-3      o <-4
+                 * 
+                 * We first process starting from 4 and handle 2,
+                 * then we come backwards on the i loop iteration until we reach 3 and handle 1.
+                 * 2 and 1 will be ignored in the i loop because they already have a stack value.
+                 */
+
+                HitObject objectI = hitObjects[i];
+
+                if (objectI.StackCount != 0 || objectI is Spinner) continue;
+
+                /* If this object is a hitcircle, then we enter this "special" case.
+                 * It either ends with a stack of hitcircles only, or a stack of hitcircles that are underneath a slider.
+                 * Any other case is handled by the "is Slider" code below this.
+                 */
+                if (objectI is HitCircle)
+                {
+                    while (--n >= 0)
+                    {
+                        HitObject objectN = hitObjects[n];
+
+                        if (objectN is Spinner) continue;
+
+                        HitObjectSpannable spanN = objectN as HitObjectSpannable;
+
+                        if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.EndTime)
+                            //We are no longer within stacking range of the previous object.
+                            break;
+
+                        /* This is a special case where hticircles are moved DOWN and RIGHT (negative stacking) if they are under the *last* slider in a stacked pattern.
+                         *    o==o <- slider is at original location
+                         *        o <- hitCircle has stack of -1
+                         *         o <- hitCircle has stack of -2
+                         */
+                        if (spanN != null && pMathHelper.Distance(spanN.EndPosition, objectI.Position) < STACK_LENIENCE)
+                        {
+                            int offset = objectI.StackCount - objectN.StackCount + 1;
+                            for (int j = n + 1; j <= i; j++)
+                            {
+                                //For each object which was declared under this slider, we will offset it to appear *below* the slider end (rather than above).
+                                if (pMathHelper.Distance(spanN.EndPosition, hitObjects[j].Position) < STACK_LENIENCE)
+                                    hitObjects[j].StackCount -= offset;
+                            }
+
+                            //We have hit a slider.  We should restart calculation using this as the new base.
+                            //Breaking here will mean that the slider still has StackCount of 0, so will be handled in the i-outer-loop.
+                            break;
+                        }
+
+                        if (pMathHelper.Distance(objectN.Position, objectI.Position) < STACK_LENIENCE)
+                        {
+                            //Keep processing as if there are no sliders.  If we come across a slider, this gets cancelled out.
+                            //NOTE: Sliders with start positions stacking are a special case that is also handled here.
+
+                            objectN.StackCount = objectI.StackCount + 1;
+                            objectI = objectN;
+                        }
+                    }
+                }
+                else if (objectI is Slider)
+                {
+                    /* We have hit the first slider in a possible stack.
+                     * From this point on, we ALWAYS stack positive regardless.
+                     */
+                    while (--n >= 0)
+                    {
+                        HitObject objectN = hitObjects[n];
+
+                        if (objectN is Spinner) continue;
+
+                        HitObjectSpannable spanN = objectN as HitObjectSpannable;
+
+                        if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.StartTime)
+                            //We are no longer within stacking range of the previous object.
+                            break;
+
+                        if (pMathHelper.Distance((spanN != null ? spanN.EndPosition : objectN.Position), objectI.Position) < STACK_LENIENCE)
+                        {
+                            objectN.StackCount = objectI.StackCount + 1;
+                            objectI = objectN;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < hitObjectsCount; i++)
+            {
+                HitObject currHitObject = hitObjects[i];
+
+                if (currHitObject.StackCount != 0)
+                    currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
+
+                //Draw connection lines
+                if (i > 0 && (currHitObject.Type & HitObjectType.NewCombo) == 0 &&
+                    (hitObjects[i - 1].Type & HitObjectType.Spinner) == 0)
+                {
+                    Vector2 pos1 = hitObjects[i - 1].EndPosition;
+                    int time1 = hitObjects[i - 1].EndTime;
+                    Vector2 pos2 = currHitObject.Position;
+                    int time2 = currHitObject.StartTime;
+
+                    int distance = (int)pMathHelper.Distance(pos1, pos2);
+                    Vector2 distanceVector = pos2 - pos1;
+                    int length = time2 - time1;
+
+                    for (int j = (int)(DifficultyManager.FollowLineDistance * 1.5);
+                         j < distance - DifficultyManager.FollowLineDistance;
+                         j += DifficultyManager.FollowLineDistance)
+                    {
+                        float fraction = ((float)j / distance);
+                        Vector2 pos = pos1 + fraction * distanceVector;
+                        int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
+                        int fadeout = (int)(time1 + fraction * length);
+
+                        pAnimation dot =
+                            new pAnimation(fptextures,
+                                           FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, pos,
+                                           0, false, Color4.White);
+                        dot.SetFramerateFromSkin();
+
+                        dot.Transformations.Add(
+                            new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
+                        dot.Transformations.Add(
+                            new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
+                        spriteManager.Add(dot);
                     }
                 }
             }

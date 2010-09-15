@@ -14,17 +14,6 @@ namespace osum.GameplayElements.HitObjects
         {
         }
 
-        internal virtual int EndPosition
-        {
-            get;
-            set;
-        }
-
-        internal override int EndTime
-        {
-            get; set;
-        }
-
         /// <summary>
         /// Internal judging of a Hit() call. Is only called after preliminary checks have been completed.
         /// </summary>

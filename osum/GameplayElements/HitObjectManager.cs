@@ -35,12 +35,12 @@ namespace osum.GameplayElements
         /// The complete list of hitObjects.
         /// </summary>
         internal List<HitObject> hitObjects = new List<HitObject>();
+        private int hitObjectsCount;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
-
 
         //todo: pull this from a support class or something, not #if
 #if IPHONE

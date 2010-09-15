@@ -35,6 +35,7 @@ namespace osum.GameplayElements.Beatmaps
         public byte DifficultyOverall;
         public byte DifficultyCircleSize;
         public byte DifficultyHpDrainRate;
+        public int StackLeniency = 1;
 
         /// <summary>
         /// Beats the offset at.
