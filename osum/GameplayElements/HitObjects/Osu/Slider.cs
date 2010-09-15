@@ -181,6 +181,18 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
+        internal override int ComboNumber
+        {
+            get
+            {
+                return hitCircleStart.ComboNumber;
+            }
+            set
+            {
+                hitCircleStart.ComboNumber = value;
+            }
+        }
+
         internal override bool HitTest(TrackingPoint tracking)
         {
             return hitCircleStart.HitTest(tracking);
@@ -204,6 +216,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (!IsActive)
                 return ScoreChange.Ignore;
 
+            float radius = DifficultyManager.HitObjectRadius;
+
             if (trackingPoint == null)
             {
                 if (InputManager.IsPressed)
@@ -214,7 +228,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     //check each tracking point to find if any are usable
                     foreach (TrackingPoint p in InputManager.TrackingPoints)
                     {
-                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
+                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < radius * radius)
                         {
                             trackingPoint = p;
                             Console.WriteLine("got point");
@@ -223,7 +237,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     }
                 }
             }
-            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
+            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(radius * 2,2))
             {
                 trackingPoint = null;
                 Console.WriteLine("lost point");
