@@ -49,11 +49,12 @@ namespace osum.GameplayElements
         internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererDesktop();
 #endif
 
-
         public HitObjectManager(Beatmap beatmap)
         {
             this.beatmap = beatmap;
             hitFactory = new HitFactoryOsu(this);
+
+            sliderTrackRenderer.Initialize();
         }
 
         public void Dispose()

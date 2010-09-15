@@ -188,7 +188,7 @@ namespace osum.Graphics.Renderers
             // In most cases, it's set to equal a nice ratio of screen pixels, but it's constrained to within two values.
             // When circles are very large, the hitcircle(overlay).png textures become a bit fuzzy, so sharp sliders would look unnatural.
             // When they are tiny, we get the opposite problem. I confine it at 1/16th of a circle-radius, which is almost as wide as its border.
-            float aa_width = Math.Min(Math.Max(0.25f / (DifficultyManager.HitObjectRadius * GameBase.GamefieldRatio), 0.015625f), 0.0625f);
+            float aa_width = Math.Min(Math.Max(0.25f / DifficultyManager.HitObjectRadius, 0.015625f), 0.0625f);
 
             Color shadow = new Color(0, 0, 0, 128);
 
@@ -214,7 +214,7 @@ namespace osum.Graphics.Renderers
         /// <param name="OuterColour">Track edges</param>
         internal static void ComputeSliderColour(Color colour, out Color InnerColour, out Color OuterColour)
         {
-            Color col = new Color(colour.R, colour.G, colour.B, 230/255f); // Weird opengl transparency issue
+            Color col = new Color(colour.R, colour.G, colour.B, 230 / 255f); // Weird opengl transparency issue
             InnerColour = ColourHelper.Lighten2(col, 0.5f);
             OuterColour = ColourHelper.Darken(col, 0.1f);
         }
@@ -228,50 +228,44 @@ namespace osum.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         internal void Draw(List<Line> lineList, float globalRadius, int ColourIndex, Line prev)
         {
-            if (!am_initted_tex || !am_initted_geom) initialize();
-
+            switch (ColourIndex)
             {
-                switch (ColourIndex)
-                {
-                    case -1: // Grey
-                        DrawOGL(lineList, globalRadius, grey_ogl, prev);
-                        break;
-                    case -2: // Multi custom
-                        DrawOGL(lineList, globalRadius, multi_ogl, prev);
-                        break;
-                    default:
-                        if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
-                        {
+                case -1: // Grey
+                    DrawOGL(lineList, globalRadius, grey_ogl, prev);
+                    break;
+                case -2: // Multi custom
+                    DrawOGL(lineList, globalRadius, multi_ogl, prev);
+                    break;
+                default:
+                    if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
+                    {
 #if DEBUG
-                            throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
+                        throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
 #else
                             DrawOGL(lineList, globalRadius, grey_ogl, prev);
 #endif
-                        }
-                        else DrawOGL(lineList, globalRadius, textures_ogl[ColourIndex], prev);
-                        break;
-                }
+                    }
+                    else DrawOGL(lineList, globalRadius, textures_ogl[ColourIndex], prev);
+                    break;
             }
         }
 
-        private void initialize()
+        internal void Initialize()
         {
             List<Color> innerColours, outerColours;
-            
+
+            innerColours = new List<Color>(5);
+            outerColours = new List<Color>(5);
+
+            // Automatically calculate some lighter/darker shades to use for the slider track.
+            // In the long-term, I'd like these colours to be made skinnable.
+            foreach (Color col in SkinManager.DefaultColours)
             {
-                innerColours = new List<Color>(5);
-                outerColours = new List<Color>(5);
+                Color Inner, Outer;
+                ComputeSliderColour(col, out Inner, out Outer);
 
-                // Automatically calculate some lighter/darker shades to use for the slider track.
-                // In the long-term, I'd like these colours to be made skinnable.
-                foreach (Color col in SkinManager.DefaultColours)
-                {
-                    Color Inner, Outer;
-                    ComputeSliderColour(col, out Inner, out Outer);
-
-                    innerColours.Add(Inner);
-                    outerColours.Add(Outer);
-                }
+                innerColours.Add(Inner);
+                outerColours.Add(Outer);
             }
 
             Init(outerColours.ToArray(), innerColours.ToArray(), Color.White);
@@ -288,8 +282,6 @@ namespace osum.Graphics.Renderers
         /// <param name="viewport">(OpenGL only) The rectangle we restore the projection matrix to.</param>
         internal void Draw(List<Line> lineList, float globalRadius, Color colour, Color BorderColour, Line prev, Rectangle projection)
         {
-            if (!am_initted_tex || !am_initted_geom) initialize();
-
             Color Inner, Outer;
             ComputeSliderColour(colour, out Inner, out Outer);
 
