@@ -116,7 +116,7 @@ namespace osum
         public static event InputHandler OnDown;
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
-            point.Valid = true;
+            point.IncreaseValidity();
 
             if (OnDown != null)
                 OnDown(source, point);
@@ -126,7 +126,7 @@ namespace osum
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             //tracking is no longer valid.
-            point.Valid = false;
+            point.DecreaseValidity();
 
             if (OnUp != null)
                 OnUp(source, point);

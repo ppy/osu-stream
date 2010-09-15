@@ -41,8 +41,7 @@ namespace osum.Input.Sources
         {
             pressedButtons.Remove(e.Button);
 
-            if (pressedButtons.Count == 0)
-                TriggerOnUp(trackingPoints[0]);
+            TriggerOnUp(trackingPoints[0]);
         }
 
         void mouse_ButtonDown(object sender, MouseButtonEventArgs e)
