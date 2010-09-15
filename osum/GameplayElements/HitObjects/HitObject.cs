@@ -245,35 +245,35 @@ namespace osum.GameplayElements
 
             if (hitValue > 0)
             {
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 0.6F, 1.1F, Clock.Time,
                                        (int)(Clock.Time + (HitFadeIn * 0.8))));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 0, 1, Clock.Time,
                                        Clock.Time + HitFadeIn));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 1.1F, 0.9F, Clock.Time + HitFadeIn,
                                        (int)(Clock.Time + (HitFadeIn * 1.2))));
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Scale, 0.9F, 1F, Clock.Time + HitFadeIn,
                                        (int)(Clock.Time + (HitFadeIn * 1.4))));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));
             }
             else
             {
-                p.Transformations.Add(
+                p.Transform(
                             new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
                                                Clock.Time + HitFadeIn));
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0, Clock.Time + PostEmpt,
                                        Clock.Time + PostEmpt + HitFadeOut));
 
-                p.Transformations.Add(
+                p.Transform(
                     new Transformation(TransformationType.Rotation, 0,
                                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
                                        Clock.Time + HitFadeIn));

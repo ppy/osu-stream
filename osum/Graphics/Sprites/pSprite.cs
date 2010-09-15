@@ -118,7 +118,6 @@ namespace osum.Graphics.Sprites
             this.Position = position;
             this.StartPosition = position;
             this.Colour = colour;
-            this.Colour = colour;
 
             this.Scale = Vector2.One;
             this.Rotation = 0;
@@ -185,7 +184,7 @@ namespace osum.Graphics.Sprites
         internal void Transform(Transformation transform)
         {
             transform.Clocking = this.Clocking;
-            transformations.Add(transform);
+            Transformations.Add(transform);
         }
 
         internal void Transform(IEnumerable<Transformation> transforms)
@@ -561,7 +560,7 @@ namespace osum.Graphics.Sprites
                 new Transformation(Position, destination,
                                    now - (int)Math.Max(1, GameBase.ElapsedMilliseconds),
                                    now + duration, easing);
-            Transformations.Add(tr);
+            Transform(tr);
         }
 
         public virtual pSprite Clone()
@@ -578,7 +577,7 @@ namespace osum.Graphics.Sprites
 
             foreach (Transformation t in Transformations)
                 //if (!t.IsLoopStatic) 
-                clone.Transformations.Add(t.Clone());
+                clone.Transform(t.Clone());
 
             /*
             if (Loops != null)

@@ -97,7 +97,7 @@ namespace osum.GameplayElements.Scoring
             s_barBg.MoveTo(s_barBg.StartPosition - off, 500);
 
             s_kiIcon.StartPosition = new Vector2(s_kiIcon.Position.X, s_kiIcon.StartPosition.Y);
-            s_kiIcon.Transformations.Add(new Transformation(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
+            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
         }
 
         internal virtual void SlideIn()
@@ -108,7 +108,7 @@ namespace osum.GameplayElements.Scoring
 
             s_barFill.MoveTo(s_barFill.StartPosition, 500);
             s_barBg.MoveTo(s_barBg.StartPosition, 500);
-            s_kiIcon.Transformations.Add(new Transformation(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
+            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
         }
 
         public override void Update()
@@ -132,7 +132,7 @@ namespace osum.GameplayElements.Scoring
                         DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * GameBase.ElapsedMilliseconds);
                         if (s_kiIcon.Transformations.Count == 0)
                         {
-                            s_kiIcon.Transformations.Add(
+                            s_kiIcon.Transform(
                                 new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
                                                    Clock.Time + 150));
                         }
@@ -163,7 +163,7 @@ namespace osum.GameplayElements.Scoring
         {
             s_kiIcon.Transformations.RemoveAll(
                     t => t.Type == TransformationType.Scale);
-            s_kiIcon.Transformations.Add(new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
+            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
                                                              Clock.Time + 150));
         }
 
@@ -177,11 +177,11 @@ namespace osum.GameplayElements.Scoring
             Transformation t =
                 new Transformation(TransformationType.Scale, 1, 1.6F, Clock.Time, Clock.Time + 120);
             t.Easing = EasingTypes.In;
-            p.Transformations.Add(t);
+            p.Transform(t);
             t =
                 new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 120);
             t.Easing = EasingTypes.In;
-            p.Transformations.Add(t);
+            p.Transform(t);
 
             if (spriteManager != null)
                 spriteManager.Add(p);

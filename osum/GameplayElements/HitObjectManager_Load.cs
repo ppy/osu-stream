@@ -306,7 +306,7 @@ namespace osum.GameplayElements
         protected virtual void PostProcessing()
         {
             float StackOffset = DifficultyManager.HitObjectRadius / 10;
-            
+
             pTexture[] fptextures = SkinManager.LoadAll("followpoint");
 
             Vector2 stackVector = new Vector2(StackOffset, StackOffset);
@@ -416,8 +416,7 @@ namespace osum.GameplayElements
                     currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
                 //Draw connection lines
-                if (i > 0 && (currHitObject.Type & HitObjectType.NewCombo) == 0 &&
-                    (hitObjects[i - 1].Type & HitObjectType.Spinner) == 0)
+                if (i > 0 && !currHitObject.NewCombo && !(hitObjects[i - 1] is Spinner))
                 {
                     Vector2 pos1 = hitObjects[i - 1].EndPosition;
                     int time1 = hitObjects[i - 1].EndTime;
@@ -443,9 +442,9 @@ namespace osum.GameplayElements
                                            0, false, Color4.White);
                         dot.SetFramerateFromSkin();
 
-                        dot.Transformations.Add(
+                        dot.Transform(
                             new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
-                        dot.Transformations.Add(
+                        dot.Transform(
                             new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
                         spriteManager.Add(dot);
                     }
