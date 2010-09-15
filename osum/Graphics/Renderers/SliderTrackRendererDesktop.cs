@@ -57,7 +57,6 @@ namespace osum.Graphics.Renderers
         {
             GL.PushAttrib(AttribMask.EnableBit);
             
-            
             GL.Viewport(0, 0, TEX_WIDTH, 1);
             GL.Disable(EnableCap.DepthTest);
             
@@ -111,8 +110,7 @@ namespace osum.Graphics.Renderers
             
             GL.PopAttrib();
             
-            //restore viewport (can make this more efficient but not much point?)
-            GameBase.Instance.SetupScreen();
+            GameBase.Instance.SetViewport();
             
             return result;
         }

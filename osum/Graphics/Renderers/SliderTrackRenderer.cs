@@ -54,7 +54,7 @@ namespace osum.Graphics.Renderers
     /// <summary>
     /// Class to handle drawing of Greg's enhanced sliders.
     /// </summary>
-    internal abstract class SliderTrackRenderer
+    internal abstract class SliderTrackRenderer : IDisposable
     {
         protected const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
         protected const int TEX_WIDTH = 128; // Please keep power of two
@@ -109,19 +109,22 @@ namespace osum.Graphics.Renderers
             if (outer_colours.Length != iColours) throw new ArgumentException("Outer colours and inner colours must match!");
 
             {
-                if (!am_initted_geom) // TODO: Vertex buffers
+                numVertices_quad = 6;
+                numPrimitives_quad = 4;
+                numIndices_quad = 6;
+
+                numVertices_cap = MAXRES + 2;
+                numPrimitives_cap = MAXRES;
+                numIndices_cap = 3 * MAXRES;
+
+                glCalculateCapMesh();
+
+                am_initted_geom = true;
+
+                if (textures_ogl != null)
                 {
-                    numVertices_quad = 6;
-                    numPrimitives_quad = 4;
-                    numIndices_quad = 6;
-
-                    numVertices_cap = MAXRES + 2;
-                    numPrimitives_cap = MAXRES;
-                    numIndices_cap = 3 * MAXRES;
-
-                    glCalculateCapMesh();
-
-                    am_initted_geom = true;
+                    foreach (TextureGl t in textures_ogl)
+                        t.Dispose();
                 }
 
                 if (iColours == 0) // Temporary catch for i332-triggered hard crash
@@ -250,8 +253,16 @@ namespace osum.Graphics.Renderers
             }
         }
 
+        bool boundEvents;
+
         internal void Initialize()
         {
+            if (!boundEvents)
+            {
+                GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
+                boundEvents = true;
+            }
+
             List<Color> innerColours, outerColours;
 
             innerColours = new List<Color>(5);
@@ -310,5 +321,19 @@ namespace osum.Graphics.Renderers
 
         protected abstract void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius);
 
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
+        }
+
+        void GameBase_OnScreenLayoutChanged()
+        {
+            Initialize();
+        }
+
+        #endregion
     }
 }

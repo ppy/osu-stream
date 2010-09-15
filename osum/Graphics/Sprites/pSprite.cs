@@ -432,7 +432,7 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.Gamefield512x384:
                         return Scale * GameBase.SpriteRatioToWindowBase;
                     case FieldTypes.Native:
-                        return Scale;
+                        return Scale / GameBase.WindowRatio;
                     default:
                         return Scale * GameBase.SpriteRatioToWindowBase;
                 }

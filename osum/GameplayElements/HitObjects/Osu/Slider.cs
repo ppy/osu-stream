@@ -139,7 +139,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
                                    false, Color.White);
 
-            spriteSliderBody.ScaleScalar = 1.0f / 1.5f;
             spriteSliderBody.Transform(fadeInTrack);
             spriteSliderBody.Transform(fadeOut);
 
@@ -412,13 +411,20 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
             TrackingPosition = currentLine.p1 + Vector2.Normalize((currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - (aimLength - lengthAtIndex)));
 
-            if (IsVisible && (lengthDrawn < PathLength) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
+            if (IsVisible && (lengthDrawn < PathLength || trackTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
             spriteFollowBall.Rotation = currentLine.theta + (float)Math.PI;
 
             spriteFollowCircle.Position = TrackingPosition;
+        }
+
+        internal void DisposePathTexture()
+        {
+            if (trackTexture != null)
+                trackTexture.Dispose();
+            trackTexture = null;
         }
 
         internal void UpdatePathTexture()
@@ -439,8 +445,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                           (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
 
-            lastSegmentIndex = cumulativeLengths.FindLastIndex(d => d < lengthDrawn);
-            if (lastSegmentIndex == -1)
+            while (lastSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastSegmentIndex] < lengthDrawn)
+                lastSegmentIndex++;
+
+            if (lastSegmentIndex >= cumulativeLengths.Count)
             {
                 lengthDrawn = PathLength;
                 lastSegmentIndex = drawableSegments.Count - 1;
@@ -478,8 +486,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
-                //restore viewport (can make this more efficient but not much point?)
-                GameBase.Instance.SetupScreen();
+                GameBase.Instance.SetViewport();
 #endif
                 
             }
@@ -503,7 +510,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
 
             lengthDrawn = 0;
-            lastSegmentIndex = -1;
+            lastSegmentIndex = 0;
 
 #if !IPHONE
             int newtexid = GL.GenTexture();
