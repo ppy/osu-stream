@@ -151,6 +151,7 @@ namespace osum
 
 #if IPHONE
             GL.Ortho(0, GameBase.WindowBaseSize.Height, GameBase.WindowBaseSize.Width, 0, 0, 1);
+            GL.Viewport(0, 0, GameBase.WindowSize.Height, GameBase.WindowSize.Width);
 #else
             GL.Viewport(0, 0, GameBase.WindowSize.Width, GameBase.WindowSize.Height);
             GL.Ortho(0, GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height, 0, 0, 1);

@@ -35,7 +35,7 @@
     <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchSdkVersion>4.0</MtouchSdkVersion>
+    <MtouchSdkVersion>4.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -65,7 +65,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
     <Externalconsole>true</Externalconsole>
-    <MtouchSdkVersion>4.0</MtouchSdkVersion>
+    <MtouchSdkVersion>4.1</MtouchSdkVersion>
     <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -79,7 +79,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchSdkVersion>4.0</MtouchSdkVersion>
+    <MtouchSdkVersion>4.1</MtouchSdkVersion>
     <DefineConstants>IPHONE</DefineConstants>
     <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
     <MtouchI18n />
@@ -147,7 +147,6 @@
     <Compile Include="GameplayElements\HitObjectManager.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
-    <Compile Include="GameModes\Play.cs" />
     <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
@@ -163,6 +162,12 @@
     <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRendererIphone.cs" />
+    <Compile Include="GameplayElements\Events\Event.cs" />
+    <Compile Include="GameplayElements\Beatmaps\ControlPoint.cs" />
+    <Compile Include="GameModes\Play\Player.cs" />
+    <Compile Include="GameModes\Play\Components\HealthBar.cs" />
+    <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
+    <Compile Include="GameModes\GameComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
