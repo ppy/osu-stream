@@ -574,6 +574,7 @@ namespace osum.Graphics.Sprites
             clone.DrawHeight = DrawHeight;
 
             clone.Scale = Scale;
+            clone.Rotation = Rotation;
 
             foreach (Transformation t in Transformations)
                 //if (!t.IsLoopStatic) 

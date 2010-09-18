@@ -23,6 +23,8 @@ namespace osum.GameplayElements.HitObjects
             return ScoreChange.Ignore;
         }
 
+        protected virtual bool IsEndHit {get; set;}
+
         /// <summary>
         /// Is this object currently within an active range?
         /// </summary>
@@ -30,13 +32,17 @@ namespace osum.GameplayElements.HitObjects
         {
             get
             {
-                return StartTime < Clock.AudioTime && EndTime > Clock.AudioTime;
+                return StartTime < Clock.AudioTime && (EndTime > Clock.AudioTime || !IsEndHit);
             }
         }
 
         internal override bool IsVisible
         {
-            get { return Clock.AudioTime > StartTime && Clock.AudioTime < EndTime; }
+            get
+            {
+                return Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
+                   Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
+            }
         }
     }
 }

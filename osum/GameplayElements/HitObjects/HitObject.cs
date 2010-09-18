@@ -200,7 +200,7 @@ namespace osum.GameplayElements
             string spriteName;
             string specialAddition = "";
 
-            switch (hitValue & ScoreChange.HitValuesOnly)
+            switch (action & ScoreChange.HitValuesOnly)
             {
                 case ScoreChange.Hit100:
                     spriteName = "hit100";
@@ -228,7 +228,7 @@ namespace osum.GameplayElements
                     break;
             }
 
-            if (hitValue < 0)
+            if (action < 0)
                 spriteName = "hit0"; //todo: this sounds bad
 
             //Draw the hit value
@@ -236,14 +236,14 @@ namespace osum.GameplayElements
                 new pSprite(SkinManager.Load(spriteName + specialAddition),
                             FieldTypes.Gamefield512x384,
                             OriginTypes.Centre,
-                            ClockTypes.Game, Position, depth, false, Color4.White);
+                            ClockTypes.Game, EndPosition, depth, false, Color4.White);
             m_HitObjectManager.spriteManager.Add(p);
 
             int HitFadeIn = 120;
             int HitFadeOut = 600;
             int PostEmpt = 500;
 
-            if (hitValue > 0)
+            if (action > 0)
             {
                 p.Transform(
                     new Transformation(TransformationType.Scale, 0.6F, 1.1F, Clock.Time,
