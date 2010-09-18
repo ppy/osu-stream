@@ -90,6 +90,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal Rectangle trackBounds;
         internal Rectangle trackBoundsNative;
 
+        private List<pSprite> spriteCollectionStart = new List<pSprite>();
+
+        private List<pSprite> spriteCollectionEnd = new List<pSprite>();
+
         HitCircle hitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
@@ -149,7 +153,22 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
 
+            spriteCollectionStart.Add(new pSprite(SkinManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(SkinManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+
+            spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
+            spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
+
+
+            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+
+            spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
+            spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
+
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
+            SpriteCollection.AddRange(spriteCollectionStart);
+            SpriteCollection.AddRange(spriteCollectionEnd);
         }
 
         internal override bool IsVisible
@@ -172,6 +191,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 base.Colour = value;
                 hitCircleStart.Colour = value;
+                spriteCollectionStart[0].Colour = value;
+                spriteCollectionEnd[0].Colour = value;
             }
         }
 
@@ -472,7 +493,13 @@ namespace osum.GameplayElements.HitObjects.Osu
                          1024 / GameBase.WindowRatio - GameBase.GamefieldOffsetVector1.Y,
                          -1, 1);*/
 
-                m_HitObjectManager.sliderTrackRenderer.Draw(drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1),
+                List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1);
+
+                Vector2 drawEndPosition = partialDrawable[partialDrawable.Count - 1].p2;
+
+                spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
+
+                m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                           DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
 
@@ -489,9 +516,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 GameBase.Instance.SetViewport();
 #endif
-                
             }
-
 #endif
         }
 
