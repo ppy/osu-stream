@@ -89,7 +89,16 @@ namespace osum
 
             if (PrimaryTrackingPoint == point)
             {
-                //todo: find the next valid tracking point
+                //find the next valid tracking point.
+                PrimaryTrackingPoint = null;
+                foreach (TrackingPoint p in TrackingPoints)
+                {
+                    if (p != point && p.Valid)
+                    {
+                        PrimaryTrackingPoint = p;
+                        break;
+                    }
+                }
             }
 
             TriggerOnUp(source, point);

@@ -239,7 +239,7 @@ namespace osum.GameplayElements
             Vector2 oldPos = cursorTrackingPosition - spriteCircle.Position;
 
             //Update to the new mouse position.
-            cursorTrackingPosition = InputManager.PrimaryTrackingPoint.WindowPosition;
+            cursorTrackingPosition = cursorTrackingPoint.WindowPosition;
 
             Vector2 newPos = cursorTrackingPosition - spriteCircle.Position;
 
