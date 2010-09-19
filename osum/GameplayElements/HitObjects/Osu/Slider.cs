@@ -11,12 +11,41 @@ using osum.Helpers;
 using Color = OpenTK.Graphics.Color4;
 using osum;
 
+using OpenTK;
 #if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
 
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using ErrorCode = OpenTK.Graphics.ES11.All;
+using TextureEnvParameter = OpenTK.Graphics.ES11.All;
+using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
+using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using osum.Input;
 #endif
-
 using osum.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Drawing;
@@ -584,6 +613,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (pathTextureUpdateSkippedFrames++ % 3 == 0 || lengthDrawn == PathLength)
                 {
+
+                    GL.PushMatrix();
+
 #if IPHONE
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
@@ -630,7 +662,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 #endif
 
                     GameBase.Instance.SetViewport();
-                }
+
+                    GL.PopMatrix();
+               }
             }
 #endif
         }
