@@ -297,13 +297,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                 }
             }
             else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(radius * 2, 2))
-            {
                 trackingPoint = null;
-                Console.WriteLine("lost point");
-            }
 
             if (trackingPoint == null && isTracking)
             {
+                //End tracking.
                 isTracking = false;
 
                 spriteFollowCircle.Transformations.Clear();
@@ -313,6 +311,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
             else if (trackingPoint != null && !isTracking)
             {
+                //Begin tracking.
                 isTracking = true;
 
                 spriteFollowCircle.Transformations.Clear();
@@ -328,10 +327,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 lastScoredEndpoint++;
 
-                if (RepeatCount - lastScoredEndpoint == 2)
-                    spriteCollectionStart[2].Transformations.Clear();
-                if (RepeatCount - lastScoredEndpoint == 1)
-                    spriteCollectionEnd[2].Transformations.Clear();
+                if (RepeatCount - lastScoredEndpoint < 3 && RepeatCount - lastScoredEndpoint > 0)
+                {
+                    //we can turn off some repeat arrows...
+                    if (lastScoredEndpoint % 2 == 0)
+                        spriteCollectionStart[2].Transformations.Clear();
+                    else
+                        spriteCollectionEnd[2].Transformations.Clear();
+                }
 
                 if (isTracking)
                 {
@@ -346,6 +349,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     foreach (pSprite p in lastScoredEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
                     {
+                        //Burst the endpoint we just reached.
                         pSprite clone = p.Clone();
 
                         clone.Transformations.Clear();
@@ -365,7 +369,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 if (RepeatCount - lastScoredEndpoint == 0)
                 {
                     //we've hit the end of the slider altogether.
-
                     spriteFollowBall.RunAnimation = false;
                     spriteFollowCircle.Transformations.Clear();
 
@@ -532,7 +535,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (RepeatCount > 1)
                 spriteCollectionEnd[2].Rotation = 3 + endAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
             if (RepeatCount > 2)
-                spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
+                spriteCollectionStart[2].Rotation = startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
         }
 
         internal void DisposePathTexture()
