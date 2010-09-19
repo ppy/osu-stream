@@ -2,7 +2,45 @@
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
 using System;
-using osu.Graphics.Renderers;
+using osum.Graphics.Primitives;
+using System.Collections.Generic;
+using OpenTK.Graphics.ES11;
+using OpenTK;
+#if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
+
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using ErrorCode = OpenTK.Graphics.ES11.All;
+using TextureEnvParameter = OpenTK.Graphics.ES11.All;
+using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+#else
+using OpenTK.Input;
+using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using osum.Input;
+#endif
+
 namespace osum.Graphics.Renderers
 {
     internal class SliderTrackRendererIphone : SliderTrackRenderer
@@ -10,31 +48,278 @@ namespace osum.Graphics.Renderers
         #region implemented abstract members of osu.Graphics.Renderers.SliderTrackRenderer
         protected override void glDrawQuad()
         {
-            throw new System.NotImplementedException();
+            float[] coordinates = { 0, 0,
+                                    0, 0,
+                                    1, 0,
+                                    1, 0,
+                                    0, 0,
+                                    0, 0};
+
+            float[] vertices = {-QUAD_OVERLAP_FUDGE, -1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, -1, 0,
+                            -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            -QUAD_OVERLAP_FUDGE, 1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, 1, 0};
+
+            GL.TexCoordPointer(2, All.Float, 0, coordinates);
+            GL.VertexPointer(3, All.Float, 0, vertices);
+
+            GL.DrawArrays (All.TriangleStrip, 0, 6);
         }
 
 
         protected override void glDrawHalfCircle(int count)
         {
-            throw new System.NotImplementedException();
+            float[] coordinates = new float[(count + 2) * 2];
+            coordinates[0] = 1;
+
+            const int vertexSize = 3;
+
+            float[] vertices = new float[vertexSize * (count + 2)];
+
+            vertices[0] = 0;
+            vertices[1] = 0;
+            vertices[2] = 1;
+
+            for (int x = 0; x <= count; x++)
+            {
+                Vector3 v = vertices_ogl[x];
+                vertices[x * vertexSize + 3] = v.X;
+                vertices[x * vertexSize + 4] = v.Y;
+                vertices[x * vertexSize + 5] = v.Z;
+            }
+
+            GL.TexCoordPointer(2, All.Float, 0, coordinates);
+            GL.VertexPointer(3, All.Float, 0, vertices);
+
+            GL.DrawArrays (All.TriangleFan, 0, count + 2);
         }
 
 
         protected override TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
         {
-            throw new System.NotImplementedException();
+            //GL.PushAttrib(AttribMask.EnableBit);
+
+            GL.Viewport(0, 0, TEX_WIDTH, 1);
+            GL.Disable(All.DepthTest);
+
+            GL.MatrixMode(All.Modelview);
+            
+            GL.LoadIdentity();
+            
+            GL.MatrixMode(All.Projection);
+
+            GL.LoadIdentity();
+            GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
+
+            GL.Clear((int)All.ColorBufferBit);
+
+            {
+                //GL.Begin(BeginMode.LineStrip);
+
+                GL.EnableClientState(All.ColorArray);
+
+                float[] colours = {0,0,0,0,
+                                shadow.R, shadow.G, shadow.B, shadow.A,
+                                border.R, border.G, border.B, border.A,
+                                border.R, border.G, border.B, border.A,
+                                OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
+                                InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A };
+
+                float[] vertices = { 0, 0,
+                    0.078125f - aa_width, 0.0f,
+                    0.078125f + aa_width, 0.0f,
+                    0.1875f - aa_width, 0.0f,
+                    0.1875f + aa_width, 0.0f,
+                    1.0f, 0.0f };
+
+                GL.VertexPointer(2, All.Float, 0, vertices);
+                GL.ColorPointer(4,All.Float, 0, colours);
+
+                GL.DrawArrays(All.LineStrip,0,6);
+
+                GL.DisableClientState(All.ColorArray);
+
+            }
+            
+            TextureGl result = new TextureGl(TEX_WIDTH, 1);
+
+            int[] textures = new int[1];
+            GL.GenTextures (1, textures);
+            int textureId = textures[0];
+
+            GL.Enable(TextureGl.SURFACE_TYPE);
+
+            GL.BindTexture(TextureGl.SURFACE_TYPE, textureId);
+
+            GL.TexParameter (TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter (TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Linear);
+
+            GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, All.Rgba, 0, 0, TEX_WIDTH, 1, 0);
+
+            GL.Disable(TextureGl.SURFACE_TYPE);
+
+            result.SetData(textureId);
+
+            //GL.PopAttrib();
+
+            GameBase.Instance.SetViewport();
+            
+            return result;
         }
 
 
-        protected override void DrawOGL(System.Collections.Generic.List<osu.Graphics.Primitives.Line> lineList, float globalRadius, TextureGl texture, osu.Graphics.Primitives.Line prev)
+        protected override void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev)
         {
-            throw new System.NotImplementedException();
+            //GL.PushAttrib(AttribMask.EnableBit);
+
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.Blend);
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthMask(true);
+            GL.DepthFunc(All.Lequal);
+
+            GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
+            GL.Color4(255,255,255,255);
+
+            // Select The Modelview Matrix
+            GL.MatrixMode(MatrixMode.Modelview);
+            // Reset The Modelview Matrix
+            GL.LoadIdentity();
+
+            GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
+
+            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+
+            int count = lineList.Count;
+
+            GL.Color4(255,255,255,255);
+
+            for (int x = 1; x < count; x++)
+            {
+                DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius);
+
+                prev = lineList[x - 1];
+            }
+
+            DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
+
+            GL.LoadIdentity();
+
+            //GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.Blend);
+            GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
+
+            //GL.PopAttrib();
         }
 
 
-        protected override void DrawLineOGL(osu.Graphics.Primitives.Line prev, osu.Graphics.Primitives.Line curr, osu.Graphics.Primitives.Line next, float globalRadius)
+        protected override void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius)
         {
-            throw new System.NotImplementedException();
+            // Quad
+            Matrix4 matrix = new Matrix4(curr.rho, 0, 0, 0, // Scale-X
+                                        0, globalRadius, 0, 0, // Scale-Y
+                                        0, 0, 1, 0,
+                                        0, 0, 0, 1) * curr.WorldMatrix();
+
+            GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+            glDrawQuad();
+
+            int end_triangles;
+            bool flip;
+            if (next == null)
+            {
+                flip = false; // totally irrelevant
+                end_triangles = numPrimitives_cap;
+            }
+            else
+            {
+                float theta = next.theta - curr.theta;
+
+                // keep on the +- pi/2 range.
+                if (theta > Math.PI) theta -= (float)(Math.PI * 2);
+                if (theta < -Math.PI) theta += (float)(Math.PI * 2);
+
+                if (theta < 0)
+                {
+                    flip = true;
+                    end_triangles = (int)Math.Ceiling((-theta) * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                }
+                else if (theta > 0)
+                {
+                    flip = false;
+                    end_triangles = (int)Math.Ceiling(theta * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                }
+                else
+                {
+                    flip = false; // totally irrelevant
+                    end_triangles = 0;
+                }
+            }
+            end_triangles = Math.Min(end_triangles, numPrimitives_cap);
+
+            // Cap on end
+            if (flip)
+            {
+                matrix = new Matrix4(globalRadius, 0, 0, 0,
+                                    0, -globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+            }
+            else
+            {
+                matrix = new Matrix4(globalRadius, 0, 0, 0,
+                                    0, globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+            }
+
+            glDrawHalfCircle(end_triangles);
+
+            // Cap on start
+            bool hasStartCap = false;
+
+            if (prev == null) hasStartCap = true;
+            else if (curr.p1 != prev.p2) hasStartCap = true;
+
+            //todo: this makes stuff look bad... need to look into it.
+            /*if (hasStartCap)
+            {
+                // Catch for Darrinub and other slider inconsistencies. (Redpoints seem to be causing some.)
+                // Render a complete beginning cap if this Line isn't connected to the end of the previous line.
+
+                matrix = new Matrix4(-globalRadius, 0, 0, 0,
+                                    0, -globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.WorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+                glDrawHalfCircle(numPrimitives_cap);
+            }*/
         }
 
         #endregion

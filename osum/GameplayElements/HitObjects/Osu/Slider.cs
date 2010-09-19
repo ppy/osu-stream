@@ -578,25 +578,40 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (lastSegmentIndex >= FirstSegmentIndex)
             {
-#if !IPHONE
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1);
                 Vector2 drawEndPosition = partialDrawable[partialDrawable.Count - 1].p2;
                 spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 
                 if (pathTextureUpdateSkippedFrames++ % 3 == 0 || lengthDrawn == PathLength)
                 {
+#if IPHONE
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
 
                     GL.LoadIdentity();
                     GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
-                    /*GL.Ortho(-GameBase.GamefieldOffsetVector1.X,
-                             1024 / GameBase.WindowRatio - GameBase.GamefieldOffsetVector1.X,
-                             -GameBase.GamefieldOffsetVector1.Y,
-                             1024 / GameBase.WindowRatio - GameBase.GamefieldOffsetVector1.Y,
-                             -1, 1);*/
 
-                    
+                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                              DifficultyManager.HitObjectRadius, ColourIndex, prev);
+
+
+                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
+
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
+
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackTexture.TextureGl.potWidth, trackTexture.TextureGl.potHeight, 0);
+                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
+
+                    GL.Clear((int)ClearBufferMask.ColorBufferBit);
+#else
+                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                    GL.MatrixMode(MatrixMode.Projection);
+
+                    GL.LoadIdentity();
+                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
@@ -612,10 +627,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                     GL.Clear(ClearBufferMask.ColorBufferBit);
+#endif
 
                     GameBase.Instance.SetViewport();
                 }
-#endif
             }
 #endif
         }
@@ -638,15 +653,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             lengthDrawn = 0;
             lastSegmentIndex = 0;
 
-#if !IPHONE
+#if IPHONE
+            int[] textures = new int[1];
+            GL.GenTextures (1, textures);
+            int newtexid = textures[0];
+#else
             int newtexid = GL.GenTexture();
+#endif
             TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
             gl.SetData(newtexid);
             trackTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
 
             spriteSliderBody.Texture = trackTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
-#endif
         }
     }
 
