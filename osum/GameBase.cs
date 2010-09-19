@@ -221,6 +221,9 @@ namespace osum
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
+
+            fpsDisplay = new pSpriteText("", "default", -5, FieldTypes.Standard,OriginTypes.TopRight,ClockTypes.Game,new Vector2(500,0),1,true,Color.Wheat);
+            spriteManager.Add(fpsDisplay);
         }
 
         /// <summary>
@@ -244,6 +247,7 @@ namespace osum
 
         int frameCount;
         double frameTime;
+        pSpriteText fpsDisplay;
 
         /// <summary>
         /// Main update cycle.
@@ -263,6 +267,7 @@ namespace osum
             if (frameTime > 1000)
             {
                 Console.WriteLine(frameCount + " frames in " + frameTime + "ms");
+                fpsDisplay.Text = frameCount.ToString();
                 frameTime = 0;
                 frameCount = 0;
             }
