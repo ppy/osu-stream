@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using osum.Helpers;
 
 namespace osum.Graphics.Sprites
 {
@@ -40,11 +41,46 @@ namespace osum.Graphics.Sprites
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
         }
 
+        internal Queue<pSprite> SpriteQueue;
+        internal void OptimizeTimeline(ClockTypes clock)
+        {
+            if (SpriteQueue == null)
+                SpriteQueue = new Queue<pSprite>();
+
+            List<pSprite> optimizableSprites = Sprites.FindAll(s => s.Transformations.Count > 0 && !s.AlwaysDraw && s.Clocking == clock);
+
+            //sort all sprites in order of first transformation.
+            optimizableSprites.Sort((a, b) => { return a.Transformations[0].StartTime.CompareTo(b.Transformations[0].StartTime); });
+
+            foreach (pSprite p in optimizableSprites)
+            {
+                SpriteQueue.Enqueue(p);
+                Sprites.Remove(p);
+            }
+        }
+
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
         /// </summary>
         internal void Update()
         {
+            if (SpriteQueue != null)
+            {
+                pSprite topSprite = SpriteQueue.Peek();
+                while (topSprite.Transformations[0].StartTime <= Clock.GetTime(topSprite.Clocking))
+                {
+                    Add(SpriteQueue.Dequeue());
+
+                    if (SpriteQueue.Count == 0)
+                    {
+                        //we ran out of sprites in the queue. throw away queue and leave.
+                        SpriteQueue = null;
+                        break;
+                    }
+
+                    topSprite = SpriteQueue.Peek();
+                }
+            }
             for (int i = 0; i < Sprites.Count; i++)
                 Sprites[i].Update();
         }
@@ -55,11 +91,11 @@ namespace osum.Graphics.Sprites
         internal void Draw()
         {
             TextureGl.EnableTexture();
-            
-            foreach(pSprite p in Sprites)
+
+            foreach (pSprite p in Sprites)
                 //todo: consider case updates need to happen even when not visible (ie. animations)
                 if (p.Alpha > 0) p.Draw();
-            
+
             TextureGl.DisableTexture();
         }
 

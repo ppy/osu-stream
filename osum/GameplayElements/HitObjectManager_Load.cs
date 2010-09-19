@@ -475,6 +475,8 @@ namespace osum.GameplayElements
                     }
                 }
             }
+
+            spriteManager.OptimizeTimeline(ClockTypes.Audio);
         }
     }
 }
