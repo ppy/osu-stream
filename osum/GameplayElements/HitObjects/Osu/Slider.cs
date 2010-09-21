@@ -592,12 +592,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             //length we are looking to achieve based on time progress through slider
             double aimLength = PathLength * progress;
 
-            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength) - 1);
-            double lengthAtIndex = cumulativeLengths[index];
+            //index is the index of the line segment that exceeds the required length (so we need to cut it back)
+            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
 
-            //we need to finish off the current position using a bit of the line length
+            double lengthAtIndex = cumulativeLengths[index];
             Line currentLine = drawableSegments[index];
-            TrackingPosition = currentLine.p1 + Vector2.Normalize((currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - (aimLength - lengthAtIndex)));
+
+            //cut back the line to required exact length
+            TrackingPosition = currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(Math.Abs(aimLength - lengthAtIndex));
 
             if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
                 UpdatePathTexture();
