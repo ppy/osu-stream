@@ -245,9 +245,8 @@ namespace osum
         /// </summary>
         protected abstract void InitializeInput();
 
-        int frameCount;
-        double frameTime;
         pSpriteText fpsDisplay;
+        double weightedAverageFrameTime;
 
         /// <summary>
         /// Main update cycle.
@@ -261,22 +260,20 @@ namespace osum
             //todo: make more accurate
             ElapsedMilliseconds = Clock.TimeAccurate - lastTime;
 
-            frameTime += ElapsedMilliseconds;
-            frameCount++;
-
-            if (frameTime > 1000)
-            {
-                Console.WriteLine(frameCount + " frames in " + frameTime + "ms");
-                fpsDisplay.Text = frameCount.ToString();
-                frameTime = 0;
-                frameCount = 0;
-            }
-
+            UpdateFpsOverlay();
+            
             Director.Update();
 
             Components.ForEach(c => c.Update());
 
             spriteManager.Update();
+        }
+
+        private void UpdateFpsOverlay()
+        {
+            weightedAverageFrameTime = weightedAverageFrameTime * 0.95 + ElapsedMilliseconds * 0.05;
+            int fps = (int)(1000/weightedAverageFrameTime);
+            fpsDisplay.Text = fps.ToString();
         }
 
         /// <summary>
