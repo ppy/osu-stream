@@ -103,10 +103,20 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal List<Line> drawableSegments;
 
-        internal pTexture trackTexture;
+        /// <summary>
+        /// The path texture
+        /// </summary>
+        internal pTexture sliderBodyTexture;
 
+        /// <summary>
+        /// How much of the slider (path) we have drawn.
+        /// </summary>
         internal double lengthDrawn;
-        internal int lastSegmentIndex;
+
+        /// <summary>
+        /// The last segment (from drawableSegments) that has been drawn.
+        /// </summary>
+        internal int lastDrawnSegmentIndex;
 
         /// <summary>
         /// Cumulative list of curve lengths up to AND INCLUDING a given DrawableSegment.
@@ -119,10 +129,19 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal Rectangle trackBounds;
         internal Rectangle trackBoundsNative;
 
+        /// <summary>
+        /// Sprites which are stuck to the start position of the slider path.
+        /// </summary>
         private List<pSprite> spriteCollectionStart = new List<pSprite>();
 
+        /// <summary>
+        /// Sprites which are stuck to the end position of the slider path. May be used to hide rendering artifacts.
+        /// </summary>
         private List<pSprite> spriteCollectionEnd = new List<pSprite>();
 
+        /// <summary>
+        /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
+        /// </summary>
         HitCircle hitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
@@ -294,17 +313,41 @@ namespace osum.GameplayElements.HitObjects.Osu
             return ScoreChange.Ignore;
         }
 
+        /// <summary>
+        /// Tracking point associated with the slider.
+        /// </summary>
         TrackingPoint trackingPoint;
-        bool isTracking;
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is tracking.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is tracking; otherwise, <c>false</c>.
+        /// </value>
+        bool isTracking { get { return trackingPoint != null; } }
+
+        /// <summary>
+        /// Number of successfully hit end-points. Includes the start circle.
+        /// </summary>
         int scoringEndpointsHit;
 
+        /// <summary>
+        /// Index of the last end-point to be judged. Used to keep track of judging calculations.
+        /// </summary>
+        int lastJudgedEndpoint;
+
+        /// <summary>
+        /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
+        /// </summary>
+        /// <returns></returns>
         internal override ScoreChange CheckScoring()
         {
             if (!IsActive)
                 return ScoreChange.Ignore;
 
             float radius = DifficultyManager.HitObjectRadius;
+
+            bool wasTracking = isTracking;
 
             if (trackingPoint == null)
             {
@@ -319,7 +362,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                         if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < radius * radius)
                         {
                             trackingPoint = p;
-                            Console.WriteLine("got point");
                             break;
                         }
                     }
@@ -328,38 +370,37 @@ namespace osum.GameplayElements.HitObjects.Osu
             else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(radius * 2, 2))
                 trackingPoint = null;
 
-            if (trackingPoint == null && isTracking)
+            //Check is the state of tracking changed.
+            if (isTracking != wasTracking)
             {
-                //End tracking.
-                isTracking = false;
+                if (!isTracking)
+                {
+                    //End tracking.
+                    spriteFollowCircle.Transformations.Clear();
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.None));
 
-                spriteFollowCircle.Transformations.Clear();
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.None));
-
-            }
-            else if (trackingPoint != null && !isTracking)
-            {
-                //Begin tracking.
-                isTracking = true;
-
-                spriteFollowCircle.Transformations.Clear();
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.6f, 1.05f, Clock.AudioTime, Clock.AudioTime + 230, EasingTypes.InHalf));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 230, Clock.AudioTime + 270, EasingTypes.OutHalf));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 200, EndTime));
-
+                }
+                else
+                {
+                    //Begin tracking.
+                    spriteFollowCircle.Transformations.Clear();
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.6f, 1.05f, Clock.AudioTime, Clock.AudioTime + 230, EasingTypes.InHalf));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 230, Clock.AudioTime + 270, EasingTypes.OutHalf));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.In));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 200, EndTime));
+                }
             }
 
             //Check if we've hit a new endpoint...
             if ((int)progressCurrent != (int)progressLastUpdate)
             {
-                lastScoredEndpoint++;
+                lastJudgedEndpoint++;
 
-                if (RepeatCount - lastScoredEndpoint < 3 && RepeatCount - lastScoredEndpoint > 0)
+                if (RepeatCount - lastJudgedEndpoint < 3 && RepeatCount - lastJudgedEndpoint > 0)
                 {
                     //we can turn off some repeat arrows...
-                    if (lastScoredEndpoint % 2 == 0)
+                    if (lastJudgedEndpoint % 2 == 0)
                         spriteCollectionStart[2].Transformations.Clear();
                     else
                         spriteCollectionEnd[2].Transformations.Clear();
@@ -376,7 +417,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
                         Clock.Time, Clock.Time + DifficultyManager.FadeOut);
 
-                    foreach (pSprite p in lastScoredEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
+                    foreach (pSprite p in lastJudgedEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
                     {
                         //Burst the endpoint we just reached.
                         pSprite clone = p.Clone();
@@ -395,7 +436,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     scoringEndpointsHit++;
                 } 
 
-                if (RepeatCount - lastScoredEndpoint == 0)
+                if (RepeatCount - lastJudgedEndpoint == 0)
                 {
                     //we've hit the end of the slider altogether.
                     spriteFollowBall.RunAnimation = false;
@@ -403,7 +444,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     IsEndHit = true;
 
-                    float amountHit = (float)scoringEndpointsHit / (lastScoredEndpoint + 1);
+                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 1);
                     ScoreChange amount;
 
                     if (amountHit == 1)
@@ -511,12 +552,18 @@ namespace osum.GameplayElements.HitObjects.Osu
         private float endAngle;
 
 
+        /// <summary>
+        /// Floating point progress from the previous update (used during scoring for checking scoring milestones).
+        /// </summary>
         float progressLastUpdate;
+        
+        /// <summary>
+        /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
+        /// </summary>
         float progressCurrent;
-        int lastScoredEndpoint;
 
         /// <summary>
-        /// Updates this instance. Called every frame when loaded as a component.
+        /// Update all elements of the slider which aren't affected by user input.
         /// </summary>
         public override void Update()
         {
@@ -552,7 +599,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
             TrackingPosition = currentLine.p1 + Vector2.Normalize((currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - (aimLength - lengthAtIndex)));
 
-            if (IsVisible && (lengthDrawn < PathLength || trackTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
+            if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
@@ -569,15 +616,22 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal void DisposePathTexture()
         {
-            if (trackTexture != null)
-                trackTexture.Dispose();
-            trackTexture = null;
+            if (sliderBodyTexture != null)
+                sliderBodyTexture.Dispose();
+            sliderBodyTexture = null;
         }
 
+        /// <summary>
+        /// Counter for number of frames skipped since last slider path render.
+        /// </summary>
         int pathTextureUpdateSkippedFrames;
+
+        /// <summary>
+        /// Updates the slider's path texture if required.
+        /// </summary>
         internal void UpdatePathTexture()
         {
-            if (trackTexture == null) // Perform setup to begin drawing the slider track.
+            if (sliderBodyTexture == null) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
             // Snaking animation is IN PROGRESS
@@ -593,21 +647,21 @@ namespace osum.GameplayElements.HitObjects.Osu
                           (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
 
-            while (lastSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastSegmentIndex] < lengthDrawn)
-                lastSegmentIndex++;
+            while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
+                lastDrawnSegmentIndex++;
 
-            if (lastSegmentIndex >= cumulativeLengths.Count)
+            if (lastDrawnSegmentIndex >= cumulativeLengths.Count)
             {
                 lengthDrawn = PathLength;
-                lastSegmentIndex = drawableSegments.Count - 1;
+                lastDrawnSegmentIndex = drawableSegments.Count - 1;
             }
 
             Line prev = null;
             if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
 
-            if (lastSegmentIndex >= FirstSegmentIndex)
+            if (lastDrawnSegmentIndex >= FirstSegmentIndex)
             {
-                List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastSegmentIndex - FirstSegmentIndex + 1);
+                List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
                 Vector2 drawEndPosition = partialDrawable[partialDrawable.Count - 1].p2;
                 spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 
@@ -651,11 +705,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
-                    GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
                     GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
                     GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
-                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackTexture.TextureGl.potWidth, trackTexture.TextureGl.potHeight, 0);
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                     GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -669,15 +723,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 #endif
         }
 
+        /// <summary>
+        /// Creates the texture which will hold the slider's path.
+        /// </summary>
         private void CreatePathTexture()
         {
-            // Allocate the track's texture resources.
             RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
 
             trackBounds.X = (int)(rectf.X);
             trackBounds.Y = (int)(rectf.Y);
-            trackBounds.Width = (int)rectf.Width + 1;// (int)(rectf.Right * GameBase.WindowRatio + 1.0f) - trackBounds.X;
-            trackBounds.Height = (int)rectf.Height + 1;// (int)(rectf.Bottom * GameBase.WindowRatio + 1.0f) - trackBounds.Y;
+            trackBounds.Width = (int)rectf.Width + 1;
+            trackBounds.Height = (int)rectf.Height + 1;
 
             trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
             trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
@@ -685,7 +741,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
 
             lengthDrawn = 0;
-            lastSegmentIndex = 0;
+            lastDrawnSegmentIndex = 0;
 
 #if IPHONE
             int[] textures = new int[1];
@@ -696,9 +752,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 #endif
             TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
             gl.SetData(newtexid);
-            trackTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
+            sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
 
-            spriteSliderBody.Texture = trackTexture;
+            spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
         }
     }
