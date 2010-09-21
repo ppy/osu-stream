@@ -407,6 +407,9 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.StandardSnapBottomCentre:
                         fieldPosition = new Vector2(GameBase.WindowBaseSize.Width / 2 + Position.X, GameBase.WindowBaseSize.Height - Position.Y);
                         break;
+                    case FieldTypes.StandardSnapRight:
+                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, Position.Y);
+                        break;
                     case FieldTypes.Gamefield512x384:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
