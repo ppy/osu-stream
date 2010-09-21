@@ -228,7 +228,7 @@ namespace osum.Graphics.Sprites
                     for (int i = 0; i < renderCoordinates.Count; i++)
                     {
                         // note: no srcRect calculation
-                        renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i], originVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
+                        renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindowBase, originVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
                     }
                 }
             }
