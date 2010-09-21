@@ -139,6 +139,13 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private List<pSprite> spriteCollectionEnd = new List<pSprite>();
 
+        private List<pSprite> spriteCollectionTicks = new List<pSprite>();
+
+        /// <summary>
+        /// The points in progress that ticks are to be placed (based on decimal values 0 - 1).
+        /// </summary>
+        private List<double> scoringPoints = new List<double>();
+
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
         /// </summary>
@@ -181,14 +188,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
                 startTime, startTime);
             Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
-                startTime - DifficultyManager.PreEmpt - DifficultyManager.HitWindow50, startTime - DifficultyManager.PreEmpt);
+                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
             hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, soundType);
 
             spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
-                                   ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 10),
+                                   ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 14),
                                    false, Color.White);
 
             spriteSliderBody.Transform(fadeInTrack);
@@ -212,21 +219,135 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
 
-            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
-            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(SkinManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
             if (repeatCount > 1)
-                spriteCollectionEnd.Add(new pSprite(SkinManager.Load("reversearrow"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White));
+                spriteCollectionEnd.Add(new pSprite(SkinManager.Load("reversearrow"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White));
 
             spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
 
-            SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
-            SpriteCollection.AddRange(spriteCollectionStart);
-            SpriteCollection.AddRange(spriteCollectionEnd);
+            //endpoint angular caltulations
 
             startAngle = (float)Math.Atan2(drawableSegments[0].p1.Y - drawableSegments[0].p2.Y, drawableSegments[0].p1.X - drawableSegments[0].p2.X);
             endAngle = (float)Math.Atan2(drawableSegments[drawableSegments.Count - 1].p1.Y - drawableSegments[drawableSegments.Count - 1].p2.Y,
                                          drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
+
+            //tick calculations
+
+            double distanceBetweenTicks = hitObjectManager.SliderScoringPointDistance;
+
+            double tickCount = pathLength / distanceBetweenTicks;
+            int actualTickCount = (int)tickCount - 1;
+
+            double tickNumber = 0;
+            while (++tickNumber * distanceBetweenTicks < pathLength)
+            {
+                double progress = (tickNumber * distanceBetweenTicks) / pathLength;
+
+                scoringPoints.Add(progress);
+
+                pSprite scoringDot =
+                                    new pSprite(SkinManager.Load("sliderscorepoint"),
+                                                FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
+                                                SpriteManager.drawOrderBwd(StartTime + 13), false, Color.White);
+
+                scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
+                    startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
+                    startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
+
+                spriteCollectionTicks.Add(scoringDot);
+            }
+
+            spriteCollectionTicks.ForEach(s => s.Transform(fadeOut));
+
+            SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
+            SpriteCollection.AddRange(spriteCollectionStart);
+            SpriteCollection.AddRange(spriteCollectionEnd);
+            SpriteCollection.AddRange(spriteCollectionTicks);
+
+
+        }
+
+        private void CalculateSplines()
+        {
+            List<Vector2> smoothPoints;
+
+            switch (CurveType)
+            {
+                case CurveTypes.Bezier:
+                default:
+                    smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
+                    break;
+                case CurveTypes.Catmull:
+                    smoothPoints = pMathHelper.CreateCatmull(controlPoints, 10);
+                    break;
+                case CurveTypes.Linear:
+                    smoothPoints = pMathHelper.CreateLinear(controlPoints, 10);
+                    break;
+            }
+
+            //adjust the line to be of maximum length specified...
+            double currentLength = 0;
+
+            drawableSegments = new List<Line>();
+            cumulativeLengths = new List<double>();
+
+            for (int i = 1; i < smoothPoints.Count; i++)
+            {
+                Line l = new Line(smoothPoints[i], smoothPoints[i - 1]);
+                drawableSegments.Add(l);
+
+                float lineLength = l.rho;
+
+                if (lineLength + currentLength > PathLength)
+                {
+                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1) * (float)(l.rho - (PathLength - currentLength)));
+                    l.Recalc();
+
+                    currentLength += l.rho;
+                    cumulativeLengths.Add(currentLength);
+                    break; //we are done.
+                }
+
+                currentLength += l.rho;
+                cumulativeLengths.Add(currentLength);
+            }
+
+            PathLength = currentLength;
+            EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);
+        }
+
+        /// <summary>
+        /// Find the extreme values of the given curve in the form of a box.
+        /// </summary>
+        private static RectangleF FindBoundingBox(List<Line> curve, float radius)
+        {
+            // TODO: FIX this to use SCREEN coordinates instead of osupixels.
+
+            if (curve.Count == 0) throw new ArgumentException("Curve must have at least one segment.");
+
+            float Left = (int)curve[0].p1.X;
+            float Top = (int)curve[0].p1.Y;
+            float Right = (int)curve[0].p1.X;
+            float Bottom = (int)curve[0].p1.Y;
+
+            foreach (Line l in curve)
+            {
+                Left = Math.Min(Left, l.p1.X - radius);
+                Left = Math.Min(Left, l.p2.X - radius);
+
+                Top = Math.Min(Top, l.p1.Y - radius);
+                Top = Math.Min(Top, l.p2.Y - radius);
+
+                Right = Math.Max(Right, l.p1.X + radius);
+                Right = Math.Max(Right, l.p2.X + radius);
+
+                Bottom = Math.Max(Bottom, l.p1.Y + radius);
+                Bottom = Math.Max(Bottom, l.p2.Y + radius);
+            }
+
+            return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
         }
 
         internal override bool IsVisible
@@ -466,91 +587,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             return ScoreChange.Ignore;
         }
 
-        private void CalculateSplines()
-        {
-            List<Vector2> smoothPoints;
-
-            switch (CurveType)
-            {
-                case CurveTypes.Bezier:
-                default:
-                    smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
-                    break;
-                case CurveTypes.Catmull:
-                    smoothPoints = pMathHelper.CreateCatmull(controlPoints, 10);
-                    break;
-                case CurveTypes.Linear:
-                    smoothPoints = pMathHelper.CreateLinear(controlPoints, 10);
-                    break;
-            }
-
-            //adjust the line to be of maximum length specified...
-            double currentLength = 0;
-
-            drawableSegments = new List<Line>();
-            cumulativeLengths = new List<double>();
-
-            for (int i = 1; i < smoothPoints.Count; i++)
-            {
-                Line l = new Line(smoothPoints[i], smoothPoints[i - 1]);
-                drawableSegments.Add(l);
-
-                float lineLength = l.rho;
-
-                if (lineLength + currentLength > PathLength)
-                {
-                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1) * (float)(l.rho - (PathLength - currentLength)));
-                    l.Recalc();
-
-                    currentLength += l.rho;
-                    cumulativeLengths.Add(currentLength);
-                    break; //we are done.
-                }
-
-                currentLength += l.rho;
-                cumulativeLengths.Add(currentLength);
-            }
-
-            PathLength = currentLength;
-            EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);
-        }
-
-        /// <summary>
-        /// Find the extreme values of the given curve in the form of a box.
-        /// </summary>
-        private static RectangleF FindBoundingBox(List<Line> curve, float radius)
-        {
-            // TODO: FIX this to use SCREEN coordinates instead of osupixels.
-
-            if (curve.Count == 0) throw new ArgumentException("Curve must have at least one segment.");
-
-            float Left = (int)curve[0].p1.X;
-            float Top = (int)curve[0].p1.Y;
-            float Right = (int)curve[0].p1.X;
-            float Bottom = (int)curve[0].p1.Y;
-
-            foreach (Line l in curve)
-            {
-                Left = Math.Min(Left, l.p1.X - radius);
-                Left = Math.Min(Left, l.p2.X - radius);
-
-                Top = Math.Min(Top, l.p1.Y - radius);
-                Top = Math.Min(Top, l.p2.Y - radius);
-
-                Right = Math.Max(Right, l.p1.X + radius);
-                Right = Math.Max(Right, l.p2.X + radius);
-
-                Bottom = Math.Max(Bottom, l.p1.Y + radius);
-                Bottom = Math.Max(Bottom, l.p2.Y + radius);
-            }
-
-            return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
-        }
-
         internal Vector2 TrackingPosition;
         private float startAngle;
         private float endAngle;
-
 
         /// <summary>
         /// Floating point progress from the previous update (used during scoring for checking scoring milestones).
@@ -561,6 +600,20 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
         /// </summary>
         float progressCurrent;
+
+        private Vector2 positionAtProgress(double progress)
+        {
+            double aimLength = PathLength * progress;
+
+            //index is the index of the line segment that exceeds the required length (so we need to cut it back)
+            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
+
+            double lengthAtIndex = cumulativeLengths[index];
+            Line currentLine = drawableSegments[index];
+
+            //cut back the line to required exact length
+            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(Math.Abs(aimLength - lengthAtIndex));
+        }
 
         /// <summary>
         /// Update all elements of the slider which aren't affected by user input.
