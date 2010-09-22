@@ -268,5 +268,15 @@ namespace osum.Graphics.Sprites
 
             return t;
         }
+
+        /// <summary>
+        /// Offsets the transformation by the specified amount.
+        /// </summary>
+        /// <param name="amount">Number of milliseconds to offset by.</param>
+        internal void Offset(int amount)
+        {
+            EndTime += amount;
+            StartTime += amount;
+        }
     }
 }

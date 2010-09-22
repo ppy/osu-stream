@@ -383,6 +383,11 @@ namespace osum.GameplayElements
 
         internal virtual void PlaySound()
         {
+            PlaySound(SoundType);
+        }
+
+        internal virtual void PlaySound(HitObjectSoundType type)
+        {
 
             //HitObjectManager.OnHitSound(SoundType);
 

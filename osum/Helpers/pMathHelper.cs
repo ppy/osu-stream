@@ -117,7 +117,7 @@ namespace osum.Helpers
         {
             List<Vector2> output = new List<Vector2>();
 
-            for (int i = 0; i < controlPoints.Count; i++)
+            for (int i = 1; i < controlPoints.Count; i++)
             {
                 Line l = new Line(controlPoints[i - 1], controlPoints[i]);
                 int segments = (int)(l.rho / detailLevel);

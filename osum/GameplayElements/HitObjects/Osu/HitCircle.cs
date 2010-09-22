@@ -40,7 +40,6 @@ namespace osum.GameplayElements
                 new pAnimation(SkinManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
-            SpriteHitCircle2.frameSkip = 30;
             SpriteCollection.Add(SpriteHitCircle2);
             DimCollection.Add(SpriteHitCircle2);
             SpriteHitCircleText = new pSpriteText("1", "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 

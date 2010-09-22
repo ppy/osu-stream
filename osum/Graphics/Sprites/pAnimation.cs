@@ -17,7 +17,22 @@ namespace osum.Graphics.Sprites
         private double currentFrameSkip;
         public int[] CustomSequence;
         public bool DrawDimensionsManualOverride;
-        internal double frameSkip;
+        
+        internal double FrameDelay = 1000/60f;
+
+        internal double FramesPerSecond
+        {
+            get
+            {
+                return 1000 / FrameDelay;
+            }
+
+            set
+            {
+                FrameDelay = 1000.0 / value;
+            }
+        }
+
         public LoopTypes LoopType;
         internal bool RunAnimation = true;
 
@@ -81,12 +96,9 @@ namespace osum.Graphics.Sprites
         }
 
         int lastFrame;
-        double lastFrameTime;
-        bool firstFrame = true;
 
         private void resetAnimation()
         {
-            firstFrame = true;
             currentFrame = 0;
         }
 
@@ -102,10 +114,11 @@ namespace osum.Graphics.Sprites
             base.Draw();
         }
 
+        double timeSinceLastFrame;
+
         internal void UpdateFrame()
         {
             if ((!RunAnimation && lastFrame == currentFrame))
-            // || !GameBase.SixtyFramesPerSecondFrame || (Clocking == ClockTypes.Audio && AudioEngine.AudioState == AudioStates.Stopped))
                 return;
 
             if (TextureCount < 2)
@@ -113,62 +126,13 @@ namespace osum.Graphics.Sprites
 
             double spriteTime = Clock.GetTime(Clocking);
 
-            /*if (Transformations.Count > 0 && Transformations[0].StartTime > spriteTime)
+            timeSinceLastFrame += GameBase.ElapsedMilliseconds;
+
+            if (timeSinceLastFrame > FrameDelay)
             {
-                resetAnimation();
-
-                return;
-            }*/
-
-
-            if (firstFrame)
-            {
-                firstFrame = false;
-                if (Transformations.Count > 0)
-                    lastFrameTime = Transformations[0].StartTime;
-            }
-
-            double elapsed = spriteTime - lastFrameTime;
-
-            currentFrameSkip = currentFrameSkip + elapsed / Constants.SIXTY_FRAME_TIME;
-
-            lastFrameTime = spriteTime;
-
-            if (frameSkip > 0)
-            {
-                if (elapsed < 0)
-                {
-                    //reverse seek occurred..
-                    while (currentFrameSkip < 0)
-                    {
-                        currentFrameSkip += frameSkip;
-
-                        //rewind~
-                        increaseCurrentFrame(true);
-
-                    }
-                }
-                else if (elapsed > 200)
-                {
-                    //forwards seek occurred...
-
-                    while (currentFrameSkip > 20)
-                    {
-                        currentFrameSkip -= frameSkip;
-
-                        increaseCurrentFrame(false);
-                    }
-                }
-            }
-
-
-            if (currentFrameSkip > frameSkip)
-            {
-                currentFrameSkip -= frameSkip;
-
                 increaseCurrentFrame(false);
+                timeSinceLastFrame = 0;
             }
-
 
             if (lastFrame != currentFrame)
             {
@@ -206,7 +170,7 @@ namespace osum.Graphics.Sprites
         internal void SetFramerateFromSkin()
         {
             return;
-            
+
             /*
             if (SkinManager.Current == null || textureArray == null) return;
 
@@ -220,15 +184,11 @@ namespace osum.Graphics.Sprites
         public override pSprite Clone()
         {
             pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
-            clone.frameSkip = frameSkip;
+            clone.FrameDelay = FrameDelay;
+
             foreach (Transformation t in Transformations)
                 clone.Transform(t.Clone());
             return clone;
-        }
-
-        internal void SetFrameDelay(float p)
-        {
-            frameSkip = p / (100 / 6f);
         }
 
         public bool hasCustomSequence { get { return CustomSequence != null; } }

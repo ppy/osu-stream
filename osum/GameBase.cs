@@ -222,7 +222,8 @@ namespace osum
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
 
-            fpsDisplay = new pSpriteText("", "default", -5, FieldTypes.Standard,OriginTypes.TopRight,ClockTypes.Game,new Vector2(500,0),1,true,Color.Wheat);
+            fpsDisplay = new pSpriteText("", "default", -5, FieldTypes.StandardSnapRight,OriginTypes.TopRight,ClockTypes.Game,new Vector2(5,0),1,true,Color.White);
+            fpsDisplay.ScaleScalar = 0.6f;
             spriteManager.Add(fpsDisplay);
         }
 
@@ -245,9 +246,8 @@ namespace osum
         /// </summary>
         protected abstract void InitializeInput();
 
-        int frameCount;
-        double frameTime;
         pSpriteText fpsDisplay;
+        double weightedAverageFrameTime;
 
         /// <summary>
         /// Main update cycle.
@@ -261,22 +261,24 @@ namespace osum
             //todo: make more accurate
             ElapsedMilliseconds = Clock.TimeAccurate - lastTime;
 
-            frameTime += ElapsedMilliseconds;
-            frameCount++;
-
-            if (frameTime > 1000)
-            {
-                Console.WriteLine(frameCount + " frames in " + frameTime + "ms");
-                fpsDisplay.Text = frameCount.ToString();
-                frameTime = 0;
-                frameCount = 0;
-            }
-
+            UpdateFpsOverlay();
+            
             Director.Update();
 
             Components.ForEach(c => c.Update());
 
             spriteManager.Update();
+        }
+
+        private void UpdateFpsOverlay()
+        {
+            weightedAverageFrameTime = weightedAverageFrameTime * 0.95 + ElapsedMilliseconds * 0.05;
+            double fps = (1000/weightedAverageFrameTime);
+
+            if (Clock.Time < 1000) return;
+
+            fpsDisplay.Colour = fps < 59.8 ? Color.OrangeRed : Color.GreenYellow;
+            fpsDisplay.Text = String.Format("{0:0.0}", fps);
         }
 
         /// <summary>

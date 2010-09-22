@@ -38,13 +38,14 @@ using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
 using osum.Helpers;
+using osu_common.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
 {
     internal class pSprite : IDrawable, IDisposable
     {
-        protected List<Transformation> transformations;
+        protected pList<Transformation> transformations;
 
         internal Vector2 StartPosition;
 
@@ -78,6 +79,11 @@ namespace osum.Graphics.Sprites
         public object Tag;
         public int TagNumeric;
 
+        /// <summary>
+        /// Determines whether the sprite automatically remove past transformations.
+        /// </summary>
+        internal bool RemoveOldTransformations = true;
+
         internal virtual pTexture Texture
         {
             get { return texture; }
@@ -101,14 +107,14 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
         /// </summary>
-        public List<Transformation> Transformations
+        public pList<Transformation> Transformations
         {
             get { return transformations; }
         }
 
         internal pSprite(pTexture texture, FieldTypes field, OriginTypes origin, ClockTypes clocking, Vector2 position, float depth, bool alwaysDraw, Color4 colour)
         {
-            this.transformations = new List<Transformation>();
+            this.transformations = new pList<Transformation>();
 
             this.Field = field;
             this.Origin = origin;
@@ -183,7 +189,8 @@ namespace osum.Graphics.Sprites
         internal void Transform(Transformation transform)
         {
             transform.Clocking = this.Clocking;
-            Transformations.Add(transform);
+
+            Transformations.AddInPlace(transform);
         }
 
         internal void Transform(IEnumerable<Transformation> transforms)
@@ -258,7 +265,8 @@ namespace osum.Graphics.Sprites
                             break;
                     }
 
-                    transformations.RemoveAt(i);
+                    if (RemoveOldTransformations)
+                        transformations.RemoveAt(i);
                     continue;
                 }
 
@@ -406,6 +414,9 @@ namespace osum.Graphics.Sprites
                         break;
                     case FieldTypes.StandardSnapBottomCentre:
                         fieldPosition = new Vector2(GameBase.WindowBaseSize.Width / 2 + Position.X, GameBase.WindowBaseSize.Height - Position.Y);
+                        break;
+                    case FieldTypes.StandardSnapRight:
+                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, Position.Y);
                         break;
                     case FieldTypes.Gamefield512x384:
                         fieldPosition = Position;
