@@ -139,7 +139,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private List<pSprite> spriteCollectionEnd = new List<pSprite>();
 
-        private List<pSprite> spriteCollectionTicks = new List<pSprite>();
+        private List<pSprite> spriteCollectionScoringPoints = new List<pSprite>();
 
         /// <summary>
         /// The points in progress that ticks are to be placed (based on decimal values 0 - 1).
@@ -256,17 +256,15 @@ namespace osum.GameplayElements.HitObjects.Osu
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
 
-                spriteCollectionTicks.Add(scoringDot);
+                spriteCollectionScoringPoints.Add(scoringDot);
             }
 
-            spriteCollectionTicks.ForEach(s => s.Transform(fadeOut));
+            spriteCollectionScoringPoints.ForEach(s => s.Transform(fadeOut));
 
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
             SpriteCollection.AddRange(spriteCollectionStart);
             SpriteCollection.AddRange(spriteCollectionEnd);
-            SpriteCollection.AddRange(spriteCollectionTicks);
-
-
+            SpriteCollection.AddRange(spriteCollectionScoringPoints);
         }
 
         private void CalculateSplines()
@@ -463,10 +461,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <returns></returns>
         internal override ScoreChange CheckScoring()
         {
-            if (!IsActive)
+            if (!IsActive) //would be unnecessary to do anything at this point.
                 return ScoreChange.Ignore;
-
-            float radius = DifficultyManager.HitObjectRadius;
 
             bool wasTracking = isTracking;
 
@@ -480,7 +476,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     //check each tracking point to find if any are usable
                     foreach (TrackingPoint p in InputManager.TrackingPoints)
                     {
-                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < radius * radius)
+                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
                         {
                             trackingPoint = p;
                             break;
@@ -488,7 +484,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     }
                 }
             }
-            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(radius * 2, 2))
+            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadius * 2, 2))
                 trackingPoint = null;
 
             //Check is the state of tracking changed.
@@ -581,7 +577,48 @@ namespace osum.GameplayElements.HitObjects.Osu
                     return amount; //actual judging
                 }
 
+                lastJudgedScoringPoint = -1;
+
                 return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissHpOnly;
+            }
+            else
+            {
+                //Check if we've hit a new scoringpoint...
+
+                int judgePointNormalized = isReversing ? scoringPoints.Count - 1 - (lastJudgedScoringPoint + 1) : lastJudgedScoringPoint + 1;
+
+                if (lastJudgedScoringPoint < scoringPoints.Count - 1 &&
+                    (
+                        (isReversing && normalizeProgress(progressCurrent) < scoringPoints[judgePointNormalized]) ||
+                        (!isReversing && normalizeProgress(progressCurrent) > scoringPoints[judgePointNormalized])
+                    )
+                   )
+                {
+                    lastJudgedScoringPoint++;
+
+                    if (isTracking)
+                    {
+                        pSprite point = spriteCollectionScoringPoints[judgePointNormalized];
+                        
+                        point.Alpha = 0;
+
+                        if (RepeatCount > progressCurrent + 1)
+                        {
+                            //we still have more repeats to go.
+                            int nextRepeatStartTime = (int)(StartTime + (EndTime - StartTime) * (((int)progressCurrent + 1) / (float)RepeatCount));
+
+                            spriteCollectionScoringPoints[judgePointNormalized].Transform(
+                                new Transformation(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100,nextRepeatStartTime));
+                        }
+                        else
+                        {
+                            //done with the point for good.
+                            point.Transformations.Clear();
+                        }
+
+                        return ScoreChange.SliderTick;
+                    }
+                }
             }
 
             return ScoreChange.Ignore;
@@ -682,6 +719,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// Counter for number of frames skipped since last slider path render.
         /// </summary>
         int pathTextureUpdateSkippedFrames;
+        private int lastJudgedScoringPoint = -1;
 
         /// <summary>
         /// Updates the slider's path texture if required.
