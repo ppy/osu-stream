@@ -250,7 +250,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 pSprite scoringDot =
                                     new pSprite(SkinManager.Load("sliderscorepoint"),
                                                 FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
-                                                SpriteManager.drawOrderBwd(StartTime + 13), false, Color.White);
+                                                SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
@@ -555,7 +555,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     }
 
                     scoringEndpointsHit++;
-                } 
+                }
 
                 if (RepeatCount - lastJudgedEndpoint == 0)
                 {
@@ -595,14 +595,26 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// Floating point progress from the previous update (used during scoring for checking scoring milestones).
         /// </summary>
         float progressLastUpdate;
-        
+
         /// <summary>
         /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
         /// </summary>
         float progressCurrent;
 
+        private double normalizeProgress(double progress)
+        {
+            while (progress > 2)
+                progress -= 2;
+            if (progress > 1)
+                progress = 2 - progress;
+
+            return progress;
+        }
+
         private Vector2 positionAtProgress(double progress)
         {
+            progress = normalizeProgress(progress);
+
             double aimLength = PathLength * progress;
 
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
@@ -615,6 +627,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(Math.Abs(aimLength - lengthAtIndex));
         }
 
+        bool isReversing { get { return progressCurrent % 2 >= 1; } }
+
         /// <summary>
         /// Update all elements of the slider which aren't affected by user input.
         /// </summary>
@@ -624,26 +638,14 @@ namespace osum.GameplayElements.HitObjects.Osu
                 return;
 
             progressLastUpdate = progressCurrent;
+            progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
 
-            float progress = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
-            progressCurrent = progress;
+            spriteFollowBall.Reverse = isReversing;
 
-            bool backwards = false;
-
-
-            while (progress > 1)
-            {
-                backwards = !backwards;
-                progress -= 1;
-            }
-
-            if (backwards)
-                progress = 1 - progress;
-
-            spriteFollowBall.Reverse = backwards;
+            double progressNormalized = normalizeProgress(progressCurrent);
 
             //length we are looking to achieve based on time progress through slider
-            double aimLength = PathLength * progress;
+            double aimLength = PathLength * progressNormalized;
 
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
             int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
@@ -652,7 +654,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
 
             //cut back the line to required exact length
-            TrackingPosition = currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(Math.Abs(aimLength - lengthAtIndex));
+            TrackingPosition = positionAtProgress(progressNormalized);
 
             if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
                 UpdatePathTexture();
@@ -774,7 +776,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GameBase.Instance.SetViewport();
 
                     GL.PopMatrix();
-               }
+                }
             }
 #endif
         }
