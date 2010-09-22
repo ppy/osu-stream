@@ -6,19 +6,19 @@ using OpenTK.Graphics.OpenGL;
 
 namespace osum
 {
-	public class GameBaseDesktop : GameBase
-	{
+    public class GameBaseDesktop : GameBase
+    {
         GameWindowDesktop gameWindow;
 
         public GameBaseDesktop()
-		{
-		}
-		
-		override public void MainLoop()
-		{
-			gameWindow = new GameWindowDesktop();
+        {
+        }
+        
+        override public void MainLoop()
+        {
+            gameWindow = new GameWindowDesktop();
             gameWindow.Run();
-		}
+        }
 
         protected override IBackgroundAudioPlayer InitializeBackgroundAudio()
         {
