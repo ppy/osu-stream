@@ -10,8 +10,8 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using Color = OpenTK.Graphics.Color4;
 using osum;
-
 using OpenTK;
+
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -717,7 +717,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lastDrawnSegmentIndex >= FirstSegmentIndex)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
-                Vector2 drawEndPosition = partialDrawable[partialDrawable.Count - 1].p2;
+
+                Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
                 spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 
                 if (pathTextureUpdateSkippedFrames++ % 3 == 0 || lengthDrawn == PathLength)
