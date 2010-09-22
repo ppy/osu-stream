@@ -12,7 +12,9 @@ namespace osum.Audio
         HitWhistle,
         HitClap,
         HitFinish,
-        MenuHit
+        MenuHit,
+        SliderTick,
+        SliderSlide
     }
 
     internal static class AudioEngine
@@ -34,7 +36,7 @@ namespace osum.Audio
             Music = music;
         }
 
-        internal static void PlaySample(OsuSamples sample)
+        internal static int PlaySample(OsuSamples sample)
         {
             int buffer;
 
@@ -54,12 +56,18 @@ namespace osum.Audio
                 case OsuSamples.HitWhistle:
                     filename = "normal-hitwhistle";
                     break;
+                case OsuSamples.SliderTick:
+                    filename = "normal-slidertick";
+                    break;
+                case OsuSamples.SliderSlide:
+                    filename = "normal-sliderslider";
+                    break;
                 case OsuSamples.MenuHit:
                     filename = "menuhit";
                     break;
             }
 
-            if (filename == null) return;
+            if (filename == null) return -1;
 
             if (!loadedSamples.TryGetValue(sample, out buffer))
             {
@@ -67,7 +75,7 @@ namespace osum.Audio
                 loadedSamples.Add(sample, buffer);
             }
 
-            AudioEngine.Effect.PlayBuffer(buffer);
+            return AudioEngine.Effect.PlayBuffer(buffer);
         }
     }
 }

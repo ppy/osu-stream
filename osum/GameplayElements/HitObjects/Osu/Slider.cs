@@ -49,6 +49,7 @@ using osum.Input;
 using osum.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Drawing;
+using osum.Audio;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
@@ -525,6 +526,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (isTracking)
                 {
+                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint - 1] : SoundType);
+                    
                     Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
                         Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
 
@@ -598,6 +601,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     if (isTracking)
                     {
+                        AudioEngine.PlaySample(OsuSamples.SliderTick);
+
                         pSprite point = spriteCollectionScoringPoints[judgePointNormalized];
                         
                         point.Alpha = 0;
