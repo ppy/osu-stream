@@ -168,6 +168,7 @@
     <Compile Include="GameModes\Play\Components\HealthBar.cs" />
     <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
     <Compile Include="GameModes\GameComponent.cs" />
+    <Compile Include="Helpers\pList.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -690,5 +691,7 @@
     <Content Include="Skins\Default\sliderb-8.png" />
     <Content Include="Skins\Default\sliderb-9.png" />
     <Content Include="Skins\Default\menuhit.wav" />
+    <Content Include="Skins\Default\normal-sliderslide.wav" />
+    <Content Include="Skins\Default\normal-slidertick.wav" />
   </ItemGroup>
 </Project>

@@ -750,7 +750,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
                 lastDrawnSegmentIndex++;
 
-            if (lastDrawnSegmentIndex >= cumulativeLengths.Count)
+            if (true || lastDrawnSegmentIndex >= cumulativeLengths.Count)
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
@@ -784,12 +784,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
-                    GL.BindTexture(TextureGl.SURFACE_TYPE, trackTexture.TextureGl.Id);
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
 
                     GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
                     GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
 
-                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, trackTexture.TextureGl.potWidth, trackTexture.TextureGl.potHeight, 0);
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                     GL.Clear((int)ClearBufferMask.ColorBufferBit);
