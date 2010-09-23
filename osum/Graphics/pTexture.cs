@@ -213,7 +213,8 @@ namespace osum.Graphics
             try
             {
 #if IPHONE
-				return FromUIImage(UIImage.FromFile(filename),filename);
+				using (UIImage image = UIImage.FromFile(filename))
+                    return FromUIImage(image,filename);
 #endif
 
                 using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
