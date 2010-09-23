@@ -112,7 +112,9 @@ namespace osum.Graphics
         		Console.WriteLine ("GL Error: " + error);
         	}
         }
-		
+
+        static int lastDrawTexture;
+
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
@@ -160,7 +162,11 @@ namespace osum.Graphics
 							drawWidth, drawHeight, 0,
 							0, drawHeight, 0 };
 
-			GL.BindTexture(TextureTarget.Texture2D, Id);
+            if (lastDrawTexture != Id)
+            {
+                lastDrawTexture = Id;
+                GL.BindTexture(TextureTarget.Texture2D, Id);
+            }
 						
 			GL.VertexPointer(3, All.Float, 0, vertices);
 			GL.TexCoordPointer(2, All.Float, 0, coordinates);
