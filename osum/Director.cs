@@ -1,6 +1,7 @@
 using System;
 using osum.GameModes;
 using osum.Graphics.Sprites;
+using osum.Graphics.Skins;
 
 namespace osum
 {
@@ -72,6 +73,8 @@ namespace osum
             {
                 if (CurrentMode != null)
                     CurrentMode.Dispose();
+
+                SkinManager.UnloadAll();
 
                 CurrentMode = mode;
                 CurrentMode.Initialize();
