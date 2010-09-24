@@ -6,6 +6,10 @@ using System.Text;
 
 namespace osum.Graphics.Skins
 {
+    /// <summary>
+    /// Handle the loading of textures from various sources.
+    /// Caching, reuse, unloading and everything else.
+    /// </summary>
     internal static partial class TextureManager
     {
 		
@@ -42,7 +46,7 @@ namespace osum.Graphics.Skins
             return null;
         }
 
-        internal static pTexture[] LoadAll(string name)
+        internal static pTexture[] LoadAnimation(string name)
         {
             pTexture[] textures;
             pTexture texture;
@@ -85,5 +89,12 @@ namespace osum.Graphics.Skins
 
             return null;
         }
+    }
+
+    internal enum TextureSource
+    {
+        Game,
+        Skin,
+        Beatmap
     }
 }

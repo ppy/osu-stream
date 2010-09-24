@@ -37,7 +37,7 @@ namespace osum.GameplayElements
 
 
             SpriteHitCircle2 =
-                new pAnimation(TextureManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
+                new pAnimation(TextureManager.LoadAnimation(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             SpriteCollection.Add(SpriteHitCircle2);

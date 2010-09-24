@@ -221,7 +221,7 @@ namespace osum.GameplayElements.Scoring
         internal override void Initialize()
         {
             s_barFill =
-    new pAnimation(TextureManager.LoadAll("scorebar-colour"), FieldTypes.Standard, OriginTypes.TopLeft,
+    new pAnimation(TextureManager.LoadAnimation("scorebar-colour"), FieldTypes.Standard, OriginTypes.TopLeft,
                    ClockTypes.Game, new Vector2(3, 10), 0.965F, true, Color4.White);
             s_barFill.SetFramerateFromSkin();
             s_barFill.DrawDimensionsManualOverride = true;

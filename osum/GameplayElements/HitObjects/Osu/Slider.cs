@@ -174,11 +174,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             Type = HitObjectType.Slider;
 
             spriteFollowCircle =
-                new pAnimation(TextureManager.LoadAll("sliderfollowcircle"), FieldTypes.Gamefield512x384,
+                new pAnimation(TextureManager.LoadAnimation("sliderfollowcircle"), FieldTypes.Gamefield512x384,
                                OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
             spriteFollowCircle.SetFramerateFromSkin();
 
-            pTexture[] sliderballtextures = TextureManager.LoadAll("sliderb");
+            pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.Gamefield512x384, OriginTypes.Centre,
