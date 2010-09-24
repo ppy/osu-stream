@@ -72,7 +72,7 @@ namespace osum.Graphics.Sprites
         internal int Width { get { return texture != null ? texture.Width : 0; } }
         internal int Height { get { return texture != null ? texture.Height : 0; } }
 
-        internal float ScaleScalar { set { Scale = new Vector2(value, value); } }
+        internal float ScaleScalar { get { return Scale.X; } set { Scale = new Vector2(value, value); } }
 
         internal float Alpha;
 

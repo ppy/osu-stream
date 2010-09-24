@@ -276,7 +276,26 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 case CurveTypes.Bezier:
                 default:
-                    smoothPoints = pMathHelper.CreateBezier(controlPoints, 10);
+                    smoothPoints = new List<Vector2>();
+
+                    int lastIndex = 0;
+
+                    for (int i = 0; i < controlPoints.Count; i++)
+                    {
+                        bool multipartSegment = i < controlPoints.Count - 2 && controlPoints[i] == controlPoints[i + 1];
+
+                        if (multipartSegment || i == controlPoints.Count - 1)
+                        {
+                            List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
+
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(controlPoints, 10));
+
+                            if (multipartSegment) i++;
+                            //Need to skip one point since we consuned an extra.
+
+                            lastIndex = i;
+                        }
+                    }
                     break;
                 case CurveTypes.Catmull:
                     smoothPoints = pMathHelper.CreateCatmull(controlPoints, 10);
@@ -527,7 +546,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 if (isTracking)
                 {
                     PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint - 1] : SoundType);
-                    
+
                     Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
                         Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
 
@@ -604,8 +623,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                         AudioEngine.PlaySample(OsuSamples.SliderTick);
 
                         pSprite point = spriteCollectionScoringPoints[judgePointNormalized];
-                        
+
                         point.Alpha = 0;
+
+                        spriteFollowCircle.Transformations.RemoveAll(t => t.Type == TransformationType.Scale);
+                        spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime, Clock.AudioTime + 50, EasingTypes.OutHalf));
 
                         if (RepeatCount > progressCurrent + 1)
                         {
@@ -613,7 +635,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                             int nextRepeatStartTime = (int)(StartTime + (EndTime - StartTime) * (((int)progressCurrent + 1) / (float)RepeatCount));
 
                             spriteCollectionScoringPoints[judgePointNormalized].Transform(
-                                new Transformation(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100,nextRepeatStartTime));
+                                new Transformation(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
                         }
                         else
                         {
@@ -750,7 +772,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
                 lastDrawnSegmentIndex++;
 
-            if (true || lastDrawnSegmentIndex >= cumulativeLengths.Count)
+            if (lastDrawnSegmentIndex >= cumulativeLengths.Count)
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;

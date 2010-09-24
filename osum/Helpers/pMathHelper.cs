@@ -55,14 +55,14 @@ namespace osum.Helpers
             //todo: make detail based on line length rather than point count?
             int points = detailLevel * count;
 
-            for (int iteration = 0; iteration < points; iteration++)
+            for (int i = 0; i < points; i++)
             {
-                for (int i = 0; i < count; i++)
-                    working[i] = input[i];
+                for (int j = 0; j < count; j++)
+                    working[j] = input[j];
 
                 for (int level = 0; level < count; level++)
-                    for (int i = 0; i < count - level - 1; i++)
-                        Vector2.Lerp(ref working[i], ref working[i + 1], (float)iteration / points, out working[i]);
+                    for (int j = 0; j < count - level - 1; j++)
+                        Vector2.Lerp(ref working[j], ref working[j + 1], (float)i / points, out working[j]);
                 output.Add(working[0]);
             }
 
