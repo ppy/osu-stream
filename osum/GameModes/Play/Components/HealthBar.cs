@@ -221,21 +221,21 @@ namespace osum.GameplayElements.Scoring
         internal override void Initialize()
         {
             s_barFill =
-    new pAnimation(SkinManager.LoadAll("scorebar-colour"), FieldTypes.Standard, OriginTypes.TopLeft,
+    new pAnimation(TextureManager.LoadAll("scorebar-colour"), FieldTypes.Standard, OriginTypes.TopLeft,
                    ClockTypes.Game, new Vector2(3, 10), 0.965F, true, Color4.White);
             s_barFill.SetFramerateFromSkin();
             s_barFill.DrawDimensionsManualOverride = true;
 
 
-            t_kiNormal = SkinManager.Load("scorebar-ki");
-            t_kiDanger = SkinManager.Load("scorebar-kidanger");
-            t_kiDanger2 = SkinManager.Load("scorebar-kidanger2");
+            t_kiNormal = TextureManager.Load("scorebar-ki");
+            t_kiDanger = TextureManager.Load("scorebar-kidanger");
+            t_kiDanger2 = TextureManager.Load("scorebar-kidanger2");
 
             s_kiIcon =
                 new pSprite(t_kiNormal, FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
                             new Vector2(0, 10), 0.97F, true, Color4.White);
 
-            s_barBg = new pSprite(SkinManager.Load("scorebar-bg"), FieldTypes.Standard, OriginTypes.TopLeft,
+            s_barBg = new pSprite(TextureManager.Load("scorebar-bg"), FieldTypes.Standard, OriginTypes.TopLeft,
                                     ClockTypes.Game,
                                     Vector2.Zero, 0.96F, true, Color4.White);
 

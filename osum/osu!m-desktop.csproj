@@ -68,6 +68,7 @@
     <Compile Include="Graphics\Renderers\SliderTrackRendererDesktop.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="Graphics\TextureManager.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Helpers\Delegates.cs" />
     <Compile Include="Graphics\pTexture.cs" />
     <Compile Include="Graphics\TextureGl.cs" />
-    <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
     <Compile Include="Support\FadeTransition.cs" />
     <Compile Include="Support\IDrawable.cs" />

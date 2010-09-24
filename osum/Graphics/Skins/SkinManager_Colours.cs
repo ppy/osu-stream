@@ -6,7 +6,7 @@ using OpenTK.Graphics;
 
 namespace osum.Graphics.Skins
 {
-    internal static partial class SkinManager
+    internal static partial class TextureManager
     {
         internal static Color4[] DefaultColours = new[]
                                                      {

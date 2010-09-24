@@ -270,7 +270,7 @@ namespace osum.Graphics.Renderers
 
             // Automatically calculate some lighter/darker shades to use for the slider track.
             // In the long-term, I'd like these colours to be made skinnable.
-            foreach (Color col in SkinManager.DefaultColours)
+            foreach (Color col in TextureManager.DefaultColours)
             {
                 Color Inner, Outer;
                 ComputeSliderColour(col, out Inner, out Outer);

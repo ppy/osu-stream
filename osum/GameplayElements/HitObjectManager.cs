@@ -91,7 +91,7 @@ namespace osum.GameplayElements
             if (h.NewCombo)
             {
                 currentComboNumber = 1;
-                colourIndex = (colourIndex + 1) % SkinManager.DefaultColours.Length;
+                colourIndex = (colourIndex + 1) % TextureManager.DefaultColours.Length;
             }
 
             h.ComboNumber = currentComboNumber++;

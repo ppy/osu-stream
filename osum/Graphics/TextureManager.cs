@@ -6,7 +6,7 @@ using System.Text;
 
 namespace osum.Graphics.Skins
 {
-    internal static partial class SkinManager
+    internal static partial class TextureManager
     {
 		
 		public static void UnloadAll()

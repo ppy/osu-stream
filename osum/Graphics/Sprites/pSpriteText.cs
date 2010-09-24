@@ -139,22 +139,22 @@ namespace osum.Graphics.Sprites
                 switch (text[i])
                 {
                     case ' ':
-                        currentX += SkinManager.Load(TextFont + "-dot").Width;
+                        currentX += TextureManager.Load(TextFont + "-dot").Width;
                         continue;
                     case ',':
-                        tex = SkinManager.Load(TextFont + "-comma");
+                        tex = TextureManager.Load(TextFont + "-comma");
                         currentX += tex.Width;
                         break;
                     case '.':
-                        tex = SkinManager.Load(TextFont + "-dot");
+                        tex = TextureManager.Load(TextFont + "-dot");
                         currentX += tex.Width;
                         break;
                     case '%':
-                        tex = SkinManager.Load(TextFont + "-percent");
+                        tex = TextureManager.Load(TextFont + "-percent");
                         currentX += tex.Width;
                         break;
                     default:
-                        tex = SkinManager.Load(TextFont + "-" + text[i]);
+                        tex = TextureManager.Load(TextFont + "-" + text[i]);
                         if (!TextConstantSpacing)
                             currentX += tex.Width;
                         break;
@@ -173,7 +173,7 @@ namespace osum.Graphics.Sprites
             if (TextConstantSpacing)
             {
                 //float last = 0;
-                int charWidth = SkinManager.Load(TextFont + "-5").Width;
+                int charWidth = TextureManager.Load(TextFont + "-5").Width;
 
                 currentX = 0;
 

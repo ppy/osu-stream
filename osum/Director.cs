@@ -74,7 +74,7 @@ namespace osum
                 if (CurrentMode != null)
                     CurrentMode.Dispose();
 
-                SkinManager.UnloadAll();
+                TextureManager.UnloadAll();
 
                 CurrentMode = mode;
                 CurrentMode.Initialize();

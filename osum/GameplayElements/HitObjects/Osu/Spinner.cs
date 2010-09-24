@@ -101,26 +101,26 @@ namespace osum.GameplayElements
 
             //Check for a jpg background for beatmap-based skins (used to reduce filesize), then fallback to png.
             spriteBackground =
-                new pSprite(SkinManager.Load("spinner-background.jpg") ?? SkinManager.Load("spinner-background"),
+                new pSprite(TextureManager.Load("spinner-background.jpg") ?? TextureManager.Load("spinner-background"),
                             FieldTypes.StandardSnapCentre, OriginTypes.Centre , ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, fade);
             SpriteCollection.Add(spriteBackground);
 
             spriteCircle =
-                new pSprite(SkinManager.Load("spinner-circle"),
+                new pSprite(TextureManager.Load("spinner-circle"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
             SpriteCollection.Add(spriteCircle);
 
             spriteScoreMetre =
-                new pSprite(SkinManager.Load("spinner-metre"),
+                new pSprite(TextureManager.Load("spinner-metre"),
                             FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime + 1), false, fade);
             spriteScoreMetre.DrawHeight = 0;
             SpriteCollection.Add(spriteScoreMetre);
 
             spriteRpmBackground =
-                new pSprite(SkinManager.Load("spinner-rpm"),
+                new pSprite(TextureManager.Load("spinner-rpm"),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
                             Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteCollection.Add(spriteRpmBackground);
@@ -131,21 +131,21 @@ namespace osum.GameplayElements
             spriteRpmText.ScaleScalar = 0.9f;
             SpriteCollection.Add(spriteRpmText);
 
-            pTexture highRes = SkinManager.Load("spinner-approachcircle");
+            pTexture highRes = TextureManager.Load("spinner-approachcircle");
 
             HighResApproachCircle = highRes != null; // || SkinManager.IsDefault;
 
             if (HighResApproachCircle)
             {
                 SpriteApproachCircle =
-                    new pSprite(SkinManager.Load("spinner-approachcircle"),
+                    new pSprite(TextureManager.Load("spinner-approachcircle"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                                 new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             }
             else
             {
                 SpriteApproachCircle =
-                    new pSprite(SkinManager.Load("approachcircle"),
+                    new pSprite(TextureManager.Load("approachcircle"),
                                 FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                                 new Vector2(GameBase.WindowBaseSize.Width / 2, (SPINNER_TOP + GameBase.WindowBaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             }
@@ -158,7 +158,7 @@ namespace osum.GameplayElements
             SpriteCollection.Add(spriteBonus);
 
             SpriteSpin =
-                new pSprite(SkinManager.Load("spinner-spin"),
+                new pSprite(TextureManager.Load("spinner-spin"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
@@ -174,7 +174,7 @@ namespace osum.GameplayElements
             }
 
             SpriteClear =
-                new pSprite(SkinManager.Load("spinner-clear"),
+                new pSprite(TextureManager.Load("spinner-clear"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.WindowBaseSize.Width / 2, (GameBase.WindowBaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));

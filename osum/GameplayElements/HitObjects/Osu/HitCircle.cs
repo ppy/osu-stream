@@ -25,19 +25,19 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new pSprite(SkinManager.Load("approachcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
+            SpriteApproachCircle = new pSprite(TextureManager.Load("approachcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
             //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
             SpriteCollection.Add(SpriteApproachCircle);
 
             SpriteHitCircle1 =
-                new pSprite(SkinManager.Load(SpriteNameHitCircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
+                new pSprite(TextureManager.Load(SpriteNameHitCircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             SpriteCollection.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
             DimCollection.Add(SpriteHitCircle1);
 
 
             SpriteHitCircle2 =
-                new pAnimation(SkinManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
+                new pAnimation(TextureManager.LoadAll(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             SpriteCollection.Add(SpriteHitCircle2);

@@ -135,7 +135,7 @@ namespace osum.GameplayElements
             {
                 if (value >= 4) throw new ArgumentOutOfRangeException();
                 colour_index = value;
-                Colour = SkinManager.DefaultColours[value];
+                Colour = TextureManager.DefaultColours[value];
             }
         }
 
@@ -233,7 +233,7 @@ namespace osum.GameplayElements
 
             //Draw the hit value
             pSprite p =
-                new pSprite(SkinManager.Load(spriteName + specialAddition),
+                new pSprite(TextureManager.Load(spriteName + specialAddition),
                             FieldTypes.Gamefield512x384,
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);

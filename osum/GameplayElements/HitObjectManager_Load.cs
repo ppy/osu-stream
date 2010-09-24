@@ -332,7 +332,7 @@ namespace osum.GameplayElements
         {
             float StackOffset = DifficultyManager.HitObjectRadius / 10;
 
-            pTexture[] fptextures = SkinManager.LoadAll("followpoint");
+            pTexture[] fptextures = TextureManager.LoadAll("followpoint");
 
             Vector2 stackVector = new Vector2(StackOffset, StackOffset);
 

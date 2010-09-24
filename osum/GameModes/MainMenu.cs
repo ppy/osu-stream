@@ -21,11 +21,11 @@ namespace osum.GameModes
 		internal override void Initialize()
         {
             pSprite menuBackground =
-                new pSprite(SkinManager.Load("menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                new pSprite(TextureManager.Load("menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Game, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(menuBackground);
 
-            osuLogo = new pSprite(SkinManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
+            osuLogo = new pSprite(TextureManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
 			
 			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
