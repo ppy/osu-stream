@@ -14,6 +14,7 @@ using System.Drawing;
 using osum.Audio;
 using osum.Graphics.Renderers;
 using osum.GameplayElements.Scoring;
+using osum.GameModes.Play.Components;
 
 namespace osum.GameModes
 {
@@ -22,9 +23,9 @@ namespace osum.GameModes
         HitObjectManager hitObjectManager;
 
         HealthBar healthBar;
+        ScoreDisplay scoreDisplay;
 
-        public Player()
-            : base()
+        public Player() : base()
         {
         }
 
@@ -47,14 +48,31 @@ namespace osum.GameModes
 
             healthBar = new HealthBar();
 
+            scoreDisplay = new ScoreDisplay();
+
             AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
             AudioEngine.Music.Play();
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
-            switch (change)
+            switch (change & ~ScoreChange.ComboAddition)
             {
+                case ScoreChange.SliderRepeat:
+                    scoreDisplay.Increase(30);
+                    break;
+                case ScoreChange.SliderTick:
+                    scoreDisplay.Increase(10);
+                    break;
+                case ScoreChange.Hit50:
+                    scoreDisplay.Increase(50);
+                    break;
+                case ScoreChange.Hit100:
+                    scoreDisplay.Increase(100);
+                    break;
+                case ScoreChange.Hit300:
+                    scoreDisplay.Increase(300);
+                    break;
                 case ScoreChange.Miss:
                     healthBar.ReduceCurrentHp(20);
                     break;
@@ -70,6 +88,9 @@ namespace osum.GameModes
 
             hitObjectManager.Dispose();
 
+            healthBar.Dispose();
+            scoreDisplay.Dispose();
+
             base.Dispose();
         }
 
@@ -77,6 +98,7 @@ namespace osum.GameModes
         {
             hitObjectManager.Draw();
 
+            scoreDisplay.Draw();
             healthBar.Draw();
 
             base.Draw();
@@ -87,6 +109,7 @@ namespace osum.GameModes
             hitObjectManager.Update();
 
             healthBar.Update();
+            scoreDisplay.Update();
 
             base.Update();
         }
