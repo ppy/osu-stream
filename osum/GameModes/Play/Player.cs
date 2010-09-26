@@ -58,6 +58,14 @@ namespace osum.GameModes
         {
             switch (change & ~ScoreChange.ComboAddition)
             {
+                case ScoreChange.SpinnerBonus:
+                    scoreDisplay.Increase(1000);
+                    break;
+                case ScoreChange.SpinnerSpinPoints:
+                    scoreDisplay.Increase(500);
+                    break;
+                case ScoreChange.SpinnerSpin:
+                    break;
                 case ScoreChange.SliderRepeat:
                     scoreDisplay.Increase(30);
                     break;
