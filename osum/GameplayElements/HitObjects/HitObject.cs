@@ -473,7 +473,7 @@ namespace osum.GameplayElements
                     Clock.AudioTime + 40, Clock.AudioTime + 60));
                 p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
                     Clock.AudioTime + 60, Clock.AudioTime + 80));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
+                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0),
                     Clock.AudioTime + 80, Clock.AudioTime + 100));
                 p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos,
                     Clock.AudioTime + 100, Clock.AudioTime + 120));
