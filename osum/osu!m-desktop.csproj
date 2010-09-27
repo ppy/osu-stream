@@ -52,6 +52,7 @@
     <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
     <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
     <Compile Include="GameplayElements\Beatmaps\ControlPoint.cs" />
     <Compile Include="GameplayElements\Events\Event.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
+    <Compile Include="Libraries\Osz2\MapPackage.cs" />
+    <Compile Include="Libraries\Osz2\MapStream.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
@@ -127,12 +130,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="bass_fx.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\babycruisingedit.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Beatmaps\bcl\image.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\achievement-unknown.png">
@@ -884,12 +881,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Beatmaps\bcl\beatmap.osu">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
     <Folder Include="GameplayElements\Scoring\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Beatmaps\lix - battle scene 2 -active solid mix-.osz2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Beatmaps\lix - tori no uta -ethereal house mix-.osz2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -6,26 +6,48 @@ using OpenTK;
 using osum.Helpers;
 using System.IO;
 using osum.Graphics.Skins;
+using osum.GameplayElements.Beatmaps;
+using System.Collections.Generic;
 namespace osum
 {
     public class SongSelect : GameMode
     {
-        public SongSelect() : base()
+        public SongSelect()
+            : base()
         {
         }
-        
-        internal override void Initialize ()
+
+        static List<Beatmap> availableMaps;
+
+        internal override void Initialize()
         {
-            foreach (string s in Directory.GetDirectories("Beatmaps"))
+            if (availableMaps == null)
+                InitializeBeatmaps();
+        }
+
+        private void InitializeBeatmaps()
+        {
+            availableMaps = new List<Beatmap>();
+
+            foreach (string s in Directory.GetFiles("Beatmaps"))
             {
                 //pSprite song = new pSprite(TextureManager.Load);
+                Console.WriteLine("Loading file " + s);
+
+                Beatmap b = new Beatmap(s);
+
+                foreach (string file in b.Package.MapFiles)
+                {
+                    Console.WriteLine(" -" + file);
+                }
+                
+                availableMaps.Add(b);
 
             }
         }
-        
-        public override void Draw ()
+
+        public override void Draw()
         {
-            Console.WriteLine(Clock.AudioTime);
             base.Draw();
         }
     }

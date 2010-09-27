@@ -50,7 +50,7 @@ namespace osum.GameModes
 
             scoreDisplay = new ScoreDisplay();
 
-            AudioEngine.Music.Load("Beatmaps/bcl/babycruisingedit.mp3");
+            AudioEngine.Music.Load(beatmap.GetFileBytes(beatmap.AudioFilename));
             AudioEngine.Music.Play();
         }
 

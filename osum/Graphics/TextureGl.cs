@@ -325,9 +325,7 @@ namespace osum.Graphics
         		int[] textures = new int[1];
         		GL.GenTextures (1, textures);
         		Id = textures[0];
-#if DEBUG
-        		Console.WriteLine ("TextureGl assigned: " + Id);
-#endif
+        		//Console.WriteLine ("TextureGl assigned: " + Id);
         	}
 
             if (level > 0)

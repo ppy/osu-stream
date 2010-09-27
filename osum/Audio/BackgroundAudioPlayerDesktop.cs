@@ -66,11 +66,9 @@ namespace osum.Audio
             }
         }
 
-        public bool Load(string filename)
+        public bool Load(byte[] audio)
         {
             FreeMusic();
-
-            byte[] audio = File.ReadAllBytes(filename);
 
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 

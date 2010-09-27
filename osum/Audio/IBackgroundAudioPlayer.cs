@@ -19,7 +19,7 @@ namespace osum
         /// <summary>
         /// Loads an audio track.
         /// </summary>
-        bool Load(string filename);
+        bool Load(byte[] bytes);
 
         /// <summary>
         /// Plays the loaded audio.

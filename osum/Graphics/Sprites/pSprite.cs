@@ -189,7 +189,6 @@ namespace osum.Graphics.Sprites
         internal void Transform(Transformation transform)
         {
             transform.Clocking = this.Clocking;
-
             Transformations.AddInPlace(transform);
         }
 

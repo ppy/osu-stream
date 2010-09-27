@@ -49,7 +49,7 @@ namespace osum.GameModes
 
             osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.Time, Clock.Time + 1000, EasingTypes.In));
 			
-			Director.ChangeMode(OsuMode.Play, new FadeTransition());
+			Director.ChangeMode(OsuMode.SongSelect, new FadeTransition());
 
             AudioEngine.Music.Play();
         }
