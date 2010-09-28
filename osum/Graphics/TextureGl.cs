@@ -113,6 +113,54 @@ namespace osum.Graphics
         	}
         }
 
+        int fbo;// = new int[1];
+        //int fixed renderbuffer;
+
+        internal unsafe void drawToTexture(bool begin)
+        {
+            if (begin)
+            {
+                fixed (int* p = &fbo)
+                    GLES.GenFramebuffers(1, p);
+
+                /*glGenFramebuffersOES(1, &fbo);
+                glBindFramebufferOES(GL_FRAMEBUFFER_OES, fbo);
+                glGenRenderbuffersOES(1, &renderbuffer);
+                glBindRenderbufferOES(GL_RENDERBUFFER_OES, renderbuffer);
+
+                glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, _width, _height);
+                glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, renderbuffer);
+
+                glBindTexture(GL_TEXTURE_2D, _name);
+                glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D, _name, 0);
+
+                glGetIntegerv(GL_VIEWPORT,(int*)viewport);
+                glViewport(0, 0, _width, _height);
+
+                glPushMatrix();
+                glScalef(320.0f/_width, 480.0f/_height, 1.0f);
+
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);*/
+            }
+            else
+            {
+                //save data to texture using glCopyTexImage2D
+                /*glPopMatrix();
+
+                glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
+                glDeleteFramebuffersOES(1, &fbo);
+                glDeleteRenderbuffersOES(1, &renderbuffer);*/
+
+                //restore viewport
+                //glViewport(viewport[0],viewport[1],viewport[2],viewport[3]);
+                GameBase.Instance.SetViewport();
+            }
+        }
+
+
         static int lastDrawTexture;
 
         /// <summary>
