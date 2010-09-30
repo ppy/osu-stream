@@ -278,5 +278,11 @@ namespace osum.Graphics.Sprites
             EndTime += amount;
             StartTime += amount;
         }
+
+        public override string ToString()
+        {
+            return string.Format("{4} {0}-{1} {2} to {3}",
+                StartTime, EndTime, StartFloat, EndFloat, Type);
+        }
     }
 }
