@@ -48,7 +48,10 @@ namespace osum
             }
             
             PendingMode = mode;
-            ActiveTransition = transition;
+            
+            if (ActiveTransition == null)
+                ActiveTransition = transition;
+
             return true;
         }
 

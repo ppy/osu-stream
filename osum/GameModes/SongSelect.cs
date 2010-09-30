@@ -32,13 +32,13 @@ namespace osum
             foreach (string s in Directory.GetFiles("Beatmaps"))
             {
                 //pSprite song = new pSprite(TextureManager.Load);
-                Console.WriteLine("Loading file " + s);
+                Console.WriteLine("Loading file \"{0}\"", s);
 
                 Beatmap b = new Beatmap(s);
 
                 foreach (string file in b.Package.MapFiles)
                 {
-                    Console.WriteLine(" -" + file);
+                    Console.WriteLine(" - {0}", file);
                 }
                 
                 availableMaps.Add(b);
