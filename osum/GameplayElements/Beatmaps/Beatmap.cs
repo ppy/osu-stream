@@ -17,7 +17,7 @@ namespace osum.GameplayElements.Beatmaps
         public byte DifficultyHpDrainRate;
         public int StackLeniency = 1;
 
-        public string BeatmapFilename { get { return ContainerFilename + "/beatmap.osu"; } }
+        public string BeatmapFilename { get { return Package.MapFiles[0]; } }
         public string StoryboardFilename { get { return ""; } }
 
         private MapPackage package;

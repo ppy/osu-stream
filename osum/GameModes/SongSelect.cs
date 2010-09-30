@@ -44,11 +44,19 @@ namespace osum
                 availableMaps.Add(b);
 
             }
+
+            Player.SetBeatmap(availableMaps[0]);
+            Director.ChangeMode(OsuMode.Play);
         }
 
         public override void Draw()
         {
             base.Draw();
+        }
+
+        public override void Update()
+        {
+            base.Update();
         }
     }
 }

@@ -82,8 +82,6 @@
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
-    <Compile Include="Libraries\Osz2\MapPackage.cs" />
-    <Compile Include="Libraries\Osz2\MapStream.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
@@ -113,6 +111,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OpenTK.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="osu!common">
+      <HintPath>.\osu!common.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />

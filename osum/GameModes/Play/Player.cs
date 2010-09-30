@@ -25,6 +25,8 @@ namespace osum.GameModes
         HealthBar healthBar;
         ScoreDisplay scoreDisplay;
 
+        static Beatmap Beatmap;
+
         public Player() : base()
         {
         }
@@ -37,11 +39,9 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
-            Beatmap beatmap = new Beatmap("Beatmaps/bcl/");
-
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
 
-            hitObjectManager = new HitObjectManager(beatmap);
+            hitObjectManager = new HitObjectManager(Beatmap);
             hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
 
             hitObjectManager.LoadFile();
@@ -50,7 +50,7 @@ namespace osum.GameModes
 
             scoreDisplay = new ScoreDisplay();
 
-            AudioEngine.Music.Load(beatmap.GetFileBytes(beatmap.AudioFilename));
+            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
             AudioEngine.Music.Play();
         }
 
@@ -123,6 +123,11 @@ namespace osum.GameModes
         }
 
 
+
+        internal static void SetBeatmap(Beatmap beatmap)
+        {
+            Beatmap = beatmap;
+        }
     }
 }
 
