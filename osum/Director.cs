@@ -2,6 +2,7 @@ using System;
 using osum.GameModes;
 using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
+using osum.Support;
 
 namespace osum
 {
@@ -25,6 +26,11 @@ namespace osum
         /// </summary>
         private static Transition ActiveTransition;
 
+        internal static bool ChangeMode(OsuMode mode)
+        {
+            return ChangeMode(mode, new FadeTransition());
+        }
+        
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
         /// </summary>
@@ -78,6 +84,12 @@ namespace osum
 
                 CurrentMode = mode;
                 CurrentMode.Initialize();
+
+                if (PendingMode != newMode)
+                {
+                    //we got a new request to load a *different* mode during initialisation...
+                    return;
+                }
             }
 
             PendingMode = OsuMode.Unknown;
@@ -94,11 +106,9 @@ namespace osum
 
                 if (ActiveTransition.FadeOutDone)
                 {
-                    if (PendingMode != OsuMode.Unknown)
-                    {
+                    while (PendingMode != OsuMode.Unknown)
                         changeMode(PendingMode);
-                        ActiveTransition.FadeIn();
-                    }
+                    ActiveTransition.FadeIn();
                 }
                 
                 if (ActiveTransition.FadeInDone)
