@@ -222,7 +222,7 @@ namespace osum
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
 
-            fpsDisplay = new pSpriteText("", "default", -5, FieldTypes.StandardSnapRight,OriginTypes.TopRight,ClockTypes.Game,new Vector2(5,0),1,true,Color.White);
+            fpsDisplay = new pSpriteText("", "default", -5, FieldTypes.StandardSnapBottomRight,OriginTypes.BottomRight,ClockTypes.Game,new Vector2(5,0),1,true,Color.White);
             fpsDisplay.ScaleScalar = 0.6f;
             spriteManager.Add(fpsDisplay);
         }
