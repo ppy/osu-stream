@@ -473,6 +473,8 @@ namespace osum.GameplayElements
                         dot.Transform(
                             new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
                         dot.Transform(
+                            new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
+                        dot.Transform(
                             new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
                         spriteManager.Add(dot);
                     }

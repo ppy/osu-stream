@@ -200,7 +200,7 @@ namespace osum.GameplayElements
             string spriteName;
             string specialAddition = "";
 
-            OsuTexture texture = OsuTexture.hit0;
+            OsuTexture texture = OsuTexture.None;
 
             switch (action & ScoreChange.HitValuesOnly)
             {
@@ -228,7 +228,7 @@ namespace osum.GameplayElements
             }
 
             if (action < 0)
-                spriteName = "hit0"; //todo: this sounds bad
+                texture = OsuTexture.hit0;
 
             //Draw the hit value
             pSprite p =
