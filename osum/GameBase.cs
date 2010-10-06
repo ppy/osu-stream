@@ -201,6 +201,8 @@ namespace osum
         {
             SetupScreen();
 
+            TextureManager.Initialize();
+
             InputManager.Initialize();
             InitializeInput();
             if (InputManager.RegisteredSources.Count == 0)

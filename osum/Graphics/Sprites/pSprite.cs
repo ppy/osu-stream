@@ -69,8 +69,10 @@ namespace osum.Graphics.Sprites
         internal int DrawWidth;
         internal int DrawHeight;
 
-        internal int Width { get { return texture != null ? texture.Width : 0; } }
-        internal int Height { get { return texture != null ? texture.Height : 0; } }
+        internal int TextureWidth { get { return texture != null ? texture.Width : 0; } }
+        internal int TextureHeight { get { return texture != null ? texture.Height : 0; } }
+        internal int TextureX { get { return texture != null ? texture.X : 0; } }
+        internal int TextureY { get { return texture != null ? texture.Y : 0; } }
 
         internal float ScaleScalar { get { return Scale.X; } set { Scale = new Vector2(value, value); } }
 
@@ -152,38 +154,38 @@ namespace osum.Graphics.Sprites
                     originVector = Vector2.Zero;
                     break;
                 case OriginTypes.TopCentre:
-                    originVector = new Vector2(Width / 2, 0);
+                    originVector = new Vector2(TextureWidth / 2, 0);
                     break;
                 case OriginTypes.TopRight:
-                    originVector = new Vector2(Width, 0);
+                    originVector = new Vector2(TextureWidth, 0);
                     break;
                 case OriginTypes.CentreLeft:
-                    originVector = new Vector2(0, Height / 2);
+                    originVector = new Vector2(0, TextureHeight / 2);
                     break;
                 case OriginTypes.Centre:
-                    originVector = new Vector2(Width / 2, Height / 2);
+                    originVector = new Vector2(TextureWidth / 2, TextureHeight / 2);
                     break;
                 case OriginTypes.CentreRight:
-                    originVector = new Vector2(Width, Height / 2);
+                    originVector = new Vector2(TextureWidth, TextureHeight / 2);
                     break;
                 case OriginTypes.BottomLeft:
-                    originVector = new Vector2(0, Height);
+                    originVector = new Vector2(0, TextureHeight);
                     break;
                 case OriginTypes.BottomCentre:
-                    originVector = new Vector2(Width / 2, Height);
+                    originVector = new Vector2(TextureWidth / 2, TextureHeight);
                     break;
                 case OriginTypes.BottomRight:
-                    originVector = new Vector2(Width, Height);
+                    originVector = new Vector2(TextureWidth, TextureHeight);
                     break;
             }
         }
 
         internal virtual void UpdateTextureSize()
         {
-            DrawWidth = Width;
-            DrawHeight = Height;
-            DrawTop = 0;
-            DrawLeft = 0;
+            DrawWidth = TextureWidth;
+            DrawHeight = TextureHeight;
+            DrawTop = TextureY;
+            DrawLeft = TextureX;
         }
 
         internal void Transform(Transformation transform)

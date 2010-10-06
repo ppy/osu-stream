@@ -147,7 +147,7 @@ namespace osum.GameplayElements.Scoring
                 DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 6 * GameBase.ElapsedMilliseconds * 0.1);
             }
 
-            s_barFill.DrawWidth = (int)Math.Min(s_barFill.Width, Math.Max(0, (s_barFill.Width * (DisplayHp / HP_BAR_MAXIMUM))));
+            s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
 
             //Sync Ki icon position with the end of the scorebar fill.
             s_kiIcon.Position = new Vector2(CurrentXPosition, s_kiIcon.Position.Y);

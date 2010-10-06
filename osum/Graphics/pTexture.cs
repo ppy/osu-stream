@@ -50,6 +50,8 @@ namespace osum.Graphics
         public bool fromResourceStore;
         internal int Width;
         internal int Height;
+        internal int X;
+        internal int Y;
         internal int LastAccess;
         internal bool isDisposed;
 #if DEBUG
