@@ -522,10 +522,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                 {
                     //Begin tracking.
                     spriteFollowCircle.Transformations.Clear();
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.5f, 1.05f, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 200), EasingTypes.InHalf));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 200), EasingTypes.InHalf));
                     spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime,Clock.AudioTime + 250), EasingTypes.OutHalf));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 190), EasingTypes.None));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 190, EndTime));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 140), EasingTypes.None));
+                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 140, EndTime));
                 }
             }
 
