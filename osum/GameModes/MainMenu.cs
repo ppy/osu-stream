@@ -11,6 +11,7 @@ using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
 using osum.Support;
+using osum.Graphics;
 
 namespace osum.GameModes
 {
@@ -20,6 +21,17 @@ namespace osum.GameModes
 
 		internal override void Initialize()
         {
+            const int initial_display = 1300;
+            
+            pSprite whiteLayer =
+                new pSprite(pTexture.FromRawBytes(new byte[] { 255, 255, 255, 255 }, 1, 1), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Game, Vector2.Zero, 1, false, Color4.White);
+            whiteLayer.Scale = new Vector2(GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height) / GameBase.SpriteRatioToWindowBase;
+            spriteManager.Add(whiteLayer);
+
+            whiteLayer.Transform(new Transformation(TransformationType.Fade,0,0.2f,300,500));
+            whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.2f, 1, initial_display - 100, initial_display));
+            whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 500));
+            
             pSprite menuBackground =
                 new pSprite(TextureManager.Load("menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Game, Vector2.Zero, 0, true, Color.White);
@@ -28,7 +40,8 @@ namespace osum.GameModes
             osuLogo = new pSprite(TextureManager.Load("menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             spriteManager.Add(osuLogo);
 			
-			osuLogo.Transform(new Transformation(TransformationType.Rotation,0,200,0,200000));
+            osuLogo.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display));
+            menuBackground.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display));
 
 			
             //AudioEngine.Music.Load("test.mp3");
@@ -57,6 +70,8 @@ namespace osum.GameModes
         public override void Update()
         {
 			base.Update();
+
+            osuLogo.Rotation += (float)(GameBase.ElapsedMilliseconds * 0.0001);
         }
 
         public override void Draw()
