@@ -200,31 +200,30 @@ namespace osum.GameplayElements
             string spriteName;
             string specialAddition = "";
 
+            OsuTexture texture = OsuTexture.hit0;
+
             switch (action & ScoreChange.HitValuesOnly)
             {
                 case ScoreChange.Hit100:
-                    spriteName = "hit100";
+                    texture = OsuTexture.hit100;
                     break;
                 case ScoreChange.Hit300:
-                    spriteName = "hit300";
+                    texture = OsuTexture.hit300;
                     break;
                 case ScoreChange.Hit50:
-                    spriteName = "hit50";
+                    texture = OsuTexture.hit50;
                     break;
                 case ScoreChange.Hit100k:
-                    spriteName = "hit100k";
+                    texture = OsuTexture.hit100k;
                     break;
                 case ScoreChange.Hit300g:
-                    spriteName = "hit300g";
+                    texture = OsuTexture.hit300g;
                     break;
                 case ScoreChange.Hit300k:
-                    spriteName = "hit300k";
+                    texture = OsuTexture.hit300k;
                     break;
                 case ScoreChange.Miss:
-                    spriteName = "hit0";
-                    break;
-                default:
-                    spriteName = string.Empty;
+                    texture = OsuTexture.hit0;
                     break;
             }
 
@@ -233,7 +232,7 @@ namespace osum.GameplayElements
 
             //Draw the hit value
             pSprite p =
-                new pSprite(TextureManager.Load(spriteName + specialAddition),
+                new pSprite(TextureManager.Load(texture),
                             FieldTypes.Gamefield512x384,
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
