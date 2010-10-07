@@ -116,6 +116,7 @@ namespace osum.Graphics
         int fbo;// = new int[1];
         //int fixed renderbuffer;
 
+#if IPHONE
         internal unsafe void drawToTexture(bool begin)
         {
             if (begin)
@@ -159,6 +160,8 @@ namespace osum.Graphics
                 GameBase.Instance.SetViewport();
             }
         }
+
+#endif
 
 
         static int lastDrawTexture;

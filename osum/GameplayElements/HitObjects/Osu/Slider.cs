@@ -237,13 +237,13 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             double distanceBetweenTicks = hitObjectManager.SliderScoringPointDistance;
 
-            double tickCount = pathLength / distanceBetweenTicks;
+            double tickCount = PathLength / distanceBetweenTicks;
             int actualTickCount = (int)Math.Round(tickCount) - 1;
 
             double tickNumber = 0;
             while (++tickNumber <= actualTickCount)
             {
-                double progress = (tickNumber * distanceBetweenTicks) / pathLength;
+                double progress = (tickNumber * distanceBetweenTicks) / PathLength;
 
                 scoringPoints.Add(progress);
 
@@ -312,14 +312,14 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             for (int i = 1; i < smoothPoints.Count; i++)
             {
-                Line l = new Line(smoothPoints[i], smoothPoints[i - 1]);
+                Line l = new Line(smoothPoints[i - 1], smoothPoints[i]);
                 drawableSegments.Add(l);
 
                 float lineLength = l.rho;
 
                 if (lineLength + currentLength > PathLength)
                 {
-                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1) * (float)(l.rho - (PathLength - currentLength)));
+                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1)) * (float)(PathLength - currentLength);
                     l.Recalc();
 
                     currentLength += l.rho;
@@ -327,7 +327,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     break; //we are done.
                 }
 
-                currentLength += l.rho;
+                currentLength += lineLength;
                 cumulativeLengths.Add(currentLength);
             }
 
@@ -686,7 +686,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
 
             //cut back the line to required exact length
-            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(Math.Abs(aimLength - lengthAtIndex));
+            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(1 - Math.Abs(lengthAtIndex - aimLength));
         }
 
         bool isReversing { get { return progressCurrent % 2 >= 1; } }
@@ -722,15 +722,15 @@ namespace osum.GameplayElements.HitObjects.Osu
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
-            spriteFollowBall.Rotation = currentLine.theta + (float)Math.PI;
+            spriteFollowBall.Rotation = currentLine.theta;// +(float)Math.PI;
 
             spriteFollowCircle.Position = TrackingPosition;
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
-                spriteCollectionEnd[2].Rotation = 3 + endAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
+                spriteCollectionEnd[2].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
             if (RepeatCount > 2)
-                spriteCollectionStart[2].Rotation = startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
+                spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 4);
         }
 
         internal void DisposePathTexture()
