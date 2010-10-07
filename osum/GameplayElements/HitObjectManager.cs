@@ -56,6 +56,8 @@ namespace osum.GameplayElements
 
             sliderTrackRenderer.Initialize();
 
+            ResetComboCounts();
+
             GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
         }
 
@@ -157,13 +159,49 @@ namespace osum.GameplayElements
                 TriggerScoreChange(found.Hit(), found);
         }
 
+        Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
+
         public event ScoreChangeDelegate OnScoreChanged;
         private void TriggerScoreChange(ScoreChange change, HitObject hitObject)
         {
             if (change == ScoreChange.Ignore) return;
 
+            ScoreChange hitAmount = change & ScoreChange.HitValuesOnly;
+            
+            if (hitAmount != ScoreChange.Ignore)
+            {
+                //handle combo additions here
+                ComboScoreCounts[hitAmount] += 1;
+
+                //is next hitObject the end of a combo?
+                int index = hitObjects.IndexOf(hitObject);
+                if (index == hitObjectsCount - 1 || hitObjects[index + 1].NewCombo)
+                {
+                    //apply combo addition
+                    if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
+                        change |= ScoreChange.GekiAddition;
+                    else if (ComboScoreCounts[ScoreChange.Miss] == 0)
+                        change |= ScoreChange.KatuAddition;
+                    else
+                        change |= ScoreChange.MuAddition;
+
+                    ResetComboCounts();
+                }
+            }
+            
+
+            hitObject.HitAnimation(change);
+
             if (OnScoreChanged != null)
                 OnScoreChanged(change, hitObject);
+        }
+
+        private void ResetComboCounts()
+        {
+            ComboScoreCounts[ScoreChange.Miss] = 0;
+            ComboScoreCounts[ScoreChange.Hit50] = 0;
+            ComboScoreCounts[ScoreChange.Hit100] = 0;
+            ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
         internal double SliderScoringPointDistance

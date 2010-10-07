@@ -65,7 +65,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Sprite for the follow-circle (visible during tracking).
         /// </summary>
-        internal readonly pAnimation spriteFollowCircle;
+        internal readonly pSprite spriteFollowCircle;
 
         /// <summary>
         /// Sprite for slider body (path).
@@ -174,9 +174,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             Type = HitObjectType.Slider;
 
             spriteFollowCircle =
-                new pAnimation(TextureManager.LoadAnimation("sliderfollowcircle"), FieldTypes.Gamefield512x384,
+                new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
                                OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
-            spriteFollowCircle.SetFramerateFromSkin();
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
@@ -595,7 +594,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                     else
                         amount = ScoreChange.Miss;
 
-                    HitAnimation(amount);
                     return amount; //actual judging
                 }
 

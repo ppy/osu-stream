@@ -163,7 +163,6 @@ namespace osum.GameplayElements
             if (action != ScoreChange.Ignore)
             {
                 IsHit = true;
-                HitAnimation(action);
             }
 
             return action;
@@ -186,7 +185,7 @@ namespace osum.GameplayElements
         /// Trigger a hit animation showing the score overlay above the object.
         /// </summary>
         /// <param name="action">The ssociated score change action.</param>
-        protected virtual void HitAnimation(ScoreChange action)
+        internal virtual void HitAnimation(ScoreChange action)
         {
             if (m_HitObjectManager == null) return; //is the case for sliders, where we don't want to display this stuff.
 

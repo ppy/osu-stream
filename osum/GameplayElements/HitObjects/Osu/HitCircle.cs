@@ -138,7 +138,7 @@ namespace osum.GameplayElements
             return hitValue;
         }
 
-        protected override void HitAnimation(ScoreChange action)
+        internal override void HitAnimation(ScoreChange action)
         {
             if (action > 0)
             {

@@ -34,10 +34,19 @@ namespace osum.Graphics.Skins
 
         public static void Initialize()
         {
-            textureLocations.Add(OsuTexture.hit300, new SpriteSheetTexture("hit", 0, 0, 256, 256));
-            textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 256, 0, 256, 256));
+
+            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 768, 0, 256, 256));
+
             textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 512, 0, 256, 256));
-            textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 0, 256, 256, 256));
+
+            textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 256, 0, 256, 256));
+            textureLocations.Add(OsuTexture.hit100k, new SpriteSheetTexture("hit", 256, 256, 256, 256));
+
+            textureLocations.Add(OsuTexture.hit300, new SpriteSheetTexture("hit", 0, 0, 256, 256));
+            textureLocations.Add(OsuTexture.hit300k, new SpriteSheetTexture("hit", 0, 256, 256, 256));
+            textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 0, 512, 256, 256));
+
+            textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 0, 768, 256, 256));
         }
 
 		public static void UnloadAll()

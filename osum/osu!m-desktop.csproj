@@ -885,15 +885,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
     <Folder Include="GameplayElements\Scoring\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Beatmaps\lix - battle scene 2 -active solid mix-.osz2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Beatmaps\lix - tori no uta -ethereal house mix-.osz2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
