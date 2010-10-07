@@ -169,6 +169,7 @@
     <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
     <Compile Include="GameModes\GameComponent.cs" />
     <Compile Include="Helpers\pList.cs" />
+    <Compile Include="Graphics\GLES.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -693,5 +694,12 @@
     <Content Include="Skins\Default\menuhit.wav" />
     <Content Include="Skins\Default\normal-sliderslide.wav" />
     <Content Include="Skins\Default\normal-slidertick.wav" />
+    <Content Include="Skins\Default\soft-hitclap.wav" />
+    <Content Include="Skins\Default\soft-hitfinish.wav" />
+    <Content Include="Skins\Default\soft-hitnormal.wav" />
+    <Content Include="Skins\Default\soft-hitwhistle.wav" />
+    <Content Include="Skins\Default\soft-sliderslide.wav" />
+    <Content Include="Skins\Default\soft-slidertick.wav" />
+    <Content Include="Skins\Default\soft-sliderwhistle.wav" />
   </ItemGroup>
 </Project>

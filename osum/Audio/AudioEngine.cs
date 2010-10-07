@@ -42,25 +42,27 @@ namespace osum.Audio
 
             string filename = null;
 
+            string setName = "soft";
+
             switch (sample)
             {
                 case OsuSamples.HitClap:
-                    filename = "normal-hitclap";
+                    filename = setName + "-hitclap";
                     break;
                 case OsuSamples.HitFinish:
-                    filename = "normal-hitfinish";
+                    filename = setName + "-hitfinish";
                     break;
                 case OsuSamples.HitNormal:
-                    filename = "normal-hitnormal";
+                    filename = setName + "-hitnormal";
                     break;
                 case OsuSamples.HitWhistle:
-                    filename = "normal-hitwhistle";
+                    filename = setName + "-hitwhistle";
                     break;
                 case OsuSamples.SliderTick:
-                    filename = "normal-slidertick";
+                    filename = setName + "-slidertick";
                     break;
                 case OsuSamples.SliderSlide:
-                    filename = "normal-sliderslider";
+                    filename = setName + "-sliderslider";
                     break;
                 case OsuSamples.MenuHit:
                     filename = "menuhit";

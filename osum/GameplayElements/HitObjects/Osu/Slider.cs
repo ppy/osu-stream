@@ -238,10 +238,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             double distanceBetweenTicks = hitObjectManager.SliderScoringPointDistance;
 
             double tickCount = pathLength / distanceBetweenTicks;
-            int actualTickCount = (int)tickCount - 1;
+            int actualTickCount = (int)Math.Round(tickCount) - 1;
 
             double tickNumber = 0;
-            while (++tickNumber * distanceBetweenTicks < pathLength)
+            while (++tickNumber <= actualTickCount)
             {
                 double progress = (tickNumber * distanceBetweenTicks) / pathLength;
 
