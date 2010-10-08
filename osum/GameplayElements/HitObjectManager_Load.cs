@@ -444,6 +444,7 @@ namespace osum.GameplayElements
                     currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
                 //Draw connection lines
+
                 if (i > 0 && !currHitObject.NewCombo && !(hitObjects[i - 1] is Spinner))
                 {
                     Vector2 pos1 = hitObjects[i - 1].EndPosition;
@@ -455,11 +456,19 @@ namespace osum.GameplayElements
                     Vector2 distanceVector = pos2 - pos1;
                     int length = time2 - time1;
 
-                    for (int j = (int)(DifficultyManager.FollowLineDistance * 1.5);
-                         j < distance - DifficultyManager.FollowLineDistance;
-                         j += DifficultyManager.FollowLineDistance)
+                    int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
+
+                    if (distance < DifficultyManager.FollowLineDistance * 4)
+                        continue;
+
+                    //find out how many points we can place (evenly)
+                    int count = (int)((distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+
+                    float usableDistance = (distance - buffer_size * 2) / (count);
+
+                    for (int j = 0; j < count + 1; j++)
                     {
-                        float fraction = ((float)j / distance);
+                        float fraction = (buffer_size + usableDistance * j) / distance;
                         Vector2 pos = pos1 + fraction * distanceVector;
                         int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
                         int fadeout = (int)(time1 + fraction * length);
