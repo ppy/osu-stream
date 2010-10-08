@@ -319,7 +319,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (lineLength + currentLength > PathLength)
                 {
-                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1)) * (float)(PathLength - currentLength);
+                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1)) * (float)(l.rho - (PathLength - currentLength));
                     l.Recalc();
 
                     currentLength += l.rho;
@@ -673,6 +673,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             return progress;
         }
 
+        private Line lineAtProgress(double progress)
+        {
+            progress = normalizeProgress(progress);
+
+            double aimLength = PathLength * progress;
+
+            //index is the index of the line segment that exceeds the required length (so we need to cut it back)
+            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
+
+            double lengthAtIndex = cumulativeLengths[index];
+            return drawableSegments[index];
+        }
+        
         private Vector2 positionAtProgress(double progress)
         {
             progress = normalizeProgress(progress);
@@ -686,7 +699,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
 
             //cut back the line to required exact length
-            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(1 - Math.Abs(lengthAtIndex - aimLength));
+            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - Math.Abs(lengthAtIndex - aimLength));
         }
 
         bool isReversing { get { return progressCurrent % 2 >= 1; } }
@@ -704,25 +717,14 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBall.Reverse = isReversing;
 
-            double progressNormalized = normalizeProgress(progressCurrent);
-
-            //length we are looking to achieve based on time progress through slider
-            double aimLength = PathLength * progressNormalized;
-
-            //index is the index of the line segment that exceeds the required length (so we need to cut it back)
-            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
-
-            double lengthAtIndex = cumulativeLengths[index];
-            Line currentLine = drawableSegments[index];
-
             //cut back the line to required exact length
-            TrackingPosition = positionAtProgress(progressNormalized);
+            TrackingPosition = positionAtProgress(progressCurrent);
 
             if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
-            spriteFollowBall.Rotation = currentLine.theta;// +(float)Math.PI;
+            spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
 
             spriteFollowCircle.Position = TrackingPosition;
 
