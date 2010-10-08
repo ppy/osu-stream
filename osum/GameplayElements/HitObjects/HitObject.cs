@@ -389,14 +389,14 @@ namespace osum.GameplayElements
 
             //HitObjectManager.OnHitSound(SoundType);
 
-            if ((SoundType & HitObjectSoundType.Finish) > 0)
+            if ((type & HitObjectSoundType.Finish) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitFinish);
             //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
 
-            if ((SoundType & HitObjectSoundType.Whistle) > 0)
+            if ((type & HitObjectSoundType.Whistle) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitWhistle);
 
-            if ((SoundType & HitObjectSoundType.Clap) > 0)
+            if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap);
 
             //if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)

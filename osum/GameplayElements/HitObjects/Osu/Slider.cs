@@ -192,7 +192,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
-            hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, soundType);
+            hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
 
             spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 14),
@@ -544,7 +544,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (isTracking)
                 {
-                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint - 1] : SoundType);
+                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType);
 
                     Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
                         Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
