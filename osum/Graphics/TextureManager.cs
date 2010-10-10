@@ -37,7 +37,7 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 210, 366, 140, 134));
 
-            textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 129, 132));
+            textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 133, 132));
 
             textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 189, 0, 180, 180));
             textureLocations.Add(OsuTexture.hit100k, new SpriteSheetTexture("hit", 190, 180, 180, 180));
@@ -47,6 +47,12 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 626, 0, 206, 207));
 
             textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 370, 132, 256, 257));
+            textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 190, 366, 20, 18));
+
+            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 833, 0, 108, 108));
+            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 833, 108, 128, 128));
+
+            textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
         }
 
 		public static void UnloadAll()
@@ -163,6 +169,10 @@ namespace osum.Graphics.Skins
         hit100k,
         hit300g,
         hit300k,
-        hit0
+        hit0,
+        sliderscorepoint,
+        hitcircle,
+        hitcircleoverlay,
+        approachcircle
     }
 }

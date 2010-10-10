@@ -16,8 +16,6 @@ namespace osum.GameplayElements
 
         private const float TEXT_SIZE = 0.8f;
 
-        internal virtual string SpriteNameHitCircle { get { return "hitcircle"; } }
-
         internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
             : base(hit_object_manager, pos, startTime, soundType, newCombo)
         {
@@ -25,19 +23,19 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new pSprite(TextureManager.Load("approachcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
+            SpriteApproachCircle = new pSprite(TextureManager.Load(OsuTexture.approachcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
             //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
             SpriteCollection.Add(SpriteApproachCircle);
 
             SpriteHitCircle1 =
-                new pSprite(TextureManager.Load(SpriteNameHitCircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
+                new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             SpriteCollection.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
             DimCollection.Add(SpriteHitCircle1);
 
 
             SpriteHitCircle2 =
-                new pAnimation(TextureManager.LoadAnimation(SpriteNameHitCircle + "overlay"), FieldTypes.Gamefield512x384,
+                new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             SpriteCollection.Add(SpriteHitCircle2);
@@ -194,7 +192,7 @@ namespace osum.GameplayElements
 
         internal pSprite SpriteApproachCircle;
         internal pSprite SpriteHitCircle1;
-        internal pAnimation SpriteHitCircle2;
+        internal pSprite SpriteHitCircle2;
         internal pSpriteText SpriteHitCircleText;
 
         private int comboNumber;

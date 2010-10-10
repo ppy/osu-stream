@@ -210,8 +210,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //Start and end circles
 
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
             if (repeatCount > 2)
                 spriteCollectionStart.Add(new pSprite(TextureManager.Load("reversearrow"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White));
 
@@ -219,8 +219,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
 
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load("hitcircle"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load("hitcircleoverlay"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
             if (repeatCount > 1)
                 spriteCollectionEnd.Add(new pSprite(TextureManager.Load("reversearrow"), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White));
 
@@ -248,7 +248,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 scoringPoints.Add(progress);
 
                 pSprite scoringDot =
-                                    new pSprite(TextureManager.Load("sliderscorepoint"),
+                                    new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
                                                 FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
