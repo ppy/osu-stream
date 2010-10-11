@@ -462,7 +462,7 @@ namespace osum.GameplayElements
                         continue;
 
                     //find out how many points we can place (evenly)
-                    int count = (int)((distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+                    int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
 
                     float usableDistance = (distance - buffer_size * 2) / (count);
 
