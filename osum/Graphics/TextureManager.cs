@@ -44,15 +44,17 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.hit300, new SpriteSheetTexture("hit", 0, 0, 189, 190));
             textureLocations.Add(OsuTexture.hit300k, new SpriteSheetTexture("hit", 0, 190, 190, 190));
-            textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 626, 0, 206, 207));
+            textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 626, 0, 208, 207));
 
             textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 370, 132, 256, 257));
             textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 190, 366, 20, 18));
 
-            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 833, 0, 108, 108));
-            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 833, 108, 128, 128));
+            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 834, 0, 108, 108));
+            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
 
             textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
+
+            textureLocations.Add(OsuTexture.sliderarrow, new SpriteSheetTexture("hit", 626, 206, 79, 62));
         }
 
 		public static void UnloadAll()
@@ -173,6 +175,7 @@ namespace osum.Graphics.Skins
         sliderscorepoint,
         hitcircle,
         hitcircleoverlay,
-        approachcircle
+        approachcircle,
+        sliderarrow
     }
 }
