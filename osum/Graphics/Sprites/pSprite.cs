@@ -588,6 +588,8 @@ namespace osum.Graphics.Sprites
             clone.DrawWidth = DrawWidth;
             clone.DrawHeight = DrawHeight;
 
+            clone.originVector = originVector;
+
             clone.Scale = Scale;
             clone.Rotation = Rotation;
 
