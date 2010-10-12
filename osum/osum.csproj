@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>IPHONE DEBUG SIMULATOR</DefineConstants>
+    <DefineConstants>IPHONE DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -55,7 +55,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>IPHONE DEBUG</DefineConstants>
+    <DefineConstants>IPHONE DEBUG NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -80,7 +80,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchSdkVersion>4.1</MtouchSdkVersion>
-    <DefineConstants>IPHONE</DefineConstants>
+    <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
     <MtouchI18n />
   </PropertyGroup>
@@ -110,7 +110,6 @@
     <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
-    <Compile Include="Graphics\Skins\SkinManager.cs" />
     <Compile Include="GameplayElements\BeatmapManager.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Graphics\Color4.cs" />
@@ -170,6 +169,25 @@
     <Compile Include="GameModes\GameComponent.cs" />
     <Compile Include="Helpers\pList.cs" />
     <Compile Include="Graphics\GLES.cs" />
+    <Compile Include="Graphics\TextureManager.cs" />
+    <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
+    <Compile Include="..\..\..\osu!\osu!common\Bancho\bSerializable.cs">
+      <Link>Helpers\osu!common\bSerializable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\osu!\osu!common\Helpers\FastSerializer.cs">
+      <Link>Helpers\osu!common\FastSerializer.cs</Link>
+    </Compile>
+    <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
+    <Compile Include="..\..\..\osu!\osu!common\Libraries\Osz2\MapPackage.cs">
+      <Link>Helpers\osu!common\MapPackage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\osu!\osu!common\Libraries\Osz2\MapStream.cs">
+      <Link>Helpers\osu!common\MapStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\osu!\osu!common\Helpers\DynamicDeserializer.cs">
+      <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -185,6 +203,8 @@
     <Folder Include="GameplayElements\" />
     <Folder Include="GameplayElements\Beatmaps\" />
     <Folder Include="Graphics\Renderers\" />
+    <Folder Include="Helpers\osu!common\" />
+    <Folder Include="Beatmaps\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
@@ -668,19 +688,6 @@
     <Content Include="Skins\Default\normal-hitfinish.wav" />
     <Content Include="Skins\Default\normal-hitnormal.wav" />
     <Content Include="Skins\Default\normal-hitwhistle.wav" />
-    <Content Include="Beatmaps\bcl\background.png" />
-    <Content Include="Beatmaps\bcl\babycruisingedit.mp3" />
-    <Content Include="Beatmaps\bcl\background-real.png" />
-    <Content Include="Beatmaps\bcl\beatmap.osu" />
-    <Content Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29 [Normal].osu" />
-    <Content Include="Beatmaps\bcl\Perfume - Baby Cruising Love %28peppy%29.osb" />
-    <Content Include="Beatmaps\bcl\play-skip.png" />
-    <Content Include="Beatmaps\bcl\play-warningarrow.png" />
-    <Content Include="Beatmaps\bcl\section-fail.png" />
-    <Content Include="Beatmaps\bcl\section-pass.png" />
-    <Content Include="Beatmaps\bcl\spinner-circle.png" />
-    <Content Include="Beatmaps\bcl\spinner-metre.png" />
-    <Content Include="Beatmaps\bcl\spinnerspin.mp3" />
     <Content Include="Skins\Default\sliderb-0.png" />
     <Content Include="Skins\Default\sliderb-1.png" />
     <Content Include="Skins\Default\sliderb-2.png" />
@@ -701,5 +708,7 @@
     <Content Include="Skins\Default\soft-sliderslide.wav" />
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
+    <Content Include="Skins\Default\hit.png" />
+    <Content Include="Beatmaps\lix - tori no uta -ethereal house mix-.osz2" />
   </ItemGroup>
 </Project>

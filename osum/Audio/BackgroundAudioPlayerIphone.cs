@@ -45,6 +45,25 @@ namespace osum
 			
 		}
 
+        public unsafe bool Load(byte[] bytes)
+        {
+            if (player != null)
+                player.Dispose();
+
+            NSError error = null;
+
+
+            fixed (byte* ptr = bytes)
+            {
+                NSData data = NSData.FromBytes((IntPtr)ptr,(uint)bytes.Length);
+
+                player = AVAudioPlayer.FromData(data,out error);
+                player.MeteringEnabled = true;
+            }
+
+            return error == null;
+        }
+
         public bool Load(string filename)
         {
             if (player != null)
@@ -68,6 +87,6 @@ namespace osum
                 return player == null ? 0 : player.CurrentTime;
             }
         }
-	}
+    }
 }
 

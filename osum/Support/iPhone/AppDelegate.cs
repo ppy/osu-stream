@@ -63,7 +63,7 @@ namespace osum.Support.iPhone
 		{
 			Console.WriteLine("+++ResignActivation");
 			
-			SkinManager.UnloadAll();
+			TextureManager.UnloadAll();
 			
 			if (glView.EAGLContext != null)
 			    glView.Stop();
