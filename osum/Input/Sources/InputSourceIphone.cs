@@ -31,8 +31,6 @@ namespace osum
 		
 		public void HandleTouchesBegan (NSSet touches, UIEvent evt)
 		{
-			Console.WriteLine("touch began");
-
             TrackingPoint newPoint = null;
 
 			foreach (UITouch u in NSSetToList(touches))
@@ -40,8 +38,6 @@ namespace osum
                 newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
                 trackingPoints.Add(newPoint);
             }
-			
-			Console.WriteLine("total touches: " + trackingPoints.Count);
 			
 			if (trackingPoints.Count == 1)
 				TriggerOnDown(newPoint);
@@ -57,9 +53,6 @@ namespace osum
                 if (point != null) point.Location = u.LocationInView(gameWindow);
             }
 			
-			Console.WriteLine("touch moved");
-			Console.WriteLine("total touches: " + trackingPoints.Count);
-			
 			TriggerOnMove(point);
 		}
 		
@@ -72,9 +65,6 @@ namespace osum
 				point = trackingPoints.Find(t => t.Tag == u);
                 if (point != null) trackingPoints.Remove(point);
             }
-			
-			Console.WriteLine("touch ended");
-			Console.WriteLine("total touches: " + trackingPoints.Count);
 			
 			if (trackingPoints.Count == 0)
 				TriggerOnUp(point);

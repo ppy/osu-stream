@@ -55,14 +55,11 @@ namespace osum.Support.iPhone
 			UIApplication.SharedApplication.StatusBarHidden = true;
 			UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight,false);
 			
-			Console.WriteLine("+++FinishedLaunching");
 			Instance = this;
 		}
 		
 		public override void OnResignActivation (UIApplication app)
 		{
-			Console.WriteLine("+++ResignActivation");
-			
 			TextureManager.UnloadAll();
 			
 			if (glView.EAGLContext != null)
@@ -72,12 +69,10 @@ namespace osum.Support.iPhone
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated (UIApplication app)
 		{
-			Console.WriteLine("+++OnActivated");
-			
 			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
 			
 			//start the run loop.
-			glView.Run(60.0);
+			glView.Run(60);
 		}
 	}
 }

@@ -74,8 +74,6 @@ namespace osum
 
         private static void ReceiveDown(InputSource source, TrackingPoint point)
         {
-            Console.WriteLine("input: down");
-
             if (PrimaryTrackingPoint == null)
                 PrimaryTrackingPoint = point;
 
@@ -85,8 +83,6 @@ namespace osum
 
         private static void ReceiveUp(InputSource source, TrackingPoint point)
         {
-            Console.WriteLine("input: up");
-
             if (PrimaryTrackingPoint == point)
             {
                 //find the next valid tracking point.
@@ -106,8 +102,6 @@ namespace osum
 
         private static void ReceiveClick(InputSource source, TrackingPoint point)
         {
-            Console.WriteLine("input: click");
-
             UpdatePointerPosition(point);
             TriggerOnClick(source, point);
         }
