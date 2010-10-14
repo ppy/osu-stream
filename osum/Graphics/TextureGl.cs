@@ -364,7 +364,7 @@ namespace osum.Graphics
         	if (format == 0)
         		format = PixelFormat.Bgra;
 
-            GL.GetError ();
+            GL.GetError();
         	//Clear errors.
 
             bool newTexture = false;
@@ -376,7 +376,6 @@ namespace osum.Graphics
         		int[] textures = new int[1];
         		GL.GenTextures (1, textures);
         		Id = textures[0];
-        		//Console.WriteLine ("TextureGl assigned: " + Id);
         	}
 
             if (level > 0)
@@ -385,8 +384,8 @@ namespace osum.Graphics
        		GL.BindTexture (SURFACE_TYPE, Id);
 
 			//Nearest gives ~30% more draw performance, but looks a bit shitty.
-            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-        	GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
+        	GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
 			
 			//can't determine if this helps
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
