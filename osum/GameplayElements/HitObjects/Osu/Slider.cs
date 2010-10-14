@@ -147,6 +147,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private List<double> scoringPoints = new List<double>();
 
+        const bool NO_SNAKING = true;
+
+        const bool PRERENDER_ALL = true;
+
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
         /// </summary>
@@ -265,6 +269,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.AddRange(spriteCollectionStart);
             SpriteCollection.AddRange(spriteCollectionEnd);
             SpriteCollection.AddRange(spriteCollectionScoringPoints);
+
+            if (PRERENDER_ALL)
+                UpdatePathTexture();
         }
 
         private void CalculateSplines()
@@ -762,6 +769,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (sliderBodyTexture == null) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
+            if (lengthDrawn == PathLength) return; //finished drawing already.
+
             // Snaking animation is IN PROGRESS
 #if FBO
                 int FirstSegmentIndex = lastSegmentIndex + 1;
@@ -778,7 +787,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
                 lastDrawnSegmentIndex++;
 
-            if (lastDrawnSegmentIndex >= cumulativeLengths.Count)
+            if (lastDrawnSegmentIndex >= cumulativeLengths.Count || NO_SNAKING)
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
@@ -798,7 +807,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 {
 
                     GL.PushMatrix();
-
 #if IPHONE
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
@@ -810,8 +818,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
 
-                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
-
+                    GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
 
                     GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);

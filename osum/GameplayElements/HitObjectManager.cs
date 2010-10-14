@@ -130,7 +130,7 @@ namespace osum.GameplayElements
                 else
                 {
                     Slider s = h as Slider;
-                    if (s != null)
+                    if (s != null && s.EndTime < Clock.AudioTime)
                         s.DisposePathTexture();
                 }
         }
