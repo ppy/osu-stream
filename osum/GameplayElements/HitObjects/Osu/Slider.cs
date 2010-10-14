@@ -149,7 +149,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         const bool NO_SNAKING = true;
 
-        const bool PRERENDER_ALL = true;
+        const bool PRERENDER_ALL = false;
 
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.

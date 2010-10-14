@@ -39,8 +39,8 @@ namespace osum
                 trackingPoints.Add(newPoint);
             }
 			
-			if (trackingPoints.Count == 1)
-				TriggerOnDown(newPoint);
+			//if (trackingPoints.Count == 1)
+		    TriggerOnDown(newPoint);
 		}
 		
 		public void HandleTouchesMoved (NSSet touches, UIEvent evt)
@@ -66,8 +66,7 @@ namespace osum
                 if (point != null) trackingPoints.Remove(point);
             }
 			
-			if (trackingPoints.Count == 0)
-				TriggerOnUp(point);
+			TriggerOnUp(point);
 			
 		}
 		
