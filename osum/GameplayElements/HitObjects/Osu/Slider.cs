@@ -147,8 +147,11 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private List<double> scoringPoints = new List<double>();
 
+#if IPHONE
         const bool NO_SNAKING = true;
-
+#else
+        const bool NO_SNAKING = false;
+#endif
         const bool PRERENDER_ALL = false;
 
         /// <summary>
