@@ -353,7 +353,7 @@
     <Content Include="Skins\Default\soft-sliderslide.wav" />
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
-    <Content Include="Beatmaps\lix - tori no uta -ethereal house mix-.osz2" />
     <Content Include="Skins\Default\hit.png" />
+    <Content Include="Beatmaps\lix - phantom ensemble -ark trance mix-.osz2" />
   </ItemGroup>
 </Project>
