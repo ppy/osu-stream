@@ -29,7 +29,7 @@ namespace osum
         {
             availableMaps = new List<Beatmap>();
 
-            foreach (string s in Directory.GetFiles("Beatmaps"))
+            foreach (string s in Directory.GetFiles("Beatmaps","*.osz2"))
             {
                 //pSprite song = new pSprite(TextureManager.Load);
                 Console.WriteLine("Loading file \"{0}\"", s);
