@@ -141,18 +141,12 @@ namespace osum.GameplayElements
             if (action > 0)
             {
                 //Fade out the actual hit circle
-                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.9F, 
-                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
+                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F, 
+                    Clock.Time, Clock.Time + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
-                Transformation circleScaleOut2 = new Transformation(TransformationType.Scale, 1.9F, 2F,
-                    (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
-
-                Transformation textScaleOut = new Transformation(TransformationType.Scale, TEXT_SIZE * 1.1F, TEXT_SIZE * 1.9F,
-                    Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
-
-                Transformation textScaleOut2 = new Transformation(TransformationType.Scale, TEXT_SIZE * 1.9F, TEXT_SIZE * 2F,
-                    (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
-
+                Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F * TEXT_SIZE, 1.4F * TEXT_SIZE,
+                    Clock.Time, Clock.Time + DifficultyManager.FadeOut, EasingTypes.InHalf);
+                
                 Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0, 
                     Clock.Time, Clock.Time + DifficultyManager.FadeOut);
 
@@ -160,21 +154,18 @@ namespace osum.GameplayElements
                 SpriteHitCircle1.Transformations.Clear();
                 SpriteHitCircle1.Clocking = ClockTypes.Game;
                 SpriteHitCircle1.Transform(circleScaleOut);
-                SpriteHitCircle1.Transform(circleScaleOut2);
                 SpriteHitCircle1.Transform(circleFadeOut);
 
                 //SpriteHitCircle2.Depth = SpriteManager.drawOrderFwd(StartTime + 2);
                 SpriteHitCircle2.Transformations.Clear();
                 SpriteHitCircle2.Clocking = ClockTypes.Game;
                 SpriteHitCircle2.Transform(circleScaleOut);
-                SpriteHitCircle2.Transform(circleScaleOut2);
                 SpriteHitCircle2.Transform(circleFadeOut);
 
                 //SpriteHitCircleText.Depth = SpriteManager.drawOrderFwd(StartTime + 2);
                 SpriteHitCircleText.Transformations.Clear();
                 SpriteHitCircleText.Clocking = ClockTypes.Game;
                 SpriteHitCircleText.Transform(textScaleOut);
-                SpriteHitCircleText.Transform(textScaleOut2);
                 SpriteHitCircleText.Transform(circleFadeOut);
 
                 SpriteApproachCircle.Transformations.Clear();

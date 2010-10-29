@@ -220,7 +220,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
             if (repeatCount > 2)
-                spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White));
+                spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true });
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
@@ -229,7 +229,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
             spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
             if (repeatCount > 1)
-                spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White));
+                spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true });
 
             spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
@@ -250,7 +250,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             double tickNumber = 0;
             while (++tickNumber <= actualTickCount)
             {
-                double progress = (tickNumber * distanceBetweenTicks) / PathLength;
+                /*double progress = (tickNumber * distanceBetweenTicks) / PathLength;
 
                 scoringPoints.Add(progress);
 
@@ -263,7 +263,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
 
-                spriteCollectionScoringPoints.Add(scoringDot);
+                spriteCollectionScoringPoints.Add(scoringDot);*/
             }
 
             spriteCollectionScoringPoints.ForEach(s => s.Transform(fadeOut));

@@ -244,20 +244,7 @@ namespace osum.GameplayElements
             if (action > 0)
             {
                 p.Transform(
-                    new Transformation(TransformationType.Scale, 0.6F, 1.1F, Clock.Time,
-                                       (int)(Clock.Time + (HitFadeIn * 0.8))));
-
-                p.Transform(
-                    new Transformation(TransformationType.Fade, 0, 1, Clock.Time,
-                                       Clock.Time + HitFadeIn));
-
-                p.Transform(
-                    new Transformation(TransformationType.Scale, 1.1F, 0.9F, Clock.Time + HitFadeIn,
-                                       (int)(Clock.Time + (HitFadeIn * 1.2))));
-                p.Transform(
-                    new Transformation(TransformationType.Scale, 0.9F, 1F, Clock.Time + HitFadeIn,
-                                       (int)(Clock.Time + (HitFadeIn * 1.4))));
-
+                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 1.4)),1, 0.3f, 3));
                 p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));

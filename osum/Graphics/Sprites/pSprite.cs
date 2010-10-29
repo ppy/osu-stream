@@ -77,6 +77,8 @@ namespace osum.Graphics.Sprites
 
         internal float ScaleScalar { get { return Scale.X; } set { Scale = new Vector2(value, value); } }
 
+        internal bool Additive { get { return blending == BlendingFactorDest.One; } set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; } }
+
         internal float Alpha;
 
         public object Tag;
@@ -274,7 +276,6 @@ namespace osum.Graphics.Sprites
 
                 // reset some values
                 effect = SpriteEffect.None;
-                blending = BlendingFactorDest.OneMinusSrcAlpha;
 
                 // update current transformations
                 if (t.Initiated)
@@ -475,6 +476,7 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+
                     Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
 
                     if (Field == FieldTypes.Native)

@@ -108,7 +108,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal float CurrentFloat
+        internal virtual float CurrentFloat
         {
             get
             {
@@ -189,6 +189,11 @@ namespace osum.Graphics.Sprites
         internal Transformation(TransformationType type, float source, float destination, int start, int end)
             : this(type, source, destination, start, end, EasingTypes.None)
         {
+        }
+
+        protected Transformation(TransformationType type)
+        {
+            Type = type;
         }
 
         internal Transformation(TransformationType type, float source, float destination, int start, int end, EasingTypes easing)
@@ -285,4 +290,35 @@ namespace osum.Graphics.Sprites
                 StartTime, EndTime, StartFloat, EndFloat, Type);
         }
     }
+
+    internal class TransformationBounce : Transformation
+    {
+        private float Magnitude;
+        private float Pulses;
+
+        internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
+            : base(TransformationType.Scale,aimSize, aimSize, startTime, endTime)
+        {
+            Magnitude = magnitude;
+            Pulses = pulses;
+        }
+
+        internal override float CurrentFloat
+        {
+            get
+            {
+                int now = Clock.GetTime(Clocking);
+
+                float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
+
+                float rawSine = (float)Math.Sin(Pulses * Math.PI * (progress - 0.5f / Pulses));
+
+                float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress,2));
+
+                return Math.Max(0,StartFloat + diminishingMagnitude * rawSine);
+            }
+        }
+    }
+
+
 }
