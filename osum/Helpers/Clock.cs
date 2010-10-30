@@ -9,6 +9,7 @@ namespace osum.Helpers
     public enum ClockTypes
     {
         Game,
+        Mode,
         Audio
     }
 
@@ -26,6 +27,15 @@ namespace osum.Helpers
             get { return (int)(time * 1000); }
         }
 
+        private static int lastModeLoadTime;
+        public static int ModeTime { get { return Time - lastModeLoadTime; } }
+
+        public static void ModeLoadComplete()
+        {
+            lastModeLoadTime = Time;
+        }
+
+
         /// <summary>
         /// Gets the current game time in milliseconds, accurate to many decimal places.
         /// </summary>
@@ -35,6 +45,7 @@ namespace osum.Helpers
         }
 
         static double currentFrameAudioTime;
+        
 
         /// <summary>
         /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
@@ -59,6 +70,8 @@ namespace osum.Helpers
                 default:
                 case ClockTypes.Game:
                     return Clock.Time;
+                case ClockTypes.Mode:
+                    return Clock.ModeTime;
             }
         }
 

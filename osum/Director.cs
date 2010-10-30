@@ -3,6 +3,7 @@ using osum.GameModes;
 using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using osum.Support;
+using osum.Helpers;
 
 namespace osum
 {
@@ -93,6 +94,8 @@ namespace osum
                     //we got a new request to load a *different* mode during initialisation...
                     return;
                 }
+
+                Clock.ModeLoadComplete();
             }
 
             PendingMode = OsuMode.Unknown;
