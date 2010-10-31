@@ -241,7 +241,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                                          drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
 
             //tick calculations
-
             double distanceBetweenTicks = hitObjectManager.SliderScoringPointDistance;
 
             double tickCount = PathLength / distanceBetweenTicks;
@@ -250,7 +249,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             double tickNumber = 0;
             while (++tickNumber <= actualTickCount)
             {
-                /*double progress = (tickNumber * distanceBetweenTicks) / PathLength;
+                double progress = (tickNumber * distanceBetweenTicks) / PathLength;
 
                 scoringPoints.Add(progress);
 
@@ -263,7 +262,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
                     startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
 
-                spriteCollectionScoringPoints.Add(scoringDot);*/
+                spriteCollectionScoringPoints.Add(scoringDot);
             }
 
             spriteCollectionScoringPoints.ForEach(s => s.Transform(fadeOut));
@@ -329,7 +328,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (lineLength + currentLength > PathLength)
                 {
-                    l.p2 = l.p1 + Vector2.Normalize((l.p2 - l.p1)) * (float)(l.rho - (PathLength - currentLength));
+                    l.p2 = l.p1 + Vector2.Normalize(l.p2 - l.p1) * (float)(PathLength - currentLength);
                     l.Recalc();
 
                     currentLength += l.rho;
