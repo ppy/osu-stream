@@ -98,7 +98,7 @@ namespace osum.GameModes
             if (Clock.ModeTime > initial_display)
             {
                 elapsedRotation += GameBase.ElapsedMilliseconds;
-                osuLogo.Rotation += (float) (Math.Cos((elapsedRotation)/1000f)*0.0001);
+                osuLogo.Rotation += (float) (Math.Cos((elapsedRotation)/1000f)*0.0001 * GameBase.ElapsedMilliseconds);
             }
 
 		    int track = 0;
@@ -106,10 +106,6 @@ namespace osum.GameModes
                 if (s.Transformations.Count == 0)
                     s.Transform(new TransformationBounce(Clock.Time, Clock.Time + 900, s.ScaleScalar, 0.1f, 2));
             });
-
-            
-
-
 		}
 
 		public override void Draw()
