@@ -60,9 +60,11 @@ namespace osum
                     pt.OnHoverLost += delegate {pt.Colour = Color4.White; };
 
                     spriteManager.Add(pt);
+
+                    break;
                 }
 
-                currentPosition.Y += 10;
+                currentPosition.Y += 30;
                 
                 availableMaps.Add(b);
 

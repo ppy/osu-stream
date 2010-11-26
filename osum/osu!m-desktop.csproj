@@ -379,15 +379,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
     <Folder Include="GameplayElements\Scoring\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Beatmaps\beatmap.osu">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Beatmaps\lix - phantom ensemble -ark trance mix--1 - copy.osz2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
