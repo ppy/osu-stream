@@ -106,10 +106,12 @@ namespace osum.Graphics.Sprites
 
         bool inputCheckHover(Vector2 position)
         {
-            return Rectangle.Left < position.X &&
-                Rectangle.Right >= position.X &&
-                Rectangle.Top < position.Y &&
-                Rectangle.Bottom >= position.Y;
+            Box2 rect = DisplayRectangle;
+
+            return rect.Left < position.X &&
+                rect.Right >= position.X &&
+                rect.Top < position.Y &&
+                rect.Bottom >= position.Y;
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)

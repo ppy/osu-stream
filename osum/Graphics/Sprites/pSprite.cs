@@ -205,14 +205,25 @@ namespace osum.Graphics.Sprites
                 this.Transform(t);
         }
 
-        protected Box2 Rectangle;
+        protected Box2 TextureRectangle
+        {
+            get { return new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop); }
+        }
+
+        protected Box2 DisplayRectangle
+        {
+            get
+            {
+                Vector2 topLeft = FieldPosition - originVector;
+                Vector2 bottomRight = new Vector2(FieldPosition.X + DrawWidth * FieldScale.X, FieldPosition.Y + DrawHeight * FieldScale.Y);
+
+                return new Box2(topLeft.X, topLeft.Y, bottomRight.X, bottomRight.Y);
+            }
+        }
 
         public virtual void Update()
         {
             UpdateTransformations();
-
-            //update the box position
-            Rectangle = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
         }
 
         /// <summary>
@@ -492,16 +503,7 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-
-                    if (Field == FieldTypes.Native)
-                    {
-                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, Rectangle, effect);
-                    }
-                    else
-                    {
-                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, Rectangle, effect);
-                    }
-
+                    texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle, effect);
                 }
             }
 
@@ -627,7 +629,7 @@ namespace osum.Graphics.Sprites
 
         #region IDisposable Members
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             //todo: kill texture if possible
 

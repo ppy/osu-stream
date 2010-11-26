@@ -171,8 +171,6 @@ namespace osum
 
             SetViewport();
 
-            int size = 1;
-            
             WindowRatio = (float)WindowSize.Height / WindowBaseSize.Height;
 
             //Setup gamefield...

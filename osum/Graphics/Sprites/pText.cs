@@ -13,14 +13,12 @@ namespace osum.Graphics.Sprites
         internal Color4 BorderColour;
 
         public int BorderWidth = 1;
-        private int renderingResolution = GameBase.WindowSize.Width;
         internal bool TextAntialiasing = true;
         internal TextAlignment TextAlignment;
 
         public bool TextBold;
         internal Vector2 TextBounds;
         internal Color4 TextColour;
-        internal bool TextRenderSpecific;
         internal bool TextShadow;
         internal float TextSize;
         public bool TextUnderline;
@@ -52,11 +50,22 @@ namespace osum.Graphics.Sprites
             TextSize = textSize;
             TextAlignment = TextAlignment.Left;
             TextBounds = bounds;
-            TextAntialiasing = true;
 
-            Field = FieldTypes.StandardNoScale;
+            Field = FieldTypes.Native;
 
-            TextRenderSpecific = true;
+            GameBase.OnScreenLayoutChanged += new VoidDelegate(GameBase_OnScreenLayoutChanged);
+        }
+
+        public override void Dispose()
+        {
+            GameBase.OnScreenLayoutChanged -= new VoidDelegate(GameBase_OnScreenLayoutChanged);
+
+            base.Dispose();
+        }
+
+        void GameBase_OnScreenLayoutChanged()
+        {
+            textChanged = true;
         }
 
         public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
@@ -68,30 +77,16 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (internalTexture != null && !internalTexture.IsDisposed && !textChanged && GameBase.WindowSize.Width == renderingResolution)
+                if (internalTexture != null && !internalTexture.IsDisposed && !textChanged)
                     return internalTexture;
+
+                textChanged = true;
 
                 MeasureText();
 
                 return internalTexture;
             }
             set { }
-        }
-
-        internal Vector2 MeasureText(int startIndex, int length)
-        {
-            float size = (TextRenderSpecific ? (float) GameBase.WindowRatio : 1)*TextSize;
-
-            if (Text.Length == 0)
-                return Vector2.Zero;
-
-            Vector2 measure;
-            NativeText.CreateText(Text.Substring(startIndex, length), size, Vector2.Zero, TextColour, TextShadow, TextBold,
-                                  TextUnderline, TextAlignment,
-                                  TextAntialiasing, out measure, BackgroundColour, BorderColour, BorderWidth, true, FontFace);
-            if (TextRenderSpecific)
-                return measure/GameBase.WindowRatio;
-            return measure*0.625f;
         }
 
         Vector2 lastMeasure;
@@ -101,13 +96,12 @@ namespace osum.Graphics.Sprites
             if (textChanged)
             {
                 refreshTexture();
+                
                 DrawWidth = (int)Math.Round(lastMeasure.X);
                 DrawHeight = (int)Math.Round(lastMeasure.Y);
             }
 
-            if (TextRenderSpecific)
-                return lastMeasure/GameBase.WindowRatio;
-            return lastMeasure*0.625f; // *GameBase.WindowRatio;
+            return lastMeasure;
         }
 
         /// <summary>
@@ -117,15 +111,12 @@ namespace osum.Graphics.Sprites
         /// <returns></returns>
         private pTexture refreshTexture()
         {
-            bool existed = false;
-
             if (internalTexture != null && !internalTexture.IsDisposed)
             {
                 internalTexture.Dispose();
                 internalTexture = null;
-                existed = true;
             }
-            
+
             textChanged = false;
 
             if (string.IsNullOrEmpty(Text) && TextBounds.X == 0)
@@ -134,19 +125,14 @@ namespace osum.Graphics.Sprites
                 return null;
             }
 
-            renderingResolution = GameBase.WindowSize.Height;
+            float size = GameBase.WindowRatio * TextSize;
 
-            float size = (TextRenderSpecific ? (float)GameBase.WindowRatio : 1) * TextSize;
-            Vector2 bounds = (TextRenderSpecific ? GameBase.WindowRatio : 1)*TextBounds;
+            Vector2 bounds = Vector2.Zero;
+
             internalTexture =
                 NativeText.CreateText(Text, size, bounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
-            
-            if (aggressiveCleanup)
-            {
-                internalTexture.TrackAccessTime = true;
-                //if (!existed) DynamicSpriteCache.Load(this,true);
-            }
+
 
             UpdateTextureSize();
             UpdateTextureAlignment();
