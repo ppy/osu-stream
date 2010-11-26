@@ -46,25 +46,32 @@ namespace osum.Graphics.Sprites
 
         bool inputEventsBound;
 
-        internal event EventHandler onClick;
+        private event EventHandler onClick;
         internal event EventHandler OnClick
         {
             add { onClick += value; updateInputBindings(); }
             remove { onClick -= value; updateInputBindings(); }
         }
 
-        internal event EventHandler onHover;
+        private event EventHandler onHover;
         internal event EventHandler OnHover
         {
             add { onHover += value; updateInputBindings(); }
             remove { onHover -= value; updateInputBindings(); }
         }
+        
+        private event EventHandler onHoverLost;
+        internal event EventHandler OnHoverLost {
+            add { onHoverLost += value; }
+            remove { onHoverLost -= value; }
+        }
 
-        private void unbindAllEvents()
+        internal void UnbindAllEvents()
         {
             onClick = null;
             onHover = null;
-            OnHoverLost = null;
+            onHoverLost = null;
+
             updateInputBindings();
         }
 
@@ -95,25 +102,43 @@ namespace osum.Graphics.Sprites
             
         }
 
+        bool inputIsHovering;
+
+        bool inputCheckHover(Vector2 position)
+        {
+            return Rectangle.Left < position.X &&
+                Rectangle.Right >= position.X &&
+                Rectangle.Top < position.Y &&
+                Rectangle.Bottom >= position.Y;
+        }
+
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            bool isNowHovering = inputCheckHover(trackingPoint.WindowPosition);
+
+            if (isNowHovering != inputIsHovering)
+            {
+                inputIsHovering = isNowHovering;
+
+                if (inputIsHovering)
+                {
+                    if (onHover != null)
+                        onHover(this, null);
+                }
+                else
+                {
+                    if (onHoverLost != null)
+                        onHoverLost(this, null);
+                }
+            }
 
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
-            Vector2 position = trackingPoint.WindowPosition;
-
-            if (Rectangle.Left < position.X &&
-                Rectangle.Right >= position.X &&
-                Rectangle.Top < position.Y &&
-                Rectangle.Bottom >= position.Y)
-            {
+            if (inputIsHovering)
                     Click();
-            }
         }
-
-        internal event EventHandler OnHoverLost;
 
         internal void Click()
         {

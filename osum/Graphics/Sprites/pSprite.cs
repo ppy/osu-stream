@@ -631,7 +631,7 @@ namespace osum.Graphics.Sprites
         {
             //todo: kill texture if possible
 
-            unbindAllEvents();
+            UnbindAllEvents();
 
         }
 

@@ -43,11 +43,21 @@ namespace osum
                 foreach (string file in b.Package.MapFiles)
                 {
                     Console.WriteLine(" - {0}", file);
+                    
                     pText pt = new pText(string.Format(" - {0}", file), 12, currentPosition, 1, true, Color4.White);
+                    
                     pt.OnClick += delegate {
+                        
+                        pt.UnbindAllEvents();
+
+                        pt.MoveTo(pt.Position + new Vector2(20, 0), 1000, EasingTypes.In);
+
                         Player.SetBeatmap(b);
                         Director.ChangeMode(OsuMode.Play);
                     };
+
+                    pt.OnHover += delegate { pt.Colour = Color4.OrangeRed; };
+                    pt.OnHoverLost += delegate {pt.Colour = Color4.White; };
 
                     spriteManager.Add(pt);
                 }
@@ -57,9 +67,6 @@ namespace osum
                 availableMaps.Add(b);
 
             }
-
-
-            
         }
 
         public override void Draw()
