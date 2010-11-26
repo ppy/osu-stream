@@ -38,10 +38,13 @@ namespace osum
                 //pSprite song = new pSprite(TextureManager.Load);
                 Console.WriteLine("Loading file \"{0}\"", s);
 
-                Beatmap b = new Beatmap(s);
+                Beatmap reader = new Beatmap(s);
 
-                foreach (string file in b.Package.MapFiles)
+                foreach (string file in reader.Package.MapFiles)
                 {
+                    Beatmap b = new Beatmap(s);
+                    b.BeatmapFilename = file;
+
                     Console.WriteLine(" - {0}", file);
                     
                     pText pt = new pText(string.Format(" - {0}", file), 12, currentPosition, 1, true, Color4.White);
@@ -61,12 +64,14 @@ namespace osum
 
                     spriteManager.Add(pt);
 
-                    break;
+                    currentPosition.Y += 30;
+
+                    availableMaps.Add(b);
                 }
 
-                currentPosition.Y += 30;
                 
-                availableMaps.Add(b);
+                
+                
 
             }
         }
