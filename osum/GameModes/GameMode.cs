@@ -39,6 +39,7 @@ namespace osum.GameModes
         /// </summary>
         public virtual void Dispose()
         {
+            spriteManager.Dispose();
             //GC.SuppressFinalize(this);
         }
 

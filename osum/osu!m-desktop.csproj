@@ -66,9 +66,12 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="GameModes\Play\Components\HealthBar.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\Renderers\NativeText.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRendererDesktop.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="Graphics\Sprites\pSprite_Interaction.cs" />
+    <Compile Include="Graphics\Sprites\pText.cs" />
     <Compile Include="Graphics\TextureManager.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />

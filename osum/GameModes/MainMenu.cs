@@ -25,7 +25,7 @@ namespace osum.GameModes
 
 		internal override void Initialize()
 		{
-			pSprite menuBackground =
+			menuBackground =
 				new pSprite(TextureManager.Load(@"menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
 							ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
 			spriteManager.Add(menuBackground);
@@ -80,6 +80,7 @@ namespace osum.GameModes
 				AudioEngine.PlaySample(OsuSamples.MenuHit);
 
                 osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+                osuLogo.Transform(new Transformation(TransformationType.Rotation, 0, 1.4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
 
 				Director.ChangeMode(OsuMode.SongSelect, new FadeTransition());
 			}
@@ -88,6 +89,8 @@ namespace osum.GameModes
         double elapsedRotation;
         float startingRotation = 5;
         bool finishedSpinIn;
+        private pSprite menuBackground;
+
 		public override void Update()
 		{
 			base.Update();
@@ -103,6 +106,10 @@ namespace osum.GameModes
                 if (s.Transformations.Count == 0)
                     s.Transform(new TransformationBounce(Clock.Time, Clock.Time + 900, s.ScaleScalar, 0.1f, 2));
             });
+
+            
+
+
 		}
 
 		public override void Draw()

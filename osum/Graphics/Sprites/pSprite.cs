@@ -44,7 +44,7 @@ using osu_common.Helpers;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pSprite : IDrawable, IDisposable
+    internal partial class pSprite : IDrawable, IDisposable
     {
         protected pList<Transformation> transformations;
 
@@ -69,6 +69,8 @@ namespace osum.Graphics.Sprites
         internal int DrawLeft;
         internal int DrawWidth;
         internal int DrawHeight;
+
+        internal bool Disposable;
 
         internal int TextureWidth { get { return texture != null ? texture.Width : 0; } }
         internal int TextureHeight { get { return texture != null ? texture.Height : 0; } }
@@ -203,7 +205,20 @@ namespace osum.Graphics.Sprites
                 this.Transform(t);
         }
 
+        protected Box2 Rectangle;
+
         public virtual void Update()
+        {
+            UpdateTransformations();
+
+            //update the box position
+            Rectangle = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
+        }
+
+        /// <summary>
+        /// Iterates through each tansformation and applies where necessary.
+        /// </summary>
+        private void UpdateTransformations()
         {
             bool hasColour = false;
             bool hasAlpha = false;
@@ -468,6 +483,7 @@ namespace osum.Graphics.Sprites
 
         public virtual void Draw()
         {
+            pTexture texture = Texture;
             if (texture == null || texture.TextureGl == null)
                 return;
 
@@ -477,15 +493,13 @@ namespace osum.Graphics.Sprites
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
 
-                    Box2 rect = new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
-
                     if (Field == FieldTypes.Native)
                     {
-                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, Rectangle, effect);
                     }
                     else
                     {
-                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, rect, effect);
+                        texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, Rectangle, effect);
                     }
 
                 }
@@ -616,6 +630,9 @@ namespace osum.Graphics.Sprites
         public void Dispose()
         {
             //todo: kill texture if possible
+
+            unbindAllEvents();
+
         }
 
         #endregion

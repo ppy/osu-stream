@@ -62,6 +62,10 @@ namespace osum
             return true;
         }
 
+        internal static void Update()
+        {
+        }
+
         private static void UpdatePointerPosition(TrackingPoint point)
         {
             if (PrimaryTrackingPoint == point)

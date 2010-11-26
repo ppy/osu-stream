@@ -131,7 +131,9 @@ namespace osum.Graphics.Sprites
 
         public void Dispose()
         {
-            //todo: do we want to dispose of sprites being managed by this manager? possibly.
+            foreach (pSprite p in Sprites)
+                p.Dispose();
+
             Sprites = null;
         }
     }

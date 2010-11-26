@@ -263,6 +263,8 @@ namespace osum
             //todo: make more accurate
             ElapsedMilliseconds = Clock.TimeAccurate - lastTime;
 
+            InputManager.Update();
+
             UpdateFpsOverlay();
             
             Director.Update();

@@ -8,6 +8,8 @@ using System.IO;
 using osum.Graphics.Skins;
 using osum.GameplayElements.Beatmaps;
 using System.Collections.Generic;
+using osum.Graphics.Sprites;
+using OpenTK.Graphics;
 namespace osum
 {
     public class SongSelect : GameMode
@@ -29,6 +31,8 @@ namespace osum
         {
             availableMaps = new List<Beatmap>();
 
+            Vector2 currentPosition = new Vector2(10,10);
+
             foreach (string s in Directory.GetFiles("Beatmaps","*.osz2"))
             {
                 //pSprite song = new pSprite(TextureManager.Load);
@@ -39,14 +43,23 @@ namespace osum
                 foreach (string file in b.Package.MapFiles)
                 {
                     Console.WriteLine(" - {0}", file);
+                    pText pt = new pText(string.Format(" - {0}", file), 12, currentPosition, 1, true, Color4.White);
+                    pt.OnClick += delegate {
+                        Player.SetBeatmap(b);
+                        Director.ChangeMode(OsuMode.Play);
+                    };
+
+                    spriteManager.Add(pt);
                 }
+
+                currentPosition.Y += 10;
                 
                 availableMaps.Add(b);
 
             }
 
-            Player.SetBeatmap(availableMaps[0]);
-            Director.ChangeMode(OsuMode.Play);
+
+            
         }
 
         public override void Draw()
