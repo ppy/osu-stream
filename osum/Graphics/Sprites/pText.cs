@@ -3,7 +3,7 @@ using osum.Graphics.Sprites;
 using OpenTK.Graphics;
 using OpenTK;
 using osum.Helpers;
-using osu.Graphics.Renderers;
+using osum.Graphics.Renderers;
 
 namespace osum.Graphics.Sprites
 {
@@ -29,6 +29,8 @@ namespace osum.Graphics.Sprites
 
         private bool textChanged = true;
         private bool exactCoordinates = true;
+
+        private static NativeTextRenderer TextRenderer = new NativeTextRenderer();
 
         private pTexture internalTexture;
 
@@ -129,8 +131,7 @@ namespace osum.Graphics.Sprites
 
             Vector2 bounds = Vector2.Zero;
 
-            internalTexture =
-                NativeText.CreateText(Text, size, bounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
+            internalTexture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 
 

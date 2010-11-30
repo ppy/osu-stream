@@ -11,21 +11,13 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Helpers;
 
-namespace osu.Graphics.Renderers
+namespace osum.Graphics.Renderers
 {
-    internal enum TextAlignment
-    {
-        Left,
-        LeftFixed,
-        Centre,
-        Right
-    }
-
-    internal static class NativeText
+    internal class NativeTextRendererDesktop : NativeTextRenderer
     {
         static readonly Brush blackBrush = Brushes.Black;
        
-        internal static pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
+        internal override pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
                                             bool bold, bool underline, TextAlignment alignment, bool forceAa,
                                             out Vector2 measured,
                                             Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)

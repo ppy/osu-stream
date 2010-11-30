@@ -32,10 +32,9 @@
     <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
+    <MtouchMinimumOS>3.0</MtouchMinimumOS>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchSdkVersion>4.1</MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -48,7 +47,7 @@
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchSdkVersion>3.2</MtouchSdkVersion>
+    <MtouchI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,7 +65,6 @@
     <additionalargs>/unsafe</additionalargs>
     <Externalconsole>true</Externalconsole>
     <MtouchSdkVersion>4.1</MtouchSdkVersion>
-    <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -81,7 +79,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchSdkVersion>4.1</MtouchSdkVersion>
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
-    <CodesignProvision>C1FF375F-E056-46FD-AAA6-299EC1DE2726</CodesignProvision>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
   </PropertyGroup>
@@ -189,6 +186,9 @@
     <Compile Include="..\..\..\osu!\osu!common\Helpers\DynamicDeserializer.cs">
       <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
     </Compile>
+    <Compile Include="Graphics\Sprites\pSprite_Interaction.cs" />
+    <Compile Include="Graphics\Sprites\pText.cs" />
+    <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -245,8 +245,6 @@
     </Content>
     <Content Include="Skins\Default\scorebar-bg.png">
     </Content>
-    <Content Include="Skins\Default\play-warningarrow.png">
-    </Content>
     <Content Include="Skins\Default\score-percent.png">
     </Content>
     <Content Include="Skins\Default\score-3.png">
@@ -271,8 +269,6 @@
     </Content>
     <Content Include="Skins\Default\default-x.png">
     </Content>
-    <Content Include="Skins\Default\scoreboard-explosion-1.png">
-    </Content>
     <Content Include="Skins\Default\star3.png">
     </Content>
     <Content Include="Skins\Default\score-4.png">
@@ -284,8 +280,6 @@
     <Content Include="Skins\Default\score-7.png">
     </Content>
     <Content Include="Skins\Default\star2.png">
-    </Content>
-    <Content Include="Skins\Default\scoreboard-explosion-2.png">
     </Content>
     <Content Include="Skins\Default\score-1.png">
     </Content>
@@ -325,7 +319,6 @@
     </Content>
     <Content Include="Skins\Default\default-comma.png">
     </Content>
-    <Content Include="test.mp3" />
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
     <Content Include="Support\iPhone\loading-Landscape.png" />
@@ -354,6 +347,8 @@
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="Skins\Default\hit.png" />
+    <Content Include="Skins\Default\menu-explosion.png" />
+    <Content Include="Beatmaps\spice girls - goodbye.osz2" />
     <Content Include="Beatmaps\lix - phantom ensemble -ark trance mix-.osz2" />
   </ItemGroup>
 </Project>
