@@ -752,6 +752,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (sliderBodyTexture != null)
                 sliderBodyTexture.Dispose();
             sliderBodyTexture = null;
+
+#if IPHONE
+            if (fbo > 0)
+                GL.Oes.DeleteFramebuffers(fbo);
+#endif
         }
 
         /// <summary>
