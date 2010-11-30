@@ -29,6 +29,8 @@ using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using osu_common.Helpers;
+using OpenTK;
+using osum.Helpers;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;

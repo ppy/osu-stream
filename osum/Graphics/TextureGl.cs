@@ -405,7 +405,7 @@ namespace osum.Graphics
             {
                 if (SURFACE_TYPE == TextureTarget.Texture2D)
                 {
-                    if (potWidth == textureWidth && potHeight == textureHeight)
+                    if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
                     {
 #if IPHONE
                         GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,

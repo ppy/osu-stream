@@ -40,12 +40,12 @@ namespace osum.GameplayElements.Beatmaps
 
         public Stream GetFileStream(string filename)
         {
-#if DEBUG
+#if true
             //hack
             if (filename.EndsWith(".osu"))
             {
-                if (File.Exists("beatmaps\\beatmap.osu"))
-                    return new FileStream("beatmaps\\beatmap.osu", FileMode.Open);
+                if (File.Exists("Beatmaps/beatmap.osu"))
+                    return new FileStream("Beatmaps/beatmap.osu", FileMode.Open);
             }
 #endif
 
