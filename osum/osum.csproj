@@ -348,7 +348,6 @@
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\menu-explosion.png" />
-    <Content Include="Beatmaps\spice girls - goodbye.osz2" />
     <Content Include="Beatmaps\lix - phantom ensemble -ark trance mix-.osz2" />
   </ItemGroup>
 </Project>

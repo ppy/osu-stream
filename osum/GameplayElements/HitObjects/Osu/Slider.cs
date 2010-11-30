@@ -148,7 +148,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         private List<double> scoringPoints = new List<double>();
 
         const bool NO_SNAKING = false;
-#endif
         const bool PRERENDER_ALL = false;
 
         /// <summary>
@@ -755,7 +754,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 #if IPHONE
             if (fbo > 0)
-                GL.Oes.DeleteFramebuffers(fbo);
+            {
+                GL.Oes.DeleteFramebuffers(1,ref fbo);
+                fbo = 0;
+            }
 #endif
         }
 
