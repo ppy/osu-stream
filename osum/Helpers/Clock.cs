@@ -19,6 +19,12 @@ namespace osum.Helpers
         private static double time = 0;
         private static double zero = 0;
 
+#if IPHONE
+        private const int UNIVERSAL_OFFSET = -5;
+#else
+        private const int UNIVERSAL_OFFSET = 20;
+#endif
+
         /// <summary>
         /// Get the current game time in milliseconds.
         /// </summary>
@@ -52,7 +58,7 @@ namespace osum.Helpers
         /// </summary>
         public static int AudioTime
         {
-            get { return (int)(currentFrameAudioTime*1000); }
+            get { return (int)(currentFrameAudioTime*1000) + UNIVERSAL_OFFSET; }
         }
 
         /// <summary>
