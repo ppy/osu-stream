@@ -35,9 +35,6 @@ namespace osum
 
             foreach (string s in Directory.GetFiles("Beatmaps","*.osz2"))
             {
-                //pSprite song = new pSprite(TextureManager.Load);
-                Console.WriteLine("Loading file \"{0}\"", s);
-
                 Beatmap reader = new Beatmap(s);
 
                 foreach (string file in reader.Package.MapFiles)
@@ -45,9 +42,7 @@ namespace osum
                     Beatmap b = new Beatmap(s);
                     b.BeatmapFilename = file;
 
-                    Console.WriteLine(" - {0}", file);
-                    
-                    pText pt = new pText(string.Format(" - {0}", file), 16, currentPosition, new Vector2(512,32), 1, true, Color4.White, false);
+                    pText pt = new pText(string.Format("{0}", file), 16, currentPosition, new Vector2(512,32), 1, true, Color4.White, false);
                     
                     pt.OnClick += delegate {
                         
@@ -68,11 +63,6 @@ namespace osum
 
                     availableMaps.Add(b);
                 }
-
-                
-                
-                
-
             }
         }
 
