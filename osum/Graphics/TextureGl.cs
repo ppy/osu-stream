@@ -393,7 +393,6 @@ namespace osum.Graphics
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 #endif
 
-
             //can't determine if this helps
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
@@ -401,7 +400,7 @@ namespace osum.Graphics
 			//doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
-            PixelFormat internalFormat = PixelFormat.Rgba;
+            PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
             switch (format)
             {
                 case PixelFormat.Alpha:
