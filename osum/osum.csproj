@@ -81,7 +81,7 @@
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <CodesignProvision>B5101D0D-CC9F-4FE7-A12D-41CD044828D5</CodesignProvision>
+    <CodesignProvision>B0735A8B-3E86-4C10-9330-1C27FF6DC50A</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -191,6 +191,8 @@
     <Compile Include="Graphics\Sprites\pText.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererIphone.cs" />
+    <Compile Include="GameModes\Play\Components\ComboCounter.cs" />
+    <Compile Include="GameplayElements\Scoring\Score.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
