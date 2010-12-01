@@ -116,7 +116,7 @@ namespace osum.Graphics.Sprites
                 rect.Bottom >= position.Y;
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        void inputUpdateHoverState(TrackingPoint trackingPoint)
         {
             bool isNowHovering = inputCheckHover(trackingPoint.WindowPosition);
 
@@ -135,13 +135,19 @@ namespace osum.Graphics.Sprites
                         onHoverLost(this, null);
                 }
             }
+        }
 
+        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        {
+            inputUpdateHoverState(trackingPoint);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            inputUpdateHoverState(trackingPoint);
+
             if (inputIsHovering)
-                    Click();
+                Click();
         }
 
         internal void Click()
