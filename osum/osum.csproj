@@ -189,6 +189,7 @@
     <Compile Include="Graphics\Sprites\pSprite_Interaction.cs" />
     <Compile Include="Graphics\Sprites\pText.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
+    <Compile Include="Graphics\Renderers\NativeTextRendererIphone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

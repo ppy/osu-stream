@@ -47,7 +47,7 @@ namespace osum
 
                     Console.WriteLine(" - {0}", file);
                     
-                    pText pt = new pText(string.Format(" - {0}", file), 12, currentPosition, 1, true, Color4.White);
+                    pText pt = new pText(string.Format(" - {0}", file), 16, currentPosition, new Vector2(512,32), 1, true, Color4.White, false);
                     
                     pt.OnClick += delegate {
                         

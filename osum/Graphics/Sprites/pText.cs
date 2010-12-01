@@ -30,7 +30,11 @@ namespace osum.Graphics.Sprites
         private bool textChanged = true;
         private bool exactCoordinates = true;
 
-        private static NativeTextRenderer TextRenderer = new NativeTextRenderer();
+#if IPHONE
+        private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
+#else
+        private static NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();
+#endif
 
         private pTexture internalTexture;
 
@@ -129,9 +133,7 @@ namespace osum.Graphics.Sprites
 
             float size = GameBase.WindowRatio * TextSize;
 
-            Vector2 bounds = Vector2.Zero;
-
-            internalTexture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
+            internalTexture = TextRenderer.CreateText(Text, size, TextBounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 
 

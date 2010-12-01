@@ -401,6 +401,14 @@ namespace osum.Graphics
 			//doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
+            PixelFormat internalFormat = PixelFormat.Rgba;
+            switch (format)
+            {
+                case PixelFormat.Alpha:
+                    internalFormat = PixelInternalFormat.Alpha;
+                    break;
+            }
+
             if (newTexture)
             {
                 if (SURFACE_TYPE == TextureTarget.Texture2D)
@@ -408,10 +416,10 @@ namespace osum.Graphics
                     if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
                     {
 #if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, dataPointer);
 #else
-                        GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, dataPointer);
 #endif
                     }
@@ -421,10 +429,10 @@ namespace osum.Graphics
                         GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
                         IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
 #if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, pinnedDataPointer);
 #else
-                        GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, potWidth, potHeight, 0, format,
+                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, pinnedDataPointer);
 #endif
                         h0.Free();
@@ -436,10 +444,10 @@ namespace osum.Graphics
                 else
                 {
 #if IPHONE
-                    GL.TexImage2D(SURFACE_TYPE, level, (int)PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
+                    GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth, textureHeight, 0, format,
                                     PixelType.UnsignedByte, dataPointer);
 #else
-                    GL.TexImage2D(SURFACE_TYPE, level, PixelInternalFormat.Rgba, textureWidth, textureHeight, 0, format,
+                    GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth, textureHeight, 0, format,
                                     PixelType.UnsignedByte, dataPointer);
 #endif
                 }
