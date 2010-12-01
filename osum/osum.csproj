@@ -81,6 +81,7 @@
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
+    <CodesignProvision>B5101D0D-CC9F-4FE7-A12D-41CD044828D5</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
