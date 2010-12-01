@@ -235,6 +235,8 @@ namespace osum.Graphics.Sprites
             bool hasAlpha = false;
             bool hasRotation = false;
             bool hasScale = false;
+            bool hasMovement = false;
+            bool hasMovementX = false;
 
             for (int i = 0; i < transformations.Count; i++)
             {
@@ -257,10 +259,12 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Movement:
                             Position = t.EndVector;
+                            hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
                             Position.X = t.EndFloat;
+                            hasMovementX = true;
                             break;
 
                         case TransformationType.MovementY:
@@ -320,10 +324,12 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Movement:
                             Position = t.CurrentVector;
+                            hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
                             Position.X = t.CurrentFloat;
+                            hasMovementX = true;
                             break;
 
                         case TransformationType.MovementY:
@@ -380,11 +386,13 @@ namespace osum.Graphics.Sprites
                         break;
 
                     case TransformationType.Movement:
-                        Position = t.CurrentVector;
+                        if (!hasMovement)
+                            Position = t.CurrentVector;
                         break;
 
                     case TransformationType.MovementX:
-                        Position.X = t.CurrentFloat;
+                        if (!hasMovementX)
+                            Position.X = t.CurrentFloat;
                         break;
 
                     case TransformationType.MovementY:
@@ -597,7 +605,7 @@ namespace osum.Graphics.Sprites
                 return;
             }
 
-            Transformations.Add(
+            Transform(
                 new Transformation(Colour, colour,
                                    Clock.GetTime(Clocking) - (int)GameBase.ElapsedMilliseconds,
                                    Clock.GetTime(Clocking) + duration));
