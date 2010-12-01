@@ -119,12 +119,12 @@ namespace osum.GameplayElements
                 if (isDimmed)
                 {
                     foreach (pSprite p in DimCollection)
-                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.4f),100);
+                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.4f), 0);
                 }
                 else
                 {
                     foreach (pSprite p in DimCollection)
-                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), 100);
+                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), (int)m_HitObjectManager.FirstBeatLength/2);
                 }
             }
         }
@@ -173,10 +173,10 @@ namespace osum.GameplayElements
         /// </returns>
         internal ScoreChange Hit()
         {
-            if (Clock.AudioTime < StartTime - 400)
+            if (Clock.AudioTime < StartTime - 200)
             {
                 Shake();
-                return ScoreChange.Shake;
+                return ScoreChange.Ignore;
             }
 
             if (IsHit)
@@ -185,9 +185,7 @@ namespace osum.GameplayElements
             ScoreChange action = HitAction();
 
             if (action != ScoreChange.Ignore)
-            {
                 IsHit = true;
-            }
 
             return action;
         }
@@ -466,26 +464,30 @@ namespace osum.GameplayElements
                     pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
 
+        const int TAG_SHAKE_TRANSFORMATION = 54327;
+
         internal virtual void Shake()
         {
             foreach (pSprite p in SpriteCollection)
             {
-                Transformation previousShake = p.Transformations.FindLast(t => t.Type == TransformationType.Movement);
+                Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
 
-                Vector2 startPos = previousShake != null ? previousShake.EndVector : p.Position;
+                float pos = previousShake != null ? previousShake.EndFloat : p.Position.X;
 
-                p.Transform(new Transformation(startPos, startPos + new Vector2(8, 0),
-                    Clock.AudioTime, Clock.AudioTime + 20));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
-                    Clock.AudioTime + 20, Clock.AudioTime + 40));
-                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0),
-                    Clock.AudioTime + 40, Clock.AudioTime + 60));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos - new Vector2(8, 0),
-                    Clock.AudioTime + 60, Clock.AudioTime + 80));
-                p.Transform(new Transformation(startPos - new Vector2(8, 0), startPos + new Vector2(8, 0),
-                    Clock.AudioTime + 80, Clock.AudioTime + 100));
-                p.Transform(new Transformation(startPos + new Vector2(8, 0), startPos,
-                    Clock.AudioTime + 100, Clock.AudioTime + 120));
+                const int shake_count = 6;
+                const int shake_velocity = 8;
+                const int shake_period = 40;
+
+                for (int i = 0; i < shake_count; i++)
+                {
+                    int s = i == 0 ? 0 : shake_velocity;
+                    if (i % 2 == 0) s = -s;
+
+                    int e = i == shake_count - 1 ? 0 : -s;
+
+                    p.Transform(new Transformation(TransformationType.MovementX, pos + s, pos + e,
+                        Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period) { Tag = TAG_SHAKE_TRANSFORMATION });
+                }
             }
         }
 

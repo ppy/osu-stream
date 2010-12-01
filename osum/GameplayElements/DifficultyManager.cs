@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 
         public static int SliderVelocity = 300;
 
-        internal static int PreEmpt { get { return 1500; } }
+        internal static int PreEmpt { get { return 1000; } }
         // TODO: PreEmptSnakeStart should depend on the slider length.
         // For very short sliders, it should be around 50% of PreEmpt,
         // whereas for long ones, it should be as large as (but never larger than) PreEmpt.

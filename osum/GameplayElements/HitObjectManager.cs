@@ -143,6 +143,7 @@ namespace osum.GameplayElements
         /// <returns>Found object, null on no object found.</returns>
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
+            //todo: optimise for visible only
             foreach (HitObject h in hitObjects)
             {
                 if (h.HitTest(tracking))
@@ -155,6 +156,19 @@ namespace osum.GameplayElements
         internal void HandlePressAt(TrackingPoint point)
         {
             HitObject found = FindObjectAt(point);
+
+            int index = hitObjects.IndexOf(found); //todo: optimise index -- store inside hitObject plz.
+            if (index > 0)
+            {
+                //check last hidObject has been hit already and isn't still active
+                HitObject last = hitObjects[index - 1];
+                if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
+                {
+                    found.Shake();
+                    return;
+                }
+            }
+
             if (found != null)
                 TriggerScoreChange(found.Hit(), found);
         }
