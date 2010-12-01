@@ -11,17 +11,17 @@ namespace osum.Graphics.Sprites
     {
         internal Color4 BackgroundColour;
         internal Color4 BorderColour;
+        public bool TextBold;
+        public bool TextUnderline;
 
         public int BorderWidth = 1;
         internal bool TextAntialiasing = true;
         internal TextAlignment TextAlignment;
 
-        public bool TextBold;
-        internal Vector2 TextBounds;
+                internal Vector2 TextBounds;
         internal Color4 TextColour;
         internal bool TextShadow;
         internal float TextSize;
-        public bool TextUnderline;
         private bool aggressiveCleanup;
         internal string FontFace = "Tahoma";
 
@@ -37,11 +37,6 @@ namespace osum.Graphics.Sprites
 #endif
 
         private pTexture internalTexture;
-
-        public override pSprite Clone()
-        {
-            throw new NotImplementedException();
-        }
 
         internal pText(string text, float textSize, Vector2 startPosition, Vector2 bounds, float drawDepth,
                        bool alwaysDraw, Color4 colour, bool shadow)
@@ -95,8 +90,7 @@ namespace osum.Graphics.Sprites
             set { }
         }
 
-        Vector2 lastMeasure;
-
+        private Vector2 lastMeasure;
         internal Vector2 MeasureText()
         {
             if (textChanged)

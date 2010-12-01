@@ -61,14 +61,14 @@ namespace osum.Graphics.Sprites
                 if (text == value) return;
                 
                 text = value;
-                TextChanged = true;
+                textChanged = true;
 
                 MeasureText();
             }
         }
 
-        internal bool TextChanged;
-        internal Vector2 lastMeasure;
+        private bool textChanged;
+        private Vector2 lastMeasure;
 
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
@@ -83,8 +83,8 @@ namespace osum.Graphics.Sprites
 
         internal Vector2 MeasureText()
         {
-            if (TextChanged)
-                refreshRenderArray();
+            if (textChanged)
+                refreshTexture();
 
             UpdateTextureAlignment();
 
@@ -118,9 +118,12 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        private void refreshRenderArray()
+        /// <summary>
+        /// Updates the array of each character which is to be displayed.
+        /// </summary>
+        private void refreshTexture()
         {
-            TextChanged = false;
+            textChanged = false;
 
             renderTextures.Clear();
             renderCoordinates.Clear();
