@@ -211,6 +211,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
 
+            DimCollection.Add(spriteSliderBody);
+
             //Start and end circles
 
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
@@ -267,6 +269,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.AddRange(spriteCollectionStart);
             SpriteCollection.AddRange(spriteCollectionEnd);
             SpriteCollection.AddRange(spriteCollectionScoringPoints);
+
+            DimCollection.AddRange(hitCircleStart.SpriteCollection);
+            DimCollection.AddRange(spriteCollectionStart);
+            DimCollection.AddRange(spriteCollectionEnd);
+            DimCollection.AddRange(spriteCollectionScoringPoints);
 
             if (PRERENDER_ALL)
                 UpdatePathTexture();
@@ -720,9 +727,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         public override void Update()
         {
-            if (!IsVisible)
-                return;
-
             progressLastUpdate = progressCurrent;
             progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
 
@@ -744,6 +748,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 spriteCollectionEnd[2].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
                 spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 2);
+
+            base.Update();
         }
 
         internal void DisposePathTexture()
@@ -816,8 +822,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.PushMatrix();
 
 #if IPHONE
-
-
                     int oldFBO = 0;
                     GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
 
@@ -839,6 +843,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
 
                     GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+
+                    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 #else
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
@@ -858,10 +864,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
                     GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
-#endif
 
-                    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
-                    GL.ClearColor(0,0,0,0);
+                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+#endif
 
                     GameBase.Instance.SetViewport();
 

@@ -119,7 +119,7 @@ namespace osum.GameplayElements
         {
             spriteManager.Update();
 
-            //todo: optimise for only visible
+            //todo: optimise for active range only.
             foreach (HitObject h in hitObjects)
                 if (h.IsVisible)
                 {
@@ -162,6 +162,12 @@ namespace osum.GameplayElements
         Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
 
         public event ScoreChangeDelegate OnScoreChanged;
+        
+        /// <summary>
+        /// Cached value of the first beat length for the current beatmap. Used for general calculations (circle dimming).
+        /// </summary>
+        public double FirstBeatLength;
+
         private void TriggerScoreChange(ScoreChange change, HitObject hitObject)
         {
             if (change == ScoreChange.Ignore) return;

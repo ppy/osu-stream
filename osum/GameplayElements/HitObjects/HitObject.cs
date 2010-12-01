@@ -103,6 +103,30 @@ namespace osum.GameplayElements
         /// </summary>
         public virtual void Update()
         {
+            UpdateDimming();
+        }
+
+        bool isDimmed;
+        private void UpdateDimming()
+        {
+            bool shouldDim = Clock.AudioTime < StartTime && 
+                Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
+
+            if (shouldDim != isDimmed)
+            {
+                isDimmed = shouldDim;
+
+                if (isDimmed)
+                {
+                    foreach (pSprite p in DimCollection)
+                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.4f),100);
+                }
+                else
+                {
+                    foreach (pSprite p in DimCollection)
+                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), 100);
+                }
+            }
         }
 
         internal virtual bool NewCombo { get; set; }

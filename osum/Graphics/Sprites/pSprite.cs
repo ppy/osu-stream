@@ -575,6 +575,31 @@ namespace osum.Graphics.Sprites
             this.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
+        internal void FadeColour(Color4 colour, int duration)
+        {
+            FadeColour(colour, duration, false);
+        }
+
+        internal void FadeColour(Color4 colour, int duration, bool force)
+        {
+            if (!force && Colour == colour && Transformations.Count == 0)
+                return;
+
+            Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
+
+            if (duration == 0)
+            {
+                //Shortcut a duration of 0.
+                Colour = colour;
+                return;
+            }
+
+            Transformations.Add(
+                new Transformation(Colour, colour,
+                                   Clock.GetTime(Clocking) - (int)GameBase.ElapsedMilliseconds,
+                                   Clock.GetTime(Clocking) + duration));
+        }
+
         internal void MoveTo(Vector2 destination, int duration)
         {
             MoveTo(destination, duration, EasingTypes.None);

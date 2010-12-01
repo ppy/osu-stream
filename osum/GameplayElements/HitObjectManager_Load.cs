@@ -333,6 +333,8 @@ namespace osum.GameplayElements
 
         protected virtual void PostProcessing()
         {
+            FirstBeatLength = beatmap.beatLengthAt(0);
+
             float StackOffset = DifficultyManager.HitObjectRadius / 10;
 
             pTexture[] fptextures = TextureManager.LoadAnimation("followpoint");
