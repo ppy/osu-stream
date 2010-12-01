@@ -24,6 +24,7 @@ namespace osum.GameModes
 
         HealthBar healthBar;
         ScoreDisplay scoreDisplay;
+        ComboCounter comboCounter;
 
         Score currentScore;
 
@@ -52,6 +53,8 @@ namespace osum.GameModes
 
             scoreDisplay = new ScoreDisplay();
 
+            comboCounter = new ComboCounter();
+
             currentScore = new Score();
 
             AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
@@ -74,27 +77,31 @@ namespace osum.GameModes
                 case ScoreChange.SliderRepeat:
                 case ScoreChange.SliderEnd:
                     currentScore.totalScore += 30;
+                    comboCounter.IncreaseCombo();
                     break;
                 case ScoreChange.SliderTick:
                     currentScore.totalScore += 10;
+                    comboCounter.IncreaseCombo();
                     break;
                 case ScoreChange.Hit50:
                     currentScore.totalScore += 50;
                     currentScore.count50++;
+                    comboCounter.IncreaseCombo();
                     break;
                 case ScoreChange.Hit100:
                     currentScore.totalScore += 100;
                     currentScore.count100++;
+                    comboCounter.IncreaseCombo();
                     break;
                 case ScoreChange.Hit300:
                     currentScore.totalScore += 300;
                     currentScore.count300++;
+                    comboCounter.IncreaseCombo();
                     break;
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
+                    comboCounter.SetCombo(0);
                     break;
-                default:
-                    throw new Exception("unhandled score change");
             }
 
             //then handle the hp addition
@@ -130,6 +137,7 @@ namespace osum.GameModes
 
             scoreDisplay.Draw();
             healthBar.Draw();
+            comboCounter.Draw();
 
             base.Draw();
         }
@@ -140,6 +148,7 @@ namespace osum.GameModes
 
             healthBar.Update();
             scoreDisplay.Update();
+            comboCounter.Update();
 
             base.Update();
         }

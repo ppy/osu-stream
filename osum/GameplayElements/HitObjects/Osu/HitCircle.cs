@@ -46,7 +46,7 @@ namespace osum.GameplayElements
                                                     false, white);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
-            SpriteHitCircleText.MeasureText();
+
             if (ShowCircleText)
             {
                 SpriteCollection.Add(SpriteHitCircleText);

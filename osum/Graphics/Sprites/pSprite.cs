@@ -51,7 +51,7 @@ namespace osum.Graphics.Sprites
         internal Vector2 StartPosition;
 
         protected pTexture texture;
-        protected Vector2 originVector;
+        internal Vector2 OriginVector;
         protected SpriteEffect effect;
         protected BlendingFactorDest blending;
 
@@ -156,31 +156,31 @@ namespace osum.Graphics.Sprites
             switch (Origin)
             {
                 case OriginTypes.TopLeft:
-                    originVector = Vector2.Zero;
+                    OriginVector = Vector2.Zero;
                     break;
                 case OriginTypes.TopCentre:
-                    originVector = new Vector2(TextureWidth / 2, 0);
+                    OriginVector = new Vector2(TextureWidth / 2, 0);
                     break;
                 case OriginTypes.TopRight:
-                    originVector = new Vector2(TextureWidth, 0);
+                    OriginVector = new Vector2(TextureWidth, 0);
                     break;
                 case OriginTypes.CentreLeft:
-                    originVector = new Vector2(0, TextureHeight / 2);
+                    OriginVector = new Vector2(0, TextureHeight / 2);
                     break;
                 case OriginTypes.Centre:
-                    originVector = new Vector2(TextureWidth / 2, TextureHeight / 2);
+                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight / 2);
                     break;
                 case OriginTypes.CentreRight:
-                    originVector = new Vector2(TextureWidth, TextureHeight / 2);
+                    OriginVector = new Vector2(TextureWidth, TextureHeight / 2);
                     break;
                 case OriginTypes.BottomLeft:
-                    originVector = new Vector2(0, TextureHeight);
+                    OriginVector = new Vector2(0, TextureHeight);
                     break;
                 case OriginTypes.BottomCentre:
-                    originVector = new Vector2(TextureWidth / 2, TextureHeight);
+                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight);
                     break;
                 case OriginTypes.BottomRight:
-                    originVector = new Vector2(TextureWidth, TextureHeight);
+                    OriginVector = new Vector2(TextureWidth, TextureHeight);
                     break;
             }
         }
@@ -214,7 +214,7 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 topLeft = FieldPosition - originVector;
+                Vector2 topLeft = FieldPosition - OriginVector;
                 Vector2 bottomRight = new Vector2(FieldPosition.X + DrawWidth * FieldScale.X, FieldPosition.Y + DrawHeight * FieldScale.Y);
 
                 return new Box2(topLeft.X, topLeft.Y, bottomRight.X, bottomRight.Y);
@@ -447,6 +447,9 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.StandardSnapRight:
                         fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, Position.Y);
                         break;
+                    case FieldTypes.StandardSnapBottomLeft:
+                        fieldPosition = new Vector2(Position.X, GameBase.WindowBaseSize.Height - Position.Y);
+                        break;
                     case FieldTypes.StandardSnapBottomRight:
                         fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, GameBase.WindowBaseSize.Height - Position.Y);
                         break;
@@ -503,7 +506,7 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-                    texture.TextureGl.Draw(FieldPosition, originVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle, effect);
+                    texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle, effect);
                 }
             }
 
@@ -631,7 +634,7 @@ namespace osum.Graphics.Sprites
             clone.DrawWidth = DrawWidth;
             clone.DrawHeight = DrawHeight;
 
-            clone.originVector = originVector;
+            clone.OriginVector = OriginVector;
 
             clone.Scale = Scale;
             clone.Rotation = Rotation;
@@ -709,6 +712,8 @@ namespace osum.Graphics.Sprites
         StandardSnapRight,
 
         StandardSnapBottomRight,
+
+        StandardSnapBottomLeft,
 
         /// <summary>
         ///   Aligns from the exact centre, where a position of 0 is translated to Standard(320,240).

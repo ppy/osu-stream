@@ -61,7 +61,9 @@ namespace osum.Graphics.Sprites
                 if (text == value) return;
                 
                 text = value;
-                refreshRenderArray();
+                TextChanged = true;
+
+                MeasureText();
             }
         }
 
@@ -72,12 +74,11 @@ namespace osum.Graphics.Sprites
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(null, fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
-            Text = text;
-            texture = null;
-            TextChanged = true;
-            //Type = SpriteTypes.SpriteText;
             TextFont = fontname;
             SpacingOverlap = spacingOverlap;
+
+            //this will trigger a render call here
+            Text = text;
         }
 
         internal Vector2 MeasureText()
@@ -95,21 +96,24 @@ namespace osum.Graphics.Sprites
             switch (Origin)
             {
                 case OriginTypes.Centre:
-                    originVector = lastMeasure * 0.5F;
+                    OriginVector = lastMeasure * 0.5F;
                     break;
                 case OriginTypes.TopCentre:
-                    originVector.X = lastMeasure.X * 0.5F;
+                    OriginVector.X = lastMeasure.X * 0.5F;
                     break;
                 case OriginTypes.TopRight:
-                    originVector.X = lastMeasure.X;
+                    OriginVector.X = lastMeasure.X;
                     break;
                 case OriginTypes.BottomCentre:
-                    originVector.X = lastMeasure.X / 2;
-                    originVector.Y = lastMeasure.Y;
+                    OriginVector.X = lastMeasure.X / 2;
+                    OriginVector.Y = lastMeasure.Y;
                     break;
                 case OriginTypes.BottomRight:
-                    originVector.X = lastMeasure.X;
-                    originVector.Y = lastMeasure.Y;
+                    OriginVector.X = lastMeasure.X;
+                    OriginVector.Y = lastMeasure.Y;
+                    break;
+                case OriginTypes.BottomLeft:
+                    OriginVector.Y = lastMeasure.Y;
                     break;
             }
         }
@@ -199,27 +203,10 @@ namespace osum.Graphics.Sprites
             lastMeasure = new Vector2(width, height);
 
             UpdateTextureAlignment();
-
-            //DrawWidth = (int)Math.Round(lastMeasure.X);
-            //DrawHeight = (int)Math.Round(lastMeasure.Y);
         }
 
         public override void Draw()
         {
-            // either call base.Draw() or duplicate code here
-
-            /*
-            Vector2 tmp = Position;
-            for (int i = 0; i < renderCoordinates.Count; i++)
-            {
-                texture = renderTextures[i];
-                Position = tmp + renderCoordinates[i];
-                base.Draw();
-            }
-            Position = tmp;
-            texture = null;
-            */
-
             if (transformations.Count != 0 || AlwaysDraw)
             {
                 if (Alpha != 0)
@@ -229,7 +216,7 @@ namespace osum.Graphics.Sprites
                     {
                         // note: no srcRect calculation
                         if (renderTextures[i].TextureGl != null)
-                            renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindowBase, originVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
+                            renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindowBase, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
                     }
                 }
             }
