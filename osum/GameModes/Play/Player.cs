@@ -25,6 +25,8 @@ namespace osum.GameModes
         HealthBar healthBar;
         ScoreDisplay scoreDisplay;
 
+        Score currentScore;
+
         static Beatmap Beatmap;
 
         public Player() : base()
@@ -50,44 +52,64 @@ namespace osum.GameModes
 
             scoreDisplay = new ScoreDisplay();
 
+            currentScore = new Score();
+
             AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
             AudioEngine.Music.Play();
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
+            //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
             {
                 case ScoreChange.SpinnerBonus:
-                    scoreDisplay.Increase(1000);
+                    currentScore.totalScore += 1000;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
-                    scoreDisplay.Increase(500);
+                    currentScore.totalScore += 500;
                     break;
                 case ScoreChange.SpinnerSpin:
                     break;
                 case ScoreChange.SliderRepeat:
-                    scoreDisplay.Increase(30);
+                case ScoreChange.SliderEnd:
+                    currentScore.totalScore += 30;
                     break;
                 case ScoreChange.SliderTick:
-                    scoreDisplay.Increase(10);
+                    currentScore.totalScore += 10;
                     break;
                 case ScoreChange.Hit50:
-                    scoreDisplay.Increase(50);
+                    currentScore.totalScore += 50;
+                    currentScore.count50++;
                     break;
                 case ScoreChange.Hit100:
-                    scoreDisplay.Increase(100);
+                    currentScore.totalScore += 100;
+                    currentScore.count100++;
                     break;
                 case ScoreChange.Hit300:
-                    scoreDisplay.Increase(300);
+                    currentScore.totalScore += 300;
+                    currentScore.count300++;
                     break;
+                case ScoreChange.Miss:
+                    currentScore.countMiss++;
+                    break;
+                default:
+                    throw new Exception("unhandled score change");
+            }
+
+            //then handle the hp addition
+            switch (change)
+            {
                 case ScoreChange.Miss:
                     healthBar.ReduceCurrentHp(20);
                     break;
                 default:
-                    healthBar.IncreaseCurrentHp(10);
+                    healthBar.IncreaseCurrentHp(5);
                     break;
             }
+
+            scoreDisplay.SetScore(currentScore.totalScore);
+            scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
         }
 
         public override void Dispose()

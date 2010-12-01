@@ -109,7 +109,7 @@ namespace osum.GameModes.Play.Components
             spriteManager.Update();
         }
 
-        internal void Update(float accuracy)
+        internal void SetAccuracy(float accuracy)
         {
             currentAccuracy = Math.Round(accuracy,2);
         }
@@ -123,9 +123,9 @@ namespace osum.GameModes.Play.Components
             
         }
 
-        internal void Increase(int p)
+        internal void SetScore(int score)
         {
-            currentScore += p;
+            currentScore = score;
         }
     }
 }

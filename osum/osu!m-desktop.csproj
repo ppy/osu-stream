@@ -65,6 +65,7 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="GameModes\Play\Components\HealthBar.cs" />
+    <Compile Include="GameplayElements\Scoring\Score.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererDesktop.cs" />
@@ -382,6 +383,5 @@
   <ItemGroup>
     <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
-    <Folder Include="GameplayElements\Scoring\" />
   </ItemGroup>
 </Project>
