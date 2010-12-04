@@ -171,20 +171,20 @@
     <Compile Include="Graphics\TextureManager.cs" />
     <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
-    <Compile Include="..\..\..\osu!\osu!common\Bancho\bSerializable.cs">
+    <Compile Include="osu!common\Bancho\bSerializable.cs">
       <Link>Helpers\osu!common\bSerializable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\osu!\osu!common\Helpers\FastSerializer.cs">
+    <Compile Include="osu!common\\Helpers\FastSerializer.cs">
       <Link>Helpers\osu!common\FastSerializer.cs</Link>
     </Compile>
     <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
-    <Compile Include="..\..\..\osu!\osu!common\Libraries\Osz2\MapPackage.cs">
+    <Compile Include="osu!common\\Libraries\Osz2\MapPackage.cs">
       <Link>Helpers\osu!common\MapPackage.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\osu!\osu!common\Libraries\Osz2\MapStream.cs">
+    <Compile Include="osu!common\\Libraries\Osz2\MapStream.cs">
       <Link>Helpers\osu!common\MapStream.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\osu!\osu!common\Helpers\DynamicDeserializer.cs">
+    <Compile Include="osu!common\\Helpers\DynamicDeserializer.cs">
       <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
     </Compile>
     <Compile Include="Graphics\Sprites\pSprite_Interaction.cs" />
