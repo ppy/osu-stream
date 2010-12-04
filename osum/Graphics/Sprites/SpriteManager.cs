@@ -10,6 +10,8 @@ namespace osum.Graphics.Sprites
     {
         internal List<pSprite> Sprites;
 
+        int creationTime = Clock.Time;
+
         internal SpriteManager()
         {
             this.Sprites = new List<pSprite>();
@@ -59,11 +61,24 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        bool firstRender = true;
+
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
         /// </summary>
         internal void Update()
         {
+            if (firstRender)
+            {
+                int loadTime = Clock.Time - creationTime;
+
+                foreach (pSprite p in Sprites)
+                    if (p.Clocking == ClockTypes.Game)
+                        p.Transformations.ForEach(t => t.Offset(loadTime));
+
+                firstRender = false;
+            }
+
             if (SpriteQueue != null)
             {
                 pSprite topSprite = SpriteQueue.Peek();
@@ -81,6 +96,7 @@ namespace osum.Graphics.Sprites
                     topSprite = SpriteQueue.Peek();
                 }
             }
+
             for (int i = 0; i < Sprites.Count; i++)
                 Sprites[i].Update();
         }

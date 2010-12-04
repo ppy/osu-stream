@@ -102,7 +102,6 @@ namespace osum.Graphics.Renderers
             //GL.PushAttrib(AttribMask.EnableBit);
 
             GL.Viewport(0, 0, TEX_WIDTH, 1);
-            GL.Disable(All.DepthTest);
 
             GL.MatrixMode(All.Modelview);
             
@@ -116,8 +115,6 @@ namespace osum.Graphics.Renderers
             GL.Clear((int)All.ColorBufferBit);
 
             {
-                //GL.Begin(BeginMode.LineStrip);
-
                 GL.EnableClientState(All.ColorArray);
 
                 float[] colours = {0,0,0,0,
@@ -162,8 +159,6 @@ namespace osum.Graphics.Renderers
 
             result.SetData(textureId);
 
-            //GL.PopAttrib();
-
             GameBase.Instance.SetViewport();
             
             return result;
@@ -174,13 +169,11 @@ namespace osum.Graphics.Renderers
         {
             //GL.PushAttrib(AttribMask.EnableBit);
 
-            GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(All.Lequal);
 
-            GL.Enable((EnableCap)TextureGl.SURFACE_TYPE);
             GL.Color4(255,255,255,255);
 
             // Select The Modelview Matrix
@@ -190,10 +183,10 @@ namespace osum.Graphics.Renderers
 
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
 
-            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            /*GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);*/
 
             int count = lineList.Count;
 
@@ -210,7 +203,6 @@ namespace osum.Graphics.Renderers
 
             GL.LoadIdentity();
 
-            //GL.Enable(EnableCap.CullFace);
             GL.Enable(EnableCap.Blend);
             GL.Disable(EnableCap.DepthTest);
             GL.DepthMask(false);

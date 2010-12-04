@@ -254,6 +254,8 @@ namespace osum
         /// </summary>
         public void Update(FrameEventArgs e)
         {
+            GL.Disable(All.DepthTest);
+
             double lastTime = Clock.TimeAccurate;
 
             Clock.Update(e.Time);
@@ -291,10 +293,8 @@ namespace osum
             //todo: make update actually update on iphone and call from game architecture
             Update(e);
 
-            //not necessary when drawing background.
-
-
             Director.Draw();
+
             spriteManager.Draw();
         }
     }

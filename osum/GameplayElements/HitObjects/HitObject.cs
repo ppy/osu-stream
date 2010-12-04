@@ -124,7 +124,7 @@ namespace osum.GameplayElements
                 else
                 {
                     foreach (pSprite p in DimCollection)
-                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), (int)m_HitObjectManager.FirstBeatLength/2);
+                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), (int)m_HitObjectManager.FirstBeatLength/4);
                 }
             }
         }

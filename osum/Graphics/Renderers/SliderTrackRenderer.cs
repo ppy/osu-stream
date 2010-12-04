@@ -64,7 +64,7 @@ namespace osum.Graphics.Renderers
 
         // If the peak vertex of a quad is at exactly 0, we get a crack running down the center of horizontal linear sliders.
         // We shift the vertex slightly off to the side to avoid this.
-        protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-1f;
+        protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
         protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m

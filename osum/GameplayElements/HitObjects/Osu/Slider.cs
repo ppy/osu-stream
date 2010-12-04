@@ -834,17 +834,17 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.LoadIdentity();
                     GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+                    GL.Clear((int)ClearBufferMask.ColorBufferBit);
 
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
+                    //GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
+                    //GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
 
                     GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 
-                    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+                    GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
@@ -856,14 +856,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
 
-                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
-
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
                     GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
                     GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
-                    GL.Disable((EnableCap)TextureGl.SURFACE_TYPE);
 
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 #endif
