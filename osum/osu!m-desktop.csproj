@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG MONO</DefineConstants>
+    <DefineConstants>DEBUG MONO NO_ENCRYPTION OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -83,6 +83,12 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Helpers\osu!common\bSerializable.cs" />
+    <Compile Include="Helpers\osu!common\DynamicDeserializer.cs" />
+    <Compile Include="Helpers\osu!common\FastSerializer.cs" />
+    <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
+    <Compile Include="Helpers\osu!common\MapPackage.cs" />
+    <Compile Include="Helpers\osu!common\MapStream.cs" />
     <Compile Include="Helpers\pList.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
@@ -124,10 +130,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\osu!\osu!common\osu!common.csproj">
-      <Project>{45261FB7-C518-428D-861A-446544C48597}</Project>
-      <Name>osu!common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BassNet\BassNet.csproj">
       <Project>{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}</Project>
       <Name>BassNet</Name>

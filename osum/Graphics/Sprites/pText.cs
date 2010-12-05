@@ -25,7 +25,18 @@ namespace osum.Graphics.Sprites
         private bool aggressiveCleanup;
         internal string FontFace = "Tahoma";
 
-        internal string Text;
+        private string text;
+        internal string Text
+        {
+            get { return text; }
+            set
+            {
+                if (text == value) return;
+
+                text = value;
+                textChanged = true;
+            }
+        }
 
         private bool textChanged = true;
         private bool exactCoordinates = true;
@@ -35,8 +46,6 @@ namespace osum.Graphics.Sprites
 #else
         private static NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();
 #endif
-
-        private pTexture internalTexture;
 
         internal pText(string text, float textSize, Vector2 startPosition, Vector2 bounds, float drawDepth,
                        bool alwaysDraw, Color4 colour, bool shadow)
@@ -78,14 +87,14 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (internalTexture != null && !internalTexture.IsDisposed && !textChanged)
-                    return internalTexture;
+                if (texture != null && !texture.IsDisposed && !textChanged)
+                    return texture;
 
                 textChanged = true;
 
                 MeasureText();
 
-                return internalTexture;
+                return texture;
             }
             set { }
         }
@@ -111,10 +120,10 @@ namespace osum.Graphics.Sprites
         /// <returns></returns>
         private pTexture refreshTexture()
         {
-            if (internalTexture != null && !internalTexture.IsDisposed)
+            if (texture != null && !texture.IsDisposed)
             {
-                internalTexture.Dispose();
-                internalTexture = null;
+                texture.Dispose();
+                texture = null;
             }
 
             textChanged = false;
@@ -127,14 +136,14 @@ namespace osum.Graphics.Sprites
 
             float size = GameBase.WindowRatio * TextSize;
 
-            internalTexture = TextRenderer.CreateText(Text, size, TextBounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
+            texture = TextRenderer.CreateText(Text, size, TextBounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 
 
             UpdateTextureSize();
             UpdateTextureAlignment();
 
-            return internalTexture;
+            return texture;
         }
     }
 }

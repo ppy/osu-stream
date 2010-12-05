@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using osu.Helpers;
+using osum.Helpers;
 using osu_common.Helpers;
 using Rectangle=System.Drawing.Rectangle;
 using osum.Graphics;

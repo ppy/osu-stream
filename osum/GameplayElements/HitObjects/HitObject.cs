@@ -119,12 +119,12 @@ namespace osum.GameplayElements
                 if (isDimmed)
                 {
                     foreach (pSprite p in DimCollection)
-                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.4f), 0);
+                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.3f), 0);
                 }
                 else
                 {
                     foreach (pSprite p in DimCollection)
-                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.4f), (int)m_HitObjectManager.FirstBeatLength/4);
+                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
                 }
             }
         }
