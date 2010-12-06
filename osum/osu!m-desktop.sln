@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!m-desktop", "osu!m-desk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BassNet", "..\BassNet\BassNet.csproj", "{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!common", "..\..\osu!\osu!common\osu!common.csproj", "{45261FB7-C518-428D-861A-446544C48597}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,21 +48,6 @@ Global
 		{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}.ReleaseLocal|Mixed Platforms.Build.0 = Release|Any CPU
 		{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}.ReleaseLocal|x86.ActiveCfg = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.Release|x86.ActiveCfg = Release|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.ReleaseLocal|Any CPU.ActiveCfg = ReleaseLocal|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.ReleaseLocal|Any CPU.Build.0 = ReleaseLocal|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.ReleaseLocal|Mixed Platforms.ActiveCfg = ReleaseLocal|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.ReleaseLocal|Mixed Platforms.Build.0 = ReleaseLocal|Any CPU
-		{45261FB7-C518-428D-861A-446544C48597}.ReleaseLocal|x86.ActiveCfg = ReleaseLocal|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
