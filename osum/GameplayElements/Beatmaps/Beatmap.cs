@@ -25,7 +25,7 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
-                if (package == null) package = new MapPackage(ContainerFilename);
+                if (package == null && ContainerFilename.EndsWith("osz2")) package = new MapPackage(ContainerFilename);
 
                 return package;
             }
@@ -40,16 +40,8 @@ namespace osum.GameplayElements.Beatmaps
 
         public Stream GetFileStream(string filename)
         {
-#if true
-            //hack
-            if (filename.EndsWith(".osu"))
-            {
-                if (File.Exists("Beatmaps/beatmap.osu"))
-                    return new FileStream("Beatmaps/beatmap.osu", FileMode.Open);
-            }
-#endif
-
-            
+            if (Package == null)
+                return new FileStream(ContainerFilename + "\\" + filename, FileMode.Open);
             return Package.GetFile(filename);
         }
 

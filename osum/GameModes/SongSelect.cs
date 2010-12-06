@@ -33,16 +33,16 @@ namespace osum
 
             Vector2 currentPosition = new Vector2(10,10);
 
-            foreach (string s in Directory.GetFiles("Beatmaps","*.osz2"))
+            foreach (string s in Directory.GetDirectories("Beatmaps"))
             {
                 Beatmap reader = new Beatmap(s);
 
-                foreach (string file in reader.Package.MapFiles)
+                foreach (string file in reader.Package == null ? Directory.GetFiles(s,"*.osu") : reader.Package.MapFiles)
                 {
                     Beatmap b = new Beatmap(s);
-                    b.BeatmapFilename = file;
+                    b.BeatmapFilename = Path.GetFileName(file);
 
-                    pText pt = new pText(string.Format("{0}", file), 16, currentPosition, new Vector2(512,32), 1, true, Color4.White, false);
+                    pText pt = new pText(string.Format("{0}", b.BeatmapFilename), 13, currentPosition, Vector2.Zero, 1, true, Color4.White, false);
                     
                     pt.OnClick += delegate {
                         
