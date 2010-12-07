@@ -41,7 +41,17 @@ namespace osum.Audio
         public bool Play()
         {
             Bass.BASS_ChannelPlay(audioStream, true);
-            
+            return true;
+        }
+
+        /// <summary>
+        /// Stops the playing audio (and unloads it).
+        /// </summary>
+        /// <returns></returns>
+        public bool Stop()
+        {
+            Bass.BASS_ChannelStop(audioStream);
+            FreeMusic();
             return true;
         }
 
@@ -69,7 +79,6 @@ namespace osum.Audio
         public bool Load(byte[] audio)
         {
             FreeMusic();
-
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 
             audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN);
@@ -80,6 +89,8 @@ namespace osum.Audio
         public double CurrentTime
         {
             get {
+                if (audioStream == 0) return 0;
+
                 long audioTimeRaw = Bass.BASS_ChannelGetPosition(audioStream);
                 return Bass.BASS_ChannelBytes2Seconds(audioStream, audioTimeRaw); 
             }
