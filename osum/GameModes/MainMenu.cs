@@ -12,6 +12,7 @@ using System.Drawing;
 using osum.Audio;
 using osum.Support;
 using osum.Graphics;
+using System.IO;
 
 namespace osum.GameModes
 {
@@ -61,6 +62,13 @@ namespace osum.GameModes
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0, 0.2f, 300, 500));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.2f, 1, initial_display - 100, initial_display));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
+
+            try
+            {
+                pText buildTime = new pText(File.GetCreationTimeUtc("osu!m.exe").ToString(), 13, Vector2.Zero, Vector2.Zero, 1, true, Color4.White, false);
+                spriteManager.Add(buildTime);
+            }
+            catch { }
 
 			InputManager.OnDown += new InputHandler(InputManager_OnDown);
 		}
