@@ -29,6 +29,7 @@ namespace osum.GameModes
         Score currentScore;
 
         static Beatmap Beatmap;
+        public static bool Autoplay;
 
         public Player() : base()
         {
@@ -122,6 +123,8 @@ namespace osum.GameModes
         public override void Dispose()
         {
             InputManager.OnDown -= new InputHandler(InputManager_OnDown);
+
+            AudioEngine.Music.Stop();
 
             hitObjectManager.Dispose();
 

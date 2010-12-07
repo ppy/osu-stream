@@ -6,6 +6,8 @@ using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
 using System.Drawing;
+using osum.GameModes;
+using osum.Support;
 
 namespace osum
 {
@@ -35,6 +37,29 @@ namespace osum
             GL.Enable(EnableCap.Blend);
             
             GameBase.Instance.Initialize();
+
+            KeyPress += new EventHandler<KeyPressEventArgs>(GameWindowDesktop_KeyPress);
+        }
+
+        void GameWindowDesktop_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case 'a':
+                    Player.Autoplay = !Player.Autoplay;
+                    break;
+            }
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (Director.CurrentOsuMode != OsuMode.MainMenu)
+            {
+                e.Cancel = true;
+                Director.ChangeMode(OsuMode.MainMenu,new FadeTransition(200,400));
+            }
+
+            base.OnClosing(e);
         }
 
         /// <summary>

@@ -50,6 +50,7 @@ using osum.Graphics.Renderers;
 using OpenTK.Graphics;
 using System.Drawing;
 using osum.Audio;
+using osum.GameModes;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
@@ -448,7 +449,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override bool HitTest(TrackingPoint tracking)
         {
-            return hitCircleStart.HitTest(tracking);
+            return Player.Autoplay || hitCircleStart.HitTest(tracking);
         }
 
         protected override ScoreChange HitAction()
@@ -478,7 +479,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <value>
         ///     <c>true</c> if this instance is tracking; otherwise, <c>false</c>.
         /// </value>
-        bool isTracking { get { return trackingPoint != null; } }
+        bool isTracking { get { return (Player.Autoplay && Clock.AudioTime >= StartTime) || trackingPoint != null; } }
+
+        bool wasTracking;
 
         /// <summary>
         /// Number of successfully hit end-points. Includes the start circle.
@@ -498,8 +501,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (!IsActive) //would be unnecessary to do anything at this point.
                 return ScoreChange.Ignore;
-
-            bool wasTracking = isTracking;
 
             if (trackingPoint == null)
             {
@@ -525,6 +526,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             //Check is the state of tracking changed.
             if (isTracking != wasTracking)
             {
+                wasTracking = isTracking;
+
                 if (!isTracking)
                 {
                     //End tracking.

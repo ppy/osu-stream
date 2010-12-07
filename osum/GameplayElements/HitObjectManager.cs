@@ -11,6 +11,7 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Graphics.Renderers;
 using osum.Helpers;
+using osum.GameModes;
 
 #endregion
 
@@ -124,6 +125,9 @@ namespace osum.GameplayElements
                 if (h.IsVisible)
                 {
                     h.Update();
+
+                    if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
+                        TriggerScoreChange(h.Hit(), h);
 
                     TriggerScoreChange(h.CheckScoring(), h);
                 }

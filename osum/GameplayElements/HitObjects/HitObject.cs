@@ -9,6 +9,7 @@ using osum.Helpers;
 using osum.Support;
 using osum.Audio;
 using osum.Graphics.Skins;
+using osum.GameModes;
 
 namespace osum.GameplayElements
 {
@@ -197,7 +198,7 @@ namespace osum.GameplayElements
         internal virtual ScoreChange CheckScoring()
         {
             //check for miss
-            if (Clock.AudioTime > HittableEndTime)
+            if (Clock.AudioTime > (Player.Autoplay ? StartTime : HittableEndTime))
                 return Hit(); //force a "hit" if we haven't yet.
 
             return ScoreChange.Ignore;

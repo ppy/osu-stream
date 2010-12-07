@@ -50,6 +50,8 @@ using osum.Support;
 using System.Collections.Generic;
 using System.Globalization;
 using osum.Audio;
+using System.IO;
+using System.Diagnostics;
 
 
 namespace osum
@@ -222,7 +224,7 @@ namespace osum
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
 
-            fpsDisplay = new pText("", 13, Vector2.Zero, new Vector2(256,40), 1, true, Color4.White, false);
+            fpsDisplay = new pText("", 11, Vector2.Zero, new Vector2(256,40), 1, true, Color4.White, false);
             fpsDisplay.Field = FieldTypes.StandardSnapBottomRight;
             fpsDisplay.Origin = OriginTypes.BottomRight;
             spriteManager.Add(fpsDisplay);
@@ -283,7 +285,7 @@ namespace osum
             if (Clock.Time < 1000) return;
 
             fpsDisplay.Colour = fps < 59 ? Color.OrangeRed : Color.GreenYellow;
-            fpsDisplay.Text = String.Format("{0:0}fps {1} {2}", Math.Round(fps), Clock.Time, Clock.AudioTime);
+            fpsDisplay.Text = String.Format("{0:0}fps g{1} a{2} {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "");
         }
 
         /// <summary>
