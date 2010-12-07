@@ -72,7 +72,6 @@ namespace osum.Helpers
             {
                 case ClockTypes.Audio:
                     return Clock.AudioTime;
-
                 default:
                 case ClockTypes.Game:
                     return Clock.Time;
@@ -87,7 +86,7 @@ namespace osum.Helpers
 
             currentFrameAudioTime += elapsed;
 
-            double sourceTime = AudioTimeSource.CurrentTime + 0.04f;
+            double sourceTime = AudioTimeSource.CurrentTime;
 
             if (Math.Abs(currentFrameAudioTime - sourceTime) > 0.01)
                 currentFrameAudioTime = sourceTime;

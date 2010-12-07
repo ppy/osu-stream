@@ -23,8 +23,7 @@ namespace osum
 
         internal override void Initialize()
         {
-            if (availableMaps == null)
-                InitializeBeatmaps();
+            InitializeBeatmaps();
         }
 
         private void InitializeBeatmaps()

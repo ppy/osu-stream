@@ -16,6 +16,7 @@ namespace osum
         /// The active game mode, which is being drawn to screen.
         /// </summary>
         internal static GameMode CurrentMode {get; private set;}
+        internal static OsuMode CurrentOsuMode { get; private set; }
 
         /// <summary>
         /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
@@ -97,6 +98,7 @@ namespace osum
             }
 
             PendingMode = OsuMode.Unknown;
+            CurrentOsuMode = newMode;
         }
 
         /// <summary>
