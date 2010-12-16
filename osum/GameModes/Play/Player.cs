@@ -156,8 +156,6 @@ namespace osum.GameModes
             base.Update();
         }
 
-
-
         internal static void SetBeatmap(Beatmap beatmap)
         {
             Beatmap = beatmap;

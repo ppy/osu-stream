@@ -40,11 +40,10 @@ namespace osum
                 {
                     Beatmap b = new Beatmap(s);
                     b.BeatmapFilename = Path.GetFileName(file);
-
-                    pText pt = new pText(string.Format("{0}", b.BeatmapFilename), 13, currentPosition, Vector2.Zero, 1, true, Color4.White, false);
+					
+                    pText pt = new pText(string.Format("{0}", b.BeatmapFilename), 18, currentPosition, Vector2.Zero, 1, true, Color4.White, false);
                     
                     pt.OnClick += delegate {
-                        
                         pt.UnbindAllEvents();
 
                         pt.MoveTo(pt.Position + new Vector2(20, 0), 1000, EasingTypes.In);

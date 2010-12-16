@@ -80,7 +80,21 @@ namespace osum
             return error == null;
         }
 
-        public double CurrentTime
+        public bool Stop ()
+        {
+        	if (player != null)
+			{
+				player.Stop();
+				player.Dispose();
+				player = null;
+				
+				return true;
+			}
+			
+			return false;
+        }
+        
+		public double CurrentTime
         {
             get
             {

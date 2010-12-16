@@ -7,6 +7,7 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
 using OpenTK.Graphics.ES11;
 using System.Drawing;
+using OpenTK;
 namespace osum.Graphics.Renderers
 {
     unsafe internal class NativeTextRendererIphone : NativeTextRenderer
@@ -19,6 +20,9 @@ namespace osum.Graphics.Renderers
         internal override pTexture CreateText(string text, float size, OpenTK.Vector2 restrictBounds, OpenTK.Graphics.Color4 Color4, bool shadow, bool bold, bool underline, TextAlignment alignment, bool forceAa, out OpenTK.Vector2 measured, OpenTK.Graphics.Color4 background, OpenTK.Graphics.Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
             UIFont font = UIFont.SystemFontOfSize(size);
+			
+			if (restrictBounds == Vector2.Zero)
+				restrictBounds = new Vector2(512,64);
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);
