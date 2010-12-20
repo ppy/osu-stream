@@ -371,5 +371,6 @@
     <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix- %28James%29 [TEST].osu" />
     <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix- %28James%29.osb" />
     <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix-.mp3" />
+    <Content Include="Skins\Default\menu-back.png" />
   </ItemGroup>
 </Project>
