@@ -295,7 +295,7 @@ namespace osum.Graphics.Renderers
             else if (curr.p1 != prev.p2) hasStartCap = true;
 
             //todo: this makes stuff look bad... need to look into it.
-            /*if (hasStartCap)
+            if (hasStartCap)
             {
                 // Catch for Darrinub and other slider inconsistencies. (Redpoints seem to be causing some.)
                 // Render a complete beginning cap if this Line isn't connected to the end of the previous line.
@@ -311,7 +311,7 @@ namespace osum.Graphics.Renderers
                                     matrix.M41, matrix.M42, matrix.M43, matrix.M44});
 
                 glDrawHalfCircle(numPrimitives_cap);
-            }*/
+            }
         }
 
         #endregion
