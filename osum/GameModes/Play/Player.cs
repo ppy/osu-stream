@@ -15,6 +15,8 @@ using osum.Audio;
 using osum.Graphics.Renderers;
 using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
+using osum.Graphics.Sprites;
+using osum.Graphics.Skins;
 
 namespace osum.GameModes
 {
@@ -25,6 +27,7 @@ namespace osum.GameModes
         HealthBar healthBar;
         ScoreDisplay scoreDisplay;
         ComboCounter comboCounter;
+		pSprite backButton;
 
         Score currentScore;
 
@@ -60,6 +63,17 @@ namespace osum.GameModes
 
             AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
             AudioEngine.Music.Play();
+			
+			//add a temporary button to allow returning to song select
+			backButton = new pSprite(TextureManager.Load("menu-back"),FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft,
+			                         ClockTypes.Game, Vector2.Zero, 1, true, new Color4(1,1,1,0.4f));
+			backButton.Scale = new Vector2(0.4f,0.4f);
+			
+			backButton.OnClick += delegate {
+				backButton.UnbindAllEvents();
+				Director.ChangeMode(OsuMode.SongSelect);
+			};
+			spriteManager.Add(backButton);
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
