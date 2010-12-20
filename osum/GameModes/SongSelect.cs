@@ -62,6 +62,40 @@ namespace osum
                     availableMaps.Add(b);
                 }
             }
+			
+#if IPHONE
+			string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			
+			pText ptx = new pText(string.Format("documents folder:"), 18, currentPosition, Vector2.Zero, 1, true, Color4.BlueViolet, false);
+			spriteManager.Add(ptx);
+			currentPosition.Y += 30;
+			
+			foreach (string file in Directory.GetFiles(docs,"*.osu"))
+            {
+                Beatmap b = new Beatmap(docs);
+                b.BeatmapFilename = Path.GetFileName(file);
+				
+                pText pt = new pText(string.Format("{0}", b.BeatmapFilename), 18, currentPosition, Vector2.Zero, 1, true, Color4.White, false);
+                
+                pt.OnClick += delegate {
+                    pt.UnbindAllEvents();
+
+                    pt.MoveTo(pt.Position + new Vector2(20, 0), 1000, EasingTypes.In);
+
+                    Player.SetBeatmap(b);
+                    Director.ChangeMode(OsuMode.Play);
+                };
+
+                pt.OnHover += delegate { pt.Colour = Color4.OrangeRed; };
+                pt.OnHoverLost += delegate {pt.Colour = Color4.White; };
+
+                spriteManager.Add(pt);
+
+                currentPosition.Y += 30;
+
+                availableMaps.Add(b);
+			}
+#endif
         }
 
         public override void Draw()
