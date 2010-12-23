@@ -30,12 +30,22 @@ namespace osum
 		}
 		
 
-		public bool Play ()
+		public bool Play()
 		{
 			if (player == null)
 				return false;
 			
 			player.Play();
+			
+			return true;
+		}
+		
+		public bool Pause()
+		{
+			if (player == null)
+				return false;
+			
+			player.Pause();
 			
 			return true;
 		}

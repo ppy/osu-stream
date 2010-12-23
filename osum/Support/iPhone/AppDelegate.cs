@@ -41,6 +41,7 @@ using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
+using osum.Audio;
 
 namespace osum
 {
@@ -64,12 +65,18 @@ namespace osum
 			
 			if (glView.EAGLContext != null)
 			    glView.Stop();
+			
+			if (AudioEngine.Music != null)
+				AudioEngine.Music.Pause();
 		}
 		
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated (UIApplication app)
 		{
 			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
+			
+			if (AudioEngine.Music != null)
+				AudioEngine.Music.Play();
 			
 			//start the run loop.
 			glView.Run(60);

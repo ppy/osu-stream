@@ -19,7 +19,7 @@ namespace osum.Graphics.Sprites
         internal bool TextAntialiasing = true;
         internal TextAlignment TextAlignment;
 
-                internal Vector2 TextBounds;
+        internal Vector2 TextBounds;
         internal Color4 TextColour;
         internal bool TextShadow;
         internal float TextSize;

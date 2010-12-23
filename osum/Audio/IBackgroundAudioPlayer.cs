@@ -31,6 +31,11 @@ namespace osum
         /// Stops the playing audio.
         /// </summary>
         bool Stop();
-    }
+
+        /// <summary>
+        /// Pause the playing audio.
+        /// </summary>
+        bool Pause();
+	}
 }
 
