@@ -161,7 +161,15 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            hitObjectManager.Update();
+            //check whether the map is finished
+			if (hitObjectManager.AllNotesHit)
+			{
+				Ranking.RankableScore = currentScore;
+				Director.ChangeMode(OsuMode.Ranking);
+				
+			}
+			
+			hitObjectManager.Update();
 
             healthBar.Update();
             scoreDisplay.Update();

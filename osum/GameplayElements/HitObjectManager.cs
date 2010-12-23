@@ -37,6 +37,8 @@ namespace osum.GameplayElements
         /// </summary>
         internal List<HitObject> hitObjects = new List<HitObject>();
         private int hitObjectsCount;
+		
+		private int lastHitObject;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
@@ -101,6 +103,8 @@ namespace osum.GameplayElements
             h.ColourIndex = colourIndex;
 
             hitObjects.Add(h);
+			
+			h.Index = hitObjectsCount++;
 
             spriteManager.Add(h);
         }
@@ -120,8 +124,10 @@ namespace osum.GameplayElements
         {
             spriteManager.Update();
 
-            //todo: optimise for active range only.
-            foreach (HitObject h in hitObjects)
+            for (int i = lastHitObject + 1; i < hitObjectsCount; i++)
+			{
+				HitObject h = hitObjects[i];
+				
                 if (h.IsVisible)
                 {
                     h.Update();
@@ -130,6 +136,10 @@ namespace osum.GameplayElements
                         TriggerScoreChange(h.Hit(), h);
 
                     TriggerScoreChange(h.CheckScoring(), h);
+					
+					if (h.IsHit && Clock.AudioTime > h.StartTime && !h.IsActive)
+						lastHitObject = i;
+						//if this object has been hit (and has completed its active period) we can start processing from a new index.
                 }
                 else
                 {
@@ -137,9 +147,20 @@ namespace osum.GameplayElements
                     if (s != null && s.EndTime < Clock.AudioTime)
                         s.DisposePathTexture();
                 }
+				
+				if (!h.IsVisible) break; //no need to do any further processing.
+			}
         }
 
         #endregion
+			
+		internal bool AllNotesHit
+		{
+			get
+			{
+				return lastHitObject == hitObjectsCount - 1;
+			}
+		}
 
         /// <summary>
         /// Finds an object at the specified window-space location.
@@ -161,11 +182,12 @@ namespace osum.GameplayElements
         {
             HitObject found = FindObjectAt(point);
 
-            int index = hitObjects.IndexOf(found); //todo: optimise index -- store inside hitObject plz.
-            if (index > 0)
+            if (found == null) return;
+			
+            if (found.Index > 0)
             {
                 //check last hidObject has been hit already and isn't still active
-                HitObject last = hitObjects[index - 1];
+                HitObject last = hitObjects[found.Index - 1];
                 if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
                 {
                     found.Shake();
@@ -173,8 +195,7 @@ namespace osum.GameplayElements
                 }
             }
 
-            if (found != null)
-                TriggerScoreChange(found.Hit(), found);
+            TriggerScoreChange(found.Hit(), found);
         }
 
         Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
@@ -198,8 +219,7 @@ namespace osum.GameplayElements
                 ComboScoreCounts[hitAmount] += 1;
 
                 //is next hitObject the end of a combo?
-                int index = hitObjects.IndexOf(hitObject);
-                if (index == hitObjectsCount - 1 || hitObjects[index + 1].NewCombo)
+                if (hitObject.Index == hitObjectsCount - 1 || hitObjects[hitObject.Index + 1].NewCombo)
                 {
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
@@ -234,8 +254,7 @@ namespace osum.GameplayElements
             {
                 return ((100 * beatmap.DifficultySliderMultiplier) / beatmap.DifficultySliderTickRate);
             }
-
-        }
+		}
 
 
         internal double VelocityAt(int time)

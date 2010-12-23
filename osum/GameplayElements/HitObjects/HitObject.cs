@@ -98,6 +98,8 @@ namespace osum.GameplayElements
         internal ScoreChange hitValue;
 
         internal HitObjectType Type;
+		
+		internal int Index;
 
         /// <summary>
         /// Do any arbitrary updates for this hitObject.
@@ -164,7 +166,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal bool IsHit { get; private set; }
+        internal bool IsHit { get; set; }
 
         /// <summary>
         /// This will cause the hitObject to get hit and scored.
@@ -186,7 +188,7 @@ namespace osum.GameplayElements
             ScoreChange action = HitAction();
 
             if (action != ScoreChange.Ignore)
-                IsHit = true;
+				IsHit = true;
 
             return action;
         }
@@ -299,7 +301,16 @@ namespace osum.GameplayElements
 
         internal virtual void Dispose()
         {
-        }
+			
+		}
+			
+		/// <summary>
+        /// Is this object currently within an active range?
+        /// </summary>
+        internal virtual bool IsActive
+		{
+			get { return false; }	
+		}
 
         #endregion
 

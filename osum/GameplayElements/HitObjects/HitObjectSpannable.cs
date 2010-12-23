@@ -28,7 +28,7 @@ namespace osum.GameplayElements.HitObjects
         /// <summary>
         /// Is this object currently within an active range?
         /// </summary>
-        internal virtual bool IsActive
+        internal override bool IsActive
         {
             get
             {

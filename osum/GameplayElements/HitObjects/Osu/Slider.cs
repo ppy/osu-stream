@@ -499,8 +499,13 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <returns></returns>
         internal override ScoreChange CheckScoring()
         {
-            if (!IsActive) //would be unnecessary to do anything at this point.
-                return ScoreChange.Ignore;
+			if (!IsActive) //would be unnecessary to do anything at this point.
+			{
+				if (lastJudgedEndpoint > 0)
+					IsHit = true; //maybe this should be done somewhere that isn't reliant on timing (checkscoring only gets called while the object is visible)
+				
+				return ScoreChange.Ignore;
+			}
 
             if (trackingPoint == null)
             {
@@ -830,7 +835,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
-
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
 
@@ -842,8 +846,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-                    //GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
-                    //GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
+                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
 
                     GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 
