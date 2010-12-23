@@ -59,7 +59,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 128, 128));
         }
 
-		public static void UnloadAll()
+		public static void DisposeAll()
 		{
 			foreach (pTexture p in SpriteCache.Values)
 				p.Dispose();
@@ -67,9 +67,31 @@ namespace osum.Graphics.Skins
 			SpriteCache.Clear();
 			AnimationCache.Clear();
 		}
-
+		
+		public static void UnloadAll()
+		{
+			foreach (pTexture p in SpriteCache.Values)
+				p.UnloadTexture();
+			
+			foreach (pTexture p in DisposableTextures)
+				p.Dispose();
+			DisposableTextures.Clear();
+		}
+		
+		public static void ReloadAll()
+		{
+			foreach (pTexture p in SpriteCache.Values)
+				p.ReloadIfPossible();
+		}
+		
+		public static void RegisterDisposable(pTexture t)
+		{
+			DisposableTextures.Add(t);	
+		}
+		
     	internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
+		internal static List<pTexture> DisposableTextures = new List<pTexture>();
 
         internal static pTexture Load(OsuTexture texture)
         {

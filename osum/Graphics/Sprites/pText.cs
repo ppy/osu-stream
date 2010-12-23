@@ -4,6 +4,7 @@ using OpenTK.Graphics;
 using OpenTK;
 using osum.Helpers;
 using osum.Graphics.Renderers;
+using osum.Graphics.Skins;
 
 namespace osum.Graphics.Sprites
 {
@@ -122,7 +123,9 @@ namespace osum.Graphics.Sprites
         {
             if (texture != null && !texture.IsDisposed)
             {
-                texture.Dispose();
+                TextureManager.DisposableTextures.Remove(texture);
+				
+				texture.Dispose();
                 texture = null;
             }
 
@@ -138,7 +141,8 @@ namespace osum.Graphics.Sprites
 
             texture = TextRenderer.CreateText(Text, size, TextBounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
-
+			
+			TextureManager.RegisterDisposable(texture);
 
             UpdateTextureSize();
             UpdateTextureAlignment();

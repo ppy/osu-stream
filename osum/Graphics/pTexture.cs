@@ -134,6 +134,31 @@ namespace osum.Graphics
                 TextureGl = null;
             }
         }
+		
+		/// <summary>
+		/// Unloads texture without fully disposing. It may be able to be restored by calling ReloadIfPossible
+		/// </summary>
+		internal void UnloadTexture()
+		{
+			if (TextureGl != null)
+			{
+				TextureGl.Dispose();
+				TextureGl = null;
+			}
+		}
+		
+		internal void ReloadIfPossible()
+		{
+			if (TextureGl == null)
+			{
+				if (assetName != null)
+				{
+					pTexture reloadedTexture = FromFile(assetName);
+					this.TextureGl = reloadedTexture.TextureGl;
+					reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
+				}
+			}
+		}
 
         #endregion
 
@@ -217,10 +242,10 @@ namespace osum.Graphics
 #if IPHONE
 				using (UIImage image = UIImage.FromFile(filename))
                     return FromUIImage(image,filename);
-#endif
-
+#else
                 using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     return FromStream(stream, filename);
+#endif
             }
             catch
             {

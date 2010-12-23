@@ -38,6 +38,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
 
 using System.Drawing;
+using osum.Graphics.Skins;
 
 namespace osum
 {
@@ -69,12 +70,22 @@ namespace osum
 			eaglLayer.Opaque = true;
 		}
 		
+		static bool firstLoad = true;
 		protected override void OnLoad (EventArgs e)
 		{
 			GL.Disable(EnableCap.Lighting);
 			GL.Enable(EnableCap.Blend);
 
-			GameBase.Instance.Initialize();
+			if (firstLoad)
+			{
+				GameBase.Instance.Initialize();
+				firstLoad = false;
+			}
+			else
+			{
+				GameBase.Instance.SetupScreen();
+				TextureManager.ReloadAll();	
+			}
 			
 			base.OnLoad(e);
 		}

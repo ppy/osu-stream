@@ -72,6 +72,9 @@ namespace osum
                 case OsuMode.SongSelect:
                     mode = new SongSelect();
                     break;
+				case OsuMode.Ranking:
+					mode = new Ranking();
+					break;
                 case OsuMode.Play:
                     mode = new Player();
                     break;
@@ -83,7 +86,7 @@ namespace osum
                 if (CurrentMode != null)
                     CurrentMode.Dispose();
 
-                TextureManager.UnloadAll();
+                TextureManager.DisposeAll();
 
                 CurrentMode = mode;
                 CurrentMode.Initialize();

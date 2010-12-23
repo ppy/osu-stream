@@ -178,7 +178,8 @@ namespace osum.Graphics.Renderers
 
             // Select The Modelview Matrix
             GL.MatrixMode(MatrixMode.Modelview);
-            // Reset The Modelview Matrix
+
+			// Reset The Modelview Matrix
             GL.LoadIdentity();
 
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
