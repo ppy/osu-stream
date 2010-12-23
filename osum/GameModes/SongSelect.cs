@@ -32,7 +32,8 @@ namespace osum
 
             Vector2 currentPosition = new Vector2(10,10);
 
-            foreach (string s in Directory.GetDirectories("Beatmaps"))
+            if (Directory.Exists("Beatmaps"))
+			foreach (string s in Directory.GetDirectories("Beatmaps"))
             {
                 Beatmap reader = new Beatmap(s);
 
