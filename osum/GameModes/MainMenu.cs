@@ -54,9 +54,7 @@ namespace osum.GameModes
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
             spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
 
-            pSprite whiteLayer =
-    new pSprite(pTexture.FromRawBytes(new byte[] { 255, 255, 255, 255 }, 1, 1), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
-            whiteLayer.Scale = new Vector2(GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height) / GameBase.SpriteRatioToWindowBase;
+            pSprite whiteLayer = pSprite.FullscreenWhitePixel;
             spriteManager.Add(whiteLayer);
 
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0, 0.2f, 300, 500));

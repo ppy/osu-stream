@@ -514,6 +514,7 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+
                     texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle, effect);
                 }
             }
@@ -674,6 +675,16 @@ namespace osum.Graphics.Sprites
         }
 
         #endregion
+		
+		internal static pSprite FullscreenWhitePixel
+		{
+			get {
+				pSprite whiteLayer =
+				    new pSprite(pTexture.FromRawBytes(new byte[] { 255, 255, 255, 255 }, 1, 1), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
+		            whiteLayer.Scale = new Vector2(GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height) / GameBase.SpriteRatioToWindowBase;
+	            return whiteLayer;
+			}
+		}
     }
 
     internal class pSpriteDepthComparer : IComparer<pSprite>
