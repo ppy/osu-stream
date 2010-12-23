@@ -1,0 +1,4 @@
+date=`date "+%Y%m%d-%H%M"`
+cd ~/Desktop/projects/osum/osum/bin/iPhone/Release/
+zip -r osum-$date.zip osum.app/*
+mv osum-$date.zip ~/Dropbox/osu\!m/iphone/
