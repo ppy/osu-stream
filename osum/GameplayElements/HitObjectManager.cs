@@ -148,7 +148,8 @@ namespace osum.GameplayElements
                         s.DisposePathTexture();
                 }
 				
-				if (!h.IsVisible) break; //no need to do any further processing.
+				if (h.EndTime < Clock.AudioTime - 5000)
+					break; //stop processing after a decent amount of leeway...
 			}
         }
 
