@@ -83,6 +83,7 @@
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
+    <CodesignProvision>EBC761E1-0E02-4152-8702-ABFAB8E5C50A</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -194,6 +195,7 @@
     <Compile Include="osu!common\Helpers\DynamicDeserializer.cs">
       <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
     </Compile>
+    <Compile Include="GameModes\Ranking.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -352,25 +354,6 @@
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\menu-explosion.png" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\Amane - Eternal Fullmoon %28James%29 [Eternal].osu" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\Amane - Eternal Fullmoon %28James%29.osb" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\amane_kiyurougetu.mp3" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinner-approachcircle.png" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinner-background.png" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinner-circle.png" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinner-metre.png" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinnerspin.wav" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\spinnerspin2.wav" />
-    <Content Include="Beatmaps\Amane - Eternal Fullmoon\title.jpg" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\Amane - Melt in the Sky %28dvo enhance%29.osb" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\Amane - Melt in the Sky %28dvorak%29 [sample pattern].osu" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\Amane - Melt in the Sky %28dvorak%29.osb" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\BG.jpg" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\Melt in the sky.mp3" />
-    <Content Include="Beatmaps\Amane - Melt in the sky2\soft-hitclap.wav" />
-    <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix- %28James%29 [TEST].osu" />
-    <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix- %28James%29.osb" />
-    <Content Include="Beatmaps\Lix - Phantom Ensemble -Ark Trance mix-\Lix - Phantom Ensemble -Ark Trance mix-.mp3" />
     <Content Include="Skins\Default\menu-back.png" />
   </ItemGroup>
 </Project>
