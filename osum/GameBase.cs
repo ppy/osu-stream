@@ -204,7 +204,9 @@ namespace osum
             TextureManager.Initialize();
 
             InputManager.Initialize();
+			
             InitializeInput();
+			
             if (InputManager.RegisteredSources.Count == 0)
                 throw new Exception("No input sources registered");
 
@@ -224,7 +226,7 @@ namespace osum
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
 
-            fpsDisplay = new pText("", 11, Vector2.Zero, new Vector2(256,40), 1, true, Color4.White, false);
+            fpsDisplay = new pText("", 40, Vector2.Zero, new Vector2(512,40), 1, true, Color4.White, false);
             fpsDisplay.Field = FieldTypes.StandardSnapBottomRight;
             fpsDisplay.Origin = OriginTypes.BottomRight;
             spriteManager.Add(fpsDisplay);
@@ -276,13 +278,16 @@ namespace osum
 
             spriteManager.Update();
         }
-
+		
+		int lastFpsDraw = 0;
+		
         private void UpdateFpsOverlay()
         {
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + ElapsedMilliseconds * 0.02;
             double fps = (1000/weightedAverageFrameTime);
 
-            if (Clock.Time < 1000) return;
+            if (Clock.Time / 500 == lastFpsDraw) return;
+			lastFpsDraw = Clock.Time / 500;
 
             fpsDisplay.Colour = fps < 59 ? Color.OrangeRed : Color.GreenYellow;
             fpsDisplay.Text = String.Format("{0:0}fps g{1} a{2} {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "");
