@@ -102,17 +102,14 @@ namespace osum.Graphics.Renderers
 			GL.Viewport(0, 0, TEX_WIDTH, 1);
 
             GL.MatrixMode(All.Modelview);
-            
             GL.LoadIdentity();
             
             GL.MatrixMode(All.Projection);
-
             GL.LoadIdentity();
 			
             GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
 
             GL.Clear((int)All.ColorBufferBit);
-
             GL.EnableClientState(All.ColorArray);
 
             float[] colours = {0,0,0,0,
@@ -139,7 +136,7 @@ namespace osum.Graphics.Renderers
             TextureGl result = new TextureGl(TEX_WIDTH, 1);
 
             int[] textures = new int[1];
-            GL.GenTextures (1, textures);
+            GL.GenTextures(1, textures);
             int textureId = textures[0];
 
             GL.Enable(TextureGl.SURFACE_TYPE);

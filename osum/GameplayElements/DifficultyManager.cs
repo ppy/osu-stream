@@ -7,10 +7,12 @@ namespace osum.GameplayElements
 {
     internal static class DifficultyManager
     {
-        /// <summary>
+        public static float HitObjectRadiusDefault { get { return 64 * GameBase.SpriteRatioToWindowBase; } }
+		
+		/// <summary>
         /// Radius of hitObjects in a gamefield.
         /// </summary>
-        public static float HitObjectRadius { get { return 64 * GameBase.SpriteRatioToWindowBase; } }
+        public static float HitObjectRadius { get { return 80 * GameBase.SpriteRatioToWindowBase; } }
 
         public static int SliderVelocity = 300;
 

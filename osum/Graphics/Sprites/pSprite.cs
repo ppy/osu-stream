@@ -34,6 +34,7 @@ using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using osu_common.Helpers;
+using osum.GameplayElements;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -483,7 +484,7 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     case FieldTypes.Gamefield512x384:
-                        return Scale * GameBase.SpriteRatioToWindowBase;
+                        return Scale * GameBase.SpriteRatioToWindowBase * (DifficultyManager.HitObjectRadius / DifficultyManager.HitObjectRadiusDefault);
                     case FieldTypes.Native:
                         return Scale / GameBase.WindowRatio;
                     default:
