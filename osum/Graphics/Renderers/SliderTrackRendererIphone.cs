@@ -99,9 +99,7 @@ namespace osum.Graphics.Renderers
 
         protected override TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
         {
-            //GL.PushAttrib(AttribMask.EnableBit);
-
-            GL.Viewport(0, 0, TEX_WIDTH, 1);
+			GL.Viewport(0, 0, TEX_WIDTH, 1);
 
             GL.MatrixMode(All.Modelview);
             
@@ -110,35 +108,33 @@ namespace osum.Graphics.Renderers
             GL.MatrixMode(All.Projection);
 
             GL.LoadIdentity();
+			
             GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
 
             GL.Clear((int)All.ColorBufferBit);
 
-            {
-                GL.EnableClientState(All.ColorArray);
+            GL.EnableClientState(All.ColorArray);
 
-                float[] colours = {0,0,0,0,
-                                shadow.R, shadow.G, shadow.B, shadow.A,
-                                border.R, border.G, border.B, border.A,
-                                border.R, border.G, border.B, border.A,
-                                OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
-                                InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A };
+            float[] colours = {0,0,0,0,
+                            shadow.R, shadow.G, shadow.B, shadow.A,
+                            border.R, border.G, border.B, border.A,
+                            border.R, border.G, border.B, border.A,
+                            OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
+                            InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A };
 
-                float[] vertices = { 0, 0,
-                    0.078125f - aa_width, 0.0f,
-                    0.078125f + aa_width, 0.0f,
-                    0.1875f - aa_width, 0.0f,
-                    0.1875f + aa_width, 0.0f,
-                    1.0f, 0.0f };
+            float[] vertices = { 0, 0,
+                0.078125f - aa_width, 0.0f,
+                0.078125f + aa_width, 0.0f,
+                0.1875f - aa_width, 0.0f,
+                0.1875f + aa_width, 0.0f,
+                1.0f, 0.0f };
 
-                GL.VertexPointer(2, All.Float, 0, vertices);
-                GL.ColorPointer(4,All.Float, 0, colours);
+            GL.VertexPointer(2, All.Float, 0, vertices);
+            GL.ColorPointer(4,All.Float, 0, colours);
 
-                GL.DrawArrays(All.LineStrip,0,6);
+            GL.DrawArrays(All.LineStrip,0,6);
 
-                GL.DisableClientState(All.ColorArray);
-
-            }
+            GL.DisableClientState(All.ColorArray);
             
             TextureGl result = new TextureGl(TEX_WIDTH, 1);
 

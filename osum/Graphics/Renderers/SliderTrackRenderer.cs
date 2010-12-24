@@ -135,11 +135,18 @@ namespace osum.Graphics.Renderers
                 else
                 {
                     textures_ogl = new TextureGl[iColours];
-
+					
+					/* 
+					 * todo: this is the WORST HACK EVER
+					 * it fixes the issue where the first slider texture will not render correctly,
+					 * but i'm not sure of the actual cause.
+					 * 
+					 * forcing it to render twice fixes it though.
+					 */
+					textures_ogl[0] = glRenderSliderTexture(border_colour, inner_colours[0], outer_colours[0]);
+					
                     for (int x = 0; x < iColours; x++)
-                    {
                         textures_ogl[x] = glRenderSliderTexture(border_colour, inner_colours[x], outer_colours[x]);
-                    }
                 }
 
                 Color grey1, grey2;
@@ -193,7 +200,7 @@ namespace osum.Graphics.Renderers
             // When they are tiny, we get the opposite problem. I confine it at 1/16th of a circle-radius, which is almost as wide as its border.
             float aa_width = Math.Min(Math.Max(0.25f / DifficultyManager.HitObjectRadius, 0.015625f), 0.0625f);
 
-            Color shadow = new Color(0, 0, 0, 128);
+            Color shadow = new Color(0, 0, 0, 0.5f);
 
             return glRenderSliderTexture(shadow, border, InnerColour, OuterColour, aa_width, toon);
         }

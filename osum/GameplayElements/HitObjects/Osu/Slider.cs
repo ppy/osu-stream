@@ -795,9 +795,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             // Snaking animation is IN PROGRESS
 #if FBO
-                int FirstSegmentIndex = lastSegmentIndex + 1;
-
-                throw new NotImplementedException();
+            int FirstSegmentIndex = lastSegmentIndex + 1;
+            throw new NotImplementedException();
 #else
             int FirstSegmentIndex = 0;
 
