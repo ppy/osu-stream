@@ -45,6 +45,8 @@ namespace osum.Graphics.Sprites
     internal partial class pSprite : IDrawable, IDisposable
     {
         internal bool IsClickable { get { return onClick != null; } }
+		
+		internal bool HandleClickOnUp;
 
         bool inputEventsBound;
 
@@ -99,11 +101,6 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
-        {
-            
-        }
-
         bool inputIsHovering;
 
         bool inputCheckHover(Vector2 position)
@@ -136,18 +133,45 @@ namespace osum.Graphics.Sprites
                 }
             }
         }
-
+		
+		float acceptableUpClick;
+		
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             inputUpdateHoverState(trackingPoint);
+			
+			if (acceptableUpClick > 0)
+				acceptableUpClick -= Math.Abs(trackingPoint.WindowDelta.X) + Math.Abs(trackingPoint.WindowDelta.Y);
         }
-
+		
+		const float HANDLE_UP_MOVEMENT_ALLOWANCE = 5;
+		
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
             inputUpdateHoverState(trackingPoint);
-
             if (inputIsHovering)
+			{
+                acceptableUpClick = HANDLE_UP_MOVEMENT_ALLOWANCE;
+				if (!HandleClickOnUp)
+					Click();
+			}
+			else
+			{
+				acceptableUpClick = 0;
+			}
+        }
+		
+        void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
+		{	
+			if (inputIsHovering && acceptableUpClick > 0)
                 Click();
+			
+			if (inputIsHovering)
+			{
+				inputIsHovering = false;
+				if (onHoverLost != null)
+	                onHoverLost(this, null);
+			}
         }
 
         internal void Click()

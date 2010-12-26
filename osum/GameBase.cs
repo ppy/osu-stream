@@ -160,7 +160,7 @@ namespace osum
 #endif
 
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            //GL.LoadIdentity();
         }
 
         /// <summary>
@@ -305,6 +305,12 @@ namespace osum
 
             spriteManager.Draw();
         }
+		
+		public static void TriggerLayoutChanged()
+		{
+			if (OnScreenLayoutChanged != null)
+				OnScreenLayoutChanged();
+		}
     }
 }
 

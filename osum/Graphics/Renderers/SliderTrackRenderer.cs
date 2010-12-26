@@ -238,7 +238,7 @@ namespace osum.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         internal void Draw(List<Line> lineList, float globalRadius, int ColourIndex, Line prev)
         {
-            switch (ColourIndex)
+			switch (ColourIndex)
             {
                 case -1: // Grey
                     DrawOGL(lineList, globalRadius, grey_ogl, prev);

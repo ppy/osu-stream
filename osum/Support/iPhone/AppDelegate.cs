@@ -80,6 +80,8 @@ namespace osum
 			if (AudioEngine.Music != null)
 				AudioEngine.Music.Play();
 			
+			GameBase.TriggerLayoutChanged();
+			
 			//start the run loop.
 			glView.Run(60);
 		}

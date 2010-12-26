@@ -198,7 +198,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
 
-            spriteSliderBody = new pSprite(null, FieldTypes.Native, OriginTypes.TopLeft,
+            spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 14),
                                    false, Color.White);
 
@@ -788,7 +788,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal void UpdatePathTexture()
         {
-            if (sliderBodyTexture == null) // Perform setup to begin drawing the slider track.
+            if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
             if (lengthDrawn == PathLength) return; //finished drawing already.
@@ -911,6 +911,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 #endif
 
             sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
+			TextureManager.RegisterDisposable(sliderBodyTexture);
 
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);

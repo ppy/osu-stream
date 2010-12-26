@@ -139,7 +139,6 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Support\IUpdateable.cs" />
-    <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="Director.cs" />
     <Compile Include="Support\Transition.cs" />
     <Compile Include="Support\ITimeSource.cs" />
@@ -196,6 +195,8 @@
       <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
     </Compile>
     <Compile Include="GameModes\Ranking.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect.cs" />
+    <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -212,6 +213,8 @@
     <Folder Include="GameplayElements\Beatmaps\" />
     <Folder Include="Graphics\Renderers\" />
     <Folder Include="Helpers\osu!common\" />
+    <Folder Include="GameModes\SongSelect\" />
+    <Folder Include="GameModes\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />

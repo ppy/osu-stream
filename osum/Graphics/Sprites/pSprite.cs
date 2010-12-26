@@ -70,7 +70,9 @@ namespace osum.Graphics.Sprites
         internal int DrawLeft;
         internal int DrawWidth;
         internal int DrawHeight;
-
+		
+		internal int ClockingNow { get { return Clock.GetTime(Clocking); } }
+		
         internal bool Disposable;
 
         internal int TextureWidth { get { return texture != null ? texture.Width : 0; } }
@@ -466,8 +468,9 @@ namespace osum.Graphics.Sprites
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
                         break;
+					case FieldTypes.NativeScaled:
+						return Position / GameBase.WindowRatio;
                     case FieldTypes.Native:
-                        return Position / GameBase.WindowRatio;
                     default:
                         fieldPosition = Position;
                         break;
@@ -486,6 +489,7 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.Gamefield512x384:
                         return Scale * GameBase.SpriteRatioToWindowBase * (DifficultyManager.HitObjectRadius / DifficultyManager.HitObjectRadiusDefault);
                     case FieldTypes.Native:
+					case FieldTypes.NativeScaled:
                         return Scale / GameBase.WindowRatio;
                     default:
                         return Scale * GameBase.SpriteRatioToWindowBase;
@@ -624,6 +628,9 @@ namespace osum.Graphics.Sprites
 
             if (destination == Position)
                 return;
+			
+			if (duration == 0)
+				Position = destination;
 
             int now = Clock.GetTime(Clocking);
 
@@ -767,6 +774,8 @@ namespace osum.Graphics.Sprites
         ///   Native screen resolution.
         /// </summary>
         Native,
+		
+		NativeScaled,
 
         /// <summary>
         ///   Native screen resolution with 1024x768-native sprite scaling.

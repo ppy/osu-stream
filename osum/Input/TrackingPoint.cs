@@ -6,11 +6,22 @@ namespace osum
 	public class TrackingPoint
 	{
 		public object Tag;
-
+		
+		private PointF location;
         /// <summary>
         /// The raw screen location 
         /// </summary>
-		public PointF Location;
+		public PointF Location
+		{
+			get	{ return location; }
+			set { 
+				if (location != Point.Empty)
+					Delta = new PointF(location.X - value.X, location.Y - value.Y);
+				location = value;
+			}
+		}
+		
+		public PointF Delta;
 
 
         /// <summary>
@@ -37,6 +48,14 @@ namespace osum
 			get
 			{
 				return new Vector2(Location.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, Location.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
+			}
+		}
+		
+		public virtual Vector2 WindowDelta
+		{
+			get
+			{
+				return new Vector2(Delta.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, Delta.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
 			}
 		}
 
