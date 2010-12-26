@@ -297,9 +297,13 @@ namespace osum.Graphics.Sprites
     {
         private float Magnitude;
         private float Pulses;
-
-        internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
-            : base(TransformationType.Scale,aimSize, aimSize, startTime, endTime)
+		
+		internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
+			: this(TransformationType.Scale, startTime, endTime, aimSize, magnitude, pulses)
+		{}
+				
+        internal TransformationBounce(TransformationType type, int startTime, int endTime, float aimSize, float magnitude, float pulses)
+            : base(type,aimSize, aimSize, startTime, endTime)
         {
             Magnitude = magnitude;
             Pulses = pulses;

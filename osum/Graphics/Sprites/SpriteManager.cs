@@ -37,7 +37,13 @@ namespace osum.Graphics.Sprites
             Sprites.Insert(pos, sprite);
         }
 
-        internal void Add(pSpriteCollection collection)
+        internal void Add(ICollection<pSprite> sprites)
+		{
+			foreach (pSprite p in sprites)
+                Add(p); //todo: can optimise this when they are already sorted in depth order.
+		}
+		
+		internal void Add(pSpriteCollection collection)
         {
             foreach (pSprite p in collection.SpriteCollection)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
