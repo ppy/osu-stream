@@ -451,12 +451,12 @@ namespace osum.GameplayElements
 
         public int CompareTo(HitObject other)
         {
-            return EndTime.CompareTo(other.EndTime);
+            return StartTime.CompareTo(other.StartTime);
         }
 
         public int CompareTo(int time)
         {
-            return EndTime.CompareTo(time);
+            return StartTime.CompareTo(time);
         }
 
         #endregion

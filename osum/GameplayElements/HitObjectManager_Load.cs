@@ -320,6 +320,7 @@ namespace osum.GameplayElements
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
                                     Add(h);
+							
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.

@@ -12,6 +12,7 @@ using osum.Graphics.Sprites;
 using osum.Graphics.Renderers;
 using osum.Helpers;
 using osum.GameModes;
+using osu_common.Helpers;
 
 #endregion
 
@@ -35,7 +36,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// The complete list of hitObjects.
         /// </summary>
-        internal List<HitObject> hitObjects = new List<HitObject>();
+        internal pList<HitObject> hitObjects = new pList<HitObject>();
         private int hitObjectsCount;
 		
 		private int lastHitObject;
@@ -102,7 +103,7 @@ namespace osum.GameplayElements
             h.ComboNumber = currentComboNumber++;
             h.ColourIndex = colourIndex;
 
-            hitObjects.Add(h);
+            hitObjects.AddInPlace(h);
 			
 			h.Index = hitObjectsCount++;
 
@@ -119,12 +120,14 @@ namespace osum.GameplayElements
         #endregion
 
         #region IUpdateable Members
-
+		
         public void Update()
         {
             spriteManager.Update();
+			
+			int lastActiveObject = -1;
 
-            for (int i = lastHitObject + 1; i < hitObjectsCount; i++)
+            for (int i = lastHitObject; i < hitObjectsCount; i++)
 			{
 				HitObject h = hitObjects[i];
 				
@@ -137,9 +140,8 @@ namespace osum.GameplayElements
 
                     TriggerScoreChange(h.CheckScoring(), h);
 					
-					if (h.IsHit && Clock.AudioTime > h.StartTime && !h.IsActive)
-						lastHitObject = i;
-						//if this object has been hit (and has completed its active period) we can start processing from a new index.
+					if (h.IsActive)
+						lastActiveObject = i;
                 }
                 else
                 {
@@ -147,6 +149,10 @@ namespace osum.GameplayElements
                     if (s != null && s.EndTime < Clock.AudioTime)
                         s.DisposePathTexture();
                 }
+				
+				if (h.IsHit && Clock.AudioTime > h.EndTime && !h.IsActive && lastActiveObject < 0)
+						//if this object has been hit (and has completed its active period) we can start processing from a new index.
+						lastHitObject = i;
 				
 				if (h.EndTime < Clock.AudioTime - 5000)
 					break; //stop processing after a decent amount of leeway...
@@ -169,13 +175,17 @@ namespace osum.GameplayElements
         /// <returns>Found object, null on no object found.</returns>
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
-            //todo: optimise for visible only
-            foreach (HitObject h in hitObjects)
+            for (int i = lastHitObject; i < hitObjectsCount; i++)
             {
-                if (h.HitTest(tracking))
+                HitObject h = hitObjects[i];
+				
+				if (h.HitTest(tracking))
                     return h;
+				
+				if (i > lastHitObject && !h.IsVisible)
+					return null;
             }
-
+			
             return null;
         }
 
@@ -187,13 +197,16 @@ namespace osum.GameplayElements
 			
             if (found.Index > 0)
             {
-                //check last hidObject has been hit already and isn't still active
-                HitObject last = hitObjects[found.Index - 1];
-                if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
-                {
-                    found.Shake();
-                    return;
-                }
+                if (Clock.AudioTime < found.StartTime - DifficultyManager.HitWindow300)
+				{
+					//check last hitObject has been hit already and isn't still active
+	                HitObject last = hitObjects[found.Index - 1];
+	                if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
+	                {
+	                    found.Shake();
+	                    return;
+	                }
+				}
             }
 
             TriggerScoreChange(found.Hit(), found);
