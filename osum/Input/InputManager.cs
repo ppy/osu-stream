@@ -78,7 +78,7 @@ namespace osum
 
         private static void ReceiveDown(InputSource source, TrackingPoint point)
         {
-            if (PrimaryTrackingPoint == null)
+            //if (PrimaryTrackingPoint == null)
                 PrimaryTrackingPoint = point;
 
             UpdatePointerPosition(point);
@@ -100,20 +100,23 @@ namespace osum
                     }
                 }
             }
-
+			
             TriggerOnUp(source, point);
+			UpdatePointerPosition(point);
         }
 
         private static void ReceiveClick(InputSource source, TrackingPoint point)
         {
-            UpdatePointerPosition(point);
             TriggerOnClick(source, point);
+            UpdatePointerPosition(point);
         }
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
-            UpdatePointerPosition(point);
-            TriggerOnMove(source, point);
+            GameBase.fpsDisplay.Text = "source count: " + TrackingPoints.Count;
+			
+			TriggerOnMove(source, point);
+			UpdatePointerPosition(point);
         }
 
         #endregion
