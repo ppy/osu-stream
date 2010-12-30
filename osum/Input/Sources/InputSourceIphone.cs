@@ -7,84 +7,79 @@ namespace osum
 	public class InputSourceIphone : InputSource
 	{
 		private GameWindowIphone gameWindow;
-		
+
 		public InputSourceIphone(GameWindowIphone gameWindow) : base()
 		{
 			this.gameWindow = gameWindow;
 		}
-		
-		private static List<UITouch> NSSetToList(NSSet set)
+
+		private static List<UITouch> NSSetToList(NSSet @set)
 		{
 			// Make full-aot aware of the needed ICollection<UITouch> types
-				ICollection<UITouch> touches_col = (ICollection<UITouch>)set.ToArray<UITouch>();
-				
-				#pragma warning disable 0219
-				// this is a tiny hack, make sure the AOT compiler knows about
-				// UICollection.Count, as it will need it when we instantiate the list below
-				int touches_count = touches_col.Count;
-				#pragma warning restore 0219
-				
-				List<UITouch> touches = new List<UITouch>(touches_col);
+			ICollection<UITouch> touches_col = (ICollection<UITouch>)@set.ToArray<UITouch>();
 			
-				return touches;
+			#pragma warning disable 0219
+			// this is a tiny hack, make sure the AOT compiler knows about
+			// UICollection.Count, as it will need it when we instantiate the list below
+			int touches_count = touches_col.Count;
+			#pragma warning restore 0219
+			
+			List<UITouch> touches = new List<UITouch>(touches_col);
+			
+			return touches;
 		}
-		
-		public void HandleTouchesBegan (NSSet touches, UIEvent evt)
-		{
-            TrackingPoint newPoint = null;
 
-			foreach (UITouch u in NSSetToList(touches))
-            {
-                newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
-                trackingPoints.Add(newPoint);
-            }
+		public void HandleTouchesBegan(NSSet touches, UIEvent evt)
+		{
+			TrackingPoint newPoint = null;
+			
+			foreach (UITouch u in NSSetToList(touches)) {
+				newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
+				trackingPoints.Add(newPoint);
+				GameBase.fpsDisplay.Text = "NEW POINT";
+			}
 			
 			//if (trackingPoints.Count == 1)
-		    TriggerOnDown(newPoint);
+			TriggerOnDown(newPoint);
 		}
-		
-		public void HandleTouchesMoved (NSSet touches, UIEvent evt)
+
+		public void HandleTouchesMoved(NSSet touches, UIEvent evt)
 		{
 			TrackingPoint point = null;
 
-			foreach (UITouch u in NSSetToList(touches))
-            {
+			foreach (UITouch u in NSSetToList(touches)) {
 				point = trackingPoints.Find(t => t.Tag == u);
-                if (point != null) point.Location = u.LocationInView(gameWindow);
-            }
+				if (point != null)
+					point.Location = u.LocationInView(gameWindow);
+				else
+					GameBase.fpsDisplay.Text = "point not found!!!!!!!!!!!";
+			}
 			
 			TriggerOnMove(point);
 		}
-		
-		public void HandleTouchesEnded (NSSet touches, UIEvent evt)
-		{
-            TrackingPoint point = null;
 
-            foreach (UITouch u in NSSetToList(touches))
-            {
+		public void HandleTouchesEnded(NSSet touches, UIEvent evt)
+		{
+			TrackingPoint point = null;
+			
+			foreach (UITouch u in NSSetToList(touches)) {
 				point = trackingPoints.Find(t => t.Tag == u);
-                if (point != null) trackingPoints.Remove(point);
-            }
+				if (point != null)
+				{
+					trackingPoints.Remove(point);
+					GameBase.fpsDisplay.Text = "KILLED POINT";
+				}
+				else
+					GameBase.fpsDisplay.Text = "point not found @end!!!!!!!!!!!";
+			}
 			
 			TriggerOnUp(point);
-			
 		}
-		
-		public void HandleTouchesCancelled (NSSet touches, UIEvent evt)
+
+		public void HandleTouchesCancelled(NSSet touches, UIEvent evt)
 		{
-            //todo: do we actually need to implement this?
-
-            /*foreach (UITouch u in NSSetToList(touches))
-				trackingPoints.RemoveAll(t => t.Tag == u);
-			
-			Console.WriteLine("touch cancelled");
-			Console.WriteLine("total touches: " + trackingPoints.Count);
-			
-			if (trackingPoints.Count == 0)
-				TriggerOnUp();
-            */
-		}
-
+			HandleTouchesEnded(touches, evt);
+		}		
 	}
 }
 
