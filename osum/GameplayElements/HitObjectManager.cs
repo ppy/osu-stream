@@ -1,3 +1,5 @@
+//#define OPTIMISED_PROCESSING
+
 #region Using Statements
 
 using System;
@@ -126,12 +128,16 @@ namespace osum.GameplayElements
             spriteManager.Update();
 			
 			int lastActiveObject = -1;
-
+			
+#if OPTIMISED_PROCESSING
             for (int i = lastHitObject; i < hitObjectsCount; i++)
+#else
+			for (int i = 0; i < hitObjectsCount; i++)
+#endif
 			{
 				HitObject h = hitObjects[i];
 				
-                if (h.IsVisible)
+                if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
 
@@ -154,8 +160,10 @@ namespace osum.GameplayElements
 						//if this object has been hit (and has completed its active period) we can start processing from a new index.
 						lastHitObject = i;
 				
+#if OPTIMISED_PROCESSING
 				if (h.EndTime < Clock.AudioTime - 5000)
 					break; //stop processing after a decent amount of leeway...
+#endif
 			}
         }
 
@@ -175,15 +183,21 @@ namespace osum.GameplayElements
         /// <returns>Found object, null on no object found.</returns>
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
-            for (int i = lastHitObject; i < hitObjectsCount; i++)
+#if OPTIMISED_PROCESSING
+			for (int i = lastHitObject; i < hitObjectsCount; i++)
+#else
+			for (int i = 0; i < hitObjectsCount; i++)
+#endif
             {
                 HitObject h = hitObjects[i];
 				
 				if (h.HitTest(tracking))
                     return h;
 				
+#if OPTIMISED_PROCESSING
 				if (i > lastHitObject && !h.IsVisible)
 					return null;
+#endif
             }
 			
             return null;
