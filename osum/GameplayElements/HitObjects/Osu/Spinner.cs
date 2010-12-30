@@ -87,12 +87,12 @@ namespace osum.GameplayElements
         /// <summary>
         /// Offset to align background with spinner circle.
         /// </summary>
-        private int SPINNER_TOP = - GameBase.WindowBaseSize.Height / 40;
+        private int SPINNER_TOP = -GameBase.WindowBaseSize.Height / 40;
 
         internal Spinner(HitObjectManager hitObjectManager, int startTime, int endTime, HitObjectSoundType soundType)
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true)
         {
-            Position = new Vector2(GameBase.WindowBaseSize.Width / 2, GameBase.WindowBaseSize.Height / 2);
+            Position = new Vector2(GameBase.GamefieldBaseSize.Width / 2, GameBase.GamefieldBaseSize.Height / 2);
             EndTime = endTime;
             Type = HitObjectType.Spinner;
             Colour = Color4.Gray;
@@ -219,6 +219,12 @@ namespace osum.GameplayElements
         {
             return;
         }
+		
+		internal override int HittableEndTime {
+			get {
+				return EndTime;
+			}
+		}
 
         TrackingPoint cursorTrackingPoint;
         Vector2 cursorTrackingPosition;
@@ -227,6 +233,10 @@ namespace osum.GameplayElements
             //Update the angles
             velocityFromInput = 0;
             
+			ScoreChange change = base.CheckScoring();
+			if (change != ScoreChange.Ignore)
+				return change;
+			
             if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
             {
                 cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
@@ -235,6 +245,13 @@ namespace osum.GameplayElements
 
             if (cursorTrackingPoint == null || !InputManager.IsPressed)
                 return ScoreChange.Ignore;
+			
+			if (InputManager.PrimaryTrackingPoint == null)
+				return ScoreChange.Ignore;
+			
+			GameBase.fpsDisplay.Text = string.Format("tracking point: {0} {1}",
+			                                         cursorTrackingPoint.WindowPosition.X,
+			                                         cursorTrackingPoint.WindowPosition.Y);
 
             Vector2 oldPos = cursorTrackingPosition - spriteCircle.Position;
 
@@ -327,15 +344,6 @@ namespace osum.GameplayElements
                 else
                     StopSound();
 
-                /*
-                if (GameBase.Mode == OsuModes.Play &&
-                    ModManager.CheckActive(Player.currentScore.enabledMods, Mods.DoubleTime))
-                    rotationCount = (int)((spriteCircle.CurrentRotation / Math.PI) * 1.5);
-                else if (GameBase.Mode == OsuModes.Play &&
-                         ModManager.CheckActive(Player.currentScore.enabledMods, Mods.HalfTime))
-                    rotationCount = (int)((spriteCircle.CurrentRotation / Math.PI) * 0.75);
-                else
-                */
                 currentRotationCount = (int)(spriteCircle.Rotation / Math.PI);
             }
 
@@ -400,10 +408,18 @@ namespace osum.GameplayElements
             spriteScoreMetre.Position.Y = (float)(SPINNER_TOP + 43.25 * (10 - barCount));
             //spriteScoreMetre.Height = (int)(43.25 * (10 - barCount));
         }
-
+		
+		internal override bool HitTest(TrackingPoint tracking)
+		{
+			return false;
+		}
+		
         protected override ScoreChange HitAction()
         {
-            StopSound();
+            if (Clock.AudioTime < EndTime)
+				return ScoreChange.Ignore;
+			
+			StopSound();
 
             ScoreChange val = ScoreChange.Miss;
             if (scoringRotationCount > rotationRequirement + 1)
@@ -416,110 +432,5 @@ namespace osum.GameplayElements
                 PlaySound();
             return val;
         }
-
-        // scoring stuff
-        //internal override IncreaseScoreType GetScorePoints(Vector2 currentMousePos)
-        /*
-        if (!InputManager.ScorableFrame)
-            return 0;
-
-        Vector2 calc = currentMousePos - spriteCircle.CurrentPositionScaled;
-        double newMouseAngle = Math.Atan2(calc.Y, calc.X);
-
-        double angleDiff = newMouseAngle - lastMouseAngle;
-
-        if (newMouseAngle - lastMouseAngle < -Math.PI)
-            angleDiff = (2 * Math.PI) + newMouseAngle - lastMouseAngle;
-        else if (lastMouseAngle - newMouseAngle < -Math.PI)
-            angleDiff = (-2 * Math.PI) - lastMouseAngle + newMouseAngle;
-
-        if (angleDiff == 0)
-        {
-            if (zeroCount++ < 1)
-                velocityTheoretical = velocityTheoretical / 3;
-            else
-                velocityTheoretical = 0;
-        }
-        else
-        {
-            zeroCount = 0;
-
-            if (!Player.Relaxing &&
-                (
-#if !ARCADE
-(InputManager.leftButton == ButtonState.Released && InputManager.rightButton == ButtonState.Released) ||
-#endif
-Clock.AudioTime < StartTime ||
-                Clock.AudioTime > EndTime))
-                angleDiff = 0;
-            else
-            {
-                double pyth = Vector2.Distance(currentMousePos, spriteCircle.CurrentPositionScaled);
-
-                if (pyth > GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2 && !InputManager.ReplayMode &&
-                    !GameBase.graphics.IsFullScreen)
-                {
-                    Vector2 mousePos = spriteCircle.CurrentPositionScaled +
-                                       calc * (float)((GameBase.WindowRatioInverse * SPINNER_CIRCLE_WIDTH / 2) / pyth);
-
-                    MouseHandler.MousePosition = mousePos;
-                    MouseHandler.MousePoint = new Point((int)mousePos.X, (int)mousePos.Y);
-                    Mouse.SetPosition((int)mousePos.X, (int)mousePos.Y);
-                }
-            }
-
-            if (Math.Abs(angleDiff) < Math.PI && GameBase.SixtyFramesPerSecondLength > 0)
-                velocityTheoretical = angleDiff / GameBase.SIXTY_FRAME_TIME;
-            else
-                velocityTheoretical = 0;
-        }
-
-        lastMouseAngle = newMouseAngle;
-
-        return GetActualScore();
-        */
-        /*
-        internal IncreaseScoreType GetActualScore()
-        {
-            IncreaseScoreType score = IncreaseScoreType.Ignore;
-
-            if (rotationCount != lastRotationCount)
-            {
-                scoringRotationCount++;
-                if (SkinManager.Current.SpinnerFrequencyModulate)
-                    Bass.BASS_ChannelSetAttribute(AudioEngine.ch_spinnerSpin, BASSAttribute.BASS_ATTRIB_FREQ,
-                                                  Math.Min(100000,
-                                                           20000 +
-                                                           (int)
-                                                           (40000 * ((float)scoringRotationCount / rotationRequirement))));
-
-                if (scoringRotationCount > rotationRequirement + 3 &&
-                    (scoringRotationCount - (rotationRequirement + 3)) % 2 == 0)
-                {
-                    score = IncreaseScoreType.SpinnerBonus;
-                    AudioEngine.PlaySample(AudioEngine.s_SpinnerBonus, AudioEngine.VolumeSample);
-                    spriteBonus.Text = (1000 * (scoringRotationCount - (rotationRequirement + 3)) / 2).ToString();
-                    spriteBonus.Transformations.Clear();
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800));
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Scale, 1.28F, 2f, Clock.AudioTime, Clock.AudioTime + 800));
-                    spriteBonus.Transformations[0].Easing = EasingTypes.In;
-                    spriteBonus.Transformations[1].Easing = EasingTypes.In;
-                    //Ensure we don't recycle this too early.
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
-                }
-                else if (scoringRotationCount > 1 && scoringRotationCount % 2 == 0)
-                    score = IncreaseScoreType.SpinnerSpinPoints;
-                else if (scoringRotationCount > 1)
-                    score = IncreaseScoreType.SpinnerSpin;
-            }
-
-            lastRotationCount = rotationCount;
-
-            return score;
-        }
-        */
     }
 }
