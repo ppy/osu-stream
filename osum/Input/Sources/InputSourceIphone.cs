@@ -36,7 +36,6 @@ namespace osum
 			foreach (UITouch u in NSSetToList(touches)) {
 				newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
 				trackingPoints.Add(newPoint);
-				GameBase.fpsDisplay.Text = "NEW POINT";
 			}
 			
 			//if (trackingPoints.Count == 1)
@@ -51,8 +50,6 @@ namespace osum
 				point = trackingPoints.Find(t => t.Tag == u);
 				if (point != null)
 					point.Location = u.LocationInView(gameWindow);
-				else
-					GameBase.fpsDisplay.Text = "point not found!!!!!!!!!!!";
 			}
 			
 			TriggerOnMove(point);
@@ -65,12 +62,7 @@ namespace osum
 			foreach (UITouch u in NSSetToList(touches)) {
 				point = trackingPoints.Find(t => t.Tag == u);
 				if (point != null)
-				{
 					trackingPoints.Remove(point);
-					GameBase.fpsDisplay.Text = "KILLED POINT";
-				}
-				else
-					GameBase.fpsDisplay.Text = "point not found @end!!!!!!!!!!!";
 			}
 			
 			TriggerOnUp(point);

@@ -251,7 +251,7 @@ namespace osum
         /// </summary>
         protected abstract void InitializeInput();
 
-        pText fpsDisplay;
+        internal static pText fpsDisplay;
         double weightedAverageFrameTime;
 
         /// <summary>
@@ -286,8 +286,8 @@ namespace osum
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + ElapsedMilliseconds * 0.02;
             double fps = (1000/weightedAverageFrameTime);
 
-            if (Clock.Time / 500 == lastFpsDraw) return;
-			lastFpsDraw = Clock.Time / 500;
+            if (Clock.Time / 5000 == lastFpsDraw) return;
+			lastFpsDraw = Clock.Time / 5000;
 
             fpsDisplay.Colour = fps < 59 ? Color.OrangeRed : Color.GreenYellow;
             fpsDisplay.Text = String.Format("{0:0}fps g{1} a{2} {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "");

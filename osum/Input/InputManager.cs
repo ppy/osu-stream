@@ -113,8 +113,6 @@ namespace osum
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
-            GameBase.fpsDisplay.Text = "source count: " + TrackingPoints.Count;
-			
 			TriggerOnMove(source, point);
 			UpdatePointerPosition(point);
         }

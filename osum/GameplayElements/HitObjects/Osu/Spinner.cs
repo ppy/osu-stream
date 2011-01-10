@@ -249,10 +249,6 @@ namespace osum.GameplayElements
 			if (InputManager.PrimaryTrackingPoint == null)
 				return ScoreChange.Ignore;
 			
-			GameBase.fpsDisplay.Text = string.Format("tracking point: {0} {1}",
-			                                         cursorTrackingPoint.WindowPosition.X,
-			                                         cursorTrackingPoint.WindowPosition.Y);
-
             Vector2 oldPos = cursorTrackingPosition - spriteCircle.Position;
 
             //Update to the new mouse position.
