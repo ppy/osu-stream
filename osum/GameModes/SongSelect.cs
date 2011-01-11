@@ -25,19 +25,20 @@ namespace osum
         {
             InitializeBeatmaps();
 			
-			InputManager.OnMove += HandleInputManagerOnMove;
+			InputManager.OnMove += InputManager_OnMove;
         }
 
-        void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
+        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-			offset += trackingPoint.WindowDelta.Y;	
+            if (InputManager.IsPressed)
+                offset += trackingPoint.WindowDelta.Y;	
         }
 		
 		public override void Dispose()
 		{
 			base.Dispose();
 			
-			InputManager.OnMove -= HandleInputManagerOnMove;
+			InputManager.OnMove -= InputManager_OnMove;
 		}
 		
 		const string BEATMAP_DIRECTORY = "Beatmaps";

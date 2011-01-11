@@ -41,6 +41,7 @@ using OpenTK.Graphics.OpenGL;
 using osum.Input;
 using osum.Helpers;
 using osu_common.Helpers;
+using osum.GameplayElements;
 #endif
 
 namespace osum.Graphics.Sprites

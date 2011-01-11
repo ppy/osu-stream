@@ -95,5 +95,11 @@ namespace osum.Audio
                 return Bass.BASS_ChannelBytes2Seconds(audioStream, audioTimeRaw); 
             }
         }
+
+        public bool Pause()
+        {
+            Bass.BASS_ChannelPause(audioStream);
+            return true;
+        }
     }
 }

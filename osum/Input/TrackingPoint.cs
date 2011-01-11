@@ -16,7 +16,7 @@ namespace osum
 			get	{ return location; }
 			set { 
 				if (location != Point.Empty)
-					Delta = new PointF(location.X - value.X, location.Y - value.Y);
+                    Delta = new PointF(value.X - location.X, value.Y - location.Y);
 				location = value;
 			}
 		}
