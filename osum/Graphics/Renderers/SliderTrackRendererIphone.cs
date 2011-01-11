@@ -50,8 +50,8 @@ namespace osum.Graphics.Renderers
         {
             float[] coordinates = { 0, 0,
                                     0, 0,
-                                    1, 0,
-                                    1, 0,
+                                    1 - 1f / TEX_WIDTH, 0,
+                                    1 - 1f / TEX_WIDTH, 0,
                                     0, 0,
                                     0, 0};
 
