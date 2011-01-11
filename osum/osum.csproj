@@ -195,8 +195,8 @@
       <Link>Helpers\osu!common\DynamicDeserializer.cs</Link>
     </Compile>
     <Compile Include="GameModes\Ranking.cs" />
-    <Compile Include="GameModes\SongSelect\SongSelect.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
+    <Compile Include="GameModes\SongSelect.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
