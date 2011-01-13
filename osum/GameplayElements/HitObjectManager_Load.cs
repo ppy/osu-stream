@@ -310,7 +310,14 @@ namespace osum.GameplayElements
                                         }
                                     }
 
-                                    h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0);
+                                    if (repeatCount > 1 && length < 50)
+                                    {
+                                        h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0);
+                                    }
+                                    else
+                                    {
+                                        h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0);
+                                    }
                                 }
                                 else if ((type & HitObjectType.Spinner) > 0)
                                 {

@@ -65,6 +65,7 @@
     <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="GameModes\Play\Components\HealthBar.cs" />

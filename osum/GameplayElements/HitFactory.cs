@@ -22,5 +22,7 @@ namespace osum.GameplayElements.HitObjects
                                               HitObjectSoundType soundType, CurveTypes curveType, int repeatCount, double sliderLength, List<Vector2> sliderPoints, List<HitObjectSoundType> soundTypes, int comboOffset);
 
         internal abstract Spinner CreateSpinner(int startTime, int endTime, HitObjectSoundType soundType);
+
+        internal abstract HoldCircle CreateHoldCircle(Vector2 pos, int time, bool newCombo, HitObjectSoundType soundType, int repeatCount, double length, List<HitObjectSoundType> sounds, int comboOffset);
     }
 }
