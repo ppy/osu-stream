@@ -61,12 +61,12 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Sprite for the animated ball (visible during active time).
         /// </summary>
-        internal readonly pAnimation spriteFollowBall;
+        internal pAnimation spriteFollowBall;
 
         /// <summary>
         /// Sprite for the follow-circle (visible during tracking).
         /// </summary>
-        internal readonly pSprite spriteFollowCircle;
+        internal pSprite spriteFollowCircle;
 
         /// <summary>
         /// Sprite for slider body (path).
@@ -103,7 +103,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Line segments which are to be drawn to the screen (based on smoothPoints).
         /// </summary>
-        internal List<Line> drawableSegments;
+        internal List<Line> drawableSegments = new List<Line>();
 
         /// <summary>
         /// The path texture
@@ -123,7 +123,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Cumulative list of curve lengths up to AND INCLUDING a given DrawableSegment.
         /// </summary>
-        internal List<double> cumulativeLengths;
+        internal List<double> cumulativeLengths = new List<double>();
 
         /// <summary>
         /// Track bounding rectangle measured in SCREEN COORDINATES
@@ -134,12 +134,12 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Sprites which are stuck to the start position of the slider path.
         /// </summary>
-        private List<pSprite> spriteCollectionStart = new List<pSprite>();
+        protected List<pSprite> spriteCollectionStart = new List<pSprite>();
 
         /// <summary>
         /// Sprites which are stuck to the end position of the slider path. May be used to hide rendering artifacts.
         /// </summary>
-        private List<pSprite> spriteCollectionEnd = new List<pSprite>();
+        protected List<pSprite> spriteCollectionEnd = new List<pSprite>();
 
         private List<pSprite> spriteCollectionScoringPoints = new List<pSprite>();
 
@@ -177,9 +177,27 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             Type = HitObjectType.Slider;
 
+            CalculateSplines();
+
+            initializeStartCircle();
+            initializeSprites();
+
+            if (PRERENDER_ALL)
+                UpdatePathTexture();
+        }
+
+        private void initializeStartCircle()
+        {
+            hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
+            SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
+            DimCollection.AddRange(hitCircleStart.SpriteCollection);
+        }
+
+        protected virtual void initializeSprites()
+        {
             spriteFollowCircle =
-                new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
-                               OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
+    new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
@@ -187,16 +205,13 @@ namespace osum.GameplayElements.HitObjects.Osu
                 new pAnimation(sliderballtextures, FieldTypes.Gamefield512x384, OriginTypes.Centre,
                                ClockTypes.Audio, Position, 0.99f, false, Color.White);
 
-            CalculateSplines();
-
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
-                startTime, startTime);
+                StartTime, StartTime);
             Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
-                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
+                StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 EndTime, EndTime + DifficultyManager.HitWindow50);
 
-            hitCircleStart = new HitCircle(null, Position, StartTime, newCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, SpriteManager.drawOrderBwd(EndTime + 14),
@@ -218,7 +233,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
-            if (repeatCount > 2)
+            if (RepeatCount > 2)
                 spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true });
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
@@ -227,23 +242,25 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
             spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
-            if (repeatCount > 1)
+            if (RepeatCount > 1)
                 spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true });
 
             spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
 
-            //endpoint angular caltulations
-
-            startAngle = (float)Math.Atan2(drawableSegments[0].p1.Y - drawableSegments[0].p2.Y, drawableSegments[0].p1.X - drawableSegments[0].p2.X);
-            endAngle = (float)Math.Atan2(drawableSegments[drawableSegments.Count - 1].p1.Y - drawableSegments[drawableSegments.Count - 1].p2.Y,
-                                         drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
+            //endpoint angular calculations
+            if (drawableSegments.Count > 0)
+            {
+                startAngle = (float)Math.Atan2(drawableSegments[0].p1.Y - drawableSegments[0].p2.Y, drawableSegments[0].p1.X - drawableSegments[0].p2.X);
+                endAngle = (float)Math.Atan2(drawableSegments[drawableSegments.Count - 1].p1.Y - drawableSegments[drawableSegments.Count - 1].p2.Y,
+                                             drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
+            }
 
             //tick calculations
-            double distanceBetweenTicks = hitObjectManager.SliderScoringPointDistance;
+            double distanceBetweenTicks = m_HitObjectManager.SliderScoringPointDistance;
 
             double tickCount = PathLength / distanceBetweenTicks;
-            int actualTickCount = (int)Math.Ceiling(Math.Round(tickCount,1)) - 1;
+            int actualTickCount = (int)Math.Ceiling(Math.Round(tickCount, 1)) - 1;
 
             double tickNumber = 0;
             while (++tickNumber <= actualTickCount)
@@ -258,29 +275,24 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
-                    startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
-                    startTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
+                    StartTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
+                    StartTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
 
                 spriteCollectionScoringPoints.Add(scoringDot);
             }
 
             spriteCollectionScoringPoints.ForEach(s => s.Transform(fadeOut));
 
-            SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
             SpriteCollection.AddRange(spriteCollectionStart);
             SpriteCollection.AddRange(spriteCollectionEnd);
             SpriteCollection.AddRange(spriteCollectionScoringPoints);
 
-            DimCollection.AddRange(hitCircleStart.SpriteCollection);
             DimCollection.AddRange(spriteCollectionStart);
             DimCollection.AddRange(spriteCollectionEnd);
             DimCollection.AddRange(spriteCollectionScoringPoints);
-
-            if (PRERENDER_ALL)
-                UpdatePathTexture();
         }
 
-        private void CalculateSplines()
+        protected virtual void CalculateSplines()
         {
             List<Vector2> smoothPoints;
 
@@ -319,9 +331,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //adjust the line to be of maximum length specified...
             double currentLength = 0;
-
-            drawableSegments = new List<Line>();
-            cumulativeLengths = new List<double>();
 
             for (int i = 1; i < smoothPoints.Count; i++)
             {
@@ -400,8 +409,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 base.Colour = value;
                 hitCircleStart.Colour = value;
-                spriteCollectionStart[0].Colour = value;
-                spriteCollectionEnd[0].Colour = value;
+                if (spriteCollectionStart.Count > 0) spriteCollectionStart[0].Colour = value;
+                if (spriteCollectionEnd.Count > 0) spriteCollectionEnd[0].Colour = value;
             }
         }
 
@@ -447,12 +456,12 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        internal override bool HitTest(TrackingPoint tracking)
+        internal override bool HitTestInitial(TrackingPoint tracking)
         {
-            return Player.Autoplay || hitCircleStart.HitTest(tracking);
+            return Player.Autoplay || hitCircleStart.HitTestInitial(tracking);
         }
 
-        protected override ScoreChange HitAction()
+        protected override ScoreChange HitActionInitial()
         {
             ScoreChange startCircleChange = hitCircleStart.Hit();
 
@@ -536,19 +545,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                 if (!isTracking)
                 {
                     //End tracking.
-                    spriteFollowCircle.Transformations.Clear();
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
+                    endTracking();
 
                 }
                 else
                 {
-                    //Begin tracking.
-                    spriteFollowCircle.Transformations.Clear();
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 200), EasingTypes.InHalf));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime,Clock.AudioTime + 250), EasingTypes.OutHalf));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime,Clock.AudioTime + 140), EasingTypes.None));
-                    spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 140, EndTime));
+                    beginTracking();
                 }
             }
 
@@ -557,43 +559,13 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 lastJudgedEndpoint++;
 
-                if (RepeatCount - lastJudgedEndpoint < 3 && RepeatCount - lastJudgedEndpoint > 0)
-                {
-                    //we can turn off some repeat arrows...
-                    if (lastJudgedEndpoint % 2 == 0)
-                        spriteCollectionStart[2].Transformations.Clear();
-                    else
-                        spriteCollectionEnd[2].Transformations.Clear();
-                }
+                newEndpoint();
 
                 if (isTracking)
                 {
                     PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType);
 
-                    Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
-                        Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
-
-                    Transformation circleScaleOut2 = new Transformation(TransformationType.Scale, 1.9F, 2F,
-                        (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
-
-                    Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                        Clock.Time, Clock.Time + DifficultyManager.FadeOut);
-
-                    foreach (pSprite p in lastJudgedEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
-                    {
-                        //Burst the endpoint we just reached.
-                        pSprite clone = p.Clone();
-
-                        clone.Transformations.Clear();
-
-                        clone.Clocking = ClockTypes.Game;
-
-                        clone.Transform(circleScaleOut);
-                        clone.Transform(circleScaleOut2);
-                        clone.Transform(circleFadeOut);
-
-                        m_HitObjectManager.spriteManager.Add(clone);
-                    }
+                    burstEndpoint();
 
                     scoringEndpointsHit++;
                 }
@@ -601,8 +573,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 if (RepeatCount - lastJudgedEndpoint == 0)
                 {
                     //we've hit the end of the slider altogether.
-                    spriteFollowBall.RunAnimation = false;
-                    spriteFollowCircle.Transformations.Clear();
+                    lastEndpoint();
 
                     IsEndHit = true;
 
@@ -675,6 +646,69 @@ namespace osum.GameplayElements.HitObjects.Osu
             return ScoreChange.Ignore;
         }
 
+        protected virtual void lastEndpoint()
+        {
+            spriteFollowBall.RunAnimation = false;
+            spriteFollowCircle.Transformations.Clear();
+        }
+
+        protected virtual void newEndpoint()
+        {
+            if (RepeatCount - lastJudgedEndpoint < 3 && RepeatCount - lastJudgedEndpoint > 0)
+            {
+                //we can turn off some repeat arrows...
+                if (lastJudgedEndpoint % 2 == 0)
+                    spriteCollectionStart[2].Transformations.Clear();
+                else
+                    spriteCollectionEnd[2].Transformations.Clear();
+            }
+        }
+
+        protected virtual void beginTracking()
+        {
+            //Begin tracking.
+            spriteFollowCircle.Transformations.Clear();
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 200), EasingTypes.InHalf));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime, Clock.AudioTime + 250), EasingTypes.OutHalf));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 140), EasingTypes.None));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.AudioTime + 140, EndTime));
+        }
+
+        protected virtual void endTracking()
+        {
+            spriteFollowCircle.Transformations.Clear();
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
+        }
+
+        protected virtual void burstEndpoint()
+        {
+            Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
+                        Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
+
+            Transformation circleScaleOut2 = new Transformation(TransformationType.Scale, 1.9F, 2F,
+                (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
+
+            Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
+                Clock.Time, Clock.Time + DifficultyManager.FadeOut);
+
+            foreach (pSprite p in lastJudgedEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
+            {
+                //Burst the endpoint we just reached.
+                pSprite clone = p.Clone();
+
+                clone.Transformations.Clear();
+
+                clone.Clocking = ClockTypes.Game;
+
+                clone.Transform(circleScaleOut);
+                clone.Transform(circleScaleOut2);
+                clone.Transform(circleFadeOut);
+
+                m_HitObjectManager.spriteManager.Add(clone);
+            }
+        }
+
         internal Vector2 TrackingPosition;
         private float startAngle;
         private float endAngle;
@@ -682,12 +716,12 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Floating point progress from the previous update (used during scoring for checking scoring milestones).
         /// </summary>
-        float progressLastUpdate;
+        protected float progressLastUpdate;
 
         /// <summary>
         /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
         /// </summary>
-        float progressCurrent;
+        protected float progressCurrent;
 
         private double normalizeProgress(double progress)
         {
@@ -699,7 +733,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             return progress;
         }
 
-        private Line lineAtProgress(double progress)
+        protected virtual Line lineAtProgress(double progress)
         {
             progress = normalizeProgress(progress);
 
@@ -712,7 +746,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             return drawableSegments[index];
         }
         
-        private Vector2 positionAtProgress(double progress)
+        protected virtual Vector2 positionAtProgress(double progress)
         {
             progress = normalizeProgress(progress);
 
@@ -786,7 +820,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Updates the slider's path texture if required.
         /// </summary>
-        internal void UpdatePathTexture()
+        internal virtual void UpdatePathTexture()
         {
             if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();

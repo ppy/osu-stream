@@ -18,7 +18,7 @@ namespace osum.GameplayElements.HitObjects
         /// Internal judging of a Hit() call. Is only called after preliminary checks have been completed.
         /// </summary>
         /// <returns>A <see cref="ScoreChange"/></returns>
-        protected override ScoreChange HitAction()
+        protected override ScoreChange HitActionInitial()
         {
             return ScoreChange.Ignore;
         }

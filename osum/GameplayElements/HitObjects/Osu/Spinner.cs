@@ -405,12 +405,12 @@ namespace osum.GameplayElements
             //spriteScoreMetre.Height = (int)(43.25 * (10 - barCount));
         }
 		
-		internal override bool HitTest(TrackingPoint tracking)
+		internal override bool HitTestInitial(TrackingPoint tracking)
 		{
 			return false;
 		}
 		
-        protected override ScoreChange HitAction()
+        protected override ScoreChange HitActionInitial()
         {
             if (Clock.AudioTime < EndTime)
 				return ScoreChange.Ignore;

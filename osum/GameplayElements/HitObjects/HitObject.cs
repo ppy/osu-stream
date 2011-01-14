@@ -185,7 +185,7 @@ namespace osum.GameplayElements
             if (IsHit)
                 return ScoreChange.Ignore;
 
-            ScoreChange action = HitAction();
+            ScoreChange action = HitActionInitial();
 
             if (action != ScoreChange.Ignore)
 				IsHit = true;
@@ -252,7 +252,7 @@ namespace osum.GameplayElements
             }
 
             if (action < 0)
-                texture = OsuTexture.hit0;
+                return;
 
             //Draw the hit value
             pSprite p =
@@ -297,7 +297,7 @@ namespace osum.GameplayElements
         /// <returns>
         /// A <see cref="ScoreChange"/>
         /// </returns>
-        protected abstract ScoreChange HitAction();
+        protected abstract ScoreChange HitActionInitial();
 
         internal virtual void Dispose()
         {
@@ -465,7 +465,7 @@ namespace osum.GameplayElements
         {
         }
 
-        internal virtual bool HitTest(TrackingPoint tracking)
+        internal virtual bool HitTestInitial(TrackingPoint tracking)
         {
             float radius = 50;
 

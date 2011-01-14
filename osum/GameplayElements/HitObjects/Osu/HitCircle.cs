@@ -116,7 +116,7 @@ namespace osum.GameplayElements
             get { return true; }
         }
 
-        protected override ScoreChange HitAction()
+        protected override ScoreChange HitActionInitial()
         {
             int hitTime = Clock.AudioTime;
             int accuracy = Math.Abs(hitTime - StartTime);

@@ -191,7 +191,7 @@ namespace osum.GameplayElements
             {
                 HitObject h = hitObjects[i];
 				
-				if (h.HitTest(tracking))
+				if (h.HitTestInitial(tracking))
                     return h;
 				
 #if OPTIMISED_PROCESSING
