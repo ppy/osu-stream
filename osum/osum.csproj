@@ -83,7 +83,7 @@
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <CodesignProvision>EBC761E1-0E02-4152-8702-ABFAB8E5C50A</CodesignProvision>
+    <CodesignProvision>E7C91542-19C7-4312-9345-F48DE9897D66</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -197,6 +197,7 @@
     <Compile Include="GameModes\Ranking.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
     <Compile Include="GameModes\SongSelect.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
