@@ -100,6 +100,7 @@ namespace osum.Graphics.Skins
             if (textureLocations.TryGetValue(texture, out info))
             {
                 pTexture tex = Load(info.SheetName);
+                tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;
                 tex.Width = info.Width;

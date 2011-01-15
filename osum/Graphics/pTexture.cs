@@ -62,10 +62,7 @@ namespace osum.Graphics
 
         ~pTexture()
         {
-#if DEBUG
-            //Console.WriteLine("TEXTURE FINALIZER");
-#endif
-            Dispose(false);
+            //Dispose(false);
         }
 
         public pTexture(TextureGl textureGl, int width, int height)
@@ -421,6 +418,11 @@ namespace osum.Graphics
             //FromRawBytes(
             //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
         }*/
+
+        internal pTexture Clone()
+        {
+            return new pTexture(TextureGl, Width, Height) { assetName = this.assetName, fromResourceStore = this.fromResourceStore };
+        }
     }
 
     /// <summary>

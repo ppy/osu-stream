@@ -154,7 +154,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
         /// </summary>
-        HitCircle hitCircleStart;
+        protected HitCircle hitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
@@ -179,14 +179,14 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             CalculateSplines();
 
-            initializeStartCircle();
             initializeSprites();
+            initializeStartCircle();
 
             if (PRERENDER_ALL)
                 UpdatePathTexture();
         }
 
-        private void initializeStartCircle()
+        protected virtual void initializeStartCircle()
         {
             hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);

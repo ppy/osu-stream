@@ -14,6 +14,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 {
     class HoldCircle : Slider
     {
+        private pSprite holdCircleOverlay;
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes)
             : base(hit_object_manager, pos, startTime, newCombo, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes)
         {
@@ -50,12 +51,23 @@ namespace osum.GameplayElements.HitObjects.Osu
             
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            holdCircleOverlay = new pSprite(TextureManager.Load(OsuTexture.holdcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), true, Color.White);
+            spriteCollectionStart.Add(holdCircleOverlay);
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
             SpriteCollection.AddRange(spriteCollectionStart);
             DimCollection.AddRange(spriteCollectionStart);
+        }
+
+        protected override void initializeStartCircle()
+        {
+            base.initializeStartCircle();
+
+            hitCircleStart.SpriteHitCircle1.Texture = null;
+            hitCircleStart.SpriteHitCircle2.Texture = null;
+            hitCircleStart.SpriteHitCircleText.Colour = Color4.Transparent;
         }
 
         internal override Color4 Colour
@@ -66,7 +78,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
             set
             {
-                base.Colour = value;
+                base.Colour = new Color4(0.648f,0,244/256f,1);
                 spriteCollectionStart[0].Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
                 spriteCollectionStart[0].Transform(new Transformation(Colour, Color4.White, StartTime, EndTime));
             }
@@ -89,12 +101,21 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void beginTracking()
         {
-            
+            holdCircleOverlay.FadeOut(100);
         }
 
         protected override void endTracking()
         {
-            
+            holdCircleOverlay.FadeIn(100);
+
+            Transformation returnto = new Transformation(TransformationType.Scale,spriteCollectionStart[0].ScaleScalar, 1, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In);
+
+            foreach (pSprite p in spriteCollectionStart)
+            {
+                p.Transformations.RemoveAll(t => t.Type == TransformationType.Scale);
+                p.Transform(returnto);
+            }
+
         }
 
         protected override void newEndpoint()
@@ -104,7 +125,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void lastEndpoint()
         {
-            
+            holdCircleOverlay.FadeOut(100);
+            holdCircleOverlay.AlwaysDraw = false;
         }
 
         internal override Vector2 EndPosition
