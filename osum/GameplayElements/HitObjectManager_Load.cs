@@ -310,7 +310,7 @@ namespace osum.GameplayElements
                                         }
                                     }
 
-                                    if (repeatCount > 1 && length < 50)
+                                    if ((repeatCount > 1 && length < 50) || repeatCount > 8)
                                     {
                                         h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0);
                                     }
