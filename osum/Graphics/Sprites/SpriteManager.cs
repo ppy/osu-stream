@@ -102,9 +102,20 @@ namespace osum.Graphics.Sprites
                     topSprite = SpriteQueue.Peek();
                 }
             }
-
-            for (int i = 0; i < Sprites.Count; i++)
-                Sprites[i].Update();
+			
+			List<int> removable = new List<int>();
+			
+			int i = 0;
+            foreach (pSprite p in Sprites)
+			{
+                p.Update();
+				if (p.IsRemovable)
+					removable.Add(i);
+				i++;
+			}
+			
+			for (i = removable.Count - 1; i >= 0; i--)
+				Sprites.RemoveAt(removable[i]);
         }
 
         /// <summary>

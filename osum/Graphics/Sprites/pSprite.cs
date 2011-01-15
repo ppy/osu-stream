@@ -149,6 +149,14 @@ namespace osum.Graphics.Sprites
 
             this.Texture = texture;
         }
+		
+		internal virtual bool IsRemovable
+		{
+			get
+			{
+				return !AlwaysDraw && Transformations.Count == 0;
+			}
+		}
 
         internal virtual void UpdateTextureAlignment()
         {
