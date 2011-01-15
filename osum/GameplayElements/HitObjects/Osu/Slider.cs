@@ -197,8 +197,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
-
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, true, Color.White);
+			spriteFollowCircle.Alpha = 0;
+			
             pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
             spriteFollowBall =
@@ -222,7 +223,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBall.Transform(fadeIn);
             spriteFollowBall.Transform(fadeOut);
-
+			
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
@@ -650,6 +651,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowBall.RunAnimation = false;
             spriteFollowCircle.Transformations.Clear();
+			spriteFollowCircle.AlwaysDraw = false;
         }
 
         protected virtual void newEndpoint()
@@ -769,17 +771,20 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         public override void Update()
         {
-            progressLastUpdate = progressCurrent;
+			progressLastUpdate = progressCurrent;
             progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
 
             spriteFollowBall.Reverse = isReversing;
 
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
-
+			
             if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
+			{
                 UpdatePathTexture();
-
+			}
+			
+			
             spriteFollowBall.Position = TrackingPosition;
             spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
 
@@ -822,7 +827,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal virtual void UpdatePathTexture()
         {
-            if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
+			if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
             if (lengthDrawn == PathLength) return; //finished drawing already.

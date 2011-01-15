@@ -251,7 +251,7 @@ namespace osum.GameplayElements
                     break;
             }
 
-            if (action < 0)
+            if (texture == OsuTexture.None)
                 return;
 
             //Draw the hit value

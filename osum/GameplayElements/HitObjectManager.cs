@@ -1,4 +1,4 @@
-//#define OPTIMISED_PROCESSING
+#define OPTIMISED_PROCESSING
 
 #region Using Statements
 
@@ -123,6 +123,8 @@ namespace osum.GameplayElements
 
         #region IUpdateable Members
 		
+		int processedTo;
+		
         public void Update()
         {
             spriteManager.Update();
@@ -156,13 +158,17 @@ namespace osum.GameplayElements
                         s.DisposePathTexture();
                 }
 				
-				if (h.IsHit && Clock.AudioTime > h.EndTime && !h.IsActive && lastActiveObject < 0)
+				if (h.IsHit && Clock.AudioTime - 3000 > h.EndTime && !h.IsActive && lastActiveObject < 0)
 						//if this object has been hit (and has completed its active period) we can start processing from a new index.
 						lastHitObject = i;
 				
 #if OPTIMISED_PROCESSING
-				if (h.EndTime < Clock.AudioTime - 5000)
+				if (h.StartTime > Clock.AudioTime + 3000)
+				{
+					GameBase.fpsDisplay.Text = "processed from " + lastHitObject + " to " + i;
+					processedTo = i;
 					break; //stop processing after a decent amount of leeway...
+				}
 #endif
 			}
         }
@@ -184,7 +190,7 @@ namespace osum.GameplayElements
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
 #if OPTIMISED_PROCESSING
-			for (int i = lastHitObject; i < hitObjectsCount; i++)
+			for (int i = lastHitObject; i < processedTo; i++)
 #else
 			for (int i = 0; i < hitObjectsCount; i++)
 #endif
@@ -193,11 +199,6 @@ namespace osum.GameplayElements
 				
 				if (h.HitTestInitial(tracking))
                     return h;
-				
-#if OPTIMISED_PROCESSING
-				if (i > lastHitObject && !h.IsVisible)
-					return null;
-#endif
             }
 			
             return null;
