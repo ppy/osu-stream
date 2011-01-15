@@ -229,7 +229,9 @@ namespace osum
             fpsDisplay = new pText("", 40, Vector2.Zero, new Vector2(512,40), 1, true, Color4.White, false);
             fpsDisplay.Field = FieldTypes.StandardSnapBottomRight;
             fpsDisplay.Origin = OriginTypes.BottomRight;
-            spriteManager.Add(fpsDisplay);
+#if DEBUG
+			spriteManager.Add(fpsDisplay);
+#endif
         }
 
         /// <summary>
