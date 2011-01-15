@@ -246,10 +246,11 @@ namespace osum.GameplayElements
                 case ScoreChange.Hit300k:
                     texture = OsuTexture.hit300k;
                     break;
-                case ScoreChange.Miss:
-                    texture = OsuTexture.hit0;
-                    break;
             }
+
+            //because miss is negative, it can't be handled using HitValuesOnly
+            if (action == ScoreChange.Miss)
+                texture = OsuTexture.hit0;
 
             if (texture == OsuTexture.None)
                 return;
