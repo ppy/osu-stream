@@ -207,6 +207,8 @@ namespace osum.GameplayElements.Scoring
         {
             if (InitialIncrease) InitialIncrease = false;
 
+            KiBulge();
+
             //if (Player.Playing && InitialIncrease) InitialIncrease = false;
 
             CurrentHpUncapped += amount;
