@@ -56,8 +56,10 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.sliderarrow, new SpriteSheetTexture("hit", 626, 206, 77, 58));
 
-            textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 128, 128));
+            textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
+            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
         }
+
 
 		public static void DisposeAll()
 		{
@@ -202,6 +204,8 @@ namespace osum.Graphics.Skins
         hitcircleoverlay,
         approachcircle,
         sliderarrow,
-        holdcircle
+        holdcircle,
+        followpoint
+
     }
 }

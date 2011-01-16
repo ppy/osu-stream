@@ -345,7 +345,7 @@ namespace osum.GameplayElements
 
             float StackOffset = DifficultyManager.HitObjectRadius / 10;
 
-            pTexture[] fptextures = TextureManager.LoadAnimation("followpoint");
+            pTexture fptexture = TextureManager.Load(OsuTexture.followpoint);
 
             Vector2 stackVector = new Vector2(StackOffset, StackOffset);
 
@@ -483,12 +483,11 @@ namespace osum.GameplayElements
                         int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
                         int fadeout = (int)(time1 + fraction * length);
 
-                        pAnimation dot =
-                            new pAnimation(fptextures,
+                        pSprite dot =
+                            new pSprite(fptexture,
                                            FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, pos,
                                            0.1f, false, Color4.White);
-                        dot.SetFramerateFromSkin();
-
+                        
                         dot.Transform(
                             new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
                         dot.Transform(
