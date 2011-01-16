@@ -45,9 +45,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void burstEndpoint()
         {
-            Transformation bounce = new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 200, 1.4f, 0.2f, 1);
+            Transformation bounce = new Transformation(TransformationType.Scale,
+                1.1f + 0.5f * progressCurrent/RepeatCount,
+                1 + 0.4f * progressCurrent / RepeatCount,
+                Clock.AudioTime,
+                Clock.AudioTime + (EndTime - StartTime) / RepeatCount,
+                EasingTypes.In
+            );
+
             foreach (pSprite p in spriteCollectionStart)
             {
+                p.Transformations.RemoveAll(b => b.Type == TransformationType.Scale);
                 p.Transform(bounce);
             }
 
@@ -62,6 +70,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            
             holdCircleOverlay = new pSprite(TextureManager.Load(OsuTexture.holdcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), true, Color.White);
             spriteCollectionStart.Add(holdCircleOverlay);
 
@@ -112,12 +121,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void beginTracking()
         {
-            holdCircleOverlay.FadeOut(100);
+            holdCircleOverlay.FadeOut(160);
         }
 
         protected override void endTracking()
         {
-            holdCircleOverlay.FadeIn(100);
+            holdCircleOverlay.FadeIn(80);
 
             Transformation returnto = new Transformation(TransformationType.Scale,spriteCollectionStart[0].ScaleScalar, 1, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In);
 
