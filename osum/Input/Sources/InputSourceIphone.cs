@@ -36,10 +36,10 @@ namespace osum
 			foreach (UITouch u in NSSetToList(touches)) {
 				newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
 				trackingPoints.Add(newPoint);
+				TriggerOnDown(newPoint);
 			}
+
 			
-			//if (trackingPoints.Count == 1)
-			TriggerOnDown(newPoint);
 		}
 
 		public void HandleTouchesMoved(NSSet touches, UIEvent evt)
@@ -49,10 +49,11 @@ namespace osum
 			foreach (UITouch u in NSSetToList(touches)) {
 				point = trackingPoints.Find(t => t.Tag == u);
 				if (point != null)
+				{
 					point.Location = u.LocationInView(gameWindow);
+					TriggerOnMove(point);
+				}
 			}
-			
-			TriggerOnMove(point);
 		}
 
 		public void HandleTouchesEnded(NSSet touches, UIEvent evt)
@@ -62,10 +63,12 @@ namespace osum
 			foreach (UITouch u in NSSetToList(touches)) {
 				point = trackingPoints.Find(t => t.Tag == u);
 				if (point != null)
+				{
 					trackingPoints.Remove(point);
+					TriggerOnUp(point);
+				}
 			}
 			
-			TriggerOnUp(point);
 		}
 
 		public void HandleTouchesCancelled(NSSet touches, UIEvent evt)
