@@ -359,5 +359,6 @@
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\menu-explosion.png" />
     <Content Include="Skins\Default\menu-back.png" />
+    <Content Include="Skins\Default\playfield.png" />
   </ItemGroup>
 </Project>
