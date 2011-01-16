@@ -33,6 +33,7 @@ namespace osum.GameModes
 
         static Beatmap Beatmap;
         public static bool Autoplay;
+        private pSprite playfield;
 
         public Player() : base()
         {
@@ -74,6 +75,11 @@ namespace osum.GameModes
 				Director.ChangeMode(OsuMode.SongSelect);
 			};
 			spriteManager.Add(backButton);
+
+            playfield =
+                new pSprite(TextureManager.Load(@"playfield"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                            ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
+            spriteManager.Add(playfield);
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
@@ -150,13 +156,13 @@ namespace osum.GameModes
 
         public override void Draw()
         {
+            base.Draw();
+
             hitObjectManager.Draw();
 
             scoreDisplay.Draw();
             healthBar.Draw();
             comboCounter.Draw();
-
-            base.Draw();
         }
 
         public override void Update()
