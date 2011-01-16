@@ -165,7 +165,7 @@ namespace osum.GameplayElements
 #if OPTIMISED_PROCESSING
 				if (h.StartTime > Clock.AudioTime + 3000)
 				{
-					GameBase.fpsDisplay.Text = "processed from " + lastHitObject + " to " + i;
+					//GameBase.fpsDisplay.Text = "processed from " + lastHitObject + " to " + i;
 					processedTo = i;
 					break; //stop processing after a decent amount of leeway...
 				}
