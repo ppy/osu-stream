@@ -650,8 +650,16 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void lastEndpoint()
         {
             spriteFollowBall.RunAnimation = false;
+
             spriteFollowCircle.Transformations.Clear();
-			spriteFollowCircle.AlwaysDraw = false;
+
+            if (spriteFollowCircle.Alpha > 0)
+            {
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.None));
+            }
+
+            spriteFollowCircle.AlwaysDraw = false;
         }
 
         protected virtual void newEndpoint()
