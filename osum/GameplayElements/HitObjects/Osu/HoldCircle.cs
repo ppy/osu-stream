@@ -32,6 +32,17 @@ namespace osum.GameplayElements.HitObjects.Osu
             return position;
         }
 
+        protected override ScoreChange HitActionInitial()
+        {
+            ScoreChange s = base.HitActionInitial();
+
+            if (s != ScoreChange.Ignore)
+                burstEndpoint();
+
+            return s;
+
+        }
+
         protected override void burstEndpoint()
         {
             Transformation bounce = new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 200, 1.4f, 0.2f, 1);
