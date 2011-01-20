@@ -90,7 +90,7 @@ namespace osum.GameplayElements
         private int SPINNER_TOP = -GameBase.WindowBaseSize.Height / 40;
 
         internal Spinner(HitObjectManager hitObjectManager, int startTime, int endTime, HitObjectSoundType soundType)
-            : base(hitObjectManager, Vector2.Zero, startTime, soundType, true)
+            : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
             Position = new Vector2(GameBase.GamefieldBaseSize.Width / 2, GameBase.GamefieldBaseSize.Height / 2);
             EndTime = endTime;

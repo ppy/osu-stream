@@ -16,8 +16,8 @@ namespace osum.GameplayElements
 
         private const float TEXT_SIZE = 0.8f;
 
-        internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, HitObjectSoundType soundType)
-            : base(hit_object_manager, pos, startTime, soundType, newCombo)
+        internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType)
+            : base(hit_object_manager, pos, startTime, soundType, newCombo, comboOffset)
         {
             Type = HitObjectType.Circle;
 

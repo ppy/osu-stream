@@ -156,10 +156,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         protected HitCircle hitCircleStart;
 
-        internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, HitObjectSoundType soundType,
+        internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
                         List<HitObjectSoundType> soundTypes)
-            : base(hitObjectManager, startPosition, startTime, soundType, newCombo)
+            : base(hitObjectManager, startPosition, startTime, soundType, newCombo, comboOffset)
         {
             CurveType = curveType;
 
@@ -188,7 +188,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void initializeStartCircle()
         {
-            hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, SoundTypeList != null ? SoundTypeList[0] : SoundType);
+            hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
             DimCollection.AddRange(hitCircleStart.SpriteCollection);
         }

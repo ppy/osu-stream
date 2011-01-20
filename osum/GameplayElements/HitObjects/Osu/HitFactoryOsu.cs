@@ -17,13 +17,13 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal override HitCircle CreateHitCircle(Vector2 startPosition, int startTime, bool newCombo,
                                                     HitObjectSoundType soundType, int comboOffset)
         {
-            return new HitCircle(hitObjectManager, startPosition, startTime, newCombo, soundType);
+            return new HitCircle(hitObjectManager, startPosition, startTime, newCombo, comboOffset, soundType);
         }
 
         internal override Slider CreateSlider(Vector2 startPosition, int startTime, bool newCombo,
                                               HitObjectSoundType soundType, CurveTypes curveType, int repeatCount, double sliderLength, List<Vector2> sliderPoints, List<HitObjectSoundType> soundTypes, int comboOffset)
         {
-            return new Slider(hitObjectManager, startPosition, startTime, newCombo, soundType, curveType, repeatCount, sliderLength, sliderPoints, soundTypes);
+            return new Slider(hitObjectManager, startPosition, startTime, newCombo, comboOffset, soundType, curveType, repeatCount, sliderLength, sliderPoints, soundTypes);
         }
 
         internal override Spinner CreateSpinner(int startTime, int endTime, HitObjectSoundType soundType)
@@ -33,7 +33,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override HoldCircle CreateHoldCircle(Vector2 pos, int time, bool newCombo, HitObjectSoundType soundType, int repeatCount, double length, List<HitObjectSoundType> sounds, int comboOffset)
         {
-           return new HoldCircle(hitObjectManager, pos, time, newCombo, soundType, length, repeatCount, sounds);
+            return new HoldCircle(hitObjectManager, pos, time, newCombo, comboOffset, soundType, length, repeatCount, sounds);
         }
     }
 }

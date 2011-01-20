@@ -80,7 +80,7 @@ namespace osum.GameplayElements
     {
         protected HitObjectManager m_HitObjectManager;
 
-        public HitObject(HitObjectManager hitObjectManager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo)
+        public HitObject(HitObjectManager hitObjectManager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo, int comboOffset)
         {
             m_HitObjectManager = hitObjectManager;
             this.position = position;
@@ -88,6 +88,7 @@ namespace osum.GameplayElements
             EndTime = StartTime;
             SoundType = soundType;
             NewCombo = newCombo;
+            ComboOffset = comboOffset;
         }
 
         #region General & Timing
@@ -100,6 +101,7 @@ namespace osum.GameplayElements
         internal HitObjectType Type;
 		
 		internal int Index;
+        internal int ComboOffset;
 
         /// <summary>
         /// Do any arbitrary updates for this hitObject.
