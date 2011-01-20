@@ -77,13 +77,12 @@
     <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <MtouchDebug>False</MtouchDebug>
     <ConsolePause>false</ConsolePause>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchSdkVersion>4.2</MtouchSdkVersion>
     <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <CodesignProvision>71FE0AC4-BE1D-48E4-8A78-35F2530FCAE6</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
