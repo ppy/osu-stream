@@ -132,6 +132,9 @@ namespace osum.GameplayElements
 
             int lowestActiveObject = -1;
 			
+			processedTo = hitObjectsCount - 1;
+			//initialise to the last object. if we don't find an earlier one below, this wil be used.
+			
 #if OPTIMISED_PROCESSING
             for (int i = processFrom; i < hitObjectsCount; i++)
 #else
