@@ -383,7 +383,7 @@ namespace osum.Graphics
 
        		GL.BindTexture (SURFACE_TYPE, Id);
 
-#if IPHONE
+#if IPHONEss
             //Nearest gives ~30% more draw performance, but looks a bit shitty.
             GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
         	GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
