@@ -101,5 +101,14 @@ namespace osum.Audio
             Bass.BASS_ChannelPause(audioStream);
             return true;
         }
+
+        public bool SeekTo(int milliseconds)
+        {
+            if (audioStream == 0) return false;
+
+            Bass.BASS_ChannelSetPosition(audioStream, milliseconds / 1000d);
+            return true;
+
+        }
     }
 }

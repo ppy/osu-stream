@@ -8,6 +8,8 @@ using OpenTK.Input;
 using System.Drawing;
 using osum.GameModes;
 using osum.Support;
+using osum.Audio;
+using osum.Helpers;
 
 namespace osum
 {
@@ -86,7 +88,9 @@ namespace osum
             
             if (Keyboard[Key.Escape])
                 Exit();
-            
+            if (Keyboard[Key.Right])
+                AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
+
             //todo: make update happen from here.
         }
 

@@ -36,6 +36,11 @@ namespace osum
         /// Pause the playing audio.
         /// </summary>
         bool Pause();
+
+        /// <summary>
+        /// Seek to specified location.
+        /// </summary>
+        bool SeekTo(int milliseconds);
 	}
 }
 
