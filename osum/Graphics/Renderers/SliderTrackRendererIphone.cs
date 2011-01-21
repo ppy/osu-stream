@@ -72,7 +72,7 @@ namespace osum.Graphics.Renderers
         protected override void glDrawHalfCircle(int count)
         {
             float[] coordinates = new float[(count + 2) * 2];
-            coordinates[0] = 1;
+            coordinates[0] = 1 - 1.0f / TEX_WIDTH;
 
             const int vertexSize = 3;
 
