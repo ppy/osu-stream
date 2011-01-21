@@ -108,8 +108,8 @@ namespace osum
 			
 			GL.PushMatrix();
 			
-			float width = GameBase.WindowBaseSize.Height;
-			float height = GameBase.WindowBaseSize.Width;
+			float width = GameBase.WindowSize.Height;
+			float height = GameBase.WindowSize.Width;
 			
 			GL.LoadIdentity();
 			GL.Translate(width / 2, height / 2, 0);
