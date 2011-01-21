@@ -41,6 +41,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 using System.Text;
 using OpenTK;
+using osum.Graphics.Skins;
 
 namespace osum.Graphics
 {
@@ -85,6 +86,7 @@ namespace osum.Graphics
 
         internal TextureGl TextureGl;
         internal bool TrackAccessTime;
+        internal OsuTexture OsuTextureInfo;
 
         public bool IsDisposed
         {

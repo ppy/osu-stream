@@ -59,5 +59,10 @@ namespace osum.GameModes
         {
             spriteManager.Draw();
         }
+
+        public virtual void OnFirstUpdate()
+        {
+            
+        }
     }
 }

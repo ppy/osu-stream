@@ -197,8 +197,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, true, Color.White);
-			spriteFollowCircle.Alpha = 0;
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
 			
             pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
@@ -223,6 +222,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBall.Transform(fadeIn);
             spriteFollowBall.Transform(fadeOut);
+
+            spriteFollowCircle.Transform(new NullTransform(StartTime,EndTime));
 			
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
@@ -466,6 +467,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             ScoreChange startCircleChange = hitCircleStart.Hit();
 
+            if (startCircleChange == ScoreChange.Ignore)
+                return startCircleChange;
+
             //triggered on the first hit
             if (startCircleChange > 0)
             {
@@ -475,7 +479,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 return ScoreChange.SliderEnd;
             }
 
-            return ScoreChange.Ignore;
+            return ScoreChange.MissNoCross;
         }
 
         /// <summary>
@@ -503,20 +507,27 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         int lastJudgedEndpoint;
 
+        internal override bool IsHit
+        {
+            get
+            {
+                return IsEndHit;
+            }
+            set
+            {
+                base.IsHit = value;
+            }
+        }
+
         /// <summary>
         /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
         /// </summary>
         /// <returns></returns>
         internal override ScoreChange CheckScoring()
         {
-			if (!IsActive) //would be unnecessary to do anything at this point.
-			{
-				if (lastJudgedEndpoint > 0)
-					IsHit = true; //maybe this should be done somewhere that isn't reliant on timing (checkscoring only gets called while the object is visible)
-				
-				return ScoreChange.Ignore;
-			}
-
+            if (!hitCircleStart.IsHit)
+                base.CheckScoring();
+            
             if (trackingPoint == null)
             {
                 if (InputManager.IsPressed)
@@ -547,7 +558,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 {
                     //End tracking.
                     endTracking();
-
                 }
                 else
                 {
@@ -556,9 +566,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //Check if we've hit a new endpoint...
-            if ((int)progressCurrent != (int)progressLastUpdate)
+            if ((int)progressCurrent != progressEndpointProcessed)
             {
                 lastJudgedEndpoint++;
+                progressEndpointProcessed++;
 
                 newEndpoint();
 
@@ -595,7 +606,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 lastJudgedScoringPoint = -1;
 
-                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissHpOnly;
+                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissNoCross;
             }
             else
             {
@@ -658,8 +669,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.In));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.None));
             }
-
-            spriteFollowCircle.AlwaysDraw = false;
         }
 
         protected virtual void newEndpoint()
@@ -726,7 +735,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Floating point progress from the previous update (used during scoring for checking scoring milestones).
         /// </summary>
-        protected float progressLastUpdate;
+        protected int progressEndpointProcessed;
 
         /// <summary>
         /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
@@ -779,7 +788,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         public override void Update()
         {
-			progressLastUpdate = progressCurrent;
             progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
 
             spriteFollowBall.Reverse = isReversing;
@@ -810,8 +818,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal void DisposePathTexture()
         {
             if (sliderBodyTexture != null)
+            {
                 sliderBodyTexture.Dispose();
-            sliderBodyTexture = null;
+                sliderBodyTexture = null;
 
 #if IPHONE
             if (fbo > 0)
@@ -820,6 +829,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 fbo = 0;
             }
 #endif
+            }
         }
 
         /// <summary>
@@ -829,6 +839,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         private int lastJudgedScoringPoint = -1;
 
         uint fbo;
+        private bool IsEndHit;
 
         /// <summary>
         /// Updates the slider's path texture if required.

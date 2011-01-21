@@ -692,6 +692,14 @@ namespace osum.Graphics.Sprites
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            if (texture != null)
+                return texture.assetName + "(" + texture.OsuTextureInfo + ")";
+            else
+                return "unknown";
+        }
 		
 		internal static pSprite FullscreenWhitePixel
 		{

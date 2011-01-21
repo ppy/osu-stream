@@ -12,7 +12,7 @@ namespace osum.Support
         private int FadeInTime;
 
         public FadeTransition()
-            : this(1000, 1000)
+            : this(500, 500)
         { }
 
         public FadeTransition(int fadeOut, int fadeIn)
@@ -57,7 +57,7 @@ namespace osum.Support
         {
             get
             {
-                return SpriteManager.UniversalDim == 1;
+                return SpriteManager.UniversalDim == 1 && fadeState == FadeState.FadeOut;
             }
         }
     }

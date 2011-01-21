@@ -326,5 +326,12 @@ namespace osum.Graphics.Sprites
         }
     }
 
+    internal class NullTransform : Transformation
+    {
+        public NullTransform(int startTime, int endTime) : base(TransformationType.None,0,0,startTime, endTime)
+        {
+        }
+    }
+
 
 }

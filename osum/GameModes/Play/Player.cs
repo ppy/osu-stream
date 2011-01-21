@@ -61,14 +61,11 @@ namespace osum.GameModes
             comboCounter = new ComboCounter();
 
             currentScore = new Score();
-
-            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
-            AudioEngine.Music.Play();
 			
 			//add a temporary button to allow returning to song select
-			backButton = new pSprite(TextureManager.Load("menu-back"),FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft,
+			backButton = new pSprite(TextureManager.Load("menu-back"),FieldTypes.StandardSnapRight, OriginTypes.TopRight,
 			                         ClockTypes.Game, Vector2.Zero, 1, true, new Color4(1,1,1,0.4f));
-			backButton.Scale = new Vector2(0.4f,0.4f);
+			backButton.Scale = new Vector2(0.7f,0.7f);
 			
 			backButton.OnClick += delegate {
 				backButton.UnbindAllEvents();
@@ -80,6 +77,14 @@ namespace osum.GameModes
                 new pSprite(TextureManager.Load(@"playfield"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(playfield);
+
+            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
+            Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
+        }
+
+        void Director_OnTransitionEnded()
+        {
+            AudioEngine.Music.Play();
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)

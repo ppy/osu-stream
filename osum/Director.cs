@@ -32,6 +32,8 @@ namespace osum
         {
             return ChangeMode(mode, new FadeTransition());
         }
+
+        public static event VoidDelegate OnTransitionEnded;
         
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
@@ -97,18 +99,32 @@ namespace osum
                     return;
                 }
 
-                Clock.ModeLoadComplete();
+                modeChangePending = true;
             }
 
             PendingMode = OsuMode.Unknown;
             CurrentOsuMode = newMode;
         }
 
+        static bool modeChangePending;
+
+
         /// <summary>
         /// Updates the director, along with current game mode.
         /// </summary>
-        internal static void Update()
+        internal static bool Update()
         {
+            if (modeChangePending)
+            {
+                //There was a mode change last frame.
+                //See below for where this is set.
+                Clock.ModeLoadComplete();
+                ActiveTransition.FadeIn();
+                CurrentMode.OnFirstUpdate();
+
+                modeChangePending = false;
+            }
+
             if (ActiveTransition != null)
             {
                 ActiveTransition.Update();
@@ -117,17 +133,29 @@ namespace osum
                 {
                     while (PendingMode != OsuMode.Unknown)
                         changeMode(PendingMode);
-                    ActiveTransition.FadeIn();
                 }
-                
+
                 if (ActiveTransition.FadeInDone)
                 {
+                    if (OnTransitionEnded != null)
+                    {
+                        OnTransitionEnded();
+                        OnTransitionEnded = null;
+                    }
+
                     ActiveTransition = null;
                 }
             }
+
+            if (modeChangePending) return true;
+            //Save the first mode updates after we purge this frame away.
+            //Initialising a mode usually takes a fair amount of time and will throw off timings,
+            //so we count this as a null frame.
             
             if (CurrentMode != null)
                 CurrentMode.Update();
+
+            return false;
         }
 
         /// <summary>

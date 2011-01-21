@@ -52,18 +52,23 @@ namespace osum.Graphics.Sprites
         internal Queue<pSprite> SpriteQueue;
         internal void OptimizeTimeline(ClockTypes clock)
         {
-            if (SpriteQueue == null)
-                SpriteQueue = new Queue<pSprite>();
-
             List<pSprite> optimizableSprites = Sprites.FindAll(s => s.Transformations.Count > 0 && !s.AlwaysDraw && s.Clocking == clock);
 
             //sort all sprites in order of first transformation.
             optimizableSprites.Sort((a, b) => { return a.Transformations[0].StartTime.CompareTo(b.Transformations[0].StartTime); });
 
-            foreach (pSprite p in optimizableSprites)
+            if (SpriteQueue == null)
             {
-                SpriteQueue.Enqueue(p);
-                Sprites.Remove(p);
+                SpriteQueue = new Queue<pSprite>(optimizableSprites);
+                optimizableSprites.ForEach(s => Sprites.Remove(s));
+            }
+            else
+            {
+                foreach (pSprite p in optimizableSprites)
+                {
+                    SpriteQueue.Enqueue(p);
+                    Sprites.Remove(p);
+                }
             }
         }
 
@@ -113,6 +118,10 @@ namespace osum.Graphics.Sprites
 					removable.Add(i);
 				i++;
 			}
+
+#if DEBUG
+            GameBase.DebugOut("SpriteManager: tracking " + Sprites.Count + " sprites");
+#endif
 			
 			for (i = removable.Count - 1; i >= 0; i--)
 				Sprites.RemoveAt(removable[i]);

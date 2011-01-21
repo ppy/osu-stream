@@ -41,7 +41,7 @@ namespace osum.GameplayElements
         internal pList<HitObject> hitObjects = new pList<HitObject>();
         private int hitObjectsCount;
 		
-		private int lastHitObject;
+		private int processFrom;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
@@ -128,17 +128,18 @@ namespace osum.GameplayElements
         public void Update()
         {
             spriteManager.Update();
-			
-			int lastActiveObject = -1;
+
+
+            int lowestActiveObject = -1;
 			
 #if OPTIMISED_PROCESSING
-            for (int i = lastHitObject; i < hitObjectsCount; i++)
+            for (int i = processFrom; i < hitObjectsCount; i++)
 #else
 			for (int i = 0; i < hitObjectsCount; i++)
 #endif
 			{
 				HitObject h = hitObjects[i];
-				
+
                 if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
@@ -147,9 +148,9 @@ namespace osum.GameplayElements
                         TriggerScoreChange(h.Hit(), h);
 
                     TriggerScoreChange(h.CheckScoring(), h);
-					
-					if (h.IsActive)
-						lastActiveObject = i;
+
+                    if (lowestActiveObject < 0)
+                        lowestActiveObject = i;
                 }
                 else
                 {
@@ -158,19 +159,21 @@ namespace osum.GameplayElements
                         s.DisposePathTexture();
                 }
 				
-				if (h.IsHit && Clock.AudioTime - 3000 > h.EndTime && !h.IsActive && lastActiveObject < 0)
-						//if this object has been hit (and has completed its active period) we can start processing from a new index.
-						lastHitObject = i;
-				
 #if OPTIMISED_PROCESSING
-				if (h.StartTime > Clock.AudioTime + 3000)
+				if (h.StartTime > Clock.AudioTime + 4000 && !h.IsVisible)
 				{
-					//GameBase.fpsDisplay.Text = "processed from " + lastHitObject + " to " + i;
 					processedTo = i;
 					break; //stop processing after a decent amount of leeway...
 				}
 #endif
 			}
+
+            if (lowestActiveObject >= 0)
+                processFrom = lowestActiveObject;
+
+#if DEBUG
+            GameBase.DebugOut("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + hitObjectsCount + ")");
+#endif
         }
 
         #endregion
@@ -179,7 +182,7 @@ namespace osum.GameplayElements
 		{
 			get
 			{
-				return lastHitObject == hitObjectsCount - 1;
+                return hitObjects[hitObjectsCount - 1].IsHit;
 			}
 		}
 
@@ -190,7 +193,7 @@ namespace osum.GameplayElements
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
 #if OPTIMISED_PROCESSING
-			for (int i = lastHitObject; i < processedTo; i++)
+			for (int i = processFrom; i < processedTo + 1; i++)
 #else
 			for (int i = 0; i < hitObjectsCount; i++)
 #endif

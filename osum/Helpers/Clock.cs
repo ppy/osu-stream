@@ -51,6 +51,7 @@ namespace osum.Helpers
         }
 
         static double currentFrameAudioTime;
+        static int currentFrameAudioTimeOffset;
         
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace osum.Helpers
         /// </summary>
         public static int AudioTime
         {
-            get { return (int)(currentFrameAudioTime*1000) + UNIVERSAL_OFFSET; }
+            get { return currentFrameAudioTimeOffset; }
         }
 
         /// <summary>
@@ -88,8 +89,19 @@ namespace osum.Helpers
 
             double sourceTime = AudioTimeSource.CurrentTime;
 
-            if (Math.Abs(currentFrameAudioTime - sourceTime) > 0.01)
-                currentFrameAudioTime = sourceTime;
+            if (sourceTime == 0)
+                currentFrameAudioTimeOffset = 0;
+            else
+            {
+                double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
+                if (inaccuracy > 0.01)
+                {
+                    GameBase.DebugOut("RESYNC AUDIO (" + (inaccuracy * 1000) + ")");
+                    currentFrameAudioTime = sourceTime;
+                }
+
+                currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
+            }
         }
 
         public static ITimeSource AudioTimeSource { private get; set; }

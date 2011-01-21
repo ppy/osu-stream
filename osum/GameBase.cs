@@ -224,12 +224,10 @@ namespace osum
             AudioEngine.Initialize(effect, music);
 
             //Load the main menu initially.
-            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200,500));
+            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(0,500));
 
-            fpsDisplay = new pText("", 40, Vector2.Zero, new Vector2(512,40), 1, true, Color4.White, false);
-            fpsDisplay.Field = FieldTypes.StandardSnapBottomRight;
-            fpsDisplay.Origin = OriginTypes.BottomRight;
 #if DEBUG
+            fpsDisplay = new pText("", 8, new Vector2(0,40), Vector2.Zero, 0, true, Color4.White, false);
 			spriteManager.Add(fpsDisplay);
 #endif
         }
@@ -256,29 +254,41 @@ namespace osum
         internal static pText fpsDisplay;
         double weightedAverageFrameTime;
 
+        bool ignoreFrame;
+
         /// <summary>
-        /// Main update cycle.
+        /// Main update cycle
         /// </summary>
-        public void Update(FrameEventArgs e)
+        /// <returns>true if a draw should occur</returns>
+        public bool Update(FrameEventArgs e)
         {
             GL.Disable(EnableCap.DepthTest);
 
             double lastTime = Clock.TimeAccurate;
-
             Clock.Update(e.Time);
 
-            //todo: make more accurate
-            ElapsedMilliseconds = Clock.TimeAccurate - lastTime;
+            ElapsedMilliseconds = ignoreFrame ? 0 : Clock.TimeAccurate - lastTime;
+            ignoreFrame = false;
+
+            if (Director.Update())
+            {
+                ignoreFrame = true;
+                //Mode change occurred; we don't need to do anything this frame.
+                //We are on a blank screen and don't want to throw off timings, so let's cancel the draw.
+                return false;
+            }
+            
+            UpdateFpsOverlay();
 
             InputManager.Update();
 
-            UpdateFpsOverlay();
-            
-            Director.Update();
+            TextureManager.Update();
 
             Components.ForEach(c => c.Update());
 
             spriteManager.Update();
+
+            return true;
         }
 		
 		int lastFpsDraw = 0;
@@ -288,11 +298,20 @@ namespace osum
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + ElapsedMilliseconds * 0.02;
             double fps = (1000/weightedAverageFrameTime);
 
-            if (Clock.Time / 5000 == lastFpsDraw) return;
-			lastFpsDraw = Clock.Time / 5000;
+            //if (Clock.Time / 5000 == lastFpsDraw) return;
+			//lastFpsDraw = Clock.Time / 5000;
 
-            fpsDisplay.Colour = fps < 59 ? Color.OrangeRed : Color.GreenYellow;
-            fpsDisplay.Text = String.Format("{0:0}fps g{1} a{2} {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "");
+#if DEBUG
+            fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
+            fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} Audio:{2:#,0}ms {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime);
+#endif
+        }
+
+        internal static void DebugOut(string s)
+        {
+#if DEBUG
+            fpsDisplay.Text += "\n" + s;
+#endif
         }
 
         /// <summary>
@@ -301,11 +320,12 @@ namespace osum
         public void Draw(FrameEventArgs e)
         {
             //todo: make update actually update on iphone and call from game architecture
-            Update(e);
+            if (Update(e))
+            {
+                Director.Draw();
 
-            Director.Draw();
-
-            spriteManager.Draw();
+                spriteManager.Draw();
+            }
         }
 		
 		public static void TriggerLayoutChanged()

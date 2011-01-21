@@ -40,7 +40,7 @@ namespace osum.GameplayElements
     internal enum ScoreChange
     {
         MissHpOnlyNoCombo = -524288,
-        MissHpOnly = -262144,
+        MissNoCross = -262144,
         Miss = -131072,
         Ignore = 0,
         MuAddition = 1,
@@ -168,7 +168,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal bool IsHit { get; set; }
+        internal virtual bool IsHit { get; set; }
 
         /// <summary>
         /// This will cause the hitObject to get hit and scored.
@@ -312,7 +312,7 @@ namespace osum.GameplayElements
         /// </summary>
         internal virtual bool IsActive
 		{
-			get { return false; }	
+			get { return !IsHit; }	
 		}
 
         #endregion

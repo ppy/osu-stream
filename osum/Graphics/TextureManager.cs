@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using osum.Support;
 
 namespace osum.Graphics.Skins
 {
@@ -60,13 +61,23 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
         }
 
+        public static void Update()
+        {
+#if DEBUG
+            GameBase.DebugOut("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
+#endif
+        }
+
 
 		public static void DisposeAll()
 		{
 			foreach (pTexture p in SpriteCache.Values)
 				p.Dispose();
+            foreach (pTexture p in DisposableTextures)
+                p.Dispose();
 			
 			SpriteCache.Clear();
+            DisposableTextures.Clear();
 			AnimationCache.Clear();
 		}
 		
@@ -88,7 +99,9 @@ namespace osum.Graphics.Skins
 		
 		public static void RegisterDisposable(pTexture t)
 		{
-			DisposableTextures.Add(t);	
+            if (t == null)
+                throw new Exception("what?");
+            DisposableTextures.Add(t);
 		}
 		
     	internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
@@ -107,6 +120,7 @@ namespace osum.Graphics.Skins
                 tex.Y = info.Y;
                 tex.Width = info.Width;
                 tex.Height = info.Height;
+                tex.OsuTextureInfo = texture;
 
                 return tex;
             }

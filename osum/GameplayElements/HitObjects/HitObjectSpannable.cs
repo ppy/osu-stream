@@ -23,8 +23,6 @@ namespace osum.GameplayElements.HitObjects
             return ScoreChange.Ignore;
         }
 
-        protected virtual bool IsEndHit {get; set;}
-
         /// <summary>
         /// Is this object currently within an active range?
         /// </summary>
@@ -32,7 +30,7 @@ namespace osum.GameplayElements.HitObjects
         {
             get
             {
-                return StartTime < Clock.AudioTime && (EndTime > Clock.AudioTime || !IsEndHit);
+                return StartTime < Clock.AudioTime && (EndTime > Clock.AudioTime || !IsHit);
             }
         }
 
