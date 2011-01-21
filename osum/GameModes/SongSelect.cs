@@ -63,7 +63,7 @@ namespace osum
                 availableMaps.Add(b);
 				panels.Add(panel);
 			}
-#else
+#endif
             if (Directory.Exists(BEATMAP_DIRECTORY))
 			foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
             {
@@ -81,8 +81,7 @@ namespace osum
                     availableMaps.Add(b);
 					panels.Add(panel);
                 }
-            }
-#endif
+			}
         }
 		
 		float offset;

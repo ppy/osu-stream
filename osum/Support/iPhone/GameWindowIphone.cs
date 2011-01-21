@@ -97,7 +97,7 @@ namespace osum
 		
 		protected override void OnUpdateFrame (FrameEventArgs e)
 		{
-			base.OnUpdateFrame (e);
+			base.OnUpdateFrame(e);
 		}
 		
 		protected override void OnRenderFrame (FrameEventArgs e)

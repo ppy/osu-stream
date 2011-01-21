@@ -111,6 +111,11 @@ namespace osum
                 return player == null ? 0 : player.CurrentTime;
             }
         }
-    }
+
+		public bool SeekTo(int milliseconds)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
 
