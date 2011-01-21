@@ -156,7 +156,7 @@ namespace osum
             GL.Viewport(0, 0, GameBase.WindowSize.Height, GameBase.WindowSize.Width);
 #else
             GL.Viewport(0, 0, GameBase.WindowSize.Width, GameBase.WindowSize.Height);
-            GL.Ortho(0, GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height, 0, -1, 1);
+            GL.Ortho(0, GameBase.WindowSize.Width, GameBase.WindowSize.Height, 0, -1, 1);
 #endif
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -173,7 +173,7 @@ namespace osum
 
             SetViewport();
 
-            WindowRatio = (float)WindowSize.Height / WindowBaseSize.Height;
+            WindowRatio = (float)WindowSize.Width / WindowBaseSize.Width;
 
             //Setup gamefield...
             GamefieldSize = new Size(

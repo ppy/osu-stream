@@ -219,7 +219,7 @@ namespace osum.Graphics.Sprites
                     {
                         // note: no srcRect calculation
                         if (renderTextures[i].TextureGl != null)
-                            renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindowBase, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
+                            renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindow, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null, SpriteEffect.None);
                     }
                 }
             }

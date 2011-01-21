@@ -226,10 +226,10 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 topLeft = FieldPosition - OriginVector;
-                Vector2 bottomRight = new Vector2(FieldPosition.X + DrawWidth * FieldScale.X, FieldPosition.Y + DrawHeight * FieldScale.Y);
+                Vector2 pos = FieldPosition / GameBase.WindowRatio;
+                Vector2 scale = FieldScale / GameBase.WindowRatio;
 
-                return new Box2(topLeft.X, topLeft.Y, bottomRight.X, bottomRight.Y);
+                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + DrawWidth * scale.X, pos.Y + DrawHeight * scale.Y);
             }
         }
 
@@ -456,32 +456,35 @@ namespace osum.Graphics.Sprites
             {
                 Vector2 fieldPosition;
 
+                Vector2 pos = Position * GameBase.WindowRatio;
+
                 switch (Field)
                 {
                     case FieldTypes.StandardSnapCentre:
-                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width / 2 + Position.X, GameBase.WindowBaseSize.Height / 2 + Position.Y);
+                        fieldPosition = new Vector2(GameBase.WindowSize.Width / 2 + pos.X, GameBase.WindowSize.Height / 2 + pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomCentre:
-                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width / 2 + Position.X, GameBase.WindowBaseSize.Height - Position.Y);
+                        fieldPosition = new Vector2(GameBase.WindowSize.Width / 2 + pos.X, GameBase.WindowSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapRight:
-                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, Position.Y);
+                        fieldPosition = new Vector2(GameBase.WindowSize.Width - pos.X, pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomLeft:
-                        fieldPosition = new Vector2(Position.X, GameBase.WindowBaseSize.Height - Position.Y);
+                        fieldPosition = new Vector2(pos.X, GameBase.WindowSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomRight:
-                        fieldPosition = new Vector2(GameBase.WindowBaseSize.Width - Position.X, GameBase.WindowBaseSize.Height - Position.Y);
+                        fieldPosition = new Vector2(GameBase.WindowSize.Width - pos.X, GameBase.WindowSize.Height - pos.Y);
                         break;
                     case FieldTypes.Gamefield512x384:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
+                        Vector2.Multiply(ref fieldPosition, GameBase.WindowRatio, out fieldPosition);
                         break;
 					case FieldTypes.NativeScaled:
-						return Position / GameBase.WindowRatio;
+						return Position;
                     case FieldTypes.Native:
                     default:
-                        fieldPosition = Position;
+                        fieldPosition = pos;
                         break;
                 }
 
@@ -496,12 +499,12 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     case FieldTypes.Gamefield512x384:
-                        return Scale * GameBase.SpriteRatioToWindowBase * (DifficultyManager.HitObjectRadius / DifficultyManager.HitObjectRadiusDefault);
+                        return Scale * GameBase.SpriteRatioToWindow * (DifficultyManager.HitObjectRadius / DifficultyManager.HitObjectRadiusDefault);
                     case FieldTypes.Native:
 					case FieldTypes.NativeScaled:
-                        return Scale / GameBase.WindowRatio;
+                        return Scale;
                     default:
-                        return Scale * GameBase.SpriteRatioToWindowBase;
+                        return Scale * GameBase.SpriteRatioToWindow;
                 }
             }
         }
