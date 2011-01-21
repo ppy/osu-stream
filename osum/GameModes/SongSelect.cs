@@ -49,6 +49,21 @@ namespace osum
         {
             availableMaps = new List<Beatmap>();
 
+#if IPHONE
+			string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			
+			foreach (string s in Directory.GetFiles(docs,"*.osu"))
+            {
+				Beatmap b = new Beatmap(docs);
+                b.BeatmapFilename = Path.GetFileName(s);
+				
+				BeatmapPanel panel = new BeatmapPanel(b);
+				spriteManager.Add(panel);
+
+                availableMaps.Add(b);
+				panels.Add(panel);
+			}
+#else
             if (Directory.Exists(BEATMAP_DIRECTORY))
 			foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
             {
@@ -67,21 +82,6 @@ namespace osum
 					panels.Add(panel);
                 }
             }
-			
-#if IPHONE
-			string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			
-			foreach (string s in Directory.GetFiles(docs,"*.osu"))
-            {
-				Beatmap b = new Beatmap(docs);
-                b.BeatmapFilename = Path.GetFileName(s);
-				
-				BeatmapPanel panel = new BeatmapPanel(b);
-				spriteManager.Add(panel);
-
-                availableMaps.Add(b);
-				panels.Add(panel);
-			}
 #endif
         }
 		
@@ -108,4 +108,5 @@ namespace osum
         }
     }
 }
+
 
