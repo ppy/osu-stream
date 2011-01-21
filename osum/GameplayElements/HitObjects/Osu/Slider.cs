@@ -527,6 +527,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (!hitCircleStart.IsHit)
                 base.CheckScoring();
+			
+			if (IsEndHit || Clock.AudioTime < StartTime)
+				return ScoreChange.Ignore;
             
             if (trackingPoint == null)
             {
@@ -664,7 +667,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transformations.Clear();
 
-            if (spriteFollowCircle.Alpha > 0)
+            if (spriteFollowCircle.Alpha > 0 && isTracking)
             {
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.In));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.None));
@@ -686,7 +689,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void beginTracking()
         {
             //Begin tracking.
-            spriteFollowCircle.Transformations.Clear();
+            spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
+			
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 200), EasingTypes.InHalf));
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime, Clock.AudioTime + 250), EasingTypes.OutHalf));
             spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 140), EasingTypes.None));
@@ -695,9 +699,13 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void endTracking()
         {
-            spriteFollowCircle.Transformations.Clear();
+            if (IsEndHit)
+				return;
+			
+			spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
+			
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, spriteFollowCircle.Alpha, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
         }
 
         protected virtual void burstEndpoint()
@@ -903,9 +911,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Nearest);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Nearest);
-
                     GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 
                     GL.Clear((int)ClearBufferMask.ColorBufferBit);
@@ -921,8 +926,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
 

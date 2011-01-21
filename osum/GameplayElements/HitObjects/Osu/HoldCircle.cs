@@ -146,7 +146,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected override void lastEndpoint()
         {
             holdCircleOverlay.FadeOut(100);
-            holdCircleOverlay.AlwaysDraw = false;
         }
 
         internal override Vector2 EndPosition
