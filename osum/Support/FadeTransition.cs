@@ -29,10 +29,16 @@ namespace osum.Support
             switch (fadeState)
             {
                 case FadeState.FadeIn:
-                    SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - GameBase.ElapsedMilliseconds / FadeInTime);
-                    break;
+                    if (FadeInTime == 0)
+						SpriteManager.UniversalDim = 0;
+                	else
+						SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - GameBase.ElapsedMilliseconds / FadeInTime);
+					break;
                 case FadeState.FadeOut:
-                    SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
+					if (FadeOutTime == 0)
+                    	SpriteManager.UniversalDim = 1;
+					else
+						SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
                     break;
             }
 
