@@ -326,7 +326,11 @@ namespace osum
             {
             	//todo: only clear when required
 				if (Director.CurrentMode.RequireClear || Director.IsTransitioning)
+#if IPHONE
 					GL.Clear((int)ClearBufferMask.ColorBufferBit);
+#else
+                    GL.Clear(ClearBufferMask.ColorBufferBit);
+#endif
 				
 				
 				Director.Draw();
