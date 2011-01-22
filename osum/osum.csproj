@@ -197,6 +197,7 @@
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
     <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
+    <Compile Include="Support\DebugOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

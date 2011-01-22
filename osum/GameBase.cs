@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using osum.Audio;
 using osum.GameModes;
 using osum.Graphics.Skins;
@@ -40,6 +39,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
+using OpenTK.Graphics.OpenGL;
 #endif
 
 
