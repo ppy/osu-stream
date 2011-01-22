@@ -41,6 +41,20 @@ namespace osum.Graphics.Sprites
 
         private bool textChanged = true;
         private bool exactCoordinates = true;
+		
+		protected override Vector2 FieldPosition {
+			get {
+				if (exactCoordinates)
+				{
+					Vector2 pos = base.FieldPosition;
+					pos.X = (int)pos.X;
+					pos.Y = (int) pos.Y;
+					return pos;
+				}
+				
+				return base.FieldPosition;
+			}
+		}
 
 #if IPHONE
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();

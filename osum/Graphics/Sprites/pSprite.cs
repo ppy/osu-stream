@@ -450,7 +450,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        protected Vector2 FieldPosition
+        protected virtual Vector2 FieldPosition
         {
             get
             {
@@ -492,7 +492,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        protected Vector2 FieldScale
+        internal Vector2 FieldScale
         {
             get
             {
