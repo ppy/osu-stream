@@ -102,7 +102,7 @@ namespace osum.GameModes
 		    int track = 0;
             explosions.ForEach(s => {
                 if (s.Transformations.Count == 0)
-                    s.Transform(new TransformationBounce(Clock.Time, Clock.Time + 900, s.ScaleScalar, 0.1f, 2));
+                    s.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 900, s.ScaleScalar, 0.1f, 2));
             });
 		}
 

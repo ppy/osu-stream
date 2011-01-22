@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.Helpers;
+using osum.Support;
 
 namespace osum.Graphics.Sprites
 {
@@ -120,7 +121,7 @@ namespace osum.Graphics.Sprites
 			}
 
 #if DEBUG
-            GameBase.DebugOut("SpriteManager: tracking " + Sprites.Count + " sprites");
+            DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites");
 #endif
 			
 			for (i = removable.Count - 1; i >= 0; i--)

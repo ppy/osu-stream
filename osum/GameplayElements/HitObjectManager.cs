@@ -15,6 +15,7 @@ using osum.Graphics.Renderers;
 using osum.Helpers;
 using osum.GameModes;
 using osu_common.Helpers;
+using osum.Support;
 
 #endregion
 
@@ -175,7 +176,7 @@ namespace osum.GameplayElements
                 processFrom = lowestActiveObject;
 
 #if DEBUG
-            GameBase.DebugOut("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + hitObjectsCount + ")");
+            DebugOverlay.AddLine("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + hitObjectsCount + ")");
 #endif
         }
 

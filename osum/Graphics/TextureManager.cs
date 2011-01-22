@@ -64,7 +64,7 @@ namespace osum.Graphics.Skins
         public static void Update()
         {
 #if DEBUG
-            GameBase.DebugOut("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
+            DebugOverlay.AddLine("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
 #endif
         }
 

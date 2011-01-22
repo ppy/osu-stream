@@ -106,6 +106,7 @@
     <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
     <Compile Include="Support\FadeTransition.cs" />
+    <Compile Include="Support\DebugOverlay.cs" />
     <Compile Include="Support\IDrawable.cs" />
     <Compile Include="Graphics\Sprites\pAnimation.cs" />
     <Compile Include="Graphics\Sprites\pSprite.cs" />

@@ -1,16 +1,16 @@
 using System;
-using OpenTK.Platform;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Audio;
-using OpenTK.Audio.OpenAL;
-using osum.GameplayElements;
+using OpenTK.Graphics.OpenGL;
+using osum.Audio;
+using osum.GameModes;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
-using osum.Graphics;
 using osum.Helpers;
-using System.Drawing;
-
+using osum.Support;
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -40,18 +40,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
-using OpenTK.Input;
-using OpenTK.Graphics.OpenGL;
-using osum.Input;
 #endif
-
-using osum.GameModes;
-using osum.Support;
-using System.Collections.Generic;
-using System.Globalization;
-using osum.Audio;
-using System.IO;
-using System.Diagnostics;
 
 
 namespace osum
@@ -60,17 +49,11 @@ namespace osum
     {
         public static GameBase Instance;
 
-
         public static Random Random = new Random();
 
-        /// <summary>
-        /// Top-level sprite manager. Draws above everything else.
-        /// </summary>
-        private SpriteManager spriteManager = new SpriteManager();
-
         internal static Size WindowBaseSize = new Size(640, 480);
-        internal static Size WindowBaseHalf { get { return new Size(WindowBaseSize.Width / 2, WindowBaseSize.Height / 2); } }
-        internal static Size GamefieldBaseSize =  new Size(512,384);
+
+        internal static Size GamefieldBaseSize = new Size(512, 384);
 
         internal static int SpriteResolution;
 
@@ -80,10 +63,10 @@ namespace osum
         internal static float SpriteRatioToWindowBase;
 
         internal static float SpriteRatioToWindow;
-        
+
         internal static Size WindowSize;
         internal static Size GamefieldSize;
-        
+
         /// <summary>
         /// The ratio of actual-pixel window size in relation to the base resolution used internally.
         /// </summary>
@@ -93,9 +76,39 @@ namespace osum
         /// The ratio of the actual-pixel gamefield compared to the base resolution.
         /// </summary>
         internal static float GamefieldRatio;
-        
+
         internal static Vector2 GamefieldOffsetVector1;
 
+
+        internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+
+        public static double ElapsedMilliseconds = 1000/60f;
+
+        /// <summary>
+        /// A list of components which get updated every frame.
+        /// </summary>
+        public static List<IUpdateable> Components = new List<IUpdateable>();
+
+        /// <summary>
+        /// Top-level sprite manager. Draws above everything else.
+        /// </summary>
+        internal readonly SpriteManager SpriteManager = new SpriteManager();
+
+        /// <summary>
+        /// May be set in the update loop to force the next frame to have an ElapsedMilliseconds of 0
+        /// </summary>
+        private bool ignoreNextFrameTime;
+
+        public GameBase()
+        {
+            Instance = this;
+            MainLoop();
+        }
+
+        internal static Size WindowBaseHalf
+        {
+            get { return new Size(WindowBaseSize.Width/2, WindowBaseSize.Height/2); }
+        }
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
         {
@@ -123,21 +136,6 @@ namespace osum
             Vector2.Subtract(ref vec, ref GamefieldOffsetVector1, out vec);
         }
 
-        internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
-
-        public static double ElapsedMilliseconds = 1000 / 60f;
-
-        /// <summary>
-        /// A list of components which get updated every frame.
-        /// </summary>
-        public static List<IUpdateable> Components = new List<IUpdateable>();
-
-        public GameBase()
-        {
-            Instance = this;
-            MainLoop();
-        }
-
         /// <summary>
         /// MainLoop runs, starts the main loop and calls Initialize when ready.
         /// </summary>
@@ -155,8 +153,8 @@ namespace osum
             GL.Ortho(0, GameBase.WindowSize.Height, GameBase.WindowSize.Width, 0, -1, 1);
             GL.Viewport(0, 0, GameBase.WindowSize.Height, GameBase.WindowSize.Width);
 #else
-            GL.Viewport(0, 0, GameBase.WindowSize.Width, GameBase.WindowSize.Height);
-            GL.Ortho(0, GameBase.WindowSize.Width, GameBase.WindowSize.Height, 0, -1, 1);
+            GL.Viewport(0, 0, WindowSize.Width, WindowSize.Height);
+            GL.Ortho(0, WindowSize.Width, WindowSize.Height, 0, -1, 1);
 #endif
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -169,28 +167,28 @@ namespace osum
         public virtual void SetupScreen()
         {
             //Setup window...
-            WindowBaseSize.Height = (int)(WindowBaseSize.Width * (float)WindowSize.Height / WindowSize.Width);
+            WindowBaseSize.Height = (int) (WindowBaseSize.Width*(float) WindowSize.Height/WindowSize.Width);
 
             SetViewport();
 
-            WindowRatio = (float)WindowSize.Width / WindowBaseSize.Width;
+            WindowRatio = (float) WindowSize.Width/WindowBaseSize.Width;
 
             //Setup gamefield...
             GamefieldSize = new Size(
-                (int)Math.Round(GamefieldBaseSize.Width * WindowRatio),
-                (int)Math.Round(GamefieldBaseSize.Height * WindowRatio)
-            );
+                (int) Math.Round(GamefieldBaseSize.Width*WindowRatio),
+                (int) Math.Round(GamefieldBaseSize.Height*WindowRatio)
+                );
 
-            GamefieldOffsetVector1 = new Vector2((float)(WindowBaseSize.Width - GamefieldBaseSize.Width) / 2,
-                                                 (float)(WindowBaseSize.Height - GamefieldBaseSize.Height) / 4 * 3);
+            GamefieldOffsetVector1 = new Vector2((float) (WindowBaseSize.Width - GamefieldBaseSize.Width)/2,
+                                                 (float) (WindowBaseSize.Height - GamefieldBaseSize.Height)/4*3);
 
-            GamefieldRatio = (float)GamefieldSize.Height / GamefieldBaseSize.Height;
+            GamefieldRatio = (float) GamefieldSize.Height/GamefieldBaseSize.Height;
 
             SpriteResolution = Math.Max(960, Math.Min(1024, WindowSize.Width));
 
-            SpriteRatioToWindowBase = (float)WindowBaseSize.Width / SpriteResolution;
+            SpriteRatioToWindowBase = (float) WindowBaseSize.Width/SpriteResolution;
 
-            SpriteRatioToWindow = (float)WindowSize.Width / SpriteResolution;
+            SpriteRatioToWindow = (float) WindowSize.Width/SpriteResolution;
 
             if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
@@ -206,9 +204,9 @@ namespace osum
             TextureManager.Initialize();
 
             InputManager.Initialize();
-			
+
             InitializeInput();
-			
+
             if (InputManager.RegisteredSources.Count == 0)
                 throw new Exception("No input sources registered");
 
@@ -226,12 +224,7 @@ namespace osum
             AudioEngine.Initialize(effect, music);
 
             //Load the main menu initially.
-            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(0,500));
-
-#if DEBUG
-            fpsDisplay = new pText("", 8, new Vector2(0,40), Vector2.Zero, 0, true, Color4.White, false);
-			spriteManager.Add(fpsDisplay);
-#endif
+            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(0, 500));
         }
 
         /// <summary>
@@ -253,11 +246,6 @@ namespace osum
         /// </summary>
         protected abstract void InitializeInput();
 
-        internal static pText fpsDisplay;
-        double weightedAverageFrameTime;
-
-        bool ignoreFrame;
-
         /// <summary>
         /// Main update cycle
         /// </summary>
@@ -269,51 +257,28 @@ namespace osum
             double lastTime = Clock.TimeAccurate;
             Clock.Update(e.Time);
 
-            ElapsedMilliseconds = ignoreFrame ? 0 : Clock.TimeAccurate - lastTime;
-            ignoreFrame = false;
+            ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
+            ignoreNextFrameTime = false;
+
+            DebugOverlay.Update();
+
+            TextureManager.Update();
 
             if (Director.Update())
             {
-                ignoreFrame = true;
+                ignoreNextFrameTime = true;
                 //Mode change occurred; we don't need to do anything this frame.
                 //We are on a blank screen and don't want to throw off timings, so let's cancel the draw.
                 return false;
             }
-            
-            UpdateFpsOverlay();
 
             InputManager.Update();
 
-            TextureManager.Update();
-
             Components.ForEach(c => c.Update());
 
-            spriteManager.Update();
+            SpriteManager.Update();
 
             return true;
-        }
-		
-		int lastFpsDraw = 0;
-		
-        private void UpdateFpsOverlay()
-        {
-            weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + ElapsedMilliseconds * 0.02;
-            double fps = (1000/weightedAverageFrameTime);
-
-            //if (Clock.Time / 5000 == lastFpsDraw) return;
-			//lastFpsDraw = Clock.Time / 5000;
-
-#if DEBUG
-            fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
-            fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} Audio:{2:#,0}ms {3}", Math.Round(fps), Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime);
-#endif
-        }
-
-        internal static void DebugOut(string s)
-        {
-#if DEBUG
-            fpsDisplay.Text += "\n" + s;
-#endif
         }
 
         /// <summary>
@@ -321,29 +286,28 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
-			//todo: make update actually update on iphone and call from game architecture
+            //todo: make update actually update on iphone and call from game architecture
             if (Update(e))
             {
-            	//todo: only clear when required
-				if (Director.CurrentMode.RequireClear || Director.IsTransitioning)
+                //todo: only clear when required
+                if (Director.CurrentMode.RequireClear || Director.IsTransitioning)
 #if IPHONE
 					GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
                     GL.Clear(ClearBufferMask.ColorBufferBit);
 #endif
-				
-				
-				Director.Draw();
 
-                spriteManager.Draw();
+
+                Director.Draw();
+
+                SpriteManager.Draw();
             }
         }
-		
-		public static void TriggerLayoutChanged()
-		{
-			if (OnScreenLayoutChanged != null)
-				OnScreenLayoutChanged();
-		}
+
+        public static void TriggerLayoutChanged()
+        {
+            if (OnScreenLayoutChanged != null)
+                OnScreenLayoutChanged();
+        }
     }
 }
-
