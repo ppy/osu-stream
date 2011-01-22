@@ -72,7 +72,7 @@ namespace osum
         internal static Size WindowBaseHalf { get { return new Size(WindowBaseSize.Width / 2, WindowBaseSize.Height / 2); } }
         internal static Size GamefieldBaseSize =  new Size(512,384);
 
-        internal static int SpriteResolution = 1024;
+        internal static int SpriteResolution;
 
         /// <summary>
         /// Ratio of sprite size compared to their default habitat (SpriteResolution)
@@ -185,6 +185,8 @@ namespace osum
                                                  (float)(WindowBaseSize.Height - GamefieldBaseSize.Height) / 4 * 3);
 
             GamefieldRatio = (float)GamefieldSize.Height / GamefieldBaseSize.Height;
+
+            SpriteResolution = Math.Max(960, Math.Min(1024, WindowSize.Width));
 
             SpriteRatioToWindowBase = (float)WindowBaseSize.Width / SpriteResolution;
 
