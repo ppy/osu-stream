@@ -263,7 +263,9 @@ namespace osum
 
             DebugOverlay.Update();
 			
+#if DEBUG
 			DebugOverlay.AddLine("Window Size: " + WindowSize.Width + "x" + WindowSize.Height + " Sprite Resolution: " + SpriteResolution);
+#endif
 
             TextureManager.Update();
 
