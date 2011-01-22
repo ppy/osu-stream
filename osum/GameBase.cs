@@ -63,7 +63,8 @@ namespace osum
         internal static float SpriteRatioToWindowBase;
 
         internal static float SpriteRatioToWindow;
-
+		
+		internal static float WindowScaleFactor = 1;
         internal static Size WindowSize;
         internal static Size GamefieldSize;
 
@@ -261,6 +262,8 @@ namespace osum
             ignoreNextFrameTime = false;
 
             DebugOverlay.Update();
+			
+			DebugOverlay.AddLine("Window Size: " + WindowSize.Width + "x" + WindowSize.Height + " Sprite Resolution: " + SpriteResolution);
 
             TextureManager.Update();
 

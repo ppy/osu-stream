@@ -73,7 +73,11 @@ namespace osum.Support.iPhone
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated(UIApplication app)
 		{
-			GameBase.WindowSize = new Size((int)glView.Bounds.Height, (int)glView.Bounds.Width);
+			glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
+			
+			GameBase.WindowScaleFactor = glView.ContentScaleFactor;
+			GameBase.WindowSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.WindowScaleFactor), 
+			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.WindowScaleFactor));
 			
 			//music may have started playing from a previously resigned execution, so let's restart it here.
 			//eventually we probably want to do something to give the user more notice before resuming gameplay...
