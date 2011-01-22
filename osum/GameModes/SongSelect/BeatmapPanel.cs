@@ -51,8 +51,8 @@ namespace osum.GameModes.SongSelect
 		
 		internal void MoveTo(Vector2 location)
 		{
-			text.MoveTo(location + new Vector2(0,10),400);
-			backingPlate.MoveTo(location,400);
+			text.MoveTo(location + new Vector2(0,10),200);
+			backingPlate.MoveTo(location,200);
 		}
 	}
 }
