@@ -464,6 +464,9 @@ namespace osum.GameplayElements
 
         #endregion
 
+        public virtual bool IncrementCombo { get { return true; } }
+
+
         internal virtual void StopSound()
         {
         }

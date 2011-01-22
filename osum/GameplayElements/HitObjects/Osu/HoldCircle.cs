@@ -20,6 +20,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
         }
 
+        public override bool IncrementCombo
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         protected override void CalculateSplines()
         {
             EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);

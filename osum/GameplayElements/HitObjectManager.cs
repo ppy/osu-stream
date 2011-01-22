@@ -103,7 +103,10 @@ namespace osum.GameplayElements
                 colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
             }
 
-            h.ComboNumber = currentComboNumber++;
+            h.ComboNumber = currentComboNumber;
+            if (h.IncrementCombo)
+                currentComboNumber++;
+
             h.ColourIndex = colourIndex;
 
             hitObjects.AddInPlace(h);
