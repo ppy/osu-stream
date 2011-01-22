@@ -319,10 +319,15 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
-            //todo: make update actually update on iphone and call from game architecture
+			//todo: make update actually update on iphone and call from game architecture
             if (Update(e))
             {
-                Director.Draw();
+            	//todo: only clear when required
+				if (Director.CurrentMode.RequireClear || Director.IsTransitioning)
+					GL.Clear((int)ClearBufferMask.ColorBufferBit);
+				
+				
+				Director.Draw();
 
                 spriteManager.Draw();
             }

@@ -37,6 +37,7 @@ namespace osum.GameModes
 
         public Player() : base()
         {
+			RequireClear = false;
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)

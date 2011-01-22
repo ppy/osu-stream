@@ -121,8 +121,6 @@ namespace osum
 			GL.Enable (All.Texture2D);
 			GL.BlendFunc (All.BlendSrc, All.BlendDst);
 			
-			GL.Clear((int)ClearBufferMask.ColorBufferBit);
-
 			GameBase.Instance.Draw(e);
 			
 			GL.PopMatrix();
