@@ -381,17 +381,10 @@ namespace osum.Graphics
             if (level > 0)
         		return;
 
-       		GL.BindTexture (SURFACE_TYPE, Id);
+       		GL.BindTexture(SURFACE_TYPE, Id);
 
-#if IPHONEss
-            //Nearest gives ~30% more draw performance, but looks a bit shitty.
-            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
-        	GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
-#else
-            //Nearest gives ~30% more draw performance, but looks a bit shitty.
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
-#endif
 
             //can't determine if this helps
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
