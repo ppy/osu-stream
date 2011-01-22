@@ -45,7 +45,7 @@ namespace osum.GameModes.SongSelect
             backingPlate.OnHover += delegate { backingPlate.Colour = Color4.YellowGreen; };
             backingPlate.OnHoverLost += delegate { backingPlate.Colour = Color4.OrangeRed; };
 			
-			text = new pText(Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename), 18, Vector2.Zero, Vector2.Zero, 1, true, Color4.White, false);
+			text = new pText(Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename), 25, Vector2.Zero, Vector2.Zero, 1, true, Color4.White, false);
 			SpriteCollection.Add(text);
 		}
 		
