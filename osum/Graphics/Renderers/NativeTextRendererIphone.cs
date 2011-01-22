@@ -22,12 +22,10 @@ namespace osum.Graphics.Renderers
             UIFont font = UIFont.SystemFontOfSize(size);
 			
 			if (restrictBounds == Vector2.Zero)
-				restrictBounds = new Vector2(512,64);
+				restrictBounds = new Vector2(512 * GameBase.WindowScaleFactor,32 * GameBase.WindowScaleFactor);
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);
-
-
 
             CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray();
 
@@ -47,18 +45,9 @@ namespace osum.Graphics.Renderers
                 context.ScaleCTM(1, -1);
 
                 UIGraphics.PushContext(context);
-    
-                string[] lines = text.Split('\n');
-
-                if (lines.Length > 1)
-                {
-    
-                }
-                else
-                {
-                    actualSize = new NSString(text).DrawString(new RectangleF(0,0,width,height),font, UILineBreakMode.TailTruncation,  UITextAlignment.Left);
-                }
-    
+                
+                actualSize = new NSString(text).DrawString(new RectangleF(0,0,width,height),font, UILineBreakMode.TailTruncation,  UITextAlignment.Left);
+                
                 UIGraphics.PopContext();
 
                 measured = new OpenTK.Vector2(actualSize.Width, actualSize.Height);
