@@ -4,6 +4,7 @@ using OpenTK.Audio.OpenAL;
 using System.Collections.Generic;
 using osum.Support;
 using osum.Audio;
+using System.IO;
 
 namespace osum
 {
@@ -53,7 +54,9 @@ namespace osum
         /// <returns>-1 on error, bufferId on success.</returns>
         public int Load(string filename)
         {
-            int[] buffers = AL.GenBuffers(1);
+            if (!File.Exists(filename)) return -1;
+			
+			int[] buffers = AL.GenBuffers(1);
 
             // Load a .wav file from disk
             if (XRam.IsInitialized) XRam.SetBufferMode(0, ref buffers[0], XRamExtension.XRamStorage.Hardware); // optional
