@@ -44,6 +44,20 @@ namespace osum.GameModes
         {
             //pass on the event to hitObjectManager for handling.
             hitObjectManager.HandlePressAt(point);
+			
+			if (InputManager.TrackingPoints.Count == 2)
+			{
+				Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
+				Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
+				
+				if (Math.Max(p1.X,p2.X) > (GameBase.WindowBaseSize.Width - 40) &&
+				    Math.Min(p1.X,p2.X) < 40 &&
+				    p1.Y + p2.Y < 80)
+				{
+					Director.ChangeMode(OsuMode.SongSelect);
+				}
+				
+			}
         }
 
         internal override void Initialize()
@@ -62,17 +76,6 @@ namespace osum.GameModes
             comboCounter = new ComboCounter();
 
             currentScore = new Score();
-			
-			//add a temporary button to allow returning to song select
-			backButton = new pSprite(TextureManager.Load("menu-back"),FieldTypes.StandardSnapRight, OriginTypes.TopRight,
-			                         ClockTypes.Game, Vector2.Zero, 1, true, new Color4(1,1,1,0.4f));
-			backButton.Scale = new Vector2(0.7f,0.7f);
-			
-			backButton.OnClick += delegate {
-				backButton.UnbindAllEvents();
-				Director.ChangeMode(OsuMode.SongSelect);
-			};
-			spriteManager.Add(backButton);
 
             playfield =
                 new pSprite(TextureManager.Load(@"playfield"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
