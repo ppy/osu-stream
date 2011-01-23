@@ -153,6 +153,8 @@ namespace osum.Graphics.Renderers
             result.SetData(textureId);
 
             GameBase.Instance.SetViewport();
+			
+			GL.Clear((int)All.ColorBufferBit);
             
             return result;
         }
