@@ -34,11 +34,22 @@ namespace osum.Audio
         {
             Effect = effect;
             Music = music;
+			
+			foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
+				LoadSample(s);
         }
 
         internal static int PlaySample(OsuSamples sample)
         {
-            int buffer;
+            int buffer = LoadSample(sample);
+			if (buffer < 0) return buffer;
+			
+            return AudioEngine.Effect.PlayBuffer(buffer);
+        }
+		
+		internal static int LoadSample(OsuSamples sample)
+		{
+			int buffer;
 
             string filename = null;
 
@@ -75,10 +86,10 @@ namespace osum.Audio
             {
                 buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
                 loadedSamples.Add(sample, buffer);
-            }
-
-            return AudioEngine.Effect.PlayBuffer(buffer);
-        }
+			}
+			
+			return buffer;
+		}
     }
 }
     
