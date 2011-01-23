@@ -76,6 +76,7 @@
     <Compile Include="Graphics\Renderers\SliderTrackRendererDesktop.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="Graphics\Sprites\pDrawable.cs" />
     <Compile Include="Graphics\Sprites\pSprite_Interaction.cs" />
     <Compile Include="Graphics\Sprites\pText.cs" />
     <Compile Include="Graphics\TextureManager.cs" />

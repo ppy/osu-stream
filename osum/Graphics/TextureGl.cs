@@ -170,7 +170,7 @@ namespace osum.Graphics
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
-                         Box2? srcRect, SpriteEffect effect)
+                         Box2? srcRect)
         {
 			if (Id < 0)
                 return;
@@ -184,8 +184,8 @@ namespace osum.Graphics
 
             Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
 
-            bool verticalFlip = (effect & SpriteEffect.FlipVertically) > 0;
-            bool horizontalFlip = (effect & SpriteEffect.FlipHorizontally) > 0;
+            bool verticalFlip = false;//(effect & SpriteEffect.FlipVertically) > 0;
+            bool horizontalFlip = false;//(effect & SpriteEffect.FlipHorizontally) > 0;
 
 #if IPHONE
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);

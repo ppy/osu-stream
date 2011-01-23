@@ -16,8 +16,8 @@ namespace osum.GameModes
 		pSprite fill1;
 		pSprite fill2;
 		pSprite fill3;
-		
-		List<pSprite> fillSprites = new List<pSprite>();
+
+        List<pDrawable> fillSprites = new List<pDrawable>();
 		
 		float actualSpriteScaleX;
 		

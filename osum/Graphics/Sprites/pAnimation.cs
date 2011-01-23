@@ -17,6 +17,7 @@ namespace osum.Graphics.Sprites
         private double currentFrameSkip;
         public int[] CustomSequence;
         public bool DrawDimensionsManualOverride;
+        internal bool Reverse;
         
         internal double FrameDelay = 1000/60f;
 
