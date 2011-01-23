@@ -40,7 +40,7 @@ namespace osum.GameModes.Play.Components
             if (showScore)
             {
                 s_Score =
-                    new pSpriteText("00000000", "score",-2,
+                    new pSpriteText("0000000", "score",-2,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                         new Vector2(0, 0), 0.95F, true, Color4.White);
                 s_Score.TextConstantSpacing = true;
@@ -94,7 +94,7 @@ namespace osum.GameModes.Play.Components
                     if (displayScore < currentScore)
                     {
                         displayScore += Math.Max(1, (currentScore - displayScore) / 10);
-                        s_Score.Text = String.Format("{0:00000000}", displayScore);
+                        s_Score.Text = String.Format("{0:0000000}", displayScore);
                     }
                 }
             }
