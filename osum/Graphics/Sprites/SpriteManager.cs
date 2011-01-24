@@ -84,7 +84,7 @@ namespace osum.Graphics.Sprites
             {
                 int loadTime = Clock.Time - creationTime;
 
-                foreach (pSprite p in Sprites)
+                foreach (pDrawable p in Sprites)
                     if (p.Clocking == ClockTypes.Game)
                         p.Transformations.ForEach(t => t.Offset(loadTime));
 
@@ -112,7 +112,7 @@ namespace osum.Graphics.Sprites
 			List<int> removable = new List<int>();
 			
 			int i = 0;
-            foreach (pSprite p in Sprites)
+            foreach (pDrawable p in Sprites)
 			{
                 p.Update();
 				if (p.IsRemovable)
@@ -133,13 +133,8 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal void Draw()
         {
-            TextureGl.EnableTexture();
-
-            foreach (pSprite p in Sprites)
-                //todo: consider case updates need to happen even when not visible (ie. animations)
+            foreach (pDrawable p in Sprites)
                 if (p.Alpha > 0) p.Draw();
-
-            TextureGl.DisableTexture();
         }
 
         /// <summary>
@@ -174,7 +169,7 @@ namespace osum.Graphics.Sprites
 
         public void Dispose()
         {
-            foreach (pSprite p in Sprites)
+            foreach (pDrawable p in Sprites)
                 p.Dispose();
 
             Sprites = null;

@@ -174,7 +174,9 @@ namespace osum.Graphics
         {
 			if (Id < 0)
                 return;
-                
+              
+			
+			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
 
             Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
@@ -285,6 +287,7 @@ namespace osum.Graphics
 #endif
 
             GL.PopMatrix();
+			GL.Disable(EnableCap.Texture2D);
         }
 
         internal static void DisableTexture()

@@ -214,7 +214,7 @@ namespace osum.Graphics.Sprites
             {
                 if (Alpha != 0)
                 {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
                     for (int i = 0; i < renderCoordinates.Count; i++)
                     {
                         // note: no srcRect calculation

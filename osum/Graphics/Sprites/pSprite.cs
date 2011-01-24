@@ -35,7 +35,6 @@ using MonoTouch.CoreGraphics;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
 
 
@@ -69,7 +68,6 @@ namespace osum.Graphics.Sprites
 
             Scale = Vector2.One;
             Rotation = 0;
-            blending = BlendingFactorDest.OneMinusSrcAlpha;
             DrawDepth = depth;
             AlwaysDraw = alwaysDraw;
 
@@ -104,18 +102,6 @@ namespace osum.Graphics.Sprites
         internal int TextureY
         {
             get { return texture != null ? texture.Y : 0; }
-        }
-
-        internal float ScaleScalar
-        {
-            get { return Scale.X; }
-            set { Scale = new Vector2(value, value); }
-        }
-
-        internal bool Additive
-        {
-            get { return blending == BlendingFactorDest.One; }
-            set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
         internal virtual pTexture Texture
@@ -191,7 +177,7 @@ namespace osum.Graphics.Sprites
             {
                 if (Alpha != 0)
                 {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
 
                     texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
                                            TextureRectangle);

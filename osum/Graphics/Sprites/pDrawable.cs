@@ -7,13 +7,17 @@ using osum.Helpers;
 using OpenTK;
 using osu_common.Helpers;
 using osum.GameplayElements;
+#if IPHONE
+using OpenTK.Graphics.ES11;
+#else
 using OpenTK.Graphics.OpenGL;
+#endif
 
 namespace osum.Graphics.Sprites
 {
-    class pDrawable : IDrawable, IDisposable
+    internal class pDrawable : IDrawable, IDisposable
     {
-        internal float Alpha;
+        internal float Alpha = 1;
         internal bool AlwaysDraw;
         internal ClockTypes Clocking;
         internal Color4 Colour;
@@ -28,7 +32,7 @@ namespace osum.Graphics.Sprites
         internal OriginTypes Origin;
         internal Vector2 OriginVector;
         internal Vector2 Position;
-        protected BlendingFactorDest blending;
+        protected BlendingFactorDest blending = BlendingFactorDest.OneMinusSrcAlpha;
 
         internal float DrawDepth;
 
@@ -48,6 +52,18 @@ namespace osum.Graphics.Sprites
         internal virtual bool IsRemovable
         {
             get { return !AlwaysDraw && Transformations.Count == 0; }
+        }
+		
+		internal float ScaleScalar
+        {
+            get { return Scale.X; }
+            set { Scale = new Vector2(value, value); }
+        }
+
+        internal bool Additive
+        {
+            get { return blending == BlendingFactorDest.One; }
+            set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
         protected virtual Vector2 FieldPosition
@@ -441,7 +457,6 @@ namespace osum.Graphics.Sprites
 
         public virtual void Draw()
         {
-            throw new NotImplementedException();
         }
 
         #endregion
