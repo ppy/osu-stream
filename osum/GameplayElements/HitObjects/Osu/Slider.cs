@@ -110,6 +110,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal pTexture sliderBodyTexture;
 
+        internal uint renderBufferDepth;
+
         /// <summary>
         /// How much of the slider (path) we have drawn.
         /// </summary>
@@ -860,11 +862,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lengthDrawn == PathLength) return; //finished drawing already.
 
             // Snaking animation is IN PROGRESS
-#if FBO
-            int FirstSegmentIndex = lastSegmentIndex + 1;
-            throw new NotImplementedException();
-#else
-            int FirstSegmentIndex = 0;
+            int FirstSegmentIndex = 0;// lastDrawnSegmentIndex + 1;
 
             // Length of the curve we're drawing up to.
             lengthDrawn = PathLength *
@@ -906,7 +904,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.LoadIdentity();
                     GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                    GL.Clear((int)ClearBufferMask.ColorBufferBit);
+                    if (FirstSegmentIndex == 0)
+                        GL.Clear((int)ClearBufferMask.ColorBufferBit);
 
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
@@ -915,23 +914,22 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
+
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
+
                     GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                     GL.MatrixMode(MatrixMode.Projection);
 
                     GL.LoadIdentity();
                     GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
+                    if (FirstSegmentIndex == 0)
+                        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
                     m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                               DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-
-                    GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                    GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
-
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
 
                     GameBase.Instance.SetViewport();
@@ -940,7 +938,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 }
             }
-#endif
         }
 
         /// <summary>
@@ -969,8 +966,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             gl.SetData(IntPtr.Zero, 0, All.Rgba);
 
 #else
-            int newtexid = GL.GenTexture();
-            gl.SetData(newtexid);
+            gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
 #endif
 
             sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
@@ -992,6 +988,19 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             // unbind frame buffer
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+#else
+            // make depth buffer
+            GL.GenRenderbuffers(1, out renderBufferDepth);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, renderBufferDepth);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, trackBoundsNative.Width, trackBoundsNative.Height);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+
+            GL.GenFramebuffers(1, out fbo);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
+            
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, gl.Id, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
         }
     }
