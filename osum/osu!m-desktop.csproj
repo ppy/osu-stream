@@ -399,6 +399,6 @@
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "C:\Users\peppy\Documents\My Dropbox\osu!m\osu!m.exe"</PostBuildEvent>
+    <PostBuildEvent>if exist "C:\Users\peppy" copy /Y "$(TargetPath)" "C:\Users\peppy\Documents\My Dropbox\osu!m\osu!m.exe"</PostBuildEvent>
   </PropertyGroup>
 </Project>
