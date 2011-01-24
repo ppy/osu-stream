@@ -19,6 +19,7 @@
     <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
     <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
+    <BundleIconIPad>Support\iPhone\icon72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -95,6 +96,7 @@
     <None Include="Info.plist" />
     <None Include="Support\iPhone\icon.png" />
     <None Include="Support\iPhone\icon%402x.png" />
+    <None Include="Support\iPhone\icon72.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -359,9 +361,10 @@
     <Content Include="Skins\Default\soft-sliderslide.wav" />
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
-    <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\menu-explosion.png" />
     <Content Include="Skins\Default\menu-back.png" />
     <Content Include="Skins\Default\playfield.png" />
+    <Content Include="iTunesArtwork" />
+    <Content Include="Skins\Default\hit.png" />
   </ItemGroup>
 </Project>
