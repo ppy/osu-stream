@@ -70,6 +70,7 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="GameModes\Play\Components\HealthBar.cs" />
     <Compile Include="GameplayElements\Scoring\Score.cs" />
+    <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererDesktop.cs" />
@@ -399,6 +400,6 @@
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if exist "C:\Users\peppy" copy /Y "$(TargetPath)" "C:\Users\peppy\Documents\My Dropbox\osu!m\osu!m.exe"</PostBuildEvent>
+    <PostBuildEvent>if exist "C:\Users\peppy" copy /Y "$(TargetPath)" "C:\Users\peppy\Dropbox\osu!m\osu!m.exe"</PostBuildEvent>
   </PropertyGroup>
 </Project>
