@@ -110,11 +110,6 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
-        public override void Draw()
-        {
-            base.Draw();
-        }
-
         double timeSinceLastFrame;
 
         internal void UpdateFrame()

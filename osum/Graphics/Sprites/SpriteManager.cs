@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using osum.Helpers;
 using osum.Support;
+using OpenTK.Graphics.ES11;
 
 namespace osum.Graphics.Sprites
 {
@@ -46,7 +47,7 @@ namespace osum.Graphics.Sprites
 		
 		internal void Add(pSpriteCollection collection)
         {
-            foreach (pSprite p in collection.SpriteCollection)
+            foreach (pDrawable p in collection.SpriteCollection)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
         }
 
@@ -80,11 +81,13 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal void Update()
         {
-            if (firstRender)
+            texturesEnabled = false; //reset on new frame.
+			
+			if (firstRender)
             {
                 int loadTime = Clock.Time - creationTime;
 
-                foreach (pSprite p in Sprites)
+                foreach (pDrawable p in Sprites)
                     if (p.Clocking == ClockTypes.Game)
                         p.Transformations.ForEach(t => t.Offset(loadTime));
 
@@ -112,7 +115,7 @@ namespace osum.Graphics.Sprites
 			List<int> removable = new List<int>();
 			
 			int i = 0;
-            foreach (pSprite p in Sprites)
+            foreach (pDrawable p in Sprites)
 			{
                 p.Update();
 				if (p.IsRemovable)
@@ -121,7 +124,8 @@ namespace osum.Graphics.Sprites
 			}
 
 #if DEBUG
-            DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites");
+            if (Sprites.Count > 5)
+                DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites");
 #endif
 			
 			for (i = removable.Count - 1; i >= 0; i--)
@@ -131,16 +135,42 @@ namespace osum.Graphics.Sprites
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
-        internal void Draw()
+        internal bool Draw()
         {
-            TextureGl.EnableTexture();
-
-            foreach (pSprite p in Sprites)
-                //todo: consider case updates need to happen even when not visible (ie. animations)
-                if (p.Alpha > 0) p.Draw();
-
-            TextureGl.DisableTexture();
+            foreach (pDrawable p in Sprites)
+			{
+                if (p.Alpha > 0)
+				{
+					TexturesEnabled = p.UsesTextures;
+					
+					p.Draw();
+				}
+			}
+            return true;
         }
+		
+		static bool texturesEnabled = false;
+		internal static bool TexturesEnabled
+		{
+			get { return texturesEnabled; }	
+			
+			set {
+				if (texturesEnabled == value)
+					return;
+				texturesEnabled = value;
+				
+				if (texturesEnabled)
+				{
+					GL.Enable(All.Texture2D);
+					GL.EnableClientState(All.TextureCoordArray);
+				}
+				else
+				{
+					GL.Disable(All.Texture2D);
+					GL.DisableClientState(All.TextureCoordArray);
+				}
+			}
+		}
 
         /// <summary>
         ///   Used by spinners.  Has a range of 0-0.2
@@ -174,7 +204,7 @@ namespace osum.Graphics.Sprites
 
         public void Dispose()
         {
-            foreach (pSprite p in Sprites)
+            foreach (pDrawable p in Sprites)
                 p.Dispose();
 
             Sprites = null;

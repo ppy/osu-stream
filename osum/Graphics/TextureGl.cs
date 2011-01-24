@@ -174,7 +174,7 @@ namespace osum.Graphics
         {
 			if (Id < 0)
                 return;
-                
+
 			GL.PushMatrix();
 
             Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
@@ -287,37 +287,6 @@ namespace osum.Graphics
             GL.PopMatrix();
         }
 
-        internal static void DisableTexture()
-        {
-            switch (SURFACE_TYPE)
-            {
-                case TextureTarget.Texture2D:
-                    GL.Disable(EnableCap.Texture2D);
-                    break;
-#if !IPHONE
-                case TextureTarget.TextureRectangle:
-                    GL.Disable(EnableCap.Texture2D);
-                    break;
-#endif
-            }
-        }
-
-        internal static void EnableTexture()
-        {
-            switch (SURFACE_TYPE)
-            {
-                case TextureTarget.Texture2D:
-                    GL.Enable(EnableCap.Texture2D);
-                    break;
-#if !IPHONE
-                case TextureTarget.TextureRectangle:
-                    GL.Enable(EnableCap.Texture2D);
-                    break;
-#endif
-            }
-        }
-
-
         public void SetData(int textureId)
         {
             this.Id = textureId;
@@ -366,6 +335,8 @@ namespace osum.Graphics
 
             GL.GetError();
         	//Clear errors.
+			
+			SpriteManager.TexturesEnabled = true;
 
             bool newTexture = false;
 

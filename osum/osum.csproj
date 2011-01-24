@@ -198,6 +198,8 @@
     <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
     <Compile Include="Support\DebugOverlay.cs" />
+    <Compile Include="Graphics\Sprites\pDrawable.cs" />
+    <Compile Include="Graphics\Drawables\CircularProgress.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -216,6 +218,7 @@
     <Folder Include="Helpers\osu!common\" />
     <Folder Include="GameModes\SongSelect\" />
     <Folder Include="GameModes\" />
+    <Folder Include="Graphics\Drawables\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />

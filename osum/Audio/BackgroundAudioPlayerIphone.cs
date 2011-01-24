@@ -114,8 +114,10 @@ namespace osum
 
 		public bool SeekTo(int milliseconds)
 		{
-			throw new NotImplementedException();
+			if (player == null)
+				return false;
+			player.CurrentTime = milliseconds/1000d;
+			return true;
 		}
 	}
 }
-

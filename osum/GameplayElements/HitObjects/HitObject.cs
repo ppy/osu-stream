@@ -322,7 +322,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Sprites which should be dimmed when not the active object.
         /// </summary>
-        protected internal List<pSprite> DimCollection = new List<pSprite>();
+        protected internal List<pDrawable> DimCollection = new List<pDrawable>();
 
         protected Vector2 position;
         internal virtual Vector2 Position
@@ -486,7 +486,7 @@ namespace osum.GameplayElements
 
         internal virtual void Shake()
         {
-            foreach (pSprite p in SpriteCollection)
+            foreach (pDrawable p in SpriteCollection)
             {
                 Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
 

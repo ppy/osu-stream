@@ -9,6 +9,7 @@ using OpenTK.Graphics;
 using OpenTK;
 using osum.Graphics.Primitives;
 using System.Drawing;
+using osum.Graphics.Drawables;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
@@ -53,21 +54,24 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void burstEndpoint()
         {
+            int duration = (EndTime - StartTime) / RepeatCount;
+
             Transformation bounce = new Transformation(TransformationType.Scale,
                 1.1f + 0.5f * progressCurrent/RepeatCount,
                 1 + 0.4f * progressCurrent / RepeatCount,
                 Clock.AudioTime,
-                Clock.AudioTime + (EndTime - StartTime) / RepeatCount,
+                Clock.AudioTime + duration,
                 EasingTypes.In
             );
 
-            foreach (pSprite p in spriteCollectionStart)
+            foreach (pDrawable p in spriteCollectionStart)
             {
                 p.Transformations.RemoveAll(b => b.Type == TransformationType.Scale);
                 p.Transform(bounce);
             }
-
         }
+
+        CircularProgress circularProgress;
 
         protected override void initializeSprites()
         {
@@ -80,11 +84,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
             
             holdCircleOverlay = new pSprite(TextureManager.Load(OsuTexture.holdcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White);
-            spriteCollectionStart.Add(holdCircleOverlay);
             holdCircleOverlay.Transform(new NullTransform(StartTime, EndTime));
+            spriteCollectionStart.Add(holdCircleOverlay);
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
+
+            circularProgress = new CircularProgress(position, 200, false, 0, Color.White);
+            circularProgress.Clocking = ClockTypes.Audio;
+            circularProgress.Field = FieldTypes.Gamefield512x384;
+            circularProgress.Additive = true;
+            circularProgress.Transform(new NullTransform(StartTime, EndTime));
+            
+            spriteCollectionStart.Add(circularProgress);
 
             SpriteCollection.AddRange(spriteCollectionStart);
             DimCollection.AddRange(spriteCollectionStart);
@@ -110,6 +122,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                 base.Colour = new Color4(0.648f,0,244/256f,1);
                 spriteCollectionStart[0].Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
                 spriteCollectionStart[0].Transform(new Transformation(Colour, Color4.White, StartTime, EndTime));
+                circularProgress.Transform(new Transformation(
+                    new Color4(Colour.R, Colour.G, Colour.B, 0.8f),
+                    ColourHelper.Lighten(new Color4(Colour.R, Colour.G, Colour.B, 0.8f),0.5f),
+                    StartTime, EndTime));
             }
         }
 
@@ -125,20 +141,23 @@ namespace osum.GameplayElements.HitObjects.Osu
         public override void Update()
         {
             progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
+            circularProgress.Progress = progressCurrent / RepeatCount;
         }
 
         protected override void beginTracking()
         {
             holdCircleOverlay.FadeOut(160);
+            circularProgress.FadeIn(160);
         }
 
         protected override void endTracking()
         {
             holdCircleOverlay.FadeIn(80);
+            circularProgress.FadeOut(80);
 
             Transformation returnto = new Transformation(TransformationType.Scale,spriteCollectionStart[0].ScaleScalar, 1, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In);
 
-            foreach (pSprite p in spriteCollectionStart)
+            foreach (pDrawable p in spriteCollectionStart)
             {
                 p.Transformations.RemoveAll(t => t.Type == TransformationType.Scale);
                 p.Transform(returnto);
@@ -154,6 +173,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected override void lastEndpoint()
         {
             holdCircleOverlay.FadeOut(100);
+            circularProgress.FadeOut(300);
         }
 
         internal override Vector2 EndPosition

@@ -35,7 +35,6 @@ using MonoTouch.CoreGraphics;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
 
 
@@ -69,7 +68,6 @@ namespace osum.Graphics.Sprites
 
             Scale = Vector2.One;
             Rotation = 0;
-            blending = BlendingFactorDest.OneMinusSrcAlpha;
             DrawDepth = depth;
             AlwaysDraw = alwaysDraw;
 
@@ -80,11 +78,12 @@ namespace osum.Graphics.Sprites
 
             Texture = texture;
         }
-
-        internal int ClockingNow
-        {
-            get { return Clock.GetTime(Clocking); }
-        }
+		
+		internal override bool UsesTextures {
+			get {
+				return true;
+			}
+		}
 
         internal int TextureWidth
         {
@@ -104,18 +103,6 @@ namespace osum.Graphics.Sprites
         internal int TextureY
         {
             get { return texture != null ? texture.Y : 0; }
-        }
-
-        internal float ScaleScalar
-        {
-            get { return Scale.X; }
-            set { Scale = new Vector2(value, value); }
-        }
-
-        internal bool Additive
-        {
-            get { return blending == BlendingFactorDest.One; }
-            set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
         internal virtual pTexture Texture
@@ -181,22 +168,17 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
-        public override void Draw()
+        public override bool Draw()
         {
+            if (!base.Draw()) return false;
+            
             pTexture texture = Texture;
             if (texture == null || texture.TextureGl == null)
-                return;
+                return false;
 
-            if (transformations.Count != 0 || AlwaysDraw)
-            {
-                if (Alpha != 0)
-                {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
-
-                    texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
-                                           TextureRectangle);
-                }
-            }
+            texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
+                                    TextureRectangle);
+            return true;
         }
 
         #endregion

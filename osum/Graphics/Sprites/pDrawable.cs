@@ -7,19 +7,69 @@ using osum.Helpers;
 using OpenTK;
 using osu_common.Helpers;
 using osum.GameplayElements;
+#if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
+
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using MonoTouch.UIKit;
+using MonoTouch.CoreGraphics;
+#else
 using OpenTK.Graphics.OpenGL;
+using osum.Input;
+#endif
 
 namespace osum.Graphics.Sprites
 {
-    class pDrawable : IDrawable, IDisposable
+    internal class pDrawable : IDrawable, IDisposable
     {
         internal float Alpha;
-        internal bool AlwaysDraw;
+
+        private bool alwaysDraw;
+        internal bool AlwaysDraw
+        {
+            get { return alwaysDraw; }
+            set
+            {
+                alwaysDraw = value;
+                Alpha = alwaysDraw ? 1 : 0;
+            }
+        }
         internal ClockTypes Clocking;
+
         internal Color4 Colour;
+        /*protected Color4 colour;
+        internal Color4 Colour
+        {
+            get { return colour; }
+            set { colour = value; StartColour = value; }
+        }
+        
+        internal Color4 StartColour;*/
+        
         internal bool Disposable;
         internal float Rotation;
-        internal Vector2 Scale;
+        internal Vector2 Scale = Vector2.One;
         internal Vector2 StartPosition;
         protected pList<Transformation> transformations = new pList<Transformation>();
         public object Tag;
@@ -28,7 +78,7 @@ namespace osum.Graphics.Sprites
         internal OriginTypes Origin;
         internal Vector2 OriginVector;
         internal Vector2 Position;
-        protected BlendingFactorDest blending;
+        protected BlendingFactorDest blending = BlendingFactorDest.OneMinusSrcAlpha;
 
         internal float DrawDepth;
 
@@ -48,6 +98,23 @@ namespace osum.Graphics.Sprites
         internal virtual bool IsRemovable
         {
             get { return !AlwaysDraw && Transformations.Count == 0; }
+        }
+		
+		internal virtual bool UsesTextures
+        {
+            get { return false; }
+        }
+		
+		internal float ScaleScalar
+        {
+            get { return Scale.X; }
+            set { Scale = new Vector2(value, value); }
+        }
+
+        internal bool Additive
+        {
+            get { return blending == BlendingFactorDest.One; }
+            set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
         protected virtual Vector2 FieldPosition
@@ -322,6 +389,11 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        internal int ClockingNow
+        {
+            get { return Clock.GetTime(Clocking); }
+        }
+
         internal void FadeIn(int duration)
         {
             int count = Transformations.Count;
@@ -413,6 +485,29 @@ namespace osum.Graphics.Sprites
                                          Clock.GetTime(Clocking) + duration));
         }
 
+        internal const int TRANSFORMATION_TAG_FLASH = 51458;
+
+        internal void FlashColour(Color4 colour, int duration)
+        {
+            if (Colour == colour)
+                return;
+
+            Color4 end = Colour;
+
+            Transformation start = Transformations.Find(t => t.Tag == TRANSFORMATION_TAG_FLASH);
+            if (start != null)
+            {
+                end = start.EndColour;
+                Transformations.Remove(start);
+            }
+
+            Transformation flash = new Transformation(colour, end,
+                                   ClockingNow,
+                                   ClockingNow + duration);
+            flash.Tag = TRANSFORMATION_TAG_FLASH;
+            Transform(flash);
+        }
+
         internal void MoveTo(Vector2 destination, int duration)
         {
             MoveTo(destination, duration, EasingTypes.None);
@@ -439,9 +534,18 @@ namespace osum.Graphics.Sprites
 
         #region IDrawable Members
 
-        public virtual void Draw()
+        public virtual bool Draw()
         {
-            throw new NotImplementedException();
+            if (transformations.Count != 0 || AlwaysDraw)
+            {
+                if (Alpha != 0)
+                {
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

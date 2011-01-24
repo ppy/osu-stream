@@ -71,7 +71,7 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(s_Accuracy);
         }
 
-        internal void Draw()
+        internal bool Draw()
         {
             //if (GameBase.SixtyFramesPerSecondFrame)
             {
@@ -100,6 +100,8 @@ namespace osum.GameModes.Play.Components
             }
 
             spriteManager.Draw();
+
+            return true;
         }
 
         internal virtual void Update(int score)

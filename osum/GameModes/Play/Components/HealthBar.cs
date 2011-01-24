@@ -154,11 +154,6 @@ namespace osum.GameplayElements.Scoring
 
         }
 
-        internal virtual void Draw()
-        {
-            spriteManager.Draw();
-        }
-
         internal virtual void KiBulge()
         {
             s_kiIcon.Transformations.RemoveAll(

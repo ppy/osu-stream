@@ -136,14 +136,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Sprites which are stuck to the start position of the slider path.
         /// </summary>
-        protected List<pSprite> spriteCollectionStart = new List<pSprite>();
+        protected List<pDrawable> spriteCollectionStart = new List<pDrawable>();
 
         /// <summary>
         /// Sprites which are stuck to the end position of the slider path. May be used to hide rendering artifacts.
         /// </summary>
-        protected List<pSprite> spriteCollectionEnd = new List<pSprite>();
+        protected List<pDrawable> spriteCollectionEnd = new List<pDrawable>();
 
-        private List<pSprite> spriteCollectionScoringPoints = new List<pSprite>();
+        private List<pDrawable> spriteCollectionScoringPoints = new List<pDrawable>();
 
         /// <summary>
         /// The points in progress that ticks are to be placed (based on decimal values 0 - 1).
@@ -261,7 +261,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //tick calculations
-            double distanceBetweenTicks = m_HitObjectManager.SliderScoringPointDistance;
+            double distanceBetweenTicks = m_HitObjectManager.ScoringDistanceAt(StartTime);
 
             double tickCount = PathLength / distanceBetweenTicks;
             int actualTickCount = (int)Math.Ceiling(Math.Round(tickCount, 1)) - 1;
@@ -632,7 +632,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     {
                         AudioEngine.PlaySample(OsuSamples.SliderTick);
 
-                        pSprite point = spriteCollectionScoringPoints[judgePointNormalized];
+                        pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
 
                         point.Alpha = 0;
 

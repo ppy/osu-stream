@@ -208,21 +208,26 @@ namespace osum.Graphics.Sprites
             UpdateTextureAlignment();
         }
 
-        public override void Draw()
+        public override bool Draw()
         {
             if (transformations.Count != 0 || AlwaysDraw)
             {
                 if (Alpha != 0)
                 {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, blending);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
                     for (int i = 0; i < renderCoordinates.Count; i++)
                     {
                         // note: no srcRect calculation
                         if (renderTextures[i].TextureGl != null)
                             renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindow, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null);
                     }
+
+                    return true;
                 }
+                
             }
+
+            return false;
         }
     }
 }

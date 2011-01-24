@@ -84,11 +84,6 @@ namespace osum.GameModes
 		{
 		}
 		
-		public override void Draw()
-		{
-			base.Draw();
-		}
-		
 		public override void Update()
 		{
 			base.Update();

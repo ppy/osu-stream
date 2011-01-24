@@ -13,7 +13,41 @@ using osum.Audio;
 using osum.Support;
 using osum.Graphics;
 using System.IO;
+using osum.Graphics.Drawables;
+#if IPHONE
+using OpenTK.Graphics.ES11;
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.OpenGLES;
+
+using TextureTarget = OpenTK.Graphics.ES11.All;
+using TextureParameterName = OpenTK.Graphics.ES11.All;
+using EnableCap = OpenTK.Graphics.ES11.All;
+using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
+using BlendingFactorDest = OpenTK.Graphics.ES11.All;
+using PixelStoreParameter = OpenTK.Graphics.ES11.All;
+using VertexPointerType = OpenTK.Graphics.ES11.All;
+using ColorPointerType = OpenTK.Graphics.ES11.All;
+using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using TexCoordPointerType = OpenTK.Graphics.ES11.All;
+using BeginMode = OpenTK.Graphics.ES11.All;
+using MatrixMode = OpenTK.Graphics.ES11.All;
+using PixelInternalFormat = OpenTK.Graphics.ES11.All;
+using PixelFormat = OpenTK.Graphics.ES11.All;
+using PixelType = OpenTK.Graphics.ES11.All;
+using ShaderType = OpenTK.Graphics.ES11.All;
+using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
+using ProgramParameter = OpenTK.Graphics.ES11.All;
+using ShaderParameter = OpenTK.Graphics.ES11.All;
+using ErrorCode = OpenTK.Graphics.ES11.All;
+using TextureEnvParameter = OpenTK.Graphics.ES11.All;
+using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+#else
+using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
+using System.Drawing;
+using osum.Input;
+#endif
 
 namespace osum.GameModes
 {
@@ -64,7 +98,7 @@ namespace osum.GameModes
 
 			InputManager.OnDown += new InputHandler(InputManager_OnDown);
 		}
-		
+
 		public override void Dispose ()
 		{
 			InputManager.OnDown -= new InputHandler(InputManager_OnDown);
@@ -104,52 +138,18 @@ namespace osum.GameModes
                 if (s.Transformations.Count == 0)
                     s.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 900, s.ScaleScalar, 0.1f, 2));
             });
+
+            
 		}
 
-		public override void Draw()
+		public override bool Draw()
 		{
-			base.Draw();
-
-            float da = (float) (Math.PI/20);
-            float startAngle = (float) (-Math.PI/2);
-            
-            float endAngle = (float)((((float)Clock.Time / 3000) % 2) * (2 * Math.PI) + startAngle);
-
-            int parts = (int)((endAngle - startAngle) / da);
-            
-            float[] vertices = new float[parts * 2 + 2];
-            float[] colours = new float[parts * 4 + 4];
-
-            float radius = 200;
-
-            float xsc = 200;
-            float ysc = 200;
-
-            vertices[0] = xsc;
-            vertices[1] = ysc;
-
-            float a = startAngle;
-            for (int v = 1; v < parts + 1; v++)
-            {
-                vertices[v * 2] = (float)(xsc + Math.Cos(a)*radius);
-                vertices[v * 2 + 1] = (float)(ysc + Math.Sin(a)*radius);
-                a += da;
-
-                colours[v * 4] = 1;
-                colours[v * 4 + 1] = 1;
-                colours[v * 4 + 2] = 1;
-                colours[v * 4 + 3] = 1;
-            }
-
-            GL.EnableClientState(EnableCap.ColorArray);
-            GL.EnableClientState(EnableCap.VertexArray);
-
-		    GL.VertexPointer(2,VertexPointerType.Float, 0, vertices);
-            GL.ColorPointer(4, ColorPointerType.Float, 0,colours);
-            GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
+            if (!base.Draw()) return false;
 			
 			if (!Director.IsTransitioning)
 				osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
+            
+            return true;
 		}
 	}
 }

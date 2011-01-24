@@ -22,6 +22,10 @@ namespace osum.Graphics.Renderers
                                             out Vector2 measured,
                                             Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
+
+            size *= 0.6f;
+            //todo: this is a temporary hack to make sizes the same on desktop and iphone.
+            //need to switch this around so desktop is the base size and iphone matches instead.
             
             try
             {
