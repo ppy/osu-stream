@@ -13,6 +13,7 @@ using osum.Audio;
 using osum.Support;
 using osum.Graphics;
 using System.IO;
+using OpenTK.Graphics.OpenGL;
 
 namespace osum.GameModes
 {
@@ -99,7 +100,6 @@ namespace osum.GameModes
                 osuLogo.Rotation += (float) (Math.Cos((elapsedRotation)/1000f)*0.0001 * GameBase.ElapsedMilliseconds);
             }
 
-		    int track = 0;
             explosions.ForEach(s => {
                 if (s.Transformations.Count == 0)
                     s.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 900, s.ScaleScalar, 0.1f, 2));
@@ -109,6 +109,44 @@ namespace osum.GameModes
 		public override void Draw()
 		{
 			base.Draw();
+
+            float da = (float) (Math.PI/20);
+            float startAngle = (float) (-Math.PI/2);
+            
+            float endAngle = (float)((((float)Clock.Time / 3000) % 2) * (2 * Math.PI) + startAngle);
+
+            int parts = (int)((endAngle - startAngle) / da);
+            
+            float[] vertices = new float[parts * 2 + 2];
+            float[] colours = new float[parts * 4 + 4];
+
+            float radius = 200;
+
+            float xsc = 200;
+            float ysc = 200;
+
+            vertices[0] = xsc;
+            vertices[1] = ysc;
+
+            float a = startAngle;
+            for (int v = 1; v < parts + 1; v++)
+            {
+                vertices[v * 2] = (float)(xsc + Math.Cos(a)*radius);
+                vertices[v * 2 + 1] = (float)(ysc + Math.Sin(a)*radius);
+                a += da;
+
+                colours[v * 4] = 1;
+                colours[v * 4 + 1] = 1;
+                colours[v * 4 + 2] = 1;
+                colours[v * 4 + 3] = 1;
+            }
+
+            GL.EnableClientState(EnableCap.ColorArray);
+            GL.EnableClientState(EnableCap.VertexArray);
+
+		    GL.VertexPointer(2,VertexPointerType.Float, 0, vertices);
+            GL.ColorPointer(4, ColorPointerType.Float, 0,colours);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
 			
 			if (!Director.IsTransitioning)
 				osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
