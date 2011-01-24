@@ -2,6 +2,8 @@ using System;
 using osum.Graphics.Sprites;
 using osum.Graphics.Drawables;
 using osum.Helpers;
+using OpenTK.Graphics;
+using OpenTK;
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -32,10 +34,6 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
-using osum.Input;
-using OpenTK.Graphics;
-using OpenTK;
 #endif
 
 
@@ -109,15 +107,13 @@ namespace osum.Graphics.Drawables
                     colours[v * 4 + 3] = c.A * (0.1f + 0.4f * ((float)v/parts));
                 }
 
-                GL.Enable(EnableCap.ColorArray);
-                GL.Enable(EnableCap.VertexArray);
+                GL.EnableClientState(EnableCap.ColorArray);
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
                 GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
 
-                GL.Disable(EnableCap.ColorArray);
-                GL.Disable(EnableCap.VertexArray);
+                GL.DisableClientState(EnableCap.ColorArray);
 
                 return true;
             }

@@ -174,9 +174,6 @@ namespace osum.Graphics
         {
 			if (Id < 0)
                 return;
-              
-			
-			GL.Enable(EnableCap.Texture2D);
 
 			GL.PushMatrix();
 
@@ -191,8 +188,6 @@ namespace osum.Graphics
             bool horizontalFlip = false;//(effect & SpriteEffect.FlipHorizontally) > 0;
 
 #if IPHONE
-            GL.Enable(EnableCap.VertexArray);
-
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
 			
 			GL.Translate(currentPos.X, currentPos.Y, 0);
@@ -228,8 +223,6 @@ namespace osum.Graphics
 			GL.TexCoordPointer(2, All.Float, 0, coordinates);
 			
 			GL.DrawArrays (All.TriangleFan, 0, 4);
-
-            GL.Disable(EnableCap.VertexArray);
 #else
             GL.Color4(drawColour);
 
@@ -292,40 +285,7 @@ namespace osum.Graphics
 #endif
 
             GL.PopMatrix();
-
-			GL.Disable(EnableCap.Texture2D);
         }
-
-        internal static void DisableTexture()
-        {
-            switch (SURFACE_TYPE)
-            {
-                case TextureTarget.Texture2D:
-                    GL.Disable(EnableCap.Texture2D);
-                    break;
-#if !IPHONE
-                case TextureTarget.TextureRectangle:
-                    GL.Disable(EnableCap.Texture2D);
-                    break;
-#endif
-            }
-        }
-
-        internal static void EnableTexture()
-        {
-            switch (SURFACE_TYPE)
-            {
-                case TextureTarget.Texture2D:
-                    GL.Enable(EnableCap.Texture2D);
-                    break;
-#if !IPHONE
-                case TextureTarget.TextureRectangle:
-                    GL.Enable(EnableCap.Texture2D);
-                    break;
-#endif
-            }
-        }
-
 
         public void SetData(int textureId)
         {
@@ -375,6 +335,8 @@ namespace osum.Graphics
 
             GL.GetError();
         	//Clear errors.
+			
+			SpriteManager.TexturesEnabled = true;
 
             bool newTexture = false;
 

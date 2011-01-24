@@ -78,6 +78,12 @@ namespace osum.Graphics.Sprites
 
             Texture = texture;
         }
+		
+		internal override bool UsesTextures {
+			get {
+				return true;
+			}
+		}
 
         internal int TextureWidth
         {

@@ -8,6 +8,7 @@ using MonoTouch.Foundation;
 using OpenTK.Graphics.ES11;
 using System.Drawing;
 using OpenTK;
+using osum.Graphics.Sprites;
 namespace osum.Graphics.Renderers
 {
     unsafe internal class NativeTextRendererIphone : NativeTextRenderer
@@ -51,6 +52,8 @@ namespace osum.Graphics.Renderers
                 UIGraphics.PopContext();
 
                 measured = new OpenTK.Vector2(actualSize.Width, actualSize.Height);
+				
+				SpriteManager.TexturesEnabled = true;
     
                 TextureGl gl = new TextureGl(width, height);
                 gl.SetData((IntPtr)dataPtr, 0, All.Alpha);

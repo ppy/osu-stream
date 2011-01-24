@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using osum.Helpers;
 using osum.Support;
+using OpenTK.Graphics.ES11;
 
 namespace osum.Graphics.Sprites
 {
@@ -80,7 +81,9 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal void Update()
         {
-            if (firstRender)
+            texturesEnabled = false; //reset on new frame.
+			
+			if (firstRender)
             {
                 int loadTime = Clock.Time - creationTime;
 
@@ -135,9 +138,39 @@ namespace osum.Graphics.Sprites
         internal bool Draw()
         {
             foreach (pDrawable p in Sprites)
-                if (p.Alpha > 0) p.Draw();
+			{
+                if (p.Alpha > 0)
+				{
+					TexturesEnabled = p.UsesTextures;
+					
+					p.Draw();
+				}
+			}
             return true;
         }
+		
+		static bool texturesEnabled = false;
+		internal static bool TexturesEnabled
+		{
+			get { return texturesEnabled; }	
+			
+			set {
+				if (texturesEnabled == value)
+					return;
+				texturesEnabled = value;
+				
+				if (texturesEnabled)
+				{
+					GL.Enable(All.Texture2D);
+					GL.EnableClientState(All.TextureCoordArray);
+				}
+				else
+				{
+					GL.Disable(All.Texture2D);
+					GL.DisableClientState(All.TextureCoordArray);
+				}
+			}
+		}
 
         /// <summary>
         ///   Used by spinners.  Has a range of 0-0.2
