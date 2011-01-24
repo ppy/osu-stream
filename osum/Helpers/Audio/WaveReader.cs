@@ -186,8 +186,6 @@ namespace OpenTK.Audio
                 decoded_data = new SoundData(new SoundFormat(channels, bits_per_sample, sample_rate),
                                                              reader.ReadBytes((int)reader.BaseStream.Length));
                 
-                Debug.WriteLine("decoded!");
-
                 //return new SoundData(decoded_data, new SoundFormat(channels, bits_per_sample, sample_rate));
                 return decoded_data;
             }
