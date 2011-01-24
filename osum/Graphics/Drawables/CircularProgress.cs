@@ -12,6 +12,7 @@ using MonoTouch.OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
+using ArrayCap = OpenTK.Graphics.ES11.All;
 using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
 using BlendingFactorDest = OpenTK.Graphics.ES11.All;
 using PixelStoreParameter = OpenTK.Graphics.ES11.All;
@@ -66,8 +67,6 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
 
-                Console.WriteLine(c.ToString());
-
                 float resolution = 0.1f;
                 float startAngle = (float)(-Math.PI / 2);
                 float cappedProgress = pMathHelper.ClampToOne(Progress);
@@ -107,13 +106,13 @@ namespace osum.Graphics.Drawables
                     colours[v * 4 + 3] = c.A * (0.1f + 0.4f * ((float)v/parts));
                 }
 
-                GL.EnableClientState(EnableCap.ColorArray);
+                GL.EnableClientState(ArrayCap.ColorArray);
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
                 GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
 
-                GL.DisableClientState(EnableCap.ColorArray);
+                GL.DisableClientState(ArrayCap.ColorArray);
 
                 return true;
             }

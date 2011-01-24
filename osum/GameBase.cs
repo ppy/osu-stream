@@ -299,6 +299,7 @@ namespace osum
 #else
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 #endif
+                GL.EnableClientState(ArrayCap.VertexArray);
 
                 Director.Draw();
 
