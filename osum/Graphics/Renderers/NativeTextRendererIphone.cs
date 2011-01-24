@@ -23,7 +23,7 @@ namespace osum.Graphics.Renderers
             UIFont font = UIFont.SystemFontOfSize(size);
 			
 			if (restrictBounds == Vector2.Zero)
-				restrictBounds = new Vector2(512 * GameBase.WindowScaleFactor,32 * GameBase.WindowScaleFactor);
+				restrictBounds = new Vector2((GameBase.WindowSize.Width > 512 ? 1024 : 512) * GameBase.WindowScaleFactor,64 * GameBase.WindowScaleFactor);
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);
