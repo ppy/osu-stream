@@ -294,12 +294,10 @@ namespace osum
             //todo: make update actually update on iphone and call from game architecture
             if (Update(e))
             {
-                //todo: only clear when required
-                if (Director.CurrentMode.RequireClear || Director.IsTransitioning)
 #if IPHONE
-					GL.Clear((int)ClearBufferMask.ColorBufferBit);
+			    GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
-                    GL.Clear(ClearBufferMask.ColorBufferBit);
+                GL.Clear(ClearBufferMask.ColorBufferBit);
 #endif
 
 
