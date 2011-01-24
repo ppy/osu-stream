@@ -805,11 +805,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
 			
-            if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart))
+            if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)
+                && (pathTextureUpdateSkippedFrames++ % 1 == 0))
 			{
                 UpdatePathTexture();
 			}
-			
 			
             spriteFollowBall.Position = TrackingPosition;
             spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
@@ -862,13 +862,15 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lengthDrawn == PathLength) return; //finished drawing already.
 
             // Snaking animation is IN PROGRESS
-            int FirstSegmentIndex = 0;// lastDrawnSegmentIndex + 1;
+            int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
+            if (lastDrawnSegmentIndex == -1) lastDrawnSegmentIndex++;
 
             // Length of the curve we're drawing up to.
             lengthDrawn = PathLength *
                           (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
 
+            // this is probably faster than a binary search since it runs so few times and the result is very close
             while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
                 lastDrawnSegmentIndex++;
 
@@ -888,55 +890,51 @@ namespace osum.GameplayElements.HitObjects.Osu
                 Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
                 spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 
-                if (pathTextureUpdateSkippedFrames++ % 3 == 0 || lengthDrawn == PathLength)
-                {
-                    GL.PushMatrix();
+                GL.PushMatrix();
 
 #if IPHONE
-                    int oldFBO = 0;
-                    GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+                int oldFBO = 0;
+                GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
 
-                    GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
-                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
-                    GL.MatrixMode(MatrixMode.Projection);
+                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                GL.MatrixMode(MatrixMode.Projection);
 
-                    GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                GL.LoadIdentity();
+                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                    if (FirstSegmentIndex == 0)
-                        GL.Clear((int)ClearBufferMask.ColorBufferBit);
-
-                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                              DifficultyManager.HitObjectRadius, ColourIndex, prev);
-
-                    GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-
+                if (FirstSegmentIndex == 0)
                     GL.Clear((int)ClearBufferMask.ColorBufferBit);
+
+                m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                            DifficultyManager.HitObjectRadius, ColourIndex, prev);
+
+                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+
+                GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
 
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
 
-                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
-                    GL.MatrixMode(MatrixMode.Projection);
+                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                GL.MatrixMode(MatrixMode.Projection);
 
-                    GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                GL.LoadIdentity();
+                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                    if (FirstSegmentIndex == 0)
-                        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                if (FirstSegmentIndex == 0)
+                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                              DifficultyManager.HitObjectRadius, ColourIndex, prev);
+                m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                            DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
 
-                    GameBase.Instance.SetViewport();
+                GameBase.Instance.SetViewport();
 
-                    GL.PopMatrix();
-
-                }
+                GL.PopMatrix();
             }
         }
 
@@ -958,7 +956,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
 
             lengthDrawn = 0;
-            lastDrawnSegmentIndex = 0;
+            lastDrawnSegmentIndex = -1;
 
             TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
 
@@ -998,8 +996,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             GL.GenFramebuffers(1, out fbo);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, gl.Id, 0);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
         }
