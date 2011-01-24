@@ -776,9 +776,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             double aimLength = PathLength * normalizeProgress(progress);
 			
-			if (progress == 1)
-				Console.WriteLine("got here");
-			
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
             int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
 
