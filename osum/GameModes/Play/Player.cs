@@ -65,7 +65,7 @@ namespace osum.GameModes
             // fast forward for iphone
             if (InputManager.TrackingPoints.Count >= 3)
             {
-                AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
+                AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
             }
         }
 
