@@ -287,18 +287,14 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        internal double SliderScoringPointDistance
-        {
-            get
-            {
-                return ((100 * beatmap.DifficultySliderMultiplier) / beatmap.DifficultySliderTickRate);
-            }
-		}
-
-
         internal double VelocityAt(int time)
         {
-            return (SliderScoringPointDistance * beatmap.DifficultySliderTickRate * (1000F / beatmap.beatLengthAt(time)));
+            return (100000.0f * beatmap.DifficultySliderMultiplier / beatmap.beatLengthAt(time, true));
+        }
+
+        internal double ScoringDistanceAt(int time)
+        {
+            return ((100 * beatmap.DifficultySliderMultiplier / beatmap.bpmMultiplierAt(time)) / beatmap.DifficultySliderTickRate);
         }
     }
 

@@ -259,7 +259,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //tick calculations
-            double distanceBetweenTicks = m_HitObjectManager.SliderScoringPointDistance;
+            double distanceBetweenTicks = m_HitObjectManager.ScoringDistanceAt(StartTime);
 
             double tickCount = PathLength / distanceBetweenTicks;
             int actualTickCount = (int)Math.Ceiling(Math.Round(tickCount, 1)) - 1;

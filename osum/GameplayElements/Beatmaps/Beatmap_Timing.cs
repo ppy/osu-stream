@@ -54,7 +54,7 @@ namespace osum.GameplayElements.Beatmaps
 
         internal double beatLengthAt(double time)
         {
-            return beatLengthAt(time, true);
+            return beatLengthAt(time, false);
         }
 
         internal double beatLengthAt(double time, bool allowMultiplier)
