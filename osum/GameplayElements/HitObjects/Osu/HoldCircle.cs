@@ -90,7 +90,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
-            circularProgress = new CircularProgress(position, 200, false, 0, Color.White);
+            circularProgress = new CircularProgress(position, 180, false, 0, Color.White);
             circularProgress.Clocking = ClockTypes.Audio;
             circularProgress.Field = FieldTypes.Gamefield512x384;
             circularProgress.Additive = true;
@@ -173,7 +173,13 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected override void lastEndpoint()
         {
             holdCircleOverlay.FadeOut(100);
-            circularProgress.FadeOut(300);
+			
+			circularProgress.Transformations.Clear();
+            
+			circularProgress.FadeOut(500);
+			circularProgress.EvenShading = true;
+			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar, circularProgress.ScaleScalar + 0.1f, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.Out));
+			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.Out));
         }
 
         internal override Vector2 EndPosition

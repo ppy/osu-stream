@@ -44,6 +44,7 @@ namespace osum.Graphics.Drawables
 	{
         internal float Progress;
         internal float Radius;
+		internal bool EvenShading;
 
         public CircularProgress(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
 		{
@@ -82,7 +83,7 @@ namespace osum.Graphics.Drawables
                 float[] vertices = new float[parts * 2 + 2];
                 float[] colours = new float[parts * 4 + 4];
 
-                float radius = Radius * GameBase.WindowRatio;
+                float radius = Radius * GameBase.WindowRatio * ScaleScalar;
                 Vector2 pos = FieldPosition;
 
                 vertices[0] = pos.X;
@@ -103,7 +104,7 @@ namespace osum.Graphics.Drawables
                     colours[v * 4] = c.R;
                     colours[v * 4 + 1] = c.G;
                     colours[v * 4 + 2] = c.B;
-                    colours[v * 4 + 3] = c.A * (0.1f + 0.4f * ((float)v/parts));
+                    colours[v * 4 + 3] = c.A * (EvenShading ? 0.5f :  (0.1f + 0.4f * ((float)v/parts)));
                 }
 
                 GL.EnableClientState(ArrayCap.ColorArray);
