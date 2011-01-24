@@ -60,9 +60,19 @@ namespace osum.GameModes
 			}
         }
 
+        void InputManager_OnMove(InputSource source, TrackingPoint point)
+        {
+            // fast forward for iphone
+            if (InputManager.TrackingPoints.Count >= 3)
+            {
+                AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
+            }
+        }
+
         internal override void Initialize()
         {
             InputManager.OnDown += new InputHandler(InputManager_OnDown);
+            InputManager.OnMove += new InputHandler(InputManager_OnMove);
 
             hitObjectManager = new HitObjectManager(Beatmap);
             hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
