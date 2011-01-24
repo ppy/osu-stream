@@ -104,7 +104,7 @@ namespace osum.Graphics.Drawables
                     colours[v * 4] = c.R;
                     colours[v * 4 + 1] = c.G;
                     colours[v * 4 + 2] = c.B;
-                    colours[v * 4 + 3] = c.A * (EvenShading ? 0.5f :  (0.1f + 0.4f * ((float)v/parts)));
+                    colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f :  (0.2f + 0.4f * ((float)v/parts)));
                 }
 
                 GL.EnableClientState(ArrayCap.ColorArray);
