@@ -295,11 +295,10 @@ namespace osum
             if (Update(e))
             {
 #if IPHONE
-			    GL.Clear((int)ClearBufferMask.ColorBufferBit);
+			    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 #else
-                GL.Clear(ClearBufferMask.ColorBufferBit);
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 #endif
-
 
                 Director.Draw();
 
