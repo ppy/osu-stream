@@ -353,6 +353,8 @@ namespace osum.GameplayElements
 
             const int STACK_LENIENCE = 3;
 
+            hitObjects[0].NewCombo = true;
+
             //Reverse pass for stack calculation.
             for (int i = hitObjectsCount - 1; i > 0; i--)
             {
