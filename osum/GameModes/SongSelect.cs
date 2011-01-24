@@ -1,6 +1,5 @@
 using System;
 using osum.GameModes;
-using OpenTK.Graphics.ES11;
 using osum.GameplayElements;
 using OpenTK;
 using osum.Helpers;
@@ -86,11 +85,6 @@ namespace osum
 		
 		float offset;
 		
-        public override void Draw()
-        {
-			base.Draw();
-        }
-
         public override void Update()
         {
             base.Update();

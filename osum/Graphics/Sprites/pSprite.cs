@@ -79,11 +79,6 @@ namespace osum.Graphics.Sprites
             Texture = texture;
         }
 
-        internal int ClockingNow
-        {
-            get { return Clock.GetTime(Clocking); }
-        }
-
         internal int TextureWidth
         {
             get { return texture != null ? texture.Width : 0; }
@@ -167,22 +162,17 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
-        public override void Draw()
+        public override bool Draw()
         {
+            if (!base.Draw()) return false;
+            
             pTexture texture = Texture;
             if (texture == null || texture.TextureGl == null)
-                return;
+                return false;
 
-            if (transformations.Count != 0 || AlwaysDraw)
-            {
-                if (Alpha != 0)
-                {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
-
-                    texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
-                                           TextureRectangle);
-                }
-            }
+            texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
+                                    TextureRectangle);
+            return true;
         }
 
         #endregion

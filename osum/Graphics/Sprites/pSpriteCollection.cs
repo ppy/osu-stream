@@ -7,16 +7,16 @@ namespace osum.Graphics.Sprites
 {
     internal class pSpriteCollection
     {
-        internal List<pSprite> SpriteCollection;
+        internal List<pDrawable> SpriteCollection;
 
         internal pSpriteCollection()
         {
-            this.SpriteCollection = new List<pSprite>();
+            this.SpriteCollection = new List<pDrawable>();
         }
 
-        internal pSpriteCollection(IEnumerable<pSprite> sprites)
+        internal pSpriteCollection(IEnumerable<pDrawable> sprites)
         {
-            this.SpriteCollection = new List<pSprite>(sprites);
+            this.SpriteCollection = new List<pDrawable>(sprites);
         }
     }
 }

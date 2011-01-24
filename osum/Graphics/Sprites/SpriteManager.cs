@@ -46,7 +46,7 @@ namespace osum.Graphics.Sprites
 		
 		internal void Add(pSpriteCollection collection)
         {
-            foreach (pSprite p in collection.SpriteCollection)
+            foreach (pDrawable p in collection.SpriteCollection)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
         }
 
@@ -121,7 +121,8 @@ namespace osum.Graphics.Sprites
 			}
 
 #if DEBUG
-            DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites");
+            if (Sprites.Count > 5)
+                DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites");
 #endif
 			
 			for (i = removable.Count - 1; i >= 0; i--)
@@ -131,10 +132,11 @@ namespace osum.Graphics.Sprites
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
-        internal void Draw()
+        internal bool Draw()
         {
             foreach (pDrawable p in Sprites)
                 if (p.Alpha > 0) p.Draw();
+            return true;
         }
 
         /// <summary>

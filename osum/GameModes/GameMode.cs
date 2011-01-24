@@ -25,8 +25,6 @@ namespace osum.GameModes
         /// </summary>
         internal abstract void Initialize();
 		
-		internal bool RequireClear = true;
-
         /// <summary>
         /// A spriteManager provided free of charge.
         /// </summary>
@@ -57,9 +55,10 @@ namespace osum.GameModes
         /// <summary>
         /// Draws this object to screen.
         /// </summary>
-        public virtual void Draw()
+        public virtual bool Draw()
         {
             spriteManager.Draw();
+            return true;
         }
 
         public virtual void OnFirstUpdate()

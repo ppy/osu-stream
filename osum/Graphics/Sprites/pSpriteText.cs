@@ -208,7 +208,7 @@ namespace osum.Graphics.Sprites
             UpdateTextureAlignment();
         }
 
-        public override void Draw()
+        public override bool Draw()
         {
             if (transformations.Count != 0 || AlwaysDraw)
             {
@@ -221,8 +221,13 @@ namespace osum.Graphics.Sprites
                         if (renderTextures[i].TextureGl != null)
                             renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteRatioToWindow, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null);
                     }
+
+                    return true;
                 }
+                
             }
+
+            return false;
         }
     }
 }

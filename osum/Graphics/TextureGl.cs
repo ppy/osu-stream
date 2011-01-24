@@ -177,6 +177,7 @@ namespace osum.Graphics
               
 			
 			GL.Enable(EnableCap.Texture2D);
+
 			GL.PushMatrix();
 
             Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
@@ -190,6 +191,8 @@ namespace osum.Graphics
             bool horizontalFlip = false;//(effect & SpriteEffect.FlipHorizontally) > 0;
 
 #if IPHONE
+            GL.Enable(EnableCap.VertexArray);
+
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
 			
 			GL.Translate(currentPos.X, currentPos.Y, 0);
@@ -225,6 +228,8 @@ namespace osum.Graphics
 			GL.TexCoordPointer(2, All.Float, 0, coordinates);
 			
 			GL.DrawArrays (All.TriangleFan, 0, 4);
+
+            GL.Disable(EnableCap.VertexArray);
 #else
             GL.Color4(drawColour);
 
@@ -287,6 +292,7 @@ namespace osum.Graphics
 #endif
 
             GL.PopMatrix();
+
 			GL.Disable(EnableCap.Texture2D);
         }
 

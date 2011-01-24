@@ -37,7 +37,6 @@ namespace osum.GameModes
 
         public Player() : base()
         {
-			RequireClear = false;
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
@@ -173,7 +172,7 @@ namespace osum.GameModes
             base.Dispose();
         }
 
-        public override void Draw()
+        public override bool Draw()
         {
             base.Draw();
 
@@ -182,6 +181,8 @@ namespace osum.GameModes
             scoreDisplay.Draw();
             healthBar.Draw();
             comboCounter.Draw();
+
+            return true;
         }
 
         public override void Update()

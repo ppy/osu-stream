@@ -13,6 +13,7 @@ using osum.Audio;
 using osum.Support;
 using osum.Graphics;
 using System.IO;
+using osum.Graphics.Drawables;
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -41,7 +42,6 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using osum.Graphics.Drawables;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -95,12 +95,10 @@ namespace osum.GameModes
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0, 0.2f, 300, 500));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.2f, 1, initial_display - 100, initial_display));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
-			
-			spriteManager.Add(new CircularProgress());
 
 			InputManager.OnDown += new InputHandler(InputManager_OnDown);
 		}
-		
+
 		public override void Dispose ()
 		{
 			InputManager.OnDown -= new InputHandler(InputManager_OnDown);
@@ -140,14 +138,18 @@ namespace osum.GameModes
                 if (s.Transformations.Count == 0)
                     s.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 900, s.ScaleScalar, 0.1f, 2));
             });
+
+            
 		}
 
-		public override void Draw()
+		public override bool Draw()
 		{
-			base.Draw();
+            if (!base.Draw()) return false;
 			
 			if (!Director.IsTransitioning)
 				osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
+            
+            return true;
 		}
 	}
 }

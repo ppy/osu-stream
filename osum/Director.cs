@@ -161,10 +161,13 @@ namespace osum
         /// <summary>
         /// Draws the current game mode.
         /// </summary>
-        internal static void Draw()
+        internal static bool Draw()
         {
-            if (CurrentMode != null)
-                CurrentMode.Draw();
+            if (CurrentMode == null)
+                return false;
+            
+            CurrentMode.Draw();
+            return true;
         }
 
         public static bool IsTransitioning { get { return ActiveTransition != null; } }

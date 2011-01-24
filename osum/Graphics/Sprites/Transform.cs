@@ -105,7 +105,7 @@ namespace osum.Graphics.Sprites
                     CalculateCurrent(StartColour.R, EndColour.R),
                     CalculateCurrent(StartColour.G, EndColour.G),
                     CalculateCurrent(StartColour.B, EndColour.B),
-                    1
+                    CalculateCurrent(StartColour.A, EndColour.A)
                 );
             }
         }

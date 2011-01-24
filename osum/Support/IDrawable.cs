@@ -11,6 +11,6 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Draws this object to screen.
         /// </summary>
-        void Draw();
+        bool Draw();
     }
 }

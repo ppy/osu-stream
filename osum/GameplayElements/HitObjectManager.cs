@@ -118,9 +118,10 @@ namespace osum.GameplayElements
 
         #region IDrawable Members
 
-        public void Draw()
+        public bool Draw()
         {
             spriteManager.Draw();
+            return true;
         }
 
         #endregion
