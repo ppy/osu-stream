@@ -19,6 +19,7 @@ using MonoTouch.OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
+using ArrayCap = OpenTK.Graphics.ES11.All;
 using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
 using BlendingFactorDest = OpenTK.Graphics.ES11.All;
 using PixelStoreParameter = OpenTK.Graphics.ES11.All;
