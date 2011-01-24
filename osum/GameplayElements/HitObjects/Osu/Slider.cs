@@ -764,23 +764,21 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual Line lineAtProgress(double progress)
         {
-            progress = normalizeProgress(progress);
-
-            double aimLength = PathLength * progress;
+            double aimLength = PathLength * normalizeProgress(progress);
 
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
             int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
 
-            double lengthAtIndex = cumulativeLengths[index];
             return drawableSegments[index];
         }
         
         protected virtual Vector2 positionAtProgress(double progress)
         {
-            progress = normalizeProgress(progress);
-
-            double aimLength = PathLength * progress;
-
+            double aimLength = PathLength * normalizeProgress(progress);
+			
+			if (progress == 1)
+				Console.WriteLine("got here");
+			
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
             int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
 
@@ -788,7 +786,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Line currentLine = drawableSegments[index];
 
             //cut back the line to required exact length
-            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(currentLine.rho - Math.Abs(lengthAtIndex - aimLength));
+            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(aimLength - (index > 0 ? cumulativeLengths[index - 1] : 0));
         }
 
         bool isReversing { get { return progressCurrent % 2 >= 1; } }
@@ -805,11 +803,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
 			
-            if (IsVisible && (lengthDrawn < PathLength || sliderBodyTexture == null) && (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)
-                && (pathTextureUpdateSkippedFrames++ % 1 == 0))
-			{
+            if (IsVisible && (sliderBodyTexture == null || (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)))
                 UpdatePathTexture();
-			}
 			
             spriteFollowBall.Position = TrackingPosition;
             spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
@@ -856,21 +851,22 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal virtual void UpdatePathTexture()
         {
+            if (lengthDrawn == PathLength) return; //finished drawing already.
+			
 			if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
-
-            if (lengthDrawn == PathLength) return; //finished drawing already.
 
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
             if (lastDrawnSegmentIndex == -1) lastDrawnSegmentIndex++;
 
-            // Length of the curve we're drawing up to.
-            lengthDrawn = PathLength *
-                          (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
+            double drawProgress = (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
+			
+			// Length of the curve we're drawing up to.
+            lengthDrawn = PathLength * drawProgress;
 
-            // this is probably faster than a binary search since it runs so few times and the result is very close
+			// this is probably faster than a binary search since it runs so few times and the result is very close
             while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
                 lastDrawnSegmentIndex++;
 
@@ -879,6 +875,15 @@ namespace osum.GameplayElements.HitObjects.Osu
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
             }
+			
+			Vector2 drawEndPosition = positionAtProgress(lengthDrawn/PathLength);
+            spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
+			
+			if (pathTextureUpdateSkippedFrames++ % 5 != 0 && lastDrawnSegmentIndex != drawableSegments.Count - 1)
+			{
+				lastDrawnSegmentIndex = FirstSegmentIndex - 1;
+				return;
+			}
 
             Line prev = null;
             if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
@@ -886,9 +891,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lastDrawnSegmentIndex >= FirstSegmentIndex)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
-
-                Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
-                spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 
                 GL.PushMatrix();
 
