@@ -57,7 +57,7 @@ namespace osum.GameModes
 
         List<pSprite> explosions = new List<pSprite>();
 
-        const int initial_display = 1300;
+        const int initial_display = 500;
 
 		internal override void Initialize()
 		{
@@ -90,10 +90,10 @@ namespace osum.GameModes
             spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
 
             pSprite whiteLayer = pSprite.FullscreenWhitePixel;
+			//whiteLayer.Additive = true;
             spriteManager.Add(whiteLayer);
 
-            whiteLayer.Transform(new Transformation(TransformationType.Fade, 0, 0.2f, 300, 500));
-            whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.2f, 1, initial_display - 100, initial_display));
+            whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.125f, 1f, initial_display - 200, initial_display));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
 
 			InputManager.OnDown += new InputHandler(InputManager_OnDown);
@@ -111,7 +111,8 @@ namespace osum.GameModes
 			if (!Director.IsTransitioning)
 			{
 				AudioEngine.PlaySample(OsuSamples.MenuHit);
-
+				
+				osuLogo.Transformations.Clear();
                 osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
                 osuLogo.Transform(new Transformation(TransformationType.Rotation, 0, 1.4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
 
@@ -128,7 +129,7 @@ namespace osum.GameModes
 		{
 			base.Update();
 
-            if (Clock.ModeTime > initial_display)
+			if (Clock.ModeTime > initial_display)
             {
                 elapsedRotation += GameBase.ElapsedMilliseconds;
                 osuLogo.Rotation += (float) (Math.Cos((elapsedRotation)/1000f)*0.0001 * GameBase.ElapsedMilliseconds);
@@ -146,8 +147,8 @@ namespace osum.GameModes
 		{
             if (!base.Draw()) return false;
 			
-			if (!Director.IsTransitioning)
-				osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
+			//if (!Director.IsTransitioning)
+			//	osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
             
             return true;
 		}

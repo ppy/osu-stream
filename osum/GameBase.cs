@@ -225,7 +225,7 @@ namespace osum
             AudioEngine.Initialize(effect, music);
 
             //Load the main menu initially.
-            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(0, 500));
+            Director.ChangeMode(OsuMode.MainMenu, null);
         }
 
         /// <summary>
