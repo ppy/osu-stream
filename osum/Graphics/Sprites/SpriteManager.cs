@@ -184,12 +184,13 @@ namespace osum.Graphics.Sprites
         }
 		
 		static bool texturesEnabled = false;
+        static bool firstForFrame = true;
 		internal static bool TexturesEnabled
 		{
 			get { return texturesEnabled; }	
 			
 			set {
-				if (texturesEnabled == value)
+				if (texturesEnabled == value && !firstForFrame)
 					return;
 				texturesEnabled = value;
 				
@@ -205,6 +206,11 @@ namespace osum.Graphics.Sprites
 				}
 			}
 		}
+
+        internal static void Reset()
+        {
+            firstForFrame = true;
+        }
 
         /// <summary>
         ///   Used by spinners.  Has a range of 0-0.2

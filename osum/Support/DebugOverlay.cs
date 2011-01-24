@@ -22,7 +22,7 @@ namespace osum.Support
             {
 #if DEBUG
                 fpsDisplay = new pText("", 16, new Vector2(0, 40), new Vector2(512,256), 0, true, Color4.White, false);
-                GameBase.Instance.SpriteManager.Add(fpsDisplay);
+                GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
 #else
                 return;
 #endif

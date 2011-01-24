@@ -105,8 +105,6 @@ namespace osum
             //ensure the gl context is in the current thread.
             MakeCurrent();
             
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            
             GameBase.Instance.Draw(e);
             
             // display

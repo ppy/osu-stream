@@ -94,7 +94,7 @@ namespace osum
         /// <summary>
         /// Top-level sprite manager. Draws above everything else.
         /// </summary>
-        internal readonly SpriteManager SpriteManager = new SpriteManager();
+        internal readonly SpriteManager MainSpriteManager = new SpriteManager();
 
         /// <summary>
         /// May be set in the update loop to force the next frame to have an ElapsedMilliseconds of 0
@@ -255,6 +255,7 @@ namespace osum
         public bool Update(FrameEventArgs e)
         {
             GL.Disable(EnableCap.DepthTest);
+            GL.EnableClientState(ArrayCap.VertexArray);
 
             double lastTime = Clock.TimeAccurate;
             Clock.Update(e.Time);
@@ -282,7 +283,7 @@ namespace osum
 
             Components.ForEach(c => c.Update());
 
-            SpriteManager.Update();
+            MainSpriteManager.Update();
 
             return true;
         }
@@ -300,11 +301,12 @@ namespace osum
 #else
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 #endif
-                GL.EnableClientState(ArrayCap.VertexArray);
+
+                SpriteManager.Reset();
 
                 Director.Draw();
 
-                SpriteManager.Draw();
+                MainSpriteManager.Draw();
             }
         }
 
