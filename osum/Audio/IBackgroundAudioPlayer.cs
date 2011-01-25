@@ -11,7 +11,17 @@ namespace osum
         /// Gets the current volume.
         /// </summary>
         /// <value>The current volume.</value>
-        float CurrentVolume
+        float Volume
+        {
+            get;
+			set;
+        }
+		
+		/// <summary>
+        /// Gets the current power of the music.
+        /// </summary>
+        /// <value>The current power.</value>
+        float CurrentPower
         {
             get;
         }
@@ -20,6 +30,15 @@ namespace osum
         /// Loads an audio track.
         /// </summary>
         bool Load(byte[] bytes);
+		
+		/// <summary>
+		/// Set/get whether the current track is looping or not. 
+		/// </summary>
+		bool Loop
+		{
+			get;
+			set;
+		}
 
         /// <summary>
         /// Plays the loaded audio.

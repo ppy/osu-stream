@@ -20,7 +20,28 @@ namespace osum
 #endif
 		}
 		
-		public float CurrentVolume {
+		public bool Loop {
+			get
+			{
+				return player.NumberOfLoops == -1;	
+			}
+			
+			set
+			{
+				player.NumberOfLoops = value ? -1 : 0;
+			}
+		}
+		
+		public float Volume {
+			get {
+				return player.Volume;
+			}
+			set {
+				player.Volume = value;
+			}
+		}
+		
+		public float CurrentPower {
 			get {
                 if (player == null) return 0;
 
