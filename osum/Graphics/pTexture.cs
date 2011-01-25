@@ -156,6 +156,7 @@ namespace osum.Graphics
 					this.TextureGl = reloadedTexture.TextureGl;
 					reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
 				}
+				
 			}
 		}
 

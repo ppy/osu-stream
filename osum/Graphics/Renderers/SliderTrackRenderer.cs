@@ -127,32 +127,19 @@ namespace osum.Graphics.Renderers
                         t.Dispose();
                 }
 
-                if (iColours == 0) // Temporary catch for i332-triggered hard crash
-                {
-                    textures_ogl = new TextureGl[1];
-                    textures_ogl[0] = glRenderSliderTexture(new Color(255, 255, 255, 255), new Color(255, 255, 255, 64), new Color(0, 0, 0, 64));
-                }
-                else
-                {
-                    textures_ogl = new TextureGl[iColours];
-					
-					/* 
-					 * todo: this is the WORST HACK EVER
-					 * it fixes the issue where the first slider texture will not render correctly,
-					 * but i'm not sure of the actual cause.
-					 * 
-					 * forcing it to render twice fixes it though.
-					 */
-					textures_ogl[0] = glRenderSliderTexture(border_colour, inner_colours[0], outer_colours[0]);
-					
-                    for (int x = 0; x < iColours; x++)
-                        textures_ogl[x] = glRenderSliderTexture(border_colour, inner_colours[x], outer_colours[x]);
-                }
-
-                Color grey1, grey2;
-                ComputeSliderColour(Color.Gray, out grey1, out grey2);
-                //grey_ogl = glRenderSliderTexture(border_colour, grey1, grey2);
-                multi_ogl = textures_ogl[0]; // Should be unneeded if things go right.
+                textures_ogl = new TextureGl[iColours];
+				
+				/* 
+				 * todo: this is the WORST HACK EVER
+				 * it fixes the issue where the first slider texture will not render correctly,
+				 * but i'm not sure of the actual cause.
+				 * 
+				 * forcing it to render twice fixes it though.
+				 */
+				textures_ogl[0] = glRenderSliderTexture(border_colour, inner_colours[0], outer_colours[0]);
+				
+                for (int x = 0; x < iColours; x++)
+                    textures_ogl[x] = glRenderSliderTexture(border_colour, inner_colours[x], outer_colours[x]);
 
                 am_initted_tex = true;
             }

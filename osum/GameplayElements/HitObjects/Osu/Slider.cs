@@ -823,6 +823,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 sliderBodyTexture.Dispose();
                 sliderBodyTexture = null;
+			}
 
 #if IPHONE
             if (fbo > 0)
@@ -831,7 +832,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 fbo = 0;
             }
 #endif
-            }
         }
 
         /// <summary>
@@ -942,7 +942,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private void CreatePathTexture()
         {
-            RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
+            //resign any old FBO assignments first.
+			DisposePathTexture();
+			
+			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
 
             trackBounds.X = (int)(rectf.X);
             trackBounds.Y = (int)(rectf.Y);
@@ -959,12 +962,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
 
-#if IPHONE
-            gl.SetData(IntPtr.Zero, 0, All.Rgba);
-
-#else
             gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-#endif
 
             sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
 			TextureManager.RegisterDisposable(sliderBodyTexture);
