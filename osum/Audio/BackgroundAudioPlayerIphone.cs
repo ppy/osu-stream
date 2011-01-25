@@ -20,7 +20,16 @@ namespace osum
 #endif
 		}
 		
-		public float CurrentVolume {
+		public float Volume {
+			get {
+				return player.Volume;
+			}
+			set {
+				player.Volume = value;
+			}
+		}
+		
+		public float CurrentPower {
 			get {
                 if (player == null) return 0;
 
@@ -55,20 +64,19 @@ namespace osum
 			
 		}
 
-        public unsafe bool Load(byte[] bytes)
+        public bool Load(byte[] audio, bool looping)
         {
-            if (player != null)
-                player.Dispose();
+            Unload();
 
             NSError error = null;
-
 
             fixed (byte* ptr = bytes)
             {
                 NSData data = NSData.FromBytes((IntPtr)ptr,(uint)bytes.Length);
 
                 player = AVAudioPlayer.FromData(data,out error);
-                player.MeteringEnabled = true;
+                //player.MeteringEnabled = true; -- enable for CurrentPower readings
+                player.NumberOfLoops = looping ? -1 : 0;
             }
 
             return error == null;
@@ -88,6 +96,12 @@ namespace osum
             player.MeteringEnabled = true;
 
             return error == null;
+        }
+
+        public bool Unload()
+        {
+            if (player != null)
+                player.Dispose();
         }
 
         public bool Stop ()
