@@ -270,7 +270,7 @@ namespace osum.Graphics.Sprites
                     }
 
                     if (RemoveOldTransformations)
-                        transformations.RemoveAt(i);
+                        transformations.RemoveAt(i--);
                     continue;
                 }
 
