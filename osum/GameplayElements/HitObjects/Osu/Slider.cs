@@ -671,6 +671,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (spriteFollowCircle.Alpha > 0 && isTracking)
             {
+                spriteFollowCircle.AlwaysDraw = false;
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.In));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.None));
             }
@@ -691,6 +692,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void beginTracking()
         {
             //Begin tracking.
+            spriteFollowCircle.AlwaysDraw = true;
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 			
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 200), EasingTypes.InHalf));
@@ -703,7 +705,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (IsEndHit)
 				return;
-			
+
+            spriteFollowCircle.AlwaysDraw = false;
 			spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 			
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
