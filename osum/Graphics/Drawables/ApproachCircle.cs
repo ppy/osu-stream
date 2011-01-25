@@ -66,26 +66,31 @@ namespace osum.Graphics.Drawables
             {
                 float rad1 = (Radius * ScaleScalar + Width * 0.5f) * GameBase.WindowRatio;
                 float rad2 = (Radius * ScaleScalar - Width * 0.5f) * GameBase.WindowRatio;
-                int parts = 32;
+                int parts = 64;
 
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
                 float[] vertices = new float[parts * 4 + 4];
-                float[] colours = new float[parts * 4 + 4];
+                float[] colours = new float[parts * 8 + 8];
 
                 for (int v = 0; v < parts; v++)
                 {
                     vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad1);
-                    vertices[v * 4 + 1] = (float)(pos.X + Math.Sin(v * 2.0f * Math.PI / parts) * rad1);
+                    vertices[v * 4 + 1] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad1);
 
                     vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad2);
-                    vertices[v * 4 + 3] = (float)(pos.X + Math.Sin(v * 2.0f * Math.PI / parts) * rad2);
+                    vertices[v * 4 + 3] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad2);
 
-                    colours[v * 4] = c.R;
-                    colours[v * 4 + 1] = c.G;
-                    colours[v * 4 + 2] = c.B;
-                    colours[v * 4 + 3] = c.A;
+                    colours[v * 8] = c.R;
+                    colours[v * 8 + 1] = c.G;
+                    colours[v * 8 + 2] = c.B;
+                    colours[v * 8 + 3] = c.A;
+
+                    colours[v * 8 + 4] = c.R;
+                    colours[v * 8 + 5] = c.G;
+                    colours[v * 8 + 6] = c.B;
+                    colours[v * 8 + 7] = c.A;
                 }
 
                 vertices[parts * 4] = vertices[0];
@@ -93,10 +98,15 @@ namespace osum.Graphics.Drawables
                 vertices[parts * 4 + 2] = vertices[2];
                 vertices[parts * 4 + 3] = vertices[3];
 
-                colours[parts * 4] = c.R;
-                colours[parts * 4 + 1] = c.G;
-                colours[parts * 4 + 2] = c.B;
-                colours[parts * 4 + 3] = c.A;
+                colours[parts * 8] = c.R;
+                colours[parts * 8 + 1] = c.G;
+                colours[parts * 8 + 2] = c.B;
+                colours[parts * 8 + 3] = c.A;
+
+                colours[parts * 8 + 4] = c.R;
+                colours[parts * 8 + 5] = c.G;
+                colours[parts * 8 + 6] = c.B;
+                colours[parts * 8 + 7] = c.A;
 
                 SpriteManager.TexturesEnabled = false;
                 GL.EnableClientState(ArrayCap.ColorArray);
@@ -104,7 +114,7 @@ namespace osum.Graphics.Drawables
                 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
-                GL.DrawArrays(BeginMode.TriangleStrip, 0, parts);
+                GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
 
                 GL.DisableClientState(ArrayCap.ColorArray);
                 GL.DisableClientState(ArrayCap.VertexArray);
