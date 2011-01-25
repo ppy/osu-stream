@@ -4,6 +4,7 @@ using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using osum.Support;
 using osum.Helpers;
+using osum.Audio;
 
 namespace osum
 {
@@ -128,6 +129,8 @@ namespace osum
             if (ActiveTransition != null)
             {
                 ActiveTransition.Update();
+				
+				AudioEngine.Music.Volume = Director.ActiveTransition.CurrentValue;
 
                 if (ActiveTransition.FadeOutDone)
                 {
@@ -146,7 +149,7 @@ namespace osum
                     ActiveTransition = null;
                 }
             }
-
+			
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.
             //Initialising a mode usually takes a fair amount of time and will throw off timings,

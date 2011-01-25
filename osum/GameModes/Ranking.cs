@@ -7,6 +7,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Collections;
 using System.Collections.Generic;
+using osum.Audio;
 namespace osum.GameModes
 {
 	public class Ranking : GameMode
@@ -78,6 +79,12 @@ namespace osum.GameModes
 			fill3.Transform(new TransformationBounce(time_between_fills * 2, end_bouncing, fill3.Scale.Y * ratio50, fill3.Scale.Y * ratio50, 1));
 			
 			spriteManager.Add(fillSprites);
+		}
+		
+		public override void Dispose()
+		{
+			AudioEngine.Music.Unload();
+			base.Dispose();
 		}
 		
 		public Ranking()

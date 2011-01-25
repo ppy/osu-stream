@@ -95,9 +95,6 @@ namespace osum
         {
             base.Update();
 			
-			if (Director.IsTransitioning)
-				AudioEngine.Music.Volume = Director.ActiveTransition.CurrentValue;
-
 			if (Director.PendingMode == OsuMode.Unknown)
 			{
 				Vector2 pos = new Vector2(50,10 + offset);

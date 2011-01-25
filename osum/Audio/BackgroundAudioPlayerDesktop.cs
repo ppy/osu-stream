@@ -122,7 +122,9 @@ namespace osum.Audio
             }
             set
             {
-                Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, value);
+                if (audioStream == 0) return;
+				
+				Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, value);
             }
         }
 

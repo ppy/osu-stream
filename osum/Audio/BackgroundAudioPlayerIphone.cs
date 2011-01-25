@@ -22,9 +22,13 @@ namespace osum
 		
 		public float Volume {
 			get {
+				if (player == null) return 0;
+				
 				return player.Volume;
 			}
 			set {
+				if (player == null) return;
+				
 				player.Volume = value;
 			}
 		}

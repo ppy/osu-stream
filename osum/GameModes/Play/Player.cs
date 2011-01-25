@@ -161,8 +161,6 @@ namespace osum.GameModes
         {
             InputManager.OnDown -= new InputHandler(InputManager_OnDown);
 
-            AudioEngine.Music.Unload();
-
             hitObjectManager.Dispose();
 
             healthBar.Dispose();
