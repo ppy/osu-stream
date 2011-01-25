@@ -27,7 +27,6 @@ namespace osum.GameModes
         HealthBar healthBar;
         ScoreDisplay scoreDisplay;
         ComboCounter comboCounter;
-		pSprite backButton;
 
         Score currentScore;
 
