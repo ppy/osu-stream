@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using osum.Graphics.Primitives;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using osum.Graphics.Sprites;
 
 namespace osum.Graphics.Renderers
 {
@@ -55,6 +56,8 @@ namespace osum.Graphics.Renderers
 
         protected override TextureGl glRenderSliderTexture(Color4 shadow, Color4 border, Color4 InnerColour, Color4 OuterColour, float aa_width, bool toon)
         {
+            SpriteManager.TexturesEnabled = false;
+
             GL.PushAttrib(AttribMask.EnableBit);
             
             GL.Viewport(0, 0, TEX_WIDTH, 1);
