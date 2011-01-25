@@ -72,7 +72,7 @@ namespace osum.Graphics.Renderers
             GL.LoadIdentity();
             GL.Ortho(0.0d, 1.0d, 1.0d, -1.0d, -1.0d, 1.0d);
             
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(Constants.COLOR_BUFFER_BIT);
             
             {
                 GL.Begin(BeginMode.LineStrip);

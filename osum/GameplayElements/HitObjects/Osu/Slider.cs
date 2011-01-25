@@ -909,16 +909,13 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                 if (FirstSegmentIndex == 0)
-                    GL.Clear((int)ClearBufferMask.ColorBufferBit);
+                    GL.Clear(Constants.COLOR_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-
-                GL.Clear((int)ClearBufferMask.ColorBufferBit);
 #else
-
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
 
                 GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
@@ -928,7 +925,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                 if (FirstSegmentIndex == 0)
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadius, ColourIndex, prev);

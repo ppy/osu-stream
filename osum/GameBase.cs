@@ -81,7 +81,6 @@ namespace osum
 
         internal static Vector2 GamefieldOffsetVector1;
 
-
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public static double ElapsedMilliseconds = 1000/60f;
@@ -121,7 +120,6 @@ namespace osum
 
         internal static void GamefieldToStandard(ref Vector2 vec)
         {
-            //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
             Vector2.Add(ref vec, ref GamefieldOffsetVector1, out vec);
         }
 
@@ -134,7 +132,6 @@ namespace osum
 
         internal static void StandardToGamefield(ref Vector2 vec)
         {
-            //Vector2.Multiply(ref vec, GamefieldRatio, out vec);
             Vector2.Subtract(ref vec, ref GamefieldOffsetVector1, out vec);
         }
 
@@ -296,11 +293,7 @@ namespace osum
             //todo: make update actually update on iphone and call from game architecture
             if (Update(e))
             {
-#if IPHONE
-			    GL.Clear((int)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
-#else
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-#endif
+                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
                 SpriteManager.Reset();
 
