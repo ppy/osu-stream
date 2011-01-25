@@ -45,16 +45,7 @@ namespace osum.Graphics.Sprites
     {
         internal float Alpha;
 
-        private bool alwaysDraw;
-        internal bool AlwaysDraw
-        {
-            get { return alwaysDraw; }
-            set
-            {
-                alwaysDraw = value;
-                Alpha = alwaysDraw ? 1 : 0;
-            }
-        }
+        internal bool AlwaysDraw;
         internal ClockTypes Clocking;
 
         internal Color4 Colour;
@@ -85,7 +76,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Determines whether the sprite automatically remove past transformations.
         /// </summary>
-        internal bool RemoveOldTransformations = false;
+        internal bool RemoveOldTransformations = true;
 
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.

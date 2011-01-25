@@ -95,7 +95,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.Field = FieldTypes.Gamefield512x384;
             circularProgress.Additive = true;
             circularProgress.Transform(new NullTransform(StartTime, EndTime));
-			circularProgress.RemoveOldTransformations = true;
             
             spriteCollectionStart.Add(circularProgress);
 
@@ -149,12 +148,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             holdCircleOverlay.FadeOut(160);
             circularProgress.FadeIn(160);
+            circularProgress.AlwaysDraw = true;
         }
 
         protected override void endTracking()
         {
             holdCircleOverlay.FadeIn(80);
             circularProgress.FadeOut(80);
+            circularProgress.AlwaysDraw = false;
 
             Transformation returnto = new Transformation(TransformationType.Scale,spriteCollectionStart[0].ScaleScalar, 1, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In);
 
@@ -182,6 +183,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 			circularProgress.EvenShading = true;
 			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.2f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 300, EasingTypes.Out));
 			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.Out));
+            circularProgress.AlwaysDraw = true;
         }
 
         internal override Vector2 EndPosition

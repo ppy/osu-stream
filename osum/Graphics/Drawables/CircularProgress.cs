@@ -49,6 +49,7 @@ namespace osum.Graphics.Drawables
         public CircularProgress(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
 		{
             AlwaysDraw = alwaysDraw;
+            Alpha = alwaysDraw ? 1 : 0;
             DrawDepth = drawDepth;
             StartPosition = position;
             Position = position;
