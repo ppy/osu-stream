@@ -57,8 +57,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             int duration = (EndTime - StartTime) / RepeatCount;
 
             Transformation bounce = new Transformation(TransformationType.Scale,
-                1.1f + 0.5f * progressCurrent/RepeatCount,
-                1 + 0.4f * progressCurrent / RepeatCount,
+                1.1f + 0.4f * progressCurrent/RepeatCount,
+                1 + 0.3f * progressCurrent / RepeatCount,
                 Clock.AudioTime,
                 Clock.AudioTime + duration,
                 EasingTypes.In
@@ -181,8 +181,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 			circularProgress.Alpha = 0.8f;
 			circularProgress.FadeOut(500);
 			circularProgress.EvenShading = true;
-			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.2f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 300, EasingTypes.Out));
-			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.Out));
+			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 500, EasingTypes.In));
+			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.In));
             circularProgress.AlwaysDraw = true;
         }
 
