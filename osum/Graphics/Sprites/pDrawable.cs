@@ -85,7 +85,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Determines whether the sprite automatically remove past transformations.
         /// </summary>
-        internal bool RemoveOldTransformations = true;
+        internal bool RemoveOldTransformations = false;
 
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
@@ -227,22 +227,26 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.EndColour;
-                            hasColour = true;
+							if (!RemoveOldTransformations)
+	                            hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.EndFloat;
-                            hasAlpha = true;
+							if (!RemoveOldTransformations)
+	                            hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
                             Position = t.EndVector;
-                            hasMovement = true;
+							if (!RemoveOldTransformations)
+	                            hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
                             Position.X = t.EndFloat;
-                            hasMovementX = true;
+							if (!RemoveOldTransformations)
+	                            hasMovementX = true;
                             break;
 
                         case TransformationType.MovementY:
@@ -255,17 +259,20 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Rotation:
                             Rotation = t.EndFloat;
-                            hasRotation = true;
+							if (!RemoveOldTransformations)
+	                            hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.EndFloat, t.EndFloat);
-                            hasScale = true;
+                        	if (!RemoveOldTransformations)    
+								hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.EndVector;
-                            hasScale = true;
+							if (!RemoveOldTransformations)
+                            	hasScale = true;
                             break;
                     }
 

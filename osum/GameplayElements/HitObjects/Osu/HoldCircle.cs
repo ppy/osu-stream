@@ -95,6 +95,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.Field = FieldTypes.Gamefield512x384;
             circularProgress.Additive = true;
             circularProgress.Transform(new NullTransform(StartTime, EndTime));
+			circularProgress.RemoveOldTransformations = true;
             
             spriteCollectionStart.Add(circularProgress);
 
@@ -176,9 +177,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 			
 			circularProgress.Transformations.Clear();
             
+			circularProgress.Alpha = 0.8f;
 			circularProgress.FadeOut(500);
 			circularProgress.EvenShading = true;
-			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar, circularProgress.ScaleScalar + 0.1f, Clock.AudioTime, Clock.AudioTime + 200, EasingTypes.Out));
+			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.2f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 300, EasingTypes.Out));
 			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.Out));
         }
 
