@@ -4,8 +4,9 @@
 using System;
 using osum.Graphics.Primitives;
 using System.Collections.Generic;
-using OpenTK.Graphics.ES11;
 using OpenTK;
+using osum.Graphics.Sprites;
+
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -15,12 +16,14 @@ using MonoTouch.OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
+using ArrayCap = OpenTK.Graphics.ES11.All;
 using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
 using BlendingFactorDest = OpenTK.Graphics.ES11.All;
 using PixelStoreParameter = OpenTK.Graphics.ES11.All;
 using VertexPointerType = OpenTK.Graphics.ES11.All;
 using ColorPointerType = OpenTK.Graphics.ES11.All;
 using ClearBufferMask = OpenTK.Graphics.ES11.All;
+using DepthFunction = OpenTK.Graphics.ES11.All;
 using TexCoordPointerType = OpenTK.Graphics.ES11.All;
 using BeginMode = OpenTK.Graphics.ES11.All;
 using MatrixMode = OpenTK.Graphics.ES11.All;
@@ -34,6 +37,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using OpenTK.Graphics.ES11;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -62,10 +66,9 @@ namespace osum.Graphics.Renderers
                             -QUAD_OVERLAP_FUDGE, 1, 0,
                             1 + QUAD_OVERLAP_FUDGE, 1, 0};
 
-            GL.TexCoordPointer(2, All.Float, 0, coordinates);
-            GL.VertexPointer(3, All.Float, 0, vertices);
-
-            GL.DrawArrays (All.TriangleStrip, 0, 6);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+            GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
         }
 
 
@@ -90,27 +93,30 @@ namespace osum.Graphics.Renderers
                 vertices[x * vertexSize + 5] = v.Z;
             }
 
-            GL.TexCoordPointer(2, All.Float, 0, coordinates);
-            GL.VertexPointer(3, All.Float, 0, vertices);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
 
-            GL.DrawArrays (All.TriangleFan, 0, count + 2);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, count + 2);
         }
 
 
         protected override TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
         {
-			GL.Viewport(0, 0, TEX_WIDTH, 1);
-
-            GL.MatrixMode(All.Modelview);
-            GL.LoadIdentity();
+            SpriteManager.TexturesEnabled = false;
             
-            GL.MatrixMode(All.Projection);
+            GL.Viewport(0, 0, TEX_WIDTH, 1);
+
+            GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-			
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
             GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
 
-            GL.Clear((int)All.ColorBufferBit);
-            GL.EnableClientState(All.ColorArray);
+            GL.Clear(Constants.COLOR_BUFFER_BIT);
+
+            GL.EnableClientState(ArrayCap.ColorArray);
 
             float[] colours = {0,0,0,0,
                             shadow.R, shadow.G, shadow.B, shadow.A,
@@ -126,72 +132,57 @@ namespace osum.Graphics.Renderers
                 0.1875f + aa_width, 0.0f,
                 1.0f, 0.0f };
 
-            GL.VertexPointer(2, All.Float, 0, vertices);
-            GL.ColorPointer(4,All.Float, 0, colours);
+            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+            GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+            GL.DrawArrays(BeginMode.LineStrip, 0, 6);
 
-            GL.DrawArrays(All.LineStrip,0,6);
+            GL.DisableClientState(ArrayCap.ColorArray);
 
-            GL.DisableClientState(All.ColorArray);
-            
             TextureGl result = new TextureGl(TEX_WIDTH, 1);
 
             int[] textures = new int[1];
             GL.GenTextures(1, textures);
             int textureId = textures[0];
 
-            GL.Enable(TextureGl.SURFACE_TYPE);
-
             GL.BindTexture(TextureGl.SURFACE_TYPE, textureId);
 
-            GL.TexParameter (TextureGl.SURFACE_TYPE, All.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter (TextureGl.SURFACE_TYPE, All.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
 
-            GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, All.Rgba, 0, 0, TEX_WIDTH, 1, 0);
-
-            GL.Disable(TextureGl.SURFACE_TYPE);
+            GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, TEX_WIDTH, 1, 0);
 
             result.SetData(textureId);
 
             GameBase.Instance.SetViewport();
-			
-			GL.Clear((int)All.ColorBufferBit);
-            
+
+            GL.Clear(Constants.COLOR_BUFFER_BIT);
+
             return result;
         }
 
 
         protected override void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev)
         {
-            //GL.PushAttrib(AttribMask.EnableBit);
-
             GL.Disable(EnableCap.Blend);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
-            GL.DepthFunc(All.Lequal);
+            GL.DepthFunc(DepthFunction.Lequal);
 
-            GL.Color4(255,255,255,255);
+            SpriteManager.TexturesEnabled = true;
 
-            // Select The Modelview Matrix
             GL.MatrixMode(MatrixMode.Modelview);
-
-			// Reset The Modelview Matrix
             GL.LoadIdentity();
+
+            GL.Color4((byte)255, (byte)255, (byte)255, (byte)255);
 
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
 
-            /*GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);*/
-
             int count = lineList.Count;
-
-            GL.Color4(255,255,255,255);
-
             for (int x = 1; x < count; x++)
             {
                 DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius);
-
                 prev = lineList[x - 1];
             }
 
@@ -202,8 +193,6 @@ namespace osum.Graphics.Renderers
             GL.Enable(EnableCap.Blend);
             GL.Disable(EnableCap.DepthTest);
             GL.DepthMask(false);
-
-            //GL.PopAttrib();
         }
 
 
@@ -312,11 +301,11 @@ namespace osum.Graphics.Renderers
 
         #endregion
 
-        public SliderTrackRendererIphone() : base()
+        public SliderTrackRendererIphone()
+            : base()
         {
         }
-        
-        
+
+
     }
 }
-

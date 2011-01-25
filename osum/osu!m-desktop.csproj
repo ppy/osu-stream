@@ -76,6 +76,7 @@
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererDesktop.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRendererDesktop.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRendererIphone.cs" />
     <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
     <Compile Include="Graphics\Sprites\pDrawable.cs" />
