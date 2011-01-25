@@ -57,7 +57,7 @@ namespace osum.Graphics
             textureWidth = width;
             textureHeight = height;
 
-            if (SURFACE_TYPE == TextureTarget.Texture2D)
+            if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
             {
                 potWidth = GetPotDimension(width);
                 potHeight = GetPotDimension(height);
@@ -184,16 +184,10 @@ namespace osum.Graphics
 
             Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
 
-            bool verticalFlip = false;//(effect & SpriteEffect.FlipVertically) > 0;
-            bool horizontalFlip = false;//(effect & SpriteEffect.FlipHorizontally) > 0;
-
-#if IPHONE
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
-			
 			GL.Translate(currentPos.X, currentPos.Y, 0);
 			
-			if (rotation != 0)
-		        GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+			if (rotation != 0) GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
 
             if (originVector.X != 0 || originVector.Y != 0)
                 GL.Translate(-originVector.X, -originVector.Y, 0);
@@ -216,73 +210,14 @@ namespace osum.Graphics
             if (lastDrawTexture != Id)
             {
                 lastDrawTexture = Id;
-                GL.BindTexture(TextureTarget.Texture2D, Id);
+                GL.BindTexture(TextureGl.SURFACE_TYPE, Id);
             }
 						
-			GL.VertexPointer(3, All.Float, 0, vertices);
-			GL.TexCoordPointer(2, All.Float, 0, coordinates);
+			GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
 			
-			GL.DrawArrays (All.TriangleFan, 0, 4);
-#else
-            GL.Color4(drawColour);
 
-            checkGlError();
-
-            //GL.PushMatrix();
-            GL.LoadIdentity();
-
-            GL.Translate(currentPos.X, currentPos.Y, 0);
-            GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
-
-            if (originVector.X != 0 || originVector.Y != 0)
-                GL.Translate(-originVector.X, -originVector.Y, 0);
-
-            GL.BindTexture(SURFACE_TYPE, Id);
-
-            GL.Begin(BeginMode.Quads);
-
-            if (SURFACE_TYPE == TextureTarget.Texture2D)
-            {
-                float left = (float)drawRect.Left / potWidth;
-                float right = (float)drawRect.Right / potWidth;
-                float top = (float)drawRect.Top / potHeight;
-                float bottom = (float)drawRect.Bottom / potHeight;
-
-                GL.TexCoord2(horizontalFlip ? right : left, verticalFlip ? top : bottom);
-                GL.Vertex2(0, drawHeight);
-
-                GL.TexCoord2(horizontalFlip ? left : right, verticalFlip ? top : bottom);
-                GL.Vertex2(drawWidth, drawHeight);
-
-                GL.TexCoord2(horizontalFlip ? left : right, verticalFlip ? bottom : top);
-                GL.Vertex2(drawWidth, 0);
-
-                GL.TexCoord2(horizontalFlip ? right : left, verticalFlip ? bottom : top);
-                GL.Vertex2(0, 0);
-            }
-            else
-            {
-                GL.TexCoord2(horizontalFlip ? drawRect.Right : drawRect.Left,
-                                verticalFlip ? drawRect.Top : drawRect.Bottom);
-                GL.Vertex2(0, drawHeight);
-
-                GL.TexCoord2(horizontalFlip ? drawRect.Left : drawRect.Right,
-                                verticalFlip ? drawRect.Top : drawRect.Bottom);
-                GL.Vertex2(drawWidth, drawHeight);
-
-                GL.TexCoord2(horizontalFlip ? drawRect.Left : drawRect.Right,
-                                verticalFlip ? drawRect.Bottom : drawRect.Top);
-                GL.Vertex2(drawWidth, 0);
-
-                GL.TexCoord2(horizontalFlip ? drawRect.Right : drawRect.Left,
-                                verticalFlip ? drawRect.Bottom : drawRect.Top);
-                GL.Vertex2(0, 0);
-            }
-
-            GL.End();
-
-            checkGlError();
-#endif
+			GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
             GL.PopMatrix();
         }
@@ -354,12 +289,12 @@ namespace osum.Graphics
 
        		GL.BindTexture(SURFACE_TYPE, Id);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
 
             //can't determine if this helps
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+			GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
 
 			//doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
@@ -374,7 +309,7 @@ namespace osum.Graphics
 
             if (newTexture)
             {
-                if (SURFACE_TYPE == TextureTarget.Texture2D)
+                if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
                 {
                     if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
                     {
