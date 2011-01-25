@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using osum.Graphics.Sprites;
 using OpenTK.Graphics;
 using osum.GameModes.SongSelect;
+using osum.Audio;
 namespace osum
 {
     public class SongSelect : GameMode
@@ -25,6 +26,10 @@ namespace osum
             InitializeBeatmaps();
 			
 			InputManager.OnMove += InputManager_OnMove;
+			
+			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"));
+			AudioEngine.Music.Play();
+			AudioEngine.Music.Loop = true;
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
@@ -89,6 +94,9 @@ namespace osum
         {
             base.Update();
 			
+			if (Director.IsTransitioning)
+				AudioEngine.Music.Volume = Director.ActiveTransition.CurrentValue;
+
 			if (Director.PendingMode == OsuMode.Unknown)
 			{
 				Vector2 pos = new Vector2(50,10 + offset);

@@ -366,5 +366,6 @@
     <Content Include="Skins\Default\playfield.png" />
     <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\hit.png" />
+    <Content Include="Skins\Default\select.m4a" />
   </ItemGroup>
 </Project>
