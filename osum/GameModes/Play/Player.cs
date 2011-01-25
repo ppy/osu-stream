@@ -90,7 +90,7 @@ namespace osum.GameModes
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(playfield);
 
-            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename));
+            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename),false);
             Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
         }
 
@@ -161,7 +161,7 @@ namespace osum.GameModes
         {
             InputManager.OnDown -= new InputHandler(InputManager_OnDown);
 
-            AudioEngine.Music.Stop();
+            AudioEngine.Music.Unload();
 
             hitObjectManager.Dispose();
 

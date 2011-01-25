@@ -26,10 +26,9 @@ namespace osum
             InitializeBeatmaps();
 			
 			InputManager.OnMove += InputManager_OnMove;
-			
-			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"));
+
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
 			AudioEngine.Music.Play();
-			AudioEngine.Music.Loop = true;
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
@@ -41,6 +40,8 @@ namespace osum
 		public override void Dispose()
 		{
 			base.Dispose();
+
+            AudioEngine.Music.Unload();
 			
 			InputManager.OnMove -= InputManager_OnMove;
 		}

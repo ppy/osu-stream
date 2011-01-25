@@ -26,15 +26,6 @@ namespace osum.Audio
         }
 
         /// <summary>
-        /// Gets the current volume.
-        /// </summary>
-        /// <value>The current volume.</value>
-        public float CurrentVolume
-        {
-            get { return 0; }
-        }
-
-        /// <summary>
         /// Plays the loaded audio.
         /// </summary>
         /// <returns></returns>
@@ -76,13 +67,19 @@ namespace osum.Audio
             }
         }
 
-        public bool Load(byte[] audio)
+        public bool Load(byte[] audio, bool looping)
         {
             FreeMusic();
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 
-            audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN);
+            audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
 
+            return true;
+        }
+
+        public bool Unload()
+        {
+            FreeMusic();
             return true;
         }
 
@@ -110,5 +107,37 @@ namespace osum.Audio
             return true;
 
         }
+
+        #region IBackgroundAudioPlayer Members
+
+        public float Volume
+        {
+            get
+            {
+                if (audioStream == 0) return 1;
+
+                float o = 1;
+                Bass.BASS_ChannelGetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, ref o);
+                return o;
+            }
+            set
+            {
+                Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, value);
+            }
+        }
+
+        public float CurrentPower
+        {
+            get {
+
+                int word = Bass.BASS_ChannelGetLevel(audioStream);
+                int left = Utils.LowWord32(word);
+                int right = Utils.HighWord32(word);
+
+                return (left + right) / 65536 * 2f;
+            }
+        }
+
+        #endregion
     }
 }

@@ -29,17 +29,13 @@ namespace osum
         /// <summary>
         /// Loads an audio track.
         /// </summary>
-        bool Load(byte[] bytes);
-		
-		/// <summary>
-		/// Set/get whether the current track is looping or not. 
-		/// </summary>
-		bool Loop
-		{
-			get;
-			set;
-		}
+        bool Load(byte[] bytes, bool looping);
 
+        /// <summary>
+        /// Unloads the current audio track.
+        /// </summary>
+        bool Unload();
+		
         /// <summary>
         /// Plays the loaded audio.
         /// </summary>
