@@ -823,7 +823,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 sliderBodyTexture.Dispose();
                 sliderBodyTexture = null;
-			}
+                lengthDrawn = 0;
+                lastDrawnSegmentIndex = -1;
+            }
 
 #if IPHONE
             if (fbo > 0)
