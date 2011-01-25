@@ -61,7 +61,8 @@ namespace osum.Support
 
         internal static void AddLine(string s)
         {
-            if (updateFrame)
+            if (!updateFrame) return;
+			
 #if DEBUG
             fpsDisplay.Text += "\n" + s;
 #endif
