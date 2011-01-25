@@ -26,7 +26,7 @@ namespace osum
         /// <summary>
         /// The transition being used to introduce a pending mode.
         /// </summary>
-        private static Transition ActiveTransition;
+        internal static Transition ActiveTransition;
 
         internal static bool ChangeMode(OsuMode mode)
         {

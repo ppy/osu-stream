@@ -7,6 +7,12 @@ namespace osum
         public Transition()
         {
         }
+		
+		public virtual float CurrentValue
+		{
+			get { return 0; }
+		}
+			
 
         public virtual bool FadeOutDone
         {

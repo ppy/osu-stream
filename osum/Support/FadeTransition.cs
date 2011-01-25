@@ -23,6 +23,13 @@ namespace osum.Support
         }
 
         FadeState fadeState = FadeState.FadeOut;
+		
+		float currentValue; //todo: yucky.
+		public override float CurrentValue {
+			get {
+				return currentValue;
+			}
+		}
 
         public override void Update()
         {
@@ -41,6 +48,8 @@ namespace osum.Support
 						SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
                     break;
             }
+			
+			currentValue = 1 - SpriteManager.UniversalDim; //todo: yucky.
 
             base.Update();
         }
