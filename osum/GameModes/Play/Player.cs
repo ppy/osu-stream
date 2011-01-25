@@ -181,11 +181,11 @@ namespace osum.GameModes
 
             return true;
         }
-
+		
         public override void Update()
         {
             //check whether the map is finished
-			if (hitObjectManager.AllNotesHit)
+			if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.hitObjects[hitObjectManager.hitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
 			{
 				Ranking.RankableScore = currentScore;
 				Director.ChangeMode(OsuMode.Ranking);
