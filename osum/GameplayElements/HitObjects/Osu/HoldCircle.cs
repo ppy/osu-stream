@@ -183,7 +183,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 			circularProgress.EvenShading = true;
 			circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 500, EasingTypes.In));
 			circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.In));
-            circularProgress.AlwaysDraw = true;
+            circularProgress.AlwaysDraw = false;
         }
 
         internal override Vector2 EndPosition

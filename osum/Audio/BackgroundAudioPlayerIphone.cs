@@ -64,15 +64,15 @@ namespace osum
 			
 		}
 
-        public bool Load(byte[] audio, bool looping)
+        public unsafe bool Load(byte[] audio, bool looping)
         {
             Unload();
 
             NSError error = null;
 
-            fixed (byte* ptr = bytes)
+            fixed (byte* ptr = audio)
             {
-                NSData data = NSData.FromBytes((IntPtr)ptr,(uint)bytes.Length);
+                NSData data = NSData.FromBytes((IntPtr)ptr,(uint)audio.Length);
 
                 player = AVAudioPlayer.FromData(data,out error);
                 //player.MeteringEnabled = true; -- enable for CurrentPower readings
@@ -102,6 +102,7 @@ namespace osum
         {
             if (player != null)
                 player.Dispose();
+			return true;
         }
 
         public bool Stop ()
