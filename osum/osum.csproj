@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <BundleIdentifier>osu</BundleIdentifier>
-    <BundleVersion>1000</BundleVersion>
+    <BundleVersion>1001</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>Support\iPhone\icon.png</BundleIcon>
     <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
@@ -202,6 +202,7 @@
     <Compile Include="Support\DebugOverlay.cs" />
     <Compile Include="Graphics\Sprites\pDrawable.cs" />
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
+    <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
