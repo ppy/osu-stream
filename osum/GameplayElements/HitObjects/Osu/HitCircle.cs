@@ -7,6 +7,7 @@ using OpenTK.Graphics;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Graphics.Drawables;
 
 namespace osum.GameplayElements
 {
@@ -23,7 +24,9 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new pSprite(TextureManager.Load(OsuTexture.approachcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), false, white);
+            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius * 0.95f, false, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), white);
+            SpriteApproachCircle.Clocking = ClockTypes.Audio;
+            SpriteApproachCircle.Field = FieldTypes.Gamefield512x384;
             //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
             SpriteCollection.Add(SpriteApproachCircle);
 
@@ -58,6 +61,11 @@ namespace osum.GameplayElements
 
             SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 4, 1, 
                 startTime - DifficultyManager.PreEmpt, startTime));
+
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 1, 0.95f,
+                startTime, startTime + (int)(DifficultyManager.PreEmpt * 0.1f)));
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 1, 0,
+                startTime, startTime + (int)(DifficultyManager.PreEmpt * 0.1f)));
             
             /*
             if (Player.currentScore != null && ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden))
@@ -172,7 +180,7 @@ namespace osum.GameplayElements
             }
             else
             {
-                foreach (pSprite p in SpriteCollection)
+                foreach (pDrawable p in SpriteCollection)
                     p.Transformations.Clear();
             }
 
@@ -181,7 +189,7 @@ namespace osum.GameplayElements
 
         #endregion
 
-        internal pSprite SpriteApproachCircle;
+        internal pDrawable SpriteApproachCircle;
         internal pSprite SpriteHitCircle1;
         internal pSprite SpriteHitCircle2;
         internal pSpriteText SpriteHitCircleText;
