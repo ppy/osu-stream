@@ -64,7 +64,7 @@ namespace osum.Graphics.Drawables
 		{
             if (base.Draw())
             {
-
+                /*
                 Color4 c = AlphaAppliedColour;
 
                 float resolution = 0.1f;
@@ -87,12 +87,25 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
 
                 float a = startAngle;
+                */
+
+                float rad1 = (Radius * ScaleScalar + Width * 0.5f) * GameBase.WindowRatio;
+                float rad2 = (Radius * ScaleScalar - Width * 0.5f) * GameBase.WindowRatio;
+                int parts = 32;
+
+                Vector2 pos = FieldPosition;
+                Color4 c = AlphaAppliedColour;
+
+                float[] vertices = new float[parts * 4 + 4];
+                float[] colours = new float[parts * 4 + 4];
 
                 for (int v = 0; v < parts; v++)
                 {
-                    vertices[v * 2] = (float)(pos.X + Math.Cos(a) * radius);
-                    vertices[v * 2 + 1] = (float)(pos.Y + Math.Sin(a) * radius);
-                    a += da;
+                    vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f / (Math.PI * parts)) * rad1);
+                    vertices[v * 4 + 1] = (float)(pos.X + Math.Sin(v * 2.0f / (Math.PI * parts)) * rad1);
+
+                    vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f / (Math.PI * parts)) * rad2);
+                    vertices[v * 4 + 3] = (float)(pos.X + Math.Sin(v * 2.0f / (Math.PI * parts)) * rad2);
 
                     colours[v * 4] = c.R;
                     colours[v * 4 + 1] = c.G;
@@ -100,16 +113,26 @@ namespace osum.Graphics.Drawables
                     colours[v * 4 + 3] = c.A;
                 }
 
+                vertices[parts * 4] = vertices[0];
+                vertices[parts * 4 + 1] = vertices[1];
+                vertices[parts * 4 + 2] = vertices[2];
+                vertices[parts * 4 + 3] = vertices[3];
+
+                colours[parts * 4] = c.R;
+                colours[parts * 4 + 1] = c.G;
+                colours[parts * 4 + 2] = c.B;
+                colours[parts * 4 + 3] = c.A;
+
                 SpriteManager.TexturesEnabled = false;
                 GL.EnableClientState(ArrayCap.ColorArray);
                 GL.EnableClientState(ArrayCap.VertexArray);
                 
-                GL.LineWidth(width);
-                GL.Enable(EnableCap.LineSmooth);
+                //GL.LineWidth(width);
+                //GL.Enable(EnableCap.LineSmooth);
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
-                GL.DrawArrays(BeginMode.LineLoop, 0, parts);
+                GL.DrawArrays(BeginMode.TriangleStrip, 0, parts);
 
                 GL.DisableClientState(ArrayCap.ColorArray);
                 GL.DisableClientState(ArrayCap.VertexArray);
