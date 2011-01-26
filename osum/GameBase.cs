@@ -290,9 +290,11 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
+            bool doDraw = Update(e);
+
             GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
-            if (Update(e))
+            if (doDraw)
             {
                 SpriteManager.Reset();
 

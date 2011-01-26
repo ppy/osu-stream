@@ -49,12 +49,7 @@ namespace osum.GameplayElements
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
 
-        //todo: pull this from a support class or something, not #if
-#if IPHONE
         internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererIphone();
-#else
-        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRendererDesktop();
-#endif
 
         public HitObjectManager(Beatmap beatmap)
         {

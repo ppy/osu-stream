@@ -930,9 +930,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
 
+                GL.PopMatrix();
+
                 GameBase.Instance.SetViewport();
 
-                GL.PopMatrix();
+                
             }
         }
 

@@ -114,8 +114,6 @@ namespace osum.Graphics.Renderers
 
             GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
 
-            GL.Clear(Constants.COLOR_BUFFER_BIT);
-
             GL.EnableClientState(ArrayCap.ColorArray);
 
             float[] colours = {0,0,0,0,
@@ -157,8 +155,6 @@ namespace osum.Graphics.Renderers
 
             GameBase.Instance.SetViewport();
 
-            GL.Clear(Constants.COLOR_BUFFER_BIT);
-
             return result;
         }
 
@@ -188,11 +184,11 @@ namespace osum.Graphics.Renderers
 
             DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
 
-            GL.LoadIdentity();
-
             GL.Enable(EnableCap.Blend);
-            GL.Disable(EnableCap.DepthTest);
-            GL.DepthMask(false);
+            //GL.Disable(EnableCap.DepthTest);
+            //GL.DepthMask(false);
+
+            GL.LoadIdentity();
         }
 
 
