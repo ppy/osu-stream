@@ -54,7 +54,7 @@ namespace osum.Graphics.Renderers
     /// <summary>
     /// Class to handle drawing of Greg's enhanced sliders.
     /// </summary>
-    internal abstract class SliderTrackRenderer : IDisposable
+    internal class SliderTrackRenderer : IDisposable
     {
         protected const int MAXRES = 24; // A higher MAXRES produces rounder endcaps at the cost of more vertices
         protected const int TEX_WIDTH = 128; // Please keep power of two
@@ -129,16 +129,7 @@ namespace osum.Graphics.Renderers
 
                 textures_ogl = new TextureGl[iColours];
 				
-				/* 
-				 * todo: this is the WORST HACK EVER
-				 * it fixes the issue where the first slider texture will not render correctly,
-				 * but i'm not sure of the actual cause.
-				 * 
-				 * forcing it to render twice fixes it though.
-				 */
-				textures_ogl[0] = glRenderSliderTexture(border_colour, inner_colours[0], outer_colours[0]);
-				
-                for (int x = 0; x < iColours; x++)
+				for (int x = 0; x < iColours; x++)
                     textures_ogl[x] = glRenderSliderTexture(border_colour, inner_colours[x], outer_colours[x]);
 
                 am_initted_tex = true;
@@ -166,16 +157,6 @@ namespace osum.Graphics.Renderers
             vertices_ogl[MAXRES] = new Vector3(0.0f, 1.0f, 0.0f);
         }
 
-        protected abstract void glDrawQuad();
-
-        protected abstract void glDrawHalfCircle(int count);
-
-        /// <summary>
-        /// Render a gradient into a 256x1 texture.
-        /// </summary>
-        protected abstract TextureGl glRenderSliderTexture(Color shadow, Color border, Color InnerColour, Color OuterColour, float aa_width, bool toon);
-
-
         /// <summary>
         /// This overload computes the outer/inner colours and AA widths, and has a hardcoded shadow colour.
         /// </summary>
@@ -189,18 +170,9 @@ namespace osum.Graphics.Renderers
 
             Color shadow = new Color(0, 0, 0, 0.5f);
 
+            GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+
             return glRenderSliderTexture(shadow, border, InnerColour, OuterColour, aa_width, toon);
-        }
-
-        /// <summary>
-        /// Recomputes the textures used on Tag Multi custom colour sliders.
-        /// </summary>
-        internal void SetTagCustomColour(Color color)
-        {
-            Color inner, outer;
-            ComputeSliderColour(color, out inner, out outer);
-
-            multi_ogl = glRenderSliderTexture(border_colour, inner, outer);
         }
 
         /// <summary>
@@ -220,19 +192,21 @@ namespace osum.Graphics.Renderers
         /// Draws a slider to the active device using a cached texture.
         /// </summary>
         /// <param name="lineList">List of lines to use</param>
-        /// <param name="globalRadius">Width of the slider</param>
+        /// <param name="radius">Width of the slider</param>
         /// <param name="ColourIndex">Current combo colour index between 0 and 4; -1 for grey; -2 for Tag Multi override.</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
-        internal void Draw(List<Line> lineList, float globalRadius, int ColourIndex, Line prev)
+        internal void Draw(List<Line> lineList, float radius, int ColourIndex, Line prev)
         {
-			switch (ColourIndex)
+            GL.Color4((byte)255, (byte)255, (byte)255, (byte)255);
+
+            switch (ColourIndex)
             {
-                case -1: // Grey
-                    DrawOGL(lineList, globalRadius, grey_ogl, prev);
+                /*case -1: // Grey
+                    DrawOGL(lineList, radius, grey_ogl, prev);
                     break;
                 case -2: // Multi custom
-                    DrawOGL(lineList, globalRadius, multi_ogl, prev);
-                    break;
+                    DrawOGL(lineList, radius, multi_ogl, prev);
+                    break;*/
                 default:
                     if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
                     {
@@ -242,7 +216,7 @@ namespace osum.Graphics.Renderers
                             DrawOGL(lineList, globalRadius, grey_ogl, prev);
 #endif
                     }
-                    else DrawOGL(lineList, globalRadius, textures_ogl[ColourIndex], prev);
+                    else DrawOGL(lineList, radius, textures_ogl[ColourIndex], prev, true);
                     break;
             }
         }
@@ -282,16 +256,20 @@ namespace osum.Graphics.Renderers
 
         List<LineTextureInfo> lineTextureCache = new List<LineTextureInfo>();
 
-        internal TextureGl CreateLineTexture(Color innerColour, Color outerColour, Color borderColour)
+        internal TextureGl CreateLineTexture(Color innerColour, Color outerColour, Color borderColour, float radius)
         {
-            LineTextureInfo search = new LineTextureInfo(innerColour, outerColour, borderColour);
+            float aa_width = 0.08f;
+
+            Color shadow = new Color(1, 0, 0, 1);
+
+            LineTextureInfo search = new LineTextureInfo(innerColour, outerColour, borderColour, aa_width);
             
             LineTextureInfo texInfo = lineTextureCache.Find(t => t.Equals(search));
 
             if (texInfo == null)
             {
                 texInfo = search;
-                texInfo.SetTexture(glRenderSliderTexture(borderColour, innerColour, outerColour));
+                texInfo.SetTexture(glRenderSliderTexture(shadow, borderColour, innerColour, outerColour, aa_width, false));
                 lineTextureCache.Add(texInfo);
             }
 
@@ -302,27 +280,20 @@ namespace osum.Graphics.Renderers
         /// Draws a slider to the active device. Its texture is rendered on the fly.
         /// </summary>
         /// <param name="lineList">List of lines to use</param>
-        /// <param name="globalRadius">Width of the slider</param>
+        /// <param name="radius">Width of the slider</param>
         /// <param name="colour">Single colour of the track</param>
         /// <param name="borderColour">ruoloCredroB</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         /// <param name="viewport">(OpenGL only) The rectangle we restore the projection matrix to.</param>
-        internal void Draw(List<Line> lineList, float globalRadius, Color innerColour, Color outerColour, Color borderColour)
+        internal void Draw(List<Line> lineList, float radius, Color innerColour, Color outerColour, Color borderColour, Color4 tint)
         {
-            DrawOGL(lineList, globalRadius, CreateLineTexture(innerColour, outerColour, borderColour), null);
+
+            TextureGl tex = CreateLineTexture(innerColour, outerColour, borderColour, radius);
+
+            GL.Color4(tint.R, tint.G, tint.B, tint.A);
+            
+            DrawOGL(lineList, radius, tex, null, false);
         }
-
-        /// <summary>
-        /// Core drawing method in OpenGL
-        /// </summary>
-        /// <param name="lineList">List of lines to use</param>
-        /// <param name="globalRadius">Width of the slider</param>
-        /// <param name="texture">Texture used for the track</param>
-        /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
-        protected abstract void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev);
-
-        protected abstract void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius);
-
 
         #region IDisposable Members
 
@@ -337,6 +308,260 @@ namespace osum.Graphics.Renderers
         }
 
         #endregion
+
+        protected void glDrawQuad()
+        {
+            float[] coordinates = { 0, 0,
+                                    0, 0,
+                                    1 - 1f / TEX_WIDTH, 0,
+                                    1 - 1f / TEX_WIDTH, 0,
+                                    0, 0,
+                                    0, 0};
+
+            float[] vertices = {-QUAD_OVERLAP_FUDGE, -1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, -1, 0,
+                            -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            -QUAD_OVERLAP_FUDGE, 1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, 1, 0};
+
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+            GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
+        }
+
+
+        protected void glDrawHalfCircle(int count)
+        {
+            float[] coordinates = new float[(count + 2) * 2];
+            coordinates[0] = 1 - 1.0f / TEX_WIDTH;
+
+            const int vertexSize = 3;
+
+            float[] vertices = new float[vertexSize * (count + 2)];
+
+            vertices[0] = 0;
+            vertices[1] = 0;
+            vertices[2] = 1;
+
+            for (int x = 0; x <= count; x++)
+            {
+                Vector3 v = vertices_ogl[x];
+                vertices[x * vertexSize + 3] = v.X;
+                vertices[x * vertexSize + 4] = v.Y;
+                vertices[x * vertexSize + 5] = v.Z;
+            }
+
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+
+            GL.DrawArrays(BeginMode.TriangleFan, 0, count + 2);
+        }
+
+        /// <summary>
+        /// Render a gradient into a 256x1 texture.
+        /// </summary>
+        protected TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
+        {
+            SpriteManager.TexturesEnabled = false;
+
+            GL.Viewport(0, 0, TEX_WIDTH, 1);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
+
+            GL.EnableClientState(ArrayCap.ColorArray);
+
+            float[] colours = {0,0,0,0,
+                            shadow.R, shadow.G, shadow.B, shadow.A,
+                            border.R, border.G, border.B, border.A,
+                            border.R, border.G, border.B, border.A,
+                            OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
+                            InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A };
+
+            float[] vertices = { 0, 0,
+                0.078125f - aa_width, 0.0f,
+                0.078125f + aa_width, 0.0f,
+                0.1875f - aa_width, 0.0f,
+                0.1875f + aa_width, 0.0f,
+                1.0f, 0.0f };
+
+            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+            GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+            GL.DrawArrays(BeginMode.LineStrip, 0, 6);
+
+            GL.DisableClientState(ArrayCap.ColorArray);
+
+            TextureGl result = new TextureGl(TEX_WIDTH, 1);
+
+            int[] textures = new int[1];
+            GL.GenTextures(1, textures);
+            int textureId = textures[0];
+
+            GL.BindTexture(TextureGl.SURFACE_TYPE, textureId);
+
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+
+            GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, TEX_WIDTH, 1, 0);
+
+            result.SetData(textureId);
+
+            GameBase.Instance.SetViewport();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Core drawing method in OpenGL
+        /// </summary>
+        /// <param name="lineList">List of lines to use</param>
+        /// <param name="globalRadius">Width of the slider</param>
+        /// <param name="texture">Texture used for the track</param>
+        /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
+        protected void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev, bool renderingToTexture)
+        {
+            if (renderingToTexture)
+            {
+                GL.Disable(EnableCap.Blend);
+                GL.DepthMask(true);
+                GL.DepthFunc(DepthFunction.Lequal);
+            }
+
+            SpriteManager.TexturesEnabled = true;
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
+
+            int count = lineList.Count;
+            for (int x = 1; x < count; x++)
+            {
+                DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius);
+                prev = lineList[x - 1];
+            }
+
+            DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
+
+            if (renderingToTexture)
+            {
+                GL.Enable(EnableCap.Blend);
+                GL.DepthMask(false);
+            }
+
+            GL.LoadIdentity();
+        }
+
+        protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius)
+        {
+            // Quad
+            Matrix4 matrix = new Matrix4(curr.rho, 0, 0, 0, // Scale-X
+                                        0, globalRadius, 0, 0, // Scale-Y
+                                        0, 0, 1, 0,
+                                        0, 0, 0, 1) * curr.WorldMatrix();
+
+            GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+            glDrawQuad();
+
+            int end_triangles;
+            bool flip;
+            if (next == null)
+            {
+                flip = false; // totally irrelevant
+                end_triangles = numPrimitives_cap;
+            }
+            else
+            {
+                float theta = next.theta - curr.theta;
+
+                // keep on the +- pi/2 range.
+                if (theta > Math.PI) theta -= (float)(Math.PI * 2);
+                if (theta < -Math.PI) theta += (float)(Math.PI * 2);
+
+                if (theta < 0)
+                {
+                    flip = true;
+                    end_triangles = (int)Math.Ceiling((-theta) * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                }
+                else if (theta > 0)
+                {
+                    flip = false;
+                    end_triangles = (int)Math.Ceiling(theta * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                }
+                else
+                {
+                    flip = false; // totally irrelevant
+                    end_triangles = 0;
+                }
+            }
+            end_triangles = Math.Min(end_triangles, numPrimitives_cap);
+
+            // Cap on end
+            if (flip)
+            {
+                matrix = new Matrix4(globalRadius, 0, 0, 0,
+                                    0, -globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+            }
+            else
+            {
+                matrix = new Matrix4(globalRadius, 0, 0, 0,
+                                    0, globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+            }
+
+            glDrawHalfCircle(end_triangles);
+
+            // Cap on start
+            bool hasStartCap = false;
+
+            if (prev == null) hasStartCap = true;
+            else if (curr.p1 != prev.p2) hasStartCap = true;
+
+            //todo: this makes stuff look bad... need to look into it.
+            if (hasStartCap)
+            {
+                // Catch for Darrinub and other slider inconsistencies. (Redpoints seem to be causing some.)
+                // Render a complete beginning cap if this Line isn't connected to the end of the previous line.
+
+                matrix = new Matrix4(-globalRadius, 0, 0, 0,
+                                    0, -globalRadius, 0, 0,
+                                    0, 0, 1, 0,
+                                    0, 0, 0, 1) * curr.WorldMatrix();
+
+                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
+                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
+                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
+                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+
+                glDrawHalfCircle(numPrimitives_cap);
+            }
+        }
     }
 
     public class LineTextureInfo : IEquatable<LineTextureInfo>
@@ -344,13 +569,15 @@ namespace osum.Graphics.Renderers
         public Color4 Inner;
         public Color4 Outer;
         public Color4 Border;
+        public float Width;
         public TextureGl Texture;
 
-        public LineTextureInfo(Color4 inner, Color4 outer, Color4 border)
+        public LineTextureInfo(Color4 inner, Color4 outer, Color4 border, float width)
         {
             Inner = inner;
             Outer = outer;
             Border = border;
+            Width = width;
         }
 
         public void SetTexture(TextureGl texture)
@@ -368,7 +595,7 @@ namespace osum.Graphics.Renderers
 
         public bool Equals(LineTextureInfo other)
         {
-            return other.Inner == Inner && other.Outer == Outer && other.Border == Border;
+            return other.Inner == Inner && other.Outer == Outer && other.Border == Border && other.Width == Width;
         }
 
         #endregion
