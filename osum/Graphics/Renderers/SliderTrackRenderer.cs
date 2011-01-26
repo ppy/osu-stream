@@ -262,6 +262,10 @@ namespace osum.Graphics.Renderers
             innerColours = new List<Color>(5);
             outerColours = new List<Color>(5);
 
+            foreach (LineTextureInfo l in lineTextureCache)
+                l.Dispose();
+            lineTextureCache.Clear();
+
             // Automatically calculate some lighter/darker shades to use for the slider track.
             // In the long-term, I'd like these colours to be made skinnable.
             foreach (Color col in TextureManager.DefaultColours)
@@ -276,32 +280,35 @@ namespace osum.Graphics.Renderers
             Init(outerColours.ToArray(), innerColours.ToArray(), Color.White);
         }
 
+        List<LineTextureInfo> lineTextureCache = new List<LineTextureInfo>();
+
+        internal TextureGl CreateLineTexture(Color innerColour, Color outerColour, Color borderColour)
+        {
+            LineTextureInfo search = new LineTextureInfo(innerColour, outerColour, borderColour);
+            
+            LineTextureInfo texInfo = lineTextureCache.Find(t => t == search);
+
+            if (texInfo == null)
+            {
+                texInfo = search;
+                texInfo.SetTexture(glRenderSliderTexture(innerColour, outerColour, borderColour));
+            }
+
+            return texInfo.Texture;
+        }
+
         /// <summary>
         /// Draws a slider to the active device. Its texture is rendered on the fly.
         /// </summary>
         /// <param name="lineList">List of lines to use</param>
         /// <param name="globalRadius">Width of the slider</param>
         /// <param name="colour">Single colour of the track</param>
-        /// <param name="BorderColour">ruoloCredroB</param>
+        /// <param name="borderColour">ruoloCredroB</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         /// <param name="viewport">(OpenGL only) The rectangle we restore the projection matrix to.</param>
-        internal void Draw(List<Line> lineList, float globalRadius, Color colour, Color BorderColour, Line prev, Rectangle projection)
+        internal void Draw(List<Line> lineList, float globalRadius, Color innerColour, Color outerColour, Color borderColour)
         {
-            Color Inner, Outer;
-            ComputeSliderColour(colour, out Inner, out Outer);
-
-            TextureGl tex = glRenderSliderTexture(BorderColour, Inner, Outer);
-
-            GL.Viewport(0, 0, projection.Width, projection.Height);
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(projection.Left, projection.Right, projection.Top, projection.Bottom, -1, 1); // Bottom and top are flipped but this is the way peppy did it so is expected
-
-            DrawOGL(lineList, globalRadius, tex, prev);
-
-            tex.Dispose(); // hmmmm do we wait for GC or kill it off the bat?
-            //we kill it ;) -peppy
+            DrawOGL(lineList, globalRadius, CreateLineTexture(innerColour, outerColour, borderColour), null);
         }
 
         /// <summary>
@@ -326,6 +333,41 @@ namespace osum.Graphics.Renderers
         void GameBase_OnScreenLayoutChanged()
         {
             Initialize();
+        }
+
+        #endregion
+    }
+
+    public class LineTextureInfo : IEquatable<LineTextureInfo>
+    {
+        public Color4 Inner;
+        public Color4 Outer;
+        public Color4 Border;
+        public TextureGl Texture;
+
+        public LineTextureInfo(Color4 inner, Color4 outer, Color4 border)
+        {
+            Inner = inner;
+            Outer = outer;
+            Border = border;
+        }
+
+        public void SetTexture(TextureGl texture)
+        {
+            Texture = texture;
+        }
+
+        public void Dispose()
+        {
+            if (Texture != null)
+                Texture.Dispose();
+        }
+
+        #region IEquatable<LineTextureInfo> Members
+
+        public bool Equals(LineTextureInfo other)
+        {
+            return other.Inner == Inner && other.Outer == Outer && other.Border == Border;
         }
 
         #endregion
