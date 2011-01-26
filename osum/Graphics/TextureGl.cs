@@ -98,10 +98,7 @@ namespace osum.Graphics
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                Delete();
-            }
+            Delete();
         }
 
         private void checkGlError ()
