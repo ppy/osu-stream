@@ -286,12 +286,13 @@ namespace osum.Graphics.Renderers
         {
             LineTextureInfo search = new LineTextureInfo(innerColour, outerColour, borderColour);
             
-            LineTextureInfo texInfo = lineTextureCache.Find(t => t == search);
+            LineTextureInfo texInfo = lineTextureCache.Find(t => t.Equals(search));
 
             if (texInfo == null)
             {
                 texInfo = search;
-                texInfo.SetTexture(glRenderSliderTexture(innerColour, outerColour, borderColour));
+                texInfo.SetTexture(glRenderSliderTexture(borderColour, innerColour, outerColour));
+                lineTextureCache.Add(texInfo);
             }
 
             return texInfo.Texture;
