@@ -24,7 +24,7 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius * 0.95f, false, SpriteManager.drawOrderFwdPrio(StartTime - DifficultyManager.PreEmpt), white);
+            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius * 0.95f, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
             SpriteApproachCircle.Field = FieldTypes.Gamefield512x384;
             //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
