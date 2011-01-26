@@ -101,8 +101,15 @@ namespace osum.GameplayElements
                 colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
             }
 
+            bool sameTimeAsLastAdded = (hitObjectsCount == 0 || h.StartTime != hitObjects[hitObjectsCount - 1].StartTime);
+
+            if (sameTimeAsLastAdded)
+                currentComboNumber = Math.Max(1, --currentComboNumber);
+
             h.ComboNumber = currentComboNumber;
+
             if (h.IncrementCombo)
+                //don't increase on simultaneous notes.
                 currentComboNumber++;
 
             h.ColourIndex = colourIndex;
