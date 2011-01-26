@@ -98,13 +98,32 @@ namespace osum.GameplayElements
             if (h.NewCombo)
             {
                 currentComboNumber = 1;
-                colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
+                colourIndex = (colourIndex + 1 + h.ComboOffset)%TextureManager.DefaultColours.Length;
             }
 
-            bool sameTimeAsLastAdded = (hitObjectsCount == 0 || h.StartTime != hitObjects[hitObjectsCount - 1].StartTime);
+            bool sameTimeAsLastAdded = hitObjectsCount != 0 && h.StartTime == hitObjects[hitObjectsCount - 1].StartTime;
 
             if (sameTimeAsLastAdded)
+            {
                 currentComboNumber = Math.Max(1, --currentComboNumber);
+
+                HitObject hLast = hitObjects[hitObjectsCount - 1];
+
+                Vector2 p1 = h.SpriteCollection[0].Position;
+                Vector2 p2 = hLast.SpriteCollection[0].Position;
+
+                Vector2 p3 = (p2 + p1) / 2;
+                float length = (p2 - p1).Length;
+                
+                pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.Gamefield512x384,OriginTypes.Centre,
+                    ClockTypes.Audio, p3, h.SpriteCollection[0].DrawDepth + 0.001f, true, Color4.White);
+                connectingLine.Scale = new Vector2(length/2, 1);
+                connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
+                connectingLine.Transform(h.SpriteCollection[0].Transformations);
+                h.SpriteCollection.Add(connectingLine);
+                h.DimCollection.Add(connectingLine);
+
+            }
 
             h.ComboNumber = currentComboNumber;
 
@@ -125,30 +144,6 @@ namespace osum.GameplayElements
 
         public bool Draw()
         {
-            //todo: hacky connection line implementation.
-            for (int i = processFrom; i < processedTo; i++)
-            {
-                HitObject h1 = hitObjects[i];
-                HitObject h2 = hitObjects[i + 1];
-
-                if (h1.StartTime == h2.StartTime && h1.IsVisible)
-                {
-                    Vector2 p1 = h1.SpriteCollection[0].FieldPosition;
-                    Vector2 p2 = h2.SpriteCollection[0].FieldPosition;
-
-                    
-                    Vector2 p3 = (p2 + p1) / 2;
-
-                    float percentageX = (float)((DifficultyManager.HitObjectRadius * GameBase.WindowRatio * 1.86f) / (p2 - p1).Length);
-
-                    p2 = (p2 - p3) * (1 - percentageX) + p3;
-                    p1 = (p1 - p3) * (1 - percentageX) + p3;
-
-                    sliderTrackRenderer.Draw(new List<Line>() { new Line(p1, p2) }, 7 * GameBase.WindowRatio,
-                        Color4.White, Color4.White, Color4.White, new Color4(1,1,1,h1.SpriteCollection[0].Alpha));
-                }
-            }
-
             spriteManager.Draw();
 
 

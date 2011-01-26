@@ -142,6 +142,7 @@ namespace osum.Graphics.Sprites
                         fieldPosition = new Vector2(GameBase.WindowSize.Width - pos.X,
                                                     GameBase.WindowSize.Height - pos.Y);
                         break;
+                    case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.Gamefield512x384:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);

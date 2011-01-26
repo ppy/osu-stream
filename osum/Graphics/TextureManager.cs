@@ -59,6 +59,8 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
+
+            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
         }
 
         public static void Update()
@@ -217,7 +219,8 @@ namespace osum.Graphics.Skins
         approachcircle,
         sliderarrow,
         holdcircle,
-        followpoint
+        followpoint,
+        connectionline
 
     }
 }

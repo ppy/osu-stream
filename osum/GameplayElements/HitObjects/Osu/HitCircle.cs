@@ -24,12 +24,6 @@ namespace osum.GameplayElements
 
             Color4 white = Color4.White;
 
-            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius * 0.95f, false, 1, white);
-            SpriteApproachCircle.Clocking = ClockTypes.Audio;
-            SpriteApproachCircle.Field = FieldTypes.Gamefield512x384;
-            //if (ShowApproachCircle && (Player.currentScore == null || !ModManager.CheckActive(Player.currentScore.enabledMods, Mods.Hidden)))
-            SpriteCollection.Add(SpriteApproachCircle);
-
             SpriteHitCircle1 =
                 new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             SpriteCollection.Add(SpriteHitCircle1);
@@ -47,6 +41,11 @@ namespace osum.GameplayElements
                                                     FieldTypes.Gamefield512x384, OriginTypes.Centre,
                                                     ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
                                                     false, white);
+
+            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius * 0.95f, false, 1, white);
+            SpriteApproachCircle.Clocking = ClockTypes.Audio;
+            SpriteApproachCircle.Field = FieldTypes.Gamefield512x384;
+            SpriteCollection.Add(SpriteApproachCircle);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
 
