@@ -42,7 +42,7 @@ namespace osum.Graphics.Sprites
         private bool textChanged = true;
         private bool exactCoordinates = true;
 		
-		protected override Vector2 FieldPosition {
+		internal override Vector2 FieldPosition {
 			get {
 				if (exactCoordinates)
 				{

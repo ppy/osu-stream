@@ -62,6 +62,7 @@ namespace osum.Graphics.Sprites
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
         internal Vector2 StartPosition;
+        internal Vector2 Offset;
         protected pList<Transformation> transformations = new pList<Transformation>();
         public object Tag;
         public int TagNumeric;
@@ -108,13 +109,18 @@ namespace osum.Graphics.Sprites
             set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
-        protected virtual Vector2 FieldPosition
+        internal virtual Vector2 FieldPosition
         {
             get
             {
                 Vector2 fieldPosition;
 
-                Vector2 pos = Position * GameBase.WindowRatio;
+                Vector2 pos = Position;
+
+                if (Offset != Vector2.Zero)
+                    pos += Offset;
+                
+                pos *= GameBase.WindowRatio;
 
                 switch (Field)
                 {
@@ -171,13 +177,12 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        protected Color4 AlphaAppliedColour
+        internal Color4 AlphaAppliedColour
         {
             get
             {
                 if (SpriteManager.UniversalDim > 0)
-                    return ColourHelper.Darken(new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A),
-                                               SpriteManager.UniversalDim);
+                    return new Color4(Colour.R - SpriteManager.UniversalDim, Colour.G - SpriteManager.UniversalDim, Colour.B - SpriteManager.UniversalDim, Alpha * Colour.A);
 
                 return Alpha < 1 ? new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A) : Colour;
             }
