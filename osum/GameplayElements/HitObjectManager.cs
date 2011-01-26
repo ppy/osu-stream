@@ -16,6 +16,9 @@ using osum.Helpers;
 using osum.GameModes;
 using osu_common.Helpers;
 using osum.Support;
+using OpenTK.Graphics;
+using osum.Graphics.Primitives;
+using OpenTK;
 
 #endregion
 
@@ -115,7 +118,33 @@ namespace osum.GameplayElements
 
         public bool Draw()
         {
+            //todo: hacky connection line implementation.
+            for (int i = processFrom; i < processedTo; i++)
+            {
+                HitObject h1 = hitObjects[i];
+                HitObject h2 = hitObjects[i + 1];
+
+                if (h1.StartTime == h2.StartTime && h1.IsVisible)
+                {
+                    Vector2 p1 = h1.SpriteCollection[0].FieldPosition;
+                    Vector2 p2 = h2.SpriteCollection[0].FieldPosition;
+
+                    
+                    Vector2 p3 = (p2 + p1) / 2;
+
+                    float percentageX = (float)((DifficultyManager.HitObjectRadius * GameBase.WindowRatio * 1.86f) / (p2 - p1).Length);
+
+                    p2 = (p2 - p3) * (1 - percentageX) + p3;
+                    p1 = (p1 - p3) * (1 - percentageX) + p3;
+
+                    sliderTrackRenderer.Draw(new List<Line>() { new Line(p1, p2) }, 7 * GameBase.WindowRatio,
+                        Color4.White, Color4.White, Color4.White, new Color4(1,1,1,h1.SpriteCollection[0].Alpha));
+                }
+            }
+
             spriteManager.Draw();
+
+
             return true;
         }
 
