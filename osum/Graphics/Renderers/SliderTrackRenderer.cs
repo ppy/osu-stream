@@ -14,11 +14,13 @@ using MonoTouch.OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
+using ArrayCap = OpenTK.Graphics.ES11.All;
 using BlendingFactorSrc = OpenTK.Graphics.ES11.All;
 using BlendingFactorDest = OpenTK.Graphics.ES11.All;
 using PixelStoreParameter = OpenTK.Graphics.ES11.All;
 using VertexPointerType = OpenTK.Graphics.ES11.All;
 using ColorPointerType = OpenTK.Graphics.ES11.All;
+using DepthFunction = OpenTK.Graphics.ES11.All;
 using ClearBufferMask = OpenTK.Graphics.ES11.All;
 using TexCoordPointerType = OpenTK.Graphics.ES11.All;
 using BeginMode = OpenTK.Graphics.ES11.All;
@@ -213,7 +215,7 @@ namespace osum.Graphics.Renderers
 #if DEBUG
                         throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
 #else
-                            DrawOGL(lineList, globalRadius, grey_ogl, prev);
+                            DrawOGL(lineList, radius, grey_ogl, prev, true);
 #endif
                     }
                     else DrawOGL(lineList, radius, textures_ogl[ColourIndex], prev, true);
@@ -364,17 +366,19 @@ namespace osum.Graphics.Renderers
         protected TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
         {
             SpriteManager.TexturesEnabled = false;
-
-            GL.Viewport(0, 0, TEX_WIDTH, 1);
-
+			
+			GL.PushMatrix();
+			
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-
+			
+			//todo: can we do this whole function without changing the viewport? it should be possible i think (and might be much more efficient)
+            GL.Viewport(0, 0, TEX_WIDTH, 1);
+			GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
+			
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-
-            GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
-
+			
             GL.EnableClientState(ArrayCap.ColorArray);
 
             float[] colours = {0,0,0,0,
@@ -415,7 +419,9 @@ namespace osum.Graphics.Renderers
             result.SetData(textureId);
 
             GameBase.Instance.SetViewport();
-
+			
+			GL.PopMatrix();
+			
             return result;
         }
 
@@ -428,7 +434,9 @@ namespace osum.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         protected void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev, bool renderingToTexture)
         {
-            if (renderingToTexture)
+            GL.PushMatrix();
+			
+			if (renderingToTexture)
             {
                 GL.Disable(EnableCap.Blend);
                 GL.DepthMask(true);
@@ -438,7 +446,7 @@ namespace osum.Graphics.Renderers
             SpriteManager.TexturesEnabled = true;
 
             GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
+            //GL.LoadIdentity();
 
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
 
@@ -457,7 +465,7 @@ namespace osum.Graphics.Renderers
                 GL.DepthMask(false);
             }
 
-            GL.LoadIdentity();
+			GL.PopMatrix();
         }
 
         protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius)

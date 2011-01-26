@@ -106,8 +106,6 @@ namespace osum
 
 			MakeCurrent();
 			
-			GL.PushMatrix();
-			
 			float width = GameBase.WindowSize.Height;
 			float height = GameBase.WindowSize.Width;
 			
@@ -117,8 +115,6 @@ namespace osum
 			GL.Translate(-height / 2, -width / 2, 0);
 			
 			GameBase.Instance.Draw(e);
-			
-			GL.PopMatrix();
 			
 			SwapBuffers();
 		}
