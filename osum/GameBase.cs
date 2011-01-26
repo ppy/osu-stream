@@ -157,7 +157,7 @@ namespace osum
 #endif
 
             GL.MatrixMode(MatrixMode.Modelview);
-            //GL.LoadIdentity();
+            GL.LoadIdentity();
         }
 
         /// <summary>
@@ -290,11 +290,10 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
-            //todo: make update actually update on iphone and call from game architecture
+            GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+
             if (Update(e))
             {
-                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-
                 SpriteManager.Reset();
 
                 Director.Draw();
