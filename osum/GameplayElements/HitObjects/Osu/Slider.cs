@@ -897,9 +897,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.PushMatrix();
 
 #if IPHONE
-                int oldFBO = 0;
-                GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-
                 GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
                 GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
@@ -914,7 +911,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadius, ColourIndex, prev);
 
-                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, 0);
 #else
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
 
