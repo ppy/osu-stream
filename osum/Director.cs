@@ -94,13 +94,16 @@ namespace osum
                 CurrentMode = mode;
                 CurrentMode.Initialize();
 
-                if (PendingMode != newMode)
+                if (PendingMode != OsuMode.Unknown) //can be unknown on first startup
                 {
-                    //we got a new request to load a *different* mode during initialisation...
-                    return;
-                }
+                    if (PendingMode != newMode)
+                    {
+                        //we got a new request to load a *different* mode during initialisation...
+                        return;
+                    }
 
-                modeChangePending = true;
+                    modeChangePending = true;
+                }
             }
 
             PendingMode = OsuMode.Unknown;
