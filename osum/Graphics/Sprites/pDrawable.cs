@@ -63,7 +63,6 @@ namespace osum.Graphics.Sprites
         internal Vector2 Scale = Vector2.One;
         internal Vector2 StartPosition;
         internal Vector2 Offset;
-        protected pList<Transformation> transformations = new pList<Transformation>();
         public object Tag;
         public int TagNumeric;
         internal FieldTypes Field;
@@ -82,10 +81,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
         /// </summary>
-        public pList<Transformation> Transformations
-        {
-            get { return transformations; }
-        }
+        public pList<Transformation> Transformations = new pList<Transformation>(){UseBackwardsSearch = true};
 
         internal virtual bool IsRemovable
         {
@@ -215,9 +211,9 @@ namespace osum.Graphics.Sprites
             bool hasMovement = false;
             bool hasMovementX = false;
 
-            for (int i = 0; i < transformations.Count; i++)
+            for (int i = 0; i < Transformations.Count; i++)
             {
-                Transformation t = transformations[i];
+                Transformation t = Transformations[i];
 
                 // remove old transformations
                 if (t.Terminated)
@@ -276,7 +272,7 @@ namespace osum.Graphics.Sprites
                     }
 
                     if (RemoveOldTransformations)
-                        transformations.RemoveAt(i--);
+                        Transformations.RemoveAt(i--);
                     continue;
                 }
 
@@ -542,7 +538,7 @@ namespace osum.Graphics.Sprites
 
         public virtual bool Draw()
         {
-            if (transformations.Count != 0 || AlwaysDraw)
+            if (Transformations.Count != 0 || AlwaysDraw)
             {
                 if (Alpha != 0)
                 {

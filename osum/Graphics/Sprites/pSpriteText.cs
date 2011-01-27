@@ -210,7 +210,7 @@ namespace osum.Graphics.Sprites
 
         public override bool Draw()
         {
-            if (transformations.Count != 0 || AlwaysDraw)
+            if (AlwaysDraw || Transformations.Count != 0)
             {
                 if (Alpha != 0)
                 {

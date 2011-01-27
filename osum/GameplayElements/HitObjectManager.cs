@@ -42,7 +42,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// The complete list of hitObjects.
         /// </summary>
-        internal pList<HitObject> hitObjects = new pList<HitObject>();
+        internal pList<HitObject> hitObjects = new pList<HitObject>() { UseBackwardsSearch = true };
         private int hitObjectsCount;
 		
 		private int processFrom;
