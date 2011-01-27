@@ -84,7 +84,7 @@ namespace osum.Graphics.Drawables
                 float[] vertices = new float[parts * 2 + 2];
                 float[] colours = new float[parts * 4 + 4];
 
-                float radius = Radius * GameBase.WindowRatio * ScaleScalar;
+                float radius = Radius * FieldScale.X;
                 Vector2 pos = FieldPosition;
 
                 vertices[0] = pos.X;

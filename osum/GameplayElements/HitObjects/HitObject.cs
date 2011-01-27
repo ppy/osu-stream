@@ -260,7 +260,7 @@ namespace osum.GameplayElements
             //Draw the hit value
             pSprite p =
                 new pSprite(TextureManager.Load(texture),
-                            FieldTypes.Gamefield512x384,
+                            FieldTypes.GamefieldSprites,
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
             m_HitObjectManager.spriteManager.Add(p);

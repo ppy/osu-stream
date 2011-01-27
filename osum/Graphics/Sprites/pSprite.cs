@@ -275,7 +275,11 @@ namespace osum.Graphics.Sprites
         ///   The gamefield resolution.  Used for hitobjects and anything which needs to align with gameplay elements.
         ///   This is scaled in proportion to the native resolution and aligned accordingly.
         /// </summary>
-        Gamefield512x384,
+        GamefieldSprites,
+		
+		GamefieldExact,
+		
+		GamefieldStandardScale,
         /// <summary>
         ///   Gamefield "container" resolution.  This is where storyboard and background events sits, and is the same
         ///   scaling/positioning as Standard when in play mode.  It differs in editor design mode where this field
@@ -348,7 +352,6 @@ namespace osum.Graphics.Sprites
         ///   Native screen resolution aligned from the right-hand side of the screen, where an X position of 0 is translated to Standard(WindowWidth).
         /// </summary>
         NativeSnapRight,
-        GamefieldStandardScale,
     }
 
     internal enum OriginTypes

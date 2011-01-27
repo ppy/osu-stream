@@ -64,8 +64,10 @@ namespace osum.Graphics.Drawables
 		{
             if (base.Draw())
             {
-                float rad1 = (Radius * ScaleScalar + Width * 0.5f) * GameBase.WindowRatio;
-                float rad2 = (Radius * ScaleScalar - Width * 0.5f) * GameBase.WindowRatio;
+                float scaleAdjustment = FieldScale.X / Scale.X;
+				
+				float rad1 = (Radius * ScaleScalar + Width * 0.5f) * scaleAdjustment;
+                float rad2 = (Radius * ScaleScalar - Width * 0.5f) * scaleAdjustment;
                 const int parts = 64;
 
                 Vector2 pos = FieldPosition;
@@ -77,7 +79,6 @@ namespace osum.Graphics.Drawables
                 {
                     vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad1);
                     vertices[v * 4 + 1] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad1);
-
                     vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad2);
                     vertices[v * 4 + 3] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad2);
                 }

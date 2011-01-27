@@ -143,7 +143,8 @@ namespace osum.Graphics.Sprites
                                                     GameBase.WindowSize.Height - pos.Y);
                         break;
                     case FieldTypes.GamefieldStandardScale:
-                    case FieldTypes.Gamefield512x384:
+                    case FieldTypes.GamefieldSprites:
+					case FieldTypes.GamefieldExact:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
                         Vector2.Multiply(ref fieldPosition, GameBase.WindowRatio, out fieldPosition);
@@ -166,9 +167,10 @@ namespace osum.Graphics.Sprites
             {
                 switch (Field)
                 {
-                    case FieldTypes.Gamefield512x384:
-                        return Scale * GameBase.SpriteRatioToWindow *
-                               (DifficultyManager.HitObjectRadius / DifficultyManager.HitObjectRadiusDefault);
+					case FieldTypes.GamefieldExact:
+                        return Scale * (DifficultyManager.HitObjectSolidRatio * DifficultyManager.HitObjectSizeModifier * GameBase.GamefieldRatio);
+					case FieldTypes.GamefieldSprites:
+                        return Scale * DifficultyManager.HitObjectSizeModifier * GameBase.GamefieldRatio;
                     case FieldTypes.Native:
                     case FieldTypes.NativeScaled:
                         return Scale;

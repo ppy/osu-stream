@@ -198,13 +198,13 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void initializeSprites()
         {
             spriteFollowCircle =
-    new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.Gamefield512x384,
+    new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
                    OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
 			
             pTexture[] sliderballtextures = TextureManager.LoadAnimation("sliderb");
 
             spriteFollowBall =
-                new pAnimation(sliderballtextures, FieldTypes.Gamefield512x384, OriginTypes.Centre,
+                new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                ClockTypes.Audio, Position, 0.99f, false, Color.White);
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
@@ -235,19 +235,19 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //Start and end circles
 
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
             if (RepeatCount > 2)
-                spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true });
+                spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true });
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
 
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
             if (RepeatCount > 1)
-                spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true });
+                spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true });
 
             spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
@@ -275,7 +275,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 pSprite scoringDot =
                                     new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
-                                                FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
+                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
@@ -909,7 +909,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Clear(Constants.COLOR_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadius, ColourIndex, prev);
+                                                            DifficultyManager.HitObjectRadiusFull, ColourIndex, prev);
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, 0);
 #else
@@ -925,7 +925,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadius, ColourIndex, prev);
+                                                            DifficultyManager.HitObjectRadiusFull, ColourIndex, prev);
 
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
@@ -946,13 +946,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             //resign any old FBO assignments first.
 			DisposePathTexture();
 			
-			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadius);
+			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusFull);
+			//the fact we need to divide by DifficultyManager.HitObjectActualSpriteRatio here baffles me.
 
             trackBounds.X = (int)(rectf.X);
             trackBounds.Y = (int)(rectf.Y);
             trackBounds.Width = (int)rectf.Width + 1;
             trackBounds.Height = (int)rectf.Height + 1;
-
+			
             trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
             trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
             trackBoundsNative.Width = (int)(rectf.Width * GameBase.WindowRatio) + 1;
@@ -964,7 +965,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
 
             gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-
+			
             sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
 			TextureManager.RegisterDisposable(sliderBodyTexture);
 
@@ -972,9 +973,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
 
 #if IPHONE
-            int oldFBO = 0;
-            GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-
             // create framebuffer
             GL.Oes.GenFramebuffers(1, ref fbo);
             GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
@@ -983,7 +981,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, gl.Id, 0);
 
             // unbind frame buffer
-            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+            GL.Oes.BindFramebuffer(All.FramebufferOes, 0);
 #else
             // make depth buffer
             GL.GenRenderbuffers(1, out renderBufferDepth);

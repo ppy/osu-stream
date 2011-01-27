@@ -184,6 +184,8 @@ namespace osum
             GamefieldRatio = (float) GamefieldSize.Height/GamefieldBaseSize.Height;
 
             SpriteResolution = Math.Max(960, Math.Min(1024, WindowSize.Width));
+			//todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
+			//need to consider the WindowScaleFactor value here.
 
             SpriteRatioToWindowBase = (float) WindowBaseSize.Width/SpriteResolution;
 

@@ -487,7 +487,7 @@ namespace osum.GameplayElements
 
                         pSprite dot =
                             new pSprite(fptexture,
-                                           FieldTypes.Gamefield512x384, OriginTypes.Centre, ClockTypes.Audio, pos,
+                                           FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
                                            0.1f, false, Color4.White);
                         
                         dot.Transform(
