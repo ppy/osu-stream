@@ -23,6 +23,8 @@ namespace osum.GameplayElements
     {
         public void LoadFile()
         {
+            spriteManager.ForwardPlayOptimisedAdd = true;
+
             beatmap.ControlPoints.Clear();
 
             FileSection currentSection = FileSection.Unknown;
@@ -501,7 +503,7 @@ namespace osum.GameplayElements
                 }
             }
 
-            spriteManager.OptimizeTimeline(ClockTypes.Audio);
+            spriteManager.ForwardPlayOptimisedAdd = false;
         }
     }
 }

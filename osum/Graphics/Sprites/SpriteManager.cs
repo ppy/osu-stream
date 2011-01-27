@@ -61,10 +61,41 @@ namespace osum.Graphics.Sprites
         pDrawableDepthComparer depth = new pDrawableDepthComparer();
         public static float UniversalDim;
 
+        private bool forwardPlayOptimisedAdd;
+        internal bool ForwardPlayOptimisedAdd
+        {
+            get { return forwardPlayOptimisedAdd; }
+            set
+            {
+                if (forwardPlayOptimisedAdd && !value)
+                {
+                    int c = forwardPlayList.Count;
+                    if (c > 0)
+                    {
+                        if (SpriteQueue == null)
+                            SpriteQueue = new Queue<pDrawable>(forwardPlayList);
+                        forwardPlayList.Clear();
+                    }
+                }
+                forwardPlayOptimisedAdd = value;
+            }
+        }
+
+        private List<pDrawable> forwardPlayList = new List<pDrawable>();
+
         internal void Add(pDrawable sprite)
         {
-            //todo: make this more efficient. .Contains() is slow with a lot of items in the list.
-            //if (!sprites.Contains(sprite))
+            if (ForwardPlayOptimisedAdd && sprite.Transformations.Count > 0)
+            {
+                int index = forwardPlayList.BinarySearch(sprite);
+
+                if (index < 0)
+                    forwardPlayList.Insert(~index, sprite);
+                else
+                    forwardPlayList.Insert(index, sprite);
+
+                return;
+            }
 
             int pos = Sprites.BinarySearch(sprite, depth);
 
@@ -88,6 +119,11 @@ namespace osum.Graphics.Sprites
         internal Queue<pDrawable> SpriteQueue;
         internal void OptimizeTimeline(ClockTypes clock)
         {
+            //SpriteQueue = new Queue<pDrawable>(Sprites);
+            //Sprites.Clear();
+
+            //return;
+
             List<pDrawable> optimizableSprites = Sprites.FindAll(s => s.Transformations.Count > 0 && !s.AlwaysDraw && s.Clocking == clock);
 
             //sort all sprites in order of first transformation.

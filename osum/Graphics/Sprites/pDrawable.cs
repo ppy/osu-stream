@@ -41,7 +41,7 @@ using osum.Input;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pDrawable : IDrawable, IDisposable
+    internal class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
     {
         internal float Alpha;
 
@@ -570,6 +570,15 @@ namespace osum.Graphics.Sprites
         public virtual void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region IComparable<pDrawable> Members
+
+        public int CompareTo(pDrawable other)
+        {
+            return Transformations[0].StartTime.CompareTo(other.Transformations[0].StartTime);
         }
 
         #endregion
