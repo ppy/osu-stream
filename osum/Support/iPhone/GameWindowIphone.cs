@@ -106,14 +106,6 @@ namespace osum
 
 			MakeCurrent();
 			
-			float width = GameBase.WindowSize.Height;
-			float height = GameBase.WindowSize.Width;
-			
-			GL.LoadIdentity();
-			GL.Translate(width / 2, height / 2, 0);
-			GL.Rotate(90, 0, 0, 1);
-			GL.Translate(-height / 2, -width / 2, 0);
-			
 			GameBase.Instance.Draw(e);
 			
 			SwapBuffers();

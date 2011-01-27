@@ -881,7 +881,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 			Vector2 drawEndPosition = positionAtProgress(lengthDrawn/PathLength);
             spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 			
-			if (pathTextureUpdateSkippedFrames++ % 5 != 0 && lastDrawnSegmentIndex != drawableSegments.Count - 1)
+			if (pathTextureUpdateSkippedFrames++ % 2 != 0 && lastDrawnSegmentIndex != drawableSegments.Count - 1)
 			{
 				lastDrawnSegmentIndex = FirstSegmentIndex - 1;
 				return;
@@ -894,15 +894,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
 
-                GL.PushMatrix();
+                
+				
 
 #if IPHONE
-                GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
+                int oldFBO = 0;
+				GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+				
+				GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
-                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.MatrixMode(MatrixMode.Projection);
-
                 GL.LoadIdentity();
+				
+				GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                 if (FirstSegmentIndex == 0)
@@ -911,7 +915,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadiusFull, ColourIndex, prev);
 
-                GL.Oes.BindFramebuffer(All.FramebufferOes, 0);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
 
@@ -930,11 +934,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
 
-                GL.PopMatrix();
-
                 GameBase.Instance.SetViewport();
-
-                
             }
         }
 
@@ -973,7 +973,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
 
 #if IPHONE
-            // create framebuffer
+            int oldFBO = 0;
+			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+			
+			// create framebuffer
             GL.Oes.GenFramebuffers(1, ref fbo);
             GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
@@ -981,7 +984,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, gl.Id, 0);
 
             // unbind frame buffer
-            GL.Oes.BindFramebuffer(All.FramebufferOes, 0);
+            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
             // make depth buffer
             GL.GenRenderbuffers(1, out renderBufferDepth);

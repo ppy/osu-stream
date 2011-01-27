@@ -143,7 +143,7 @@ namespace osum
 
         public static event VoidDelegate OnScreenLayoutChanged;
 
-        public void SetViewport()
+        public virtual void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
