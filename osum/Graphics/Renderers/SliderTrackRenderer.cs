@@ -434,8 +434,6 @@ namespace osum.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         protected void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev, bool renderingToTexture)
         {
-            GL.PushMatrix();
-			
 			if (renderingToTexture)
             {
                 GL.Disable(EnableCap.Blend);
@@ -446,7 +444,6 @@ namespace osum.Graphics.Renderers
             SpriteManager.TexturesEnabled = true;
 
             GL.MatrixMode(MatrixMode.Modelview);
-            //GL.LoadIdentity();
 
             GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
 
@@ -464,8 +461,6 @@ namespace osum.Graphics.Renderers
                 GL.Enable(EnableCap.Blend);
                 GL.DepthMask(false);
             }
-
-			GL.PopMatrix();
         }
 
         protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius)
