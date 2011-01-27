@@ -90,7 +90,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
-            circularProgress = new CircularProgress(position, 240, false, 0, Color.White);
+            circularProgress = new CircularProgress(position, 200, false, 0, Color.White);
             circularProgress.Clocking = ClockTypes.Audio;
             circularProgress.Field = FieldTypes.GamefieldExact;
             circularProgress.Additive = true;
