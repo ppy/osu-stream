@@ -27,7 +27,12 @@ namespace osum
 			
 			InputManager.OnMove += InputManager_OnMove;
 
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
+#if IPHONE
+			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
+#else
+			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
+#endif
+			
 			AudioEngine.Music.Play();
         }
 
