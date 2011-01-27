@@ -108,21 +108,8 @@ namespace osum.GameplayElements
                 currentComboNumber = Math.Max(1, --currentComboNumber);
 
                 HitObject hLast = hitObjects[hitObjectsCount - 1];
-
-                Vector2 p1 = h.SpriteCollection[0].Position;
-                Vector2 p2 = hLast.SpriteCollection[0].Position;
-
-                Vector2 p3 = (p2 + p1) / 2;
-                float length = (p2 - p1).Length;
-                
-                pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.Gamefield512x384,OriginTypes.Centre,
-                    ClockTypes.Audio, p3, h.SpriteCollection[0].DrawDepth + 0.001f, true, Color4.White);
-                connectingLine.Scale = new Vector2(length/2, 1);
-                connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-                connectingLine.Transform(h.SpriteCollection[0].Transformations);
-                h.SpriteCollection.Add(connectingLine);
-                h.DimCollection.Add(connectingLine);
-
+				
+				Connect(h, hLast);
             }
 
             h.ComboNumber = currentComboNumber;
@@ -139,6 +126,32 @@ namespace osum.GameplayElements
 
             spriteManager.Add(h);
         }
+		
+		void Connect(HitObject h1, HitObject h2)
+		{
+				Vector2 p1 = h1.SpriteCollection[0].Position;
+                Vector2 p2 = h2.SpriteCollection[0].Position;
+
+                Vector2 p3 = (p2 + p1) / 2;
+                float length = (p2 - p1).Length - DifficultyManager.HitObjectRadius * 1.96f;
+				
+				if (length > DifficultyManager.HitObjectRadius)
+				{
+	                pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.GamefieldSprites,OriginTypes.Centre,
+	                    ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, true, Color4.White);
+	                connectingLine.Scale = new Vector2(length/2, DifficultyManager.HitObjectSizeModifier * 2); //div 2 because texture is 2px long.
+	                connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
+	                connectingLine.Transform(h1.SpriteCollection[0].Transformations);
+	                h1.SpriteCollection.Add(connectingLine);
+	                h1.DimCollection.Add(connectingLine);
+					
+					h1.connectedObject = h2;
+					h2.connectedObject = h1;
+					
+					h1.connectionSprite = connectingLine;
+					h2.connectionSprite = connectingLine;
+				}	
+		}
 
         #region IDrawable Members
 

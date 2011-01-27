@@ -102,6 +102,9 @@ namespace osum.GameplayElements
 		
 		internal int Index;
         internal int ComboOffset;
+		
+		internal HitObject connectedObject;
+		internal pSprite connectionSprite;
 
         /// <summary>
         /// Do any arbitrary updates for this hitObject.
@@ -507,6 +510,14 @@ namespace osum.GameplayElements
                         Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period) { Tag = TAG_SHAKE_TRANSFORMATION });
                 }
             }
+			
+			if (connectedObject != null)
+			{
+				connectedObject.connectedObject = null;
+				connectedObject.Shake();
+				connectedObject.connectedObject = this;
+			}
+			
         }
 
         public override string ToString()
