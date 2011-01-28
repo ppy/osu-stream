@@ -11,7 +11,7 @@ namespace osum.GameplayElements
 		private const float HitObjectRadiusSprite = 64;
 		internal const float HitObjectSolidRatio = HitObjectRadiusSolid / HitObjectRadiusSprite;
 		
-		public static float HitObjectSizeModifier = 0.9f;
+		public static float HitObjectSizeModifier = 0.85f;
 
 		/// <summary>
         /// Radius of hitObjects in the current gamefield.
