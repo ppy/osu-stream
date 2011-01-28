@@ -148,14 +148,9 @@ namespace osum
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
-#if IPHONE
-            GL.Ortho(0, GameBase.WindowSize.Height, GameBase.WindowSize.Width, 0, -1, 1);
-            GL.Viewport(0, 0, GameBase.WindowSize.Height, GameBase.WindowSize.Width);
-#else
             GL.Viewport(0, 0, WindowSize.Width, WindowSize.Height);
             GL.Ortho(0, WindowSize.Width, WindowSize.Height, 0, -1, 1);
-#endif
-
+			
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
         }

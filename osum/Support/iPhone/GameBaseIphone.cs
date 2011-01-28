@@ -63,17 +63,6 @@ namespace osum
 			base.Initialize();
 		}
 		
-		public override void SetViewport()
-		{
-			base.SetViewport();
-			
-			float width = GameBase.WindowSize.Height;
-			float height = GameBase.WindowSize.Width;
-			GL.Translate(width / 2, height / 2, 0);
-			GL.Rotate(90, 0, 0, 1);
-			GL.Translate(-height / 2, -width / 2, 0);
-		}
-		
 		protected override IBackgroundAudioPlayer InitializeBackgroundAudio ()
 		{
 			//only initialise the first time (we may be here from a resume operation)
