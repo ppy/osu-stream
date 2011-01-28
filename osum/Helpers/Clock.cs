@@ -94,7 +94,7 @@ namespace osum.Helpers
             else
             {
                 double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
-                if (inaccuracy > 0.05)
+                if (inaccuracy > 0.03)
 					currentFrameAudioTime = sourceTime;
 
                 currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
