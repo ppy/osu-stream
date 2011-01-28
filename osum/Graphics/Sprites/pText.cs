@@ -12,7 +12,6 @@ namespace osum.Graphics.Sprites
     {
         internal Color4 BackgroundColour;
         internal Color4 BorderColour;
-        public bool TextBold;
         public bool TextUnderline;
 
         public int BorderWidth = 1;
@@ -23,6 +22,7 @@ namespace osum.Graphics.Sprites
         internal Color4 TextColour;
         internal bool TextShadow;
         internal float TextSize;
+		internal bool Bold;
         private bool aggressiveCleanup;
         internal string FontFace = "Tahoma";
 
@@ -152,8 +152,10 @@ namespace osum.Graphics.Sprites
             }
 
             float size = GameBase.WindowRatio * TextSize;
-
-            texture = TextRenderer.CreateText(Text, size, TextBounds, TextColour, TextShadow, TextBold, TextUnderline, TextAlignment,
+			
+			Vector2 bounds = TextBounds * GameBase.WindowRatio;
+			
+            texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 			
 			TextureManager.RegisterDisposable(texture);

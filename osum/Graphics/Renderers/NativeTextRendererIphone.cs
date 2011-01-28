@@ -20,7 +20,8 @@ namespace osum.Graphics.Renderers
 
         internal override pTexture CreateText(string text, float size, OpenTK.Vector2 restrictBounds, OpenTK.Graphics.Color4 Color4, bool shadow, bool bold, bool underline, TextAlignment alignment, bool forceAa, out OpenTK.Vector2 measured, OpenTK.Graphics.Color4 background, OpenTK.Graphics.Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
-            UIFont font = UIFont.SystemFontOfSize(size);
+            UIFont font = bold ? UIFont.BoldSystemFontOfSize(size) : UIFont.SystemFontOfSize(size);
+			
 			
 			if (restrictBounds == Vector2.Zero)
 				restrictBounds = new Vector2((GameBase.WindowSize.Width > 512 ? 1024 : 512) * GameBase.WindowScaleFactor,64 * GameBase.WindowScaleFactor);
@@ -47,7 +48,7 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PushContext(context);
                 
-                actualSize = new NSString(text).DrawString(new RectangleF(0,0,width,height),font, UILineBreakMode.TailTruncation,  UITextAlignment.Left);
+                actualSize = new NSString(text).DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.TailTruncation,  UITextAlignment.Left);
                 
                 UIGraphics.PopContext();
 
@@ -58,7 +59,7 @@ namespace osum.Graphics.Renderers
                 TextureGl gl = new TextureGl(width, height);
                 gl.SetData((IntPtr)dataPtr, 0, All.Alpha);
     
-                return new pTexture(gl, width, height);
+                return new pTexture(gl, (int)actualSize.Width, (int)actualSize.Height);
             }
         }
     }

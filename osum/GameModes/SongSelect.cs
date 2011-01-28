@@ -38,8 +38,8 @@ namespace osum
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (InputManager.IsPressed)
-                offset += trackingPoint.WindowDelta.Y;	
+			if (InputManager.IsPressed)
+                offset = offset + InputManager.PrimaryTrackingPoint.WindowDelta.Y;
         }
 		
 		public override void Dispose()
@@ -100,9 +100,13 @@ namespace osum
         {
             base.Update();
 			
+            
+			if (!InputManager.IsPressed)
+				offset = offset * 0.9f + Math.Min(0,Math.Max(panels.Count * -80 + GameBase.WindowBaseSize.Height, offset)) * 0.1f;
+			
 			if (Director.PendingMode == OsuMode.Unknown)
 			{
-				Vector2 pos = new Vector2(50,10 + offset);
+				Vector2 pos = new Vector2(0,10 + offset);
 				foreach (BeatmapPanel p in panels)
 				{
 					p.MoveTo(pos);
