@@ -20,7 +20,7 @@ namespace osum.Helpers
         private static double zero = 0;
 
 #if IPHONE
-        private const int UNIVERSAL_OFFSET = 55;
+        private const int UNIVERSAL_OFFSET = 65;
 #else
         private const int UNIVERSAL_OFFSET = 20;
 #endif
