@@ -8,6 +8,7 @@ using osum.Helpers;
 using osum.GameModes;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.Audio;
 
 namespace osum.Support
 {
@@ -51,10 +52,12 @@ namespace osum.Support
             {
 
 #if DEBUG
-                fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
-                fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} Audio:{2:#,0}ms {3}",
+                int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
+				fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
+                fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
-                                                Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime);
+                                                Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
+				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #endif
             }
         }
