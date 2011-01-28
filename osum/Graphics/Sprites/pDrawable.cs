@@ -70,6 +70,20 @@ namespace osum.Graphics.Sprites
         internal Vector2 OriginVector;
         internal Vector2 Position;
         protected BlendingFactorDest blending = BlendingFactorDest.OneMinusSrcAlpha;
+		
+		internal virtual bool IsOnScreen
+		{
+			get
+			{
+				Vector2 pos = FieldPosition;
+				
+				if (pos.X > GameBase.WindowSize.Width || pos.X < 0 ||
+				    pos.Y > GameBase.WindowSize.Height || pos.Y < 0)
+					return false;
+				
+				return true;
+			}
+		}
 
         internal float DrawDepth;
 
@@ -538,13 +552,12 @@ namespace osum.Graphics.Sprites
 
         public virtual bool Draw()
         {
-            if (Transformations.Count != 0 || AlwaysDraw)
+            if (Alpha != 0 &&
+			    (Transformations.Count != 0 || AlwaysDraw) &&
+			    IsOnScreen)
             {
-                if (Alpha != 0)
-                {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
-                    return true;
-                }
+                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
+                return true;
             }
 
             return false;

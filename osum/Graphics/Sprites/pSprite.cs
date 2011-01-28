@@ -84,6 +84,19 @@ namespace osum.Graphics.Sprites
 				return true;
 			}
 		}
+		
+		internal override bool IsOnScreen {
+			get {
+				
+				Box2 rect = DisplayRectangle;
+
+				if (rect.Left > GameBase.WindowSize.Width || rect.Right < 0 ||
+				    rect.Top > GameBase.WindowSize.Height || rect.Bottom < 0)
+					return false;
+				
+				return true;
+			}
+		}
 
         internal int TextureWidth
         {
