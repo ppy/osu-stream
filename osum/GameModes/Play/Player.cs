@@ -54,6 +54,12 @@ namespace osum.GameModes
 				{
 					Director.ChangeMode(OsuMode.SongSelect);
 				}
+				else if (Math.Max(p1.X,p2.X) > (GameBase.WindowBaseSize.Width - 40) &&
+				    Math.Min(p1.X,p2.X) < 40 &&
+				    p1.Y + p2.Y > (GameBase.WindowBaseSize.Height * 2) - 40)
+				{
+					Player.Autoplay = !Autoplay;	
+				}
 				
 			}
         }
