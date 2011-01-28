@@ -47,7 +47,7 @@ namespace osum
 		{
 			get
 			{
-				return new Vector2(Location.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, Location.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
+				return new Vector2(GameBase.WindowScaleFactor * Location.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, GameBase.WindowScaleFactor * Location.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
 			}
 		}
 		
@@ -55,7 +55,7 @@ namespace osum
 		{
 			get
 			{
-				return new Vector2(Delta.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, Delta.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
+				return new Vector2(GameBase.WindowScaleFactor * Delta.X/GameBase.WindowSize.Width * GameBase.WindowBaseSize.Width, GameBase.WindowScaleFactor * Delta.Y/GameBase.WindowSize.Height * GameBase.WindowBaseSize.Height);	
 			}
 		}
 
