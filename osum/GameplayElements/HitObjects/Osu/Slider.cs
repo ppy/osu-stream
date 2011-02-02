@@ -824,8 +824,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (sliderBodyTexture != null)
             {
-                sliderBodyTexture.Dispose();
+                TextureManager.ReturnTexture(sliderBodyTexture);
                 sliderBodyTexture = null;
+
                 lengthDrawn = 0;
                 lastDrawnSegmentIndex = -1;
             }
@@ -962,12 +963,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             lengthDrawn = 0;
             lastDrawnSegmentIndex = -1;
 
-            TextureGl gl = new TextureGl(trackBoundsNative.Width, trackBoundsNative.Height);
-
-            gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-			
-            sliderBodyTexture = new pTexture(gl, trackBoundsNative.Width, trackBoundsNative.Height);
-			TextureManager.RegisterDisposable(sliderBodyTexture);
+            sliderBodyTexture = TextureManager.RequireTexture(trackBoundsNative.Width, trackBoundsNative.Height);
 
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
@@ -981,7 +977,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
 
             // attach renderbuffer
-            GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, gl.Id, 0);
+            GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, sliderBodyTexture.TextureGl.Id, 0);
 
             // unbind frame buffer
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
@@ -995,7 +991,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             GL.GenFramebuffers(1, out fbo);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
             
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, gl.Id, 0);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id, 0);
             GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif

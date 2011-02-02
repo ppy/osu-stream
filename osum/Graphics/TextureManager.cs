@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using osum.Support;
+using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Skins
 {
@@ -73,13 +74,10 @@ namespace osum.Graphics.Skins
 
 		public static void DisposeAll()
 		{
-			foreach (pTexture p in SpriteCache.Values)
-				p.Dispose();
-            foreach (pTexture p in DisposableTextures)
-                p.Dispose();
+			UnloadAll();
 			
 			SpriteCache.Clear();
-            DisposableTextures.Clear();
+            
 			AnimationCache.Clear();
 		}
 		
@@ -87,10 +85,12 @@ namespace osum.Graphics.Skins
 		{
 			foreach (pTexture p in SpriteCache.Values)
 				p.UnloadTexture();
-			
 			foreach (pTexture p in DisposableTextures)
 				p.Dispose();
+
 			DisposableTextures.Clear();
+
+            availableSurfaces = null;
 		}
 		
 		public static void ReloadAll()
@@ -192,6 +192,36 @@ namespace osum.Graphics.Skins
             }
 
             return null;
+        }
+
+        static Queue<pTexture> availableSurfaces;
+        
+        internal static pTexture RequireTexture(int width, int height)
+        {
+            if (availableSurfaces == null)
+            {
+                availableSurfaces = new Queue<pTexture>();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    TextureGl gl = new TextureGl(GameBase.WindowSize.Width, GameBase.WindowSize.Width);
+                    gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
+                    pTexture t = new pTexture(gl, GameBase.WindowSize.Width, GameBase.WindowSize.Width);
+                    RegisterDisposable(t);
+                    availableSurfaces.Enqueue(t);
+                }
+            }
+
+            pTexture tex = availableSurfaces.Dequeue();
+            tex.Width = width;
+            tex.Height = height;
+
+            return tex;
+        }
+
+        internal static void ReturnTexture(pTexture texture)
+        {
+            availableSurfaces.Enqueue(texture);
         }
     }
 
