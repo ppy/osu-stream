@@ -5,6 +5,8 @@ using OpenTK.Graphics;
 using osu_common.Helpers;
 using osum.GameplayElements;
 using osum.Helpers;
+using osum.Graphics.Skins;
+
 #if IPHONE
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -32,7 +34,6 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
-using osum.Graphics.Skins;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.Input;

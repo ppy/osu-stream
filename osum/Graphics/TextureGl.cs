@@ -304,7 +304,9 @@ namespace osum.Graphics
                     break;
             }
 			
+#if IPHONE //for some reason this optimisation fails on pc
 			if (dataPointer != IntPtr.Zero)
+#endif
 			{
 	            if (newTexture)
 	            {
