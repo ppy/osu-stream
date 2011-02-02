@@ -368,5 +368,6 @@
     <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\select.m4a" />
+    <Content Include="Skins\Default\white.png" />
   </ItemGroup>
 </Project>

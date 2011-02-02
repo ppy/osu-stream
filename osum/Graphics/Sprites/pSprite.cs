@@ -32,6 +32,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
+using osum.Graphics.Skins;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
@@ -155,8 +156,9 @@ namespace osum.Graphics.Sprites
             get
             {
                 pSprite whiteLayer =
-                    new pSprite(pTexture.FromRawBytes(new byte[] {255, 255, 255, 255}, 1, 1), FieldTypes.Standard,
+                    new pSprite(TextureManager.Load("white"), FieldTypes.Standard,
                                 OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
+				
                 whiteLayer.Scale = new Vector2(GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height)/
                                    GameBase.SpriteRatioToWindowBase;
                 return whiteLayer;
