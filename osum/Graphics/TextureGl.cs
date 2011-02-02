@@ -274,7 +274,7 @@ namespace osum.Graphics
 
             if (level == 0 && Id < 0)
             {
-        		Delete ();
+        		Delete();
         		newTexture = true;
         		int[] textures = new int[1];
         		GL.GenTextures (1, textures);
@@ -303,56 +303,58 @@ namespace osum.Graphics
                     internalFormat = PixelInternalFormat.Alpha;
                     break;
             }
-
-            if (newTexture)
-            {
-                if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
-                {
-                    if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
-                    {
-#if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, dataPointer);
-#else
-                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, dataPointer);
-#endif
-                    }
-                    else
-                    {
-                        byte[] temp = new byte[potWidth * potHeight * 4];
-                        GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
-                        IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
-#if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, pinnedDataPointer);
-#else
-                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, pinnedDataPointer);
-#endif
-                        h0.Free();
-
-                        GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                          PixelType.UnsignedByte, dataPointer);
-                    }
-                }
-                else
-                {
-#if IPHONE
-                    GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth, textureHeight, 0, format,
-                                    PixelType.UnsignedByte, dataPointer);
-#else
-                    GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth, textureHeight, 0, format,
-                                    PixelType.UnsignedByte, dataPointer);
-#endif
-                }
-            }
-            else
-            {
-                GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
-                                   PixelType.UnsignedByte, dataPointer);
-            }
-
+			
+			if (dataPointer != IntPtr.Zero)
+			{
+	            if (newTexture)
+	            {
+	                if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
+	                {
+	                    if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
+	                    {
+	#if IPHONE
+	                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
+	                                        PixelType.UnsignedByte, dataPointer);
+	#else
+	                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
+	                                        PixelType.UnsignedByte, dataPointer);
+	#endif
+	                    }
+	                    else
+	                    {
+	                        byte[] temp = new byte[potWidth * potHeight * 4];
+	                        GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
+	                        IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
+	#if IPHONE
+	                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
+	                                        PixelType.UnsignedByte, pinnedDataPointer);
+	#else
+	                        GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
+	                                        PixelType.UnsignedByte, pinnedDataPointer);
+	#endif
+	                        h0.Free();
+	
+	                        GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
+	                                          PixelType.UnsignedByte, dataPointer);
+	                    }
+	                }
+	                else
+	                {
+	#if IPHONE
+	                    GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth, textureHeight, 0, format,
+	                                    PixelType.UnsignedByte, dataPointer);
+	#else
+	                    GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth, textureHeight, 0, format,
+	                                    PixelType.UnsignedByte, dataPointer);
+	#endif
+	                }
+	            }
+	            else
+	            {
+	                GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
+	                                   PixelType.UnsignedByte, dataPointer);
+	            }
+			}
             
 
             if (GL.GetError() != 0)

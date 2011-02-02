@@ -90,8 +90,8 @@ namespace osum.Graphics.Sprites
 				
 				Box2 rect = DisplayRectangle;
 
-				if (rect.Left > GameBase.WindowSize.Width || rect.Right < 0 ||
-				    rect.Top > GameBase.WindowSize.Height || rect.Bottom < 0)
+				if (rect.Left > GameBase.WindowBaseSize.Width || rect.Right < 0 ||
+				    rect.Top > GameBase.WindowBaseSize.Height || rect.Bottom < 0)
 					return false;
 				
 				return true;
