@@ -87,7 +87,7 @@ namespace osum.Support.iPhone
 			GameBase.TriggerLayoutChanged();
 			
 			//start the run loop.
-			glView.Run(60);
+			glView.Run(100000);
 		}
 	}
 }
