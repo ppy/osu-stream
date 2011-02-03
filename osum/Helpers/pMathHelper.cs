@@ -45,15 +45,12 @@ namespace osum.Helpers
 			return new Vector2(point.X, point.Y);	
 		}
 
-        internal static List<Vector2> CreateBezier(List<Vector2> input, int detailLevel)
+        internal static List<Vector2> CreateBezier(List<Vector2> input, int points)
         {
             int count = input.Count;
 
             Vector2[] working = new Vector2[count];
             List<Vector2> output = new List<Vector2>();
-
-            //todo: make detail based on line length rather than point count?
-            int points = detailLevel * count;
 
             for (int i = 0; i < points; i++)
             {

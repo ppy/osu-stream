@@ -77,8 +77,8 @@ namespace osum.Graphics.Sprites
 			{
 				Vector2 pos = FieldPosition;
 				
-				if (pos.X > GameBase.WindowSize.Width || pos.X < 0 ||
-				    pos.Y > GameBase.WindowSize.Height || pos.Y < 0)
+				if (pos.X > GameBase.NativeSize.Width || pos.X < 0 ||
+				    pos.Y > GameBase.NativeSize.Height || pos.Y < 0)
 					return false;
 				
 				return true;
@@ -130,34 +130,34 @@ namespace osum.Graphics.Sprites
                 if (Offset != Vector2.Zero)
                     pos += Offset;
                 
-                pos *= GameBase.WindowRatio;
+                pos *= GameBase.BaseToNativeRatio;
 
                 switch (Field)
                 {
                     case FieldTypes.StandardSnapCentre:
-                        fieldPosition = new Vector2(GameBase.WindowSize.Width / 2 + pos.X,
-                                                    GameBase.WindowSize.Height / 2 + pos.Y);
+                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                    GameBase.NativeSize.Height / 2 + pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomCentre:
-                        fieldPosition = new Vector2(GameBase.WindowSize.Width / 2 + pos.X,
-                                                    GameBase.WindowSize.Height - pos.Y);
+                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                    GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapRight:
-                        fieldPosition = new Vector2(GameBase.WindowSize.Width - pos.X, pos.Y);
+                        fieldPosition = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomLeft:
-                        fieldPosition = new Vector2(pos.X, GameBase.WindowSize.Height - pos.Y);
+                        fieldPosition = new Vector2(pos.X, GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomRight:
-                        fieldPosition = new Vector2(GameBase.WindowSize.Width - pos.X,
-                                                    GameBase.WindowSize.Height - pos.Y);
+                        fieldPosition = new Vector2(GameBase.NativeSize.Width - pos.X,
+                                                    GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.GamefieldSprites:
 					case FieldTypes.GamefieldExact:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
-                        Vector2.Multiply(ref fieldPosition, GameBase.WindowRatio, out fieldPosition);
+                        Vector2.Multiply(ref fieldPosition, GameBase.BaseToNativeRatio, out fieldPosition);
                         break;
                     case FieldTypes.NativeScaled:
                         return Position;
@@ -178,14 +178,14 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
 					case FieldTypes.GamefieldExact:
-                        return Scale * (DifficultyManager.HitObjectSolidRatio * DifficultyManager.HitObjectSizeModifier * GameBase.GamefieldRatio);
+                        return Scale * DifficultyManager.HitObjectRadius;
 					case FieldTypes.GamefieldSprites:
-                        return Scale * DifficultyManager.HitObjectSizeModifier * GameBase.GamefieldRatio;
+                        return Scale * (DifficultyManager.HitObjectSizeModifier * GameBase.SpriteToNativeRatio);
                     case FieldTypes.Native:
                     case FieldTypes.NativeScaled:
                         return Scale;
                     default:
-                        return Scale * GameBase.SpriteRatioToWindow;
+                        return Scale * GameBase.SpriteToNativeRatio;
                 }
             }
         }

@@ -229,22 +229,32 @@ namespace osum.Graphics.Skins
         }
 
         static Queue<pTexture> availableSurfaces;
-        
-        internal static pTexture RequireTexture(int width, int height)
-        {
-            if (availableSurfaces == null)
+		
+		internal static void PopulateSurfaces()
+		{
+			if (availableSurfaces == null)
             {
                 availableSurfaces = new Queue<pTexture>();
+				
+				int size = GameBase.NativeSize.Width;
 
                 for (int i = 0; i < 4; i++)
                 {
-                    TextureGl gl = new TextureGl(GameBase.WindowSize.Width, GameBase.WindowSize.Width);
+                    TextureGl gl = new TextureGl(size, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-                    pTexture t = new pTexture(gl, GameBase.WindowSize.Width, GameBase.WindowSize.Width);
+                    pTexture t = new pTexture(gl, size, size);
+					t.BindFramebuffer();
+					
                     RegisterDisposable(t);
                     availableSurfaces.Enqueue(t);
                 }
-            }
+            }	
+		}
+	
+        
+        internal static pTexture RequireTexture(int width, int height)
+        {
+            PopulateSurfaces();
 
             pTexture tex = availableSurfaces.Dequeue();
             tex.Width = width;

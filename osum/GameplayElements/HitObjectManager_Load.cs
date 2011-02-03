@@ -449,7 +449,9 @@ namespace osum.GameplayElements
                     }
                 }
             }
-
+			
+			HitObject last = null;
+			
             for (int i = 0; i < hitObjectsCount; i++)
             {
                 HitObject currHitObject = hitObjects[i];
@@ -458,11 +460,10 @@ namespace osum.GameplayElements
                     currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
                 //Draw connection lines
-
-                if (i > 0 && !currHitObject.NewCombo && !(hitObjects[i - 1] is Spinner))
+                if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                 {
-                    Vector2 pos1 = hitObjects[i - 1].EndPosition;
-                    int time1 = hitObjects[i - 1].EndTime;
+                    Vector2 pos1 = last.EndPosition;
+                    int time1 = last.EndTime;
                     Vector2 pos2 = currHitObject.Position;
                     int time2 = currHitObject.StartTime;
 
@@ -472,35 +473,37 @@ namespace osum.GameplayElements
 
                     int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
 
-                    if (distance < DifficultyManager.FollowLineDistance * 4)
-                        continue;
-
-                    //find out how many points we can place (evenly)
-                    int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
-
-                    float usableDistance = (distance - buffer_size * 2) / (count);
-
-                    for (int j = 0; j < count + 1; j++)
-                    {
-                        float fraction = (buffer_size + usableDistance * j) / distance;
-                        Vector2 pos = pos1 + fraction * distanceVector;
-                        int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
-                        int fadeout = (int)(time1 + fraction * length);
-
-                        pSprite dot =
-                            new pSprite(fptexture,
-                                           FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                           0.1f, false, Color4.White);
-                        
-                        dot.Transform(
-                            new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
-                        dot.Transform(
-                            new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
-                        dot.Transform(
-                            new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
-                        spriteManager.Add(dot);
-                    }
+                    if (distance >=  DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
+					{
+	                    //find out how many points we can place (evenly)
+	                    int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+	
+	                    float usableDistance = (distance - buffer_size * 2) / (count);
+	
+	                    for (int j = 0; j < count + 1; j++)
+	                    {
+	                        float fraction = (buffer_size + usableDistance * j) / distance;
+	                        Vector2 pos = pos1 + fraction * distanceVector;
+	                        int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
+	                        int fadeout = (int)(time1 + fraction * length);
+	
+	                        pSprite dot =
+	                            new pSprite(fptexture,
+	                                           FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
+	                                           0.01f, false, Color4.White);
+	                        
+	                        dot.Transform(
+	                            new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
+	                        dot.Transform(
+	                            new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
+	                        dot.Transform(
+	                            new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
+	                        spriteManager.Add(dot);
+	                    }
+					}
                 }
+				
+				last = currHitObject;
             }
 
             spriteManager.ForwardPlayOptimisedAdd = false;

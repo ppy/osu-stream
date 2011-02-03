@@ -102,7 +102,7 @@ namespace osum
 			
             
 			if (!InputManager.IsPressed)
-				offset = offset * 0.9f + Math.Min(0,Math.Max(panels.Count * -80 + GameBase.WindowBaseSize.Height, offset)) * 0.1f;
+				offset = offset * 0.9f + Math.Min(0,Math.Max(panels.Count * -80 + GameBase.BaseSize.Height, offset)) * 0.1f;
 			
 			if (Director.PendingMode == OsuMode.Unknown)
 			{

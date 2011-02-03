@@ -43,7 +43,7 @@ namespace osum.Graphics.Drawables
 	internal class ApproachCircle : pDrawable
 	{
         internal float Radius;
-        internal float Width = 6;
+        internal float Width = 1/20f;
 
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
 		{
@@ -53,7 +53,6 @@ namespace osum.Graphics.Drawables
             Position = position;
             Radius = radius;
             Colour = colour;
-            Field = FieldTypes.Standard;
 		}
 		
 		public override void Dispose()
@@ -64,10 +63,10 @@ namespace osum.Graphics.Drawables
 		{
             if (base.Draw())
             {
-                float scaleAdjustment = FieldScale.X / Scale.X;
+                float scale = FieldScale.X;
 				
-				float rad1 = (Radius * ScaleScalar + Width * 0.5f) * scaleAdjustment;
-                float rad2 = (Radius * ScaleScalar - Width * 0.5f) * scaleAdjustment;
+				float rad1 = (Radius + Width * 0.5f) * scale;
+                float rad2 = (Radius - Width * 0.5f) * scale;
                 const int parts = 64;
 
                 Vector2 pos = FieldPosition;

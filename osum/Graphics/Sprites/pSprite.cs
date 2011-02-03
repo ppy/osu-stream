@@ -92,8 +92,8 @@ namespace osum.Graphics.Sprites
 				
 				Box2 rect = DisplayRectangle;
 
-				if (rect.Left > GameBase.WindowBaseSize.Width || rect.Right < 0 ||
-				    rect.Top > GameBase.WindowBaseSize.Height || rect.Bottom < 0)
+				if (rect.Left > GameBase.BaseSize.Width || rect.Right < 0 ||
+				    rect.Top > GameBase.BaseSize.Height || rect.Bottom < 0)
 					return false;
 				
 				return true;
@@ -144,8 +144,8 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition/GameBase.WindowRatio;
-                Vector2 scale = FieldScale/GameBase.WindowRatio;
+                Vector2 pos = FieldPosition/GameBase.BaseToNativeRatio;
+                Vector2 scale = FieldScale/GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + DrawWidth*scale.X,
                                 pos.Y + DrawHeight*scale.Y);
@@ -160,8 +160,8 @@ namespace osum.Graphics.Sprites
                     new pSprite(TextureManager.Load("white"), FieldTypes.Standard,
                                 OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
 				
-                whiteLayer.Scale = new Vector2(GameBase.WindowBaseSize.Width, GameBase.WindowBaseSize.Height)/
-                                   GameBase.SpriteRatioToWindowBase;
+                whiteLayer.Scale = new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height)/
+                                   GameBase.SpriteToBaseRatio;
                 return whiteLayer;
             }
         }

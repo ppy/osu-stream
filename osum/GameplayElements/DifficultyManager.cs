@@ -7,17 +7,21 @@ namespace osum.GameplayElements
 {
     internal static class DifficultyManager
     {
-		private const float HitObjectRadiusSolid = 59;
-		private const float HitObjectRadiusSprite = 64;
-		internal const float HitObjectSolidRatio = HitObjectRadiusSolid / HitObjectRadiusSprite;
+		internal const float HitObjectRadiusSolid = 59;
+		internal const float HitObjectRadiusSprite = 64;
+		//these are values as found on the spritesheet
+		//they are @2x sizes. half them for gamefield radius
+		
+		internal static float HitObjectRadiusGamefield { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
+		internal static float HitObjectRadiusSolidGamefield { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
 		
 		public static float HitObjectSizeModifier = 1f;
 
 		/// <summary>
-        /// Radius of hitObjects in the current gamefield.
+        /// Radius of hitObjects in the native field.
         /// </summary>
-        public static float HitObjectRadius { get { return HitObjectRadiusSolid * HitObjectSizeModifier; } }
-		public static float HitObjectRadiusFull { get { return HitObjectRadiusSprite * HitObjectSizeModifier; } }
+        public static float HitObjectRadius { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToNativeRatio; } }
+		public static float HitObjectRadiusFull { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToNativeRatio; } }
 
         public static int SliderVelocity = 300;
 

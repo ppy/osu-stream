@@ -24,7 +24,7 @@ namespace osum.Graphics.Renderers
 			
 			
 			if (restrictBounds == Vector2.Zero)
-				restrictBounds = new Vector2((GameBase.WindowSize.Width > 512 ? 1024 : 512) * GameBase.WindowScaleFactor,64 * GameBase.WindowScaleFactor);
+				restrictBounds = new Vector2((GameBase.NativeSize.Width > 512 ? 1024 : 512) * GameBase.ScaleFactor,64 * GameBase.ScaleFactor);
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);

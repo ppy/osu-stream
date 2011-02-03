@@ -151,9 +151,9 @@ namespace osum.Graphics.Sprites
                 return null;
             }
 
-            float size = GameBase.WindowRatio * TextSize;
+            float size = GameBase.BaseToNativeRatio * TextSize;
 			
-			Vector2 bounds = TextBounds * GameBase.WindowRatio;
+			Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
 			
             texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);

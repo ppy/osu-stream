@@ -99,8 +99,8 @@ namespace osum.GameModes
 			foreach (pSprite p in fillSprites)
 				p.Scale.X = actualSpriteScaleX / 2;
 			
-			fill2.Position.Y = 1 + fill1.Position.Y + fill1.Scale.Y * GameBase.SpriteRatioToWindowBase;
-			fill3.Position.Y = 1 + fill2.Position.Y + fill2.Scale.Y * GameBase.SpriteRatioToWindowBase;
+			fill2.Position.Y = 1 + fill1.Position.Y + fill1.Scale.Y * GameBase.SpriteToBaseRatio;
+			fill3.Position.Y = 1 + fill2.Position.Y + fill2.Scale.Y * GameBase.SpriteToBaseRatio;
 		}
 		
 	}

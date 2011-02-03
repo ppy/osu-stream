@@ -133,11 +133,11 @@ namespace osum.GameplayElements
                 Vector2 p2 = h2.SpriteCollection[0].Position;
 
                 Vector2 p3 = (p2 + p1) / 2;
-                float length = (p2 - p1).Length - DifficultyManager.HitObjectRadius * 1.96f;
+                float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 				
                 pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.GamefieldSprites,OriginTypes.Centre,
                     ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, true, Color4.White);
-                connectingLine.Scale = new Vector2(length / 2 / DifficultyManager.HitObjectSizeModifier, DifficultyManager.HitObjectSizeModifier * 2); //div 2 because texture is 2px long.
+                connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
                 connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
                 connectingLine.Transform(h1.SpriteCollection[0].Transformations);
                 h1.SpriteCollection.Add(connectingLine);

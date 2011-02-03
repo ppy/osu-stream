@@ -14,7 +14,11 @@ namespace osum.Support
 {
     static class DebugOverlay
     {
-        internal static pText fpsDisplay;
+#if DEBUG
+		internal static pText fpsDisplay;
+#else
+		internal static pSpriteText fpsDisplay;
+#endif
         private static double weightedAverageFrameTime;
 
         static double lastUpdateTime;
@@ -28,7 +32,8 @@ namespace osum.Support
                 fpsDisplay = new pText("", 16, new Vector2(0, 40), new Vector2(512,256), 0, true, Color4.White, false);
                 GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
 #else
-                return;
+                fpsDisplay = new pSpriteText("", "default",0,FieldTypes.Standard,OriginTypes.TopLeft,ClockTypes.Game,new Vector2(0, 40),1, true, Color4.White);
+                GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
 #endif
             }
 
@@ -36,8 +41,12 @@ namespace osum.Support
             double fps = (1000 / weightedAverageFrameTime);
 
             lastUpdateTime += GameBase.ElapsedMilliseconds;
-
+			
+#if DEBUG
             if (lastUpdateTime > 500)
+#else
+			if (lastUpdateTime > 16)
+#endif
             {
                 lastUpdateTime = 0;
                 updateFrame = true;
@@ -51,13 +60,15 @@ namespace osum.Support
             if (updateFrame)
             {
 
+				fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
 #if DEBUG
                 int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
-				fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
                 fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
+#else
+				fpsDisplay.Text = Math.Round(fps,1).ToString();
 #endif
             }
         }

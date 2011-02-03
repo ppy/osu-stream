@@ -316,7 +316,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         {
                             List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
 
-                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, 10));
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1,(thisLength.Count / controlPoints.Count * PathLength) / 10)));
 
                             if (multipartSegment) i++;
                             //Need to skip one point since we consuned an extra.
@@ -830,14 +830,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 lengthDrawn = 0;
                 lastDrawnSegmentIndex = -1;
             }
-
-#if IPHONE
-            if (fbo > 0)
-            {
-                GL.Oes.DeleteFramebuffers(1,ref fbo);
-                fbo = 0;
-            }
-#endif
         }
 
         /// <summary>
@@ -846,7 +838,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         int pathTextureUpdateSkippedFrames;
         private int lastJudgedScoringPoint = -1;
 
-        uint fbo;
         private bool IsEndHit;
 
         /// <summary>
@@ -870,10 +861,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             lengthDrawn = PathLength * drawProgress;
 
 			// this is probably faster than a binary search since it runs so few times and the result is very close
-            while (lastDrawnSegmentIndex < cumulativeLengths.Count && cumulativeLengths[lastDrawnSegmentIndex] < lengthDrawn)
+            while (lastDrawnSegmentIndex < cumulativeLengths.Count - 1 && cumulativeLengths[lastDrawnSegmentIndex + 1] < lengthDrawn)
                 lastDrawnSegmentIndex++;
-
-            if (lastDrawnSegmentIndex >= cumulativeLengths.Count || NO_SNAKING)
+			
+            if (lastDrawnSegmentIndex >= cumulativeLengths.Count - 1 || NO_SNAKING)
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
@@ -882,27 +873,16 @@ namespace osum.GameplayElements.HitObjects.Osu
 			Vector2 drawEndPosition = positionAtProgress(lengthDrawn/PathLength);
             spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
 			
-			if (pathTextureUpdateSkippedFrames++ % 2 != 0 && lastDrawnSegmentIndex != drawableSegments.Count - 1)
-			{
-				lastDrawnSegmentIndex = FirstSegmentIndex - 1;
-				return;
-			}
-
-            Line prev = null;
-            if (FirstSegmentIndex > 0) prev = drawableSegments[FirstSegmentIndex - 1];
+            Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
 
             if (lastDrawnSegmentIndex >= FirstSegmentIndex)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
-
-                
-				
-
 #if IPHONE
                 int oldFBO = 0;
 				GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
 				
-				GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
+				GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
 
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
@@ -914,7 +894,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Clear(Constants.COLOR_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadiusFull, ColourIndex, prev);
+                                                            DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
@@ -930,7 +910,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadiusFull, ColourIndex, prev);
+                                                            DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
 
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
@@ -947,7 +927,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             //resign any old FBO assignments first.
 			DisposePathTexture();
 			
-			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusFull);
+			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusGamefield);
 			//the fact we need to divide by DifficultyManager.HitObjectActualSpriteRatio here baffles me.
 
             trackBounds.X = (int)(rectf.X);
@@ -955,46 +935,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             trackBounds.Width = (int)rectf.Width + 1;
             trackBounds.Height = (int)rectf.Height + 1;
 			
-            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.WindowRatio);
-            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.WindowRatio);
-            trackBoundsNative.Width = (int)(rectf.Width * GameBase.WindowRatio) + 1;
-            trackBoundsNative.Height = (int)(rectf.Height * GameBase.WindowRatio) + 1;
+            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatio);
+            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatio);
+            trackBoundsNative.Width = (int)(rectf.Width * GameBase.BaseToNativeRatio) + 1;
+            trackBoundsNative.Height = (int)(rectf.Height * GameBase.BaseToNativeRatio) + 1;
 
             lengthDrawn = 0;
             lastDrawnSegmentIndex = -1;
 
             sliderBodyTexture = TextureManager.RequireTexture(trackBoundsNative.Width, trackBoundsNative.Height);
+			sliderBodyTexture.BindFramebuffer();
 
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
-
-#if IPHONE
-            int oldFBO = 0;
-			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-			
-			// create framebuffer
-            GL.Oes.GenFramebuffers(1, ref fbo);
-            GL.Oes.BindFramebuffer(All.FramebufferOes, fbo);
-
-            // attach renderbuffer
-            GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, sliderBodyTexture.TextureGl.Id, 0);
-
-            // unbind frame buffer
-            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-#else
-            // make depth buffer
-            GL.GenRenderbuffers(1, out renderBufferDepth);
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, renderBufferDepth);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, trackBoundsNative.Width, trackBoundsNative.Height);
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
-
-            GL.GenFramebuffers(1, out fbo);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
-            
-            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id, 0);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-#endif
         }
     }
 

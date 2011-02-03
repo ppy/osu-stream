@@ -48,15 +48,15 @@ namespace osum.GameModes
 				Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
 				Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
 				
-				if (Math.Max(p1.X,p2.X) > (GameBase.WindowBaseSize.Width - 40) &&
+				if (Math.Max(p1.X,p2.X) > (GameBase.BaseSize.Width - 40) &&
 				    Math.Min(p1.X,p2.X) < 40 &&
 				    p1.Y + p2.Y < 80)
 				{
 					Director.ChangeMode(OsuMode.SongSelect);
 				}
-				else if (Math.Max(p1.X,p2.X) > (GameBase.WindowBaseSize.Width - 40) &&
+				else if (Math.Max(p1.X,p2.X) > (GameBase.BaseSize.Width - 40) &&
 				    Math.Min(p1.X,p2.X) < 40 &&
-				    p1.Y + p2.Y > (GameBase.WindowBaseSize.Height * 2) - 40)
+				    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
 				{
 					Player.Autoplay = !Autoplay;	
 				}
@@ -77,7 +77,9 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
-            InputManager.OnDown += new InputHandler(InputManager_OnDown);
+            TextureManager.PopulateSurfaces();
+				
+			InputManager.OnDown += new InputHandler(InputManager_OnDown);
             InputManager.OnMove += new InputHandler(InputManager_OnMove);
 
             hitObjectManager = new HitObjectManager(Beatmap);
@@ -175,7 +177,12 @@ namespace osum.GameModes
             scoreDisplay.Dispose();
 
             base.Dispose();
+			
+			GameBase.Instance.MainSpriteManager.Add(new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f), 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false));
         }
+		
+		int frameCount = 0;
+		double msCount = 0;
 
         public override bool Draw()
         {
@@ -186,6 +193,10 @@ namespace osum.GameModes
             scoreDisplay.Draw();
             healthBar.Draw();
             comboCounter.Draw();
+			
+			frameCount++;
+			
+			msCount += GameBase.ElapsedMilliseconds;
 
             return true;
         }

@@ -48,18 +48,18 @@ namespace osum.GameModes.SongSelect
 			Match m = r.Match(filename);
 			
 			
-			text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.WindowBaseSize.Width, 80), 1, true, Color4.White, false);
+			text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 80), 1, true, Color4.White, false);
 			text.Bold = true;
 			text.Offset = new Vector2(10,0);
 			SpriteCollection.Add(text);
 			
-			text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.WindowBaseSize.Width - 120, 60), 1, true, Color4.White, false);
+			text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), 1, true, Color4.White, false);
 			text.Offset = new Vector2(10,28);
 			SpriteCollection.Add(text);
 			
-			text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.WindowBaseSize.Width - 120, 60), 1, true, Color4.White, false);
+			text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), 1, true, Color4.White, false);
 			text.Origin = OriginTypes.TopRight;
-			text.Offset = new Vector2(GameBase.WindowBaseSize.Width - 10,28);
+			text.Offset = new Vector2(GameBase.BaseSize.Width - 10,28);
 			SpriteCollection.Add(text);
 		}
 		

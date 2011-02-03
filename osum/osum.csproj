@@ -55,9 +55,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>IPHONE NO_ENCRYPTION DEBUG</DefineConstants>
+    <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -203,6 +203,7 @@
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Support\iPhone\GameViewController.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

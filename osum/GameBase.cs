@@ -52,8 +52,7 @@ namespace osum
 
         public static Random Random = new Random();
 
-        internal static Size WindowBaseSize = new Size(640, 480);
-
+        internal static Size BaseSize = new Size(640, 426);
         internal static Size GamefieldBaseSize = new Size(512, 384);
 
         internal static int SpriteResolution;
@@ -61,23 +60,17 @@ namespace osum
         /// <summary>
         /// Ratio of sprite size compared to their default habitat (SpriteResolution)
         /// </summary>
-        internal static float SpriteRatioToWindowBase;
+        internal static float SpriteToBaseRatio;
 
-        internal static float SpriteRatioToWindow;
+        internal static float SpriteToNativeRatio;
 		
-		internal static float WindowScaleFactor = 1;
-        internal static Size WindowSize;
-        internal static Size GamefieldSize;
+		internal static float ScaleFactor = 1;
+        internal static Size NativeSize;
 
         /// <summary>
         /// The ratio of actual-pixel window size in relation to the base resolution used internally.
         /// </summary>
-        internal static float WindowRatio;
-
-        /// <summary>
-        /// The ratio of the actual-pixel gamefield compared to the base resolution.
-        /// </summary>
-        internal static float GamefieldRatio;
+        internal static float BaseToNativeRatio;
 
         internal static Vector2 GamefieldOffsetVector1;
 
@@ -106,9 +99,9 @@ namespace osum
             MainLoop();
         }
 
-        internal static Size WindowBaseHalf
+        internal static Size BaseSizeHalf
         {
-            get { return new Size(WindowBaseSize.Width/2, WindowBaseSize.Height/2); }
+            get { return new Size(BaseSize.Width/2, BaseSize.Height/2); }
         }
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
@@ -148,8 +141,8 @@ namespace osum
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
-            GL.Viewport(0, 0, WindowSize.Width, WindowSize.Height);
-            GL.Ortho(0, WindowSize.Width, WindowSize.Height, 0, -1, 1);
+            GL.Viewport(0, 0, NativeSize.Width, NativeSize.Height);
+            GL.Ortho(0, NativeSize.Width, NativeSize.Height, 0, -1, 1);
 			
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -161,30 +154,25 @@ namespace osum
         public virtual void SetupScreen()
         {
             //Setup window...
-            WindowBaseSize.Height = (int) (WindowBaseSize.Width*(float) WindowSize.Height/WindowSize.Width);
+            BaseSize.Height = (int) (BaseSize.Width*(float) NativeSize.Height/NativeSize.Width);
 
             SetViewport();
 
-            WindowRatio = (float) WindowSize.Width/WindowBaseSize.Width;
+            BaseToNativeRatio = (float) NativeSize.Width/BaseSize.Width;
 
-            //Setup gamefield...
-            GamefieldSize = new Size(
-                (int) Math.Round(GamefieldBaseSize.Width*WindowRatio),
-                (int) Math.Round(GamefieldBaseSize.Height*WindowRatio)
-                );
+            GamefieldOffsetVector1 = new Vector2((float) (BaseSize.Width - GamefieldBaseSize.Width)/2,
+                                                 (float) (BaseSize.Height - GamefieldBaseSize.Height)/4*3);
 
-            GamefieldOffsetVector1 = new Vector2((float) (WindowBaseSize.Width - GamefieldBaseSize.Width)/2,
-                                                 (float) (WindowBaseSize.Height - GamefieldBaseSize.Height)/4*3);
-
-            GamefieldRatio = (float) GamefieldSize.Height/GamefieldBaseSize.Height;
-
-            SpriteResolution = Math.Max(960, Math.Min(1024, WindowSize.Width));
+            SpriteResolution = Math.Max(960, Math.Min(1024, NativeSize.Width));
 			//todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
 			//need to consider the WindowScaleFactor value here.
 
-            SpriteRatioToWindowBase = (float) WindowBaseSize.Width/SpriteResolution;
+            SpriteToBaseRatio = (float) BaseSize.Width/SpriteResolution;
 
-            SpriteRatioToWindow = (float) WindowSize.Width/SpriteResolution;
+            SpriteToNativeRatio = (float) NativeSize.Width/SpriteResolution;
+			//1024x = 1024/1024 = 1
+			//960x  = 960/960   = 1
+			//480x  = 480/960   = 0.5
 
             if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
@@ -260,7 +248,7 @@ namespace osum
             DebugOverlay.Update();
 			
 #if DEBUG
-			DebugOverlay.AddLine("Window Size: " + WindowSize.Width + "x" + WindowSize.Height + " Sprite Resolution: " + SpriteResolution);
+			DebugOverlay.AddLine("Window Size: " + NativeSize.Width + "x" + NativeSize.Height + " Sprite Resolution: " + SpriteResolution);
 #endif
 
             TextureManager.Update();

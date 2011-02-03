@@ -42,7 +42,7 @@ namespace osum.GameplayElements
                                                     ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
                                                     false, white);
 
-            SpriteApproachCircle = new ApproachCircle(Position, DifficultyManager.HitObjectRadius, false, 1, white);
+            SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
             SpriteApproachCircle.Field = FieldTypes.GamefieldExact;
             SpriteCollection.Add(SpriteApproachCircle);

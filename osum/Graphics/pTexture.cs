@@ -129,7 +129,17 @@ namespace osum.Graphics
 
             if (TextureGl != null)
             {
-                TextureGl.Dispose();
+                if (fboId >= 0)
+				{
+					#if IPHONE
+	                GL.Oes.DeleteFramebuffers(1,ref fboId);
+	                fboId = -1;
+					#endif
+					
+					//todo: cleanup fbo on desktop builds.
+				}
+				
+				TextureGl.Dispose();
                 TextureGl = null;
             }
         }
@@ -418,6 +428,45 @@ namespace osum.Graphics
             //FromRawBytes(
             //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
         }*/
+		
+		internal int fboId = -1;
+		internal int fboDepthBuffer = -1;
+		
+		internal int BindFramebuffer()
+		{
+			if (fboId >= 0)
+				return fboId;
+			
+#if IPHONE
+            int oldFBO = 0;
+			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+			
+			// create framebuffer
+            GL.Oes.GenFramebuffers(1, ref fboId);
+            GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
+
+            // attach renderbuffer
+            GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);
+
+            // unbind frame buffer
+            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+#else
+            // make depth buffer
+            GL.GenRenderbuffers(1, out fboDepthBuffer);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, fboDepthBuffer);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, trackBoundsNative.Width, trackBoundsNative.Height);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+
+            GL.GenFramebuffers(1, out fboId);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
+            
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+#endif	
+			
+			return fboId;
+		}
 
         internal pTexture Clone()
         {

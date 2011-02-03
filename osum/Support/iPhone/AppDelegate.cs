@@ -75,9 +75,9 @@ namespace osum.Support.iPhone
 		{
 			glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
 			
-			GameBase.WindowScaleFactor = glView.ContentScaleFactor;
-			GameBase.WindowSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.WindowScaleFactor), 
-			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.WindowScaleFactor));
+			GameBase.ScaleFactor = glView.ContentScaleFactor;
+			GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor), 
+			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
 			
 			//music may have started playing from a previously resigned execution, so let's restart it here.
 			//eventually we probably want to do something to give the user more notice before resuming gameplay...
