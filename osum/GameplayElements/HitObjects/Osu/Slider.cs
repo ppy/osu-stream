@@ -898,7 +898,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
 
                 GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.MatrixMode(MatrixMode.Projection);

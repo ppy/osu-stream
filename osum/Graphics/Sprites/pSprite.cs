@@ -135,7 +135,7 @@ namespace osum.Graphics.Sprites
             }
         }
         
-        protected Box2 TextureRectangle
+        internal Box2 TextureRectangle
         {
             get { return new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop); }
         }

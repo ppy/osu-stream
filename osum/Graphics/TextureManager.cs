@@ -71,7 +71,7 @@ namespace osum.Graphics.Skins
         public static void Initialize()
         {
 
-            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 210, 366, 140, 134));
+            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 638, 279, 140, 134));
 
             textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 133, 132));
 
@@ -95,7 +95,16 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
 
-            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
+            textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 201, 456, 13, 47));
+            textureLocations.Add(OsuTexture.default_2, new SpriteSheetTexture("hit", 219, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_3, new SpriteSheetTexture("hit", 289, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_4, new SpriteSheetTexture("hit", 359, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_5, new SpriteSheetTexture("hit", 429, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_6, new SpriteSheetTexture("hit", 499, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
         }
 
         public static void Update()
@@ -149,7 +158,7 @@ namespace osum.Graphics.Skins
             if (textureLocations.TryGetValue(texture, out info))
             {
                 pTexture tex = Load(info.SheetName);
-                //tex = tex.Clone(); //make a new instance because we may be using different coords.
+                tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;
                 tex.Width = info.Width;
@@ -294,7 +303,17 @@ namespace osum.Graphics.Skins
         sliderarrow,
         holdcircle,
         followpoint,
-        connectionline
+        connectionline,
+        default_0,
+        default_1,
+        default_2,
+        default_3,
+        default_4,
+        default_5,
+        default_6,
+        default_7,
+        default_8,
+        default_9
 
     }
 }

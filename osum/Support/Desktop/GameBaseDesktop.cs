@@ -33,7 +33,7 @@ namespace osum
 
         public override void SetupScreen()
         {
-            WindowSize = gameWindow.ClientSize;
+            NativeSize = gameWindow.ClientSize;
 
             base.SetupScreen();
         }

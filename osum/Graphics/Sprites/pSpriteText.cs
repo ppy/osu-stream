@@ -69,12 +69,22 @@ namespace osum.Graphics.Sprites
 
         private bool textChanged;
         private Vector2 lastMeasure;
+        private OsuTexture osuTextureFont;
 
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(null, fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
             TextFont = fontname;
+
+            try
+            {
+                osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
+            }
+            catch
+            {
+            }
+
             SpacingOverlap = spacingOverlap;
 
             //this will trigger a render call here
@@ -137,7 +147,7 @@ namespace osum.Graphics.Sprites
 
             for (int i = 0; i < text.Length; i++)
             {
-                pTexture tex;
+                pTexture tex = null;
 
                 currentX -= (TextConstantSpacing || i == 0 ? 0 : SpacingOverlap);
 
@@ -161,13 +171,18 @@ namespace osum.Graphics.Sprites
                         currentX += tex.Width;
                         break;
                     default:
-                        tex = TextureManager.Load(TextFont + "-" + text[i]);
+                        if (osuTextureFont != OsuTexture.None)
+                            tex = TextureManager.Load((OsuTexture)(osuTextureFont + (text[i] - '0')));
+                        else
+                            tex = TextureManager.Load(TextFont + "-" + text[i]);
+
                         if (!TextConstantSpacing)
                             currentX += tex.Width;
                         break;
                 }
 
                 renderTextures.Add(tex);
+
                 if (TextConstantSpacing)
                     renderCoordinates.Add(new Vector2(currentX - x, 0));
                 else
@@ -215,11 +230,14 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
-                    for (int i = 0; i < renderCoordinates.Count; i++)
+                    int i = 0;
+                    foreach (pTexture sp in renderTextures)
                     {
                         // note: no srcRect calculation
-                        if (renderTextures[i].TextureGl != null)
-                            renderTextures[i].TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, AlphaAppliedColour, FieldScale, Rotation, null);
+                        if (sp.TextureGl != null)
+                            sp.TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
+                                new Box2(sp.X, sp.Y, sp.X + sp.Width, sp.Y + sp.Height));
+                        i++;
                     }
 
                     return true;

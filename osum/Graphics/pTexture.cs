@@ -127,7 +127,7 @@ namespace osum.Graphics
             if (isDisposed) return;
             isDisposed = true;
 
-            if (TextureGl != null)
+            if (TextureGl != null && isDisposed)
             {
                 if (fboId >= 0)
 				{
@@ -454,14 +454,14 @@ namespace osum.Graphics
             // make depth buffer
             GL.GenRenderbuffers(1, out fboDepthBuffer);
             GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, fboDepthBuffer);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, trackBoundsNative.Width, trackBoundsNative.Height);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, Width, Height);
             GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
 
             GL.GenFramebuffers(1, out fboId);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
             
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, renderBufferDepth);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, fboDepthBuffer);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif	
 			
