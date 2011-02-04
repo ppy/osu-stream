@@ -284,7 +284,8 @@ namespace osum
         {
             bool doDraw = Update(e);
 
-            GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+            GL.Clear(Constants.COLOR_BUFFER_BIT);
+			//todo: Does clearing DEPTH as well here add a performance overhead?
 
             if (doDraw)
             {
