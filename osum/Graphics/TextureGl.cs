@@ -162,6 +162,15 @@ namespace osum.Graphics
 
 
         static int lastDrawTexture;
+		
+		public void Bind()
+		{
+            if (lastDrawTexture != Id)
+            {
+                lastDrawTexture = Id;
+                GL.BindTexture(TextureGl.SURFACE_TYPE, Id);
+            }
+		}
 
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
@@ -169,8 +178,7 @@ namespace osum.Graphics
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
                          Box2? srcRect)
         {
-			if (Id < 0)
-                return;
+			if (Id < 0) return;
 
 			GL.PushMatrix();
 
@@ -203,17 +211,12 @@ namespace osum.Graphics
 							drawWidth, 0, 0,
 							drawWidth, drawHeight, 0,
 							0, drawHeight, 0 };
+			
+			Bind();
 
-            if (lastDrawTexture != Id)
-            {
-                lastDrawTexture = Id;
-                GL.BindTexture(TextureGl.SURFACE_TYPE, Id);
-            }
-						
 			GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
 			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
 			
-
 			GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
             GL.PopMatrix();

@@ -445,7 +445,7 @@ namespace osum.Graphics.Renderers
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-            GL.BindTexture(TextureGl.SURFACE_TYPE, texture.Id);
+			texture.Bind();
 
             int count = lineList.Count;
             for (int x = 1; x < count; x++)
