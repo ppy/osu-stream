@@ -128,6 +128,9 @@ namespace osum.Graphics.Sprites
             }
         }
 
+
+        Dictionary<char,pTexture> textureCache = new Dictionary<char, pTexture>();
+
         /// <summary>
         /// Updates the array of each character which is to be displayed.
         /// </summary>
@@ -148,37 +151,49 @@ namespace osum.Graphics.Sprites
             for (int i = 0; i < text.Length; i++)
             {
                 pTexture tex = null;
+                char c = text[i];
 
                 currentX -= (TextConstantSpacing || i == 0 ? 0 : SpacingOverlap);
 
                 int x = currentX;
 
-                switch (text[i])
+                if (textureCache.TryGetValue(c, out tex))
                 {
-                    case ' ':
-                        currentX += TextureManager.Load(TextFont + "-dot").Width;
-                        continue;
-                    case ',':
-                        tex = TextureManager.Load(TextFont + "-comma");
+                    if (!TextConstantSpacing || c < '0' || c > '9')
                         currentX += tex.Width;
-                        break;
-                    case '.':
-                        tex = TextureManager.Load(TextFont + "-dot");
-                        currentX += tex.Width;
-                        break;
-                    case '%':
-                        tex = TextureManager.Load(TextFont + "-percent");
-                        currentX += tex.Width;
-                        break;
-                    default:
-                        if (osuTextureFont != OsuTexture.None)
-                            tex = TextureManager.Load((OsuTexture)(osuTextureFont + (text[i] - '0')));
-                        else
-                            tex = TextureManager.Load(TextFont + "-" + text[i]);
+                }
+                else
+                {
+                    switch (c)
+                    {
 
-                        if (!TextConstantSpacing)
+                        case ' ':
+                            currentX += TextureManager.Load(TextFont + "-dot").Width;
+                            continue;
+                        case ',':
+                            tex = TextureManager.Load(TextFont + "-comma");
                             currentX += tex.Width;
-                        break;
+                            break;
+                        case '.':
+                            tex = TextureManager.Load(TextFont + "-dot");
+                            currentX += tex.Width;
+                            break;
+                        case '%':
+                            tex = TextureManager.Load(TextFont + "-percent");
+                            currentX += tex.Width;
+                            break;
+                        default:
+                            if (osuTextureFont != OsuTexture.None)
+                                tex = TextureManager.Load((OsuTexture)(osuTextureFont + (c - '0')));
+                            else
+                                tex = TextureManager.Load(TextFont + "-" + c);
+
+                            if (!TextConstantSpacing)
+                                currentX += tex.Width;
+                            break;
+                    }
+
+                    textureCache[text[i]] = tex;
                 }
 
                 renderTextures.Add(tex);
