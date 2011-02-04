@@ -61,11 +61,6 @@ namespace osum.Graphics
 #endif
         //public SkinSource Source;
 
-        ~pTexture()
-        {
-            //Dispose(false);
-        }
-
         public pTexture(TextureGl textureGl, int width, int height)
         {
             TextureGl = textureGl;

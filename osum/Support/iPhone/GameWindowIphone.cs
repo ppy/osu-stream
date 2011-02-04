@@ -73,9 +73,6 @@ namespace osum
 		static bool firstLoad = true;
 		protected override void OnLoad (EventArgs e)
 		{
-			GL.Disable(EnableCap.Lighting);
-			GL.Enable(EnableCap.Blend);
-
 			if (firstLoad)
 			{
 				GameBase.Instance.Initialize();

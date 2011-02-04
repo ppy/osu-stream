@@ -171,7 +171,6 @@ namespace osum.Graphics.Sprites
         public override void Dispose()
         {
             //todo: kill texture if possible
-
             UnbindAllEvents();
         }
 

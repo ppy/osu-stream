@@ -28,6 +28,7 @@ using ColorPointerType = OpenTK.Graphics.ES11.All;
 using ClearBufferMask = OpenTK.Graphics.ES11.All;
 using TexCoordPointerType = OpenTK.Graphics.ES11.All;
 using BeginMode = OpenTK.Graphics.ES11.All;
+using DepthFunction = OpenTK.Graphics.ES11.All;
 using MatrixMode = OpenTK.Graphics.ES11.All;
 using PixelInternalFormat = OpenTK.Graphics.ES11.All;
 using PixelFormat = OpenTK.Graphics.ES11.All;
@@ -155,7 +156,12 @@ namespace osum
         {
             //Setup window...
             BaseSize.Height = (int) (BaseSize.Width*(float) NativeSize.Height/NativeSize.Width);
-
+			
+            GL.Disable(EnableCap.DepthTest);
+            GL.EnableClientState(ArrayCap.VertexArray);
+			GL.Disable(EnableCap.Lighting);
+			GL.Enable(EnableCap.Blend);
+			
             SetViewport();
 
             BaseToNativeRatio = (float) NativeSize.Width/BaseSize.Width;
@@ -229,25 +235,23 @@ namespace osum
         /// Initializes the input management subsystem.
         /// </summary>
         protected abstract void InitializeInput();
-
+		
         /// <summary>
         /// Main update cycle
         /// </summary>
         /// <returns>true if a draw should occur</returns>
         public bool Update(FrameEventArgs e)
         {
-            GL.Disable(EnableCap.DepthTest);
-            GL.EnableClientState(ArrayCap.VertexArray);
-
             double lastTime = Clock.TimeAccurate;
             Clock.Update(e.Time);
-
+			
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
             ignoreNextFrameTime = false;
 
             DebugOverlay.Update();
 			
 #if DEBUG
+			DebugOverlay.AddLine("GC: 0:" +  GC.CollectionCount(0) + " 1:" + GC.CollectionCount(1) + " 2:" + GC.CollectionCount(2));
 			DebugOverlay.AddLine("Window Size: " + NativeSize.Width + "x" + NativeSize.Height + " Sprite Resolution: " + SpriteResolution);
 #endif
 
@@ -291,7 +295,9 @@ namespace osum
 
         public static void TriggerLayoutChanged()
         {
-            if (OnScreenLayoutChanged != null)
+            Instance.SetupScreen();
+			
+			if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
         }
     }
