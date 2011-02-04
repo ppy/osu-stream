@@ -69,7 +69,7 @@ namespace osum.Graphics.Sprites
         internal OriginTypes Origin;
         internal Vector2 OriginVector;
         internal Vector2 Position;
-        protected BlendingFactorDest blending = BlendingFactorDest.OneMinusSrcAlpha;
+        internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
 		
 		internal virtual bool IsOnScreen
 		{
@@ -115,8 +115,8 @@ namespace osum.Graphics.Sprites
 
         internal bool Additive
         {
-            get { return blending == BlendingFactorDest.One; }
-            set { blending = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
+            get { return BlendingMode == BlendingFactorDest.One; }
+            set { BlendingMode = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
         internal virtual Vector2 FieldPosition
@@ -263,7 +263,7 @@ namespace osum.Graphics.Sprites
                             break;
 
                         case TransformationType.ParameterAdditive:
-                            blending = BlendingFactorDest.One;
+                            BlendingMode = BlendingFactorDest.One;
                             break;
 
                         case TransformationType.Rotation:
@@ -320,7 +320,7 @@ namespace osum.Graphics.Sprites
                             break;
 
                         case TransformationType.ParameterAdditive:
-                            blending = BlendingFactorDest.One;
+                            BlendingMode = BlendingFactorDest.One;
                             break;
 
                         case TransformationType.Rotation:
@@ -375,7 +375,7 @@ namespace osum.Graphics.Sprites
                         break;
 
                     case TransformationType.ParameterAdditive:
-                        blending = BlendingFactorDest.One;
+                        BlendingMode = BlendingFactorDest.One;
                         break;
 
                     case TransformationType.Rotation:
@@ -556,7 +556,6 @@ namespace osum.Graphics.Sprites
 			    (Transformations.Count != 0 || AlwaysDraw) &&
 			    IsOnScreen)
             {
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
                 return true;
             }
 
