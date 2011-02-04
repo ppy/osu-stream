@@ -172,6 +172,9 @@ namespace osum.Graphics
             }
 		}
 
+        float[] coordinates = new float[8];
+        float[] vertices = new float[8];
+
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
@@ -202,19 +205,23 @@ namespace osum.Graphics
             float top = (float)drawRect.Top / potHeight;
             float bottom = (float)drawRect.Bottom / potHeight;
 			
-            float[] coordinates = { left, top,
-									right, top,
-									right, bottom,
-									left, bottom };
+            coordinates[0] = left;
+            coordinates[1] = top;
+            coordinates[2] = right;
+            coordinates[3] = top;
+            coordinates[4] = right;
+            coordinates[5] = bottom;
+            coordinates[6] = left;
+            coordinates[7] = bottom;
 
-			float[] vertices = {0, 0, 0,
-							drawWidth, 0, 0,
-							drawWidth, drawHeight, 0,
-							0, drawHeight, 0 };
-			
+			vertices[2] = drawWidth;
+            vertices[4] = drawWidth;
+            vertices[5] = drawHeight;
+            vertices[7] = drawHeight;
+
 			Bind();
 
-			GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+			GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
 			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
 			
 			GL.DrawArrays(BeginMode.TriangleFan, 0, 4);

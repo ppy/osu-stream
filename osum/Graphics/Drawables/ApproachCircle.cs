@@ -58,6 +58,9 @@ namespace osum.Graphics.Drawables
 		public override void Dispose()
 		{
 		}
+
+        const int PARTS = 64;
+        float[] vertices = new float[PARTS * 4 + 4];
 		
 		public override bool Draw()
 		{
@@ -67,31 +70,29 @@ namespace osum.Graphics.Drawables
 				
 				float rad1 = (Radius + Width * 0.5f) * scale;
                 float rad2 = (Radius - Width * 0.5f) * scale;
-                const int parts = 64;
+                
 
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
-                float[] vertices = new float[parts * 4 + 4];
-
-                for (int v = 0; v < parts; v++)
+                for (int v = 0; v < PARTS; v++)
                 {
-                    vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad1);
-                    vertices[v * 4 + 1] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad1);
-                    vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / parts) * rad2);
-                    vertices[v * 4 + 3] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / parts) * rad2);
+                    vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / PARTS) * rad1);
+                    vertices[v * 4 + 1] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / PARTS) * rad1);
+                    vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / PARTS) * rad2);
+                    vertices[v * 4 + 3] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / PARTS) * rad2);
                 }
 
-                vertices[parts * 4] = vertices[0];
-                vertices[parts * 4 + 1] = vertices[1];
-                vertices[parts * 4 + 2] = vertices[2];
-                vertices[parts * 4 + 3] = vertices[3];
+                vertices[PARTS * 4] = vertices[0];
+                vertices[PARTS * 4 + 1] = vertices[1];
+                vertices[PARTS * 4 + 2] = vertices[2];
+                vertices[PARTS * 4 + 3] = vertices[3];
 
                 SpriteManager.TexturesEnabled = false;
 				
 				GL.Color4(c.R, c.G, c.B, c.A);
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
+                GL.DrawArrays(BeginMode.TriangleStrip, 0, PARTS * 2 + 2);
 
                 return true;
             }
