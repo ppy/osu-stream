@@ -297,6 +297,9 @@ namespace osum.Graphics.Skins
         internal static pTexture RequireTexture(int width, int height)
         {
             PopulateSurfaces();
+			
+			if (availableSurfaces.Count == 0)
+				return null;
 
             pTexture tex = availableSurfaces.Dequeue();
             tex.Width = width;

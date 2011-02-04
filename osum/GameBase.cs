@@ -160,6 +160,7 @@ namespace osum
             GL.Disable(EnableCap.DepthTest);
             GL.EnableClientState(ArrayCap.VertexArray);
 			GL.Disable(EnableCap.Lighting);
+			GL.DepthMask(false);
 			GL.Enable(EnableCap.Blend);
 			
             SetViewport();
@@ -299,8 +300,6 @@ namespace osum
 
         public static void TriggerLayoutChanged()
         {
-            Instance.SetupScreen();
-			
 			if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
         }

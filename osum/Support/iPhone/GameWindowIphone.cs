@@ -101,7 +101,8 @@ namespace osum
 		{
 			base.OnRenderFrame(e);
 
-			MakeCurrent();
+			//MakeCurrent();
+			//todo: any reason to call this on iPhone?
 			
 			GameBase.Instance.Draw(e);
 			
