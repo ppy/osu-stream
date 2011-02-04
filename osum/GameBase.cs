@@ -243,7 +243,10 @@ namespace osum
         public bool Update(FrameEventArgs e)
         {
             double lastTime = Clock.TimeAccurate;
-            Clock.Update(e.Time);
+			double thisTime = 0; 
+			try { thisTime = e.Time; } catch {}
+			//try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
+            Clock.Update();
 			
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
             ignoreNextFrameTime = false;
