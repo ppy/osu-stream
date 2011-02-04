@@ -189,7 +189,10 @@ namespace osum.Graphics.Sprites
 			{
                 p.Update();
 				if (p.IsRemovable)
+				{
 					removable.Add(i);
+					p.Dispose();
+				}
 				i++;
 			}
 
@@ -199,20 +202,29 @@ namespace osum.Graphics.Sprites
 #endif
 			
 			for (i = removable.Count - 1; i >= 0; i--)
+			{
 				Sprites.RemoveAt(removable[i]);
+			}
         }
-
+		
+		static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
+		
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
         internal bool Draw()
         {
-            foreach (pDrawable p in Sprites)
+			foreach (pDrawable p in Sprites)
 			{
                 if (p.Alpha > 0)
 				{
+		            if (lastBlend != p.BlendingMode)
+					{
+						GL.BlendFunc(BlendingFactorSrc.SrcAlpha, p.BlendingMode);
+						lastBlend = p.BlendingMode;
+					}
+
 					TexturesEnabled = p.UsesTextures;
-					
 					p.Draw();
 				}
 			}
@@ -220,14 +232,14 @@ namespace osum.Graphics.Sprites
         }
 		
 		static bool texturesEnabled = false;
-        static bool firstForFrame = true;
 		internal static bool TexturesEnabled
 		{
 			get { return texturesEnabled; }	
 			
 			set {
-				if (texturesEnabled == value && !firstForFrame)
+				if (texturesEnabled == value)
 					return;
+				
 				texturesEnabled = value;
 				
 				if (texturesEnabled)
@@ -245,7 +257,6 @@ namespace osum.Graphics.Sprites
 
         internal static void Reset()
         {
-            firstForFrame = true;
         }
 
         /// <summary>
