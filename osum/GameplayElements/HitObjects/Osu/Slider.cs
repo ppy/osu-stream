@@ -770,7 +770,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             double aimLength = PathLength * normalizeProgress(progress);
 
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
-            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
+            int index = 0;
+            while (index < cumulativeLengths.Count && cumulativeLengths[index] < aimLength)
+                index++;
 
             return drawableSegments[index];
         }
@@ -780,7 +782,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             double aimLength = PathLength * normalizeProgress(progress);
 			
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
-            int index = Math.Max(0, cumulativeLengths.FindIndex(l => l >= aimLength));
+            int index = 0;
+            while (index < cumulativeLengths.Count && cumulativeLengths[index] < aimLength)
+                index++;
 
             double lengthAtIndex = cumulativeLengths[index];
             Line currentLine = drawableSegments[index];

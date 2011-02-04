@@ -335,6 +335,7 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawHalfCircle(int count)
         {
+            //todo: don't alloc these arrays every call if possible.
             float[] coordinates = new float[(count + 2) * 2];
             coordinates[0] = 1 - 1.0f / TEX_WIDTH;
 
