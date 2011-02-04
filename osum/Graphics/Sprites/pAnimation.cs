@@ -134,12 +134,10 @@ namespace osum.Graphics.Sprites
             {
                 texture = hasCustomSequence ? TextureArray[CustomSequence[currentFrame]] : TextureArray[currentFrame];
 
-                if (Texture != null)
+                if (texture != null)
                 {
-                    //if (!DrawDimensionsManualOverride)
-                    //    UpdateTextureSize();
-                    if (Origin != OriginTypes.TopLeft)
-                        UpdateTextureAlignment();
+                    UpdateTextureSize();
+                    UpdateTextureAlignment();
                 }
             }
 

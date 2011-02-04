@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <BundleIdentifier>osu</BundleIdentifier>
-    <BundleVersion>1007</BundleVersion>
+    <BundleVersion>1009</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>Support\iPhone\icon.png</BundleIcon>
     <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
@@ -284,13 +284,9 @@
     </Content>
     <Content Include="Skins\Default\score-x.png">
     </Content>
-    <Content Include="Skins\Default\default-x.png">
-    </Content>
     <Content Include="Skins\Default\star3.png">
     </Content>
     <Content Include="Skins\Default\score-4.png">
-    </Content>
-    <Content Include="Skins\Default\default-percent.png">
     </Content>
     <Content Include="Skins\Default\star.png">
     </Content>
@@ -300,41 +296,17 @@
     </Content>
     <Content Include="Skins\Default\score-1.png">
     </Content>
-    <Content Include="Skins\Default\default-2.png">
-    </Content>
-    <Content Include="Skins\Default\default-5.png">
-    </Content>
-    <Content Include="Skins\Default\default-6.png">
-    </Content>
-    <Content Include="Skins\Default\default-3.png">
-    </Content>
-    <Content Include="Skins\Default\default-9.png">
-    </Content>
-    <Content Include="Skins\Default\default-4.png">
-    </Content>
-    <Content Include="Skins\Default\default-8.png">
-    </Content>
     <Content Include="Skins\Default\score-comma.png">
     </Content>
     <Content Include="Skins\Default\score-dot.png">
     </Content>
-    <Content Include="Skins\Default\default-7.png">
-    </Content>
-    <Content Include="Skins\Default\default-0.png">
-    </Content>
-    <Content Include="Skins\Default\default-1.png">
-    </Content>
     <Content Include="Skins\Default\scorebar-colour-1.png">
-    </Content>
-    <Content Include="Skins\Default\default-dot.png">
     </Content>
     <Content Include="Skins\Default\scorebar-colour-2.png">
     </Content>
     <Content Include="Skins\Default\scorebar-colour-0.png">
     </Content>
     <Content Include="Skins\Default\scorebar-colour-3.png">
-    </Content>
-    <Content Include="Skins\Default\default-comma.png">
     </Content>
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
@@ -343,16 +315,6 @@
     <Content Include="Skins\Default\normal-hitfinish.wav" />
     <Content Include="Skins\Default\normal-hitnormal.wav" />
     <Content Include="Skins\Default\normal-hitwhistle.wav" />
-    <Content Include="Skins\Default\sliderb-0.png" />
-    <Content Include="Skins\Default\sliderb-1.png" />
-    <Content Include="Skins\Default\sliderb-2.png" />
-    <Content Include="Skins\Default\sliderb-3.png" />
-    <Content Include="Skins\Default\sliderb-4.png" />
-    <Content Include="Skins\Default\sliderb-5.png" />
-    <Content Include="Skins\Default\sliderb-6.png" />
-    <Content Include="Skins\Default\sliderb-7.png" />
-    <Content Include="Skins\Default\sliderb-8.png" />
-    <Content Include="Skins\Default\sliderb-9.png" />
     <Content Include="Skins\Default\menuhit.wav" />
     <Content Include="Skins\Default\normal-sliderslide.wav" />
     <Content Include="Skins\Default\normal-slidertick.wav" />
@@ -370,5 +332,9 @@
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\select.m4a" />
     <Content Include="Skins\Default\white.png" />
+    <Content Include="Skins\Default\default-comma.png" />
+    <Content Include="Skins\Default\default-dot.png" />
+    <Content Include="Skins\Default\default-percent.png" />
+    <Content Include="Skins\Default\default-x.png" />
   </ItemGroup>
 </Project>

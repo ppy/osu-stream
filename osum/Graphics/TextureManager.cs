@@ -94,6 +94,8 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
+			
+			textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
 
             textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
             textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 201, 456, 13, 47));
@@ -105,6 +107,19 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
             textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
             textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
+			
+			textureLocations.Add(OsuTexture.sliderb_0, new SpriteSheetTexture("hit", 0, 508, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_1, new SpriteSheetTexture("hit", 118, 508, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_2, new SpriteSheetTexture("hit", 236, 508, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_3, new SpriteSheetTexture("hit", 354, 508, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_4, new SpriteSheetTexture("hit", 472, 508, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_5, new SpriteSheetTexture("hit", 0, 626, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_6, new SpriteSheetTexture("hit", 118, 626, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_7, new SpriteSheetTexture("hit", 236, 626, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_8, new SpriteSheetTexture("hit", 354, 626, 118, 118));
+			textureLocations.Add(OsuTexture.sliderb_9, new SpriteSheetTexture("hit", 472, 626, 118, 118));
+			
+			textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
         }
 
         public static void Update()
@@ -193,7 +208,25 @@ namespace osum.Graphics.Skins
             return null;
         }
 
-        internal static pTexture[] LoadAnimation(string name)
+        internal static pTexture[] LoadAnimation(OsuTexture osuTexture, int count)
+		{
+			pTexture[] textures;
+			
+			string name = osuTexture.ToString();
+			
+			if (AnimationCache.TryGetValue(name, out textures))
+                return textures;
+			
+			textures = new pTexture[count];
+			
+			for (int i = 0; i < count; i++)
+				textures[i] = Load((OsuTexture)(osuTexture + i));
+			
+			AnimationCache.Add(name, textures);
+			return textures;
+		}
+			
+		internal static pTexture[] LoadAnimation(string name)
         {
             pTexture[] textures;
             pTexture texture;
@@ -313,7 +346,17 @@ namespace osum.Graphics.Skins
         default_6,
         default_7,
         default_8,
-        default_9
-
+        default_9,
+		sliderb_0,
+		sliderb_1,
+		sliderb_2,
+		sliderb_3,
+		sliderb_4,
+		sliderb_5,
+		sliderb_6,
+		sliderb_7,
+		sliderb_8,
+		sliderb_9,
+		playfield
     }
 }

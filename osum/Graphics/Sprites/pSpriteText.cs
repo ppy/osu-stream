@@ -229,7 +229,6 @@ namespace osum.Graphics.Sprites
             {
                 if (Alpha != 0)
                 {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, (BlendingFactorDest)blending);
                     int i = 0;
                     foreach (pTexture sp in renderTextures)
                     {
