@@ -152,18 +152,22 @@ namespace osum.Graphics
 			if (TextureGl != null)
 			{
 				TextureGl.Dispose();
-				TextureGl = null;
+				//TextureGl = null;
 			}
 		}
 		
 		internal void ReloadIfPossible()
 		{
-			if (TextureGl == null)
+			if (TextureGl == null || TextureGl.Id == -1)
 			{
 				if (assetName != null)
 				{
 					pTexture reloadedTexture = FromFile(assetName);
-					this.TextureGl = reloadedTexture.TextureGl;
+					if (TextureGl == null)
+						TextureGl = reloadedTexture.TextureGl;
+					else
+						TextureGl.Id = reloadedTexture.TextureGl.Id;
+					
 					reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
 				}
 				
