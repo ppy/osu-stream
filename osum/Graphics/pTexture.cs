@@ -151,7 +151,7 @@ namespace osum.Graphics
 			}
 		}
 		
-		internal void ReloadIfPossible()
+		internal bool ReloadIfPossible()
 		{
 			if (TextureGl == null || TextureGl.Id == -1)
 			{
@@ -164,9 +164,13 @@ namespace osum.Graphics
 						TextureGl.Id = reloadedTexture.TextureGl.Id;
 					
 					reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
+					
+					return true;
 				}
 				
 			}
+			
+			return false;
 		}
 
         #endregion

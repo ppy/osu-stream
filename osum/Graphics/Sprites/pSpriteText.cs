@@ -60,7 +60,7 @@ namespace osum.Graphics.Sprites
             {
                 if (text == value) return;
                 
-                text = value;
+                  text = value;
                 textChanged = true;
 
                 MeasureText();
@@ -157,9 +157,10 @@ namespace osum.Graphics.Sprites
 
                 int x = currentX;
 
-                if (textureCache.TryGetValue(c, out tex))
+                if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
+					//the extra two conditions are only required for the fps counter between modes.
                 {
-                    if (!TextConstantSpacing || c < '0' || c > '9')
+					if (!TextConstantSpacing || c < '0' || c > '9')
                         currentX += tex.Width;
                 }
                 else
@@ -193,7 +194,7 @@ namespace osum.Graphics.Sprites
                             break;
                     }
 
-                    textureCache[text[i]] = tex;
+                    textureCache[c] = tex;
                 }
 
                 renderTextures.Add(tex);
