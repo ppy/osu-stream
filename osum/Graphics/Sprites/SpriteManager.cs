@@ -145,6 +145,7 @@ namespace osum.Graphics.Sprites
         }
 
         bool firstRender = true;
+        List<int> removableSprites = new List<int>();
 
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
@@ -182,15 +183,13 @@ namespace osum.Graphics.Sprites
                 }
             }
 			
-			List<int> removable = new List<int>();
-			
 			int i = 0;
             foreach (pDrawable p in Sprites)
 			{
                 p.Update();
 				if (p.IsRemovable)
 				{
-					removable.Add(i);
+					removableSprites.Add(i);
 					p.Dispose();
 				}
 				i++;
@@ -201,10 +200,10 @@ namespace osum.Graphics.Sprites
                 DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites (" + Sprites.FindAll(s => s.IsOnScreen).Count + " on-screen)");
 #endif
 			
-			for (i = removable.Count - 1; i >= 0; i--)
-			{
-				Sprites.RemoveAt(removable[i]);
-			}
+			for (i = removableSprites.Count - 1; i >= 0; i--)
+				Sprites.RemoveAt(removableSprites[i]);
+
+            removableSprites.Clear();
         }
 		
 		static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;

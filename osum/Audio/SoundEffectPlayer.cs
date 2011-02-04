@@ -102,11 +102,14 @@ namespace osum
         /// </summary>
         public void Update()
         {
-
-            foreach (int id in Sources.FindAll(i => AL.GetSourceState(i) != ALSourceState.Playing))
+            for (int i = 0; i < Sources.Count; i++)
             {
-                AL.DeleteSource(id);
-                Sources.Remove(id);
+                if (AL.GetSourceState(i) != ALSourceState.Playing)
+                {
+                    AL.DeleteSource(i);
+                    Sources.RemoveAt(i);
+                    i--;
+                }
             }
         }
     }
