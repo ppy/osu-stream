@@ -246,7 +246,7 @@ namespace osum
 			double thisTime = 0; 
 			try { thisTime = e.Time; } catch {}
 			//try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
-            Clock.Update();
+            Clock.Update(thisTime);
 			
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
             ignoreNextFrameTime = false;
