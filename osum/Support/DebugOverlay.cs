@@ -23,6 +23,8 @@ namespace osum.Support
 
         static double lastUpdateTime;
         static bool updateFrame;
+		
+		static int gcCount;
 
         static internal void Update()
         {
@@ -38,7 +40,23 @@ namespace osum.Support
             }
 
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + GameBase.ElapsedMilliseconds * 0.02;
-            double fps = (1000 / weightedAverageFrameTime);
+			
+			if (GameBase.ElapsedMilliseconds > 25)
+			{
+					fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 100);
+					fpsDisplay.MoveTo(new Vector2(0, 40),600, EasingTypes.In);
+			}
+			
+			int newGcCount = GC.CollectionCount(0) + GC.CollectionCount(1);
+			
+			if (gcCount < newGcCount)
+			{
+				gcCount = newGcCount;
+				fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 100, fpsDisplay.Position.Y);
+				fpsDisplay.MoveTo(new Vector2(0, 40),600, EasingTypes.In);
+			}
+
+			double fps = (1000 / weightedAverageFrameTime);
 
             lastUpdateTime += GameBase.ElapsedMilliseconds;
 			
@@ -68,7 +86,7 @@ namespace osum.Support
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
-				fpsDisplay.Text = Math.Round(fps,1).ToString();
+				fpsDisplay.Text = Math.Round(Math.Min(60,fps),0).ToString();
 #endif
             }
         }
