@@ -96,12 +96,18 @@ namespace osum.GameModes
             currentScore = new Score();
 
             playfield =
-                new pSprite(TextureManager.Load(@"playfield"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                new pSprite(TextureManager.Load(OsuTexture.playfield), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(playfield);
 
             AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename),false);
             Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
+			
+			if (fpsTotalCount != null)
+			{
+				fpsTotalCount.AlwaysDraw = false;
+				fpsTotalCount = null;
+			}
         }
 
         void Director_OnTransitionEnded()
@@ -166,7 +172,9 @@ namespace osum.GameModes
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
         }
-
+		
+		static pSprite fpsTotalCount;
+		
         public override void Dispose()
         {
             InputManager.OnDown -= new InputHandler(InputManager_OnDown);
@@ -178,7 +186,8 @@ namespace osum.GameModes
 
             base.Dispose();
 			
-			GameBase.Instance.MainSpriteManager.Add(new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f), 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false));
+			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f), 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false);
+			GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
         }
 		
 		int frameCount = 0;
