@@ -108,6 +108,8 @@ namespace osum.GameModes
 				fpsTotalCount.AlwaysDraw = false;
 				fpsTotalCount = null;
 			}
+			
+			gcAtStart = GC.CollectionCount(0);
         }
 
         void Director_OnTransitionEnded()
@@ -174,6 +176,7 @@ namespace osum.GameModes
         }
 		
 		static pSprite fpsTotalCount;
+		int gcAtStart;
 		
         public override void Dispose()
         {
@@ -186,7 +189,7 @@ namespace osum.GameModes
 
             base.Dispose();
 			
-			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f), 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false);
+			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f) + " (GC: "+(GC.CollectionCount(0) - gcAtStart)+")", 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false);
 			GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
         }
 		
