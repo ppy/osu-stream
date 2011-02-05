@@ -81,12 +81,15 @@ namespace osum.GameModes.Play.Components
             base.Update();
 
             //Hit combo display (bottom-left)
-            if (displayCombo > currentCombo)
-                OnDecrease(currentCombo);
-            else if (displayCombo < currentCombo)
-                OnIncrease(currentCombo);
+            if (displayCombo != currentCombo)
+            {
+                if (displayCombo > currentCombo)
+                    OnDecrease(currentCombo);
+                else if (displayCombo < currentCombo)
+                    OnIncrease(currentCombo);
 
-            s_hitCombo_Incoming.Text = GetComboString();
+                s_hitCombo_Incoming.Text = GetComboString();
+            }
 
             if (s_hitCombo_Incoming.Transformations.Count > 0)
             {
@@ -101,7 +104,6 @@ namespace osum.GameModes.Play.Components
         {
             currentCombo = combo;
         }
-
 
         private void transferToMainCounter()
         {
