@@ -154,7 +154,7 @@ namespace osum.GameplayElements
                 p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut));
             }
 			
-			ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.78f, 0.1f, StartTime, EndTime));
+			ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.75f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
                 new pSprite(TextureManager.Load("spinner-clear"),
