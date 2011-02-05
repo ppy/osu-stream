@@ -110,8 +110,7 @@ namespace osum.Graphics
         	}
         }
 
-        int fbo;// = new int[1];
-        //int fixed renderbuffer;
+        int fbo;
 
 #if IPHONE
         internal unsafe void drawToTexture(bool begin)
@@ -183,9 +182,7 @@ namespace osum.Graphics
         {
 			if (Id < 0) return;
 
-			GL.PushMatrix();
-
-            Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
+			Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
             float drawHeight = drawRect.Height * scaleVector.Y;
             float drawWidth = drawRect.Width * scaleVector.X;
@@ -193,13 +190,9 @@ namespace osum.Graphics
             Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
 
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
-			GL.Translate(currentPos.X, currentPos.Y, 0);
 			
-			if (rotation != 0) GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
+			//if (rotation != 0) GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
 
-            if (originVector.X != 0 || originVector.Y != 0)
-                GL.Translate(-originVector.X, -originVector.Y, 0);
-			
 			float left = (float)drawRect.Left / potWidth;
             float right = (float)drawRect.Right / potWidth;
             float top = (float)drawRect.Top / potHeight;
@@ -213,20 +206,49 @@ namespace osum.Graphics
             coordinates[5] = bottom;
             coordinates[6] = left;
             coordinates[7] = bottom;
-
-			vertices[2] = drawWidth;
-            vertices[4] = drawWidth;
-            vertices[5] = drawHeight;
-            vertices[7] = drawHeight;
-
+			
+			//first move everything so it is centered on (0,0)
+			float vLeft = -originVector.X;
+			float vTop = -originVector.Y;
+			float vRight = -originVector.X + drawWidth;
+			float vBottom = -originVector.Y + drawHeight;
+			
+			if (rotation != 0)
+			{
+				float cos = (float)Math.Cos(rotation);
+				float sin = (float)Math.Sin(rotation);
+				
+				vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
+				vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
+				vertices[2] = vRight * cos - vTop * sin + currentPos.X;
+				vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
+	            vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
+	            vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
+				vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
+	            vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
+			}
+			else
+			{
+				vLeft += currentPos.X;
+				vRight += currentPos.X;
+				vTop += currentPos.Y;
+				vBottom += currentPos.Y;
+				
+				vertices[0] = vLeft;
+				vertices[1] = vTop;
+				vertices[2] = vRight;
+				vertices[3] = vTop;
+	            vertices[4] = vRight;
+	            vertices[5] = vBottom;
+				vertices[6] = vLeft;
+	            vertices[7] = vBottom;
+			}
+			
 			Bind();
 
 			GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
 			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
-			
 			GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
-
-            GL.PopMatrix();
         }
 
         public void SetData(int textureId)
