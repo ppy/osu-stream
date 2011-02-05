@@ -108,6 +108,8 @@ namespace osum
 
             PendingMode = OsuMode.Unknown;
             CurrentOsuMode = newMode;
+			
+			GC.Collect(); //force a full collect before we start displaying the new mode.
         }
 
         static bool modeChangePending;
