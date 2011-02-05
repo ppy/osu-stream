@@ -131,6 +131,46 @@ namespace osum.Graphics.Sprites
 
         Dictionary<char,pTexture> textureCache = new Dictionary<char, pTexture>();
 
+		pTexture textureFor(char c)
+		{
+			pTexture tex = null;
+			
+			if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
+					//the extra two conditions are only required for the fps counter between modes.
+                {
+					
+                }
+                else
+                {
+                    int offset = c - '0';
+					
+					switch (c)
+                    {
+                        case ',':
+							offset = 10;
+                            break;
+                        case '.':
+							offset = 11;
+							break;
+                        case '%':
+							offset = 12;
+							break;
+						case 'x':
+							offset = 13;
+							break;
+                    }
+					
+					if (osuTextureFont != OsuTexture.None)
+                        tex = TextureManager.Load((OsuTexture)(osuTextureFont + offset));
+                    else
+                        tex = TextureManager.Load(TextFont + "-" + c);
+
+                    textureCache[c] = tex;
+                }
+			
+			return tex;
+		}
+
         /// <summary>
         /// Updates the array of each character which is to be displayed.
         /// </summary>
@@ -150,52 +190,17 @@ namespace osum.Graphics.Sprites
 
             for (int i = 0; i < text.Length; i++)
             {
-                pTexture tex = null;
                 char c = text[i];
 
                 currentX -= (TextConstantSpacing || i == 0 ? 0 : SpacingOverlap);
 
                 int x = currentX;
-
-                if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
-					//the extra two conditions are only required for the fps counter between modes.
-                {
-					if (!TextConstantSpacing || c < '0' || c > '9')
+				
+				pTexture tex = textureFor(c);
+                
+				
+				if (!TextConstantSpacing || c < '0' || c > '9')
                         currentX += tex.Width;
-                }
-                else
-                {
-                    switch (c)
-                    {
-
-                        case ' ':
-                            currentX += TextureManager.Load(TextFont + "-dot").Width;
-                            continue;
-                        case ',':
-                            tex = TextureManager.Load(TextFont + "-comma");
-                            currentX += tex.Width;
-                            break;
-                        case '.':
-                            tex = TextureManager.Load(TextFont + "-dot");
-                            currentX += tex.Width;
-                            break;
-                        case '%':
-                            tex = TextureManager.Load(TextFont + "-percent");
-                            currentX += tex.Width;
-                            break;
-                        default:
-                            if (osuTextureFont != OsuTexture.None)
-                                tex = TextureManager.Load((OsuTexture)(osuTextureFont + (c - '0')));
-                            else
-                                tex = TextureManager.Load(TextFont + "-" + c);
-
-                            if (!TextConstantSpacing)
-                                currentX += tex.Width;
-                            break;
-                    }
-
-                    textureCache[c] = tex;
-                }
 
                 renderTextures.Add(tex);
 
@@ -211,7 +216,7 @@ namespace osum.Graphics.Sprites
             if (TextConstantSpacing)
             {
                 //float last = 0;
-                int charWidth = TextureManager.Load(TextFont + "-5").Width;
+                int charWidth = textureFor('5').Width;
 
                 currentX = 0;
 

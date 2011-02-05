@@ -70,44 +70,19 @@ namespace osum.Graphics.Skins
 
         public static void Initialize()
         {
-
-            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 638, 279, 140, 134));
-
+	        //scoring sprites
+            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 694, 279, 140, 134));
             textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 133, 132));
-
             textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 189, 0, 180, 180));
             textureLocations.Add(OsuTexture.hit100k, new SpriteSheetTexture("hit", 190, 180, 180, 180));
-
             textureLocations.Add(OsuTexture.hit300, new SpriteSheetTexture("hit", 0, 0, 189, 190));
             textureLocations.Add(OsuTexture.hit300k, new SpriteSheetTexture("hit", 0, 190, 190, 190));
             textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 626, 0, 208, 207));
 
+            //sliders
             textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 370, 132, 256, 257));
             textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 190, 366, 20, 18));
-
-            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 834, 0, 108, 108));
-            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
-
-            textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
-
             textureLocations.Add(OsuTexture.sliderarrow, new SpriteSheetTexture("hit", 626, 206, 77, 58));
-
-            textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
-            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
-			
-			textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
-
-            textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 201, 456, 13, 47));
-            textureLocations.Add(OsuTexture.default_2, new SpriteSheetTexture("hit", 219, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_3, new SpriteSheetTexture("hit", 289, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_4, new SpriteSheetTexture("hit", 359, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_5, new SpriteSheetTexture("hit", 429, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_6, new SpriteSheetTexture("hit", 499, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
-			
 			textureLocations.Add(OsuTexture.sliderb_0, new SpriteSheetTexture("hit", 0, 508, 118, 118));
 			textureLocations.Add(OsuTexture.sliderb_1, new SpriteSheetTexture("hit", 118, 508, 118, 118));
 			textureLocations.Add(OsuTexture.sliderb_2, new SpriteSheetTexture("hit", 236, 508, 118, 118));
@@ -118,7 +93,46 @@ namespace osum.Graphics.Skins
 			textureLocations.Add(OsuTexture.sliderb_7, new SpriteSheetTexture("hit", 236, 626, 118, 118));
 			textureLocations.Add(OsuTexture.sliderb_8, new SpriteSheetTexture("hit", 354, 626, 118, 118));
 			textureLocations.Add(OsuTexture.sliderb_9, new SpriteSheetTexture("hit", 472, 626, 118, 118));
-			
+
+
+            //hitcircles
+            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 834, 0, 108, 108));
+            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
+            textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
+            textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
+            
+            //hitobject misc.
+            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
+			textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
+
+            //default font (hitobjects)
+            textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 201, 456, 13, 47));
+            textureLocations.Add(OsuTexture.default_2, new SpriteSheetTexture("hit", 219, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_3, new SpriteSheetTexture("hit", 289, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_4, new SpriteSheetTexture("hit", 359, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_5, new SpriteSheetTexture("hit", 429, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_6, new SpriteSheetTexture("hit", 499, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
+            textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
+            
+            //score font
+            textureLocations.Add(OsuTexture.score_0, new SpriteSheetTexture("hit", 126, 400, 42, 54));
+            textureLocations.Add(OsuTexture.score_1, new SpriteSheetTexture("hit", 180, 400, 20, 54));
+            textureLocations.Add(OsuTexture.score_2, new SpriteSheetTexture("hit", 215, 400, 41, 54));
+            textureLocations.Add(OsuTexture.score_3, new SpriteSheetTexture("hit", 258, 400, 43, 54));
+            textureLocations.Add(OsuTexture.score_4, new SpriteSheetTexture("hit", 302, 400, 43, 54));
+            textureLocations.Add(OsuTexture.score_5, new SpriteSheetTexture("hit", 348, 400, 40, 54));
+            textureLocations.Add(OsuTexture.score_6, new SpriteSheetTexture("hit", 392, 400, 40, 54));
+            textureLocations.Add(OsuTexture.score_7, new SpriteSheetTexture("hit", 438, 400, 37, 54));
+            textureLocations.Add(OsuTexture.score_8, new SpriteSheetTexture("hit", 480, 400, 42, 54));
+            textureLocations.Add(OsuTexture.score_9, new SpriteSheetTexture("hit", 524, 400, 42, 54));
+            textureLocations.Add(OsuTexture.score_comma, new SpriteSheetTexture("hit", 572, 400, 15, 56));
+            textureLocations.Add(OsuTexture.score_dot, new SpriteSheetTexture("hit", 596, 400, 17, 54));
+            textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
+            textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
+
 			textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
         }
 
@@ -127,7 +141,7 @@ namespace osum.Graphics.Skins
 #if DEBUG
             DebugOverlay.AddLine("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
 #endif
-        }
+        } 
 
 
 		public static void DisposeAll()
@@ -135,7 +149,6 @@ namespace osum.Graphics.Skins
 			UnloadAll();
 			
 			SpriteCache.Clear();
-            
 			AnimationCache.Clear();
 		}
 		
@@ -350,6 +363,10 @@ namespace osum.Graphics.Skins
         default_7,
         default_8,
         default_9,
+		default_comma,
+		default_dot,
+		default_percent,
+		default_x,
 		sliderb_0,
 		sliderb_1,
 		sliderb_2,
@@ -360,6 +377,20 @@ namespace osum.Graphics.Skins
 		sliderb_7,
 		sliderb_8,
 		sliderb_9,
+        score_0,
+        score_1,
+        score_2,
+        score_3,
+        score_4,
+        score_5,
+        score_6,
+        score_7,
+        score_8,
+        score_9,
+		score_comma,
+		score_dot,
+		score_percent,
+		score_x,
 		playfield
     }
 }

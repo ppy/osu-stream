@@ -260,43 +260,15 @@
     </Content>
     <Content Include="Skins\Default\scorebar-bg.png">
     </Content>
-    <Content Include="Skins\Default\score-percent.png">
-    </Content>
-    <Content Include="Skins\Default\score-3.png">
-    </Content>
-    <Content Include="Skins\Default\score-8.png">
-    </Content>
-    <Content Include="Skins\Default\score-9.png">
-    </Content>
-    <Content Include="Skins\Default\score-6.png">
-    </Content>
-    <Content Include="Skins\Default\score-2.png">
-    </Content>
-    <Content Include="Skins\Default\score-0.png">
-    </Content>
-    <Content Include="Skins\Default\score-5.png">
-    </Content>
     <Content Include="Skins\Default\sliderpoint30.png">
     </Content>
     <Content Include="Skins\Default\sliderpoint10.png">
     </Content>
-    <Content Include="Skins\Default\score-x.png">
-    </Content>
     <Content Include="Skins\Default\star3.png">
-    </Content>
-    <Content Include="Skins\Default\score-4.png">
     </Content>
     <Content Include="Skins\Default\star.png">
     </Content>
-    <Content Include="Skins\Default\score-7.png">
-    </Content>
     <Content Include="Skins\Default\star2.png">
-    </Content>
-    <Content Include="Skins\Default\score-1.png">
-    </Content>
-    <Content Include="Skins\Default\score-comma.png">
-    </Content>
-    <Content Include="Skins\Default\score-dot.png">
     </Content>
     <Content Include="Skins\Default\scorebar-colour-1.png">
     </Content>
@@ -329,9 +301,5 @@
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\select.m4a" />
     <Content Include="Skins\Default\white.png" />
-    <Content Include="Skins\Default\default-comma.png" />
-    <Content Include="Skins\Default\default-dot.png" />
-    <Content Include="Skins\Default\default-percent.png" />
-    <Content Include="Skins\Default\default-x.png" />
   </ItemGroup>
 </Project>
