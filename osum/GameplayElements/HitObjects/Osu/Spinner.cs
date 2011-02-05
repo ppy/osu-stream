@@ -7,6 +7,7 @@ using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.GameplayElements.HitObjects;
+using osum.Graphics.Drawables;
 
 namespace osum.GameplayElements
 {
@@ -15,12 +16,9 @@ namespace osum.GameplayElements
         /// <summary>
         /// Used for the flicker effects on the score metre.
         /// </summary>
-        private readonly Random randomizer = new Random();
+        private static readonly Random randomizer = new Random();
 
-        #region Sprites
-        private readonly bool HighResApproachCircle;
-       
-        private readonly pSprite SpriteApproachCircle;
+        private readonly ApproachCircle ApproachCircle;
         private readonly pSprite spriteBackground;
         private readonly pSprite SpriteClear;
         private readonly pSprite spriteRpmBackground;
@@ -29,8 +27,6 @@ namespace osum.GameplayElements
         private readonly pSprite SpriteSpin;
         protected pSpriteText spriteBonus;
         protected pSprite spriteCircle;
-
-        #endregion
 
         /// <summary>
         /// The fastest acceleration that is allowed (depends on length of spinner).
@@ -131,27 +127,12 @@ namespace osum.GameplayElements
             spriteRpmText.ScaleScalar = 0.9f;
             SpriteCollection.Add(spriteRpmText);
 
-            pTexture highRes = TextureManager.Load("spinner-approachcircle");
-
-            HighResApproachCircle = highRes != null; // || SkinManager.IsDefault;
-
-            if (HighResApproachCircle)
-            {
-                SpriteApproachCircle =
-                    new pSprite(TextureManager.Load("spinner-approachcircle"),
-                                FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
-            }
-            else
-            {
-                SpriteApproachCircle =
-                    new pSprite(TextureManager.Load("approachcircle"),
-                                FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
-                                new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
-            }
-
-            SpriteCollection.Add(SpriteApproachCircle);
-
+			ApproachCircle = new ApproachCircle(new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), 1, false, 1, new Color4(77/255f, 139/255f, 217/255f,1));
+			ApproachCircle.Width = 6;
+            ApproachCircle.Clocking = ClockTypes.Audio;
+            ApproachCircle.Field = FieldTypes.Standard;
+            SpriteCollection.Add(ApproachCircle);
+			
             spriteBonus = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                                           new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height - SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
@@ -165,13 +146,15 @@ namespace osum.GameplayElements
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             SpriteCollection.Add(SpriteSpin);
 
-            foreach (pSprite p in SpriteCollection)
+            foreach (pDrawable p in SpriteCollection)
             {
                 p.Transformations.Clear();
 
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
                 p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut));
             }
+			
+			ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.78f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
                 new pSprite(TextureManager.Load("spinner-clear"),
@@ -179,15 +162,6 @@ namespace osum.GameplayElements
                             new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
             SpriteCollection.Add(SpriteClear);
-
-            if (HighResApproachCircle)
-            {
-                SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 1.86f, 0.1f, StartTime, EndTime));
-            }
-            else
-            {
-                SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 6, 0.1f, StartTime, EndTime));
-            }
 
             spriteRpmText.Transform(new Transformation(
                 spriteRpmText.Position + new Vector2(0, 50), spriteRpmText.Position,

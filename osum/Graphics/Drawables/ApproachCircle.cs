@@ -43,7 +43,7 @@ namespace osum.Graphics.Drawables
 	internal class ApproachCircle : pDrawable
 	{
         internal float Radius;
-        internal float Width = 1/20f;
+        internal float Width = 2/20f;
 
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
 		{
@@ -68,8 +68,8 @@ namespace osum.Graphics.Drawables
             {
                 float scale = FieldScale.X;
 				
-				float rad1 = (Radius + Width * 0.5f) * scale;
-                float rad2 = (Radius - Width * 0.5f) * scale;
+				float rad1 = (Radius * Scale.X + Width * 0.5f) * (scale/Scale.X);
+                float rad2 = (Radius * Scale.X - Width * 0.5f) * (scale/Scale.X);
                 
 
                 Vector2 pos = FieldPosition;
