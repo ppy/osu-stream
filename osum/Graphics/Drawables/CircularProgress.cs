@@ -61,7 +61,11 @@ namespace osum.Graphics.Drawables
 		public override void Dispose()
 		{
 		}
-		
+
+        const int parts = 48;
+        float[] vertices = new float[parts * 2 + 2];
+        float[] colours = new float[parts * 4 + 4];
+
 		public override bool Draw()
 		{
             if (base.Draw())
@@ -75,14 +79,7 @@ namespace osum.Graphics.Drawables
 
                 float endAngle = (float)(cappedProgress * Math.PI * 2f + startAngle);
 
-                int parts = (int)((endAngle - startAngle) / resolution);
-
-                float da = (endAngle - startAngle) / parts;
-
-                parts++;
-
-                float[] vertices = new float[parts * 2 + 2];
-                float[] colours = new float[parts * 4 + 4];
+                float da = (endAngle - startAngle) / (parts - 1);
 
                 float radius = Radius * FieldScale.X;
                 Vector2 pos = FieldPosition;

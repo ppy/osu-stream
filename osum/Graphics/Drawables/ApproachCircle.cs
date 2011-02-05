@@ -59,7 +59,7 @@ namespace osum.Graphics.Drawables
 		{
 		}
 
-        const int PARTS = 64;
+        const int PARTS = 48;
         float[] vertices = new float[PARTS * 4 + 4];
 		
 		public override bool Draw()
@@ -71,7 +71,6 @@ namespace osum.Graphics.Drawables
 				float rad1 = (Radius * Scale.X + Width * 0.5f) * (scale/Scale.X);
                 float rad2 = (Radius * Scale.X - Width * 0.5f) * (scale/Scale.X);
                 
-
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
