@@ -73,29 +73,26 @@ namespace osum.GameModes.Play.Components
 
         internal bool Draw()
         {
-            //if (GameBase.SixtyFramesPerSecondFrame)
+            if (s_Accuracy != null)
             {
-                if (s_Accuracy != null)
+                if (displayAccuracy - currentAccuracy <= -0.005)
                 {
-                    if (displayAccuracy - currentAccuracy <= -0.005)
-                    {
-                        displayAccuracy = Math.Round(displayAccuracy + Math.Max(0.01, (currentAccuracy - displayAccuracy) / 5), 2);
-                        s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
-                    }
-                    else if (displayAccuracy - currentAccuracy >= 0.005)
-                    {
-                        displayAccuracy = Math.Round(displayAccuracy - Math.Max(0.01, (displayAccuracy - currentAccuracy) / 5), 2);
-                        s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
-                    }
+                    displayAccuracy = Math.Round(displayAccuracy + Math.Max(0.01, (currentAccuracy - displayAccuracy) / 5), 2);
+                    s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
                 }
-
-                if (s_Score != null)
+                else if (displayAccuracy - currentAccuracy >= 0.005)
                 {
-                    if (displayScore < currentScore)
-                    {
-                        displayScore += Math.Max(1, (currentScore - displayScore) / 10);
-                        s_Score.Text = String.Format("{0:0000000}", displayScore);
-                    }
+                    displayAccuracy = Math.Round(displayAccuracy - Math.Max(0.01, (displayAccuracy - currentAccuracy) / 5), 2);
+                    s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
+                }
+            }
+
+            if (s_Score != null)
+            {
+                if (displayScore < currentScore)
+                {
+                    displayScore += Math.Max(1, (currentScore - displayScore) / 6);
+                    s_Score.Text = displayScore.ToString().PadLeft(7, '0');
                 }
             }
 
