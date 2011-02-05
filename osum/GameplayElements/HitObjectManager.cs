@@ -166,9 +166,13 @@ namespace osum.GameplayElements
 		
 		int processedTo;
 		
+		public bool AllowSpinnerOptimisation;
+		
         public void Update()
         {
-            spriteManager.Update();
+            AllowSpinnerOptimisation = false;
+			
+			spriteManager.Update();
 
 
             int lowestActiveObject = -1;
@@ -187,6 +191,9 @@ namespace osum.GameplayElements
                 if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
+					
+					if (!AllowSpinnerOptimisation)
+						AllowSpinnerOptimisation |= h is Spinner && h.SpriteCollection[0].Alpha == 1;
 
                     if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);

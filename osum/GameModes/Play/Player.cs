@@ -198,7 +198,7 @@ namespace osum.GameModes
 
         public override bool Draw()
         {
-            base.Draw();
+			base.Draw();
 
             hitObjectManager.Draw();
 
@@ -230,6 +230,8 @@ namespace osum.GameModes
             comboCounter.Update();
 
             base.Update();
+			
+			playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
         }
 
         internal static void SetBeatmap(Beatmap beatmap)
