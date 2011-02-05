@@ -332,16 +332,15 @@ namespace osum.Graphics.Renderers
             GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
         }
 
+        float[] coordinates = new float[(MAXRES + 2) * 2];
+        float[] vertices = new float[3 * (MAXRES + 2)];
 
         protected void glDrawHalfCircle(int count)
         {
             //todo: don't alloc these arrays every call if possible.
-            float[] coordinates = new float[(count + 2) * 2];
             coordinates[0] = 1 - 1.0f / TEX_WIDTH;
 
             const int vertexSize = 3;
-
-            float[] vertices = new float[vertexSize * (count + 2)];
 
             vertices[0] = 0;
             vertices[1] = 0;
