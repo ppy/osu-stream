@@ -191,8 +191,6 @@ namespace osum.Graphics
 
             GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
 			
-			//if (rotation != 0) GL.Rotate(pMathHelper.ToDegrees(rotation), 0, 0, 1.0f);
-
 			float left = (float)drawRect.Left / potWidth;
             float right = (float)drawRect.Right / potWidth;
             float top = (float)drawRect.Top / potHeight;

@@ -208,11 +208,17 @@ namespace osum.Graphics.Sprites
 		
 		static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
 		
+		void addToBatch(pDrawable p)
+		{
+		}
+
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
         internal bool Draw()
         {
+			pTexture currentBatchTexture = null;
+			
 			foreach (pDrawable p in Sprites)
 			{
                 if (p.Alpha > 0)
@@ -223,10 +229,24 @@ namespace osum.Graphics.Sprites
 						lastBlend = p.BlendingMode;
 					}
 
+					
 					TexturesEnabled = p.UsesTextures;
-					p.Draw();
+					if (p.Draw())
+					{
+						pSprite ps = p as pSprite;
+						
+						if (p.Texture != currentBatchTexture)
+						{
+							currentBatchTexture = p.Texture;
+							addToBatch(p);
+							flushBatch();
+						}
+					}
 				}
 			}
+			
+			flushBatch();
+			
             return true;
         }
 		
