@@ -211,6 +211,10 @@ namespace osum.Graphics.Sprites
 		void addToBatch(pDrawable p)
 		{
 		}
+		
+		void flushBatch()
+		{
+		}
 
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
@@ -229,17 +233,20 @@ namespace osum.Graphics.Sprites
 						lastBlend = p.BlendingMode;
 					}
 
-					
 					TexturesEnabled = p.UsesTextures;
 					if (p.Draw())
 					{
 						pSprite ps = p as pSprite;
-						
-						if (p.Texture != currentBatchTexture)
+						if (ps != null)
 						{
-							currentBatchTexture = p.Texture;
-							addToBatch(p);
-							flushBatch();
+							if (ps.Texture != currentBatchTexture)
+							{
+								//this texture is different from the current batch; we will need to flush and render fresh.
+								flushBatch();
+								currentBatchTexture = ps.Texture;
+							}
+							
+							addToBatch(ps);
 						}
 					}
 				}

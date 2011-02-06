@@ -292,6 +292,10 @@ namespace osum.Graphics.Sprites
         /// </summary>
         GamefieldSprites,
 		
+		/// <summary>
+		/// A field where 1 pixel at 1.0f scale becomes the width of a hitObject. Used for primitives that are based around
+		/// gamefield objects.
+		/// </summary>
 		GamefieldExact,
 		
 		GamefieldStandardScale,
