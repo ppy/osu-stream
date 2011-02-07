@@ -120,10 +120,7 @@ namespace osum.Graphics
 
         private void Dispose(bool isDisposing)
         {
-            if (isDisposed) return;
-            isDisposed = true;
-
-            if (TextureGl != null && isDisposed)
+            if (TextureGl != null)
             {
                 if (fboId >= 0)
 				{
@@ -243,25 +240,77 @@ namespace osum.Graphics
             return pt;
         }
 
-        /// <summary>
+        
+		public static pTexture FromFile(string filename)
+		{
+			return FromFile(filename, false);
+		}
+		
+		/// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
-        public static pTexture FromFile(string filename)
+        public static pTexture FromFile(string filename, bool mipmap)
         {
-            try
+			//load base texture first...
+			
+			pTexture tex = null;
+			
+			try
             {
 #if IPHONE
 				using (UIImage image = UIImage.FromFile(filename))
-                    return FromUIImage(image,filename);
+                    tex = FromUIImage(image,filename);
 #else
                 using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    return FromStream(stream, filename);
+                    tex = FromStream(stream, filename);
 #endif
             }
             catch
             {
                 return null;
             }
+			
+			if (mipmap)
+			{
+				int mipmapLevel = 1;
+				
+				int width = tex.Width;
+				int height = tex.Height;
+				
+				do 
+				{
+					string mmfilename = filename.Replace(".", mipmapLevel + ".");
+					if (!File.Exists(mmfilename))
+						break;
+					
+					width /= 2;
+					height /= 2;
+					
+#if IPHONE
+					using (UIImage textureImage = UIImage.FromFile(mmfilename))
+					{
+						IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
+				
+						using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+			                        width, height, 8, width * 4,
+			                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+			            	textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
+						
+			            tex.TextureGl.SetData(pTextureData,mipmapLevel,0);
+						
+						Marshal.FreeHGlobal(pTextureData);
+					}
+#endif
+					
+					
+					mipmapLevel++;
+				} while (true);
+				
+			}
+			
+			return tex;
+			
+			
         }
 
         public static pTexture FromStream(Stream stream, string assetname)
@@ -275,28 +324,20 @@ namespace osum.Graphics
             if (textureImage == null)
                 return null;
 
-            int texWidth = (int)textureImage.Size.Width;
+            int width = (int)textureImage.Size.Width;
+            int height = (int)textureImage.Size.Height;
 
-            int texHeight = (int)textureImage.Size.Height;
-
-            byte[] textureData = new byte[texWidth * texHeight * 4];
-
-            CGBitmapContext textureContext;
-
-            fixed (byte* pTextureData = textureData) {
-
-                textureContext = new CGBitmapContext((IntPtr) pTextureData,
-                        texWidth, texHeight, 8, texWidth * 4,
-                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast);
-
-                textureContext.DrawImage(new RectangleF (0, 0, texWidth, texHeight), textureImage.CGImage);
-
-                textureContext.Dispose();
-
-            }
+			IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
 			
-			//todo: we can call this using the fixed context above and pass on an IntPtr for loading?
-            pTexture tex = FromRawBytes(textureData,(int)texWidth, (int)texHeight);
+			using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+                        width, height, 8, width * 4,
+                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+            	textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
+			
+            pTexture tex = FromRawBytes(pTextureData, width, height);
+			
+			Marshal.FreeHGlobal(pTextureData);
+			
 			tex.assetName = assetname;
 			return tex;
 		}
@@ -349,7 +390,7 @@ namespace osum.Graphics
             using (MemoryStream ms = new MemoryStream(data))
                 return FromStream(ms, filename, true);
         }
-
+		
         public static pTexture FromRawBytes(IntPtr location, int width, int height)
         {
             pTexture pt = new pTexture();
@@ -358,7 +399,6 @@ namespace osum.Graphics
 
             try
             {
-                //OpenGL outperforms XNA in this case as we can remain in native unsafe territory.
                 pt.TextureGl = new TextureGl(pt.Width, pt.Height);
                 pt.TextureGl.SetData(location, 0, 0);
 
