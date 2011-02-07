@@ -293,11 +293,8 @@ namespace osum.Graphics
         public void SetData (IntPtr dataPointer, int level, PixelFormat format)
         {
         	if (format == 0)
-        		format = PixelFormat.Bgra;
+        		format = PixelFormat.Rgba;
 
-            GL.GetError();
-        	//Clear errors.
-			
 			SpriteManager.TexturesEnabled = true;
 
             bool newTexture = false;
@@ -307,17 +304,22 @@ namespace osum.Graphics
         		Delete();
         		newTexture = true;
         		int[] textures = new int[1];
-        		GL.GenTextures (1, textures);
+        		GL.GenTextures(1, textures);
         		Id = textures[0];
         	}
 
-            if (level > 0)
-        		return;
-
        		GL.BindTexture(SURFACE_TYPE, Id);
 
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            if (level > 0)
+			{
+				GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapNearest);
+	            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.LinearMipmapNearest);
+			}
+			else
+			{
+				GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+	            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+			}
 
             //can't determine if this helps
 			GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
@@ -336,7 +338,7 @@ namespace osum.Graphics
 			
             if (newTexture)
             {
-                if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
+                if (SURFACE_TYPE == TextureTarget.Texture2D)
                 {
                     if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
                     {
@@ -350,18 +352,13 @@ namespace osum.Graphics
                     }
                     else
                     {
-                        byte[] temp = new byte[potWidth * potHeight * 4];
-                        GCHandle h0 = GCHandle.Alloc(temp, GCHandleType.Pinned);
-                        IntPtr pinnedDataPointer = h0.AddrOfPinnedObject();
 #if IPHONE
                         GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, pinnedDataPointer);
+                                        PixelType.UnsignedByte, IntPtr.Zero);
 #else
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, pinnedDataPointer);
+                                        PixelType.UnsignedByte, IntPtr.Zero);
 #endif
-                        h0.Free();
-
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
                                           PixelType.UnsignedByte, dataPointer);
                     }
@@ -379,15 +376,8 @@ namespace osum.Graphics
             }
             else
             {
-                GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
+                GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth / (int)Math.Pow(2,level), textureHeight  / (int)Math.Pow(2,level), 0, format,
                                    PixelType.UnsignedByte, dataPointer);
-            }
-
-            if (GL.GetError() != 0)
-            {
-                Console.WriteLine("something go wrong!");
-                //error occurred - rollback texture
-                Delete();
             }
         }
     }
