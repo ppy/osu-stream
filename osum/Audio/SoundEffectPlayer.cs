@@ -14,11 +14,6 @@ namespace osum
     public class SoundEffectPlayer : IUpdateable, ISoundEffectPlayer
     {
         /// <summary>
-        /// Extension which provides more control over how buffers are stored.
-        /// </summary>
-        XRamExtension XRam;
-
-        /// <summary>
         /// Current OpenAL context.
         /// </summary>
         AudioContext context;
@@ -28,10 +23,8 @@ namespace osum
         /// </summary>
         Dictionary<string, int> BufferCache = new Dictionary<string, int>();
 
-        /// <summary>
-        /// Active sources are temporarily stored here so they can be managed and cleaned up.
-        /// </summary>
-        List<int> Sources = new List<int>();
+		const int MAX_SOURCES = 32; //hardware limitation
+		int[] sources;
 
         public SoundEffectPlayer()
         {
@@ -44,7 +37,7 @@ namespace osum
                 //todo: handle error here.
             }
 
-            XRam = new XRamExtension();
+			sources = AL.GenSources(MAX_SOURCES);
         }
 
         /// <summary>
@@ -56,19 +49,18 @@ namespace osum
         {
             if (!File.Exists(filename)) return -1;
 			
-			int[] buffers = AL.GenBuffers(1);
-
-            // Load a .wav file from disk
-            if (XRam.IsInitialized) XRam.SetBufferMode(0, ref buffers[0], XRamExtension.XRamStorage.Hardware); // optional
-
-            AudioReader sound = new AudioReader(filename);
-            byte[] readSound = sound.ReadToEnd().Data;
-            AL.BufferData(buffers[0], OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);
+			int buffer = AL.GenBuffer();
+			
+            using (AudioReader sound = new AudioReader(filename))
+			{
+	            byte[] readSound = sound.ReadToEnd().Data;
+	            AL.BufferData(buffer, OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);
+			}
 
             if (AL.GetError() != ALError.NoError)
                 return -1;
 
-            return buffers[0];
+            return buffer;
         }
 
         /// <summary>
@@ -79,6 +71,8 @@ namespace osum
             foreach (int id in BufferCache.Values)
                 AL.DeleteBuffer(id);
             BufferCache.Clear();
+			
+			AL.DeleteSources(sources);
         }
 
         /// <summary>
@@ -88,13 +82,17 @@ namespace osum
         /// <returns></returns>
         public int PlayBuffer(int buffer)
         {
-            int[] sources = AL.GenSources(1);
-            AL.Source(sources[0], ALSourcei.Buffer, buffer);
-            AL.SourcePlay(sources[0]);
+            int i = 0;
+			while (AL.GetSourceState(sources[i]) == ALSourceState.Playing)
+				i++;
+			
+			if (i >= MAX_SOURCES)
+				return -1; //ran out of sources
 
-            Sources.Add(sources[0]);
+            AL.Source(sources[i], ALSourcei.Buffer, buffer);
+            AL.SourcePlay(sources[i]);
 
-            return sources[0];
+            return sources[i];
         }
 
         /// <summary>
@@ -102,15 +100,7 @@ namespace osum
         /// </summary>
         public void Update()
         {
-            for (int i = 0; i < Sources.Count; i++)
-            {
-                if (AL.GetSourceState(i) != ALSourceState.Playing)
-                {
-                    AL.DeleteSource(i);
-                    Sources.RemoveAt(i);
-                    i--;
-                }
-            }
+			
         }
     }
 }
