@@ -95,20 +95,15 @@ namespace osum
 		protected override void OnUpdateFrame (FrameEventArgs e)
 		{
 			base.OnUpdateFrame(e);
+			GameBase.Instance.Update(e);
 		}
 		
 		protected override void OnRenderFrame (FrameEventArgs e)
 		{
 			base.OnRenderFrame(e);
-
-			//MakeCurrent();
-			//todo: any reason to call this on iPhone?
-			
 			GameBase.Instance.Draw(e);
-			
 			SwapBuffers();
 		}
-		
 		
 		InputSourceIphone inputHandler;
 		

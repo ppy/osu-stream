@@ -285,19 +285,17 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
-            bool doDraw = Update(e);
-
             GL.Clear(Constants.COLOR_BUFFER_BIT);
 			//todo: Does clearing DEPTH as well here add a performance overhead?
 
-            if (doDraw)
-            {
-                SpriteManager.Reset();
+            if (ignoreNextFrameTime)
+				return;
 
-                Director.Draw();
+			SpriteManager.Reset();
 
-                MainSpriteManager.Draw();
-            }
+            Director.Draw();
+
+            MainSpriteManager.Draw();
         }
 
         public static void TriggerLayoutChanged()
