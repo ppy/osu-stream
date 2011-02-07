@@ -43,7 +43,7 @@ namespace osum.Support
 			
 			if (GameBase.ElapsedMilliseconds > 25)
 			{
-					fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 100);
+					fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 10);
 					fpsDisplay.MoveTo(new Vector2(0, 40),600, EasingTypes.In);
 			}
 			
