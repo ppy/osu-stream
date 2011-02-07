@@ -213,6 +213,8 @@ namespace osum
             Components.Add(effect);
 
             AudioEngine.Initialize(effect, music);
+			
+			DebugOverlay.Update();
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);

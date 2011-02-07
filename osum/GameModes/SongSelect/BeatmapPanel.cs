@@ -51,7 +51,8 @@ namespace osum.GameModes.SongSelect
 			text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 80), 1, true, Color4.White, false);
 			text.Bold = true;
 			text.Offset = new Vector2(10,0);
-			SpriteCollection.Add(text);
+			if (text.Texture != null)
+				SpriteCollection.Add(text);
 			
 			text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), 1, true, Color4.White, false);
 			text.Offset = new Vector2(10,28);

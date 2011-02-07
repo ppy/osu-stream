@@ -80,6 +80,9 @@ namespace osum.Graphics.Sprites
             try
             {
                 osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
+				
+				TextureManager.Load(osuTextureFont);
+				//preload
             }
             catch
             {
