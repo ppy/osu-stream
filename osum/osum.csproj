@@ -33,7 +33,7 @@
     <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
-    <MtouchMinimumOS>3.0</MtouchMinimumOS>
+    <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
     <MtouchSdkVersion>4.2</MtouchSdkVersion>
