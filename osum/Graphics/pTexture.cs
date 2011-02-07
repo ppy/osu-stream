@@ -55,6 +55,7 @@ namespace osum.Graphics
         internal int Y;
         internal int LastAccess;
         private bool isDisposed;
+		internal bool Permanent;
 #if DEBUG
         internal int id;
         internal static int staticid = 1;

@@ -89,7 +89,7 @@ namespace osum
                 if (CurrentMode != null)
                     CurrentMode.Dispose();
 
-                TextureManager.DisposeAll();
+                TextureManager.DisposeAll(false);
 
                 CurrentMode = mode;
                 CurrentMode.Initialize();

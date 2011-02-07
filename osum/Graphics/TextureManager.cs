@@ -144,18 +144,20 @@ namespace osum.Graphics.Skins
         } 
 
 
-		public static void DisposeAll()
+		public static void DisposeAll(bool force)
 		{
-			UnloadAll();
+			UnloadAll(force);
 			
 			SpriteCache.Clear();
 			AnimationCache.Clear();
 		}
 		
-		public static void UnloadAll()
+		public static void UnloadAll(bool force)
 		{
 			foreach (pTexture p in SpriteCache.Values)
-				p.UnloadTexture();
+				if (!p.Permanent)
+					p.UnloadTexture();
+
 			foreach (pTexture p in DisposableTextures)
 				p.Dispose();
 
@@ -186,6 +188,7 @@ namespace osum.Graphics.Skins
             if (textureLocations.TryGetValue(texture, out info))
             {
                 pTexture tex = Load(info.SheetName);
+				tex.Permanent = true;
                 tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;
