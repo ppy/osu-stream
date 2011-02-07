@@ -170,6 +170,8 @@ namespace osum.Graphics.Skins
 		{
 			foreach (pTexture p in SpriteCache.Values)
 				p.ReloadIfPossible();
+			
+			PopulateSurfaces();
 		}
 		
 		public static void RegisterDisposable(pTexture t)
@@ -326,7 +328,8 @@ namespace osum.Graphics.Skins
 
         internal static void ReturnTexture(pTexture texture)
         {
-            availableSurfaces.Enqueue(texture);
+            if (!texture.IsDisposed && texture.TextureGl.Loaded)
+				availableSurfaces.Enqueue(texture);
         }
     }
 
