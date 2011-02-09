@@ -96,8 +96,8 @@ namespace osum.GameplayElements
 
                         //if (currentSection == FileSection.Events) ParseVariables(ref line);
 
-                        string[] split = line.Trim().Split(',');
-                        string[] var = line.Trim().Split(':');
+                        string[] split = line.Split(',');
+                        string[] var = line.Split(':');
                         string key = string.Empty;
                         string val = string.Empty;
                         if (var.Length > 1)
@@ -124,8 +124,8 @@ namespace osum.GameplayElements
                             case FileSection.TimingPoints:
                                 if (split.Length > 2)
                                     beatmap.ControlPoints.Add(
-                                        new ControlPoint(Double.Parse(split[0].Trim(), GameBase.nfi),
-                                                         Double.Parse(split[1].Trim(), GameBase.nfi),
+                                        new ControlPoint(Double.Parse(split[0], GameBase.nfi),
+                                                         Double.Parse(split[1], GameBase.nfi),
                                                          split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
                                                          (TimeSignatures)Int32.Parse(split[2]),
                                                          (SampleSet)Int32.Parse(split[3]),
@@ -240,7 +240,6 @@ namespace osum.GameplayElements
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[1], GameBase.nfi)));
                                 Vector2 pos = new Vector2(x, y);
                                 int time = (int)Decimal.Parse(split[2], GameBase.nfi);
-                                //+ BeatmapManager.Current.VersionOffset;
 
                                 int comboOffset = (Convert.ToInt32(split[3], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner;
@@ -256,7 +255,7 @@ namespace osum.GameplayElements
                                 }
                                 else if ((type & HitObjectType.Slider) > 0)
                                 {
-                                    CurveTypes curveType = CurveTypes.Catmull;
+                                    CurveTypes curveType = CurveTypes.Bezier;
                                     int repeatCount = 0;
                                     double length = 0;
                                     List<Vector2> points = new List<Vector2>();
