@@ -64,23 +64,19 @@ namespace osum.GameplayElements
             SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0.9f, 0,
                 startTime, startTime + (int)(DifficultyManager.PreEmpt * 0.1f)));
 
-            SpriteHitCircle1.Transform(new Transformation(TransformationType.Fade, 0, 1,
-                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
+            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
+                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
 
-            SpriteHitCircle2.Transform(new Transformation(TransformationType.Fade, 0, 1, 
-                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
+            SpriteHitCircle1.Transform(fadeIn);
+            SpriteHitCircle2.Transform(fadeIn);
+            SpriteHitCircleText.Transform(fadeIn);
 
-            SpriteHitCircleText.Transform(new Transformation(TransformationType.Fade, 0, 1, 
-                startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn));
+            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
+                startTime, startTime + DifficultyManager.HitWindow50);
 
-            SpriteHitCircle1.Transform(new Transformation(TransformationType.Fade, 1, 0,
-                startTime, startTime + DifficultyManager.HitWindow50));
-
-            SpriteHitCircle2.Transform(new Transformation(TransformationType.Fade, 1, 0,
-                startTime, startTime + DifficultyManager.HitWindow50));
-
-            SpriteHitCircleText.Transform(new Transformation(TransformationType.Fade, 1, 0,
-                startTime, startTime + DifficultyManager.HitWindow50));
+            SpriteHitCircle1.Transform(fadeOut);
+            SpriteHitCircle2.Transform(fadeOut);
+            SpriteHitCircleText.Transform(fadeOut);
         }
 
         protected virtual bool ShowCircleText

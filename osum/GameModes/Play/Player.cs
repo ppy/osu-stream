@@ -79,11 +79,11 @@ namespace osum.GameModes
         {
             TextureManager.PopulateSurfaces();
 				
-			InputManager.OnDown += new InputHandler(InputManager_OnDown);
-            InputManager.OnMove += new InputHandler(InputManager_OnMove);
+			InputManager.OnDown += InputManager_OnDown;
+            InputManager.OnMove += InputManager_OnMove;
 
             hitObjectManager = new HitObjectManager(Beatmap);
-            hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
+            hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
 
             hitObjectManager.LoadFile();
 
@@ -180,7 +180,8 @@ namespace osum.GameModes
 		
         public override void Dispose()
         {
-            InputManager.OnDown -= new InputHandler(InputManager_OnDown);
+            InputManager.OnDown -= InputManager_OnDown;
+
 
             hitObjectManager.Dispose();
 
@@ -189,7 +190,7 @@ namespace osum.GameModes
 
             base.Dispose();
 			
-			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.66666667f) + " (GC: "+(GC.CollectionCount(0) - gcAtStart)+")", 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false);
+			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.666667f) + " (GC: "+(GC.CollectionCount(0) - gcAtStart)+")", 16, new Vector2(0, 100), new Vector2(512,256), 0, true, Color4.White, false);
 			GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
         }
 		

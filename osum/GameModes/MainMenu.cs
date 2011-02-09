@@ -96,12 +96,12 @@ namespace osum.GameModes
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.125f, 1f, initial_display - 200, initial_display));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
 
-			InputManager.OnDown += new InputHandler(InputManager_OnDown);
+			InputManager.OnDown += InputManager_OnDown;
 		}
 
 		public override void Dispose ()
 		{
-			InputManager.OnDown -= new InputHandler(InputManager_OnDown);
+			InputManager.OnDown -= InputManager_OnDown;
 			
 			base.Dispose();
 		}

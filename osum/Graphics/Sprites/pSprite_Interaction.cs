@@ -89,15 +89,15 @@ namespace osum.Graphics.Sprites
 
             if (needEventsBound)
             {
-                InputManager.OnDown += new InputHandler(InputManager_OnDown);
-                InputManager.OnMove += new InputHandler(InputManager_OnMove);
-                InputManager.OnUp += new InputHandler(InputManager_OnUp);
+                InputManager.OnDown += InputManager_OnDown;
+                InputManager.OnMove += InputManager_OnMove;
+                InputManager.OnUp += InputManager_OnUp;
             }
             else
             {
-                InputManager.OnDown -= new InputHandler(InputManager_OnDown);
-                InputManager.OnMove -= new InputHandler(InputManager_OnMove);
-                InputManager.OnUp -= new InputHandler(InputManager_OnUp);
+                InputManager.OnDown -= InputManager_OnDown;
+                InputManager.OnMove -= InputManager_OnMove;
+                InputManager.OnUp -= InputManager_OnUp;
             }
         }
 

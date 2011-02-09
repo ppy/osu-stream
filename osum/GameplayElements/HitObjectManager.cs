@@ -77,6 +77,8 @@ namespace osum.GameplayElements
             spriteManager.Dispose();
 
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
+
+            OnScoreChanged = null;
         }
 
         /// <summary>
