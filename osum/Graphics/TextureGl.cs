@@ -256,16 +256,12 @@ namespace osum.Graphics
 
         public void SetData(byte[] data)
         {
-            SetData(data, 0, PixelFormat.Bgra);
+            SetData(data, 0, PIXEL_FORMAT);
         }
 
         public void SetData(byte[] data, int level)
         {
-#if IPHONE
-			SetData(data, level, PixelFormat.Rgba);
-#else
-			SetData(data, level, PixelFormat.Bgra);
-#endif
+            SetData(data, level, PIXEL_FORMAT);
         }
 
         /// <summary>
@@ -286,6 +282,12 @@ namespace osum.Graphics
         }
 
         public const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
+
+#if IPHONE
+        public const PixelFormat PIXEL_FORMAT = PixelFormat.Rgba;
+#else
+        public const PixelFormat PIXEL_FORMAT = PixelFormat.Bgra;
+#endif
 		
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
@@ -293,7 +295,7 @@ namespace osum.Graphics
         public void SetData (IntPtr dataPointer, int level, PixelFormat format)
         {
         	if (format == 0)
-        		format = PixelFormat.Rgba;
+                format = PIXEL_FORMAT;
 
 			SpriteManager.TexturesEnabled = true;
 
@@ -328,6 +330,15 @@ namespace osum.Graphics
 			//doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
+#if IPHONE
+            int internalFormat = (int)PixelInternalFormat.Rgba;
+            switch (format)
+            {
+                case PixelFormat.Alpha:
+                    internalFormat = (int)PixelInternalFormat.Alpha;
+                    break;
+            }
+#else
             PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
             switch (format)
             {
@@ -335,6 +346,7 @@ namespace osum.Graphics
                     internalFormat = PixelInternalFormat.Alpha;
                     break;
             }
+#endif
 			
             if (newTexture)
             {
@@ -342,41 +354,27 @@ namespace osum.Graphics
                 {
                     if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
                     {
-#if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, dataPointer);
-#else
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, dataPointer);
-#endif
                     }
                     else
                     {
-#if IPHONE
-                        GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, IntPtr.Zero);
-#else
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, IntPtr.Zero);
-#endif
+
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
                                           PixelType.UnsignedByte, dataPointer);
                     }
                 }
                 else
                 {
-#if IPHONE
-                    GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth, textureHeight, 0, format,
-                                    PixelType.UnsignedByte, dataPointer);
-#else
                     GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth, textureHeight, 0, format,
                                     PixelType.UnsignedByte, dataPointer);
-#endif
                 }
             }
             else
             {
-                GL.TexImage2D(SURFACE_TYPE, level, (int)internalFormat, textureWidth / (int)Math.Pow(2,level), textureHeight  / (int)Math.Pow(2,level), 0, format,
+                GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth / (int)Math.Pow(2,level), textureHeight  / (int)Math.Pow(2,level), 0, format,
                                    PixelType.UnsignedByte, dataPointer);
             }
         }

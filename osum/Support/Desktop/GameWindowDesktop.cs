@@ -92,6 +92,7 @@ namespace osum
                 AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
 
             //todo: make update happen from here.
+            GameBase.Instance.Update(e);
         }
 
         /// <summary>
