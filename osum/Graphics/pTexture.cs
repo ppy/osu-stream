@@ -252,6 +252,8 @@ namespace osum.Graphics
         public static pTexture FromFile(string filename, bool mipmap)
         {
 			//load base texture first...
+
+            if (!File.Exists(filename)) return null;
 			
 			pTexture tex = null;
 			
