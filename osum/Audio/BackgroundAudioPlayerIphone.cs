@@ -74,30 +74,29 @@ namespace osum
 
             NSError error = null;
 
-            fixed (byte* ptr = audio)
-            {
-                NSData data = NSData.FromBytes((IntPtr)ptr,(uint)audio.Length);
-
+			using (NSData data = NSData.FromArray(audio))
+			{
                 player = AVAudioPlayer.FromData(data,out error);
                 //player.MeteringEnabled = true; -- enable for CurrentPower readings
                 player.NumberOfLoops = looping ? -1 : 0;
-            }
+			}
 
             return error == null;
         }
 
         public bool Load(string filename)
         {
-            if (player != null)
-                player.Dispose();
+            Unload();
 
-            string path = filename;//NSBundle.MainBundle.BundlePath + "/test.mp3";
-            NSError error;
+            string path = filename;
+            
+			NSError error = null;
 
-            NSUrl url = NSUrl.FromFilename(path);
-
-            player = AVAudioPlayer.FromUrl(url,out error);
-            player.MeteringEnabled = true;
+            using (NSUrl url = NSUrl.FromFilename(path))
+			{
+	            player = AVAudioPlayer.FromUrl(url,out error);
+	            player.MeteringEnabled = true;
+			}
 
             return error == null;
         }
