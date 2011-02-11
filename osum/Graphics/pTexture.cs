@@ -135,6 +135,8 @@ namespace osum.Graphics
 				TextureGl.Dispose();
                 TextureGl = null;
             }
+			
+			isDisposed = true;
         }
 		
 		/// <summary>
@@ -189,58 +191,6 @@ namespace osum.Graphics
             }
         }
 
-        /// <summary>
-        /// Read a pTexture from the ResourceStore (ouenresources project).
-        /// </summary>
-        public static pTexture FromResourceStore(string filename)
-        {
-            //byte[] bytes = ResourcesStore.ResourceManager.GetObject(filename) as byte[];
-            byte[] bytes = null;
-
-            if (bytes == null)
-                return null;
-
-            pTexture pt = new pTexture();
-
-            pt.assetName = filename;
-            pt.fromResourceStore = true;
-
-            using (Stream stream = new MemoryStream(bytes))
-            {
-                using (HaxBinaryReader br = new HaxBinaryReader(stream))
-                {
-                    //XNA pipeline header crap.  Fuck it all.
-                    br.ReadBytes(10);
-                    int typeCount = br.Read7BitEncodedInt();
-                    for (int i = 0; i < typeCount; i++)
-                    {
-                        br.ReadString();
-                        br.ReadInt32();
-                    }
-                    br.Read7BitEncodedInt();
-                    br.Read7BitEncodedInt();
-                    //And that's the header dealt with.
-
-                    br.ReadInt32(); // skip SurfaceFormat
-                    pt.Width = br.ReadInt32();
-                    pt.Height = br.ReadInt32();
-                    int numberLevels = br.ReadInt32();
-
-                    pt.TextureGl = new TextureGl(pt.Width, pt.Height);
-
-                    for (int i = 0; i < numberLevels; i++)
-                    {
-                        int count = br.ReadInt32();
-                        byte[] data = br.ReadBytes(count);
-                        pt.SetData(data, i, 0);
-                    }
-                }
-            }
-
-            return pt;
-        }
-
-        
 		public static pTexture FromFile(string filename)
 		{
 			return FromFile(filename, false);
@@ -516,7 +466,7 @@ namespace osum.Graphics
 
         internal pTexture Clone()
         {
-            return new pTexture(TextureGl, Width, Height) { assetName = this.assetName, fromResourceStore = this.fromResourceStore };
+            return (pTexture)this.MemberwiseClone();
         }
     }
 

@@ -191,7 +191,7 @@ namespace osum.Graphics.Sprites
             if (texture == null || texture.TextureGl == null)
                 return false;
 
-            texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
+            Texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
             return true;
         }
 

@@ -81,6 +81,8 @@ namespace osum.GameModes
 				
 			InputManager.OnDown += InputManager_OnDown;
             InputManager.OnMove += InputManager_OnMove;
+			
+			TextureManager.RequireSurfaces = true;
 
             hitObjectManager = new HitObjectManager(Beatmap);
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
@@ -181,7 +183,8 @@ namespace osum.GameModes
         public override void Dispose()
         {
             InputManager.OnDown -= InputManager_OnDown;
-
+			
+			TextureManager.RequireSurfaces = false;
 
             hitObjectManager.Dispose();
 

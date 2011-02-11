@@ -134,6 +134,10 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
 			textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
+			
+			GameBase.OnScreenLayoutChanged += delegate {
+				DisposeDisposable();		
+			};
         }
 
         public static void Update()
@@ -158,12 +162,15 @@ namespace osum.Graphics.Skins
 				if (!p.Permanent)
 					p.UnloadTexture();
 
+			DisposeDisposable();
+            availableSurfaces = null;
+		}
+		
+		public static void DisposeDisposable()
+		{
 			foreach (pTexture p in DisposableTextures)
 				p.Dispose();
-
 			DisposableTextures.Clear();
-
-            availableSurfaces = null;
 		}
 		
 		public static void ReloadAll()
@@ -290,9 +297,37 @@ namespace osum.Graphics.Skins
 
         static Queue<pTexture> availableSurfaces;
 		
+		
+		static bool requireSurfaces;
+		internal static  bool RequireSurfaces
+		{
+			get {
+				return requireSurfaces;
+			}
+			
+			set
+			{
+				requireSurfaces = value;
+				
+				if (value)
+				{
+					PopulateSurfaces();	
+				}
+				else
+				{
+					if (availableSurfaces != null)
+					{
+						while (availableSurfaces.Count > 0)
+							availableSurfaces.Dequeue().Dispose();
+						availableSurfaces = null;
+					}
+				}
+			}
+		}
+		
 		internal static void PopulateSurfaces()
 		{
-			if (availableSurfaces == null)
+			if (availableSurfaces == null && RequireSurfaces)
             {
                 availableSurfaces = new Queue<pTexture>();
 				

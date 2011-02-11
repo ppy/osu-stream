@@ -254,12 +254,12 @@ namespace osum.Graphics.Sprites
                 if (Alpha != 0)
                 {
                     int i = 0;
-                    foreach (pTexture sp in renderTextures)
+                    foreach (pTexture tex in renderTextures)
                     {
                         // note: no srcRect calculation
-                        if (sp.TextureGl != null)
-                            sp.TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
-                                new Box2(sp.X, sp.Y, sp.X + sp.Width, sp.Y + sp.Height));
+                        if (tex.TextureGl != null)
+                            tex.TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
+                                new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                         i++;
                     }
 

@@ -185,8 +185,7 @@ namespace osum
 			//960x  = 960/960   = 1
 			//480x  = 480/960   = 0.5
 
-            if (OnScreenLayoutChanged != null)
-                OnScreenLayoutChanged();
+            TriggerLayoutChanged();
         }
 
         /// <summary>

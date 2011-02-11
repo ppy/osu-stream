@@ -77,23 +77,14 @@ namespace osum.Graphics.Sprites
             TextBounds = bounds;
 
             Field = FieldTypes.Native;
-
-            GameBase.OnScreenLayoutChanged += new VoidDelegate(GameBase_OnScreenLayoutChanged);
         }
 
         public override void Dispose()
         {
-            GameBase.OnScreenLayoutChanged -= new VoidDelegate(GameBase_OnScreenLayoutChanged);
-
             base.Dispose();
         }
 
-        void GameBase_OnScreenLayoutChanged()
-        {
-            textChanged = true;
-        }
-
-        public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
+		public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
             this(text, textSize, startPosition, Vector2.Zero, drawDepth, alwaysDraw, colour, false)
         {
         }
@@ -127,7 +118,7 @@ namespace osum.Graphics.Sprites
 
             return lastMeasure;
         }
-
+		
         /// <summary>
         /// don't call this directly for the moment; we need MeasureText to be called to set DrawWidth/DrawHeight
         /// (this could do with some tidying)
