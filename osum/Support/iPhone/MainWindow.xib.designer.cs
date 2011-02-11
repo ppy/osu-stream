@@ -19,8 +19,6 @@ namespace osum.Support.iPhone {
 		
 		private GameWindowIphone __mt_glView;
 		
-		private GameViewController __mt_viewController;
-		
 		#pragma warning disable 0169
 		[MonoTouch.Foundation.Connect("window")]
 		private MonoTouch.UIKit.UIWindow window {
@@ -45,22 +43,5 @@ namespace osum.Support.iPhone {
 				this.SetNativeField("glView", value);
 			}
 		}
-		
-		[MonoTouch.Foundation.Connect("viewController")]
-		private GameViewController viewController {
-			get {
-				this.__mt_viewController = ((GameViewController)(this.GetNativeField("viewController")));
-				return this.__mt_viewController;
-			}
-			set {
-				this.__mt_viewController = value;
-				this.SetNativeField("viewController", value);
-			}
-		}
-	}
-	
-	// Base type probably should be MonoTouch.UIKit.UIViewController or subclass
-	[MonoTouch.Foundation.Register("GameViewController")]
-	public partial class GameViewController {
 	}
 }
