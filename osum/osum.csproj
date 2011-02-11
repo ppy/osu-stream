@@ -202,7 +202,6 @@
     <Compile Include="Graphics\Sprites\pDrawable.cs" />
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
-    <Compile Include="Support\iPhone\GameViewController.cs" />
     <Compile Include="Graphics\Sprites\pSpriteRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
