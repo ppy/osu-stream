@@ -854,6 +854,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 			if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
+            if (sliderBodyTexture == null)
+                //creation failed
+                return;
+
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
             if (lastDrawnSegmentIndex == -1) lastDrawnSegmentIndex++;
@@ -948,7 +952,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             lastDrawnSegmentIndex = -1;
 
             sliderBodyTexture = TextureManager.RequireTexture(trackBoundsNative.Width, trackBoundsNative.Height);
-			sliderBodyTexture.BindFramebuffer();
+            
+            if (sliderBodyTexture == null)
+                return;
+			
+            sliderBodyTexture.BindFramebuffer();
 
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
