@@ -163,7 +163,6 @@ namespace osum.Graphics.Skins
 					p.UnloadTexture();
 
 			DisposeDisposable();
-            availableSurfaces = null;
 		}
 		
 		public static void DisposeDisposable()
@@ -171,6 +170,7 @@ namespace osum.Graphics.Skins
 			foreach (pTexture p in DisposableTextures)
 				p.Dispose();
 			DisposableTextures.Clear();
+            availableSurfaces = null;
 		}
 		
 		public static void ReloadAll()
