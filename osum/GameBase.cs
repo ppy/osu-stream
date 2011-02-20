@@ -167,6 +167,7 @@ namespace osum
 			GL.DepthMask(false);
 			GL.Enable(EnableCap.Blend);
 			
+			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             SetViewport();
 
             BaseToNativeRatio = (float) NativeSize.Width/BaseSize.Width;

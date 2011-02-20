@@ -159,7 +159,7 @@ namespace osum.Graphics.Skins
 		public static void UnloadAll(bool force)
 		{
 			foreach (pTexture p in SpriteCache.Values)
-				if (!p.Permanent)
+				if (!p.Permanent || force)
 					p.UnloadTexture();
 
 			DisposeDisposable();
