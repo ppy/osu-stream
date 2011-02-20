@@ -159,9 +159,14 @@ namespace osum.Graphics.Skins
 		public static void UnloadAll(bool force)
 		{
 			foreach (pTexture p in SpriteCache.Values)
-				if (!p.Permanent || force)
 					p.UnloadTexture();
-
+			
+			if (force)
+			{
+				foreach (pTexture p in SpriteCachePermanent.Values)
+						p.UnloadTexture();
+			}
+			
 			DisposeDisposable();
 		}
 		
@@ -177,8 +182,12 @@ namespace osum.Graphics.Skins
 		{
 			foreach (pTexture p in SpriteCache.Values)
 				p.ReloadIfPossible();
+			foreach (pTexture p in SpriteCachePermanent.Values)
+				p.ReloadIfPossible();
 			
 			PopulateSurfaces();
+			
+			GL.Clear(Constants.COLOR_BUFFER_BIT);
 		}
 		
 		public static void RegisterDisposable(pTexture t)
@@ -187,6 +196,7 @@ namespace osum.Graphics.Skins
 		}
 		
     	internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
+		internal static Dictionary<string, pTexture> SpriteCachePermanent = new Dictionary<string, pTexture>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
 		internal static List<pTexture> DisposableTextures = new List<pTexture>();
 
@@ -196,8 +206,7 @@ namespace osum.Graphics.Skins
 
             if (textureLocations.TryGetValue(texture, out info))
             {
-                pTexture tex = Load(info.SheetName);
-				tex.Permanent = true;
+                pTexture tex = Load(info.SheetName, true);
                 tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;
@@ -209,16 +218,23 @@ namespace osum.Graphics.Skins
             }
             else
             {
-                //fallback to separate files
-                return Load(texture.ToString());
+                //fallback to separate files (or don't!)
+				return null;
             }
         }
         
         internal static pTexture Load(string name)
+		{
+			return Load(name, false);
+		}
+		
+		internal static pTexture Load(string name, bool permanent)
         {
             pTexture texture;
-
-            if (SpriteCache.TryGetValue(name, out texture))
+			
+			Dictionary<string, pTexture> destinationCache = permanent ? SpriteCachePermanent : SpriteCache;
+			
+            if (destinationCache.TryGetValue(name, out texture))
                 return texture;
 
             string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/Default/{0}.png", name) : @"Skins/Default/" + name;
@@ -226,7 +242,8 @@ namespace osum.Graphics.Skins
 			if (File.Exists(path))
             {
 				texture = pTexture.FromFile(path);
-                SpriteCache.Add(name, texture);
+				texture.Permanent = permanent;
+                destinationCache.Add(name, texture);
                 return texture;
             }
 			
