@@ -281,6 +281,14 @@ namespace osum.Graphics
 
 			IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
 			
+			
+#if SIMULATOR
+			//on the simulator we get texture corruption without this.
+			byte[] bytes = new byte[width * height * 4];
+			Marshal.Copy(bytes, 0, pTextureData,bytes.Length);
+#endif
+			
+			
 			using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
                         width, height, 8, width * 4,
                         textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
