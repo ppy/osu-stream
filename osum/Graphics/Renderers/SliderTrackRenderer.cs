@@ -71,6 +71,12 @@ namespace osum.Graphics.Renderers
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
         protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m
 
+        // how much to trim off the inside of the texture
+        protected const float TEXTURE_SHRINKAGE_FACTOR = 1.0f;
+
+        // how far towards the inside do we slide the texture
+        protected const float TEXEL_ORIGIN = 0.5f;
+
         protected int bytesPerVertex;
         protected int numIndices_quad;
         protected int numIndices_cap;
@@ -88,10 +94,17 @@ namespace osum.Graphics.Renderers
         protected bool toon;
         protected Color border_colour;
 
-        protected Vector3[] vertices_ogl;
+        protected float[] coordinates_cap;
+        protected float[] vertices_cap;
 
+        protected float[] coordinates_quad;
+        protected float[] vertices_quad;
+
+        // initialization
         protected bool am_initted_geom = false;
         protected bool am_initted_tex = false;
+        bool boundEvents;
+
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.
@@ -120,6 +133,7 @@ namespace osum.Graphics.Renderers
                 numIndices_cap = 3 * MAXRES;
 
                 glCalculateCapMesh();
+                CalculateQuadMesh();
 
                 am_initted_geom = true;
 
@@ -143,20 +157,62 @@ namespace osum.Graphics.Renderers
         /// </summary>
         private void glCalculateCapMesh()
         {
-            vertices_ogl = new Vector3[numVertices_cap - 1];
+            vertices_cap = new float[(numVertices_cap) * 3];
+            coordinates_cap = new float[(numVertices_cap) * 2];
 
             float maxRes = (float)MAXRES;
             float step = MathHelper.Pi / maxRes;
 
-            vertices_ogl[0] = new Vector3(0.0f, -1.0f, 0.0f);
+            // the commented out lines are already set 0 from initialization.
+            // they are kept for completeness.
+            //vertices_cap[0] = 0.0f;
+            //vertices_cap[1] = 0.0f;
+            vertices_cap[2] = 1.0f;
+
+            //vertices_cap[3] = 0.0f;
+            vertices_cap[4] = -1.0f;
+            //vertices_cap[5] = 0.0f;
+
+            coordinates_cap[0] = 1.0f + (TEXEL_ORIGIN - TEXTURE_SHRINKAGE_FACTOR) / TEX_WIDTH;
+            //coordinates_cap[1] = 0.0f;
+
+            coordinates_cap[2] = TEXEL_ORIGIN / TEX_WIDTH;
+            //coordinates_cap[3] = 0.0f;
 
             for (int z = 1; z < MAXRES; z++)
             {
                 float angle = (float)z * step;
-                vertices_ogl[z] = new Vector3((float)(Math.Sin(angle)), -(float)(Math.Cos(angle)), 0.0f);
+                vertices_cap[z * 3 + 3] = (float)(Math.Sin(angle));
+                vertices_cap[z * 3 + 4] = -(float)(Math.Cos(angle));
+                //vertices_cap[z * 3 + 5] = 0.0f;
+
+                coordinates_cap[z * 2 + 2] = TEXEL_ORIGIN / TEX_WIDTH;
+                //coordinates_cap[z * 2 + 3] = 0.0f;
             }
 
-            vertices_ogl[MAXRES] = new Vector3(0.0f, 1.0f, 0.0f);
+            //vertices_cap[MAXRES * 3 + 3] = 0.0f;
+            vertices_cap[MAXRES * 3 + 4] = 1.0f;
+            //vertices_cap[MAXRES * 3 + 5] = 0.0f;
+
+            coordinates_cap[MAXRES * 2 + 2] = TEXEL_ORIGIN / TEX_WIDTH;
+            //coordinates_cap[MAXRES * 2 + 3] = 0.0f;
+        }
+
+        private void CalculateQuadMesh()
+        {
+            coordinates_quad = new[]{ TEXEL_ORIGIN / TEX_WIDTH, 0,
+                                    TEXEL_ORIGIN / TEX_WIDTH, 0,
+                                    1.0f + (TEXEL_ORIGIN - TEXTURE_SHRINKAGE_FACTOR) / TEX_WIDTH, 0,
+                                    1.0f + (TEXEL_ORIGIN - TEXTURE_SHRINKAGE_FACTOR) / TEX_WIDTH, 0,
+                                    TEXEL_ORIGIN / TEX_WIDTH, 0,
+                                    TEXEL_ORIGIN / TEX_WIDTH, 0};
+
+            vertices_quad = new[]{-QUAD_OVERLAP_FUDGE, -1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, -1, 0,
+                            -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                            -QUAD_OVERLAP_FUDGE, 1, 0,
+                            1 + QUAD_OVERLAP_FUDGE, 1, 0};
         }
 
         /// <summary>
@@ -222,8 +278,6 @@ namespace osum.Graphics.Renderers
                     break;
             }
         }
-
-        bool boundEvents;
 
         internal void Initialize()
         {
@@ -313,49 +367,15 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawQuad()
         {
-            float[] coordinates = { 0, 0,
-                                    0, 0,
-                                    1 - 1f / TEX_WIDTH, 0,
-                                    1 - 1f / TEX_WIDTH, 0,
-                                    0, 0,
-                                    0, 0};
-
-            float[] vertices = {-QUAD_OVERLAP_FUDGE, -1, 0,
-                            1 + QUAD_OVERLAP_FUDGE, -1, 0,
-                            -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                            1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                            -QUAD_OVERLAP_FUDGE, 1, 0,
-                            1 + QUAD_OVERLAP_FUDGE, 1, 0};
-
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
-            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad);
             GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
         }
 
-        float[] coordinates = new float[(MAXRES + 2) * 2];
-        float[] vertices = new float[3 * (MAXRES + 2)];
-
         protected void glDrawHalfCircle(int count)
         {
-            //todo: don't alloc these arrays every call if possible.
-            coordinates[0] = 1 - 1.0f / TEX_WIDTH;
-
-            const int vertexSize = 3;
-
-            vertices[0] = 0;
-            vertices[1] = 0;
-            vertices[2] = 1;
-
-            for (int x = 0; x <= count; x++)
-            {
-                Vector3 v = vertices_ogl[x];
-                vertices[x * vertexSize + 3] = v.X;
-                vertices[x * vertexSize + 4] = v.Y;
-                vertices[x * vertexSize + 5] = v.Z;
-            }
-
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
-            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap);
 
             GL.DrawArrays(BeginMode.TriangleFan, 0, count + 2);
         }
@@ -411,8 +431,8 @@ namespace osum.Graphics.Renderers
 
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
             GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, TEX_WIDTH, 1, 0);
 
