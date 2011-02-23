@@ -5,7 +5,7 @@ using OpenTK.Graphics;
 using osum.Helpers;
 using osum.Graphics.Sprites;
 using Color = OpenTK.Graphics.Color4;
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -75,7 +75,7 @@ namespace osum.Graphics.Renderers
         protected const float TEXTURE_SHRINKAGE_FACTOR = 1.0f;
 
         // how far towards the inside do we slide the texture
-#if IPHONE
+#if iOS
 		protected const float TEXEL_ORIGIN = 0.25f;
 #else
         protected const float TEXEL_ORIGIN = 0.5f;

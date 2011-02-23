@@ -5,7 +5,7 @@ using OpenTK.Graphics;
 using osum.Helpers;
 using osum.Graphics.Sprites;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -112,7 +112,7 @@ namespace osum.Graphics
 
         int fbo;
 
-#if IPHONE
+#if iOS
         internal unsafe void drawToTexture(bool begin)
         {
             if (begin)
@@ -283,7 +283,7 @@ namespace osum.Graphics
 
         public const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
 
-#if IPHONE
+#if iOS
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Rgba;
 #else
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Bgra;
@@ -330,7 +330,7 @@ namespace osum.Graphics
 			//doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
-#if IPHONE
+#if iOS
             int internalFormat = (int)PixelInternalFormat.Rgba;
             switch (format)
             {

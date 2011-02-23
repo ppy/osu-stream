@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

@@ -10,7 +10,7 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Support;
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -142,7 +142,7 @@ namespace osum
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
-#if IPHONE
+#if iOS
             GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
             GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
 #else

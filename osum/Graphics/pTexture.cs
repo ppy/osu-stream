@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -124,7 +124,7 @@ namespace osum.Graphics
             {
                 if (fboId >= 0)
 				{
-					#if IPHONE
+					#if iOS
 	                GL.Oes.DeleteFramebuffers(1,ref fboId);
 	                fboId = -1;
 					#endif
@@ -209,7 +209,7 @@ namespace osum.Graphics
 			
 			try
             {
-#if IPHONE
+#if iOS
 				using (UIImage image = UIImage.FromFile(filename))
                     tex = FromUIImage(image,filename);
 #else
@@ -238,7 +238,7 @@ namespace osum.Graphics
 					width /= 2;
 					height /= 2;
 					
-#if IPHONE
+#if iOS
 					using (UIImage textureImage = UIImage.FromFile(mmfilename))
 					{
 						IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
@@ -270,7 +270,7 @@ namespace osum.Graphics
             return FromStream(stream, assetname, false);
         }
 
-#if IPHONE
+#if iOS
 		public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
 		{
             if (textureImage == null)
@@ -310,7 +310,7 @@ namespace osum.Graphics
         {
             try
             {
-#if IPHONE
+#if iOS
 				return FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
@@ -441,7 +441,7 @@ namespace osum.Graphics
 			if (fboId >= 0)
 				return fboId;
 			
-#if IPHONE
+#if iOS
             int oldFBO = 0;
 			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
 			

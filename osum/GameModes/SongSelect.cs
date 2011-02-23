@@ -27,7 +27,7 @@ namespace osum
 			
 			InputManager.OnMove += InputManager_OnMove;
 
-#if IPHONE
+#if iOS
 			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
 #else
 			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
@@ -59,7 +59,7 @@ namespace osum
         {
             availableMaps = new List<Beatmap>();
 
-#if IPHONE
+#if iOS
 			string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			
 			foreach (string s in Directory.GetFiles(docs,"*.osu"))

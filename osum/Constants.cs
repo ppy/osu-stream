@@ -1,4 +1,4 @@
-﻿#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 #else
 using OpenTK.Graphics.OpenGL;
@@ -11,7 +11,7 @@ namespace osum
     {
         public const double SIXTY_FRAME_TIME = (double)1000 / 60;
 
-#if IPHONE
+#if iOS
         public const int COLOR_BUFFER_BIT = (int)All.ColorBufferBit;
         public const int COLOR_DEPTH_BUFFER_BIT = (int)(All.ColorBufferBit | All.DepthBufferBit);
         

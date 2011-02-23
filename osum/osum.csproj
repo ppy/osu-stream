@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <BundleIdentifier>osu</BundleIdentifier>
-    <BundleVersion>1030</BundleVersion>
+    <BundleVersion>1035</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>Support\iPhone\icon.png</BundleIcon>
     <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
@@ -57,7 +57,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -81,7 +81,7 @@
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchSdkVersion>4.2</MtouchSdkVersion>
-    <DefineConstants>IPHONE NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
   </PropertyGroup>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +19,7 @@ namespace osum.Helpers
         private static double time = 0;
         private static double zero = 0;
 
-#if IPHONE
+#if iOS
         private const int UNIVERSAL_OFFSET = 65;
 #else
         private const int UNIVERSAL_OFFSET = 20;

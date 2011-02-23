@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using osum.Graphics.Skins;
 using osum.Graphics;
@@ -7,7 +7,7 @@ using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

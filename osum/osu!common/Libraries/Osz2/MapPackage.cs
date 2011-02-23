@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -997,7 +997,7 @@ namespace osu_common.Libraries.Osz2
             }
         }
 
-#if !IPHONE
+#if !iOS
         public static bool UpdateFromPatch(string inputFilename, string patchFilename, string outputFilename)
         {
             try

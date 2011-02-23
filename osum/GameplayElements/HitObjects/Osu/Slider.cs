@@ -12,7 +12,7 @@ using Color = OpenTK.Graphics.Color4;
 using osum;
 using OpenTK;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -886,7 +886,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lastDrawnSegmentIndex >= FirstSegmentIndex)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
-#if IPHONE
+#if iOS
                 int oldFBO = 0;
 				GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
 				

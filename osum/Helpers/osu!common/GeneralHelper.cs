@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
@@ -37,7 +37,7 @@ namespace osu_common.Helpers
             return entry;
         }
 
-#if !IPHONE
+#if !iOS
         public static void RegistryAdd(string extension, string progId, string description, string executable)
         {
             try

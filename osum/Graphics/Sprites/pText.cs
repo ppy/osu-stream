@@ -56,7 +56,7 @@ namespace osum.Graphics.Sprites
 			}
 		}
 
-#if IPHONE
+#if iOS
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
 #else
         private static NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();

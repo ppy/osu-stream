@@ -1,7 +1,7 @@
 using System;
 using MonoTouch.UIKit;
 
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

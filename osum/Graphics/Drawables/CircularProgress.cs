@@ -4,7 +4,7 @@ using osum.Graphics.Drawables;
 using osum.Helpers;
 using OpenTK.Graphics;
 using OpenTK;
-#if IPHONE
+#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
