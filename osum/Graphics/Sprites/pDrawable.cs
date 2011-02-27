@@ -57,7 +57,7 @@ namespace osum.Graphics.Sprites
         }
         
         internal Color4 StartColour;*/
-        
+
         internal bool Disposable;
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
@@ -70,20 +70,20 @@ namespace osum.Graphics.Sprites
         internal Vector2 OriginVector;
         internal Vector2 Position;
         internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
-		
-		internal virtual bool IsOnScreen
-		{
-			get
-			{
-				Vector2 pos = FieldPosition;
-				
-				if (pos.X > GameBase.NativeSize.Width || pos.X < 0 ||
-				    pos.Y > GameBase.NativeSize.Height || pos.Y < 0)
-					return false;
-				
-				return true;
-			}
-		}
+
+        internal virtual bool IsOnScreen
+        {
+            get
+            {
+                Vector2 pos = FieldPosition;
+
+                if (pos.X > GameBase.NativeSize.Width || pos.X < 0 ||
+                    pos.Y > GameBase.NativeSize.Height || pos.Y < 0)
+                    return false;
+
+                return true;
+            }
+        }
 
         internal float DrawDepth;
 
@@ -95,19 +95,19 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
         /// </summary>
-        public pList<Transformation> Transformations = new pList<Transformation>(){UseBackwardsSearch = true};
+        public pList<Transformation> Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
 
         internal virtual bool IsRemovable
         {
             get { return !AlwaysDraw && Transformations.Count == 0; }
         }
-		
-		internal virtual bool UsesTextures
+
+        internal virtual bool UsesTextures
         {
             get { return false; }
         }
-		
-		internal float ScaleScalar
+
+        internal float ScaleScalar
         {
             get { return Scale.X; }
             set { Scale = new Vector2(value, value); }
@@ -129,7 +129,7 @@ namespace osum.Graphics.Sprites
 
                 if (Offset != Vector2.Zero)
                     pos += Offset;
-                
+
                 pos *= GameBase.BaseToNativeRatio;
 
                 switch (Field)
@@ -154,7 +154,7 @@ namespace osum.Graphics.Sprites
                         break;
                     case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.GamefieldSprites:
-					case FieldTypes.GamefieldExact:
+                    case FieldTypes.GamefieldExact:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
                         Vector2.Multiply(ref fieldPosition, GameBase.BaseToNativeRatio, out fieldPosition);
@@ -177,9 +177,9 @@ namespace osum.Graphics.Sprites
             {
                 switch (Field)
                 {
-					case FieldTypes.GamefieldExact:
+                    case FieldTypes.GamefieldExact:
                         return Scale * DifficultyManager.HitObjectRadius;
-					case FieldTypes.GamefieldSprites:
+                    case FieldTypes.GamefieldSprites:
                         return Scale * (DifficultyManager.HitObjectSizeModifier * GameBase.SpriteToNativeRatio);
                     case FieldTypes.Native:
                     case FieldTypes.NativeScaled:
@@ -236,26 +236,26 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.EndColour;
-							if (!RemoveOldTransformations)
-	                            hasColour = true;
+                            if (!RemoveOldTransformations)
+                                hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.EndFloat;
-							if (!RemoveOldTransformations)
-	                            hasAlpha = true;
+                            if (!RemoveOldTransformations)
+                                hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
                             Position = t.EndVector;
-							if (!RemoveOldTransformations)
-	                            hasMovement = true;
+                            if (!RemoveOldTransformations)
+                                hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
                             Position.X = t.EndFloat;
-							if (!RemoveOldTransformations)
-	                            hasMovementX = true;
+                            if (!RemoveOldTransformations)
+                                hasMovementX = true;
                             break;
 
                         case TransformationType.MovementY:
@@ -268,20 +268,20 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.Rotation:
                             Rotation = t.EndFloat;
-							if (!RemoveOldTransformations)
-	                            hasRotation = true;
+                            if (!RemoveOldTransformations)
+                                hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.EndFloat, t.EndFloat);
-                        	if (!RemoveOldTransformations)    
-								hasScale = true;
+                            if (!RemoveOldTransformations)
+                                hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.EndVector;
-							if (!RemoveOldTransformations)
-                            	hasScale = true;
+                            if (!RemoveOldTransformations)
+                                hasScale = true;
                             break;
                     }
 
@@ -553,8 +553,8 @@ namespace osum.Graphics.Sprites
         public virtual bool Draw()
         {
             if (Alpha != 0 &&
-			    (Transformations.Count != 0 || AlwaysDraw) &&
-			    IsOnScreen)
+                (Transformations.Count != 0 || AlwaysDraw) &&
+                IsOnScreen)
             {
                 return true;
             }

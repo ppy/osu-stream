@@ -105,12 +105,12 @@ namespace osum.Graphics.Sprites
         }
 
         internal void Add(List<pDrawable> sprites)
-		{
+        {
             foreach (pDrawable p in sprites)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
-		}
-		
-		internal void Add(pSpriteCollection collection)
+        }
+
+        internal void Add(pSpriteCollection collection)
         {
             foreach (pDrawable p in collection.SpriteCollection)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
@@ -153,8 +153,8 @@ namespace osum.Graphics.Sprites
         internal void Update()
         {
             texturesEnabled = false; //reset on new frame.
-			
-			if (firstRender)
+
+            if (firstRender)
             {
                 int loadTime = Clock.Time - creationTime;
 
@@ -182,31 +182,31 @@ namespace osum.Graphics.Sprites
                     topSprite = SpriteQueue.Peek();
                 }
             }
-			
-			int i = 0;
+
+            int i = 0;
             foreach (pDrawable p in Sprites)
-			{
+            {
                 p.Update();
-				if (p.IsRemovable)
-				{
-					removableSprites.Add(i);
-					p.Dispose();
-				}
-				i++;
-			}
+                if (p.IsRemovable)
+                {
+                    removableSprites.Add(i);
+                    p.Dispose();
+                }
+                i++;
+            }
 
 #if DEBUG
             if (Sprites.Count > 5)
                 DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites (" + Sprites.FindAll(s => s.IsOnScreen).Count + " on-screen)");
 #endif
-			
-			for (i = removableSprites.Count - 1; i >= 0; i--)
-				Sprites.RemoveAt(removableSprites[i]);
+
+            for (i = removableSprites.Count - 1; i >= 0; i--)
+                Sprites.RemoveAt(removableSprites[i]);
 
             removableSprites.Clear();
         }
-		
-		static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
+
+        static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
         internal static BlendingFactorDest BlendingMode
         {
             get { return lastBlend; }
@@ -219,75 +219,76 @@ namespace osum.Graphics.Sprites
                 }
             }
         }
-		
-		void addToBatch(pDrawable p)
-		{
-		}
-		
-		void flushBatch()
-		{
-		}
+
+        void addToBatch(pDrawable p)
+        {
+        }
+
+        void flushBatch()
+        {
+        }
 
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
         internal bool Draw()
         {
-			pTexture currentBatchTexture = null;
-			
-			foreach (pDrawable p in Sprites)
-			{
+            pTexture currentBatchTexture = null;
+
+            foreach (pDrawable p in Sprites)
+            {
                 if (p.Alpha > 0)
-				{
+                {
                     BlendingMode = p.BlendingMode;
 
-					TexturesEnabled = p.UsesTextures;
-					if (p.Draw())
-					{
-						pSprite ps = p as pSprite;
-						if (ps != null)
-						{
-							if (ps.Texture != currentBatchTexture)
-							{
-								//this texture is different from the current batch; we will need to flush and render fresh.
-								flushBatch();
-								currentBatchTexture = ps.Texture;
-							}
-							
-							addToBatch(ps);
-						}
-					}
-				}
-			}
-			
-			flushBatch();
-			
+                    TexturesEnabled = p.UsesTextures;
+                    if (p.Draw())
+                    {
+                        pSprite ps = p as pSprite;
+                        if (ps != null)
+                        {
+                            if (ps.Texture != currentBatchTexture)
+                            {
+                                //this texture is different from the current batch; we will need to flush and render fresh.
+                                flushBatch();
+                                currentBatchTexture = ps.Texture;
+                            }
+
+                            addToBatch(ps);
+                        }
+                    }
+                }
+            }
+
+            flushBatch();
+
             return true;
         }
-		
-		static bool texturesEnabled = false;
-		internal static bool TexturesEnabled
-		{
-			get { return texturesEnabled; }	
-			
-			set {
-				if (texturesEnabled == value)
-					return;
-				
-				texturesEnabled = value;
-				
-				if (texturesEnabled)
-				{
-					GL.Enable(EnableCap.Texture2D);
-					GL.EnableClientState(ArrayCap.TextureCoordArray);
-				}
-				else
-				{
-					GL.Disable(EnableCap.Texture2D);
-					GL.DisableClientState(ArrayCap.TextureCoordArray);
-				}
-			}
-		}
+
+        static bool texturesEnabled = false;
+        internal static bool TexturesEnabled
+        {
+            get { return texturesEnabled; }
+
+            set
+            {
+                if (texturesEnabled == value)
+                    return;
+
+                texturesEnabled = value;
+
+                if (texturesEnabled)
+                {
+                    GL.Enable(EnableCap.Texture2D);
+                    GL.EnableClientState(ArrayCap.TextureCoordArray);
+                }
+                else
+                {
+                    GL.Disable(EnableCap.Texture2D);
+                    GL.DisableClientState(ArrayCap.TextureCoordArray);
+                }
+            }
+        }
 
         internal static void Reset()
         {

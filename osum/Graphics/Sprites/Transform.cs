@@ -224,10 +224,10 @@ namespace osum.Graphics.Sprites
         {
             int compare;
 
-            if ((compare = StartTime.CompareTo(other.StartTime)) != 0) 
+            if ((compare = StartTime.CompareTo(other.StartTime)) != 0)
                 return compare;
 
-            if ((compare = EndTime.CompareTo(other.EndTime)) != 0) 
+            if ((compare = EndTime.CompareTo(other.EndTime)) != 0)
                 return compare;
 
             return Type.CompareTo(other.Type);
@@ -302,13 +302,13 @@ namespace osum.Graphics.Sprites
     {
         private float Magnitude;
         private float Pulses;
-		
-		internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
-			: this(TransformationType.Scale, startTime, endTime, aimSize, magnitude, pulses)
-		{}
-				
+
+        internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
+            : this(TransformationType.Scale, startTime, endTime, aimSize, magnitude, pulses)
+        { }
+
         internal TransformationBounce(TransformationType type, int startTime, int endTime, float aimSize, float magnitude, float pulses)
-            : base(type,aimSize, aimSize, startTime, endTime)
+            : base(type, aimSize, aimSize, startTime, endTime)
         {
             Magnitude = magnitude;
             Pulses = pulses;
@@ -324,16 +324,17 @@ namespace osum.Graphics.Sprites
 
                 float rawSine = (float)Math.Sin(Pulses * Math.PI * (progress - 0.5f / Pulses));
 
-                float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress,2));
+                float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress, 2));
 
-                return Math.Max(0,StartFloat + diminishingMagnitude * rawSine);
+                return Math.Max(0, StartFloat + diminishingMagnitude * rawSine);
             }
         }
     }
 
     internal class NullTransform : Transformation
     {
-        public NullTransform(int startTime, int endTime) : base(TransformationType.None,0,0,startTime, endTime)
+        public NullTransform(int startTime, int endTime)
+            : base(TransformationType.None, 0, 0, startTime, endTime)
         {
         }
     }

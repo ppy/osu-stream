@@ -18,13 +18,13 @@ namespace osum.GameModes
         private const string BEATMAP_DIRECTORY = "Beatmaps";
         private static List<Beatmap> availableMaps;
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
-        
+
         private float offset;
         private float offset_min { get { return panels.Count * -80 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
         private float offset_max = 0;
 
         private float velocity;
-        
+
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
@@ -54,7 +54,7 @@ namespace osum.GameModes
 #endif
             AudioEngine.Music.Play();
 
-            s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0,0));
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             spriteManager.Add(s_Header);
         }
 

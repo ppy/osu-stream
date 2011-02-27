@@ -34,7 +34,7 @@ namespace osu_common.Helpers
         internal sealed class VersionConfigToNamespaceAssemblyObjectBinder : SerializationBinder
         {
             private readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
-            
+
             public override Type BindToType(string assemblyName, string typeName)
             {
                 Type typeToDeserialize;
@@ -49,7 +49,7 @@ namespace osu_common.Helpers
                 {
                     if (typeName.Contains("System.Collections.Generic") && typeName.Contains("[["))
                     {
-                        string[] splitTyps = typeName.Split(new char[] {'['});
+                        string[] splitTyps = typeName.Split(new char[] { '[' });
 
                         foreach (string typ in splitTyps)
                         {
@@ -87,7 +87,7 @@ namespace osu_common.Helpers
                     throw exception;
                 }
 
-                cache.Add(assemblyName + typeName,typeToDeserialize);
+                cache.Add(assemblyName + typeName, typeToDeserialize);
 
                 return typeToDeserialize;
             }

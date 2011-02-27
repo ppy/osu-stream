@@ -40,14 +40,14 @@ using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Drawables
 {
-	internal class CircularProgress : pDrawable
-	{
+    internal class CircularProgress : pDrawable
+    {
         internal float Progress;
         internal float Radius;
-		internal bool EvenShading;
+        internal bool EvenShading;
 
         public CircularProgress(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
-		{
+        {
             AlwaysDraw = alwaysDraw;
             Alpha = alwaysDraw ? 1 : 0;
             DrawDepth = drawDepth;
@@ -56,18 +56,18 @@ namespace osum.Graphics.Drawables
             Radius = radius;
             Colour = colour;
             Field = FieldTypes.Standard;
-		}
-		
-		public override void Dispose()
-		{
-		}
+        }
+
+        public override void Dispose()
+        {
+        }
 
         const int parts = 48;
         float[] vertices = new float[parts * 2 + 2];
         float[] colours = new float[parts * 4 + 4];
 
-		public override bool Draw()
-		{
+        public override bool Draw()
+        {
             if (base.Draw())
             {
 
@@ -102,7 +102,7 @@ namespace osum.Graphics.Drawables
                     colours[v * 4] = c.R;
                     colours[v * 4 + 1] = c.G;
                     colours[v * 4 + 2] = c.B;
-                    colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f :  (0.2f + 0.4f * ((float)v/parts)));
+                    colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f : (0.2f + 0.4f * ((float)v / parts)));
                 }
 
                 GL.EnableClientState(ArrayCap.ColorArray);
@@ -118,7 +118,7 @@ namespace osum.Graphics.Drawables
 
             return false;
 
-		}
-	}
+        }
+    }
 }
 

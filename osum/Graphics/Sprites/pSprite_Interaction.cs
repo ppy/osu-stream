@@ -45,8 +45,8 @@ namespace osum.Graphics.Sprites
     internal partial class pSprite : IDrawable, IDisposable
     {
         internal bool IsClickable { get { return onClick != null; } }
-		
-		internal bool HandleClickOnUp;
+
+        internal bool HandleClickOnUp;
 
         bool inputEventsBound;
 
@@ -63,9 +63,10 @@ namespace osum.Graphics.Sprites
             add { onHover += value; updateInputBindings(); }
             remove { onHover -= value; updateInputBindings(); }
         }
-        
+
         private event EventHandler onHoverLost;
-        internal event EventHandler OnHoverLost {
+        internal event EventHandler OnHoverLost
+        {
             add { onHoverLost += value; }
             remove { onHoverLost -= value; }
         }
@@ -133,45 +134,45 @@ namespace osum.Graphics.Sprites
                 }
             }
         }
-		
-		float acceptableUpClick;
-		
+
+        float acceptableUpClick;
+
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             inputUpdateHoverState(trackingPoint);
-			
-			if (acceptableUpClick > 0)
-				acceptableUpClick -= Math.Abs(trackingPoint.WindowDelta.X) + Math.Abs(trackingPoint.WindowDelta.Y);
+
+            if (acceptableUpClick > 0)
+                acceptableUpClick -= Math.Abs(trackingPoint.WindowDelta.X) + Math.Abs(trackingPoint.WindowDelta.Y);
         }
-		
-		const float HANDLE_UP_MOVEMENT_ALLOWANCE = 5;
-		
+
+        const float HANDLE_UP_MOVEMENT_ALLOWANCE = 5;
+
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
             inputUpdateHoverState(trackingPoint);
             if (inputIsHovering)
-			{
+            {
                 acceptableUpClick = HANDLE_UP_MOVEMENT_ALLOWANCE;
-				if (!HandleClickOnUp)
-					Click();
-			}
-			else
-			{
-				acceptableUpClick = 0;
-			}
+                if (!HandleClickOnUp)
+                    Click();
+            }
+            else
+            {
+                acceptableUpClick = 0;
+            }
         }
-		
+
         void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
-		{	
-			if (inputIsHovering && acceptableUpClick > 0)
+        {
+            if (inputIsHovering && acceptableUpClick > 0)
                 Click();
-			
-			if (inputIsHovering)
-			{
-				inputIsHovering = false;
-				if (onHoverLost != null)
-	                onHoverLost(this, null);
-			}
+
+            if (inputIsHovering)
+            {
+                inputIsHovering = false;
+                if (onHoverLost != null)
+                    onHoverLost(this, null);
+            }
         }
 
         internal void Click()

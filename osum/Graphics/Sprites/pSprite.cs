@@ -52,7 +52,7 @@ namespace osum.Graphics.Sprites
         protected pTexture texture;
         private pTexture pTexture;
         private Vector2 vector2;
-        
+
 
         internal pSprite(pTexture texture, FieldTypes field, OriginTypes origin, ClockTypes clocking, Vector2 position,
                          float depth, bool alwaysDraw, Color4 colour)
@@ -82,25 +82,29 @@ namespace osum.Graphics.Sprites
             this(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Game, pos, 1, true, Color4.White)
         {
         }
-		
-		internal override bool UsesTextures {
-			get {
-				return true;
-			}
-		}
-		
-		internal override bool IsOnScreen {
-			get {
-				
-				Box2 rect = DisplayRectangle;
 
-				if (rect.Left > GameBase.BaseSize.Width || rect.Right < 0 ||
-				    rect.Top > GameBase.BaseSize.Height || rect.Bottom < 0)
-					return false;
-				
-				return true;
-			}
-		}
+        internal override bool UsesTextures
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        internal override bool IsOnScreen
+        {
+            get
+            {
+
+                Box2 rect = DisplayRectangle;
+
+                if (rect.Left > GameBase.BaseSize.Width || rect.Right < 0 ||
+                    rect.Top > GameBase.BaseSize.Height || rect.Bottom < 0)
+                    return false;
+
+                return true;
+            }
+        }
 
         internal int TextureWidth
         {
@@ -136,7 +140,7 @@ namespace osum.Graphics.Sprites
                 UpdateTextureAlignment();
             }
         }
-        
+
         internal Box2 TextureRectangle
         {
             get { return new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop); }
@@ -146,11 +150,11 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition/GameBase.BaseToNativeRatio;
-                Vector2 scale = FieldScale/GameBase.BaseToNativeRatio;
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio;
+                Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
-                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + DrawWidth*scale.X,
-                                pos.Y + DrawHeight*scale.Y);
+                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + DrawWidth * scale.X,
+                                pos.Y + DrawHeight * scale.Y);
             }
         }
 
@@ -161,8 +165,8 @@ namespace osum.Graphics.Sprites
                 pSprite whiteLayer =
                     new pSprite(TextureManager.Load("white"), FieldTypes.Standard,
                                 OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
-				
-                whiteLayer.Scale = new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height)/
+
+                whiteLayer.Scale = new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height) /
                                    GameBase.SpriteToBaseRatio;
                 return whiteLayer;
             }
@@ -188,7 +192,7 @@ namespace osum.Graphics.Sprites
         public override bool Draw()
         {
             if (!base.Draw()) return false;
-            
+
             pTexture texture = Texture;
             if (texture == null || texture.TextureGl == null)
                 return false;
@@ -212,25 +216,25 @@ namespace osum.Graphics.Sprites
                     OriginVector = Vector2.Zero;
                     break;
                 case OriginTypes.TopCentre:
-                    OriginVector = new Vector2(TextureWidth/2, 0);
+                    OriginVector = new Vector2(TextureWidth / 2, 0);
                     break;
                 case OriginTypes.TopRight:
                     OriginVector = new Vector2(TextureWidth, 0);
                     break;
                 case OriginTypes.CentreLeft:
-                    OriginVector = new Vector2(0, TextureHeight/2);
+                    OriginVector = new Vector2(0, TextureHeight / 2);
                     break;
                 case OriginTypes.Centre:
-                    OriginVector = new Vector2(TextureWidth/2, TextureHeight/2);
+                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight / 2);
                     break;
                 case OriginTypes.CentreRight:
-                    OriginVector = new Vector2(TextureWidth, TextureHeight/2);
+                    OriginVector = new Vector2(TextureWidth, TextureHeight / 2);
                     break;
                 case OriginTypes.BottomLeft:
                     OriginVector = new Vector2(0, TextureHeight);
                     break;
                 case OriginTypes.BottomCentre:
-                    OriginVector = new Vector2(TextureWidth/2, TextureHeight);
+                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight);
                     break;
                 case OriginTypes.BottomRight:
                     OriginVector = new Vector2(TextureWidth, TextureHeight);
@@ -293,14 +297,14 @@ namespace osum.Graphics.Sprites
         ///   This is scaled in proportion to the native resolution and aligned accordingly.
         /// </summary>
         GamefieldSprites,
-		
-		/// <summary>
-		/// A field where 1 pixel at 1.0f scale becomes the width of a hitObject. Used for primitives that are based around
-		/// gamefield objects.
-		/// </summary>
-		GamefieldExact,
-		
-		GamefieldStandardScale,
+
+        /// <summary>
+        /// A field where 1 pixel at 1.0f scale becomes the width of a hitObject. Used for primitives that are based around
+        /// gamefield objects.
+        /// </summary>
+        GamefieldExact,
+
+        GamefieldStandardScale,
         /// <summary>
         ///   Gamefield "container" resolution.  This is where storyboard and background events sits, and is the same
         ///   scaling/positioning as Standard when in play mode.  It differs in editor design mode where this field

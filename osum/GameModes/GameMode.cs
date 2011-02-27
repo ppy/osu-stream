@@ -7,24 +7,24 @@ using osum.Graphics.Sprites;
 namespace osum.GameModes
 {
     public enum OsuMode
-	{
-		Unknown = 0,
-		MainMenu,
-		SongSelect,
+    {
+        Unknown = 0,
+        MainMenu,
+        SongSelect,
         Play,
-		Ranking
-	}
+        Ranking
+    }
 
     /// <summary>
     /// A specific scene/screen that is to be displayed in the game.
     /// </summary>
-	public abstract class GameMode : IDrawable, IDisposable
+    public abstract class GameMode : IDrawable, IDisposable
     {
         /// <summary>
         /// Do all initialization here.
         /// </summary>
         internal abstract void Initialize();
-		
+
         /// <summary>
         /// A spriteManager provided free of charge.
         /// </summary>
@@ -63,7 +63,7 @@ namespace osum.GameModes
 
         public virtual void OnFirstUpdate()
         {
-            
+
         }
     }
 }

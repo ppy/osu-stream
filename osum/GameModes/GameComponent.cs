@@ -10,14 +10,15 @@ namespace osum.GameModes
     /// </summary>
     class GameComponent : GameMode
     {
-        public GameComponent() : base()
+        public GameComponent()
+            : base()
         {
             Initialize();
         }
-        
+
         internal override void Initialize()
         {
-            
+
         }
     }
 }

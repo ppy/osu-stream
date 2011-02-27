@@ -87,20 +87,20 @@ namespace osum.Helpers
 
     struct ScheduledDelegate : IComparable<ScheduledDelegate>
     {
-        public ScheduledDelegate(VoidDelegate task, long time )
+        public ScheduledDelegate(VoidDelegate task, long time)
         {
             Task = task;
             ExecuteTime = time;
         }
-        
+
         public VoidDelegate Task;
         public long ExecuteTime;
 
         #region IComparable<ScheduledDelegate> Members
 
-        public int  CompareTo(ScheduledDelegate other)
+        public int CompareTo(ScheduledDelegate other)
         {
-         	return ExecuteTime.CompareTo(other.ExecuteTime);
+            return ExecuteTime.CompareTo(other.ExecuteTime);
         }
 
         #endregion

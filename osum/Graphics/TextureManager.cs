@@ -70,7 +70,7 @@ namespace osum.Graphics.Skins
 
         public static void Initialize()
         {
-	        //scoring sprites
+            //scoring sprites
             textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 694, 279, 140, 134));
             textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 133, 132));
             textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 189, 0, 180, 180));
@@ -83,16 +83,16 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 370, 132, 256, 257));
             textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 190, 366, 20, 18));
             textureLocations.Add(OsuTexture.sliderarrow, new SpriteSheetTexture("hit", 626, 206, 77, 58));
-			textureLocations.Add(OsuTexture.sliderb_0, new SpriteSheetTexture("hit", 0, 508, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_1, new SpriteSheetTexture("hit", 118, 508, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_2, new SpriteSheetTexture("hit", 236, 508, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_3, new SpriteSheetTexture("hit", 354, 508, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_4, new SpriteSheetTexture("hit", 472, 508, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_5, new SpriteSheetTexture("hit", 0, 626, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_6, new SpriteSheetTexture("hit", 118, 626, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_7, new SpriteSheetTexture("hit", 236, 626, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_8, new SpriteSheetTexture("hit", 354, 626, 118, 118));
-			textureLocations.Add(OsuTexture.sliderb_9, new SpriteSheetTexture("hit", 472, 626, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_0, new SpriteSheetTexture("hit", 0, 508, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_1, new SpriteSheetTexture("hit", 118, 508, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_2, new SpriteSheetTexture("hit", 236, 508, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_3, new SpriteSheetTexture("hit", 354, 508, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_4, new SpriteSheetTexture("hit", 472, 508, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_5, new SpriteSheetTexture("hit", 0, 626, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_6, new SpriteSheetTexture("hit", 118, 626, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_7, new SpriteSheetTexture("hit", 236, 626, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_8, new SpriteSheetTexture("hit", 354, 626, 118, 118));
+            textureLocations.Add(OsuTexture.sliderb_9, new SpriteSheetTexture("hit", 472, 626, 118, 118));
 
 
             //hitcircles
@@ -100,10 +100,10 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
             textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
-            
+
             //hitobject misc.
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
-			textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
+            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
 
             //default font (hitobjects)
             textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
@@ -116,7 +116,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
             textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
             textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
-            
+
             //score font
             textureLocations.Add(OsuTexture.score_0, new SpriteSheetTexture("hit", 126, 400, 42, 54));
             textureLocations.Add(OsuTexture.score_1, new SpriteSheetTexture("hit", 180, 400, 20, 54));
@@ -133,13 +133,14 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
-			textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
+            textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
-			
-			GameBase.OnScreenLayoutChanged += delegate {
-				DisposeDisposable();		
-			};
+
+            GameBase.OnScreenLayoutChanged += delegate
+            {
+                DisposeDisposable();
+            };
         }
 
         public static void Update()
@@ -147,60 +148,60 @@ namespace osum.Graphics.Skins
 #if DEBUG
             DebugOverlay.AddLine("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
 #endif
-        } 
+        }
 
 
-		public static void DisposeAll(bool force)
-		{
-			UnloadAll(force);
-			
-			SpriteCache.Clear();
-			AnimationCache.Clear();
-		}
-		
-		public static void UnloadAll(bool force)
-		{
-			foreach (pTexture p in SpriteCache.Values)
-					p.UnloadTexture();
-			
-			if (force)
-			{
-				foreach (pTexture p in SpriteCachePermanent.Values)
-						p.UnloadTexture();
-			}
-			
-			DisposeDisposable();
-		}
-		
-		public static void DisposeDisposable()
-		{
-			foreach (pTexture p in DisposableTextures)
-				p.Dispose();
-			DisposableTextures.Clear();
+        public static void DisposeAll(bool force)
+        {
+            UnloadAll(force);
+
+            SpriteCache.Clear();
+            AnimationCache.Clear();
+        }
+
+        public static void UnloadAll(bool force)
+        {
+            foreach (pTexture p in SpriteCache.Values)
+                p.UnloadTexture();
+
+            if (force)
+            {
+                foreach (pTexture p in SpriteCachePermanent.Values)
+                    p.UnloadTexture();
+            }
+
+            DisposeDisposable();
+        }
+
+        public static void DisposeDisposable()
+        {
+            foreach (pTexture p in DisposableTextures)
+                p.Dispose();
+            DisposableTextures.Clear();
             availableSurfaces = null;
-		}
-		
-		public static void ReloadAll()
-		{
-			foreach (pTexture p in SpriteCache.Values)
-				p.ReloadIfPossible();
-			foreach (pTexture p in SpriteCachePermanent.Values)
-				p.ReloadIfPossible();
-			
-			PopulateSurfaces();
-			
-			GL.Clear(Constants.COLOR_BUFFER_BIT);
-		}
-		
-		public static void RegisterDisposable(pTexture t)
-		{
+        }
+
+        public static void ReloadAll()
+        {
+            foreach (pTexture p in SpriteCache.Values)
+                p.ReloadIfPossible();
+            foreach (pTexture p in SpriteCachePermanent.Values)
+                p.ReloadIfPossible();
+
+            PopulateSurfaces();
+
+            GL.Clear(Constants.COLOR_BUFFER_BIT);
+        }
+
+        public static void RegisterDisposable(pTexture t)
+        {
             DisposableTextures.Add(t);
-		}
-		
-    	internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
-		internal static Dictionary<string, pTexture> SpriteCachePermanent = new Dictionary<string, pTexture>();
+        }
+
+        internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
+        internal static Dictionary<string, pTexture> SpriteCachePermanent = new Dictionary<string, pTexture>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
-		internal static List<pTexture> DisposableTextures = new List<pTexture>();
+        internal static List<pTexture> DisposableTextures = new List<pTexture>();
 
         internal static pTexture Load(OsuTexture texture)
         {
@@ -221,56 +222,56 @@ namespace osum.Graphics.Skins
             else
             {
                 //fallback to separate files (or don't!)
-				return null;
+                return null;
             }
         }
-        
+
         internal static pTexture Load(string name)
-		{
-			return Load(name, false);
-		}
-		
-		internal static pTexture Load(string name, bool permanent)
+        {
+            return Load(name, false);
+        }
+
+        internal static pTexture Load(string name, bool permanent)
         {
             pTexture texture;
-			
-			Dictionary<string, pTexture> destinationCache = permanent ? SpriteCachePermanent : SpriteCache;
-			
+
+            Dictionary<string, pTexture> destinationCache = permanent ? SpriteCachePermanent : SpriteCache;
+
             if (destinationCache.TryGetValue(name, out texture))
                 return texture;
 
             string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/Default/{0}.png", name) : @"Skins/Default/" + name;
-	
-			if (File.Exists(path))
+
+            if (File.Exists(path))
             {
-				texture = pTexture.FromFile(path);
-				texture.Permanent = permanent;
+                texture = pTexture.FromFile(path);
+                texture.Permanent = permanent;
                 destinationCache.Add(name, texture);
                 return texture;
             }
-			
+
             return null;
         }
 
         internal static pTexture[] LoadAnimation(OsuTexture osuTexture, int count)
-		{
-			pTexture[] textures;
-			
-			string name = osuTexture.ToString();
-			
-			if (AnimationCache.TryGetValue(name, out textures))
+        {
+            pTexture[] textures;
+
+            string name = osuTexture.ToString();
+
+            if (AnimationCache.TryGetValue(name, out textures))
                 return textures;
-			
-			textures = new pTexture[count];
-			
-			for (int i = 0; i < count; i++)
-				textures[i] = Load((OsuTexture)(osuTexture + i));
-			
-			AnimationCache.Add(name, textures);
-			return textures;
-		}
-			
-		internal static pTexture[] LoadAnimation(string name)
+
+            textures = new pTexture[count];
+
+            for (int i = 0; i < count; i++)
+                textures[i] = Load((OsuTexture)(osuTexture + i));
+
+            AnimationCache.Add(name, textures);
+            return textures;
+        }
+
+        internal static pTexture[] LoadAnimation(string name)
         {
             pTexture[] textures;
             pTexture texture;
@@ -300,7 +301,7 @@ namespace osum.Graphics.Skins
                     list.Add(texture);
                 }
             }
-            
+
             // if the texture can't be found, try without number
             texture = Load(name);
 
@@ -315,63 +316,64 @@ namespace osum.Graphics.Skins
         }
 
         static Queue<pTexture> availableSurfaces;
-		
-		
-		static bool requireSurfaces;
-		internal static  bool RequireSurfaces
-		{
-			get {
-				return requireSurfaces;
-			}
-			
-			set
-			{
-				requireSurfaces = value;
-				
-				if (value)
-				{
-					PopulateSurfaces();	
-				}
-				else
-				{
-					if (availableSurfaces != null)
-					{
-						while (availableSurfaces.Count > 0)
-							availableSurfaces.Dequeue().Dispose();
-						availableSurfaces = null;
-					}
-				}
-			}
-		}
-		
-		internal static void PopulateSurfaces()
-		{
-			if (availableSurfaces == null && RequireSurfaces)
+
+
+        static bool requireSurfaces;
+        internal static bool RequireSurfaces
+        {
+            get
+            {
+                return requireSurfaces;
+            }
+
+            set
+            {
+                requireSurfaces = value;
+
+                if (value)
+                {
+                    PopulateSurfaces();
+                }
+                else
+                {
+                    if (availableSurfaces != null)
+                    {
+                        while (availableSurfaces.Count > 0)
+                            availableSurfaces.Dequeue().Dispose();
+                        availableSurfaces = null;
+                    }
+                }
+            }
+        }
+
+        internal static void PopulateSurfaces()
+        {
+            if (availableSurfaces == null && RequireSurfaces)
             {
                 availableSurfaces = new Queue<pTexture>();
-				
-				int size = GameBase.NativeSize.Width;
+
+                int size = GameBase.NativeSize.Width;
 
                 for (int i = 0; i < 4; i++)
                 {
                     TextureGl gl = new TextureGl(size, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
                     pTexture t = new pTexture(gl, size, size);
-					t.BindFramebuffer();
-					
+                    t.BindFramebuffer();
+
                     RegisterDisposable(t);
                     availableSurfaces.Enqueue(t);
                 }
-            }	
-		}
-	
-        
+            }
+        }
+
+
         internal static pTexture RequireTexture(int width, int height)
         {
             PopulateSurfaces();
-			
-			if (availableSurfaces.Count == 0)
-				return null;
+
+            if (availableSurfaces.Count == 0)
+                return null;
 
             pTexture tex = availableSurfaces.Dequeue();
             tex.Width = width;
@@ -383,7 +385,7 @@ namespace osum.Graphics.Skins
         internal static void ReturnTexture(pTexture texture)
         {
             if (!texture.IsDisposed && texture.TextureGl.Loaded)
-				availableSurfaces.Enqueue(texture);
+                availableSurfaces.Enqueue(texture);
         }
     }
 

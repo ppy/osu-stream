@@ -40,37 +40,37 @@ using OpenTK.Graphics.OpenGL;
 
 namespace osum.Graphics.Drawables
 {
-	internal class ApproachCircle : pDrawable
-	{
+    internal class ApproachCircle : pDrawable
+    {
         internal float Radius;
-        internal float Width = 2/20f;
+        internal float Width = 2 / 20f;
 
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
-		{
+        {
             AlwaysDraw = alwaysDraw;
             DrawDepth = drawDepth;
             StartPosition = position;
             Position = position;
             Radius = radius;
             Colour = colour;
-		}
-		
-		public override void Dispose()
-		{
-		}
+        }
+
+        public override void Dispose()
+        {
+        }
 
         const int PARTS = 48;
         float[] vertices = new float[PARTS * 4 + 4];
-		
-		public override bool Draw()
-		{
+
+        public override bool Draw()
+        {
             if (base.Draw())
             {
                 float scale = FieldScale.X;
-				
-				float rad1 = (Radius * Scale.X + Width * 0.5f) * (scale/Scale.X);
-                float rad2 = (Radius * Scale.X - Width * 0.5f) * (scale/Scale.X);
-                
+
+                float rad1 = (Radius * Scale.X + Width * 0.5f) * (scale / Scale.X);
+                float rad2 = (Radius * Scale.X - Width * 0.5f) * (scale / Scale.X);
+
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
@@ -88,8 +88,8 @@ namespace osum.Graphics.Drawables
                 vertices[PARTS * 4 + 3] = vertices[3];
 
                 SpriteManager.TexturesEnabled = false;
-				
-				GL.Color4(c.R, c.G, c.B, c.A);
+
+                GL.Color4(c.R, c.G, c.B, c.A);
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.DrawArrays(BeginMode.TriangleStrip, 0, PARTS * 2 + 2);
 
@@ -98,7 +98,7 @@ namespace osum.Graphics.Drawables
 
             return false;
 
-		}
-	}
+        }
+    }
 }
 

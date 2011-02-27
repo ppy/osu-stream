@@ -55,7 +55,7 @@ namespace osum.Graphics
         internal int Y;
         internal int LastAccess;
         private bool isDisposed;
-		internal bool Permanent;
+        internal bool Permanent;
 #if DEBUG
         internal int id;
         internal static int staticid = 1;
@@ -123,55 +123,55 @@ namespace osum.Graphics
             if (TextureGl != null)
             {
                 if (fboId >= 0)
-				{
-					#if iOS
+                {
+#if iOS
 	                GL.Oes.DeleteFramebuffers(1,ref fboId);
 	                fboId = -1;
-					#endif
-					
-					//todo: cleanup fbo on desktop builds.
-				}
-				
-				TextureGl.Dispose();
+#endif
+
+                    //todo: cleanup fbo on desktop builds.
+                }
+
+                TextureGl.Dispose();
                 TextureGl = null;
             }
-			
-			isDisposed = true;
+
+            isDisposed = true;
         }
-		
-		/// <summary>
-		/// Unloads texture without fully disposing. It may be able to be restored by calling ReloadIfPossible
-		/// </summary>
-		internal void UnloadTexture()
-		{
-			if (TextureGl != null)
-			{
-				TextureGl.Dispose();
-				//TextureGl = null;
-			}
-		}
-		
-		internal bool ReloadIfPossible()
-		{
-			if (TextureGl == null || TextureGl.Id == -1)
-			{
-				if (assetName != null)
-				{
-					pTexture reloadedTexture = FromFile(assetName);
-					if (TextureGl == null)
-						TextureGl = reloadedTexture.TextureGl;
-					else
-						TextureGl.Id = reloadedTexture.TextureGl.Id;
-					
-					reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
-					
-					return true;
-				}
-				
-			}
-			
-			return false;
-		}
+
+        /// <summary>
+        /// Unloads texture without fully disposing. It may be able to be restored by calling ReloadIfPossible
+        /// </summary>
+        internal void UnloadTexture()
+        {
+            if (TextureGl != null)
+            {
+                TextureGl.Dispose();
+                //TextureGl = null;
+            }
+        }
+
+        internal bool ReloadIfPossible()
+        {
+            if (TextureGl == null || TextureGl.Id == -1)
+            {
+                if (assetName != null)
+                {
+                    pTexture reloadedTexture = FromFile(assetName);
+                    if (TextureGl == null)
+                        TextureGl = reloadedTexture.TextureGl;
+                    else
+                        TextureGl.Id = reloadedTexture.TextureGl.Id;
+
+                    reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
+
+                    return true;
+                }
+
+            }
+
+            return false;
+        }
 
         #endregion
 
@@ -191,23 +191,23 @@ namespace osum.Graphics
             }
         }
 
-		public static pTexture FromFile(string filename)
-		{
-			return FromFile(filename, false);
-		}
-		
-		/// <summary>
+        public static pTexture FromFile(string filename)
+        {
+            return FromFile(filename, false);
+        }
+
+        /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
         public static pTexture FromFile(string filename, bool mipmap)
         {
-			//load base texture first...
+            //load base texture first...
 
             if (!File.Exists(filename)) return null;
-			
-			pTexture tex = null;
-			
-			try
+
+            pTexture tex = null;
+
+            try
             {
 #if iOS
 				using (UIImage image = UIImage.FromFile(filename))
@@ -221,23 +221,23 @@ namespace osum.Graphics
             {
                 return null;
             }
-			
-			if (mipmap)
-			{
-				int mipmapLevel = 1;
-				
-				int width = tex.Width;
-				int height = tex.Height;
-				
-				do 
-				{
-					string mmfilename = filename.Replace(".", mipmapLevel + ".");
-					if (!File.Exists(mmfilename))
-						break;
-					
-					width /= 2;
-					height /= 2;
-					
+
+            if (mipmap)
+            {
+                int mipmapLevel = 1;
+
+                int width = tex.Width;
+                int height = tex.Height;
+
+                do
+                {
+                    string mmfilename = filename.Replace(".", mipmapLevel + ".");
+                    if (!File.Exists(mmfilename))
+                        break;
+
+                    width /= 2;
+                    height /= 2;
+
 #if iOS
 					using (UIImage textureImage = UIImage.FromFile(mmfilename))
 					{
@@ -253,16 +253,16 @@ namespace osum.Graphics
 						Marshal.FreeHGlobal(pTextureData);
 					}
 #endif
-					
-					
-					mipmapLevel++;
-				} while (true);
-				
-			}
-			
-			return tex;
-			
-			
+
+
+                    mipmapLevel++;
+                } while (true);
+
+            }
+
+            return tex;
+
+
         }
 
         public static pTexture FromStream(Stream stream, string assetname)
@@ -350,7 +350,7 @@ namespace osum.Graphics
             using (MemoryStream ms = new MemoryStream(data))
                 return FromStream(ms, filename, true);
         }
-		
+
         public static pTexture FromRawBytes(IntPtr location, int width, int height)
         {
             pTexture pt = new pTexture();
@@ -432,15 +432,15 @@ namespace osum.Graphics
             //FromRawBytes(
             //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
         }*/
-		
-		internal int fboId = -1;
-		internal int fboDepthBuffer = -1;
-		
-		internal int BindFramebuffer()
-		{
-			if (fboId >= 0)
-				return fboId;
-			
+
+        internal int fboId = -1;
+        internal int fboDepthBuffer = -1;
+
+        internal int BindFramebuffer()
+        {
+            if (fboId >= 0)
+                return fboId;
+
 #if iOS
             int oldFBO = 0;
 			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
@@ -463,14 +463,14 @@ namespace osum.Graphics
 
             GL.GenFramebuffers(1, out fboId);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-            
+
             GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
             GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, fboDepthBuffer);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-#endif	
-			
-			return fboId;
-		}
+#endif
+
+            return fboId;
+        }
 
         internal pTexture Clone()
         {

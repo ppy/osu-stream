@@ -21,7 +21,7 @@ namespace osu_common.Helpers
 
             return o;
         }
-        
+
         public static string WindowsFilenameStrip(string entry)
         {
             foreach (char c in Path.GetInvalidFileNameChars())
@@ -50,7 +50,7 @@ namespace osu_common.Helpers
                     }
 
                     // register the extension, if necessary
-                    using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(extension,true))
+                    using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(extension, true))
                     {
                         if (key == null)
                         {
@@ -65,7 +65,7 @@ namespace osu_common.Helpers
                         }
                     }
 
-                    
+
                     // register the progId, if necessary
                     using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(progId))
                     {
@@ -122,14 +122,14 @@ namespace osu_common.Helpers
             dInfo.SetAccessControl(dSecurity);
         }
 #endif
-        
+
         public static string UrlEncode(string str)
         {
             if (str == null)
             {
                 return null;
             }
-            return UrlEncode(str, Encoding.UTF8,false);
+            return UrlEncode(str, Encoding.UTF8, false);
         }
 
         public static string UrlEncodeParam(string str)
@@ -138,7 +138,7 @@ namespace osu_common.Helpers
             {
                 return null;
             }
-            return UrlEncode(str, Encoding.UTF8,true);
+            return UrlEncode(str, Encoding.UTF8, true);
         }
 
         public static string UrlEncode(string str, Encoding e, bool paramEncode)
@@ -147,7 +147,7 @@ namespace osu_common.Helpers
             {
                 return null;
             }
-            return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e,paramEncode));
+            return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e, paramEncode));
         }
 
         public static byte[] UrlEncodeToBytes(string str, Encoding e, bool paramEncode)
@@ -157,7 +157,7 @@ namespace osu_common.Helpers
                 return null;
             }
             byte[] bytes = e.GetBytes(str);
-            return UrlEncodeBytesToBytespublic(bytes, 0, bytes.Length, false,paramEncode);
+            return UrlEncodeBytesToBytespublic(bytes, 0, bytes.Length, false, paramEncode);
         }
 
         private static byte[] UrlEncodeBytesToBytespublic(byte[] bytes, int offset, int count, bool alwaysCreateReturnValue, bool paramEncode)
@@ -265,10 +265,10 @@ namespace osu_common.Helpers
             if (input == null) return null;
 
             int last = input.LastIndexOf('\\');
-            
-            string asc = last >= 0 ? input.Substring(0,last + 1) : "";
 
-            foreach (char c in last >= 0 ? input.Remove(0,last + 1) : input)
+            string asc = last >= 0 ? input.Substring(0, last + 1) : "";
+
+            foreach (char c in last >= 0 ? input.Remove(0, last + 1) : input)
                 if (c < 256)
                     asc += c;
             return asc;
@@ -325,7 +325,7 @@ namespace osu_common.Helpers
                     File.Delete(file);
             }
 
-            Directory.Delete(oldFolder,true);
+            Directory.Delete(oldFolder, true);
         }
 
         public static string CleanStoryboardFilename(string filename)
@@ -335,17 +335,17 @@ namespace osu_common.Helpers
 
 
         //This is better than encoding as it doesn't check for origin specific data or remove invalid chars.
-        public unsafe static string rawBytesToString(byte[] encoded )
+        public unsafe static string rawBytesToString(byte[] encoded)
         {
             if (encoded.Length == 0)
                 return String.Empty;
 
-            char[] converted = new char[(encoded.Length+1)/2];
+            char[] converted = new char[(encoded.Length + 1) / 2];
             fixed (byte* bytePtr = encoded)
             fixed (char* stringPtr = converted)
             {
-                byte* stringBytes = (byte*) stringPtr;
-                byte* stringEnd = (byte*) (stringPtr) + converted.Length*2;
+                byte* stringBytes = (byte*)stringPtr;
+                byte* stringEnd = (byte*)(stringPtr) + converted.Length * 2;
                 byte* bytePtr2 = bytePtr;
                 do
                 {
@@ -356,20 +356,20 @@ namespace osu_common.Helpers
             return new string(converted);
         }
 
-        
+
         //This is better than encoding as it doesn't check for origin specific data or remove invalid chars.
-        public unsafe static byte[] rawStringToBytes(string decoded )
+        public unsafe static byte[] rawStringToBytes(string decoded)
         {
             if (decoded == string.Empty)
-                return new byte[] {};
+                return new byte[] { };
 
             char[] decodedC = decoded.ToCharArray();
-            byte[] converted = new byte[decodedC.Length*2];
+            byte[] converted = new byte[decodedC.Length * 2];
             fixed (char* stringPtr = decodedC)
             fixed (byte* convertedB = converted)
             {
                 char* stringPtr2 = stringPtr;
-                char* convertedC = (char*) convertedB;
+                char* convertedC = (char*)convertedB;
                 char* convertedEnd = convertedC + converted.Length;
                 do
                 {

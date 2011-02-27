@@ -56,10 +56,10 @@ namespace osum.GameplayElements
                 DimCollection.Add(SpriteHitCircleText);
             }
 
-            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F, 
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F,
                 startTime - DifficultyManager.PreEmpt, Math.Min(startTime, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn * 2)));
 
-            SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 4, 1, 
+            SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 4, 1,
                 startTime - DifficultyManager.PreEmpt, startTime));
 
             SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0.9f, 0,
@@ -114,32 +114,32 @@ namespace osum.GameplayElements
         {
             if (action > 0)
             {
-                
-				//Fade out the actual hit circle
-                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F, 
+
+                //Fade out the actual hit circle
+                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
                     Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
                 Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F * TEXT_SIZE, 1.4F * TEXT_SIZE,
                     Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut, EasingTypes.InHalf);
-                
-                Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0, 
+
+                Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
                     Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut);
-				
+
                 SpriteHitCircle1.Transformations.Clear();
                 SpriteHitCircle1.Transform(circleScaleOut);
-				SpriteHitCircle1.Transform(circleFadeOut);
-				
+                SpriteHitCircle1.Transform(circleFadeOut);
+
                 SpriteHitCircle2.Transformations.Clear();
                 SpriteHitCircle2.Transform(circleScaleOut);
-				SpriteHitCircle2.Transform(circleFadeOut);
-				
-				SpriteHitCircleText.Transformations.Clear();
+                SpriteHitCircle2.Transform(circleFadeOut);
+
+                SpriteHitCircleText.Transformations.Clear();
                 SpriteHitCircleText.Transform(textScaleOut);
-				SpriteHitCircleText.Transform(circleFadeOut);
-				
-				
-				if (connectedObject != null)
-					connectionSprite.FadeOut(100);
+                SpriteHitCircleText.Transform(circleFadeOut);
+
+
+                if (connectedObject != null)
+                    connectionSprite.FadeOut(100);
 
                 SpriteApproachCircle.Transformations.Clear();
             }
@@ -195,7 +195,7 @@ namespace osum.GameplayElements
             {
                 SpriteHitCircle1.Colour = value;
                 SpriteApproachCircle.Colour = value;
-                
+
                 base.Colour = value;
             }
         }

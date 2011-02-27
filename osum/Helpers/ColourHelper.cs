@@ -18,9 +18,9 @@ namespace osum.Helpers
         internal static Color4 Lighten(Color4 color, float amount)
         {
             return new Color4(
-                Math.Min(1.0f, color.R * (1+amount)),
-                Math.Min(1.0f, color.G * (1+amount)),
-                Math.Min(1.0f, color.B * (1+amount)),
+                Math.Min(1.0f, color.R * (1 + amount)),
+                Math.Min(1.0f, color.G * (1 + amount)),
+                Math.Min(1.0f, color.B * (1 + amount)),
                 color.A);
         }
 
@@ -46,9 +46,9 @@ namespace osum.Helpers
         internal static Color4 Darken(Color4 color, float amount)
         {
             return new Color4(
-                Math.Min(1.0f, color.R * (1-amount)),
-                Math.Min(1.0f, color.G * (1-amount)),
-                Math.Min(1.0f, color.B * (1-amount)),
+                Math.Min(1.0f, color.R * (1 - amount)),
+                Math.Min(1.0f, color.G * (1 - amount)),
+                Math.Min(1.0f, color.B * (1 - amount)),
                 color.A);
         }
 

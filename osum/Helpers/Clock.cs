@@ -52,7 +52,7 @@ namespace osum.Helpers
 
         static double currentFrameAudioTime;
         static int currentFrameAudioTimeOffset;
-        
+
 
         /// <summary>
         /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
@@ -95,7 +95,7 @@ namespace osum.Helpers
             {
                 double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
                 if (inaccuracy > 0.03)
-					currentFrameAudioTime = sourceTime;
+                    currentFrameAudioTime = sourceTime;
 
                 currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
             }

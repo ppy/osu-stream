@@ -16,13 +16,13 @@ namespace osum
         /// <summary>
         /// The active game mode, which is being drawn to screen.
         /// </summary>
-        internal static GameMode CurrentMode {get; private set;}
+        internal static GameMode CurrentMode { get; private set; }
         internal static OsuMode CurrentOsuMode { get; private set; }
 
         /// <summary>
         /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
         /// </summary>
-        internal static OsuMode PendingMode {get; private set;}
+        internal static OsuMode PendingMode { get; private set; }
 
         /// <summary>
         /// The transition being used to introduce a pending mode.
@@ -35,7 +35,7 @@ namespace osum
         }
 
         public static event VoidDelegate OnTransitionEnded;
-        
+
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
         /// </summary>
@@ -51,7 +51,7 @@ namespace osum
                 changeMode(mode);
                 return true;
             }
-            
+
             PendingMode = mode;
             ActiveTransition = transition;
 
@@ -66,7 +66,7 @@ namespace osum
         {
             //Create the actual mode
             GameMode mode = null;
-            
+
             switch (newMode)
             {
                 case OsuMode.MainMenu:
@@ -75,14 +75,14 @@ namespace osum
                 case OsuMode.SongSelect:
                     mode = new SongSelectMode();
                     break;
-				case OsuMode.Ranking:
-					mode = new Ranking();
-					break;
+                case OsuMode.Ranking:
+                    mode = new Ranking();
+                    break;
                 case OsuMode.Play:
                     mode = new Player();
                     break;
             }
-            
+
             //Can we ever fail to create a mode?
             if (mode != null)
             {
@@ -108,8 +108,8 @@ namespace osum
 
             PendingMode = OsuMode.Unknown;
             CurrentOsuMode = newMode;
-			
-			GC.Collect(); //force a full collect before we start displaying the new mode.
+
+            GC.Collect(); //force a full collect before we start displaying the new mode.
         }
 
         static bool modeChangePending;
@@ -134,8 +134,8 @@ namespace osum
             if (ActiveTransition != null)
             {
                 ActiveTransition.Update();
-				
-				AudioEngine.Music.Volume = Director.ActiveTransition.CurrentValue;
+
+                AudioEngine.Music.Volume = Director.ActiveTransition.CurrentValue;
 
                 if (ActiveTransition.FadeOutDone)
                 {
@@ -154,12 +154,12 @@ namespace osum
                     ActiveTransition = null;
                 }
             }
-			
+
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.
             //Initialising a mode usually takes a fair amount of time and will throw off timings,
             //so we count this as a null frame.
-            
+
             if (CurrentMode != null)
                 CurrentMode.Update();
 
@@ -173,7 +173,7 @@ namespace osum
         {
             if (CurrentMode == null)
                 return false;
-            
+
             CurrentMode.Draw();
             return true;
         }

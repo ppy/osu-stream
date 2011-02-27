@@ -23,7 +23,8 @@ namespace osum.GameModes.Play.Components
         protected Vector2 textMeasure;
         protected float scale;
 
-        internal ScoreDisplay() : this(Vector2.Zero, true, 1, true, true)
+        internal ScoreDisplay()
+            : this(Vector2.Zero, true, 1, true, true)
         {
         }
 
@@ -108,16 +109,16 @@ namespace osum.GameModes.Play.Components
 
         internal void SetAccuracy(float accuracy)
         {
-            currentAccuracy = Math.Round(accuracy,2);
+            currentAccuracy = Math.Round(accuracy, 2);
         }
 
         internal void Hide()
         {
             if (s_Score != null)
                 s_Score.FadeOut(0);
-            if (s_Accuracy!=null)
+            if (s_Accuracy != null)
                 s_Accuracy.FadeOut(0);
-            
+
         }
 
         internal void SetScore(int score)

@@ -64,8 +64,8 @@ namespace osum
         internal static float SpriteToBaseRatio;
 
         internal static float SpriteToNativeRatio;
-		
-		internal static float ScaleFactor = 1;
+
+        internal static float ScaleFactor = 1;
         internal static Size NativeSize;
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace osum
 
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-        public static double ElapsedMilliseconds = 1000/60f;
+        public static double ElapsedMilliseconds = 1000 / 60f;
 
         internal static Scheduler Scheduler = new Scheduler();
 
@@ -104,7 +104,7 @@ namespace osum
 
         internal static Size BaseSizeHalf
         {
-            get { return new Size(BaseSize.Width/2, BaseSize.Height/2); }
+            get { return new Size(BaseSize.Width / 2, BaseSize.Height / 2); }
         }
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
@@ -161,32 +161,32 @@ namespace osum
         public virtual void SetupScreen()
         {
             //Setup window...
-            BaseSize.Height = (int) (BaseSize.Width*(float) NativeSize.Height/NativeSize.Width);
-			
+            BaseSize.Height = (int)(BaseSize.Width * (float)NativeSize.Height / NativeSize.Width);
+
             GL.Disable(EnableCap.DepthTest);
             GL.EnableClientState(ArrayCap.VertexArray);
-			GL.Disable(EnableCap.Lighting);
-			GL.DepthMask(false);
-			GL.Enable(EnableCap.Blend);
-			
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Disable(EnableCap.Lighting);
+            GL.DepthMask(false);
+            GL.Enable(EnableCap.Blend);
+
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             SetViewport();
 
-            BaseToNativeRatio = (float) NativeSize.Width/BaseSize.Width;
+            BaseToNativeRatio = (float)NativeSize.Width / BaseSize.Width;
 
-            GamefieldOffsetVector1 = new Vector2((float) (BaseSize.Width - GamefieldBaseSize.Width)/2,
-                                                 (float) (BaseSize.Height - GamefieldBaseSize.Height)/4*3);
+            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.Width - GamefieldBaseSize.Width) / 2,
+                                                 (float)(BaseSize.Height - GamefieldBaseSize.Height) / 4 * 3);
 
             SpriteResolution = Math.Max(960, Math.Min(1024, NativeSize.Width));
-			//todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
-			//need to consider the WindowScaleFactor value here.
+            //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
+            //need to consider the WindowScaleFactor value here.
 
-            SpriteToBaseRatio = (float) BaseSize.Width/SpriteResolution;
+            SpriteToBaseRatio = (float)BaseSize.Width / SpriteResolution;
 
-            SpriteToNativeRatio = (float) NativeSize.Width/SpriteResolution;
-			//1024x = 1024/1024 = 1
-			//960x  = 960/960   = 1
-			//480x  = 480/960   = 0.5
+            SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
+            //1024x = 1024/1024 = 1
+            //960x  = 960/960   = 1
+            //480x  = 480/960   = 0.5
 
             TriggerLayoutChanged();
         }
@@ -219,8 +219,8 @@ namespace osum
             Components.Add(effect);
 
             AudioEngine.Initialize(effect, music);
-			
-			DebugOverlay.Update();
+
+            DebugOverlay.Update();
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
@@ -244,7 +244,7 @@ namespace osum
         /// Initializes the input management subsystem.
         /// </summary>
         protected abstract void InitializeInput();
-		
+
         /// <summary>
         /// Main update cycle
         /// </summary>
@@ -252,21 +252,22 @@ namespace osum
         public bool Update(FrameEventArgs e)
         {
             double lastTime = Clock.TimeAccurate;
-			double thisTime = 0; 
-			try { thisTime = e.Time; } catch {}
-			//try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
+            double thisTime = 0;
+            try { thisTime = e.Time; }
+            catch { }
+            //try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
             Clock.Update(thisTime);
-			
+
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
             ignoreNextFrameTime = false;
 
             Scheduler.Update();
 
             DebugOverlay.Update();
-			
+
 #if DEBUG
-			DebugOverlay.AddLine("GC: 0:" +  GC.CollectionCount(0) + " 1:" + GC.CollectionCount(1) + " 2:" + GC.CollectionCount(2));
-			DebugOverlay.AddLine("Window Size: " + NativeSize.Width + "x" + NativeSize.Height + " Sprite Resolution: " + SpriteResolution);
+            DebugOverlay.AddLine("GC: 0:" + GC.CollectionCount(0) + " 1:" + GC.CollectionCount(1) + " 2:" + GC.CollectionCount(2));
+            DebugOverlay.AddLine("Window Size: " + NativeSize.Width + "x" + NativeSize.Height + " Sprite Resolution: " + SpriteResolution);
 #endif
 
             TextureManager.Update();
@@ -296,12 +297,12 @@ namespace osum
             SpriteManager.Reset();
 
             GL.Clear(Constants.COLOR_BUFFER_BIT);
-			//todo: Does clearing DEPTH as well here add a performance overhead?
+            //todo: Does clearing DEPTH as well here add a performance overhead?
 
             if (ignoreNextFrameTime)
-				return;
+                return;
 
-			SpriteManager.Reset();
+            SpriteManager.Reset();
 
             Director.Draw();
 
@@ -310,7 +311,7 @@ namespace osum
 
         public static void TriggerLayoutChanged()
         {
-			if (OnScreenLayoutChanged != null)
+            if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
         }
     }

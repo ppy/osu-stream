@@ -16,7 +16,8 @@ namespace osum
     class GameWindowDesktop : GameWindow
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
-        public GameWindowDesktop() : base(960, 640, GraphicsMode.Default, "osu!m")
+        public GameWindowDesktop()
+            : base(960, 640, GraphicsMode.Default, "osu!m")
         {
             VSync = VSyncMode.On;
             //GameBase.WindowSize = new Size(960,640);
@@ -32,12 +33,12 @@ namespace osum
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            
+
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-            
+
             GL.Disable(EnableCap.Lighting);
             GL.Enable(EnableCap.Blend);
-            
+
             GameBase.Instance.Initialize();
 
             KeyPress += new EventHandler<KeyPressEventArgs>(GameWindowDesktop_KeyPress);
@@ -58,7 +59,7 @@ namespace osum
             if (Director.CurrentOsuMode != OsuMode.MainMenu)
             {
                 e.Cancel = true;
-                Director.ChangeMode(OsuMode.MainMenu,new FadeTransition(200,400));
+                Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200, 400));
             }
 
             base.OnClosing(e);
@@ -73,9 +74,9 @@ namespace osum
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            
+
             GameBase.Instance.SetupScreen();
-            
+
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace osum
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
-            
+
             if (Keyboard[Key.Escape])
                 Exit();
             if (Keyboard[Key.Right])
@@ -102,12 +103,12 @@ namespace osum
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-            
+
             //ensure the gl context is in the current thread.
             MakeCurrent();
-            
+
             GameBase.Instance.Draw(e);
-            
+
             // display
             SwapBuffers();
         }

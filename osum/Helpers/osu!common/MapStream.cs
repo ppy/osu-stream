@@ -14,7 +14,7 @@ namespace osu_common.Libraries.Osz2
 
         #endregion
 
-        
+
 
         private readonly int fLength;
 #if STRONG_ENCRYPTION
@@ -28,7 +28,7 @@ namespace osu_common.Libraries.Osz2
 #endif
         //private int fOffset;
         private long fPosition;
-        
+
         public MapStream(string filename, int offset, int length, byte[] iv, byte[] key)
         {
             FileStream file = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -80,7 +80,7 @@ namespace osu_common.Libraries.Osz2
             fLength = lengthB[0] | (lengthB[1] << 8) | (lengthB[2] << 16) | (lengthB[3] << 24);
             fPosition = 4;
 #endif
-            
+
 #if DEBUG
             Console.WriteLine("<<<<<<<<<<MAPSTREAM OPENED>>>>>>>>>>>>");
 #endif
@@ -113,13 +113,13 @@ namespace osu_common.Libraries.Osz2
 #else
             get { return fPosition - 4; }
 #endif
-            set 
+            set
             {
                 if (value % 4 > 0)
                     throw new Exception("fPosition may only be a multiple of 4 bytes");
                 fPosition = value + 4;
-            } 
-            
+            }
+
             /*
             get { return fStream.Position - fOffset; }
             set { Seek(value, SeekOrigin.Begin); }
@@ -184,12 +184,12 @@ namespace osu_common.Libraries.Osz2
         {
             // limit count
             if (Position + count > fLength)
-                count = fLength - (int) Position;
+                count = fLength - (int)Position;
 #if STRONG_ENCRYPTION
             int bytes = fStream.Read(buffer, offset, count);
 #elif NO_ENCRYPTION
             int bytes = count;
-            Array.Copy(internalBuffer,fPosition,buffer,offset,count);
+            Array.Copy(internalBuffer, fPosition, buffer, offset, count);
 #else
             int bytes = count;
             Array.Copy(internalBuffer,fPosition,buffer,offset,count);

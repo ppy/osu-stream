@@ -28,9 +28,9 @@ namespace osum.Support
 
         static double lastUpdateTime;
         static bool updateFrame;
-		
-		static int gcCount;
-        
+
+        static int gcCount;
+
         static internal void Update()
         {
             if (fpsDisplay == null)
@@ -45,23 +45,23 @@ namespace osum.Support
             }
 
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + GameBase.ElapsedMilliseconds * 0.02;
-			
-			if (GameBase.ElapsedMilliseconds > 25)
-			{
-					fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 10);
-                    fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
-			}
-			
-			int newGcCount = GC.CollectionCount(0) + GC.CollectionCount(1);
-			
-			if (gcCount < newGcCount)
-			{
-				gcCount = newGcCount;
-				fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 100, fpsDisplay.Position.Y);
-                fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
-			}
 
-			double fps = (1000 / weightedAverageFrameTime);
+            if (GameBase.ElapsedMilliseconds > 25)
+            {
+                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 10);
+                fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
+            }
+
+            int newGcCount = GC.CollectionCount(0) + GC.CollectionCount(1);
+
+            if (gcCount < newGcCount)
+            {
+                gcCount = newGcCount;
+                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 100, fpsDisplay.Position.Y);
+                fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
+            }
+
+            double fps = (1000 / weightedAverageFrameTime);
 
             lastUpdateTime += GameBase.ElapsedMilliseconds;
 
@@ -83,7 +83,7 @@ namespace osum.Support
             if (updateFrame)
             {
 
-				fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
+                fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
 #if FULL_DEBUG
                 int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
                 fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
@@ -91,7 +91,7 @@ namespace osum.Support
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
-                fpsDisplay.Text = Math.Round(Math.Min(60,fps),0).ToString();
+                fpsDisplay.Text = Math.Round(Math.Min(60, fps), 0).ToString();
 #endif
             }
         }

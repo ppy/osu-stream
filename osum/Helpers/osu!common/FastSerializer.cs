@@ -38,7 +38,8 @@ namespace osu_common.Helpers
     /// handle null strings and simplify use with ISerializable. </summary>
     public class SerializationWriter : BinaryWriter
     {
-        public SerializationWriter(Stream s) : base(s)
+        public SerializationWriter(Stream s)
+            : base(s)
         {
         }
 
@@ -54,11 +55,11 @@ namespace osu_common.Helpers
         {
             if (str == null)
             {
-                Write((byte) ObjType.nullType);
+                Write((byte)ObjType.nullType);
             }
             else
             {
-                Write((byte) ObjType.stringType);
+                Write((byte)ObjType.stringType);
                 base.Write(str);
             }
         }
@@ -143,7 +144,7 @@ namespace osu_common.Helpers
         {
             if (obj == null)
             {
-                Write((byte) ObjType.nullType);
+                Write((byte)ObjType.nullType);
             }
             else
             {
@@ -248,8 +249,8 @@ namespace osu_common.Helpers
         /// <summary> Adds the SerializationWriter buffer to the SerializationInfo at the end of GetObjectData(). </summary>
         public void AddToInfo(SerializationInfo info)
         {
-            byte[] b = ((MemoryStream) BaseStream).ToArray();
-            info.AddValue("X", b, typeof (byte[]));
+            byte[] b = ((MemoryStream)BaseStream).ToArray();
+            info.AddValue("X", b, typeof(byte[]));
         }
 
         public void WriteByteArray(byte[] b)
@@ -271,7 +272,8 @@ namespace osu_common.Helpers
     /// handle null strings and simplify use with ISerializable. </summary>
     public class SerializationReader : BinaryReader
     {
-        public SerializationReader(Stream s) : base(s)
+        public SerializationReader(Stream s)
+            : base(s)
         {
         }
 
@@ -279,7 +281,7 @@ namespace osu_common.Helpers
         /// and produce a SerializationReader from which serialized objects can be read </summary>.
         public static SerializationReader GetReader(SerializationInfo info)
         {
-            byte[] byteArray = (byte[]) info.GetValue("X", typeof (byte[]));
+            byte[] byteArray = (byte[])info.GetValue("X", typeof(byte[]));
             MemoryStream ms = new MemoryStream(byteArray);
             return new SerializationReader(ms);
         }
@@ -314,7 +316,7 @@ namespace osu_common.Helpers
         {
             long ticks = ReadInt64();
             if (ticks < 0) throw new AbandonedMutexException("oops");
-            return new DateTime(ticks,DateTimeKind.Utc);
+            return new DateTime(ticks, DateTimeKind.Utc);
         }
 
         /// <summary> Reads a generic list from the buffer. </summary>
@@ -325,7 +327,7 @@ namespace osu_common.Helpers
             IList<T> d = new List<T>(count);
 
             SerializationReader sr = new SerializationReader(BaseStream);
-            
+
             for (int i = 0; i < count; i++)
             {
                 T obj = new T();
@@ -352,14 +354,14 @@ namespace osu_common.Helpers
             int count = ReadInt32();
             if (count < 0) return null;
             IDictionary<T, U> d = new Dictionary<T, U>();
-            for (int i = 0; i < count; i++) d[(T) ReadObject()] = (U) ReadObject();
+            for (int i = 0; i < count; i++) d[(T)ReadObject()] = (U)ReadObject();
             return d;
         }
 
         /// <summary> Reads an object which was added to the buffer by WriteObject. </summary>
         public object ReadObject()
         {
-            ObjType t = (ObjType) ReadByte();
+            ObjType t = (ObjType)ReadByte();
             switch (t)
             {
                 case ObjType.boolType:

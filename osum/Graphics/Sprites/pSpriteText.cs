@@ -59,7 +59,7 @@ namespace osum.Graphics.Sprites
             set
             {
                 if (text == value) return;
-                
+
                 text = value;
                 textChanged = true;
 
@@ -80,9 +80,9 @@ namespace osum.Graphics.Sprites
             try
             {
                 osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
-				
-				TextureManager.Load(osuTextureFont);
-				//preload
+
+                TextureManager.Load(osuTextureFont);
+                //preload
             }
             catch
             {
@@ -134,47 +134,47 @@ namespace osum.Graphics.Sprites
         }
 
 
-        Dictionary<char,pTexture> textureCache = new Dictionary<char, pTexture>();
+        Dictionary<char, pTexture> textureCache = new Dictionary<char, pTexture>();
 
-		pTexture textureFor(char c)
-		{
-			pTexture tex = null;
-			
-			if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
-					//the extra two conditions are only required for the fps counter between modes.
+        pTexture textureFor(char c)
+        {
+            pTexture tex = null;
+
+            if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
+            //the extra two conditions are only required for the fps counter between modes.
+            {
+
+            }
+            else
+            {
+                int offset = c - '0';
+
+                switch (c)
                 {
-					
+                    case ',':
+                        offset = 10;
+                        break;
+                    case '.':
+                        offset = 11;
+                        break;
+                    case '%':
+                        offset = 12;
+                        break;
+                    case 'x':
+                        offset = 13;
+                        break;
                 }
+
+                if (osuTextureFont != OsuTexture.None)
+                    tex = TextureManager.Load((OsuTexture)(osuTextureFont + offset));
                 else
-                {
-                    int offset = c - '0';
-					
-					switch (c)
-                    {
-                        case ',':
-							offset = 10;
-                            break;
-                        case '.':
-							offset = 11;
-							break;
-                        case '%':
-							offset = 12;
-							break;
-						case 'x':
-							offset = 13;
-							break;
-                    }
-					
-					if (osuTextureFont != OsuTexture.None)
-                        tex = TextureManager.Load((OsuTexture)(osuTextureFont + offset));
-                    else
-                        tex = TextureManager.Load(TextFont + "-" + c);
+                    tex = TextureManager.Load(TextFont + "-" + c);
 
-                    textureCache[c] = tex;
-                }
-			
-			return tex;
-		}
+                textureCache[c] = tex;
+            }
+
+            return tex;
+        }
 
         /// <summary>
         /// Updates the array of each character which is to be displayed.
@@ -200,12 +200,12 @@ namespace osum.Graphics.Sprites
                 currentX -= (TextConstantSpacing || i == 0 ? 0 : SpacingOverlap);
 
                 int x = currentX;
-				
-				pTexture tex = textureFor(c);
-                
-				
-				if (!TextConstantSpacing || c < '0' || c > '9')
-                        currentX += tex.Width;
+
+                pTexture tex = textureFor(c);
+
+
+                if (!TextConstantSpacing || c < '0' || c > '9')
+                    currentX += tex.Width;
 
                 renderTextures.Add(tex);
 
@@ -267,7 +267,7 @@ namespace osum.Graphics.Sprites
 
                     return true;
                 }
-                
+
             }
 
             return false;

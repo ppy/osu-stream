@@ -39,11 +39,11 @@ namespace osum.Helpers
             float num = value1.Y - value2.Y;
             return ((num2 * num2) + (num * num));
         }
-		
-		public static Vector2 Point2Vector(PointF point)
-		{
-			return new Vector2(point.X, point.Y);	
-		}
+
+        public static Vector2 Point2Vector(PointF point)
+        {
+            return new Vector2(point.X, point.Y);
+        }
 
         internal static List<Vector2> CreateBezier(List<Vector2> input, int points)
         {
@@ -95,8 +95,8 @@ namespace osum.Helpers
                 for (int k = 0; k < detailLevel; k++)
                 {
                     Vector2 vector;
-                    
-                    float amount = (float) k / detailLevel;
+
+                    float amount = (float)k / detailLevel;
                     float num = amount * amount;
                     float num2 = amount * num;
 

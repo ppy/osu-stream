@@ -101,13 +101,13 @@ namespace osum.Graphics
             Delete();
         }
 
-        private void checkGlError ()
+        private void checkGlError()
         {
-        	ErrorCode error = GL.GetError ();
-        	if (error != ErrorCode.NoError)
+            ErrorCode error = GL.GetError();
+            if (error != ErrorCode.NoError)
             {
-        		Console.WriteLine ("GL Error: " + error);
-        	}
+                Console.WriteLine("GL Error: " + error);
+            }
         }
 
         int fbo;
@@ -161,15 +161,15 @@ namespace osum.Graphics
 
 
         static int lastDrawTexture;
-		
-		public void Bind()
-		{
+
+        public void Bind()
+        {
             if (lastDrawTexture != Id)
             {
                 lastDrawTexture = Id;
                 GL.BindTexture(TextureGl.SURFACE_TYPE, Id);
             }
-		}
+        }
 
         float[] coordinates = new float[8];
         float[] vertices = new float[8];
@@ -180,22 +180,22 @@ namespace osum.Graphics
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
                          Box2? srcRect)
         {
-			if (Id < 0) return;
+            if (Id < 0) return;
 
-			Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
+            Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
 
             float drawHeight = drawRect.Height * scaleVector.Y;
             float drawWidth = drawRect.Width * scaleVector.X;
 
             Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
 
-            GL.Color4(drawColour.R,drawColour.G,drawColour.B,drawColour.A);
-			
-			float left = (float)drawRect.Left / potWidth;
+            GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
+
+            float left = (float)drawRect.Left / potWidth;
             float right = (float)drawRect.Right / potWidth;
             float top = (float)drawRect.Top / potHeight;
             float bottom = (float)drawRect.Bottom / potHeight;
-			
+
             coordinates[0] = left;
             coordinates[1] = top;
             coordinates[2] = right;
@@ -204,49 +204,49 @@ namespace osum.Graphics
             coordinates[5] = bottom;
             coordinates[6] = left;
             coordinates[7] = bottom;
-			
-			//first move everything so it is centered on (0,0)
-			float vLeft = -originVector.X;
-			float vTop = -originVector.Y;
-			float vRight = -originVector.X + drawWidth;
-			float vBottom = -originVector.Y + drawHeight;
-			
-			if (rotation != 0)
-			{
-				float cos = (float)Math.Cos(rotation);
-				float sin = (float)Math.Sin(rotation);
-				
-				vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
-				vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
-				vertices[2] = vRight * cos - vTop * sin + currentPos.X;
-				vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
-	            vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
-	            vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
-				vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
-	            vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
-			}
-			else
-			{
-				vLeft += currentPos.X;
-				vRight += currentPos.X;
-				vTop += currentPos.Y;
-				vBottom += currentPos.Y;
-				
-				vertices[0] = vLeft;
-				vertices[1] = vTop;
-				vertices[2] = vRight;
-				vertices[3] = vTop;
-	            vertices[4] = vRight;
-	            vertices[5] = vBottom;
-				vertices[6] = vLeft;
-	            vertices[7] = vBottom;
-			}
-			
-			Bind();
 
-			GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
-			GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
+            //first move everything so it is centered on (0,0)
+            float vLeft = -originVector.X;
+            float vTop = -originVector.Y;
+            float vRight = -originVector.X + drawWidth;
+            float vBottom = -originVector.Y + drawHeight;
+
+            if (rotation != 0)
+            {
+                float cos = (float)Math.Cos(rotation);
+                float sin = (float)Math.Sin(rotation);
+
+                vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
+                vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
+                vertices[2] = vRight * cos - vTop * sin + currentPos.X;
+                vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
+                vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
+                vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
+                vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
+                vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
+            }
+            else
+            {
+                vLeft += currentPos.X;
+                vRight += currentPos.X;
+                vTop += currentPos.Y;
+                vBottom += currentPos.Y;
+
+                vertices[0] = vLeft;
+                vertices[1] = vTop;
+                vertices[2] = vRight;
+                vertices[3] = vTop;
+                vertices[4] = vRight;
+                vertices[5] = vBottom;
+                vertices[6] = vLeft;
+                vertices[7] = vBottom;
+            }
+
+            Bind();
+
+            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
         }
 
         public void SetData(int textureId)
@@ -270,7 +270,7 @@ namespace osum.Graphics
         public unsafe void SetData(byte[] data, int level, PixelFormat format)
         {
             fixed (byte* dataPtr = data)
-				SetData((IntPtr)dataPtr, level, format);
+                SetData((IntPtr)dataPtr, level, format);
         }
 
         internal static int GetPotDimension(int size)
@@ -288,46 +288,46 @@ namespace osum.Graphics
 #else
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Bgra;
 #endif
-		
+
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)
         /// </summary>
-        public void SetData (IntPtr dataPointer, int level, PixelFormat format)
+        public void SetData(IntPtr dataPointer, int level, PixelFormat format)
         {
-        	if (format == 0)
+            if (format == 0)
                 format = PIXEL_FORMAT;
 
-			SpriteManager.TexturesEnabled = true;
+            SpriteManager.TexturesEnabled = true;
 
             bool newTexture = false;
 
             if (level == 0 && Id < 0)
             {
-        		Delete();
-        		newTexture = true;
-        		int[] textures = new int[1];
-        		GL.GenTextures(1, textures);
-        		Id = textures[0];
-        	}
+                Delete();
+                newTexture = true;
+                int[] textures = new int[1];
+                GL.GenTextures(1, textures);
+                Id = textures[0];
+            }
 
-       		GL.BindTexture(SURFACE_TYPE, Id);
+            GL.BindTexture(SURFACE_TYPE, Id);
 
             if (level > 0)
-			{
-				GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapNearest);
-	            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.LinearMipmapNearest);
-			}
-			else
-			{
-				GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
-	            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
-			}
+            {
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapNearest);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.LinearMipmapNearest);
+            }
+            else
+            {
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+            }
 
             //can't determine if this helps
-			GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
             GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
 
-			//doesn't seem to help much at all? maybe best to test once more...
+            //doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
 #if iOS
@@ -347,7 +347,7 @@ namespace osum.Graphics
                     break;
             }
 #endif
-			
+
             if (newTexture)
             {
                 if (SURFACE_TYPE == TextureTarget.Texture2D)
@@ -374,7 +374,7 @@ namespace osum.Graphics
             }
             else
             {
-                GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth / (int)Math.Pow(2,level), textureHeight  / (int)Math.Pow(2,level), 0, format,
+                GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth / (int)Math.Pow(2, level), textureHeight / (int)Math.Pow(2, level), 0, format,
                                    PixelType.UnsignedByte, dataPointer);
             }
         }

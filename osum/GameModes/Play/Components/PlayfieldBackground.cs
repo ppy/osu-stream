@@ -54,7 +54,8 @@ namespace osum.GameModes.Play.Components
         internal static Color4 COLOUR_WARNING = new Color4(237, 29, 29, 255);
         private Color4 currentColour;
 
-        public PlayfieldBackground() : base()
+        public PlayfieldBackground()
+            : base()
         {
             float left = 0;
             float right = GameBase.NativeSize.Width;
@@ -161,7 +162,7 @@ namespace osum.GameModes.Play.Components
                 FlashColour(Color4.LightGray, 400);
             else
                 FlashColour(Color4.White, 400);
-            
+
             currentColour = colour;
         }
     }

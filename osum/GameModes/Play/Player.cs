@@ -35,7 +35,8 @@ namespace osum.GameModes
         private PlayfieldBackground s_Playfield;
 
 
-        public Player() : base()
+        public Player()
+            : base()
         {
         }
 
@@ -43,47 +44,47 @@ namespace osum.GameModes
         {
             //pass on the event to hitObjectManager for handling.
             hitObjectManager.HandlePressAt(point);
-			
-			if (InputManager.TrackingPoints.Count == 2)
-			{
-				Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
-				Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
-				
-				if (Math.Max(p1.X,p2.X) > (GameBase.BaseSize.Width - 40) &&
-				    Math.Min(p1.X,p2.X) < 40 &&
-				    p1.Y + p2.Y < 80)
-				{
-					Director.ChangeMode(OsuMode.SongSelect);
-				}
-				else if (Math.Max(p1.X,p2.X) > (GameBase.BaseSize.Width - 40) &&
-				    Math.Min(p1.X,p2.X) < 40 &&
-				    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
-				{
-					Player.Autoplay = !Autoplay;	
-				}
-				
-			}
+
+            if (InputManager.TrackingPoints.Count == 2)
+            {
+                Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
+                Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
+
+                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                    Math.Min(p1.X, p2.X) < 40 &&
+                    p1.Y + p2.Y < 80)
+                {
+                    Director.ChangeMode(OsuMode.SongSelect);
+                }
+                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                    Math.Min(p1.X, p2.X) < 40 &&
+                    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
+                {
+                    Player.Autoplay = !Autoplay;
+                }
+
+            }
         }
-		
-		int lastSeek;
+
+        int lastSeek;
         void InputManager_OnMove(InputSource source, TrackingPoint point)
         {
             // fast forward for iphone
             if (InputManager.TrackingPoints.Count >= 4 && Clock.Time - lastSeek > 250)
             {
                 lastSeek = Clock.Time;
-				AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
+                AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
             }
         }
 
         internal override void Initialize()
         {
             TextureManager.PopulateSurfaces();
-				
-			InputManager.OnDown += InputManager_OnDown;
+
+            InputManager.OnDown += InputManager_OnDown;
             InputManager.OnMove += InputManager_OnMove;
-			
-			TextureManager.RequireSurfaces = true;
+
+            TextureManager.RequireSurfaces = true;
 
             hitObjectManager = new HitObjectManager(Beatmap);
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
@@ -101,16 +102,16 @@ namespace osum.GameModes
             s_Playfield = new PlayfieldBackground();
             spriteManager.Add(s_Playfield);
 
-            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename),false);
+            AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false);
             Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
-			
-			if (fpsTotalCount != null)
-			{
-				fpsTotalCount.AlwaysDraw = false;
-				fpsTotalCount = null;
-			}
-			
-			gcAtStart = GC.CollectionCount(0);
+
+            if (fpsTotalCount != null)
+            {
+                fpsTotalCount.AlwaysDraw = false;
+                fpsTotalCount = null;
+            }
+
+            gcAtStart = GC.CollectionCount(0);
         }
 
         void Director_OnTransitionEnded()
@@ -175,15 +176,15 @@ namespace osum.GameModes
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
         }
-		
-		static pSprite fpsTotalCount;
-		int gcAtStart;
-		
+
+        static pSprite fpsTotalCount;
+        int gcAtStart;
+
         public override void Dispose()
         {
             InputManager.OnDown -= InputManager_OnDown;
-			
-			TextureManager.RequireSurfaces = false;
+
+            TextureManager.RequireSurfaces = false;
 
             hitObjectManager.Dispose();
 
@@ -191,15 +192,15 @@ namespace osum.GameModes
             scoreDisplay.Dispose();
 
             base.Dispose();
-			
+
             //Performance testing code.
-			fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount/16.666667f) + " (GC: "+(GC.CollectionCount(0) - gcAtStart)+")", 16, new Vector2(0, 100), new Vector2(512,256), 0, false, Color4.White, false);
+            fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
             fpsTotalCount.FadeOutFromOne(15000);
-			GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
+            GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
         }
-		
-		int frameCount = 0;
-		double msCount = 0;
+
+        int frameCount = 0;
+        double msCount = 0;
 
         public override bool Draw()
         {
@@ -210,10 +211,10 @@ namespace osum.GameModes
             scoreDisplay.Draw();
             healthBar.Draw();
             comboCounter.Draw();
-			
-			frameCount++;
-			
-			msCount += GameBase.ElapsedMilliseconds;
+
+            frameCount++;
+
+            msCount += GameBase.ElapsedMilliseconds;
 
             return true;
         }
@@ -221,17 +222,17 @@ namespace osum.GameModes
         public override void Update()
         {
             //check whether the map is finished
-			if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.hitObjects[hitObjectManager.hitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
-			{
-				Ranking.RankableScore = currentScore;
-				Director.ChangeMode(OsuMode.Ranking);
-			}
-			
-			hitObjectManager.Update();
+            if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.hitObjects[hitObjectManager.hitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
+            {
+                Ranking.RankableScore = currentScore;
+                Director.ChangeMode(OsuMode.Ranking);
+            }
+
+            hitObjectManager.Update();
 
             healthBar.Update();
 
-             
+
             if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
                 s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
             else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM / 2)
@@ -247,8 +248,8 @@ namespace osum.GameModes
             comboCounter.Update();
 
             base.Update();
-			
-			//playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
+
+            //playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
         }
 
         internal static void SetBeatmap(Beatmap beatmap)
