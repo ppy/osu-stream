@@ -30,6 +30,7 @@ namespace osum.GameModes.Play.Components
     new pSpriteText(GetComboString(), "score", -2,
                     FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
                     new Vector2(2, 2), 0.92F, true, Color4.White);
+            s_hitCombo.Alpha = 0;
             //s_hitCombo.OriginVector = new Vector2(3, 40);
             s_hitCombo.ScaleScalar = 1.28F;
 
@@ -64,8 +65,8 @@ namespace osum.GameModes.Play.Components
 
         internal virtual void EnsureVisible()
         {
-            if (displayCombo != 0 && s_hitCombo.Alpha == 0)
-                s_hitCombo.FadeIn(120);
+            if (displayComboMainCounter != 0 && s_hitCombo.Alpha == 0)
+                s_hitCombo.FadeIn(0);
             else if (displayCombo == 0 && currentCombo == 0 && s_hitCombo.Alpha == 1)
                 s_hitCombo.FadeOut(120);
         }
@@ -80,6 +81,8 @@ namespace osum.GameModes.Play.Components
         {
             base.Update();
 
+            EnsureVisible();
+
             //Hit combo display (bottom-left)
             if (displayCombo != currentCombo)
             {
@@ -88,6 +91,7 @@ namespace osum.GameModes.Play.Components
                 else if (displayCombo < currentCombo)
                     OnIncrease(currentCombo);
 
+                s_hitCombo_Incoming.TagNumeric = displayCombo;
                 s_hitCombo_Incoming.Text = GetComboString();
             }
 
@@ -105,8 +109,12 @@ namespace osum.GameModes.Play.Components
             currentCombo = combo;
         }
 
+        int displayComboMainCounter = 0;
+
         private void transferToMainCounter()
         {
+            displayComboMainCounter = s_hitCombo_Incoming.TagNumeric;
+
             s_hitCombo.Text = s_hitCombo_Incoming.Text;
 
             s_hitCombo.Transformations.RemoveAll(tr => tr.Type == TransformationType.Scale);
@@ -142,6 +150,8 @@ namespace osum.GameModes.Play.Components
                 displayCombo -= 1;
             else
                 displayCombo = 0;
+
+            displayComboMainCounter = displayCombo;
         }
 
         internal void IncreaseCombo()

@@ -46,7 +46,7 @@ namespace osum.Graphics.Sprites
         internal List<Vector2> renderCoordinates = new List<Vector2>();
         internal List<pTexture> renderTextures = new List<pTexture>();
 
-        internal bool TextConstantSpacing;
+        internal bool TextConstantSpacing = true;
         internal string TextFont = "default";
 
         internal int SpacingOverlap;
@@ -60,7 +60,7 @@ namespace osum.Graphics.Sprites
             {
                 if (text == value) return;
                 
-                  text = value;
+                text = value;
                 textChanged = true;
 
                 MeasureText();
@@ -96,6 +96,8 @@ namespace osum.Graphics.Sprites
 
         internal Vector2 MeasureText()
         {
+            if (text == null) return Vector2.Zero;
+
             if (textChanged)
                 refreshTexture();
 

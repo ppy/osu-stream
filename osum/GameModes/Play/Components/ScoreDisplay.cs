@@ -40,30 +40,28 @@ namespace osum.GameModes.Play.Components
             if (showScore)
             {
                 s_Score =
-                    new pSpriteText("0000000", "score", 4,
+                    new pSpriteText("0000000", "score", 2,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                         new Vector2(0, 0), 0.95F, true, Color4.White);
-                s_Score.TextConstantSpacing = true;
                 textMeasure = s_Score.MeasureText() * 0.625f * scale;
                 s_Score.Position = new Vector2(position.X, vpos);
                 s_Score.ScaleScalar = scale;
 
-                vpos += textMeasure.Y;
+                vpos += textMeasure.Y + 2;
             }
 
             if (showAccuracy)
             {
                 s_Accuracy =
-                        new pSpriteText("00.00%", "score", 4,
+                        new pSpriteText("00.00%", "score", 2,
                             alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                             new Vector2(0, 0), 0.95F, true, Color4.White);
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.6f : 1);
-                s_Accuracy.TextConstantSpacing = true;
                 s_Accuracy.Position = new Vector2(position.X, vpos);
 
                 leftOfDisplay =
                 s_Accuracy.Position +
-                                new Vector2(s_Accuracy.MeasureText().X * 0.625f * s_Accuracy.ScaleScalar + 24,
+                                new Vector2(s_Accuracy.MeasureText().X * 0.625f * s_Accuracy.ScaleScalar + 26,
                                     s_Accuracy.MeasureText().Y * 0.625f * s_Accuracy.ScaleScalar / 2);
             }
 
