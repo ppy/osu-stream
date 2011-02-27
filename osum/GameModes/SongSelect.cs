@@ -1,120 +1,138 @@
 using System;
-using osum.GameModes;
-using osum.GameplayElements;
-using OpenTK;
-using osum.Helpers;
-using System.IO;
-using osum.Graphics.Skins;
-using osum.GameplayElements.Beatmaps;
 using System.Collections.Generic;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
-using osum.GameModes.SongSelect;
+using System.IO;
+using OpenTK;
 using osum.Audio;
+using osum.GameModes;
+using osum.GameModes.SongSelect;
+using osum.GameplayElements.Beatmaps;
+using osum.Graphics.Sprites;
+using osum.Graphics.Skins;
+using osum.Helpers;
+
 namespace osum
 {
     public class SongSelect : GameMode
     {
-        public SongSelect() : base()
+        private const string BEATMAP_DIRECTORY = "Beatmaps";
+        private static List<Beatmap> availableMaps;
+        private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
+        
+        private float offset;
+        private float offset_min { get { return panels.Count * -80 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
+        private float offset_max = 0;
+        
+        /// <summary>
+        /// Offset bound to visible limits.
+        /// </summary>
+        private float offsetBound
         {
+            get
+            {
+                return Math.Min(offset_max, Math.Max(offset_min, offset));
+            }
         }
 
-        static List<Beatmap> availableMaps;
+
+        private pSprite s_Header;
 
         internal override void Initialize()
         {
             InitializeBeatmaps();
-			
-			InputManager.OnMove += InputManager_OnMove;
 
+            InputManager.OnMove += InputManager_OnMove;
+
+
+            //Start playing song select BGM.
 #if iOS
-			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
 #else
-			AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
 #endif
-			
-			AudioEngine.Music.Play();
+            AudioEngine.Music.Play();
+
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0,0));
+            spriteManager.Add(s_Header);
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-			if (InputManager.IsPressed)
-                offset = offset + InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+            if (InputManager.IsPressed)
+            {
+                float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+                if ((offset - offsetBound < 0 && change < 0) || (offset - offsetBound > 0 && change > 0))
+                    change *= Math.Min(1,10 / Math.Max(0.1f,Math.Abs(offset - offsetBound)));
+                offset = offset + change;
+            }
         }
-		
-		public override void Dispose()
-		{
-			base.Dispose();
+
+        public override void Dispose()
+        {
+            base.Dispose();
 
             AudioEngine.Music.Unload();
-			
-			InputManager.OnMove -= InputManager_OnMove;
-		}
-		
-		const string BEATMAP_DIRECTORY = "Beatmaps";
-		
-		List<BeatmapPanel> panels = new List<BeatmapPanel>();
-		
+
+            InputManager.OnMove -= InputManager_OnMove;
+        }
+
         private void InitializeBeatmaps()
         {
             availableMaps = new List<Beatmap>();
 
 #if iOS
-			string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-			
-			foreach (string s in Directory.GetFiles(docs,"*.osu"))
+            string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            
+            foreach (string s in Directory.GetFiles(docs,"*.osu"))
             {
-				Beatmap b = new Beatmap(docs);
+                Beatmap b = new Beatmap(docs);
                 b.BeatmapFilename = Path.GetFileName(s);
-				
-				BeatmapPanel panel = new BeatmapPanel(b);
-				spriteManager.Add(panel);
+                
+                BeatmapPanel panel = new BeatmapPanel(b);
+                spriteManager.Add(panel);
 
                 availableMaps.Add(b);
-				panels.Add(panel);
-			}
+                panels.Add(panel);
+            }
 #endif
+
             if (Directory.Exists(BEATMAP_DIRECTORY))
-			foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
-            {
-                Beatmap reader = new Beatmap(s);
-
-                foreach (string file in reader.Package == null ? Directory.GetFiles(s,"*.osu") : reader.Package.MapFiles)
+                foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
                 {
-                    
-					Beatmap b = new Beatmap(s);
-                    b.BeatmapFilename = Path.GetFileName(file);
-					
-					BeatmapPanel panel = new BeatmapPanel(b);
-					spriteManager.Add(panel);
+                    Beatmap reader = new Beatmap(s);
 
-                    availableMaps.Add(b);
-					panels.Add(panel);
+                    foreach (
+                        string file in reader.Package == null ? Directory.GetFiles(s, "*.osu") : reader.Package.MapFiles
+                        )
+                    {
+                        Beatmap b = new Beatmap(s);
+                        b.BeatmapFilename = Path.GetFileName(file);
+
+                        BeatmapPanel panel = new BeatmapPanel(b);
+                        spriteManager.Add(panel);
+
+                        availableMaps.Add(b);
+                        panels.Add(panel);
+                    }
                 }
-			}
         }
-		
-		float offset;
-		
+
         public override void Update()
         {
             base.Update();
-			
-            
-			if (!InputManager.IsPressed)
-				offset = offset * 0.9f + Math.Min(0,Math.Max(panels.Count * -80 + GameBase.BaseSize.Height, offset)) * 0.1f;
-			
-			if (Director.PendingMode == OsuMode.Unknown)
-			{
-				Vector2 pos = new Vector2(0,10 + offset);
-				foreach (BeatmapPanel p in panels)
-				{
-					p.MoveTo(pos);
-					pos.Y += 80;
-				}
-			}
+
+            if (!InputManager.IsPressed)
+                offset = offset * 0.9f + offsetBound * 0.1f;
+                
+
+            if (Director.PendingMode == OsuMode.Unknown)
+            {
+                Vector2 pos = new Vector2(0, 60 + offset);
+                foreach (BeatmapPanel p in panels)
+                {
+                    p.MoveTo(pos);
+                    pos.Y += 80;
+                }
+            }
         }
     }
 }
-
-

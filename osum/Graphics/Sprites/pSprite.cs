@@ -50,12 +50,9 @@ namespace osum.Graphics.Sprites
         internal int DrawWidth;
 
         protected pTexture texture;
+        private pTexture pTexture;
+        private Vector2 vector2;
         
-
-        internal pSprite(pTexture texture, OriginTypes origin, Vector2 position, Color4 colour)
-            : this(texture, FieldTypes.Standard, origin, ClockTypes.Game, position, 1, false, Color4.White)
-        {
-        }
 
         internal pSprite(pTexture texture, FieldTypes field, OriginTypes origin, ClockTypes clocking, Vector2 position,
                          float depth, bool alwaysDraw, Color4 colour)
@@ -79,6 +76,11 @@ namespace osum.Graphics.Sprites
                 Alpha = 1;
 
             Texture = texture;
+        }
+
+        public pSprite(pTexture tex, Vector2 pos) :
+            this(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Game, pos, 1, true, Color4.White)
+        {
         }
 		
 		internal override bool UsesTextures {

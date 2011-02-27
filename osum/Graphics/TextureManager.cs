@@ -134,6 +134,8 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
 			textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
+
+            textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
 			
 			GameBase.OnScreenLayoutChanged += delegate {
 				DisposeDisposable();		
@@ -206,7 +208,7 @@ namespace osum.Graphics.Skins
 
             if (textureLocations.TryGetValue(texture, out info))
             {
-                pTexture tex = Load(info.SheetName, true);
+                pTexture tex = Load(info.SheetName, info.SheetName == "hit");
                 tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;
@@ -421,20 +423,20 @@ namespace osum.Graphics.Skins
         default_7,
         default_8,
         default_9,
-		default_comma,
-		default_dot,
-		default_percent,
-		default_x,
-		sliderb_0,
-		sliderb_1,
-		sliderb_2,
-		sliderb_3,
-		sliderb_4,
-		sliderb_5,
-		sliderb_6,
-		sliderb_7,
-		sliderb_8,
-		sliderb_9,
+        default_comma,
+        default_dot,
+        default_percent,
+        default_x,
+        sliderb_0,
+        sliderb_1,
+        sliderb_2,
+        sliderb_3,
+        sliderb_4,
+        sliderb_5,
+        sliderb_6,
+        sliderb_7,
+        sliderb_8,
+        sliderb_9,
         score_0,
         score_1,
         score_2,
@@ -445,10 +447,11 @@ namespace osum.Graphics.Skins
         score_7,
         score_8,
         score_9,
-		score_comma,
-		score_dot,
-		score_percent,
-		score_x,
-		playfield
+        score_comma,
+        score_dot,
+        score_percent,
+        score_x,
+        playfield,
+        songselect_header
     }
 }

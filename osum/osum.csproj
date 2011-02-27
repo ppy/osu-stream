@@ -26,7 +26,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>IPHONE DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -51,6 +51,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchI18n />
     <MtouchSdkVersion>3.0</MtouchSdkVersion>
+    <DefineConstants>iOS</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -300,5 +301,6 @@
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\select.m4a" />
     <Content Include="Skins\Default\white.png" />
+    <Content Include="Skins\Default\songselect.png" />
   </ItemGroup>
 </Project>

@@ -14,15 +14,20 @@ namespace osum.GameModes.SongSelect
 		
 		pSprite backingPlate;
 		pText text;
-		
+
+        float base_depth = 0.5f;
+
+        static Color4 colourNormal = new Color4(28, 139, 242, 255);
+        static Color4 colourHover = new Color4(27, 197, 241, 255);
+
 		internal BeatmapPanel(Beatmap beatmap)
 		{
 			backingPlate = pSprite.FullscreenWhitePixel;
-			backingPlate.Alpha = 1;
+            backingPlate.Alpha = 1;
 			backingPlate.AlwaysDraw = true;
-			backingPlate.Colour = Color4.OrangeRed;
+			backingPlate.Colour = colourNormal;
 			backingPlate.Scale.Y = 80;
-			backingPlate.DrawDepth = 0.8f;
+			backingPlate.DrawDepth = base_depth;
 			SpriteCollection.Add(backingPlate);
 			
 			this.beatmap = beatmap;
@@ -39,26 +44,26 @@ namespace osum.GameModes.SongSelect
 			
 			backingPlate.HandleClickOnUp = true;
 
-            backingPlate.OnHover += delegate { backingPlate.Colour = Color4.YellowGreen; };
-            backingPlate.OnHoverLost += delegate { backingPlate.Colour = Color4.OrangeRed; };
+            backingPlate.OnHover += delegate { backingPlate.Colour = colourHover; };
+            backingPlate.OnHoverLost += delegate { backingPlate.Colour = colourNormal; };
 			
 			string filename = Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename);
 			
 			Regex r = new Regex(@"(.*) - (.*) \((.*)\) \[(.*)\]");
 			Match m = r.Match(filename);
-			
-			
-			text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 80), 1, true, Color4.White, false);
+
+
+            text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 80), base_depth + 0.01f, true, Color4.White, false);
 			text.Bold = true;
 			text.Offset = new Vector2(10,0);
 			if (text.Texture != null)
 				SpriteCollection.Add(text);
-			
-			text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), 1, true, Color4.White, false);
+
+            text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
 			text.Offset = new Vector2(10,28);
 			SpriteCollection.Add(text);
-			
-			text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), 1, true, Color4.White, false);
+
+            text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
 			text.Origin = OriginTypes.TopRight;
 			text.Offset = new Vector2(GameBase.BaseSize.Width - 10,28);
 			SpriteCollection.Add(text);
