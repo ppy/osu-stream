@@ -233,7 +233,12 @@ namespace osum.GameModes
             if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
                 s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
             else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM / 2)
-                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+            {
+                if (Clock.AudioTime >= hitObjectManager.hitObjects[0].StartTime)
+                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                else
+                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+            }
 
 
             scoreDisplay.Update();

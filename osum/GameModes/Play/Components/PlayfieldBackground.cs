@@ -49,6 +49,7 @@ namespace osum.GameModes.Play.Components
         float[] vertices = new float[20 * 2];
         float[] colours = new float[20 * 4];
 
+        internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_STANDARD = new Color4(18, 78, 143, 255);
         internal static Color4 COLOUR_WARNING = new Color4(237, 29, 29, 255);
         private Color4 currentColour;
@@ -97,7 +98,7 @@ namespace osum.GameModes.Play.Components
             DrawDepth = 0;
             AlwaysDraw = true;
             Alpha = 1;
-            currentColour = Colour = COLOUR_STANDARD;
+            currentColour = Colour = COLOUR_INTRO;
         }
 
         public override void Update()
@@ -154,9 +155,14 @@ namespace osum.GameModes.Play.Components
             if (colour == currentColour)
                 return;
 
-            currentColour = Colour = colour;
+            Colour = colour;
 
-            FlashColour(Color4.White, 400);
+            if (currentColour == COLOUR_INTRO)
+                FlashColour(Color4.LightGray, 400);
+            else
+                FlashColour(Color4.White, 400);
+            
+            currentColour = colour;
         }
     }
 }
