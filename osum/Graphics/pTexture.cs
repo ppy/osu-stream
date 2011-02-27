@@ -81,7 +81,7 @@ namespace osum.Graphics
         internal TextureGl TextureGl;
         internal OsuTexture OsuTextureInfo;
 
-        public bool IsDisposed {get; private set;}
+        public bool IsDisposed { get; private set; }
 
         #region IDisposable Members
 
