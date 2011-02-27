@@ -83,27 +83,23 @@ namespace osum
                     break;
             }
 
-            //Can we ever fail to create a mode?
-            if (mode != null)
+            if (CurrentMode != null)
+                CurrentMode.Dispose();
+
+            TextureManager.DisposeAll(false);
+
+            CurrentMode = mode;
+            CurrentMode.Initialize();
+
+            if (PendingMode != OsuMode.Unknown) //can be unknown on first startup
             {
-                if (CurrentMode != null)
-                    CurrentMode.Dispose();
-
-                TextureManager.DisposeAll(false);
-
-                CurrentMode = mode;
-                CurrentMode.Initialize();
-
-                if (PendingMode != OsuMode.Unknown) //can be unknown on first startup
+                if (PendingMode != newMode)
                 {
-                    if (PendingMode != newMode)
-                    {
-                        //we got a new request to load a *different* mode during initialisation...
-                        return;
-                    }
-
-                    modeChangePending = true;
+                    //we got a new request to load a *different* mode during initialisation...
+                    return;
                 }
+
+                modeChangePending = true;
             }
 
             PendingMode = OsuMode.Unknown;

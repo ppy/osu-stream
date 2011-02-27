@@ -10,7 +10,6 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using Color = OpenTK.Graphics.Color4;
 using osum;
-using OpenTK;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -43,12 +42,12 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using osum.Input;
 #endif
+
+using System.Drawing;
 using osum.Graphics.Renderers;
 using OpenTK.Graphics;
-using System.Drawing;
 using osum.Audio;
 using osum.GameModes;
 
@@ -109,8 +108,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// The path texture
         /// </summary>
         internal pTexture sliderBodyTexture;
-
-        internal uint renderBufferDepth;
 
         /// <summary>
         /// How much of the slider (path) we have drawn.
@@ -839,7 +836,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Counter for number of frames skipped since last slider path render.
         /// </summary>
-        int pathTextureUpdateSkippedFrames;
         private int lastJudgedScoringPoint = -1;
 
         private bool IsEndHit;

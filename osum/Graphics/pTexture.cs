@@ -33,7 +33,6 @@ using MonoTouch.CoreGraphics;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using System.Drawing.Imaging;
 using osum.Input;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
@@ -42,6 +41,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Text;
 using OpenTK;
 using osum.Graphics.Skins;
+
 
 namespace osum.Graphics
 {
@@ -53,8 +53,6 @@ namespace osum.Graphics
         internal int Height;
         internal int X;
         internal int Y;
-        internal int LastAccess;
-        private bool isDisposed;
         internal bool Permanent;
 #if DEBUG
         internal int id;
@@ -81,19 +79,9 @@ namespace osum.Graphics
         }
 
         internal TextureGl TextureGl;
-        internal bool TrackAccessTime;
         internal OsuTexture OsuTextureInfo;
 
-        public bool IsDisposed
-        {
-            get
-            {
-                if (TrackAccessTime)
-                    LastAccess = -1;
-                return isDisposed;
-            }
-            set { isDisposed = value; }
-        }
+        public bool IsDisposed {get; private set;}
 
         #region IDisposable Members
 
@@ -109,7 +97,7 @@ namespace osum.Graphics
         /// </summary>
         internal void TemporalDispose()
         {
-            isDisposed = true;
+            IsDisposed = true;
 
             if (TextureGl != null)
             {
@@ -136,7 +124,7 @@ namespace osum.Graphics
                 TextureGl = null;
             }
 
-            isDisposed = true;
+            IsDisposed = true;
         }
 
         /// <summary>

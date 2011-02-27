@@ -38,13 +38,11 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 #endif
 
 using osum.Graphics;
 using osum;
 using System.Collections.Generic;
-using osum.Helpers;
 using osum.GameplayElements;
 using osum.Graphics.Skins;
 using osum.Graphics.Primitives;
@@ -81,7 +79,6 @@ namespace osum.Graphics.Renderers
         protected const float TEXEL_ORIGIN = 0.5f;
 #endif
 
-        protected int bytesPerVertex;
         protected int numIndices_quad;
         protected int numIndices_cap;
         protected int numPrimitives_quad;
@@ -91,11 +88,6 @@ namespace osum.Graphics.Renderers
 
         protected TextureGl[] textures_ogl;
 
-        protected TextureGl grey_ogl;
-
-        protected TextureGl multi_ogl;
-
-        protected bool toon;
         protected Color border_colour;
 
         protected float[] coordinates_cap;
@@ -118,7 +110,6 @@ namespace osum.Graphics.Renderers
         /// <param name="outer_colours">Array of colours for the outside of the track. There should be one element for each combo colour in the map.</param>
         /// <param name="inner_colours">Array of colours for the inside of the track. There should be one element for each combo colour in the map.</param>
         /// <param name="border_colour">Single colour for the track's border.</param>
-        /// <param name="toon">If true, the track gradient is made of four solid colours instead of a smooth gradient.</param>
         /// <param name="compute_geometry">If true, meshes will be computed, as opposed to keeping the ones from before. Leave false if you know this isn't the first time a map is being loaded.</param>
         internal void Init(Color[] outer_colours, Color[] inner_colours, Color border_colour)
         {
@@ -148,8 +139,8 @@ namespace osum.Graphics.Renderers
                 }
 
                 textures_ogl = new TextureGl[iColours];
-				
-				for (int x = 0; x < iColours; x++)
+
+                for (int x = 0; x < iColours; x++)
                     textures_ogl[x] = glRenderSliderTexture(border_colour, inner_colours[x], outer_colours[x]);
 
                 am_initted_tex = true;
@@ -234,7 +225,7 @@ namespace osum.Graphics.Renderers
 
             GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
-            return glRenderSliderTexture(shadow, border, InnerColour, OuterColour, aa_width, toon);
+            return glRenderSliderTexture(shadow, border, InnerColour, OuterColour, aa_width);
         }
 
         /// <summary>
@@ -323,13 +314,13 @@ namespace osum.Graphics.Renderers
             Color shadow = new Color(1, 0, 0, 1);
 
             LineTextureInfo search = new LineTextureInfo(innerColour, outerColour, borderColour, aa_width);
-            
+
             LineTextureInfo texInfo = lineTextureCache.Find(t => t.Equals(search));
 
             if (texInfo == null)
             {
                 texInfo = search;
-                texInfo.SetTexture(glRenderSliderTexture(shadow, borderColour, innerColour, outerColour, aa_width, false));
+                texInfo.SetTexture(glRenderSliderTexture(shadow, borderColour, innerColour, outerColour, aa_width));
                 lineTextureCache.Add(texInfo);
             }
 
@@ -351,7 +342,7 @@ namespace osum.Graphics.Renderers
             TextureGl tex = CreateLineTexture(innerColour, outerColour, borderColour, radius);
 
             GL.Color4(tint.R, tint.G, tint.B, tint.A);
-            
+
             DrawOGL(lineList, radius, tex, null, false);
         }
 
@@ -387,22 +378,22 @@ namespace osum.Graphics.Renderers
         /// <summary>
         /// Render a gradient into a 256x1 texture.
         /// </summary>
-        protected TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width, bool toon)
+        protected TextureGl glRenderSliderTexture(OpenTK.Graphics.Color4 shadow, OpenTK.Graphics.Color4 border, OpenTK.Graphics.Color4 InnerColour, OpenTK.Graphics.Color4 OuterColour, float aa_width)
         {
             SpriteManager.TexturesEnabled = false;
-			
-			GL.PushMatrix();
-			
+
+            GL.PushMatrix();
+
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-			
-			//todo: can we do this whole function without changing the viewport? it should be possible i think (and might be much more efficient)
+
+            //todo: can we do this whole function without changing the viewport? it should be possible i think (and might be much more efficient)
             GL.Viewport(0, 0, TEX_WIDTH, 1);
-			GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
-			
+            GL.Ortho(0.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f);
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-			
+
             GL.EnableClientState(ArrayCap.ColorArray);
 
             float[] colours = {0,0,0,0,
@@ -443,9 +434,9 @@ namespace osum.Graphics.Renderers
             result.SetData(textureId);
 
             GameBase.Instance.SetViewport();
-			
-			GL.PopMatrix();
-			
+
+            GL.PopMatrix();
+
             return result;
         }
 
@@ -458,7 +449,7 @@ namespace osum.Graphics.Renderers
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
         protected void DrawOGL(List<Line> lineList, float globalRadius, TextureGl texture, Line prev, bool renderingToTexture)
         {
-			if (renderingToTexture)
+            if (renderingToTexture)
             {
                 GL.Disable(EnableCap.Blend);
                 GL.DepthMask(true);
@@ -469,7 +460,7 @@ namespace osum.Graphics.Renderers
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-			texture.Bind();
+            texture.Bind();
 
             int count = lineList.Count;
             for (int x = 1; x < count; x++)

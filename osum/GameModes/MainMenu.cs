@@ -45,7 +45,6 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using osum.Input;
 #endif
 
@@ -121,8 +120,6 @@ namespace osum.GameModes
         }
 
         double elapsedRotation;
-        float startingRotation = 5;
-        bool finishedSpinIn;
         private pSprite menuBackground;
 
         public override void Update()

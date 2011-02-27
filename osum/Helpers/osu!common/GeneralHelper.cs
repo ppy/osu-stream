@@ -84,7 +84,7 @@ namespace osu_common.Helpers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
         }

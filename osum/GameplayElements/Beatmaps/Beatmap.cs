@@ -8,7 +8,7 @@ using osum.GameplayElements.Beatmaps;
 using osu_common.Libraries.Osz2;
 namespace osum.GameplayElements.Beatmaps
 {
-    public partial class Beatmap
+    public partial class Beatmap : IDisposable
     {
         public string ContainerFilename;
 
@@ -62,6 +62,16 @@ namespace osum.GameplayElements.Beatmaps
 
             return data;
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (package != null)
+                package.Dispose();
+        }
+
+        #endregion
     }
 }
 

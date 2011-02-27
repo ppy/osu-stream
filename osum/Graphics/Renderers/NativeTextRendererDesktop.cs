@@ -9,7 +9,6 @@ using Rectangle=System.Drawing.Rectangle;
 using osum.Graphics;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Helpers;
 
 namespace osum.Graphics.Renderers
 {
@@ -155,7 +154,7 @@ namespace osum.Graphics.Renderers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 measured = Vector2.Zero;
                 return null;

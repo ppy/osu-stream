@@ -73,7 +73,6 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
 
-                float resolution = 0.1f;
                 float startAngle = (float)(-Math.PI / 2);
                 float cappedProgress = pMathHelper.ClampToOne(Progress);
 

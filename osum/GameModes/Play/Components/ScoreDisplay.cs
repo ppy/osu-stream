@@ -70,8 +70,10 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(s_Accuracy);
         }
 
-        internal bool Draw()
+        public override bool  Draw()
         {
+            if (!base.Draw()) return false;
+
             if (s_Accuracy != null)
             {
                 if (displayAccuracy - currentAccuracy <= -0.005)

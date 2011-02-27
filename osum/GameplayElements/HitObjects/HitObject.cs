@@ -99,12 +99,12 @@ namespace osum.GameplayElements
         internal ScoreChange hitValue;
 
         internal HitObjectType Type;
-		
-		internal int Index;
+
+        internal int Index;
         internal int ComboOffset;
-		
-		internal HitObject connectedObject;
-		internal pSprite connectionSprite;
+
+        internal HitObject connectedObject;
+        internal pSprite connectionSprite;
 
         /// <summary>
         /// Do any arbitrary updates for this hitObject.
@@ -119,7 +119,7 @@ namespace osum.GameplayElements
         //todo: this is horribly memory inefficient.
         private void UpdateDimming()
         {
-            bool shouldDim = Clock.AudioTime < StartTime && 
+            bool shouldDim = Clock.AudioTime < StartTime &&
                 Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
 
             if (shouldDim != isDimmed)
@@ -195,7 +195,7 @@ namespace osum.GameplayElements
             ScoreChange action = HitActionInitial();
 
             if (action != ScoreChange.Ignore)
-				IsHit = true;
+                IsHit = true;
 
             return action;
         }
@@ -227,9 +227,6 @@ namespace osum.GameplayElements
                 depth = SpriteManager.drawOrderBwd(EndTime - 4);
             else
                 depth = SpriteManager.drawOrderFwdPrio(EndTime - 4);
-
-            string spriteName;
-            string specialAddition = "";
 
             OsuTexture texture = OsuTexture.None;
 
@@ -277,7 +274,7 @@ namespace osum.GameplayElements
             if (action > 0)
             {
                 p.Transform(
-                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 1.4)),1, 0.3f, 3));
+                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 1.4)), 1, 0.3f, 3));
                 p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));
@@ -309,16 +306,16 @@ namespace osum.GameplayElements
 
         internal virtual void Dispose()
         {
-			
-		}
-			
-		/// <summary>
+
+        }
+
+        /// <summary>
         /// Is this object currently within an active range?
         /// </summary>
         internal virtual bool IsActive
-		{
-			get { return !IsHit; }	
-		}
+        {
+            get { return !IsHit; }
+        }
 
         #endregion
 
@@ -360,16 +357,12 @@ namespace osum.GameplayElements
         #region Sound
 
         internal Color4 ColourDim;
-        internal bool Dimmed;
-        internal bool Sounded;
         internal HitObjectSoundType SoundType;
+
         /// <summary>
         /// Whether to add this object's score to the counters (hit300 count etc.)
         /// </summary>
         public bool IsScorable = true;
-        public int TagNumeric;
-        public int scoreValue;
-        public bool LastInCombo;
 
         internal bool Whistle
         {
@@ -512,14 +505,14 @@ namespace osum.GameplayElements
                         Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period) { Tag = TAG_SHAKE_TRANSFORMATION });
                 }
             }
-			
-			if (connectedObject != null)
-			{
-				connectedObject.connectedObject = null;
-				connectedObject.Shake();
-				connectedObject.connectedObject = this;
-			}
-			
+
+            if (connectedObject != null)
+            {
+                connectedObject.connectedObject = null;
+                connectedObject.Shake();
+                connectedObject.connectedObject = this;
+            }
+
         }
 
         public override string ToString()

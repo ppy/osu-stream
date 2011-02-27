@@ -50,9 +50,6 @@ namespace osum.Graphics.Sprites
         internal int DrawWidth;
 
         protected pTexture texture;
-        private pTexture pTexture;
-        private Vector2 vector2;
-
 
         internal pSprite(pTexture texture, FieldTypes field, OriginTypes origin, ClockTypes clocking, Vector2 position,
                          float depth, bool alwaysDraw, Color4 colour)

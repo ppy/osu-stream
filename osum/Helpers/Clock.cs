@@ -17,7 +17,6 @@ namespace osum.Helpers
     {
         // measured in seconds
         private static double time = 0;
-        private static double zero = 0;
 
 #if iOS
         private const int UNIVERSAL_OFFSET = 65;

@@ -43,16 +43,6 @@ namespace OpenTK.Audio
 
         #endregion
 
-        #region public AudioReader(string filename)
-
-        /// <summary>Creates a new AudioReader that can read the specified sound file.</summary>
-        /// <param name="filename">The path to the sound file.</param>
-        /// <returns>A new OpenTK.Audio.AudioReader, which can be used to read from the specified sound file.</returns>
-        public AudioReader(string filename)
-            : this(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        { }
-
-        #endregion
 
         #region public AudioReader(Stream s)
 

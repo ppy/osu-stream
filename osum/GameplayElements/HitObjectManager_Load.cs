@@ -41,10 +41,10 @@ namespace osum.GameplayElements
             //if (beatmap.CheckFileExists(storyBoardFile))
             //    readableFiles.Add(storyBoardFile);
 
-            bool hasCustomColours = false;
+            //bool hasCustomColours = false;
+            //bool firstColour = true;
             bool hitObjectPreInit = false;
             bool lastAddedSpinner = false;
-            bool firstColour = true;
 
             //bool verticalFlip = (GameBase.Mode == OsuModes.Play && Player.currentScore != null &&
             //                     ModManager.CheckActive(Player.currentScore.enabledMods, Mods.HardRock));
@@ -170,7 +170,7 @@ namespace osum.GameplayElements
                                 Variables.Add(varSplit[0], varSplit[1]);*/
                                 break;
                             case FileSection.Events:
-                                EventType eType;
+                                /*EventType eType;
                                 Event e = null;
 
                                 try
@@ -194,7 +194,7 @@ namespace osum.GameplayElements
                                                            Vector2.Zero, 0, true, Color4.White));
                                         break;
                                     //todo: implement this
-                                }
+                                }*/
                                 break;
                             case FileSection.Difficulty:
                                 switch (key)

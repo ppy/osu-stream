@@ -110,9 +110,9 @@ namespace osum.Graphics
             }
         }
 
+#if iOS
         int fbo;
 
-#if iOS
         internal unsafe void drawToTexture(bool begin)
         {
             if (begin)

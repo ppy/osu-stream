@@ -23,7 +23,6 @@ namespace osum.Graphics.Sprites
         internal bool TextShadow;
         internal float TextSize;
 		internal bool Bold;
-        private bool aggressiveCleanup;
         internal string FontFace = "Tahoma";
 
         private string text;

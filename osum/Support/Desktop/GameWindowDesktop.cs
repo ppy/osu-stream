@@ -23,11 +23,6 @@ namespace osum
             //GameBase.WindowSize = new Size(960,640);
         }
 
-        public void Run()
-        {
-            base.Run();
-        }
-
         /// <summary>Load resources here.</summary>
         /// <param name="e">Not used.</param>
         protected override void OnLoad(EventArgs e)

@@ -8,10 +8,8 @@ using osum.GameplayElements.HitObjects;
 using osum.GameplayElements.HitObjects.Osu;
 using osum.Graphics.Renderers;
 using osum.GameplayElements.Beatmaps;
-using osum.GameplayElements.HitObjects;
 using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
-using osum.Graphics.Renderers;
 using osum.Helpers;
 using osum.GameModes;
 using osu_common.Helpers;
@@ -138,7 +136,7 @@ namespace osum.GameplayElements
                 float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 				
                 pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.GamefieldSprites,OriginTypes.Centre,
-                    ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, true, Color4.White);
+                    ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, false, Color4.White);
                 connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
                 connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
                 connectingLine.Transform(h1.SpriteCollection[0].Transformations);

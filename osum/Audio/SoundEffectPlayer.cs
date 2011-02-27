@@ -30,9 +30,9 @@ namespace osum
         {
             try
             {
-                AudioContext AC = new AudioContext();
+                context = new AudioContext();
             }
-            catch (AudioException e)
+            catch (AudioException)
             {
                 //todo: handle error here.
             }
@@ -51,7 +51,8 @@ namespace osum
 			
 			int buffer = AL.GenBuffer();
 			
-            using (AudioReader sound = new AudioReader(filename))
+            using (Stream str = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (AudioReader sound = new AudioReader(str))
 			{
 	            byte[] readSound = sound.ReadToEnd().Data;
 	            AL.BufferData(buffer, OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);

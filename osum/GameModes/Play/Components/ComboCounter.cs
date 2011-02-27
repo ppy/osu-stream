@@ -15,7 +15,6 @@ namespace osum.GameModes.Play.Components
         internal pSpriteText s_hitCombo_Incoming;
         internal int displayCombo;
         internal int currentCombo;
-        internal int hitComboLast;
 
         public ComboCounter()
             : base()

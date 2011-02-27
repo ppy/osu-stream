@@ -17,6 +17,7 @@ namespace osum.GameplayElements.Scoring
         protected pAnimation s_barFill;
         protected internal pSprite s_barBg;
         protected pSprite s_kiIcon;
+        private pSprite s_kiExplode;
 
         protected pTexture t_kiDanger;
         protected pTexture t_kiDanger2;
@@ -60,6 +61,7 @@ namespace osum.GameplayElements.Scoring
         internal double CurrentHpUncapped { get; private set; }
 
         private bool visible = true;
+
         internal bool Visible
         {
             get { return visible; }
@@ -166,20 +168,8 @@ namespace osum.GameplayElements.Scoring
         {
             if (!visible) return;
 
-            pSprite p =
-                    new pSprite(t_kiNormal, FieldTypes.NativeStandardScale, OriginTypes.Centre, ClockTypes.Game,
-                                s_kiIcon.Position, 1, false, Color4.White);
-            Transformation t =
-                new Transformation(TransformationType.Scale, 1, 1.6F, Clock.Time, Clock.Time + 120);
-            t.Easing = EasingTypes.In;
-            p.Transform(t);
-            t =
-                new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 120);
-            t.Easing = EasingTypes.In;
-            p.Transform(t);
-
-            if (spriteManager != null)
-                spriteManager.Add(p);
+            s_kiExplode.Transform(new Transformation(TransformationType.Scale, 1, 1.6F, Clock.Time, Clock.Time + 120, EasingTypes.In));
+            s_kiExplode.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 120, EasingTypes.In));
         }
 
         internal virtual void SetCurrentHp(double amount)
@@ -192,8 +182,6 @@ namespace osum.GameplayElements.Scoring
         {
             if (InitialIncrease) InitialIncrease = false;
 
-            //if (Player.Playing && InitialIncrease) InitialIncrease = false;
-
             CurrentHpUncapped = Math.Max(0, CurrentHpUncapped - amount);
             CurrentHp = Math.Max(0, CurrentHp - amount);
         }
@@ -203,8 +191,6 @@ namespace osum.GameplayElements.Scoring
             if (InitialIncrease) InitialIncrease = false;
 
             KiBulge();
-
-            //if (Player.Playing && InitialIncrease) InitialIncrease = false;
 
             CurrentHpUncapped += amount;
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, CurrentHp + amount));
@@ -236,9 +222,15 @@ namespace osum.GameplayElements.Scoring
                                     ClockTypes.Game,
                                     Vector2.Zero, 0.96F, true, Color4.White);
 
+            s_kiExplode =
+                    new pSprite(t_kiNormal, FieldTypes.NativeStandardScale, OriginTypes.Centre, ClockTypes.Game,
+                                Vector2.Zero, 1, true, Color4.White);
+            s_kiExplode.Alpha = 0;
+
             spriteManager.Add(s_barBg);
             spriteManager.Add(s_barFill);
             spriteManager.Add(s_kiIcon);
+            spriteManager.Add(s_kiExplode);
 
             CurrentHp = HP_BAR_MAXIMUM;
             CurrentHpUncapped = HP_BAR_MAXIMUM;
