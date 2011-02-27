@@ -9,6 +9,7 @@ using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using osum.Helpers;
 using osum.GameModes.SongSelect;
+using OpenTK.Graphics;
 
 namespace osum.GameModes
 {
@@ -125,6 +126,9 @@ namespace osum.GameModes
             {
                 if (p == panel)
                 {
+                    panel.s_BackingPlate.UnbindAllEvents();
+                    panel.s_BackingPlate.FlashColour(Color4.White, 600);
+
                     foreach (pSprite s in p.SpriteCollection)
                     {
                         s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
