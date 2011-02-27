@@ -71,25 +71,27 @@ namespace osum.GameModes.Play.Components
             vertices[j++] = left;
             vertices[j++] = bottom;
 
-            float topOffset = 200;
-            float leftOffset = 200;
+            float width = GameBase.NativeSize.Width * 0.2f;
+
+            float topOffset = width;
+            float leftOffset = width;
 
             for (int k = 0; k < 4; k++)
             {
                 vertices[j++] = leftOffset;
                 vertices[j++] = top;
 
-                vertices[j++] = leftOffset + 200;
+                vertices[j++] = leftOffset + width;
                 vertices[j++] = top;
 
                 vertices[j++] = left;
-                vertices[j++] = topOffset + 200;
+                vertices[j++] = topOffset + width;
 
                 vertices[j++] = left;
                 vertices[j++] = topOffset;
 
-                topOffset += 400;
-                leftOffset += 400;
+                topOffset += width * 2;
+                leftOffset += width * 2;
             }
 
             DrawDepth = 0;
