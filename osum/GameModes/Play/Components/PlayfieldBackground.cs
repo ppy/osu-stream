@@ -119,7 +119,7 @@ namespace osum.GameModes.Play.Components
             for (int i = 0; i < 20; i++)
             {
                 //change to the darker colour for bottom vertices and diagonals
-                if (i == 3) col = ColourHelper.Darken(Colour, 0.85f);
+                if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
 
                 colours[i * 4] = col.R;
                 colours[i * 4 + 1] = col.G;
