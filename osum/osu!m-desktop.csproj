@@ -94,6 +94,7 @@
     <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
     <Compile Include="Helpers\osu!common\MapPackage.cs" />
     <Compile Include="Helpers\osu!common\MapStream.cs" />
+    <Compile Include="Helpers\osu!common\Scheduler.cs" />
     <Compile Include="Helpers\pList.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />

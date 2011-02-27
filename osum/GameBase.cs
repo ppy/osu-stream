@@ -79,6 +79,8 @@ namespace osum
 
         public static double ElapsedMilliseconds = 1000/60f;
 
+        internal static Scheduler Scheduler = new Scheduler();
+
         /// <summary>
         /// A list of components which get updated every frame.
         /// </summary>
@@ -258,6 +260,8 @@ namespace osum
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
             ignoreNextFrameTime = false;
 
+            Scheduler.Update();
+
             DebugOverlay.Update();
 			
 #if DEBUG
@@ -289,6 +293,8 @@ namespace osum
         /// </summary>
         public void Draw(FrameEventArgs e)
         {
+            SpriteManager.Reset();
+
             GL.Clear(Constants.COLOR_BUFFER_BIT);
 			//todo: Does clearing DEPTH as well here add a performance overhead?
 

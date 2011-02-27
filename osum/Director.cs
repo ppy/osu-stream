@@ -73,7 +73,7 @@ namespace osum
                     mode = new MainMenu();
                     break;
                 case OsuMode.SongSelect:
-                    mode = new SongSelect();
+                    mode = new SongSelectMode();
                     break;
 				case OsuMode.Ranking:
 					mode = new Ranking();

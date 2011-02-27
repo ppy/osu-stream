@@ -204,6 +204,7 @@
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Graphics\Sprites\pSpriteRenderer.cs" />
+    <Compile Include="Helpers\osu!common\Scheduler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

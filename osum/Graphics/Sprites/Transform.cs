@@ -14,7 +14,9 @@ namespace osum.Graphics.Sprites
         In,
         Out,
         InHalf,
-        OutHalf
+        OutHalf,
+        InDouble,
+        OutDouble
     }
 
     [Flags]
@@ -130,6 +132,8 @@ namespace osum.Graphics.Sprites
 
             switch (Easing)
             {
+                case EasingTypes.InDouble:
+                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 4));
                 case EasingTypes.In:
                     return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 2));
                 case EasingTypes.InHalf:
@@ -139,7 +143,8 @@ namespace osum.Graphics.Sprites
                     return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 2));
                 case EasingTypes.OutHalf:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 1.5));
-
+                case EasingTypes.OutDouble:
+                    return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 4));
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);

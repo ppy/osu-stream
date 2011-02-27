@@ -10,42 +10,36 @@ namespace osum.GameModes.SongSelect
 {
 	internal class BeatmapPanel : pSpriteCollection
 	{
-		Beatmap beatmap;
+		internal Beatmap Beatmap;
 		
-		pSprite backingPlate;
-		pText text;
+		internal pSprite s_BackingPlate;
+		internal pText s_Text;
 
         float base_depth = 0.5f;
 
         static Color4 colourNormal = new Color4(28, 139, 242, 255);
         static Color4 colourHover = new Color4(27, 197, 241, 255);
 
-		internal BeatmapPanel(Beatmap beatmap)
+        internal const int PANEL_HEIGHT = 80;
+
+		internal BeatmapPanel(Beatmap beatmap, SongSelectMode select)
 		{
-			backingPlate = pSprite.FullscreenWhitePixel;
-            backingPlate.Alpha = 1;
-			backingPlate.AlwaysDraw = true;
-			backingPlate.Colour = colourNormal;
-			backingPlate.Scale.Y = 80;
-			backingPlate.DrawDepth = base_depth;
-			SpriteCollection.Add(backingPlate);
+			s_BackingPlate = pSprite.FullscreenWhitePixel;
+            s_BackingPlate.Alpha = 1;
+			s_BackingPlate.AlwaysDraw = true;
+			s_BackingPlate.Colour = colourNormal;
+			s_BackingPlate.Scale.Y = PANEL_HEIGHT;
+			s_BackingPlate.DrawDepth = base_depth;
+			SpriteCollection.Add(s_BackingPlate);
 			
-			this.beatmap = beatmap;
-			
-            backingPlate.OnClick += delegate {
-				
-                backingPlate.UnbindAllEvents();
-				
-				backingPlate.Colour = Color4.LightSkyBlue;
+			Beatmap = beatmap;
 
-                Player.SetBeatmap(beatmap);
-                Director.ChangeMode(OsuMode.Play);
-            };
-			
-			backingPlate.HandleClickOnUp = true;
+            s_BackingPlate.OnClick += delegate { select.SongSelected(this,null); };
 
-            backingPlate.OnHover += delegate { backingPlate.Colour = colourHover; };
-            backingPlate.OnHoverLost += delegate { backingPlate.Colour = colourNormal; };
+			s_BackingPlate.HandleClickOnUp = true;
+
+            s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(colourHover,150); };
+            s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(colourNormal, 150); };
 			
 			string filename = Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename);
 			
@@ -53,20 +47,20 @@ namespace osum.GameModes.SongSelect
 			Match m = r.Match(filename);
 
 
-            text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 80), base_depth + 0.01f, true, Color4.White, false);
-			text.Bold = true;
-			text.Offset = new Vector2(10,0);
-			if (text.Texture != null)
-				SpriteCollection.Add(text);
+            s_Text = new pText(m.Groups[1].Value + " - " + m.Groups[2].Value, 25, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, PANEL_HEIGHT), base_depth + 0.01f, true, Color4.White, false);
+			s_Text.Bold = true;
+			s_Text.Offset = new Vector2(10,0);
+			if (s_Text.Texture != null)
+				SpriteCollection.Add(s_Text);
 
-            text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
-			text.Offset = new Vector2(10,28);
-			SpriteCollection.Add(text);
+            s_Text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
+			s_Text.Offset = new Vector2(10,28);
+			SpriteCollection.Add(s_Text);
 
-            text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
-			text.Origin = OriginTypes.TopRight;
-			text.Offset = new Vector2(GameBase.BaseSize.Width - 10,28);
-			SpriteCollection.Add(text);
+            s_Text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
+			s_Text.Origin = OriginTypes.TopRight;
+			s_Text.Offset = new Vector2(GameBase.BaseSize.Width - 10,28);
+			SpriteCollection.Add(s_Text);
 		}
 		
 		internal void MoveTo(Vector2 location)
