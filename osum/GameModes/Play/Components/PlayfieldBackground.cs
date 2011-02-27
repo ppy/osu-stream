@@ -44,6 +44,10 @@ using osum.Input;
 
 namespace osum.GameModes.Play.Components
 {
+    /// <summary>
+    /// Vector implementation of a gradient + diagonal sprites background.
+    /// Hopefully uses less resources than drawing a massive texture!
+    /// </summary>
     class PlayfieldBackground : pDrawable
     {
         float[] vertices = new float[20 * 2];
@@ -64,6 +68,7 @@ namespace osum.GameModes.Play.Components
 
             int j = 0;
 
+            //main background
             vertices[j++] = left;
             vertices[j++] = top;
             vertices[j++] = right;
@@ -73,27 +78,28 @@ namespace osum.GameModes.Play.Components
             vertices[j++] = left;
             vertices[j++] = bottom;
 
-            float width = GameBase.NativeSize.Width * 0.2f;
+            //diagonal lines
+            float diagonalWidth = GameBase.NativeSize.Width * 0.2f;
 
-            float topOffset = width;
-            float leftOffset = width;
+            float diagonalY = diagonalWidth;
+            float diagonalX = diagonalWidth;
 
             for (int k = 0; k < 4; k++)
             {
-                vertices[j++] = leftOffset;
-                vertices[j++] = top;
+                vertices[j++] = diagonalX;
+                vertices[j++] = 0;
 
-                vertices[j++] = leftOffset + width;
-                vertices[j++] = top;
+                vertices[j++] = diagonalX + diagonalWidth;
+                vertices[j++] = 0;
 
-                vertices[j++] = left;
-                vertices[j++] = topOffset + width;
+                vertices[j++] = 0;
+                vertices[j++] = diagonalY + diagonalWidth;
 
-                vertices[j++] = left;
-                vertices[j++] = topOffset;
+                vertices[j++] = 0;
+                vertices[j++] = diagonalY;
 
-                topOffset += width * 2;
-                leftOffset += width * 2;
+                diagonalY += diagonalWidth * 2;
+                diagonalX += diagonalWidth * 2;
             }
 
             DrawDepth = 0;
@@ -109,15 +115,11 @@ namespace osum.GameModes.Play.Components
             Color4 colourTop = Colour;
             Color4 colourBottom = ColourHelper.Darken(Colour, 0.85f);
 
+            Color4 col = Colour;
             for (int i = 0; i < 20; i++)
             {
-                Color4 col;
-                if (i < 2)
-                    col = colourTop;
-                else if (i < 4)
-                    col = colourBottom;
-                else
-                    col = colourBottom;
+                //change to the darker colour for bottom vertices and diagonals
+                if (i == 3) col = ColourHelper.Darken(Colour, 0.85f);
 
                 colours[i * 4] = col.R;
                 colours[i * 4 + 1] = col.G;
@@ -140,6 +142,7 @@ namespace osum.GameModes.Play.Components
 
             SpriteManager.BlendingMode = BlendingFactorDest.One;
 
+            //todo: this can definitely be further optimised into a single call.
             GL.DrawArrays(BeginMode.TriangleFan, 4, 4);
             GL.DrawArrays(BeginMode.TriangleFan, 8, 4);
             GL.DrawArrays(BeginMode.TriangleFan, 12, 4);
@@ -149,7 +152,6 @@ namespace osum.GameModes.Play.Components
 
             return true;
         }
-
 
         internal void ChangeColour(Color4 colour)
         {
