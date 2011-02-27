@@ -32,7 +32,8 @@ namespace osum.GameModes
 
         static Beatmap Beatmap;
         public static bool Autoplay;
-        private pSprite playfield;
+        private PlayfieldBackground s_Playfield;
+
 
         public Player() : base()
         {
@@ -97,10 +98,8 @@ namespace osum.GameModes
 
             currentScore = new Score();
 
-            playfield =
-                new pSprite(TextureManager.Load(OsuTexture.playfield), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
-            spriteManager.Add(playfield);
+            s_Playfield = new PlayfieldBackground();
+            spriteManager.Add(s_Playfield);
 
             AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename),false);
             Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
@@ -202,7 +201,7 @@ namespace osum.GameModes
 
         public override bool Draw()
         {
-			base.Draw();
+            base.Draw();
 
             hitObjectManager.Draw();
 
@@ -216,7 +215,7 @@ namespace osum.GameModes
 
             return true;
         }
-		
+
         public override void Update()
         {
             //check whether the map is finished
@@ -224,18 +223,25 @@ namespace osum.GameModes
 			{
 				Ranking.RankableScore = currentScore;
 				Director.ChangeMode(OsuMode.Ranking);
-				
 			}
 			
 			hitObjectManager.Update();
 
             healthBar.Update();
+
+             
+            if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
+                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+            else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM / 2)
+                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+
+
             scoreDisplay.Update();
             comboCounter.Update();
 
             base.Update();
 			
-			playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
+			//playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
         }
 
         internal static void SetBeatmap(Beatmap beatmap)

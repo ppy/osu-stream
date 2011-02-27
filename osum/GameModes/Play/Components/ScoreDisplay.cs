@@ -40,7 +40,7 @@ namespace osum.GameModes.Play.Components
             if (showScore)
             {
                 s_Score =
-                    new pSpriteText("0000000", "score",-2,
+                    new pSpriteText("0000000", "score", 4,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                         new Vector2(0, 0), 0.95F, true, Color4.White);
                 s_Score.TextConstantSpacing = true;
@@ -54,7 +54,7 @@ namespace osum.GameModes.Play.Components
             if (showAccuracy)
             {
                 s_Accuracy =
-                        new pSpriteText("00.00%", "score", -2,
+                        new pSpriteText("00.00%", "score", 4,
                             alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                             new Vector2(0, 0), 0.95F, true, Color4.White);
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.6f : 1);

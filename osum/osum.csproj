@@ -205,6 +205,7 @@
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Graphics\Sprites\pSpriteRenderer.cs" />
     <Compile Include="Helpers\osu!common\Scheduler.cs" />
+    <Compile Include="GameModes\Play\Components\PlayfieldBackground.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

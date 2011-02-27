@@ -577,7 +577,6 @@ namespace osum.Graphics.Sprites
 
         public virtual void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         #endregion

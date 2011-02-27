@@ -207,6 +207,18 @@ namespace osum.Graphics.Sprites
         }
 		
 		static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
+        internal static BlendingFactorDest BlendingMode
+        {
+            get { return lastBlend; }
+            set
+            {
+                if (lastBlend != value)
+                {
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, value);
+                    lastBlend = value;
+                }
+            }
+        }
 		
 		void addToBatch(pDrawable p)
 		{
@@ -227,11 +239,7 @@ namespace osum.Graphics.Sprites
 			{
                 if (p.Alpha > 0)
 				{
-		            if (lastBlend != p.BlendingMode)
-					{
-						GL.BlendFunc(BlendingFactorSrc.SrcAlpha, p.BlendingMode);
-						lastBlend = p.BlendingMode;
-					}
+                    BlendingMode = p.BlendingMode;
 
 					TexturesEnabled = p.UsesTextures;
 					if (p.Draw())
@@ -283,6 +291,9 @@ namespace osum.Graphics.Sprites
 
         internal static void Reset()
         {
+            texturesEnabled = true;
+            TexturesEnabled = false; //force a reset
+            lastBlend = BlendingFactorDest.OneMinusDstAlpha;
         }
 
         /// <summary>

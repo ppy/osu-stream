@@ -22,7 +22,7 @@ namespace osum.GameplayElements.Scoring
         protected pTexture t_kiDanger2;
         protected pTexture t_kiNormal;
 
-        const int HP_BAR_MAXIMUM = 200;
+        internal const int HP_BAR_MAXIMUM = 200;
 
         /// <summary>
         /// Are we currently doing the initial "fill" stage?
