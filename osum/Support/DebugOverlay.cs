@@ -14,27 +14,32 @@ namespace osum.Support
 {
     static class DebugOverlay
     {
-#if DEBUG
+#if FULL_DEBUG
 		internal static pText fpsDisplay;
+        const int vertical_offset = 40;
 #else
-		internal static pSpriteText fpsDisplay;
+        internal static pSpriteText fpsDisplay;
+        const int vertical_offset = 5;
 #endif
+
+        const int horizontal_offset = 5;
+
         private static double weightedAverageFrameTime;
 
         static double lastUpdateTime;
         static bool updateFrame;
 		
 		static int gcCount;
-
+        
         static internal void Update()
         {
             if (fpsDisplay == null)
             {
-#if DEBUG
-                fpsDisplay = new pText("", 16, new Vector2(0, 40), new Vector2(512,256), 0, true, Color4.White, false);
+#if FULL_DEBUG
+                fpsDisplay = new pText("", 10, new Vector2(horizontal_offset, 40), new Vector2(512,256), 0, true, Color4.White, false);
                 GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
 #else
-                fpsDisplay = new pSpriteText("", "default",0,FieldTypes.Standard,OriginTypes.TopLeft,ClockTypes.Game,new Vector2(0, 40),1, true, Color4.White);
+                fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
                 GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
 #endif
             }
@@ -44,7 +49,7 @@ namespace osum.Support
 			if (GameBase.ElapsedMilliseconds > 25)
 			{
 					fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 10);
-					fpsDisplay.MoveTo(new Vector2(0, 40),600, EasingTypes.In);
+                    fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
 			}
 			
 			int newGcCount = GC.CollectionCount(0) + GC.CollectionCount(1);
@@ -53,17 +58,17 @@ namespace osum.Support
 			{
 				gcCount = newGcCount;
 				fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 100, fpsDisplay.Position.Y);
-				fpsDisplay.MoveTo(new Vector2(0, 40),600, EasingTypes.In);
+                fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
 			}
 
 			double fps = (1000 / weightedAverageFrameTime);
 
             lastUpdateTime += GameBase.ElapsedMilliseconds;
-			
-#if DEBUG
+
+#if FULL_DEBUG
             if (lastUpdateTime > 500)
 #else
-			if (lastUpdateTime > 16)
+            if (lastUpdateTime > 16)
 #endif
             {
                 lastUpdateTime = 0;
@@ -79,14 +84,14 @@ namespace osum.Support
             {
 
 				fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
-#if DEBUG
+#if FULL_DEBUG
                 int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
                 fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
-				fpsDisplay.Text = Math.Round(Math.Min(60,fps),0).ToString();
+                fpsDisplay.Text = Math.Round(Math.Min(60,fps),0).ToString();
 #endif
             }
         }
@@ -94,8 +99,8 @@ namespace osum.Support
         internal static void AddLine(string s)
         {
             if (!updateFrame) return;
-			
-#if DEBUG
+
+#if FULL_DEBUG
             fpsDisplay.Text += "\n" + s;
 #endif
         }
