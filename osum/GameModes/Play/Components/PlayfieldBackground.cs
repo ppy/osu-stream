@@ -61,6 +61,18 @@ namespace osum.GameModes.Play.Components
         public PlayfieldBackground()
             : base()
         {
+            initialize();
+
+            DrawDepth = 0;
+            AlwaysDraw = true;
+            Alpha = 1;
+            currentColour = Colour = COLOUR_INTRO;
+
+            GameBase.OnScreenLayoutChanged += initialize;
+        }
+
+        private void initialize()
+        {
             float left = 0;
             float right = GameBase.NativeSize.Width;
             float top = 0;
@@ -101,11 +113,13 @@ namespace osum.GameModes.Play.Components
                 diagonalY += diagonalWidth * 2;
                 diagonalX += diagonalWidth * 2;
             }
+        }
 
-            DrawDepth = 0;
-            AlwaysDraw = true;
-            Alpha = 1;
-            currentColour = Colour = COLOUR_INTRO;
+        public override void Dispose()
+        {
+            GameBase.OnScreenLayoutChanged -= initialize;
+            
+            base.Dispose();
         }
 
         public override void Update()

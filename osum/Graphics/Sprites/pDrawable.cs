@@ -65,7 +65,7 @@ namespace osum.Graphics.Sprites
         internal Vector2 Offset;
         public object Tag;
         public int TagNumeric;
-        internal FieldTypes Field;
+        internal FieldTypes Field = FieldTypes.Standard;
         internal OriginTypes Origin;
         internal Vector2 OriginVector;
         internal Vector2 Position;
