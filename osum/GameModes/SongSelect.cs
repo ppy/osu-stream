@@ -20,7 +20,7 @@ namespace osum.GameModes
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
         private float offset;
-        private float offset_min { get { return panels.Count * -80 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
+        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
         private float offset_max = 0;
 
         private float velocity;
@@ -180,7 +180,7 @@ namespace osum.GameModes
                     foreach (BeatmapPanel p in panels)
                     {
                         p.MoveTo(pos);
-                        pos.Y += 80;
+                        pos.Y += 70;
                     }
                 }
             }
