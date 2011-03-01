@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!m-desktop", "osum\osu!m-desktop.csproj", "{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapCombinator", "BeatmapCombinator\BeatmapCombinator.csproj", "{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,21 @@ Global
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Mixed Platforms.Build.0 = Release|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|x86.ActiveCfg = Release|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|x86.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|x86.ActiveCfg = Debug|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|x86.Build.0 = Debug|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|Any CPU.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|Mixed Platforms.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|x86.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|x86.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Any CPU.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|x86.ActiveCfg = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
