@@ -118,7 +118,7 @@ namespace osum.GameModes.Play.Components
         public override void Dispose()
         {
             GameBase.OnScreenLayoutChanged -= initialize;
-            
+
             base.Dispose();
         }
 

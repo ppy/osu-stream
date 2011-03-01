@@ -42,8 +42,8 @@ namespace osum.GameplayElements
         /// </summary>
         internal pList<HitObject> hitObjects = new pList<HitObject>() { UseBackwardsSearch = true };
         private int hitObjectsCount;
-		
-		private int processFrom;
+
+        private int processFrom;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
@@ -98,7 +98,7 @@ namespace osum.GameplayElements
             if (h.NewCombo)
             {
                 currentComboNumber = 1;
-                colourIndex = (colourIndex + 1 + h.ComboOffset)%TextureManager.DefaultColours.Length;
+                colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
             }
 
             bool sameTimeAsLastAdded = hitObjectsCount != 0 && h.StartTime == hitObjects[hitObjectsCount - 1].StartTime;
@@ -108,8 +108,8 @@ namespace osum.GameplayElements
                 currentComboNumber = Math.Max(1, --currentComboNumber);
 
                 HitObject hLast = hitObjects[hitObjectsCount - 1];
-				
-				Connect(h, hLast);
+
+                Connect(h, hLast);
             }
 
             h.ComboNumber = currentComboNumber;
@@ -121,34 +121,34 @@ namespace osum.GameplayElements
             h.ColourIndex = colourIndex;
 
             hitObjects.AddInPlace(h);
-			
-			h.Index = hitObjectsCount++;
+
+            h.Index = hitObjectsCount++;
 
             spriteManager.Add(h);
         }
-		
-		void Connect(HitObject h1, HitObject h2)
-		{
-				Vector2 p1 = h1.SpriteCollection[0].Position;
-                Vector2 p2 = h2.SpriteCollection[0].Position;
 
-                Vector2 p3 = (p2 + p1) / 2;
-                float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
-				
-                pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline),FieldTypes.GamefieldSprites,OriginTypes.Centre,
-                    ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, false, Color4.White);
-                connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
-                connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-                connectingLine.Transform(h1.SpriteCollection[0].Transformations);
-                h1.SpriteCollection.Add(connectingLine);
-                h1.DimCollection.Add(connectingLine);
-				
-				h1.connectedObject = h2;
-				h2.connectedObject = h1;
-				
-				h1.connectionSprite = connectingLine;
-				h2.connectionSprite = connectingLine;
-		}
+        void Connect(HitObject h1, HitObject h2)
+        {
+            Vector2 p1 = h1.SpriteCollection[0].Position;
+            Vector2 p2 = h2.SpriteCollection[0].Position;
+
+            Vector2 p3 = (p2 + p1) / 2;
+            float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
+
+            pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
+                ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, false, Color4.White);
+            connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
+            connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
+            connectingLine.Transform(h1.SpriteCollection[0].Transformations);
+            h1.SpriteCollection.Add(connectingLine);
+            h1.DimCollection.Add(connectingLine);
+
+            h1.connectedObject = h2;
+            h2.connectedObject = h1;
+
+            h1.connectionSprite = connectingLine;
+            h2.connectionSprite = connectingLine;
+        }
 
         #region IDrawable Members
 
@@ -163,37 +163,37 @@ namespace osum.GameplayElements
         #endregion
 
         #region IUpdateable Members
-		
-		int processedTo;
-		
-		public bool AllowSpinnerOptimisation;
-		
+
+        int processedTo;
+
+        public bool AllowSpinnerOptimisation;
+
         public void Update()
         {
             AllowSpinnerOptimisation = false;
-			
-			spriteManager.Update();
+
+            spriteManager.Update();
 
 
             int lowestActiveObject = -1;
-			
-			processedTo = hitObjectsCount - 1;
-			//initialise to the last object. if we don't find an earlier one below, this wil be used.
-			
+
+            processedTo = hitObjectsCount - 1;
+            //initialise to the last object. if we don't find an earlier one below, this wil be used.
+
 #if OPTIMISED_PROCESSING
             for (int i = processFrom; i < hitObjectsCount; i++)
 #else
 			for (int i = 0; i < hitObjectsCount; i++)
 #endif
-			{
-				HitObject h = hitObjects[i];
+            {
+                HitObject h = hitObjects[i];
 
                 if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
-					
-					if (!AllowSpinnerOptimisation)
-						AllowSpinnerOptimisation |= h is Spinner && h.SpriteCollection[0].Alpha == 1;
+
+                    if (!AllowSpinnerOptimisation)
+                        AllowSpinnerOptimisation |= h is Spinner && h.SpriteCollection[0].Alpha == 1;
 
                     if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);
@@ -209,15 +209,15 @@ namespace osum.GameplayElements
                     if (s != null && s.EndTime < Clock.AudioTime)
                         s.DisposePathTexture();
                 }
-				
+
 #if OPTIMISED_PROCESSING
-				if (h.StartTime > Clock.AudioTime + 4000 && !h.IsVisible)
-				{
-					processedTo = i;
-					break; //stop processing after a decent amount of leeway...
-				}
+                if (h.StartTime > Clock.AudioTime + 4000 && !h.IsVisible)
+                {
+                    processedTo = i;
+                    break; //stop processing after a decent amount of leeway...
+                }
 #endif
-			}
+            }
 
             if (lowestActiveObject >= 0)
                 processFrom = lowestActiveObject;
@@ -228,14 +228,14 @@ namespace osum.GameplayElements
         }
 
         #endregion
-			
-		internal bool AllNotesHit
-		{
-			get
-			{
+
+        internal bool AllNotesHit
+        {
+            get
+            {
                 return hitObjects[hitObjectsCount - 1].IsHit;
-			}
-		}
+            }
+        }
 
         /// <summary>
         /// Finds an object at the specified window-space location.
@@ -244,17 +244,17 @@ namespace osum.GameplayElements
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
 #if OPTIMISED_PROCESSING
-			for (int i = processFrom; i < processedTo + 1; i++)
+            for (int i = processFrom; i < processedTo + 1; i++)
 #else
 			for (int i = 0; i < hitObjectsCount; i++)
 #endif
             {
                 HitObject h = hitObjects[i];
-				
-				if (h.HitTestInitial(tracking))
+
+                if (h.HitTestInitial(tracking))
                     return h;
             }
-			
+
             return null;
         }
 
@@ -263,19 +263,19 @@ namespace osum.GameplayElements
             HitObject found = FindObjectAt(point);
 
             if (found == null) return;
-			
+
             if (found.Index > 0)
             {
                 if (Clock.AudioTime < found.StartTime - DifficultyManager.HitWindow300)
-				{
-					//check last hitObject has been hit already and isn't still active
-	                HitObject last = hitObjects[found.Index - 1];
-	                if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
-	                {
-	                    found.Shake();
-	                    return;
-	                }
-				}
+                {
+                    //check last hitObject has been hit already and isn't still active
+                    HitObject last = hitObjects[found.Index - 1];
+                    if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
+                    {
+                        found.Shake();
+                        return;
+                    }
+                }
             }
 
             TriggerScoreChange(found.Hit(), found);
@@ -284,7 +284,7 @@ namespace osum.GameplayElements
         Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
 
         public event ScoreChangeDelegate OnScoreChanged;
-        
+
         /// <summary>
         /// Cached value of the first beat length for the current beatmap. Used for general calculations (circle dimming).
         /// </summary>
@@ -295,7 +295,7 @@ namespace osum.GameplayElements
             if (change == ScoreChange.Ignore) return;
 
             ScoreChange hitAmount = change & ScoreChange.HitValuesOnly;
-            
+
             if (hitAmount != ScoreChange.Ignore)
             {
                 //handle combo additions here
@@ -315,7 +315,7 @@ namespace osum.GameplayElements
                     ResetComboCounts();
                 }
             }
-            
+
 
             hitObject.HitAnimation(change);
 
