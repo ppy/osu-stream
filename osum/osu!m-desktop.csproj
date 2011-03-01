@@ -127,6 +127,9 @@
     <Compile Include="Support\Transition.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="BassNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>BassNet.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.0.0.201, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OpenTK.dll</HintPath>
@@ -136,12 +139,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BassNet\BassNet.csproj">
-      <Project>{2FF2EE6F-7BD7-4ED4-A077-A655C8811A81}</Project>
-      <Name>BassNet</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="bass.dll">
