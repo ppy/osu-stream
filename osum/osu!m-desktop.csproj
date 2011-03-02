@@ -284,7 +284,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <PropertyGroup>
