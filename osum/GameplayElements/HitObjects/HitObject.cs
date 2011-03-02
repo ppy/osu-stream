@@ -16,7 +16,7 @@ namespace osum.GameplayElements
     internal delegate void HitCircleDelegate(HitObject h);
 
     [Flags]
-    internal enum HitObjectType
+    public enum HitObjectType
     {
         Circle = 1,
         Slider = 2,
@@ -27,7 +27,7 @@ namespace osum.GameplayElements
     }
 
     [Flags]
-    internal enum HitObjectSoundType
+    public enum HitObjectSoundType
     {
         Normal = 0,
         Whistle = 2,

@@ -33,6 +33,10 @@ namespace osum.GameplayElements.Beatmaps
         }
         public string AudioFilename;
 
+        public Beatmap()
+        {
+        }
+
         public Beatmap(string containerFilename)
         {
             ContainerFilename = containerFilename;

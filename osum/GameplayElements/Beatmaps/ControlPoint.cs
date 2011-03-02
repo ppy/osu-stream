@@ -5,7 +5,7 @@ using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.Beatmaps
 {
-    internal enum CustomSampleSet
+    public enum CustomSampleSet
     {
         Default = 0,
         Custom1 = 1,
@@ -25,17 +25,17 @@ namespace osum.GameplayElements.Beatmaps
         SimpleTriple = 3
     }
 
-    internal class ControlPoint : IComparable<ControlPoint>, ICloneable//, bSerializable
+    public class ControlPoint : IComparable<ControlPoint>, ICloneable//, bSerializable
     {
-        internal double beatLength;
-        internal CustomSampleSet customSamples;
-        internal double offset;
-        internal SampleSet sampleSet;
-        internal TimeSignatures timeSignature;
-        internal int volume;
+        public double beatLength;
+        public CustomSampleSet customSamples;
+        public double offset;
+        public SampleSet sampleSet;
+        public TimeSignatures timeSignature;
+        public int volume;
         
         private bool timingChange = true;
-        internal bool TimingChange
+        public bool TimingChange
         {
             get { return timingChange; }
             set
@@ -46,9 +46,9 @@ namespace osum.GameplayElements.Beatmaps
                 timingChange = value;
             }
         }
-        internal bool kiaiMode;
+        public bool kiaiMode;
 
-        internal float bpmMultiplier
+        public float bpmMultiplier
         {
             get
             {
@@ -58,7 +58,7 @@ namespace osum.GameplayElements.Beatmaps
             }
         }
 
-        internal ControlPoint(double offset, double beatLength, TimeSignatures timeSignature, SampleSet sampleSet,
+        public ControlPoint(double offset, double beatLength, TimeSignatures timeSignature, SampleSet sampleSet,
                              CustomSampleSet customSamples, int volume, bool timingChange, bool kiaiMode)
         {
             this.offset = offset;
@@ -71,7 +71,7 @@ namespace osum.GameplayElements.Beatmaps
             this.kiaiMode = kiaiMode;
         }
 
-        internal double bpm
+        public double bpm
         {
             get { return beatLength == 0 ? 0 : 60000 / beatLength; }
         }

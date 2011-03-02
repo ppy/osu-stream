@@ -9,7 +9,7 @@ namespace osum.GameplayElements.Beatmaps
 {
     public partial class Beatmap
     {
-        internal List<ControlPoint> ControlPoints = new List<ControlPoint>();
+        public List<ControlPoint> ControlPoints = new List<ControlPoint>();
 
         public double DifficultySliderMultiplier;
         public double DifficultySliderTickRate;
@@ -19,7 +19,7 @@ namespace osum.GameplayElements.Beatmaps
         /// </summary>
         /// <param name="time">The time.</param>
         /// <returns></returns>
-        internal double beatOffsetCloseToZeroAt(double time)
+        public double beatOffsetCloseToZeroAt(double time)
         {
             if (ControlPoints.Count == 0)
                 return 0;
@@ -38,7 +38,7 @@ namespace osum.GameplayElements.Beatmaps
             return offset;
         }
 
-        internal double beatOffsetAt(double time)
+        public double beatOffsetAt(double time)
         {
             if (ControlPoints.Count == 0)
                 return 0;
@@ -52,12 +52,12 @@ namespace osum.GameplayElements.Beatmaps
             return ControlPoints[point].offset;
         }
 
-        internal double beatLengthAt(double time)
+        public double beatLengthAt(double time)
         {
             return beatLengthAt(time, false);
         }
 
-        internal double beatLengthAt(double time, bool allowMultiplier)
+        public double beatLengthAt(double time, bool allowMultiplier)
         {
             if (ControlPoints.Count == 0)
                 return 0;
@@ -82,7 +82,7 @@ namespace osum.GameplayElements.Beatmaps
             return ControlPoints[point].beatLength * mult;
         }
 
-        internal float bpmMultiplierAt(double time)
+        public float bpmMultiplierAt(double time)
         {
             ControlPoint pt = controlPointAt(time);
 
@@ -90,7 +90,7 @@ namespace osum.GameplayElements.Beatmaps
             else return pt.bpmMultiplier;
         }
 
-        internal ControlPoint controlPointAt(double time)
+        public ControlPoint controlPointAt(double time)
         {
             if (ControlPoints.Count == 0) return null;
 
