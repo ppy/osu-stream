@@ -84,11 +84,11 @@ namespace osum
         public int PlayBuffer(int buffer)
         {
             int i = 0;
-			while (AL.GetSourceState(sources[i]) == ALSourceState.Playing)
-				i++;
-			
-			if (i >= MAX_SOURCES)
-				return -1; //ran out of sources
+            while (AL.GetSourceState(sources[i]) == ALSourceState.Playing)
+            {
+                if (++i >= MAX_SOURCES)
+                    return -1; //ran out of sources
+            }
 
             AL.Source(sources[i], ALSourcei.Buffer, buffer);
             AL.SourcePlay(sources[i]);
