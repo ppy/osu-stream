@@ -232,8 +232,8 @@ namespace osum.GameplayElements.Scoring
             spriteManager.Add(s_kiIcon);
             spriteManager.Add(s_kiExplode);
 
-            CurrentHp = HP_BAR_MAXIMUM;
-            CurrentHpUncapped = HP_BAR_MAXIMUM;
+            CurrentHp = HP_BAR_MAXIMUM / 2;
+            CurrentHpUncapped = HP_BAR_MAXIMUM / 2;
             DisplayHp = 0;
         }
     }

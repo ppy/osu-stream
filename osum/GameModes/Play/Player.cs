@@ -90,6 +90,7 @@ namespace osum.GameModes
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
 
             hitObjectManager.LoadFile();
+            hitObjectManager.ActiveStream = Difficulty.Normal;
 
             healthBar = new HealthBar();
 
@@ -222,7 +223,7 @@ namespace osum.GameModes
         public override void Update()
         {
             //check whether the map is finished
-            if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.hitObjects[hitObjectManager.hitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
+            if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.HitObjects[hitObjectManager.HitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
             {
                 Ranking.RankableScore = currentScore;
                 Director.ChangeMode(OsuMode.Ranking);
@@ -234,11 +235,22 @@ namespace osum.GameModes
 
 
             if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
-            else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM / 2)
             {
-                if (Clock.AudioTime >= hitObjectManager.hitObjects[0].StartTime)
+                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+                hitObjectManager.ActiveStream = Difficulty.Easy;
+            }
+            else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM * 2 / 3f)
+            {
+                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_HARD);
+                hitObjectManager.ActiveStream = Difficulty.Normal;
+            }
+            else if (healthBar.CurrentHp >= HealthBar.HP_BAR_MAXIMUM / 2)
+            {
+                if (Clock.AudioTime >= hitObjectManager.HitObjects[0].StartTime)
+                {
                     s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                    hitObjectManager.ActiveStream = Difficulty.Normal;
+                }
                 else
                     s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
             }

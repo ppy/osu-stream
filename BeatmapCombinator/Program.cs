@@ -178,9 +178,6 @@ namespace BeatmapCombinator
 
                 int currentTime = 0;
 
-                string currentLine = "";
-                string currentLinePrefix = "";
-
                 while (!linesRemaining.All(i => i == 0))
                 {
                     int bestMatchDifficulty = -1;
@@ -195,8 +192,6 @@ namespace BeatmapCombinator
                         
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
-
-
                         if (line.Time > currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
                         {
                             bestMatchDifficulty = i;
@@ -204,22 +199,10 @@ namespace BeatmapCombinator
                         }
                     }
 
-
-                    if (currentLine == bestMatchLine.StringRepresentation)
-                        //add this difficulty index to the start of the line if it is a dupe line
-                        currentLinePrefix += "|" + bestMatchDifficulty;
-                    else
-                    {
-                        if (currentLine.Length > 0) output.WriteLine(currentLinePrefix + "," + currentLine);
-                        currentLine = bestMatchLine.StringRepresentation;
-                        currentLinePrefix = bestMatchDifficulty.ToString();
-                    }
+                    output.WriteLine(bestMatchDifficulty + "," + bestMatchLine.StringRepresentation);
                     
                     linesRemaining[bestMatchDifficulty]--;
                 }
-
-                //write the final line from buffer.
-                output.WriteLine(currentLinePrefix + "," + currentLine);
             }
         }
     }

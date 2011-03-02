@@ -55,6 +55,7 @@ namespace osum.GameModes.Play.Components
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_STANDARD = new Color4(18, 78, 143, 255);
+        internal static Color4 COLOUR_HARD = new Color4(215, 122, 12, 255);
         internal static Color4 COLOUR_WARNING = new Color4(237, 29, 29, 255);
         private Color4 currentColour;
 

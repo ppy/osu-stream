@@ -23,8 +23,8 @@ namespace osum
         /// </summary>
         Dictionary<string, int> BufferCache = new Dictionary<string, int>();
 
-		const int MAX_SOURCES = 32; //hardware limitation
-		int[] sources;
+        const int MAX_SOURCES = 32; //hardware limitation
+        int[] sources;
 
         public SoundEffectPlayer()
         {
@@ -37,7 +37,7 @@ namespace osum
                 //todo: handle error here.
             }
 
-			sources = AL.GenSources(MAX_SOURCES);
+            sources = AL.GenSources(MAX_SOURCES);
         }
 
         /// <summary>
@@ -48,15 +48,15 @@ namespace osum
         public int Load(string filename)
         {
             if (!File.Exists(filename)) return -1;
-			
-			int buffer = AL.GenBuffer();
-			
+
+            int buffer = AL.GenBuffer();
+
             using (Stream str = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (AudioReader sound = new AudioReader(str))
-			{
-	            byte[] readSound = sound.ReadToEnd().Data;
-	            AL.BufferData(buffer, OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);
-			}
+            {
+                byte[] readSound = sound.ReadToEnd().Data;
+                AL.BufferData(buffer, OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);
+            }
 
             if (AL.GetError() != ALError.NoError)
                 return -1;
@@ -72,8 +72,8 @@ namespace osum
             foreach (int id in BufferCache.Values)
                 AL.DeleteBuffer(id);
             BufferCache.Clear();
-			
-			AL.DeleteSources(sources);
+
+            AL.DeleteSources(sources);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace osum
         /// </summary>
         public void Update()
         {
-			
+
         }
     }
 }

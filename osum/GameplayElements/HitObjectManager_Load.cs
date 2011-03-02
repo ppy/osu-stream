@@ -23,6 +23,7 @@ namespace osum.GameplayElements
     {
         public void LoadFile()
         {
+
             spriteManager.ForwardPlayOptimisedAdd = true;
 
             beatmap.ControlPoints.Clear();
@@ -199,10 +200,7 @@ namespace osum.GameplayElements
 
                                 int offset = 0;
 
-                                string difficulties = split[offset++];
-
-                                if (difficulties != "2")
-                                    continue;
+                                Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
                                 SampleSet sampleSet = (SampleSet)Int32.Parse(split[offset++]);
 
@@ -300,7 +298,7 @@ namespace osum.GameplayElements
 
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
-                                    Add(h);
+                                    Add(h, difficulty);
 							
                                 break;
                             case FileSection.Unknown:
@@ -315,167 +313,182 @@ namespace osum.GameplayElements
 
         protected virtual void PostProcessing()
         {
-            FirstBeatLength = beatmap.beatLengthAt(0);
-
-            float StackOffset = DifficultyManager.HitObjectRadiusGamefield / 10;
-
-            pTexture fptexture = TextureManager.Load(OsuTexture.followpoint);
-
-            Vector2 stackVector = new Vector2(StackOffset, StackOffset);
-
-            hitObjectsCount = hitObjects.Count;
-
-            const int STACK_LENIENCE = 3;
-
-            hitObjects[0].NewCombo = true;
-
-            //Reverse pass for stack calculation.
-            for (int i = hitObjectsCount - 1; i > 0; i--)
+            int difficultyIndex = 0;
+            foreach (List<HitObject> objects in StreamHitObjects)
             {
-                int n = i;
-                /* We should check every note which has not yet got a stack.
-                 * Consider the case we have two interwound stacks and this will make sense.
-                 * 
-                 * o <-1      o <-2
-                 *  o <-3      o <-4
-                 * 
-                 * We first process starting from 4 and handle 2,
-                 * then we come backwards on the i loop iteration until we reach 3 and handle 1.
-                 * 2 and 1 will be ignored in the i loop because they already have a stack value.
-                 */
-
-                HitObject objectI = hitObjects[i];
-
-                if (objectI.StackCount != 0 || objectI is Spinner) continue;
-
-                /* If this object is a hitcircle, then we enter this "special" case.
-                 * It either ends with a stack of hitcircles only, or a stack of hitcircles that are underneath a slider.
-                 * Any other case is handled by the "is Slider" code below this.
-                 */
-                if (objectI is HitCircle)
+                if (objects == null)
                 {
-                    while (--n >= 0)
+                    difficultyIndex++;
+                    continue;
+                }
+
+                SpriteManager diffSpriteManager = streamSpriteManagers[difficultyIndex];
+
+                FirstBeatLength = beatmap.beatLengthAt(0);
+
+                float StackOffset = DifficultyManager.HitObjectRadiusGamefield / 10;
+
+                pTexture fptexture = TextureManager.Load(OsuTexture.followpoint);
+
+                Vector2 stackVector = new Vector2(StackOffset, StackOffset);
+
+                const int STACK_LENIENCE = 3;
+
+                objects[0].NewCombo = true;
+
+                //Reverse pass for stack calculation.
+                for (int i = objects.Count - 1; i > 0; i--)
+                {
+                    int n = i;
+                    /* We should check every note which has not yet got a stack.
+                     * Consider the case we have two interwound stacks and this will make sense.
+                     * 
+                     * o <-1      o <-2
+                     *  o <-3      o <-4
+                     * 
+                     * We first process starting from 4 and handle 2,
+                     * then we come backwards on the i loop iteration until we reach 3 and handle 1.
+                     * 2 and 1 will be ignored in the i loop because they already have a stack value.
+                     */
+
+                    HitObject objectI = objects[i];
+
+                    if (objectI.StackCount != 0 || objectI is Spinner) continue;
+
+                    /* If this object is a hitcircle, then we enter this "special" case.
+                     * It either ends with a stack of hitcircles only, or a stack of hitcircles that are underneath a slider.
+                     * Any other case is handled by the "is Slider" code below this.
+                     */
+                    if (objectI is HitCircle)
                     {
-                        HitObject objectN = hitObjects[n];
-
-                        if (objectN is Spinner) continue;
-
-                        HitObjectSpannable spanN = objectN as HitObjectSpannable;
-
-                        if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.EndTime)
-                            //We are no longer within stacking range of the previous object.
-                            break;
-
-                        /* This is a special case where hticircles are moved DOWN and RIGHT (negative stacking) if they are under the *last* slider in a stacked pattern.
-                         *    o==o <- slider is at original location
-                         *        o <- hitCircle has stack of -1
-                         *         o <- hitCircle has stack of -2
-                         */
-                        if (spanN != null && pMathHelper.Distance(spanN.EndPosition, objectI.Position) < STACK_LENIENCE)
+                        while (--n >= 0)
                         {
-                            int offset = objectI.StackCount - objectN.StackCount + 1;
-                            for (int j = n + 1; j <= i; j++)
+                            HitObject objectN = objects[n];
+
+                            if (objectN is Spinner) continue;
+
+                            HitObjectSpannable spanN = objectN as HitObjectSpannable;
+
+                            if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.EndTime)
+                                //We are no longer within stacking range of the previous object.
+                                break;
+
+                            /* This is a special case where hticircles are moved DOWN and RIGHT (negative stacking) if they are under the *last* slider in a stacked pattern.
+                             *    o==o <- slider is at original location
+                             *        o <- hitCircle has stack of -1
+                             *         o <- hitCircle has stack of -2
+                             */
+                            if (spanN != null && pMathHelper.Distance(spanN.EndPosition, objectI.Position) < STACK_LENIENCE)
                             {
-                                //For each object which was declared under this slider, we will offset it to appear *below* the slider end (rather than above).
-                                if (pMathHelper.Distance(spanN.EndPosition, hitObjects[j].Position) < STACK_LENIENCE)
-                                    hitObjects[j].StackCount -= offset;
+                                int offset = objectI.StackCount - objectN.StackCount + 1;
+                                for (int j = n + 1; j <= i; j++)
+                                {
+                                    //For each object which was declared under this slider, we will offset it to appear *below* the slider end (rather than above).
+                                    if (pMathHelper.Distance(spanN.EndPosition, objects[j].Position) < STACK_LENIENCE)
+                                        objects[j].StackCount -= offset;
+                                }
+
+                                //We have hit a slider.  We should restart calculation using this as the new base.
+                                //Breaking here will mean that the slider still has StackCount of 0, so will be handled in the i-outer-loop.
+                                break;
                             }
 
-                            //We have hit a slider.  We should restart calculation using this as the new base.
-                            //Breaking here will mean that the slider still has StackCount of 0, so will be handled in the i-outer-loop.
-                            break;
-                        }
+                            if (pMathHelper.Distance(objectN.Position, objectI.Position) < STACK_LENIENCE)
+                            {
+                                //Keep processing as if there are no sliders.  If we come across a slider, this gets cancelled out.
+                                //NOTE: Sliders with start positions stacking are a special case that is also handled here.
 
-                        if (pMathHelper.Distance(objectN.Position, objectI.Position) < STACK_LENIENCE)
-                        {
-                            //Keep processing as if there are no sliders.  If we come across a slider, this gets cancelled out.
-                            //NOTE: Sliders with start positions stacking are a special case that is also handled here.
-
-                            objectN.StackCount = objectI.StackCount + 1;
-                            objectI = objectN;
+                                objectN.StackCount = objectI.StackCount + 1;
+                                objectI = objectN;
+                            }
                         }
                     }
-                }
-                else if (objectI is Slider)
-                {
-                    /* We have hit the first slider in a possible stack.
-                     * From this point on, we ALWAYS stack positive regardless.
-                     */
-                    while (--n >= 0)
+                    else if (objectI is Slider)
                     {
-                        HitObject objectN = hitObjects[n];
-
-                        if (objectN is Spinner) continue;
-
-                        HitObjectSpannable spanN = objectN as HitObjectSpannable;
-
-                        if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.StartTime)
-                            //We are no longer within stacking range of the previous object.
-                            break;
-
-                        if (pMathHelper.Distance((spanN != null ? spanN.EndPosition : objectN.Position), objectI.Position) < STACK_LENIENCE)
+                        /* We have hit the first slider in a possible stack.
+                         * From this point on, we ALWAYS stack positive regardless.
+                         */
+                        while (--n >= 0)
                         {
-                            objectN.StackCount = objectI.StackCount + 1;
-                            objectI = objectN;
+                            HitObject objectN = objects[n];
+
+                            if (objectN is Spinner) continue;
+
+                            HitObjectSpannable spanN = objectN as HitObjectSpannable;
+
+                            if (objectI.StartTime - (DifficultyManager.PreEmpt * beatmap.StackLeniency) > objectN.StartTime)
+                                //We are no longer within stacking range of the previous object.
+                                break;
+
+                            if (pMathHelper.Distance((spanN != null ? spanN.EndPosition : objectN.Position), objectI.Position) < STACK_LENIENCE)
+                            {
+                                objectN.StackCount = objectI.StackCount + 1;
+                                objectI = objectN;
+                            }
                         }
                     }
+
                 }
-            }
-			
-			HitObject last = null;
-			
-            for (int i = 0; i < hitObjectsCount; i++)
-            {
-                HitObject currHitObject = hitObjects[i];
 
-                if (currHitObject.StackCount != 0)
-                    currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
+                HitObject last = null;
 
-                //Draw connection lines
-                if (last != null && !currHitObject.NewCombo && !(last is Spinner))
+                for (int i = 0; i < objects.Count; i++)
                 {
-                    Vector2 pos1 = last.EndPosition;
-                    int time1 = last.EndTime;
-                    Vector2 pos2 = currHitObject.Position;
-                    int time2 = currHitObject.StartTime;
+                    HitObject currHitObject = objects[i];
 
-                    int distance = (int)pMathHelper.Distance(pos1, pos2);
-                    Vector2 distanceVector = pos2 - pos1;
-                    int length = time2 - time1;
+                    if (currHitObject.StackCount != 0)
+                        currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
-                    int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
+                    //Draw connection lines
+                    if (last != null && !currHitObject.NewCombo && !(last is Spinner))
+                    {
+                        Vector2 pos1 = last.EndPosition;
+                        int time1 = last.EndTime;
+                        Vector2 pos2 = currHitObject.Position;
+                        int time2 = currHitObject.StartTime;
 
-                    if (distance >=  DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
-					{
-	                    //find out how many points we can place (evenly)
-	                    int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
-	
-	                    float usableDistance = (distance - buffer_size * 2) / (count);
-	
-	                    for (int j = 0; j < count + 1; j++)
-	                    {
-	                        float fraction = (buffer_size + usableDistance * j) / distance;
-	                        Vector2 pos = pos1 + fraction * distanceVector;
-	                        int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
-	                        int fadeout = (int)(time1 + fraction * length);
-	
-	                        pSprite dot =
-	                            new pSprite(fptexture,
-	                                           FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-	                                           0.01f, false, Color4.White);
-	                        
-	                        dot.Transform(
-	                            new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
-	                        dot.Transform(
-	                            new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
-	                        dot.Transform(
-	                            new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
-	                        spriteManager.Add(dot);
-	                    }
-					}
+                        int distance = (int)pMathHelper.Distance(pos1, pos2);
+                        Vector2 distanceVector = pos2 - pos1;
+                        int length = time2 - time1;
+
+                        int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
+
+                        if (distance >= DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
+                        {
+                            //find out how many points we can place (evenly)
+                            int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+
+                            float usableDistance = (distance - buffer_size * 2) / (count);
+
+                            for (int j = 0; j < count + 1; j++)
+                            {
+                                float fraction = (buffer_size + usableDistance * j) / distance;
+                                Vector2 pos = pos1 + fraction * distanceVector;
+                                int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
+                                int fadeout = (int)(time1 + fraction * length);
+
+                                pSprite dot =
+                                    new pSprite(fptexture,
+                                                   FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
+                                                   0.01f, false, Color4.White);
+
+                                dot.Transform(
+                                    new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
+                                dot.Transform(
+                                    new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
+                                dot.Transform(
+                                    new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
+                                diffSpriteManager.Add(dot);
+                            }
+                        }
+                    }
+
+                    last = currHitObject;
                 }
-				
-				last = currHitObject;
+
+                diffSpriteManager.ForwardPlayOptimisedAdd = false;
+
+                difficultyIndex++;
             }
 
             spriteManager.ForwardPlayOptimisedAdd = false;

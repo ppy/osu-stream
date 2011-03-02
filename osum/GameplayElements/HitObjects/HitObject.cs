@@ -76,6 +76,15 @@ namespace osum.GameplayElements
         NonScoreModifiers = TaikoLargeHitBoth | TaikoLargeHitFirst | TaikoLargeHitSecond
     }
 
+    public enum Difficulty
+    {
+        None = -1,
+        Easy = 0,
+        Normal = 1,
+        Hard = 2,
+        Expert = 3
+    }
+
     internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         protected HitObjectManager m_HitObjectManager;
@@ -206,6 +215,9 @@ namespace osum.GameplayElements
         /// <returns></returns>
         internal virtual ScoreChange CheckScoring()
         {
+            if (IsHit)
+                return ScoreChange.Ignore;
+
             //check for miss
             if (Clock.AudioTime > (Player.Autoplay ? StartTime : HittableEndTime))
                 return Hit(); //force a "hit" if we haven't yet.
@@ -481,6 +493,7 @@ namespace osum.GameplayElements
         }
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
+        public Difficulty Difficulty;
 
         internal virtual void Shake()
         {
