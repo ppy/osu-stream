@@ -157,7 +157,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
-                        List<HitObjectSoundType> soundTypes)
+                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : base(hitObjectManager, startPosition, startTime, soundType, newCombo, comboOffset)
         {
             CurveType = curveType;
@@ -173,6 +173,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 SoundTypeList = soundTypes;
 
             PathLength = pathLength;
+            Velocity = velocity;
+            TickDistance = tickDistance;
 
             Type = HitObjectType.Slider;
 
@@ -258,15 +260,13 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //tick calculations
-            double distanceBetweenTicks = m_HitObjectManager.ScoringDistanceAt(StartTime);
-
-            double tickCount = PathLength / distanceBetweenTicks;
+            double tickCount = PathLength / TickDistance;
             int actualTickCount = (int)Math.Ceiling(Math.Round(tickCount, 1)) - 1;
 
             double tickNumber = 0;
             while (++tickNumber <= actualTickCount)
             {
-                double progress = (tickNumber * distanceBetweenTicks) / PathLength;
+                double progress = (tickNumber * TickDistance) / PathLength;
 
                 scoringPoints.Add(progress);
 
@@ -355,7 +355,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             PathLength = currentLength;
-            EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);
+            EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
         }
 
         /// <summary>
@@ -839,6 +839,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         private int lastJudgedScoringPoint = -1;
 
         private bool IsEndHit;
+        private double Velocity;
+        private double TickDistance;
 
         /// <summary>
         /// Updates the slider's path texture if required.

@@ -19,7 +19,7 @@ namespace osum.GameplayElements.HitObjects
                                                     HitObjectSoundType soundType, int comboOffset);
 
         internal abstract Slider CreateSlider(Vector2 startPosition, int startTime, bool newCombo,
-                                              HitObjectSoundType soundType, CurveTypes curveType, int repeatCount, double sliderLength, List<Vector2> sliderPoints, List<HitObjectSoundType> soundTypes, int comboOffset);
+                                              HitObjectSoundType soundType, CurveTypes curveType, int repeatCount, double sliderLength, List<Vector2> sliderPoints, List<HitObjectSoundType> soundTypes, int comboOffset, double velocity, double tickDistance);
 
         internal abstract Spinner CreateSpinner(int startTime, int endTime, HitObjectSoundType soundType);
 

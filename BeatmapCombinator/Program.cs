@@ -132,9 +132,12 @@ namespace BeatmapCombinator
                                 //add addition difficulty-specific information
                                 if ((type & HitObjectType.Slider) > 0)
                                 {
+                                    if (split.Length < 9) stringRep += ",";
+
                                     //velocity and scoring distance.
                                     stringRep += "," + bd.VelocityAt(time) + "," + bd.ScoringDistanceAt(time);
 
+                                    
                                 }
 
                                 bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });

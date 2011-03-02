@@ -147,54 +147,16 @@ namespace osum.GameplayElements
                                 }
                                 break;
                             case FileSection.Editor:
-                                //We only need to read this section if we are in the editor.
+                                //not relevant
                                 continue;
                             case FileSection.Colours:
-                                /*if (!hasCustomColours)
-                                {
-                                    hasCustomColours = true;
-                                    SkinManager.BeatmapColours["Combo1"] = Color.TransparentWhite;
-                                    SkinManager.BeatmapColours["Combo2"] = Color.TransparentWhite;
-                                    SkinManager.BeatmapColours["Combo3"] = Color.TransparentWhite;
-                                    SkinManager.BeatmapColours["Combo4"] = Color.TransparentWhite;
-                                    SkinManager.BeatmapColours["Combo5"] = Color.TransparentWhite;
-                                }
-                                string[] splitn = val.Split(',');
-                                SkinManager.BeatmapColours[key] =
-                                    new Color((byte)Convert.ToInt32(splitn[0]), (byte)Convert.ToInt32(splitn[1]),
-                                              (byte)Convert.ToInt32(splitn[2]));*/
+                                //not implemented yet.
                                 break;
                             case FileSection.Variables:
-                                /*string[] varSplit = line.Split('=');
-                                if (varSplit.Length != 2) continue;
-                                Variables.Add(varSplit[0], varSplit[1]);*/
+                                //not implemented yet.
                                 break;
                             case FileSection.Events:
-                                /*EventType eType;
-                                Event e = null;
-
-                                try
-                                {
-                                    eType = (EventType)Enum.Parse(typeof(EventType), split[0]);
-                                }
-                                catch
-                                {
-                                    continue;
-                                }
-
-                                switch (eType)
-                                {
-                                    case EventType.Video:
-                                    case EventType.Background:
-                                        string filename = split[2].Trim(new[] { '"' });
-                                        spriteManager.Add(
-                                            new pSprite(pTexture.FromFile(beatmap.ContainerFilename + filename),
-                                                           FieldTypes.StandardSnapCentre,
-                                                           OriginTypes.Centre, ClockTypes.Audio,
-                                                           Vector2.Zero, 0, true, Color4.White));
-                                        break;
-                                    //todo: implement this
-                                }*/
+                                //not implemented yet.
                                 break;
                             case FileSection.Difficulty:
                                 switch (key)
@@ -234,14 +196,27 @@ namespace osum.GameplayElements
                                 }
 
                                 // Mask out the first 4 bits for HitObjectType. This is redundant because they're masked out in the checks below, but still wise.
-                                HitObjectType type = (HitObjectType)(Int32.Parse(split[3], GameBase.nfi) & 15);
-                                HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[4], GameBase.nfi);
-                                int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[0], GameBase.nfi)));
-                                int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[1], GameBase.nfi)));
-                                Vector2 pos = new Vector2(x, y);
-                                int time = (int)Decimal.Parse(split[2], GameBase.nfi);
 
-                                int comboOffset = (Convert.ToInt32(split[3], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
+                                int offset = 0;
+
+                                string difficulties = split[offset++];
+
+                                if (difficulties != "2")
+                                    continue;
+
+                                SampleSet sampleSet = (SampleSet)Int32.Parse(split[offset++]);
+
+                                int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
+                                int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
+                                int time = (int)Decimal.Parse(split[offset++], GameBase.nfi);
+                                HitObjectType type = (HitObjectType)(Int32.Parse(split[offset], GameBase.nfi) & 15);
+                                int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
+                                HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
+                                
+                                Vector2 pos = new Vector2(x, y);
+                                
+
+                                
                                 bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner;
 
                                 HitObject h = null;
@@ -261,7 +236,7 @@ namespace osum.GameplayElements
                                     List<Vector2> points = new List<Vector2>();
                                     List<HitObjectSoundType> sounds = null;
 
-                                    string[] pointsplit = split[5].Split('|');
+                                    string[] pointsplit = split[offset++].Split('|');
                                     for (int i = 0; i < pointsplit.Length; i++)
                                     {
                                         if (pointsplit[i].Length == 1)
@@ -284,21 +259,17 @@ namespace osum.GameplayElements
                                         string[] temp = pointsplit[i].Split(':');
                                         Vector2 v = new Vector2((int)Convert.ToDouble(temp[0], GameBase.nfi),
                                                                 (int)Convert.ToDouble(temp[1], GameBase.nfi));
-                                        //if (i > 1 || v != points[0]) fixed with new constructor
-                                        //old maps stored the start point of a slider in this list.
-                                        //newer ones don't but we should check anyway.
                                         points.Add(v);
                                     }
 
-                                    repeatCount = Convert.ToInt32(split[6], GameBase.nfi);
+                                    repeatCount = Convert.ToInt32(split[offset++], GameBase.nfi);
 
-                                    if (split.Length > 7)
-                                        length = Convert.ToDouble(split[7], GameBase.nfi);
+                                    length = Convert.ToDouble(split[offset++], GameBase.nfi);
 
-                                    if (split.Length > 8)
+                                    //Per-endpoint Sample Additions
+                                    if (split[offset].Length > 0)
                                     {
-                                        //Per-endpoint Sample Additions
-                                        string[] adds = split[8].Split('|');
+                                        string[] adds = split[offset++].Split('|');
                                         if (adds.Length > 0)
                                         {
                                             sounds = new List<HitObjectSoundType>();
@@ -310,6 +281,8 @@ namespace osum.GameplayElements
                                             }
                                         }
                                     }
+                                    else
+                                        offset++;
 
                                     if ((repeatCount > 1 && length < 50) || repeatCount > 4)
                                     {
@@ -317,12 +290,12 @@ namespace osum.GameplayElements
                                     }
                                     else
                                     {
-                                        h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0);
+                                        h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi));
                                     }
                                 }
                                 else if ((type & HitObjectType.Spinner) > 0)
                                 {
-                                    h = hitFactory.CreateSpinner(time, Convert.ToInt32(split[5], GameBase.nfi), soundType);
+                                    h = hitFactory.CreateSpinner(time, Convert.ToInt32(split[offset++], GameBase.nfi), soundType);
                                 }
 
                                 //Make sure we have a valid  hitObject and actually add it to this manager.

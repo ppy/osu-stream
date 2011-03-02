@@ -74,7 +74,7 @@ namespace osum.GameModes
 #if iOS
             string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             
-            foreach (string s in Directory.GetFiles(docs,"*.osu"))
+            foreach (string s in Directory.GetFiles(docs,"*.osc"))
             {
                 Beatmap b = new Beatmap(docs);
                 b.BeatmapFilename = Path.GetFileName(s);
@@ -91,10 +91,9 @@ namespace osum.GameModes
                 foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
                 {
                     Beatmap reader = new Beatmap(s);
-
-                    foreach (
-                        string file in reader.Package == null ? Directory.GetFiles(s, "*.osu") : reader.Package.MapFiles
-                        )
+                    
+                    string[] files = reader.Package == null ? Directory.GetFiles(s, "*.osc") : reader.Package.MapFiles;
+                    foreach (string file in files)
                     {
                         Beatmap b = new Beatmap(s);
                         b.BeatmapFilename = Path.GetFileName(file);
