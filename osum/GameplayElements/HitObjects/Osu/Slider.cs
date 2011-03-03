@@ -205,6 +205,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                ClockTypes.Audio, Position, 0.99f, false, Color.White);
+            spriteFollowBall.FramesPerSecond = Velocity/6;
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
                 StartTime, StartTime);

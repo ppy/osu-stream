@@ -127,7 +127,8 @@ namespace osum.Graphics.Sprites
             if (timeSinceLastFrame > FrameDelay)
             {
                 increaseCurrentFrame(false);
-                timeSinceLastFrame = 0;
+
+                timeSinceLastFrame -= FrameDelay;
             }
 
             if (lastFrame != currentFrame)
