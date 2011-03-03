@@ -130,6 +130,11 @@ namespace osum
             }
         }
 
+        public bool IsElapsing
+        {
+            get { return player != null && player.Playing; }
+        }
+
 		public bool SeekTo(int milliseconds)
 		{
 			if (player == null)

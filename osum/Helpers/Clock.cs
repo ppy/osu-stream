@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.Support;
+using osum.Audio;
 
 namespace osum.Helpers
 {
@@ -84,7 +85,8 @@ namespace osum.Helpers
         {
             time += elapsed;
 
-            currentFrameAudioTime += elapsed;
+            if (AudioTimeSource.IsElapsing)
+                currentFrameAudioTime += elapsed;
 
             double sourceTime = AudioTimeSource.CurrentTime;
 
