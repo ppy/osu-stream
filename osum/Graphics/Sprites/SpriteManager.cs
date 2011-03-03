@@ -69,8 +69,7 @@ namespace osum.Graphics.Sprites
             {
                 if (forwardPlayOptimisedAdd && !value)
                 {
-                    int c = forwardPlayList.Count;
-                    if (c > 0)
+                    if (forwardPlayList.Count > 0)
                     {
                         if (SpriteQueue == null)
                             SpriteQueue = new Queue<pDrawable>(forwardPlayList);
@@ -167,11 +166,8 @@ namespace osum.Graphics.Sprites
 
             if (SpriteQueue != null)
             {
-                pDrawable topSprite = SpriteQueue.Peek();
-                while (topSprite.Transformations[0].StartTime <= Clock.GetTime(topSprite.Clocking))
+                do
                 {
-                    Add(SpriteQueue.Dequeue());
-
                     if (SpriteQueue.Count == 0)
                     {
                         //we ran out of sprites in the queue. throw away queue and leave.
@@ -179,8 +175,17 @@ namespace osum.Graphics.Sprites
                         break;
                     }
 
-                    topSprite = SpriteQueue.Peek();
+                    pDrawable topSprite = SpriteQueue.Peek();
+
+
+                    if (topSprite.Transformations.Count == 0)
+                        SpriteQueue.Dequeue(); //throw away; transformations got removed before we even got around to displaying.
+                    else if (topSprite.Transformations[0].StartTime <= Clock.GetTime(topSprite.Clocking))
+                        Add(SpriteQueue.Dequeue());
+                    else
+                        break;
                 }
+                while (true);
             }
 
             int i = 0;

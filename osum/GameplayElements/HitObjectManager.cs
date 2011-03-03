@@ -1,4 +1,4 @@
-//#define OPTIMISED_PROCESSING
+#define OPTIMISED_PROCESSING
 
 #region Using Statements
 
@@ -37,14 +37,8 @@ namespace osum.GameplayElements
         /// </summary>
         HitFactory hitFactory;
 
-        internal List<HitObject>[] StreamHitObjects = new List<HitObject>[4];
+        internal pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
-
-        /// <summary>
-        /// The complete list of hitObjects.
-        /// </summary>
-        internal pList<HitObject> HitObjects = new pList<HitObject>() { UseBackwardsSearch = true };
-        private int hitObjectsCount;
 
         private int processFrom;
 
@@ -69,7 +63,7 @@ namespace osum.GameplayElements
 
         void GameBase_OnScreenLayoutChanged()
         {
-            foreach (HitObject h in HitObjects.FindAll(h => h is Slider))
+            foreach (HitObject h in ActiveStreamObjects.FindAll(h => h is Slider))
                 ((Slider)h).DisposePathTexture();
         }
 
@@ -105,11 +99,19 @@ namespace osum.GameplayElements
                 }
 
                 activeStream = value;
+#if DEBUG
+                Console.WriteLine("Changed stream to " + activeStream);
+#endif
 
-                foreach (HitObject h in ActiveStreamObjects)
+                //only reassess processing range if we are already some way into the beatmap.
+                if (processFrom > 0)
                 {
-                    if (h.EndTime > Clock.AudioTime) break;
-                    h.IsHit = true;
+                    processFrom = 0;
+                    foreach (HitObject h in ActiveStreamObjects)
+                    {
+                        if (h.StartTime > Clock.AudioTime) break;
+                        processFrom++;
+                    }
                 }
             }
         }
@@ -131,11 +133,11 @@ namespace osum.GameplayElements
         /// <param name="h">The hitObject to manage.</param>
         void Add(HitObject h, Difficulty difficulty)
         {
-            List<HitObject> diffObjects = StreamHitObjects[(int)difficulty];
+            pList<HitObject> diffObjects = StreamHitObjects[(int)difficulty];
 
             if (diffObjects == null)
             {
-                diffObjects = new List<HitObject>();
+                diffObjects = new pList<HitObject>() { UseBackwardsSearch = true };
                 StreamHitObjects[(int)difficulty] = diffObjects;
                 streamSpriteManagers[(int)difficulty] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
             }
@@ -166,12 +168,9 @@ namespace osum.GameplayElements
             h.ComboNumber = currentComboNumber;
             h.ColourIndex = colourIndex;
             h.Difficulty = difficulty;
+            h.Index = diffObjects.Count;
 
-            //HitObjects.AddInPlace(h);
-            HitObjects.Add(h);
-            diffObjects.Add(h);
-
-            h.Index = hitObjectsCount++;
+            diffObjects.AddInPlace(h);
 
             streamSpriteManagers[(int)difficulty].Add(h);
         }
@@ -278,7 +277,7 @@ namespace osum.GameplayElements
                 processFrom = lowestActiveObject;
 
 #if DEBUG
-            DebugOverlay.AddLine("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + hitObjectsCount + ")");
+            DebugOverlay.AddLine("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + ActiveStreamObjects.Count + ")");
 #endif
         }
 
@@ -288,7 +287,7 @@ namespace osum.GameplayElements
         {
             get
             {
-                return HitObjects[hitObjectsCount - 1].IsHit;
+                return ActiveStreamObjects[ActiveStreamObjects .Count - 1].IsHit;
             }
         }
 
@@ -298,13 +297,14 @@ namespace osum.GameplayElements
         /// <returns>Found object, null on no object found.</returns>
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
+            List<HitObject> objects = ActiveStreamObjects;
 #if OPTIMISED_PROCESSING
             for (int i = processFrom; i < processedTo + 1; i++)
 #else
-            for (int i = 0; i < hitObjectsCount; i++)
+            for (int i = 0; i < objects.Count; i++)
 #endif
             {
-                HitObject h = HitObjects[i];
+                HitObject h = objects[i];
 
                 if (h.HitTestInitial(tracking))
                     return h;
@@ -324,7 +324,7 @@ namespace osum.GameplayElements
                 if (Clock.AudioTime < found.StartTime - DifficultyManager.HitWindow300)
                 {
                     //check last hitObject has been hit already and isn't still active
-                    HitObject last = HitObjects[found.Index - 1];
+                    HitObject last = ActiveStreamObjects[found.Index - 1];
                     if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
                     {
                         found.Shake();
@@ -356,8 +356,10 @@ namespace osum.GameplayElements
                 //handle combo additions here
                 ComboScoreCounts[hitAmount] += 1;
 
+                List<HitObject> objects = ActiveStreamObjects;
+
                 //is next hitObject the end of a combo?
-                if (hitObject.Index == hitObjectsCount - 1 || HitObjects[hitObject.Index + 1].NewCombo)
+                if (hitObject.Index == objects.Count - 1 || objects[hitObject.Index + 1].NewCombo)
                 {
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)

@@ -90,6 +90,7 @@ namespace osum.GameModes
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
 
             hitObjectManager.LoadFile();
+
             hitObjectManager.ActiveStream = Difficulty.Normal;
 
             healthBar = new HealthBar();
@@ -122,6 +123,9 @@ namespace osum.GameModes
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
+            if (currentScore.totalHits == 0 && change > 0)
+                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
             {
@@ -220,39 +224,81 @@ namespace osum.GameModes
             return true;
         }
 
+        bool stateCompleted; //todo: make this an enum state
+
         public override void Update()
         {
             //check whether the map is finished
-            if (hitObjectManager.AllNotesHit && Clock.AudioTime - hitObjectManager.HitObjects[hitObjectManager.HitObjects.Count - 1].EndTime > 2000 && !Director.IsTransitioning)
+            if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
             {
-                Ranking.RankableScore = currentScore;
-                Director.ChangeMode(OsuMode.Ranking);
+                stateCompleted = true;
+                GameBase.Scheduler.Add(delegate
+                {
+                    Ranking.RankableScore = currentScore;
+                    Director.ChangeMode(OsuMode.Ranking);
+                }, 2000);
             }
 
             hitObjectManager.Update();
 
             healthBar.Update();
 
-
-            if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
+            if (hitObjectManager.ActiveStream == Difficulty.Easy && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
             {
-                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
-                hitObjectManager.ActiveStream = Difficulty.Easy;
-            }
-            else if (healthBar.CurrentHp > HealthBar.HP_BAR_MAXIMUM * 2 / 3f)
-            {
-                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_HARD);
-                hitObjectManager.ActiveStream = Difficulty.Normal;
-            }
-            else if (healthBar.CurrentHp >= HealthBar.HP_BAR_MAXIMUM / 2)
-            {
-                if (Clock.AudioTime >= hitObjectManager.HitObjects[0].StartTime)
+                if (healthBar.CurrentHp == 0)
                 {
-                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                    hitObjectManager.ActiveStream = Difficulty.Normal;
-                }
-                else
                     s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+
+                    if (!stateCompleted)
+                    {
+                        stateCompleted = true;
+
+                        AudioEngine.Music.Pause();
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            Ranking.RankableScore = currentScore;
+                            Director.ChangeMode(OsuMode.SongSelect);
+                        }, 2000);
+                    }
+                } 
+                else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
+                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+                else
+                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_EASY);
+
+                
+            }
+            else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
+            {
+                switch (hitObjectManager.ActiveStream)
+                {
+                    case Difficulty.Easy:
+                        hitObjectManager.ActiveStream = Difficulty.Normal;
+                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                        healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+                        break;
+                    case Difficulty.Normal:
+                        hitObjectManager.ActiveStream = Difficulty.Hard;
+                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_HARD);
+                        healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+                        break;
+                }
+            }
+            else if (healthBar.CurrentHp == 0)
+            {
+                switch (hitObjectManager.ActiveStream)
+                {
+                    case Difficulty.Hard:
+                        hitObjectManager.ActiveStream = Difficulty.Normal;
+                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                        healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+                        break;
+                    case Difficulty.Normal:
+                        hitObjectManager.ActiveStream = Difficulty.Easy;
+                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_EASY);
+                        healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+                        break;
+                }
             }
 
 
