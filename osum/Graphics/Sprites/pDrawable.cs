@@ -451,7 +451,7 @@ namespace osum.Graphics.Sprites
 
             int count = Transformations.Count;
 
-            if (count == 0)
+            if (count == 0 && !AlwaysDraw)
                 return;
 
             if (count == 1)
