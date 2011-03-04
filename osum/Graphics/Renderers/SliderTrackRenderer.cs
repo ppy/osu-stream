@@ -261,15 +261,7 @@ namespace osum.Graphics.Renderers
                     DrawOGL(lineList, radius, multi_ogl, prev);
                     break;*/
                 default:
-                    if ((ColourIndex > textures_ogl.Length) || (ColourIndex < 0))
-                    {
-#if DEBUG
-                        throw new ArgumentOutOfRangeException("Colour index outside the range of the collection.");
-#else
-                            DrawOGL(lineList, radius, grey_ogl, prev, true);
-#endif
-                    }
-                    else DrawOGL(lineList, radius, textures_ogl[ColourIndex], prev, true);
+                    DrawOGL(lineList, radius, textures_ogl[ColourIndex], prev, true);
                     break;
             }
         }
