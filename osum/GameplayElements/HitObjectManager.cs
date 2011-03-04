@@ -76,54 +76,96 @@ namespace osum.GameplayElements
             OnScoreChanged = null;
         }
 
-        private Difficulty activeStream = Difficulty.None;
-        internal Difficulty ActiveStream
+        internal int nextStreamChange;
+
+        internal bool StreamChanging { get { return nextStreamChange + 1000 >= Clock.AudioTime; } }
+
+        internal int SetActiveStream(Difficulty stream)
         {
-            get
-            {
-                return activeStream;
-            }
+            if (ActiveStream == stream || Clock.AudioTime < nextStreamChange)
+                return -1;
 
-            set
-            {
-                if (activeStream == value)
-                    return;
+            pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
-                if (activeStream != Difficulty.None)
+            ActiveStream = stream;
+            pList<HitObject> newStreamObjects = ActiveStreamObjects;
+            SpriteManager newSpriteManager = ActiveStream >= 0 ? streamSpriteManagers[(int)ActiveStream] : null;
+
+            int switchTime = Clock.AudioTime;
+
+            if (oldStreamObjects != null)
+            {
+                int objectIndex = 0;
+
+                //find a good point to stream swithc. this will be mapper set later.
+                for (int i = processFrom; i < oldStreamObjects.Count; i++)
                 {
-                    foreach (HitObject h in ActiveStreamObjects)
+                    if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > Clock.AudioTime + 2000)
                     {
-                        Slider s = h as Slider;
-                        if (s != null) s.DisposePathTexture();
+                        objectIndex = i;
+                        switchTime = oldStreamObjects[i - 1].EndTime;
+                        break;
                     }
+
+                    newSpriteManager.Add(oldStreamObjects[i].SpriteCollection);
                 }
 
-                activeStream = value;
+                if (objectIndex - processFrom > 0)
+                {
+                    List<HitObject> graftFrom = oldStreamObjects.GetRange(processFrom, objectIndex - processFrom);
+
+                    int removeBefore = graftFrom[graftFrom.Count - 1].EndTime;
+
+                    int removeBeforeIndex = 0;
+                    for (int i = 0; i < newStreamObjects.Count; i++)
+                    {
+                        if (newStreamObjects[i].StartTime > removeBefore)
+                        {
+                            removeBeforeIndex = i;
+                            break;
+                        }
+
+                        newStreamObjects[i].SpriteCollection.ForEach(s => s.Transformations.Clear());
+                    }
+
+                    newStreamObjects.RemoveRange(0, removeBeforeIndex);
+                    newStreamObjects.InsertRange(0, graftFrom);
+                }
+            }
+
 #if DEBUG
-                Console.WriteLine("Changed stream to " + activeStream);
+            Console.WriteLine("Changed stream to " + ActiveStream);
 #endif
 
-                //only reassess processing range if we are already some way into the beatmap.
-                if (processFrom > 0)
+            //only reassess processing range if we are already some way into the beatmap.
+            if (processFrom > 0)
+            {
+                processFrom = 0;
+                foreach (HitObject h in ActiveStreamObjects)
                 {
-                    processFrom = 0;
-                    foreach (HitObject h in ActiveStreamObjects)
-                    {
-                        if (h.StartTime > Clock.AudioTime) break;
-                        processFrom++;
-                    }
+                    if (h.EndTime > Clock.AudioTime) break;
+                    processFrom++;
                 }
             }
+
+            nextStreamChange = switchTime;
+            return switchTime;
         }
 
-        internal List<HitObject> ActiveStreamObjects
+        internal Difficulty ActiveStream
+        {
+            get;
+            private set;
+        }
+
+        internal pList<HitObject> ActiveStreamObjects
         {
             get
             {
-                if (activeStream == Difficulty.None)
+                if (ActiveStream == Difficulty.None)
                     return null;
 
-                return StreamHitObjects[(int)activeStream];
+                return StreamHitObjects[(int)ActiveStream];
             }
         }
 
@@ -305,6 +347,7 @@ namespace osum.GameplayElements
 #endif
             {
                 HitObject h = objects[i];
+                h.Index = i;
 
                 if (h.HitTestInitial(tracking))
                     return h;

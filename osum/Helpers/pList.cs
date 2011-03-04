@@ -27,30 +27,40 @@ namespace osu_common.Helpers
                 base.Add(item);
         }
 
-        public void AddInPlace(T item)
+        public int AddInPlace(T item)
         {
-            if (UseBackwardsSearch)
+            return AddInPlace(item, UseBackwardsSearch);
+        }
+        
+        public int AddInPlace(T item, bool useBackwardsSearch)
+        {
+            int index = -1;
+
+            if (useBackwardsSearch)
             {
                 int count = Count;
                 if (count == 0)
                     base.Add(item);
                 else
                 {
-                    for (int i = count - 1; i >= 0; i--)
+                    for (index = count - 1; index >= 0; index--)
                     {
-                        if (base[i].CompareTo(item) > 0)
+                        if (base[index].CompareTo(item) > 0)
                             continue;
-                        base.Insert(i + 1, item);
-                        return;
+                        base.Insert(index + 1, item);
+                        return index;
                     }
                     base.Insert(0, item);
                 }
             }
             else
             {
-                int index = comparer != null ? BinarySearch(item, comparer) : BinarySearch(item);
-                Insert(index < 0 ? ~index : index, item);
+                index = comparer != null ? BinarySearch(item, comparer) : BinarySearch(item);
+                index = index < 0 ? ~index : index;
+                Insert(index, item);
             }
+
+            return index;
         }
     }
 }

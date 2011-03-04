@@ -199,13 +199,13 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
                    OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
-			
+
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                ClockTypes.Audio, Position, 0.99f, false, Color.White);
-            spriteFollowBall.FramesPerSecond = Velocity/6;
+            spriteFollowBall.FramesPerSecond = Velocity / 6;
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
                 StartTime, StartTime);
@@ -225,8 +225,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowBall.Transform(fadeIn);
             spriteFollowBall.Transform(fadeOut);
 
-            spriteFollowCircle.Transform(new NullTransform(StartTime,EndTime));
-			
+            spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime));
+
             SpriteCollection.Add(spriteFollowBall);
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
@@ -314,7 +314,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         {
                             List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
 
-                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1,(thisLength.Count / controlPoints.Count * PathLength) / 10)));
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1, (thisLength.Count / controlPoints.Count * PathLength) / 10)));
 
                             if (multipartSegment) i++;
                             //Need to skip one point since we consuned an extra.
@@ -527,10 +527,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (!hitCircleStart.IsHit)
                 base.CheckScoring();
-			
-			if (IsEndHit || Clock.AudioTime < StartTime)
-				return ScoreChange.Ignore;
-            
+
+            if (IsEndHit || Clock.AudioTime < StartTime)
+                return ScoreChange.Ignore;
+
             if (trackingPoint == null)
             {
                 if (InputManager.IsPressed)
@@ -690,7 +690,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             //Begin tracking.
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
-			
+
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 200), EasingTypes.InHalf));
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime, Clock.AudioTime + 250), EasingTypes.OutHalf));
             spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 140), EasingTypes.None));
@@ -700,10 +700,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void endTracking()
         {
             if (IsEndHit)
-				return;
+                return;
 
-			spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
-			
+            spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
+
             spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
             spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, spriteFollowCircle.Alpha, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
         }
@@ -771,11 +771,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             return drawableSegments[index];
         }
-        
+
         protected virtual Vector2 positionAtProgress(double progress)
         {
             double aimLength = PathLength * normalizeProgress(progress);
-			
+
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
             int index = 0;
             while (index < cumulativeLengths.Count && cumulativeLengths[index] < aimLength)
@@ -801,10 +801,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
-			
+
             if (IsVisible && (sliderBodyTexture == null || (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)))
                 UpdatePathTexture();
-			
+
             spriteFollowBall.Position = TrackingPosition;
             spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
 
@@ -846,8 +846,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal virtual void UpdatePathTexture()
         {
             if (lengthDrawn == PathLength) return; //finished drawing already.
-			
-			if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
+
+            if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
                 CreatePathTexture();
 
             if (sliderBodyTexture == null)
@@ -860,23 +860,23 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             double drawProgress = (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
-			
-			// Length of the curve we're drawing up to.
+
+            // Length of the curve we're drawing up to.
             lengthDrawn = PathLength * drawProgress;
 
-			// this is probably faster than a binary search since it runs so few times and the result is very close
+            // this is probably faster than a binary search since it runs so few times and the result is very close
             while (lastDrawnSegmentIndex < cumulativeLengths.Count - 1 && cumulativeLengths[lastDrawnSegmentIndex + 1] < lengthDrawn)
                 lastDrawnSegmentIndex++;
-			
+
             if (lastDrawnSegmentIndex >= cumulativeLengths.Count - 1 || NO_SNAKING)
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
             }
-			
-			Vector2 drawEndPosition = positionAtProgress(lengthDrawn/PathLength);
+
+            Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
             spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
-			
+
             Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
 
             if (lastDrawnSegmentIndex >= FirstSegmentIndex)
@@ -929,16 +929,16 @@ namespace osum.GameplayElements.HitObjects.Osu
         private void CreatePathTexture()
         {
             //resign any old FBO assignments first.
-			DisposePathTexture();
-			
-			RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusGamefield);
-			//the fact we need to divide by DifficultyManager.HitObjectActualSpriteRatio here baffles me.
+            DisposePathTexture();
+
+            RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusGamefield);
+            //the fact we need to divide by DifficultyManager.HitObjectActualSpriteRatio here baffles me.
 
             trackBounds.X = (int)(rectf.X);
             trackBounds.Y = (int)(rectf.Y);
             trackBounds.Width = (int)rectf.Width + 1;
             trackBounds.Height = (int)rectf.Height + 1;
-			
+
             trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatio);
             trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatio);
             trackBoundsNative.Width = (int)(rectf.Width * GameBase.BaseToNativeRatio) + 1;
@@ -948,10 +948,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             lastDrawnSegmentIndex = -1;
 
             sliderBodyTexture = TextureManager.RequireTexture(trackBoundsNative.Width, trackBoundsNative.Height);
-            
+
             if (sliderBodyTexture == null)
                 return;
-			
+
             sliderBodyTexture.BindFramebuffer();
 
             spriteSliderBody.Texture = sliderBodyTexture;
