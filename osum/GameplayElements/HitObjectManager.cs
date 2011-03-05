@@ -80,16 +80,22 @@ namespace osum.GameplayElements
 
         internal bool StreamChanging { get { return nextStreamChange + 1000 >= Clock.AudioTime; } }
 
-        internal int SetActiveStream(Difficulty stream)
+        /// <summary>
+        /// Call at the point of judgement. Will switch stream to new difficulty as soon as possible (next new combo).
+        /// </summary>
+        /// <param name="newDifficulty">The new stream difficulty.</param>
+        /// <returns>The time at which the switch will take place. -1 on failure.</returns>
+        internal int SetActiveStream(Difficulty newDifficulty)
         {
-            if (ActiveStream == stream || Clock.AudioTime < nextStreamChange)
+            if (ActiveStream == newDifficulty || Clock.AudioTime < nextStreamChange)
                 return -1;
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
-            ActiveStream = stream;
+            ActiveStream = newDifficulty;
+
             pList<HitObject> newStreamObjects = ActiveStreamObjects;
-            SpriteManager newSpriteManager = ActiveStream >= 0 ? streamSpriteManagers[(int)ActiveStream] : null;
+            SpriteManager newSpriteManager = ActiveStreamSpriteManager;
 
             int switchTime = Clock.AudioTime;
 
@@ -126,6 +132,7 @@ namespace osum.GameplayElements
                         }
 
                         newStreamObjects[i].SpriteCollection.ForEach(s => s.Transformations.Clear());
+                        newStreamObjects[i].Dispose();
                     }
 
                     newStreamObjects.RemoveRange(0, removeBeforeIndex);
@@ -158,12 +165,22 @@ namespace osum.GameplayElements
             private set;
         }
 
-        internal pList<HitObject> ActiveStreamObjects
+        internal SpriteManager ActiveStreamSpriteManager
         {
             get
             {
                 if (ActiveStream == Difficulty.None)
                     return null;
+
+                return streamSpriteManagers[(int)ActiveStream];
+            }
+        }
+
+        internal pList<HitObject> ActiveStreamObjects
+        {
+            get
+            {
+                
 
                 return StreamHitObjects[(int)ActiveStream];
             }
@@ -231,7 +248,7 @@ namespace osum.GameplayElements
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             connectingLine.Transform(h1.SpriteCollection[0].Transformations);
             h1.SpriteCollection.Add(connectingLine);
-            h1.DimCollection.Add(connectingLine);
+            h1.SpriteCollectionDim.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
@@ -440,6 +457,9 @@ namespace osum.GameplayElements
         {
             return ((100 * beatmap.DifficultySliderMultiplier / beatmap.bpmMultiplierAt(time)) / beatmap.DifficultySliderTickRate);
         }
+
+        public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
+        public bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
     }
 
     internal enum FileSection

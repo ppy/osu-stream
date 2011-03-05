@@ -245,8 +245,9 @@ namespace osum.GameModes
 
             if (!hitObjectManager.StreamChanging)
             {
-                if (hitObjectManager.ActiveStream == Difficulty.Easy && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
+                if (hitObjectManager.IsLowestStream && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
+                    //we are on the lowest available stream difficulty and in failing territory.
                     if (healthBar.CurrentHp == 0)
                     {
                         s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
@@ -270,55 +271,11 @@ namespace osum.GameModes
                 }
                 else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
                 {
-                    switch (hitObjectManager.ActiveStream)
-                    {
-                        case Difficulty.Easy:
-                            {
-                                int switchTime = hitObjectManager.SetActiveStream(Difficulty.Normal);
-                                GameBase.Scheduler.Add(delegate
-                                {
-                                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-                                }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
-                                break;
-                            }
-                        case Difficulty.Normal:
-                            {
-                                int switchTime = hitObjectManager.SetActiveStream(Difficulty.Hard);
-                                GameBase.Scheduler.Add(delegate
-                                {
-                                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_HARD);
-                                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-                                }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
-                                break;
-                            }
-                    }
+                    switchStream(true);
                 }
                 else if (healthBar.CurrentHp == 0)
                 {
-                    switch (hitObjectManager.ActiveStream)
-                    {
-                        case Difficulty.Hard:
-                            {
-                                int switchTime = hitObjectManager.SetActiveStream(Difficulty.Normal);
-                                GameBase.Scheduler.Add(delegate
-                                {
-                                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-                                }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
-                                break;
-                            }
-                        case Difficulty.Normal:
-                            {
-                                int switchTime = hitObjectManager.SetActiveStream(Difficulty.Easy);
-                                GameBase.Scheduler.Add(delegate
-                                {
-                                    s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_EASY);
-                                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-                                }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
-                                break;
-                            }
-                    }
+                    switchStream(false);
                 }
             }
 
@@ -329,6 +286,27 @@ namespace osum.GameModes
             base.Update();
 
             //playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
+        }
+
+        private bool switchStream(bool increase)
+        {
+            if (increase && hitObjectManager.IsHighestStream)
+                return false;
+            if (!increase && hitObjectManager.IsLowestStream)
+                return false;
+
+            int switchTime = hitObjectManager.SetActiveStream((Difficulty)(hitObjectManager.ActiveStream + (increase ? 1 : -1)));
+
+            if (switchTime < 0)
+                return false;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
+                healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+            }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
+
+            return true;
         }
 
         internal static void SetBeatmap(Beatmap beatmap)

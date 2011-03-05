@@ -40,6 +40,7 @@ using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using osum.Input;
+using osum.GameplayElements;
 #endif
 
 namespace osum.GameModes.Play.Components
@@ -167,6 +168,22 @@ namespace osum.GameModes.Play.Components
             GL.DisableClientState(ArrayCap.ColorArray);
 
             return true;
+        }
+
+        internal void ChangeColour(Difficulty difficulty)
+        {
+            switch (difficulty)
+            {
+                case Difficulty.Easy:
+                    ChangeColour(COLOUR_EASY);
+                    return;
+                case Difficulty.Normal:
+                    ChangeColour(COLOUR_STANDARD);
+                    return;
+                case Difficulty.Hard:
+                    ChangeColour(COLOUR_HARD);
+                    return;
+            }
         }
 
         internal void ChangeColour(Color4 colour)
