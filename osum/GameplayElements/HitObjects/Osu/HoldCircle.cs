@@ -99,7 +99,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.Add(circularProgress);
 
             SpriteCollection.AddRange(spriteCollectionStart);
-            DimCollection.AddRange(spriteCollectionStart);
+            SpriteCollectionDim.AddRange(spriteCollectionStart);
         }
 
         protected override void initializeStartCircle()

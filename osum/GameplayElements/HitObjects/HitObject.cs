@@ -137,12 +137,12 @@ namespace osum.GameplayElements
 
                 if (isDimmed)
                 {
-                    foreach (pDrawable p in DimCollection)
+                    foreach (pDrawable p in SpriteCollectionDim)
                         p.FadeColour(ColourHelper.Darken(p.Colour, 0.3f), 0);
                 }
                 else
                 {
-                    foreach (pDrawable p in DimCollection)
+                    foreach (pDrawable p in SpriteCollectionDim)
                         p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
                 }
             }
@@ -336,7 +336,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Sprites which should be dimmed when not the active object.
         /// </summary>
-        protected internal List<pDrawable> DimCollection = new List<pDrawable>();
+        protected internal List<pDrawable> SpriteCollectionDim = new List<pDrawable>();
 
         protected Vector2 position;
         internal virtual Vector2 Position
@@ -497,7 +497,7 @@ namespace osum.GameplayElements
 
         internal virtual void Shake()
         {
-            foreach (pDrawable p in SpriteCollection)
+            foreach (pDrawable p in SpriteCollectionDim)
             {
                 Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
 

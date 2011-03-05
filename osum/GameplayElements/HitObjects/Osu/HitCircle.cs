@@ -28,7 +28,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             SpriteCollection.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
-            DimCollection.Add(SpriteHitCircle1);
+            SpriteCollectionDim.Add(SpriteHitCircle1);
 
 
             SpriteHitCircle2 =
@@ -36,7 +36,7 @@ namespace osum.GameplayElements
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             SpriteCollection.Add(SpriteHitCircle2);
-            DimCollection.Add(SpriteHitCircle2);
+            SpriteCollectionDim.Add(SpriteHitCircle2);
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
                                                     FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                                     ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
@@ -53,7 +53,7 @@ namespace osum.GameplayElements
             if (ShowCircleText)
             {
                 SpriteCollection.Add(SpriteHitCircleText);
-                DimCollection.Add(SpriteHitCircleText);
+                SpriteCollectionDim.Add(SpriteHitCircleText);
             }
 
             SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F,

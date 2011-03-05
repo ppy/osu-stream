@@ -191,7 +191,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
             SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
-            DimCollection.AddRange(hitCircleStart.SpriteCollection);
+            SpriteCollectionDim.AddRange(hitCircleStart.SpriteCollection);
         }
 
         protected virtual void initializeSprites()
@@ -231,7 +231,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.Add(spriteFollowCircle);
             SpriteCollection.Add(spriteSliderBody);
 
-            DimCollection.Add(spriteSliderBody);
+            SpriteCollectionDim.Add(spriteSliderBody);
 
             //Start and end circles
 
@@ -289,9 +289,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteCollection.AddRange(spriteCollectionEnd);
             SpriteCollection.AddRange(spriteCollectionScoringPoints);
 
-            DimCollection.AddRange(spriteCollectionStart);
-            DimCollection.AddRange(spriteCollectionEnd);
-            DimCollection.AddRange(spriteCollectionScoringPoints);
+            SpriteCollectionDim.AddRange(spriteCollectionStart);
+            SpriteCollectionDim.AddRange(spriteCollectionEnd);
+            SpriteCollectionDim.AddRange(spriteCollectionScoringPoints);
         }
 
         protected virtual void CalculateSplines()
@@ -817,6 +817,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                 spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 2);
 
             base.Update();
+        }
+
+        internal override void Dispose()
+        {
+            DisposePathTexture();
+            base.Dispose();
         }
 
         internal void DisposePathTexture()
