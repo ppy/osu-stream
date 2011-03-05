@@ -180,7 +180,8 @@ namespace osum.GameplayElements
         {
             get
             {
-                
+                if (ActiveStream == Difficulty.None)
+                    return null;
 
                 return StreamHitObjects[(int)ActiveStream];
             }
@@ -234,6 +235,9 @@ namespace osum.GameplayElements
             streamSpriteManagers[(int)difficulty].Add(h);
         }
 
+        /// <summary>
+        /// Connect two objects that occur at the same time with a line.
+        /// </summary>
         void Connect(HitObject h1, HitObject h2)
         {
             Vector2 p1 = h1.SpriteCollection[0].Position;
@@ -342,13 +346,10 @@ namespace osum.GameplayElements
 
         #endregion
 
-        internal bool AllNotesHit
-        {
-            get
-            {
-                return ActiveStreamObjects[ActiveStreamObjects .Count - 1].IsHit;
-            }
-        }
+        /// <summary>
+        /// True when all notes have been hit in the current stream (to the end of the beatmap).
+        /// </summary>
+        internal bool AllNotesHit { get { return ActiveStreamObjects[ActiveStreamObjects.Count - 1].IsHit; } }
 
         /// <summary>
         /// Finds an object at the specified window-space location.
