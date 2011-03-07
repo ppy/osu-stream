@@ -39,13 +39,20 @@ namespace BeatmapCombinator
         /// <param name="args">Directory containing many .osu files</param>
         static void Main(string[] args)
         {
-            if (args.Length < 1)
+            foreach (string dir in Directory.GetDirectories("Beatmaps"))
+                ProcessBeatmap(dir);
+            
+        }
+
+        private static void ProcessBeatmap(string dir)
+        {
+            if (dir.Length < 1)
             {
                 Console.WriteLine("No path specified!");
                 return;
             }
 
-            List<string> osuFiles = new List<string>(Directory.GetFiles(args[0], "*.osu"));
+            List<string> osuFiles = new List<string>(Directory.GetFiles(dir, "*.osu"));
 
             if (osuFiles.Count < 1)
             {
@@ -61,6 +68,8 @@ namespace BeatmapCombinator
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Normal].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Insane].osu")));
+
+            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
 
             Console.WriteLine("Files found:");
             Console.WriteLine(string.Join("\n", orderedDifficulties));
@@ -97,7 +106,7 @@ namespace BeatmapCombinator
                             key = var[0].Trim();
                             val = var[1].Trim();
                         }
-                        
+
                         switch (currentSection)
                         {
                             case "Difficulty":
@@ -137,7 +146,7 @@ namespace BeatmapCombinator
                                     //velocity and scoring distance.
                                     stringRep += "," + bd.VelocityAt(time) + "," + bd.ScoringDistanceAt(time);
 
-                                    
+
                                 }
 
                                 bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });
@@ -189,7 +198,7 @@ namespace BeatmapCombinator
                             continue;
 
                         int holOffset = difficulties[i].HitObjectLines.Count - linesRemaining[i];
-                        
+
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
                         if (line.Time > currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
@@ -200,10 +209,11 @@ namespace BeatmapCombinator
                     }
 
                     output.WriteLine(bestMatchDifficulty + "," + bestMatchLine.StringRepresentation);
-                    
+
                     linesRemaining[bestMatchDifficulty]--;
                 }
             }
+
         }
     }
 }
