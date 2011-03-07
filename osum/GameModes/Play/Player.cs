@@ -91,7 +91,7 @@ namespace osum.GameModes
 
             hitObjectManager.LoadFile();
 
-            hitObjectManager.SetActiveStream(Difficulty.Normal);
+            hitObjectManager.SetActiveStream();
 
             healthBar = new HealthBar();
 

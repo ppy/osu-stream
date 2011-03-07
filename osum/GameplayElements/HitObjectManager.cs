@@ -71,6 +71,10 @@ namespace osum.GameplayElements
         {
             spriteManager.Dispose();
 
+            foreach (SpriteManager sm in streamSpriteManagers)
+                if (sm != null)
+                    sm.Dispose();
+
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
 
             OnScoreChanged = null;
@@ -79,6 +83,24 @@ namespace osum.GameplayElements
         internal int nextStreamChange;
 
         internal bool StreamChanging { get { return nextStreamChange + 1000 >= Clock.AudioTime; } }
+
+        /// <summary>
+        /// Sets the current stream to the best match found.
+        /// This is a temporary solution until we have all difficulties mapped for all maps.
+        /// </summary>
+        /// <returns></returns>
+        internal int SetActiveStream()
+        {
+            if (StreamHitObjects[(int)Difficulty.Normal] != null)
+                return SetActiveStream(Difficulty.Normal);
+
+            for (int i = 2; i >= 0; i--)
+                if (StreamHitObjects[i] != null)
+                    return SetActiveStream((Difficulty)i);
+
+            return -1;
+        }
+
 
         /// <summary>
         /// Call at the point of judgement. Will switch stream to new difficulty as soon as possible (next new combo).
@@ -92,10 +114,15 @@ namespace osum.GameplayElements
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
+            if (StreamHitObjects[(int)newDifficulty] == null)
+                return -1;
+
             ActiveStream = newDifficulty;
 
             pList<HitObject> newStreamObjects = ActiveStreamObjects;
             SpriteManager newSpriteManager = ActiveStreamSpriteManager;
+
+            
 
             int switchTime = Clock.AudioTime;
 
@@ -159,11 +186,7 @@ namespace osum.GameplayElements
             return switchTime;
         }
 
-        internal Difficulty ActiveStream
-        {
-            get;
-            private set;
-        }
+        internal Difficulty ActiveStream = Difficulty.None;
 
         internal SpriteManager ActiveStreamSpriteManager
         {
