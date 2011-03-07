@@ -5,6 +5,7 @@ using System.Text;
 using osum.Graphics.Sprites;
 using OpenTK.Graphics;
 using osum.Helpers;
+using osum.GameplayElements;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -40,7 +41,6 @@ using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using osum.Input;
-using osum.GameplayElements;
 #endif
 
 namespace osum.GameModes.Play.Components
