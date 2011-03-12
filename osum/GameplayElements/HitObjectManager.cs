@@ -442,8 +442,10 @@ namespace osum.GameplayElements
 
                 List<HitObject> objects = ActiveStreamObjects;
 
+                int index = objects.IndexOf(hitObject);
+
                 //is next hitObject the end of a combo?
-                if (hitObject.Index == objects.Count - 1 || objects[hitObject.Index + 1].NewCombo)
+                if (objects.Count - 1 == index || objects[index + 1].NewCombo)
                 {
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
