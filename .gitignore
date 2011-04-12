@@ -19,3 +19,6 @@ osum/osu!m-desktop.pidb
 osum/osu!m-desktop.userprefs
 osum/Beatmaps/
 *.vsp
+osum.ipa
+
+Output/*

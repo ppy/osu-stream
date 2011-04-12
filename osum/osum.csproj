@@ -11,15 +11,15 @@
     <RootNamespace>osum</RootNamespace>
     <MainNibFile>MainWindow.nib</MainNibFile>
     <AssemblyName>osum</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>osu</BundleIdentifier>
-    <BundleVersion>1045</BundleVersion>
+    <BundleVersion>1046</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
-    <BundleIcon>Support\iPhone\icon.png</BundleIcon>
-    <BundleIconHigh>Support\iPhone\icon@2x.png</BundleIconHigh>
+    <BundleIcon>icon.png</BundleIcon>
+    <BundleIconHigh>icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
     <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
-    <BundleIconIPad>Support\iPhone\icon72.png</BundleIconIPad>
+    <BundleIconIPad>icon72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -41,6 +41,7 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <DebugSymbols>true</DebugSymbols>
+    <MtouchArch>ARMv6</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -61,6 +62,7 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <additionalargs>/unsafe</additionalargs>
+    <MtouchArch>ARMv6</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,6 +83,7 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
+    <MtouchArch>ARMv6</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -101,6 +104,37 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <DebugSymbols>true</DebugSymbols>
+    <MtouchArch>ARMv6</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Testflight</OutputPath>
+    <DefineConstants>iOS NO_ENCRYPTION</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchUseArmv7>false</MtouchUseArmv7>
+    <MtouchI18n />
+    <MtouchDebug>False</MtouchDebug>
+    <additionalargs>/unsafe</additionalargs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <ConsolePause>false</ConsolePause>
+    <MtouchUseSGen>false</MtouchUseSGen>
+    <MtouchMinimumOS>3.2</MtouchMinimumOS>
+    <MtouchArch>ARMv6</MtouchArch>
+    <MtouchUseThumb>false</MtouchUseThumb>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp -r ${ProjectDir}/bin/${ProjectConfigPlat}/${ProjectConfigName}/${ProjectName}.app ${SolutionDir}/Output/Payload/${ProjectName}.app" workingdir="" />
+        <Command type="AfterBuild" command="zip -r ../${ProjectName}.ipa ." workingdir="${SolutionDir}/Output/" />
+        <Command type="BeforeBuild" command="rm -rf ${SolutionDir}/Output/Payload/${ProjectName}.app/" />
+        <Command type="BeforeBuild" command="rm -rf ${SolutionDir}/${ProjectName}.ipa" />
+        <Command type="AfterBuild" command="curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='roar' -F distribution_lists='testers' -F notify=true" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -111,9 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="Support\iPhone\icon.png" />
-    <None Include="Support\iPhone\icon%402x.png" />
-    <None Include="Support\iPhone\icon72.png" />
+    <None Include="icon.png" />
+    <None Include="icon%402x.png" />
+    <None Include="icon72.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -246,11 +280,6 @@
     <Page Include="Support\iPhone\MainWindow.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties InternalTargetFrameworkVersion="IPhone" />
-    </MonoDevelop>
-  </ProjectExtensions>
   <ItemGroup>
     <Content Include="Skins\Default\spinner-circle.png">
     </Content>

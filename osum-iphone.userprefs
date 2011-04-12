@@ -1,13 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|iPhone" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="osum/GameplayElements/HitObjectManager.cs">
-    <Files>
-      <File FileName="osum/osu!common/Libraries/Osz2/MapStream.cs" Line="53" Column="35" />
-      <File FileName="osum/GameModes/Play/Player.cs" Line="242" Column="34" />
-      <File FileName="osum/Support/iPhone/GameBaseIphone.cs" Line="29" Column="1" />
-      <File FileName="osum/GameplayElements/HitObjectManager.cs" Line="395" Column="14" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Testflight|iPhone" />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
