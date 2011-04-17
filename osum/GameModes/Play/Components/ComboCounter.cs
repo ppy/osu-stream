@@ -25,8 +25,7 @@ namespace osum.GameModes.Play.Components
         {
             base.Initialize();
 
-            s_hitCombo =
-    new pSpriteText(GetComboString(), "score", -2,
+            s_hitCombo = new pSpriteText("0x", "score", -2,
                     FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
                     new Vector2(2, 2), 0.92F, true, Color4.White);
             s_hitCombo.Alpha = 0;
@@ -43,11 +42,6 @@ namespace osum.GameModes.Play.Components
 
             spriteManager.Add(s_hitCombo);
             spriteManager.Add(s_hitCombo_Incoming);
-        }
-
-        protected virtual string GetComboString()
-        {
-            return displayCombo + "x";
         }
 
         internal virtual void SlideOut()
@@ -91,16 +85,20 @@ namespace osum.GameModes.Play.Components
                     OnIncrease(currentCombo);
 
                 s_hitCombo_Incoming.TagNumeric = displayCombo;
-                s_hitCombo_Incoming.Text = GetComboString();
+
+                s_hitCombo_Incoming.ShowInt(displayCombo, 0, true, 'x');
             }
 
             if (s_hitCombo_Incoming.Transformations.Count > 0)
             {
-                if (s_hitCombo_Incoming.Transformations[0].EndTime < Clock.Time + 140 && s_hitCombo.Text != s_hitCombo_Incoming.Text)
+                if (s_hitCombo_Incoming.Transformations[0].EndTime < Clock.Time + 140 && s_hitCombo.TagNumeric != s_hitCombo_Incoming.TagNumeric)
                     transferToMainCounter();
             }
-            else if (s_hitCombo.Text != s_hitCombo_Incoming.Text)
-                s_hitCombo.Text = s_hitCombo_Incoming.Text;
+            else if (s_hitCombo.TagNumeric != s_hitCombo_Incoming.TagNumeric)
+            {
+                s_hitCombo.TextArray = s_hitCombo_Incoming.TextArray;
+                s_hitCombo.TagNumeric = s_hitCombo_Incoming.TagNumeric;
+            }
         }
 
         internal void SetCombo(int combo)
@@ -114,7 +112,8 @@ namespace osum.GameModes.Play.Components
         {
             displayComboMainCounter = s_hitCombo_Incoming.TagNumeric;
 
-            s_hitCombo.Text = s_hitCombo_Incoming.Text;
+            s_hitCombo.TagNumeric = s_hitCombo_Incoming.TagNumeric;
+            s_hitCombo.TextArray = s_hitCombo_Incoming.TextArray;
 
             s_hitCombo.Transformations.RemoveAll(tr => tr.Type == TransformationType.Scale);
             Transformation t1 = new Transformation(TransformationType.Scale, 1.28F, 1.4F, Clock.Time, Clock.Time + 50);
@@ -129,7 +128,7 @@ namespace osum.GameModes.Play.Components
         {
             displayCombo++;
 
-            if (s_hitCombo.Text != s_hitCombo_Incoming.Text)
+            if (s_hitCombo.TagNumeric != s_hitCombo_Incoming.TagNumeric)
                 transferToMainCounter();
 
             s_hitCombo_Incoming.Transformations.RemoveAll(tr => tr.Tag == 1);

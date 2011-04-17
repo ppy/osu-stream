@@ -19,7 +19,6 @@ namespace osum.GameModes.Play.Components
         private double displayAccuracy;
         internal int currentScore;
         internal double currentAccuracy;
-        internal Vector2 leftOfDisplay;
         protected Vector2 textMeasure;
         protected float scale;
 
@@ -59,11 +58,6 @@ namespace osum.GameModes.Play.Components
                             new Vector2(0, 0), 0.95F, true, Color4.White);
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.6f : 1);
                 s_Accuracy.Position = new Vector2(position.X, vpos);
-
-                leftOfDisplay =
-                s_Accuracy.Position +
-                                new Vector2(s_Accuracy.MeasureText().X * 0.625f * s_Accuracy.ScaleScalar + 26,
-                                    s_Accuracy.MeasureText().Y * 0.625f * s_Accuracy.ScaleScalar / 2);
             }
 
             spriteManager.Add(s_Score);
@@ -91,7 +85,7 @@ namespace osum.GameModes.Play.Components
                 if (displayScore < currentScore)
                 {
                     displayScore += Math.Max(1, (currentScore - displayScore) / 6);
-                    s_Score.Text = displayScore.ToString().PadLeft(7, '0');
+                    s_Score.ShowInt(displayScore, 7);
                 }
             }
 

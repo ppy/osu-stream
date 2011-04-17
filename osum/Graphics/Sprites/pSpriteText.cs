@@ -51,19 +51,66 @@ namespace osum.Graphics.Sprites
 
         internal int SpacingOverlap;
 
-        // pushed from pSprite
-        private string text;
-        internal string Text
+
+        /// <summary>
+        /// Optimal storage for memory efficiency.
+        /// </summary>
+        private char[] textArray;
+        internal char[] TextArray
         {
-            get { return text; }
+            get { return textArray; }
             set
             {
-                if (text == value) return;
-
-                text = value;
+                if (value.Length != textArray.Length)
+                    textArray = new char[value.Length];
+                
+                for (int i = 0; i < textArray.Length; i++)
+                    textArray[i] = value[i];
+                
                 textChanged = true;
+            }
+        }
 
-                MeasureText();
+        internal void UpdateCharacterAt(int i, char c)
+        {
+            if (textArray[i] == c)
+                return;
+
+            textArray[i] = c;
+            textChanged = true;
+        }
+
+        internal string Text
+        {
+            set
+            {
+                bool sameSizeArray = textArray != null && value.Length == textArray.Length;
+
+                bool sameString = sameSizeArray;
+
+                if (sameSizeArray)
+                {
+                    for (int i = 0; i < textArray.Length; i++)
+                    {
+                        if (value[i] != textArray[i])
+                        {
+                            sameString = false;
+                            textArray[i] = value[i];
+                        }
+                    }
+
+                    if (sameString)
+                        return; //strings are equal
+                }
+                else
+                {
+                    if (value == null)
+                        textArray = null;
+                    else
+                        textArray = value.ToCharArray();
+                }
+
+                textChanged = true;
             }
         }
 
@@ -96,7 +143,7 @@ namespace osum.Graphics.Sprites
 
         internal Vector2 MeasureText()
         {
-            if (text == null) return Vector2.Zero;
+            if (textArray == null) return Vector2.Zero;
 
             if (textChanged)
                 refreshTexture();
@@ -186,16 +233,17 @@ namespace osum.Graphics.Sprites
             renderTextures.Clear();
             renderCoordinates.Clear();
 
+            if (textArray == null)
+                return;
+
             int currentX = 0;
             int height = 0;
 
             int width = 0;
 
-            string text = Text;
-
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < textArray.Length; i++)
             {
-                char c = text[i];
+                char c = textArray[i];
 
                 currentX -= (TextConstantSpacing || i == 0 ? 0 : SpacingOverlap);
 
@@ -249,12 +297,20 @@ namespace osum.Graphics.Sprites
             UpdateTextureAlignment();
         }
 
+        public override void Update()
+        {
+            if (textChanged) MeasureText();
+            base.Update();
+        }
+
         public override bool Draw()
         {
             if (AlwaysDraw || Transformations.Count != 0)
             {
                 if (Alpha != 0)
                 {
+                    if (textChanged) MeasureText();
+
                     int i = 0;
                     foreach (pTexture tex in renderTextures)
                     {
@@ -271,6 +327,36 @@ namespace osum.Graphics.Sprites
             }
 
             return false;
+        }
+
+        internal void ShowInt(int number, int padding = 0, bool separators = false,  char suffix = (char)0)
+        {
+            int numberLength = 1;
+            while (number / (int)Math.Pow(10,numberLength) > 0)
+                numberLength++;
+
+            if (numberLength < padding)
+                numberLength = padding;
+
+            int totalLength = numberLength + (suffix > 0 ? 1 : 0) + (separators ? numberLength / 3 : 0);
+
+            if (textArray.Length != totalLength)
+                //todo: can optimise this to avoid reacllocation when shrinking.
+                textArray = new char[totalLength];
+            
+            int zero_offset = 48;
+
+            int cChar = 0;
+            
+            for (int i = numberLength - 1; i >= 0; i--)
+            {
+                UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
+                if (separators && i > 0 && numberLength - 1 == 3)
+                    UpdateCharacterAt(cChar++, ',');
+            }
+
+            if (suffix > 0)
+                UpdateCharacterAt(cChar, suffix);
         }
     }
 }
