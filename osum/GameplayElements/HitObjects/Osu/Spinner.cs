@@ -314,7 +314,7 @@ namespace osum.GameplayElements
                 else
                     StopSound();
 
-                currentRotationCount = (int)(spriteCircle.Rotation / Math.PI);
+                currentRotationCount = (int)(spriteCircle.Rotation / (Math.PI * 2));
             }
 
             if (scoringRotationCount >= rotationRequirement && !Cleared)
