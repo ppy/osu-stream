@@ -243,7 +243,7 @@ namespace osum.GameplayElements
             {
                 currentComboNumber = Math.Max(1, --currentComboNumber);
                 HitObject hLast = diffObjects[diffObjects.Count - 1];
-                Connect(h, hLast);
+                Connect(hLast, h);
             }
 
             h.ComboNumber = currentComboNumber;
@@ -268,12 +268,13 @@ namespace osum.GameplayElements
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                ClockTypes.Audio, p3, h1.SpriteCollection[0].DrawDepth + 0.001f, false, Color4.White);
+                ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.StartTime - 3), false, Color4.White);
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             connectingLine.Transform(h1.SpriteCollection[0].Transformations);
-            h1.SpriteCollection.Add(connectingLine);
-            h1.SpriteCollectionDim.Add(connectingLine);
+            
+            h2.SpriteCollection.Add(connectingLine);
+            h2.SpriteCollectionDim.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
@@ -353,10 +354,6 @@ namespace osum.GameplayElements
 
             if (lowestActiveObject >= 0)
                 processFrom = lowestActiveObject;
-
-#if DEBUG
-            DebugOverlay.AddLine("HitObjectManager: activeObjects[" + processFrom + ".." + processedTo + "]  (total " + ActiveStreamObjects.Count + ")");
-#endif
         }
 
         #endregion
