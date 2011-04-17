@@ -656,6 +656,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                         return ScoreChange.SliderTick;
                     }
+
+                    return ScoreChange.MissNoCross;
                 }
             }
 

@@ -196,6 +196,9 @@ namespace osum.GameModes
                     currentScore.count300++;
                     comboCounter.IncreaseCombo();
                     break;
+                case ScoreChange.MissHpOnlyNoCombo:
+                    break;
+                case ScoreChange.MissNoCross:
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
                     comboCounter.SetCombo(0);
@@ -203,15 +206,10 @@ namespace osum.GameModes
             }
 
             //then handle the hp addition
-            switch (change)
-            {
-                case ScoreChange.Miss:
-                    healthBar.ReduceCurrentHp(20);
-                    break;
-                default:
-                    healthBar.IncreaseCurrentHp(5);
-                    break;
-            }
+            if (change < 0)
+                healthBar.ReduceCurrentHp(20);
+            else
+                healthBar.IncreaseCurrentHp(5);
 
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
