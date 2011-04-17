@@ -338,7 +338,7 @@ namespace osum.Graphics.Sprites
             if (numberLength < padding)
                 numberLength = padding;
 
-            int totalLength = numberLength + (suffix > 0 ? 1 : 0) + (separators ? numberLength / 3 : 0);
+            int totalLength = numberLength + (suffix > 0 ? 1 : 0) + (separators ? (numberLength - 1) / 3 : 0);
 
             if (textArray.Length != totalLength)
                 //todo: can optimise this to avoid reacllocation when shrinking.
