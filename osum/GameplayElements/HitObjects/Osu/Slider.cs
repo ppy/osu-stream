@@ -963,6 +963,13 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
         }
+
+        internal override void Shake()
+        {
+            if (spriteSliderBody.Texture == null)
+                return; //don't try and shake before we have drawn the body textre; it will animate in the wrong place.
+            base.Shake();
+        }
     }
 
 
