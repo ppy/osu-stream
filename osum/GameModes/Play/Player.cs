@@ -113,6 +113,10 @@ namespace osum.GameModes
                 fpsTotalCount = null;
             }
 
+            streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, 50), 1, true, Color.White);
+            streamSwitchWarningArrow.Alpha = 0;
+            spriteManager.Add(streamSwitchWarningArrow);
+
             gcAtStart = GC.CollectionCount(0);
         }
 
@@ -231,6 +235,11 @@ namespace osum.GameModes
         /// </summary>
         private int queuedStreamSwitchTime;
 
+        /// <summary>
+        /// Warning graphic which appears when a stream change is in process.
+        /// </summary>
+        private pSprite streamSwitchWarningArrow;
+
         public override void Update()
         {
             //check whether the map is finished
@@ -312,6 +321,22 @@ namespace osum.GameModes
 
             if (switchTime < 0)
                 return false;
+
+            const int animation_time = 250;
+
+            //rotate the warning arrow to the correct direction.
+            if (increase && streamSwitchWarningArrow.Rotation != 0)
+                streamSwitchWarningArrow.Transform(
+                    new Transformation(TransformationType.Rotation, streamSwitchWarningArrow.Rotation, 0, Clock.AudioTime, Clock.AudioTime + animation_time, EasingTypes.In));
+            else if (!increase && streamSwitchWarningArrow.Rotation != 1)
+                streamSwitchWarningArrow.Transform(
+                    new Transformation(TransformationType.Rotation, streamSwitchWarningArrow.Rotation, (float)Math.PI, Clock.AudioTime, Clock.AudioTime + animation_time, EasingTypes.In));
+
+            streamSwitchWarningArrow.ScaleScalar = 1;
+            streamSwitchWarningArrow.FadeIn(animation_time);
+
+            streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Fade, 1, 0, switchTime, switchTime + animation_time));
+            streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Scale, 1, 1.5f, switchTime, switchTime + animation_time));
 
             queuedStreamSwitchTime = switchTime;
             return true;

@@ -133,6 +133,8 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
+            textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
+
             textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
@@ -454,6 +456,7 @@ namespace osum.Graphics.Skins
         score_percent,
         score_x,
         playfield,
-        songselect_header
+        songselect_header,
+        stream_changing
     }
 }
