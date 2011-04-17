@@ -72,8 +72,6 @@ namespace osum.GameModes.Play.Components
 
         public override bool Draw()
         {
-            if (!base.Draw()) return false;
-
             if (s_Accuracy != null)
             {
                 if (displayAccuracy - currentAccuracy <= -0.005)
@@ -97,9 +95,7 @@ namespace osum.GameModes.Play.Components
                 }
             }
 
-            spriteManager.Draw();
-
-            return true;
+            return base.Draw();
         }
 
         internal virtual void Update(int score)
