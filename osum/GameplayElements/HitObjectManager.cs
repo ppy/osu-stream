@@ -1,5 +1,3 @@
-#define OPTIMISED_PROCESSING
-
 #region Using Statements
 
 using System;
@@ -122,7 +120,7 @@ namespace osum.GameplayElements
             pList<HitObject> newStreamObjects = ActiveStreamObjects;
             SpriteManager newSpriteManager = ActiveStreamSpriteManager;
 
-            
+
 
             int switchTime = Clock.AudioTime;
 
@@ -320,11 +318,7 @@ namespace osum.GameplayElements
             processedTo = activeObjects.Count - 1;
             //initialise to the last object. if we don't find an earlier one below, this wil be used.
 
-#if OPTIMISED_PROCESSING
             for (int i = processFrom; i < activeObjects.Count; i++)
-#else
-            for (int i = 0; i < activeObjects.Count; i++)
-#endif
             {
                 HitObject h = activeObjects[i];
 
@@ -350,13 +344,11 @@ namespace osum.GameplayElements
                         s.DisposePathTexture();
                 }
 
-#if OPTIMISED_PROCESSING
                 if (h.StartTime > Clock.AudioTime + 4000 && !h.IsVisible)
                 {
                     processedTo = i;
                     break; //stop processing after a decent amount of leeway...
                 }
-#endif
             }
 
             if (lowestActiveObject >= 0)
@@ -381,11 +373,7 @@ namespace osum.GameplayElements
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
             List<HitObject> objects = ActiveStreamObjects;
-#if OPTIMISED_PROCESSING
             for (int i = processFrom; i < processedTo + 1; i++)
-#else
-            for (int i = 0; i < objects.Count; i++)
-#endif
             {
                 HitObject h = objects[i];
                 h.Index = i;
