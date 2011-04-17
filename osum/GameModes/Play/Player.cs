@@ -25,56 +25,44 @@ namespace osum.GameModes
         HitObjectManager hitObjectManager;
 
         HealthBar healthBar;
+        
         ScoreDisplay scoreDisplay;
+
         ComboCounter comboCounter;
 
+        /// <summary>
+        /// Score which is being played (or watched?)
+        /// </summary>
         Score currentScore;
 
+        /// <summary>
+        /// The beatmap currently being played.
+        /// </summary>
         static Beatmap Beatmap;
+        
+        /// <summary>
+        /// Is autoplay activated?
+        /// </summary>
         public static bool Autoplay;
+
         private PlayfieldBackground s_Playfield;
+
+        private bool stateCompleted; //todo: make this an enum state
+
+        /// <summary>
+        /// If we are currently in the process of switching to another stream, this is when it should happen.
+        /// </summary>
+        private int queuedStreamSwitchTime;
+
+        /// <summary>
+        /// Warning graphic which appears when a stream change is in process.
+        /// </summary>
+        private pSprite s_streamSwitchWarningArrow;
 
 
         public Player()
             : base()
         {
-        }
-
-        void InputManager_OnDown(InputSource source, TrackingPoint point)
-        {
-            //pass on the event to hitObjectManager for handling.
-            hitObjectManager.HandlePressAt(point);
-
-            if (InputManager.TrackingPoints.Count == 2)
-            {
-                Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
-                Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
-
-                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
-                    Math.Min(p1.X, p2.X) < 40 &&
-                    p1.Y + p2.Y < 80)
-                {
-                    Director.ChangeMode(OsuMode.SongSelect);
-                }
-                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
-                    Math.Min(p1.X, p2.X) < 40 &&
-                    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
-                {
-                    Player.Autoplay = !Autoplay;
-                }
-
-            }
-        }
-
-        int lastSeek;
-        void InputManager_OnMove(InputSource source, TrackingPoint point)
-        {
-            // fast forward for iphone
-            if (InputManager.TrackingPoints.Count >= 4 && Clock.Time - lastSeek > 250)
-            {
-                lastSeek = Clock.Time;
-                AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
-            }
         }
 
         internal override void Initialize()
@@ -114,11 +102,11 @@ namespace osum.GameModes
                 fpsTotalCount = null;
             }
 
-            streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, 50), 1, true, Color.White);
-            streamSwitchWarningArrow.Additive = true;
-            streamSwitchWarningArrow.Alpha = 0;
+            s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Height), 1, true, Color.White);
+            s_streamSwitchWarningArrow.Additive = true;
+            s_streamSwitchWarningArrow.Alpha = 0;
 
-            spriteManager.Add(streamSwitchWarningArrow);
+            spriteManager.Add(s_streamSwitchWarningArrow);
 
             gcAtStart = GC.CollectionCount(0);
         }
@@ -143,6 +131,43 @@ namespace osum.GameModes
             fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
             fpsTotalCount.FadeOutFromOne(15000);
             GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
+        }
+
+        void InputManager_OnDown(InputSource source, TrackingPoint point)
+        {
+            //pass on the event to hitObjectManager for handling.
+            hitObjectManager.HandlePressAt(point);
+
+            if (InputManager.TrackingPoints.Count == 2)
+            {
+                Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
+                Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
+
+                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                    Math.Min(p1.X, p2.X) < 40 &&
+                    p1.Y + p2.Y < 80)
+                {
+                    Director.ChangeMode(OsuMode.SongSelect);
+                }
+                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                    Math.Min(p1.X, p2.X) < 40 &&
+                    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
+                {
+                    Player.Autoplay = !Autoplay;
+                }
+
+            }
+        }
+
+        int lastSeek;
+        void InputManager_OnMove(InputSource source, TrackingPoint point)
+        {
+            // fast forward for iphone
+            if (InputManager.TrackingPoints.Count >= 4 && Clock.Time - lastSeek > 250)
+            {
+                lastSeek = Clock.Time;
+                AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
+            }
         }
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
@@ -237,18 +262,6 @@ namespace osum.GameModes
             return true;
         }
 
-        bool stateCompleted; //todo: make this an enum state
-
-        /// <summary>
-        /// If we are currently in the process of switching to another stream, this is when it should happen.
-        /// </summary>
-        private int queuedStreamSwitchTime;
-
-        /// <summary>
-        /// Warning graphic which appears when a stream change is in process.
-        /// </summary>
-        private pSprite streamSwitchWarningArrow;
-
         public override void Update()
         {
             //check whether the map is finished
@@ -323,18 +336,24 @@ namespace osum.GameModes
             const int animation_time = 250;
 
             //rotate the warning arrow to the correct direction.
-            if (increase && streamSwitchWarningArrow.Rotation != 0)
-                streamSwitchWarningArrow.Transform(
-                    new Transformation(TransformationType.Rotation, streamSwitchWarningArrow.Rotation, 0, Clock.AudioTime, Clock.AudioTime + animation_time, EasingTypes.In));
-            else if (!increase && streamSwitchWarningArrow.Rotation != 1)
-                streamSwitchWarningArrow.Transform(
-                    new Transformation(TransformationType.Rotation, streamSwitchWarningArrow.Rotation, (float)Math.PI, Clock.AudioTime, Clock.AudioTime + animation_time, EasingTypes.In));
+            if (increase)
+            {
+                s_streamSwitchWarningArrow.Transform(
+                    new Transformation(TransformationType.Rotation, s_streamSwitchWarningArrow.Rotation, 0, Clock.AudioTime, Clock.AudioTime + animation_time * 2, EasingTypes.In));
+                s_streamSwitchWarningArrow.MoveTo(s_streamSwitchWarningArrow.Position + new Vector2(0, 20), animation_time * 4, EasingTypes.In);
+            }
+            else
+            {
+                s_streamSwitchWarningArrow.Transform(
+                    new Transformation(TransformationType.Rotation, s_streamSwitchWarningArrow.Rotation, (float)Math.PI, Clock.AudioTime, Clock.AudioTime + animation_time * 2, EasingTypes.In));
+                s_streamSwitchWarningArrow.MoveTo(s_streamSwitchWarningArrow.Position + new Vector2(0, -20), animation_time * 4, EasingTypes.In);
+            }
 
-            streamSwitchWarningArrow.ScaleScalar = 1;
-            streamSwitchWarningArrow.FadeIn(animation_time);
+            s_streamSwitchWarningArrow.ScaleScalar = 1;
+            s_streamSwitchWarningArrow.FadeIn(animation_time);
 
-            streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Fade, 1, 0, switchTime, switchTime + animation_time));
-            streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Scale, 1, 1.5f, switchTime, switchTime + animation_time));
+            s_streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Fade, 1, 0, switchTime, switchTime + animation_time));
+            s_streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Scale, 1, 2f, switchTime, switchTime + animation_time, EasingTypes.In));
 
             queuedStreamSwitchTime = switchTime;
             return true;

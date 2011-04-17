@@ -34,6 +34,9 @@ namespace osum
             return ChangeMode(mode, new FadeTransition());
         }
 
+        /// <summary>
+        /// Actions to perform when transition finishes. NOTE: Is cleared after each transition.
+        /// </summary>
         public static event VoidDelegate OnTransitionEnded;
 
         /// <summary>
