@@ -226,6 +226,11 @@ namespace osum.GameModes
 
         bool stateCompleted; //todo: make this an enum state
 
+        /// <summary>
+        /// If we are currently in the process of switching to another stream, this is when it should happen.
+        /// </summary>
+        private int queuedStreamSwitchTime;
+
         public override void Update()
         {
             //check whether the map is finished
@@ -243,7 +248,18 @@ namespace osum.GameModes
 
             healthBar.Update();
 
-            if (!hitObjectManager.StreamChanging)
+            if (hitObjectManager.StreamChanging)
+            {
+                //we are already waiting for a stream change, let's check if we can do it yet!
+                if (Clock.AudioTime >= queuedStreamSwitchTime)
+                {
+                    s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
+                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+
+                    queuedStreamSwitchTime = 0;
+                }
+            }
+            else
             {
                 if (hitObjectManager.IsLowestStream && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
@@ -279,13 +295,10 @@ namespace osum.GameModes
                 }
             }
 
-
             scoreDisplay.Update();
             comboCounter.Update();
 
             base.Update();
-
-            //playfield.Alpha = hitObjectManager.AllowSpinnerOptimisation ? 0 : 1;
         }
 
         private bool switchStream(bool increase)
@@ -300,12 +313,7 @@ namespace osum.GameModes
             if (switchTime < 0)
                 return false;
 
-            GameBase.Scheduler.Add(delegate
-            {
-                s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
-                healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-            }, switchTime - Clock.AudioTime); //todo: these will fail if audio is paused as it is a gametime calculation
-
+            queuedStreamSwitchTime = switchTime;
             return true;
         }
 
