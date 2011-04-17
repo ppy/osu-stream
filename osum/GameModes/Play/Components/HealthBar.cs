@@ -129,15 +129,12 @@ namespace osum.GameplayElements.Scoring
             {
                 if (InitialIncrease)
                 {
-                    //if (InitialIncreaseStartTime < AudioEngine.Time && (Player.Recovering || AudioEngine.AudioState == AudioStates.Playing))
+                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * GameBase.ElapsedMilliseconds);
+                    if (s_kiIcon.Transformations.Count == 0)
                     {
-                        DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * GameBase.ElapsedMilliseconds);
-                        if (s_kiIcon.Transformations.Count == 0)
-                        {
-                            s_kiIcon.Transform(
-                                new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
-                                                   Clock.Time + 150));
-                        }
+                        s_kiIcon.Transform(
+                            new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
+                                               Clock.Time + 150));
                     }
                 }
                 else
@@ -146,7 +143,7 @@ namespace osum.GameplayElements.Scoring
             else if (DisplayHp > CurrentHp)
             {
                 InitialIncrease = false;
-                DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 6 * GameBase.ElapsedMilliseconds * 0.1);
+                DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 4 * GameBase.ElapsedMilliseconds * 0.1);
             }
 
             s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
@@ -174,6 +171,8 @@ namespace osum.GameplayElements.Scoring
 
         internal virtual void SetCurrentHp(double amount)
         {
+            if (InitialIncrease) InitialIncrease = false;
+
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, amount));
             CurrentHpUncapped = amount;
         }
@@ -194,11 +193,6 @@ namespace osum.GameplayElements.Scoring
 
             CurrentHpUncapped += amount;
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, CurrentHp + amount));
-        }
-
-        internal void SetDisplayHp(double amount)
-        {
-            DisplayHp = amount;
         }
 
         internal override void Initialize()

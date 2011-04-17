@@ -76,11 +76,12 @@ namespace osum.GameplayElements
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
 
             OnScoreChanged = null;
+            OnStreamChanged = null;
         }
 
         internal int nextStreamChange;
 
-        internal bool StreamChanging { get { return nextStreamChange + 1000 >= Clock.AudioTime; } }
+        internal bool StreamChanging { get { return nextStreamChange > 0 && nextStreamChange + 1000 >= Clock.AudioTime; } }
 
         /// <summary>
         /// Sets the current stream to the best match found.
@@ -107,6 +108,8 @@ namespace osum.GameplayElements
         /// <returns>The time at which the switch will take place. -1 on failure.</returns>
         internal int SetActiveStream(Difficulty newDifficulty)
         {
+            Difficulty oldActiveStream = ActiveStream;
+
             if (ActiveStream == newDifficulty || Clock.AudioTime < nextStreamChange)
                 return -1;
 
@@ -179,6 +182,9 @@ namespace osum.GameplayElements
                     processFrom++;
                 }
             }
+
+            if (oldActiveStream == Difficulty.None)
+                return 0; //loading a stream from nothing, not switching.
 
             nextStreamChange = switchTime;
             return switchTime;
@@ -354,6 +360,14 @@ namespace osum.GameplayElements
 
             if (lowestActiveObject >= 0)
                 processFrom = lowestActiveObject;
+
+            if (nextStreamChange > 0 && nextStreamChange <= Clock.AudioTime)
+            {
+                if (OnStreamChanged != null)
+                    OnStreamChanged(ActiveStream);
+                
+                nextStreamChange = 0;
+            }
         }
 
         #endregion
@@ -408,6 +422,7 @@ namespace osum.GameplayElements
         Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
 
         public event ScoreChangeDelegate OnScoreChanged;
+        public event StreamChangeDelegate OnStreamChanged;
 
         /// <summary>
         /// Cached value of the first beat length for the current beatmap. Used for general calculations (circle dimming).

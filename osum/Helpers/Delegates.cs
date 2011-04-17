@@ -7,4 +7,5 @@ namespace osum.Helpers
     public delegate void BoolDelegate(bool b);
     public delegate void InputHandler(InputSource source, TrackingPoint trackingPoint);
     internal delegate void ScoreChangeDelegate(ScoreChange change, HitObject hitObject);
+    internal delegate void StreamChangeDelegate(Difficulty newStream);
 }

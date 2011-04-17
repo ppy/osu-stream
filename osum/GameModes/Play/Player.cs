@@ -88,6 +88,7 @@ namespace osum.GameModes
 
             hitObjectManager = new HitObjectManager(Beatmap);
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
+            hitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
 
             hitObjectManager.LoadFile();
 
@@ -118,6 +119,36 @@ namespace osum.GameModes
             spriteManager.Add(streamSwitchWarningArrow);
 
             gcAtStart = GC.CollectionCount(0);
+        }
+
+        static pSprite fpsTotalCount;
+        int gcAtStart;
+
+        public override void Dispose()
+        {
+            InputManager.OnDown -= InputManager_OnDown;
+
+            TextureManager.RequireSurfaces = false;
+
+            hitObjectManager.Dispose();
+
+            healthBar.Dispose();
+            scoreDisplay.Dispose();
+
+            base.Dispose();
+
+            //Performance testing code.
+            fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
+            fpsTotalCount.FadeOutFromOne(15000);
+            GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
+        }
+
+        void hitObjectManager_OnStreamChanged(Difficulty newStream)
+        {
+            s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
+            healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+
+            queuedStreamSwitchTime = 0;
         }
 
         void Director_OnTransitionEnded()
@@ -186,28 +217,6 @@ namespace osum.GameModes
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
         }
 
-        static pSprite fpsTotalCount;
-        int gcAtStart;
-
-        public override void Dispose()
-        {
-            InputManager.OnDown -= InputManager_OnDown;
-
-            TextureManager.RequireSurfaces = false;
-
-            hitObjectManager.Dispose();
-
-            healthBar.Dispose();
-            scoreDisplay.Dispose();
-
-            base.Dispose();
-
-            //Performance testing code.
-            fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
-            fpsTotalCount.FadeOutFromOne(15000);
-            GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
-        }
-
         int frameCount = 0;
         double msCount = 0;
 
@@ -257,18 +266,7 @@ namespace osum.GameModes
 
             healthBar.Update();
 
-            if (hitObjectManager.StreamChanging)
-            {
-                //we are already waiting for a stream change, let's check if we can do it yet!
-                if (Clock.AudioTime >= queuedStreamSwitchTime)
-                {
-                    s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
-                    healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
-
-                    queuedStreamSwitchTime = 0;
-                }
-            }
-            else
+            if (!hitObjectManager.StreamChanging)
             {
                 if (hitObjectManager.IsLowestStream && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
