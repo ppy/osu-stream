@@ -358,5 +358,39 @@ namespace osum.Graphics.Sprites
             if (suffix > 0)
                 UpdateCharacterAt(cChar, suffix);
         }
+
+        internal void ShowDouble(double number, int padding, int accuracy, char suffix)
+        {
+            int numberLengthLeft = 1;
+            while ((int)number / (int)Math.Pow(10, numberLengthLeft) > 0)
+                numberLengthLeft++;
+
+            if (numberLengthLeft < padding)
+                numberLengthLeft = padding;
+
+            int totalLength = numberLengthLeft + (suffix > 0 ? 1 : 0) + 1 + accuracy;
+
+            if (textArray.Length != totalLength)
+                //todo: can optimise this to avoid reacllocation when shrinking.
+                textArray = new char[totalLength];
+
+            int zero_offset = 48;
+
+            int cChar = 0;
+
+            for (int i = numberLengthLeft - 1; i >= 0; i--)
+                UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
+
+
+            UpdateCharacterAt(cChar++,'.');
+
+            double decimalPart = number - (int)number;
+
+            for (int i = accuracy - 1; i >= 0; i--)
+                UpdateCharacterAt(cChar++, (char)(zero_offset + (int)(decimalPart * Math.Pow(10, i + 1)) % 10));
+
+            if (suffix > 0)
+                UpdateCharacterAt(cChar, suffix);
+        }
     }
 }

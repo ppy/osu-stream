@@ -66,18 +66,13 @@ namespace osum.GameModes.Play.Components
 
         public override bool Draw()
         {
-            if (s_Accuracy != null)
+            if (s_Accuracy != null && Math.Abs(displayAccuracy - currentAccuracy) > 0.005)
             {
                 if (displayAccuracy - currentAccuracy <= -0.005)
-                {
                     displayAccuracy = Math.Round(displayAccuracy + Math.Max(0.01, (currentAccuracy - displayAccuracy) / 5), 2);
-                    s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
-                }
                 else if (displayAccuracy - currentAccuracy >= 0.005)
-                {
                     displayAccuracy = Math.Round(displayAccuracy - Math.Max(0.01, (displayAccuracy - currentAccuracy) / 5), 2);
-                    s_Accuracy.Text = String.Format("{0:00.00}%", displayAccuracy);
-                }
+                s_Accuracy.ShowDouble(displayAccuracy, 2, 2, '%');
             }
 
             if (s_Score != null)

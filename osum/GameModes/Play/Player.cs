@@ -115,7 +115,9 @@ namespace osum.GameModes
             }
 
             streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, 50), 1, true, Color.White);
+            streamSwitchWarningArrow.Additive = true;
             streamSwitchWarningArrow.Alpha = 0;
+
             spriteManager.Add(streamSwitchWarningArrow);
 
             gcAtStart = GC.CollectionCount(0);

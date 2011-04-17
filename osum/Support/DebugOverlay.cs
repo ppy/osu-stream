@@ -91,7 +91,7 @@ namespace osum.Support
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
-                fpsDisplay.Text = Math.Round(Math.Min(60, fps), 0).ToString();
+                fpsDisplay.ShowInt((int)Math.Round(Math.Min(60, fps), 0));
 #endif
             }
         }
