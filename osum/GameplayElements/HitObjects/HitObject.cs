@@ -345,7 +345,7 @@ namespace osum.GameplayElements
             set
             {
                 position = value;
-                SpriteCollection.ForEach(s => { s.StartPosition = value; s.Position = value; });
+                Sprites.ForEach(s => { s.StartPosition = value; s.Position = value; });
             }
         }
 

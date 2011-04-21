@@ -29,6 +29,8 @@ namespace osum.GameModes.SongSelect
 
         public bool Enabled = true;
 
+        bool pendingUnhover = false;
+
         internal pButton(string text, Vector2 position, Vector2 size, Color4 colour, EventHandler action)
         {
             this.action = action;
@@ -36,7 +38,7 @@ namespace osum.GameModes.SongSelect
             Colour = colour;
 
             s_BackingPlate = new pRectangle(position, size, true, base_depth, colourNormal);
-            SpriteCollection.Add(s_BackingPlate);
+            Sprites.Add(s_BackingPlate);
 
             s_BackingPlate.OnClick += s_BackingPlate_OnClick;
 
@@ -46,10 +48,12 @@ namespace osum.GameModes.SongSelect
             {
                 if (!Enabled) return;
                 s_BackingPlate.FadeColour(colourHover, 150);
+
+                pendingUnhover = true;
             };
             s_BackingPlate.OnHoverLost += delegate
             {
-                if (!Enabled) return;
+                if (!Enabled || !pendingUnhover) return;
                 s_BackingPlate.FadeColour(colourNormal, 150);
             };
 
@@ -58,7 +62,7 @@ namespace osum.GameModes.SongSelect
             s_Text.Bold = true;
 
             if (s_Text.Texture != null)
-                SpriteCollection.Add(s_Text);
+                Sprites.Add(s_Text);
         }
 
         internal Color4 Colour
@@ -68,8 +72,8 @@ namespace osum.GameModes.SongSelect
             {
                 colour = value;
 
-                colourNormal = ColourHelper.Darken(colour, 0.1f);
-                colourHover = ColourHelper.Lighten(colour, 0.1f);
+                colourNormal = ColourHelper.Darken(colour, 0.2f);
+                colourHover = colour;
 
                 if (s_BackingPlate != null)
                     s_BackingPlate.Colour = colourNormal;
@@ -80,8 +84,19 @@ namespace osum.GameModes.SongSelect
         {
             if (!Enabled) return;
 
+            s_BackingPlate.FlashColour(Color4.White, 500);
+            pendingUnhover = false;
+
             if (action != null)
                 action(this, null);
+        }
+
+        public Vector2 Position
+        {
+            get
+            {
+                return s_BackingPlate.Position;
+            }
         }
     }
 }

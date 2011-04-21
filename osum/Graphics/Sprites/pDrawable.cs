@@ -514,26 +514,20 @@ namespace osum.Graphics.Sprites
                                          Clock.GetTime(Clocking) + duration));
         }
 
-        internal const int TRANSFORMATION_TAG_FLASH = 51458;
-
         internal void FlashColour(Color4 colour, int duration)
         {
-            if (Colour == colour)
-                return;
-
             Color4 end = Colour;
 
-            Transformation start = Transformations.Find(t => t.Tag == TRANSFORMATION_TAG_FLASH);
-            if (start != null)
+            Transformation last = Transformations.FindLast(t => t.Type == TransformationType.Colour);
+            if (last != null)
             {
-                end = start.EndColour;
-                Transformations.Remove(start);
+                end = last.EndColour;
+                Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
             }
 
             Transformation flash = new Transformation(colour, end,
                                    ClockingNow,
                                    ClockingNow + duration);
-            flash.Tag = TRANSFORMATION_TAG_FLASH;
             Transform(flash);
         }
 

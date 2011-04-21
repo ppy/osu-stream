@@ -30,7 +30,7 @@ namespace osum.GameModes.SongSelect
             s_BackingPlate.Colour = colourNormal;
             s_BackingPlate.Scale.Y = PANEL_HEIGHT;
             s_BackingPlate.DrawDepth = base_depth;
-            SpriteCollection.Add(s_BackingPlate);
+            Sprites.Add(s_BackingPlate);
 
             Beatmap = beatmap;
 
@@ -51,21 +51,21 @@ namespace osum.GameModes.SongSelect
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(10, 0);
             if (s_Text.Texture != null)
-                SpriteCollection.Add(s_Text);
+                Sprites.Add(s_Text);
 
             s_Text = new pText(m.Groups[4].Value, 20, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
             s_Text.Offset = new Vector2(10, 28);
-            SpriteCollection.Add(s_Text);
+            Sprites.Add(s_Text);
 
             s_Text = new pText("by " + m.Groups[3].Value, 18, Vector2.Zero, new Vector2(GameBase.BaseSize.Width - 120, 60), base_depth + 0.01f, true, Color4.White, false);
             s_Text.Origin = OriginTypes.TopRight;
             s_Text.Offset = new Vector2(GameBase.BaseSize.Width - 10, 28);
-            SpriteCollection.Add(s_Text);
+            Sprites.Add(s_Text);
         }
 
         internal void MoveTo(Vector2 location)
         {
-            SpriteCollection.ForEach(s => s.MoveTo(location, 150));
+            Sprites.ForEach(s => s.MoveTo(location, 150));
         }
     }
 }

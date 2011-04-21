@@ -26,7 +26,7 @@ namespace osum.GameplayElements
 
             SpriteHitCircle1 =
                 new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
-            SpriteCollection.Add(SpriteHitCircle1);
+            Sprites.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
             SpriteCollectionDim.Add(SpriteHitCircle1);
 
@@ -35,7 +35,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
-            SpriteCollection.Add(SpriteHitCircle2);
+            Sprites.Add(SpriteHitCircle2);
             SpriteCollectionDim.Add(SpriteHitCircle2);
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
                                                     FieldTypes.GamefieldSprites, OriginTypes.Centre,
@@ -46,13 +46,13 @@ namespace osum.GameplayElements
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
             SpriteApproachCircle.Field = FieldTypes.GamefieldExact;
-            SpriteCollection.Add(SpriteApproachCircle);
+            Sprites.Add(SpriteApproachCircle);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
 
             if (ShowCircleText)
             {
-                SpriteCollection.Add(SpriteHitCircleText);
+                Sprites.Add(SpriteHitCircleText);
                 SpriteCollectionDim.Add(SpriteHitCircleText);
             }
 
@@ -145,7 +145,7 @@ namespace osum.GameplayElements
             }
             else
             {
-                foreach (pDrawable p in SpriteCollection)
+                foreach (pDrawable p in Sprites)
                     p.Transformations.Clear();
             }
 

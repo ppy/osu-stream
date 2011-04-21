@@ -139,7 +139,7 @@ namespace osum.GameplayElements
                         break;
                     }
 
-                    newSpriteManager.Add(oldStreamObjects[i].SpriteCollection);
+                    newSpriteManager.Add(oldStreamObjects[i]);
                 }
 
                 if (objectIndex - processFrom > 0)
@@ -157,7 +157,7 @@ namespace osum.GameplayElements
                             break;
                         }
 
-                        newStreamObjects[i].SpriteCollection.ForEach(s => s.Transformations.Clear());
+                        newStreamObjects[i].Sprites.ForEach(s => s.Transformations.Clear());
                         newStreamObjects[i].Dispose();
                     }
 
@@ -265,8 +265,8 @@ namespace osum.GameplayElements
         /// </summary>
         void Connect(HitObject h1, HitObject h2)
         {
-            Vector2 p1 = h1.SpriteCollection[0].Position;
-            Vector2 p2 = h2.SpriteCollection[0].Position;
+            Vector2 p1 = h1.Sprites[0].Position;
+            Vector2 p2 = h2.Sprites[0].Position;
 
             Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
@@ -275,9 +275,9 @@ namespace osum.GameplayElements
                 ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.StartTime - 3), false, Color4.White);
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-            connectingLine.Transform(h1.SpriteCollection[0].Transformations);
+            connectingLine.Transform(h1.Sprites[0].Transformations);
             
-            h2.SpriteCollection.Add(connectingLine);
+            h2.Sprites.Add(connectingLine);
             h2.SpriteCollectionDim.Add(connectingLine);
 
             h1.connectedObject = h2;
@@ -332,7 +332,7 @@ namespace osum.GameplayElements
                     h.Update();
 
                     if (!AllowSpinnerOptimisation)
-                        AllowSpinnerOptimisation |= h is Spinner && h.SpriteCollection[0].Alpha == 1;
+                        AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
                     if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);

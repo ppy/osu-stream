@@ -190,8 +190,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void initializeStartCircle()
         {
             hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
-            SpriteCollection.AddRange(hitCircleStart.SpriteCollection);
-            SpriteCollectionDim.AddRange(hitCircleStart.SpriteCollection);
+            Sprites.AddRange(hitCircleStart.Sprites);
+            SpriteCollectionDim.AddRange(hitCircleStart.Sprites);
         }
 
         protected virtual void initializeSprites()
@@ -227,9 +227,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
 
-            SpriteCollection.Add(spriteFollowBall);
-            SpriteCollection.Add(spriteFollowCircle);
-            SpriteCollection.Add(spriteSliderBody);
+            Sprites.Add(spriteFollowBall);
+            Sprites.Add(spriteFollowCircle);
+            Sprites.Add(spriteSliderBody);
 
             SpriteCollectionDim.Add(spriteSliderBody);
 
@@ -285,9 +285,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteCollectionScoringPoints.ForEach(s => s.Transform(fadeOut));
 
-            SpriteCollection.AddRange(spriteCollectionStart);
-            SpriteCollection.AddRange(spriteCollectionEnd);
-            SpriteCollection.AddRange(spriteCollectionScoringPoints);
+            Sprites.AddRange(spriteCollectionStart);
+            Sprites.AddRange(spriteCollectionEnd);
+            Sprites.AddRange(spriteCollectionScoringPoints);
 
             SpriteCollectionDim.AddRange(spriteCollectionStart);
             SpriteCollectionDim.AddRange(spriteCollectionEnd);

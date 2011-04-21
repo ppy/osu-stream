@@ -111,7 +111,7 @@ namespace osum.Graphics.Sprites
 
         internal void Add(pSpriteCollection collection)
         {
-            foreach (pDrawable p in collection.SpriteCollection)
+            foreach (pDrawable p in collection.Sprites)
                 Add(p); //todo: can optimise this when they are already sorted in depth order.
         }
 

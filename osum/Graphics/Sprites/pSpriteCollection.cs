@@ -7,16 +7,16 @@ namespace osum.Graphics.Sprites
 {
     internal class pSpriteCollection
     {
-        internal List<pDrawable> SpriteCollection;
+        internal List<pDrawable> Sprites;
 
         internal pSpriteCollection()
         {
-            this.SpriteCollection = new List<pDrawable>();
+            this.Sprites = new List<pDrawable>();
         }
 
         internal pSpriteCollection(IEnumerable<pDrawable> sprites)
         {
-            this.SpriteCollection = new List<pDrawable>(sprites);
+            this.Sprites = new List<pDrawable>(sprites);
         }
 
         bool visible = true;
@@ -27,8 +27,18 @@ namespace osum.Graphics.Sprites
             {
                 if (value == visible) return;
                 visible = value;
-                SpriteCollection.ForEach(s => s.Alpha = visible ? 1 : 0);
+                Sprites.ForEach(s => s.Alpha = visible ? 1 : 0);
             }
+        }
+
+        internal void Add(pDrawable p)
+        {
+            Sprites.Add(p);
+        }
+
+        internal void Add(pSpriteCollection sc)
+        {
+            Sprites.AddRange(sc.Sprites);
         }
     }
 }

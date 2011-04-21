@@ -479,7 +479,7 @@ namespace osum.GameplayElements
                                 dot.Transform(
                                     new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
                                 diffSpriteManager.Add(dot);
-                                last.SpriteCollection.Add(dot);
+                                last.Sprites.Add(dot);
                             }
                         }
                     }

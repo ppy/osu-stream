@@ -100,43 +100,43 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load("spinner-background.jpg") ?? TextureManager.Load("spinner-background"),
                             FieldTypes.StandardSnapCentre, OriginTypes.Centre , ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, fade);
-            SpriteCollection.Add(spriteBackground);
+            Sprites.Add(spriteBackground);
 
             spriteCircle =
                 new pSprite(TextureManager.Load("spinner-circle"),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
-            SpriteCollection.Add(spriteCircle);
+            Sprites.Add(spriteCircle);
 
             spriteScoreMetre =
                 new pSprite(TextureManager.Load("spinner-metre"),
                             FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime + 1), false, fade);
             spriteScoreMetre.DrawHeight = 0;
-            SpriteCollection.Add(spriteScoreMetre);
+            Sprites.Add(spriteScoreMetre);
 
             spriteRpmBackground =
                 new pSprite(TextureManager.Load("spinner-rpm"),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
                             Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
-            SpriteCollection.Add(spriteRpmBackground);
+            Sprites.Add(spriteRpmBackground);
 
             spriteRpmText = new pSpriteText("100", "score", 3,
                                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
                                             Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, fade);
             spriteRpmText.ScaleScalar = 0.9f;
-            SpriteCollection.Add(spriteRpmText);
+            Sprites.Add(spriteRpmText);
 
 			ApproachCircle = new ApproachCircle(new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), 1, false, 1, new Color4(77/255f, 139/255f, 217/255f,1));
 			ApproachCircle.Width = 6;
             ApproachCircle.Clocking = ClockTypes.Audio;
             ApproachCircle.Field = FieldTypes.Standard;
-            SpriteCollection.Add(ApproachCircle);
+            Sprites.Add(ApproachCircle);
 			
             spriteBonus = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                                           new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height - SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
-            SpriteCollection.Add(spriteBonus);
+            Sprites.Add(spriteBonus);
 
             SpriteSpin =
                 new pSprite(TextureManager.Load("spinner-spin"),
@@ -144,9 +144,9 @@ namespace osum.GameplayElements
                             new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
-            SpriteCollection.Add(SpriteSpin);
+            Sprites.Add(SpriteSpin);
 
-            foreach (pDrawable p in SpriteCollection)
+            foreach (pDrawable p in Sprites)
             {
                 p.Transformations.Clear();
 
@@ -161,7 +161,7 @@ namespace osum.GameplayElements
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
-            SpriteCollection.Add(SpriteClear);
+            Sprites.Add(SpriteClear);
 
             spriteRpmText.Transform(new Transformation(
                 spriteRpmText.Position + new Vector2(0, 50), spriteRpmText.Position,
