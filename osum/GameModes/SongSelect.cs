@@ -11,6 +11,8 @@ using osum.Helpers;
 using osum.GameModes.SongSelect;
 using OpenTK.Graphics;
 using osum.GameModes.Play.Components;
+using osum.Graphics.Drawables;
+using osum.GameplayElements;
 
 namespace osum.GameModes
 {
@@ -61,10 +63,15 @@ namespace osum.GameModes
             InitializePostSelectionOptions();
         }
 
+        private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
+
         private pButton s_ButtonEasy;
         private pButton s_ButtonStandard;
         private pButton s_ButtonExpert;
+        private pButton s_ButtonStart;
         private pDrawable s_ButtonExpertUnlock;
+
+        private pRectangle s_DifficultySelectionRectangle;
 
         private void InitializePostSelectionOptions()
         {
@@ -76,26 +83,41 @@ namespace osum.GameModes
             float currX = spacing;
 
             s_ButtonEasy = new pButton("Easy", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_EASY, difficultySelected);
-            s_ButtonEasy.Visible = false;
-            spriteManager.Add(s_ButtonEasy);
+            
+            s_ButtonEasy.Sprites.Add(new pText("Recommended for beginners!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
+
+            spritesDifficultySelection.Add(s_ButtonEasy);
 
             currX += buttonSize.X + spacing;
 
             s_ButtonStandard = new pButton("Standard", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_STANDARD, difficultySelected);
-            s_ButtonStandard.Visible = false;
-            spriteManager.Add(s_ButtonStandard);
+
+            s_ButtonStandard.Sprites.Add(new pText("Stream-based challenge!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
+
+            spritesDifficultySelection.Add(s_ButtonStandard);
+
+            Vector2 border = new Vector2(4, 4);
+
+            s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.OrangeRed) { Offset = -border };
+            spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
 
             currX += buttonSize.X + spacing;
 
             s_ButtonExpert = new pButton("Expert", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_WARNING, difficultySelected);
 
-            s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 15, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false);
-            s_ButtonExpert.SpriteCollection.Add(s_ButtonExpertUnlock);
+            s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false);
+            s_ButtonExpert.Sprites.Add(s_ButtonExpertUnlock);
 
-            s_ButtonExpert.Visible = false;
-            spriteManager.Add(s_ButtonExpert);
+            spritesDifficultySelection.Add(s_ButtonExpert);
 
             currX += buttonSize.X + spacing;
+
+            s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSizeHalf.Width * 0.5f, ypos + 120), new Vector2(GameBase.BaseSizeHalf.Width, 40), Color4.MistyRose, gameStart);
+            s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
+            spritesDifficultySelection.Add(s_ButtonStart);
+
+            spriteManager.Add(spritesDifficultySelection);
+            spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
         }
 
         bool hasSelected;
@@ -121,21 +143,19 @@ namespace osum.GameModes
                     panel.s_BackingPlate.UnbindAllEvents();
                     panel.s_BackingPlate.FlashColour(Color4.White, 600);
 
-                    foreach (pSprite s in p.SpriteCollection)
+                    foreach (pSprite s in p.Sprites)
                     {
                         s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
                     }
                 }
                 else
                 {
-                    foreach (pSprite s in p.SpriteCollection)
+                    foreach (pSprite s in p.Sprites)
                         s.FadeOut(100);
                 }
             }
 
-            s_ButtonEasy.Visible = true;
-            s_ButtonStandard.Visible = true;
-            s_ButtonExpert.Visible = true;
+            spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
 
             bool requiresUnlock = true;
 
@@ -154,9 +174,24 @@ namespace osum.GameModes
 
         private void difficultySelected(object sender, EventArgs args)
         {
-            if (sender != s_ButtonEasy) s_ButtonEasy.SpriteCollection.ForEach(s => s.FadeOut(200));
-            if (sender != s_ButtonStandard) s_ButtonStandard.SpriteCollection.ForEach(s => s.FadeOut(200));
-            if (sender != s_ButtonExpert) s_ButtonExpert.SpriteCollection.ForEach(s => s.FadeOut(200));
+            pButton button = sender as pButton;
+            if (button == null) return;
+
+            if (button == s_ButtonEasy)
+                Player.SetDifficulty(Difficulty.Easy);
+            else if (button == s_ButtonExpert)
+                Player.SetDifficulty(Difficulty.Expert);
+            else
+                Player.SetDifficulty(Difficulty.Normal);
+
+            s_DifficultySelectionRectangle.MoveTo(((pButton)sender).Position, 500, EasingTypes.In);
+        }
+
+        private void gameStart(object sender, EventArgs args)
+        {
+            if (sender != s_ButtonEasy) s_ButtonEasy.Sprites.ForEach(s => s.FadeOut(200));
+            if (sender != s_ButtonStandard) s_ButtonStandard.Sprites.ForEach(s => s.FadeOut(200));
+            if (sender != s_ButtonExpert) s_ButtonExpert.Sprites.ForEach(s => s.FadeOut(200));
 
             GameBase.Scheduler.Add(delegate
             {

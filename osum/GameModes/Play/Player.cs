@@ -25,7 +25,7 @@ namespace osum.GameModes
         HitObjectManager hitObjectManager;
 
         HealthBar healthBar;
-        
+
         ScoreDisplay scoreDisplay;
 
         ComboCounter comboCounter;
@@ -39,7 +39,9 @@ namespace osum.GameModes
         /// The beatmap currently being played.
         /// </summary>
         static Beatmap Beatmap;
-        
+
+        static Difficulty Difficulty;
+
         /// <summary>
         /// Is autoplay activated?
         /// </summary>
@@ -80,7 +82,18 @@ namespace osum.GameModes
 
             hitObjectManager.LoadFile();
 
-            hitObjectManager.SetActiveStream();
+            switch (Difficulty)
+            {
+                default:
+                    hitObjectManager.SetActiveStream();
+                    break;
+                case Difficulty.Expert:
+                    hitObjectManager.SetActiveStream(Difficulty.Expert);
+                    break;
+                case Difficulty.Easy:
+                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+                    break;
+            }
 
             healthBar = new HealthBar();
 
@@ -279,6 +292,19 @@ namespace osum.GameModes
 
             healthBar.Update();
 
+            UpdateStream();
+
+            scoreDisplay.Update();
+            comboCounter.Update();
+
+            base.Update();
+        }
+
+        private void UpdateStream()
+        {
+            if (Difficulty != Difficulty.Normal)
+                return;
+
             if (!hitObjectManager.StreamChanging)
             {
                 if (hitObjectManager.IsLowestStream && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
@@ -314,11 +340,6 @@ namespace osum.GameModes
                     switchStream(false);
                 }
             }
-
-            scoreDisplay.Update();
-            comboCounter.Update();
-
-            base.Update();
         }
 
         private bool switchStream(bool increase)
@@ -362,6 +383,11 @@ namespace osum.GameModes
         internal static void SetBeatmap(Beatmap beatmap)
         {
             Beatmap = beatmap;
+        }
+
+        internal static void SetDifficulty(Difficulty difficulty)
+        {
+            Difficulty = difficulty;
         }
     }
 }
