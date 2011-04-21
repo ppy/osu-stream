@@ -254,8 +254,10 @@ namespace osum.GameModes
             if (InputManager.IsPressed)
             {
                 float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-                if ((offset - offsetBound < 0 && change < 0) || (offset - offsetBound > 0 && change > 0))
-                    change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(offset - offsetBound)));
+                float bound = offsetBound;
+
+                if ((offset - bound < 0 && change < 0) || (offset - bound > 0 && change > 0))
+                    change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(offset - bound)));
                 offset = offset + change;
                 velocity = change;
             }
@@ -274,10 +276,14 @@ namespace osum.GameModes
             {
                 if (!InputManager.IsPressed)
                 {
-                    offset = offset * 0.9f + offsetBound * 0.1f + velocity;
+                    float bound = offsetBound;
+
+                    if (offset != bound)
+                        velocity = 0;
+
+                    offset = offset * 0.8f + bound * 0.2f + velocity;
                     velocity *= 0.9f;
                 }
-
 
                 if (Director.PendingMode == OsuMode.Unknown)
                 {
