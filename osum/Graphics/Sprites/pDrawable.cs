@@ -41,7 +41,7 @@ using osum.Input;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
+    internal partial class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
     {
         internal float Alpha;
 
@@ -119,6 +119,18 @@ namespace osum.Graphics.Sprites
             set { BlendingMode = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
+        protected virtual Box2 DisplayRectangle
+        {
+            get
+            {
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio;
+                Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
+
+                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + scale.X,
+                                pos.Y + scale.Y);
+            }
+        }
+
         internal virtual Vector2 FieldPosition
         {
             get
@@ -163,8 +175,7 @@ namespace osum.Graphics.Sprites
                         return Position;
                     case FieldTypes.Native:
                     default:
-                        fieldPosition = pos;
-                        break;
+                        return pos;
                 }
 
                 return fieldPosition;
@@ -185,7 +196,7 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.NativeScaled:
                         return Scale;
                     default:
-                        return Scale * GameBase.SpriteToNativeRatio;
+                        return Scale * GameBase.SpriteToNativeRatio * (UsesTextures ? 1 : GameBase.BaseToNativeRatio);
                 }
             }
         }
@@ -579,6 +590,7 @@ namespace osum.Graphics.Sprites
 
         public virtual void Dispose()
         {
+            UnbindAllEvents();
         }
 
         #endregion

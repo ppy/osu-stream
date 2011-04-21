@@ -42,7 +42,7 @@ using OpenTK;
 
 namespace osum.Graphics.Sprites
 {
-    internal partial class pSprite : IDrawable, IDisposable
+    internal partial class pDrawable : IDrawable, IDisposable
     {
         internal bool IsClickable { get { return onClick != null; } }
 
@@ -106,6 +106,9 @@ namespace osum.Graphics.Sprites
 
         bool inputCheckHover(Vector2 position)
         {
+            if (Alpha == 0)
+                return false;
+            
             Box2 rect = DisplayRectangle;
 
             return rect.Left < position.X &&

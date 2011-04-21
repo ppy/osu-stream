@@ -143,7 +143,7 @@ namespace osum.Graphics.Sprites
             get { return new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop); }
         }
 
-        protected Box2 DisplayRectangle
+        protected override Box2 DisplayRectangle
         {
             get
             {
@@ -173,8 +173,7 @@ namespace osum.Graphics.Sprites
 
         public override void Dispose()
         {
-            //todo: kill texture if possible
-            UnbindAllEvents();
+            base.Dispose();
         }
 
         #endregion
