@@ -10,6 +10,7 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using osum.GameModes.SongSelect;
 using OpenTK.Graphics;
+using osum.GameModes.Play.Components;
 
 namespace osum.GameModes
 {
@@ -56,7 +57,113 @@ namespace osum.GameModes
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             spriteManager.Add(s_Header);
+
+            InitializePostSelectionOptions();
         }
+
+        private pButton s_ButtonEasy;
+        private pButton s_ButtonStandard;
+        private pButton s_ButtonExpert;
+        private pDrawable s_ButtonExpertUnlock;
+
+        private void InitializePostSelectionOptions()
+        {
+            const int ypos = 140;
+            const int spacing = 20;
+
+            Vector2 buttonSize = new Vector2(185, 100);
+
+            float currX = spacing;
+
+            s_ButtonEasy = new pButton("Easy", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_EASY, difficultySelected);
+            s_ButtonEasy.Visible = false;
+            spriteManager.Add(s_ButtonEasy);
+
+            currX += buttonSize.X + spacing;
+
+            s_ButtonStandard = new pButton("Standard", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_STANDARD, difficultySelected);
+            s_ButtonStandard.Visible = false;
+            spriteManager.Add(s_ButtonStandard);
+
+            currX += buttonSize.X + spacing;
+
+            s_ButtonExpert = new pButton("Expert", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_WARNING, difficultySelected);
+
+            s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 15, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false);
+            s_ButtonExpert.SpriteCollection.Add(s_ButtonExpertUnlock);
+
+            s_ButtonExpert.Visible = false;
+            spriteManager.Add(s_ButtonExpert);
+
+            currX += buttonSize.X + spacing;
+        }
+
+        bool hasSelected;
+
+        /// <summary>
+        /// Called when a panel has been selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        internal void SongSelected(object sender, EventArgs args)
+        {
+            BeatmapPanel panel = sender as BeatmapPanel;
+            if (panel == null || hasSelected) return;
+
+            Player.SetBeatmap(panel.Beatmap);
+
+            hasSelected = true;
+
+            foreach (BeatmapPanel p in panels)
+            {
+                if (p == panel)
+                {
+                    panel.s_BackingPlate.UnbindAllEvents();
+                    panel.s_BackingPlate.FlashColour(Color4.White, 600);
+
+                    foreach (pSprite s in p.SpriteCollection)
+                    {
+                        s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
+                    }
+                }
+                else
+                {
+                    foreach (pSprite s in p.SpriteCollection)
+                        s.FadeOut(100);
+                }
+            }
+
+            s_ButtonEasy.Visible = true;
+            s_ButtonStandard.Visible = true;
+            s_ButtonExpert.Visible = true;
+
+            bool requiresUnlock = true;
+
+            if (!requiresUnlock)
+            {
+                s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
+                s_ButtonExpertUnlock.Transformations.Clear();
+                s_ButtonExpert.Enabled = true;
+            }
+            else
+            {
+                s_ButtonExpert.Colour = Color4.Gray;
+                s_ButtonExpert.Enabled = false;
+            }
+        }
+
+        private void difficultySelected(object sender, EventArgs args)
+        {
+            if (sender != s_ButtonEasy) s_ButtonEasy.SpriteCollection.ForEach(s => s.FadeOut(200));
+            if (sender != s_ButtonStandard) s_ButtonStandard.SpriteCollection.ForEach(s => s.FadeOut(200));
+            if (sender != s_ButtonExpert) s_ButtonExpert.SpriteCollection.ForEach(s => s.FadeOut(200));
+
+            GameBase.Scheduler.Add(delegate
+            {
+                Director.ChangeMode(OsuMode.Play);
+            }, 900);
+        }
+
 
         public override void Dispose()
         {
@@ -91,7 +198,7 @@ namespace osum.GameModes
                 foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
                 {
                     Beatmap reader = new Beatmap(s);
-                    
+
                     string[] files = reader.Package == null ? Directory.GetFiles(s, "*.osc") : reader.Package.MapFiles;
                     foreach (string file in files)
                     {
@@ -105,46 +212,6 @@ namespace osum.GameModes
                         panels.Add(panel);
                     }
                 }
-        }
-
-        bool hasSelected;
-
-        /// <summary>
-        /// Called when a panel has been selected.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        internal void SongSelected(object sender, EventArgs args)
-        {
-            BeatmapPanel panel = sender as BeatmapPanel;
-            if (panel == null || hasSelected) return;
-
-            hasSelected = true;
-
-            foreach (BeatmapPanel p in panels)
-            {
-                if (p == panel)
-                {
-                    panel.s_BackingPlate.UnbindAllEvents();
-                    panel.s_BackingPlate.FlashColour(Color4.White, 600);
-
-                    foreach (pSprite s in p.SpriteCollection)
-                    {
-                        s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
-                    }
-                }
-                else
-                {
-                    foreach (pSprite s in p.SpriteCollection)
-                        s.FadeOut(100);
-                }
-            }
-
-            GameBase.Scheduler.Add(delegate
-            {
-                Player.SetBeatmap(panel.Beatmap);
-                Director.ChangeMode(OsuMode.Play);
-            }, 900);
         }
 
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
@@ -164,7 +231,11 @@ namespace osum.GameModes
             base.Update();
 
 
-            if (!hasSelected)
+            if (hasSelected)
+            {
+
+            }
+            else
             {
                 if (!InputManager.IsPressed)
                 {
