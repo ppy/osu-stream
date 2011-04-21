@@ -18,5 +18,17 @@ namespace osum.Graphics.Sprites
         {
             this.SpriteCollection = new List<pDrawable>(sprites);
         }
+
+        bool visible = true;
+        internal bool Visible
+        {
+            get { return visible; }
+            set
+            {
+                if (value == visible) return;
+                visible = value;
+                SpriteCollection.ForEach(s => s.Alpha = visible ? 1 : 0);
+            }
+        }
     }
 }

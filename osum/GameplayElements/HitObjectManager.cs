@@ -123,8 +123,6 @@ namespace osum.GameplayElements
             pList<HitObject> newStreamObjects = ActiveStreamObjects;
             SpriteManager newSpriteManager = ActiveStreamSpriteManager;
 
-
-
             int switchTime = Clock.AudioTime;
 
             if (oldStreamObjects != null)
