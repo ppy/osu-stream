@@ -199,7 +199,7 @@ namespace osum.GameModes
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             if (currentScore.totalHits == 0)
-                s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                s_Playfield.ChangeColour(Difficulty);
 
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
@@ -302,12 +302,11 @@ namespace osum.GameModes
 
         private void UpdateStream()
         {
-            if (Difficulty != Difficulty.Normal)
-                return;
-
             if (!hitObjectManager.StreamChanging)
             {
-                if (hitObjectManager.IsLowestStream && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
+                if (hitObjectManager.IsLowestStream &&
+                    currentScore.totalHits > 0 &&
+                    (Difficulty == Difficulty.Easy || healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM))
                 {
                     //we are on the lowest available stream difficulty and in failing territory.
                     if (healthBar.CurrentHp == 0)
