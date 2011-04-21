@@ -32,6 +32,10 @@ namespace osum
             {
                 context = new AudioContext();
             }
+            catch (DllNotFoundException)
+            {
+                //needs openal32.dll
+            }
             catch (AudioException)
             {
                 //todo: handle error here.
