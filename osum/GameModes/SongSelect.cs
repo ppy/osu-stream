@@ -189,8 +189,12 @@ namespace osum.GameModes
             s_DifficultySelectionRectangle.MoveTo(((pButton)sender).Position, 500, EasingTypes.In);
         }
 
+        bool hasStarted;
         private void gameStart(object sender, EventArgs args)
         {
+            if (hasStarted) return;
+            hasStarted = true;
+
             if (sender != s_ButtonEasy) s_ButtonEasy.Sprites.ForEach(s => s.FadeOut(200));
             if (sender != s_ButtonStandard) s_ButtonStandard.Sprites.ForEach(s => s.FadeOut(200));
             if (sender != s_ButtonExpert) s_ButtonExpert.Sprites.ForEach(s => s.FadeOut(200));
