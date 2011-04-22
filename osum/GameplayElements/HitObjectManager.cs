@@ -394,11 +394,11 @@ namespace osum.GameplayElements
             return null;
         }
 
-        internal void HandlePressAt(TrackingPoint point)
+        internal bool HandlePressAt(TrackingPoint point)
         {
             HitObject found = FindObjectAt(point);
 
-            if (found == null) return;
+            if (found == null) return false;
 
             if (found.Index > 0)
             {
@@ -409,12 +409,13 @@ namespace osum.GameplayElements
                     if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
                     {
                         found.Shake();
-                        return;
+                        return true;
                     }
                 }
             }
 
             TriggerScoreChange(found.Hit(), found);
+            return true;
         }
 
         Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
