@@ -46,6 +46,8 @@ namespace osum.GameModes
         {
             InitializeBeatmaps();
 
+            Player.SetDifficulty(Difficulty.Normal);
+
             InputManager.OnMove += InputManager_OnMove;
 
 
