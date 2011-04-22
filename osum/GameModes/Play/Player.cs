@@ -149,7 +149,8 @@ namespace osum.GameModes
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             //pass on the event to hitObjectManager for handling.
-            hitObjectManager.HandlePressAt(point);
+            if (hitObjectManager.HandlePressAt(point))
+                return;
 
             if (InputManager.TrackingPoints.Count == 2)
             {
@@ -302,11 +303,15 @@ namespace osum.GameModes
 
         private void UpdateStream()
         {
+            if (Difficulty == Difficulty.Easy)
+                //easy can't fail, nor switch streams.
+                return;
+
             if (!hitObjectManager.StreamChanging)
             {
                 if (hitObjectManager.IsLowestStream &&
                     currentScore.totalHits > 0 &&
-                    (Difficulty == Difficulty.Easy || healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM))
+                    healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
                     //we are on the lowest available stream difficulty and in failing territory.
                     if (healthBar.CurrentHp == 0)
@@ -328,7 +333,7 @@ namespace osum.GameModes
                     else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
                         s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
                     else
-                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_EASY);
+                        s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
                 }
                 else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
                 {

@@ -84,7 +84,7 @@ namespace osum.GameModes
 
             s_ButtonEasy = new pButton("Easy", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_EASY, difficultySelected);
             
-            s_ButtonEasy.Sprites.Add(new pText("Recommended for beginners!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
+            s_ButtonEasy.Sprites.Add(new pText("Recommended for beginners! You can't fail!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
 
             spritesDifficultySelection.Add(s_ButtonEasy);
 
