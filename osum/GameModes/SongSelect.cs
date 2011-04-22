@@ -41,6 +41,7 @@ namespace osum.GameModes
 
 
         private pSprite s_Header;
+        private pSprite s_Footer;
 
         internal override void Initialize()
         {
@@ -60,7 +61,15 @@ namespace osum.GameModes
             AudioEngine.Music.Play();
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
+
+            s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
+            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
+            
             spriteManager.Add(s_Header);
+
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(0,-100), 1, true, Color4.White);
+            s_Footer.OnClick += gameStart;
+            spriteManager.Add(s_Footer);
 
             InitializePostSelectionOptions();
         }
@@ -70,7 +79,6 @@ namespace osum.GameModes
         private pButton s_ButtonEasy;
         private pButton s_ButtonStandard;
         private pButton s_ButtonExpert;
-        private pButton s_ButtonStart;
         private pDrawable s_ButtonExpertUnlock;
 
         private pRectangle s_DifficultySelectionRectangle;
@@ -100,7 +108,7 @@ namespace osum.GameModes
 
             Vector2 border = new Vector2(4, 4);
 
-            s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.OrangeRed) { Offset = -border };
+            s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.LightGray) { Offset = -border };
             spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
 
             currX += buttonSize.X + spacing;
@@ -114,9 +122,9 @@ namespace osum.GameModes
 
             currX += buttonSize.X + spacing;
 
-            s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSizeHalf.Width * 0.5f, ypos + 120), new Vector2(GameBase.BaseSizeHalf.Width, 40), Color4.MistyRose, gameStart);
-            s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
-            spritesDifficultySelection.Add(s_ButtonStart);
+            //s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSizeHalf.Width * 0.5f, ypos + 120), new Vector2(GameBase.BaseSizeHalf.Width, 40), Color4.MistyRose, gameStart);
+            //s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
+            //spritesDifficultySelection.Add(s_ButtonStart);
 
             spriteManager.Add(spritesDifficultySelection);
             spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
@@ -172,6 +180,9 @@ namespace osum.GameModes
                 s_ButtonExpert.Colour = Color4.Gray;
                 s_ButtonExpert.Enabled = false;
             }
+
+            s_Footer.Transform(new Transformation(new Vector2(-60, -15), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
         }
 
         private void difficultySelected(object sender, EventArgs args)

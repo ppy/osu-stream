@@ -76,7 +76,7 @@ namespace osum.Graphics.Sprites
         }
 
         public pSprite(pTexture tex, Vector2 pos) :
-            this(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Game, pos, 1, true, Color4.White)
+            this(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, pos, 1, true, Color4.White)
         {
         }
 
