@@ -113,9 +113,7 @@ namespace osum
         	if (player != null)
 			{
 				player.Stop();
-				player.Dispose();
-				player = null;
-				
+                SeekTo(0);
 				return true;
 			}
 			

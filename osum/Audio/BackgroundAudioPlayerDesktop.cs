@@ -36,13 +36,13 @@ namespace osum.Audio
         }
 
         /// <summary>
-        /// Stops the playing audio (and unloads it).
+        /// Stops the playing audio.
         /// </summary>
         /// <returns></returns>
         public bool Stop()
         {
             Bass.BASS_ChannelStop(audioStream);
-            FreeMusic();
+            SeekTo(0);
             return true;
         }
 
@@ -70,6 +70,7 @@ namespace osum.Audio
         public bool Load(byte[] audio, bool looping)
         {
             FreeMusic();
+
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 
             audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));

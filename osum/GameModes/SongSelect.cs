@@ -144,6 +144,12 @@ namespace osum.GameModes
 
             Player.SetBeatmap(panel.Beatmap);
 
+            AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false);
+            
+            AudioEngine.Music.Play();
+            AudioEngine.Music.Volume = 0;
+            AudioEngine.Music.SeekTo(30000);
+
             hasSelected = true;
 
             foreach (BeatmapPanel p in panels)
@@ -221,8 +227,6 @@ namespace osum.GameModes
         {
             base.Dispose();
 
-            AudioEngine.Music.Unload();
-
             InputManager.OnMove -= InputManager_OnMove;
         }
 
@@ -284,6 +288,8 @@ namespace osum.GameModes
         {
             base.Update();
 
+            if (AudioEngine.Music.Volume < 1)
+                AudioEngine.Music.Volume += 0.005f;
 
             if (hasSelected)
             {
