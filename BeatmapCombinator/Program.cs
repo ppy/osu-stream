@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements;
+using osu_common.Libraries.Osz2;
 
 namespace BeatmapCombinator
 {
@@ -41,7 +42,7 @@ namespace BeatmapCombinator
         {
             foreach (string dir in Directory.GetDirectories("Beatmaps"))
                 ProcessBeatmap(dir);
-            
+
         }
 
         private static void ProcessBeatmap(string dir)
@@ -60,7 +61,9 @@ namespace BeatmapCombinator
                 return;
             }
 
-            string newFilename = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1) + ".osc";
+            string baseName = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1);
+
+            string newFilename = baseName + ".osc";
 
             List<string> orderedDifficulties = new List<string>();
 
@@ -75,6 +78,8 @@ namespace BeatmapCombinator
             Console.WriteLine(string.Join("\n", orderedDifficulties));
 
             List<BeatmapDifficulty> difficulties = new List<BeatmapDifficulty>();
+
+            string Artist = string.Empty, Creator = string.Empty, Source = string.Empty, Title = string.Empty;
 
             foreach (string f in orderedDifficulties)
             {
@@ -109,6 +114,23 @@ namespace BeatmapCombinator
 
                         switch (currentSection)
                         {
+                            case "Metadata":
+                                switch (key)
+                                {
+                                    case "Artist":
+                                        Artist = val;
+                                        break;
+                                    case "Creator":
+                                        Creator = val;
+                                        break;
+                                    case "Title":
+                                        Title = val;
+                                        break;
+                                    case "Source":
+                                        Source = val;
+                                        break;
+                                }
+                                break;
                             case "Difficulty":
                                 switch (key)
                                 {
@@ -214,6 +236,23 @@ namespace BeatmapCombinator
                 }
             }
 
+            using (MapPackage package = new MapPackage(baseName.Remove(baseName.IndexOf("\\") + 1) + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2", true))
+            {
+                package.AddMetadata(MapMetaType.BeatmapSetID, "0");
+                package.AddMetadata(MapMetaType.Artist, Artist);
+                package.AddMetadata(MapMetaType.Creator, Creator);
+                package.AddMetadata(MapMetaType.Source, Source);
+                package.AddMetadata(MapMetaType.Title, Title);
+                //package.AddMetadata(MapMetaType.TitleUnicode, TitleUnicode);
+                //package.AddMetadata(MapMetaType.ArtistUnicode, ArtistUnicode);
+                //package.AddMetadata(MapMetaType.Tags, Tags);
+
+                foreach (string file in Directory.GetFiles(dir, "*.osc"))
+                    package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
+                foreach (string file in Directory.GetFiles(dir, "*.mp3"))
+                    package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
+                package.Save();
+            }
         }
     }
 }

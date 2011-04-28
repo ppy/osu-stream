@@ -14,7 +14,7 @@ namespace osu_common.Libraries.Osz2
 
         #endregion
 
-
+        
 
         private readonly int fLength;
 #if STRONG_ENCRYPTION
@@ -23,19 +23,23 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
         private byte[] internalBuffer;
 #else
-        private byte[] internalBuffer;
+        private FileStream internalStream;
+        //private byte[] internalBuffer;
+        private byte[] decryptedBuffer;
+        private byte[] skipBuffer = new byte[64];
         private FastEncryptionProvider encryptor = new FastEncryptionProvider();
 #endif
-        //private int fOffset;
+        private int fOffset;
         private long fPosition;
-
+        
         public MapStream(string filename, int offset, int length, byte[] iv, byte[] key)
         {
             FileStream file = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            byte[] data = new byte[length];
+            byte[] data = new byte[4];
             file.Seek(offset, SeekOrigin.Begin);
-            file.Read(data, 0, length);
-            file.Close();
+            file.Read(data, 0, 4);
+            internalStream = file;
+            internalStream.Position = fOffset = offset + 4;
 
 #if STRONG_ENCRYPTION
             // create decryptor
@@ -57,7 +61,6 @@ namespace osu_common.Libraries.Osz2
             fPosition = 4;
 #else
 
-            internalBuffer = data;
 
             uint[] uKey = new uint[4];
             unsafe
@@ -78,17 +81,31 @@ namespace osu_common.Libraries.Osz2
             byte[] lengthB = new byte[] { data[0], data[1], data[2], data[3] };
             encryptor.Decrypt(lengthB, 0, 4);
             fLength = lengthB[0] | (lengthB[1] << 8) | (lengthB[2] << 16) | (lengthB[3] << 24);
-            fPosition = 4;
+            fPosition = fOffset;
+
+#if STREAM_DEBUG
+            decryptedBuffer = new byte[fLength];
+            internalStream.Read(decryptedBuffer, 0, fLength);
+            //Array.Copy(internalBuffer, 4, decryptedBuffer, 0, fLength);
+            encryptor.Decrypt(decryptedBuffer);
+            Console.WriteLine("<<<<<<<<<<MAPSTREAM OPENED>>>>>>>>>>>>");
+            internalStream.Position = fPosition;
 #endif
 
-#if DEBUG
-            Console.WriteLine("<<<<<<<<<<MAPSTREAM OPENED>>>>>>>>>>>>");
 #endif
+            
+
         }
+
+        ~MapStream()
+        {
+            Dispose(false);
+        }
+
 
         public override bool CanRead
         {
-            get { return true; }
+            get { return !IsDisposed; }
         }
 
         public override bool CanSeek
@@ -106,20 +123,25 @@ namespace osu_common.Libraries.Osz2
             get { return fLength; }
         }
 
+        public bool IsDisposed { get; protected set; }
+
         public override long Position
         {
 #if STRONG_ENCRYPTION
             get { return fPosition; }
 #else
-            get { return fPosition - 4; }
+            get { return fPosition - fOffset; }
 #endif
-            set
+            set 
             {
-                if (value % 4 > 0)
-                    throw new Exception("fPosition may only be a multiple of 4 bytes");
-                fPosition = value + 4;
-            }
-
+                
+#if !STRONG_ENCRYPTION
+                internalStream.Seek(Position, SeekOrigin.Begin);
+#else
+                fPosition = value + fOffset;
+#endif
+            } 
+            
             /*
             get { return fStream.Position - fOffset; }
             set { Seek(value, SeekOrigin.Begin); }
@@ -144,6 +166,13 @@ namespace osu_common.Libraries.Osz2
             base.Close();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
         public override void Flush()
         {
             throw new NotSupportedException();
@@ -151,28 +180,30 @@ namespace osu_common.Libraries.Osz2
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotSupportedException();
-            /*
             switch (origin)
             {
                 case SeekOrigin.Begin:
-                    if (offset > fLength || offset < 0)
-                        throw new ArgumentOutOfRangeException("offset");
+                    if (offset >= 0)
+                        fPosition = Math.Min(offset, fLength) + fOffset;
                     break;
 
                 case SeekOrigin.Current:
-                    if (Position + offset > fLength || Position + offset < 0)
-                        throw new ArgumentOutOfRangeException("offset");
+                    if ( Position + offset >= 0)
+                        fPosition = Math.Min(fPosition + offset - fOffset, fLength) + fOffset;
                     break;
 
                 case SeekOrigin.End:
-                    if (offset > 0 || fLength + offset < 0)
-                        throw new ArgumentOutOfRangeException("offset");
+                    if (fLength + offset >= 0)
+                        fPosition = fLength + offset + fOffset;
                     break;
             }
-
+#if !STRONG_ENCRYPTION
+            internalStream.Seek(fPosition, SeekOrigin.Begin);
+            return Position;
+#else
             return fStream.Seek(fOffset + offset, origin) - fOffset;
-            */
+#endif
+            
         }
 
         public override void SetLength(long value)
@@ -180,22 +211,87 @@ namespace osu_common.Libraries.Osz2
             throw new NotSupportedException();
         }
 
+
+        protected override void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+            if (disposing)
+                internalStream.Dispose();
+
+            base.Dispose(disposing);
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             // limit count
             if (Position + count > fLength)
-                count = fLength - (int)Position;
+                count = fLength - (int) Position;
+
+            if (count == 0)
+                return 0;
 #if STRONG_ENCRYPTION
             int bytes = fStream.Read(buffer, offset, count);
 #elif NO_ENCRYPTION
             int bytes = count;
-            Array.Copy(internalBuffer, fPosition, buffer, offset, count);
-#else
-            int bytes = count;
             Array.Copy(internalBuffer,fPosition,buffer,offset,count);
-            encryptor.Decrypt(buffer, offset, count);
+#else
+            long rPosition = fPosition - fOffset;
+            long  seekablePosition = rPosition & ~0x3FL;
+            int skipped = (int) rPosition % 64;
+            int bytes = count;
+            int seekableBytes = count - (64 - skipped);
+
+            int endLeftover = 0, seekableEnd = 0;
+            if (seekableBytes > 0)
+            {
+                seekableEnd = ((int)rPosition + count) & ~0x3F;
+                endLeftover = ((int)rPosition + count) % 64;
+                seekableBytes = seekableEnd - (64 - skipped + (int)rPosition);
+
+                if (seekableBytes > 0)
+                {
+                    //Array.Copy(internalBuffer, fPosition, buffer, offset, count);
+                    internalStream.Position = fPosition;
+                    internalStream.Read(buffer, offset, count);
+                    encryptor.Decrypt(buffer, 64 - skipped + offset, seekableBytes);
+                }
+            }
+            int firstBytes = Math.Min(64,  fLength - (int) seekablePosition);
+            //Array.Copy(internalBuffer, seekablePosition + 4, skipBuffer, 0, firstBytes);
+            internalStream.Position = seekablePosition + fOffset;
+            internalStream.Read(skipBuffer, 0, firstBytes);
+            encryptor.Decrypt(skipBuffer, 0, firstBytes);
+            Array.Copy(skipBuffer, skipped, buffer, offset, Math.Min(64 - skipped, count));
+            if (endLeftover > 0)
+            {
+                int lastBytes = Math.Min(64, fLength - seekableEnd);
+                //Array.Copy(internalBuffer, seekableEnd + 4, skipBuffer, 0, lastBytes);
+                internalStream.Position = seekableEnd + fOffset;
+                internalStream.Read(skipBuffer, 0, lastBytes);
+                encryptor.Decrypt(skipBuffer, 0, lastBytes);
+                Array.Copy(skipBuffer, 0, buffer, count - endLeftover + offset, endLeftover);
+
+            }
+            internalStream.Position = fPosition;
+            //Array.Copy(internalBuffer, fPosition, buffer, offset, count);
+
+#if STREAM_DEBUG
+            for (int i = 0; i < count; i++)
+            {
+                byte byteA = buffer[i + offset];
+                byte byteB = decryptedBuffer[i + Position];
+                if (byteA != byteB)
+                {
+                    byte[] bufferA = new byte[count];
+                    byte[] bufferB = new byte[count];
+                    Array.Copy(buffer, i + offset, bufferA, 0, count - i);
+                    Array.Copy(decryptedBuffer, i + Position, bufferB, 0, count - i);
+                    //System.Diagnostics.Debugger.Break();
+                }
+            }
 #endif
-            fPosition += bytes;
+#endif
+            Seek(bytes, SeekOrigin.Current);
             return bytes;
         }
 
@@ -203,5 +299,8 @@ namespace osu_common.Libraries.Osz2
         {
             throw new NotSupportedException();
         }
+
+
+        
     }
 }

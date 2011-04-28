@@ -12,18 +12,19 @@ namespace osu_common.Libraries.Osz2
     public class MapPackage : IDisposable
     {
 
-        private const string EXT_MAP = "osu";
+        private const string EXT_MAP = "osc";
         private const string EXT_PACKAGE = "osz2";
         private const string EXT_PACKAGE_OLD = "osz";
         private const int F_OFFSET_METADATA = 68;
         private const byte VERSION_EXPORT = 0;
         private static readonly MD5CryptoServiceProvider fHasher = new MD5CryptoServiceProvider();
 
-        private static readonly byte[] KEY = new byte[]
-                                                 {
-                                                     216, 98, 163, 48, 2, 109, 118, 89, 244, 247, 37, 194, 235, 70, 174, 52,
-                                                     13, 106, 97, 84, 242, 62, 186, 48, 25, 66, 72, 85, 242, 22, 15, 92
-                                                 };
+        private byte[] KEY = new byte[]
+                                        {
+                                            216, 98, 163, 48, 2, 109, 118, 89, 244, 247, 37, 194, 235, 70, 174, 52,
+                                            13, 106, 97, 84, 242, 62, 186, 48, 25, 66, 72, 85, 242, 22, 15, 92
+                                        };
+        private static readonly byte[] knownPlain = new byte[64];
 
         private readonly string fFilename;
         private readonly Dictionary<string, FileInfo> fFiles;
@@ -37,6 +38,8 @@ namespace osu_common.Libraries.Osz2
 
         //private readonly List<string> fMapFiles;
         private readonly SortedDictionary<string, int> fMapIDsFiles;
+        private readonly Dictionary<string, DateTime> fFilesToAddDateCreated;
+        private readonly Dictionary<string, DateTime> fFilesToAddDateModified; 
 
         private readonly List<MapStream> fMapStreamsOpen;
         private readonly Dictionary<MapMetaType, string> fMetadata;
@@ -59,6 +62,14 @@ namespace osu_common.Libraries.Osz2
             get { return fOffsetData; }
         }
 
+        public bool NoVideoVersion {get; private set;}
+       
+
+        static MapPackage ()
+        {
+            new FastRandom(1990).NextBytes(knownPlain);
+        }
+
         ~MapPackage()
         {
             Dispose(false);
@@ -66,14 +77,13 @@ namespace osu_common.Libraries.Osz2
 
         private long brOffset = 0; //used to store binaryReader position used to do postprocessing later. 
 
-
+        
 
         /// <summary>
         ///
         /// Open a map package file. Integrity checks will be performed. If the file does not exist, an exception will be thrown.
         /// </summary>
-        public MapPackage(string filename)
-            : this(filename, false, false)
+        public MapPackage(string filename) : this(filename, null, false, false)
         {
         }
 
@@ -82,8 +92,7 @@ namespace osu_common.Libraries.Osz2
         /// <param name="filename">The path to the package file.</param>
         /// <param name="createIfNotFound">This has no effect if the specified file exists. If the file does not exist and this is true, the file will be created when Save() is called. Otherwise, an exception will be thrown.</param>
         /// </summary>
-        public MapPackage(string filename, bool createIfNotFound)
-            : this(filename, createIfNotFound, false)
+        public MapPackage(string filename, bool createIfNotFound) : this(filename, null, createIfNotFound, false)
         {
         }
 
@@ -93,7 +102,7 @@ namespace osu_common.Libraries.Osz2
         /// <param name="filename">The path to the package file.</param>
         /// <param name="createIfNotFound">This has no effect if the specified file exists. If the file does not exist and this is true, the file will be created when Save() is called. Otherwise, an exception will be thrown.</param>
         /// </summary>
-        public MapPackage(string filename, bool createIfNotFound, bool metadataOnly)
+        public MapPackage(string filename, byte[] key, bool createIfNotFound, bool metadataOnly)
         {
             fNotOnDisk = !File.Exists(filename);
             if (fNotOnDisk && !createIfNotFound)
@@ -103,11 +112,13 @@ namespace osu_common.Libraries.Osz2
 
             fFilename = filename;
             fMetadata = new Dictionary<MapMetaType, string>();
-            fFiles = new Dictionary<string, FileInfo>();
+            fFiles = new Dictionary<string, FileInfo>(StringComparer.CurrentCultureIgnoreCase);
             //fMapFiles = new List<string>();
             fMapIDsFiles = new SortedDictionary<string, int>();
+            fFilesToAddDateCreated = new Dictionary<string, DateTime>();
+            fFilesToAddDateModified = new Dictionary<string, DateTime>();
             fMapStreamsOpen = new List<MapStream>();
-            fFilesToAdd = new Dictionary<string, byte[]>();
+            fFilesToAdd = new Dictionary<string, byte[]>(StringComparer.CurrentCultureIgnoreCase);
 
             fMetadataChanged = false;
             fFiledataChanged = false;
@@ -130,7 +141,7 @@ namespace osu_common.Libraries.Osz2
 
             // lock the file from writes
             fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-
+            
 
             // read data and perform integrity checks
             using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
@@ -160,25 +171,23 @@ namespace osu_common.Libraries.Osz2
 
                     for (int i = 0; i < count; i++)
                     {
-                        short key = br.ReadInt16();
-                        string value = br.ReadString();
+                        short dKey = br.ReadInt16();
+                        string dValue = br.ReadString();
 
                         // check the value is clean and add to dictionary
-                        if (Enum.IsDefined(typeof(MapMetaType), (int)key))
-                            fMetadata.Add((MapMetaType)key, value);
+                        if (Enum.IsDefined(typeof (MapMetaType), (int) dKey))
+                            fMetadata.Add((MapMetaType) dKey, dValue);
 
-                        writer.Write(key);
-                        writer.Write(value);
+                        writer.Write(dKey);
+                        writer.Write(dValue);
                     }
                     writer.Flush();
 
                     // check hash
-                    byte[] hash = GetOszHash(memstream.ToArray(), count * 3, 0xa7);
-                    for (int i = 0; i < 16; i++)
-                    {
-                        if (hash[i] != hash_meta[i])
-                            throw new IOException("File failed integrity check.");
-                    }
+                    byte[] hash = GetOszHash(memstream.ToArray(), count*3, 0xa7);
+                    if (!GeneralHelper.CompareByteSequence(hash, hash_meta))
+                        throw new IOException("File failed integrity check.");
+
 
                     writer.Close();
                 }
@@ -187,13 +196,25 @@ namespace osu_common.Libraries.Osz2
                 int mapCount = br.ReadInt32();
                 for (int i = 0; i < mapCount; i++)
                     fMapIDsFiles.Add(br.ReadString(), br.ReadInt32());
+                
 
+                //get key
+                if (key != null)
+                {
+                    KEY = key;
+                }
+                else
+                {
+                    //no key is given, we'll generate it from the metadata.
+                    string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
+                    KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
+                }
 
-
+              
                 //all metadata is now loaded.
                 if (metadataOnly)
                     //save brOffset for if postProcessing gets called later
-                    brOffset = br.BaseStream.Position;
+                    brOffset = br.BaseStream.Position; 
                 else
                     doPostProcessing(br);
             }
@@ -208,10 +229,12 @@ namespace osu_common.Libraries.Osz2
             if (HasPostProcessed)
                 throw new Exception("Already has been postprocessed");
 
-            BinaryReader br = new BinaryReader(File.OpenRead(fFilename));
-            br.BaseStream.Seek(brOffset, SeekOrigin.Begin);
-            doPostProcessing(br);
-            br.Close();
+            using (BinaryReader br = new BinaryReader(File.OpenRead(fFilename)))
+            {
+                br.BaseStream.Seek(brOffset, SeekOrigin.Begin);
+                doPostProcessing(br);
+            }
+
         }
 
         /// <summary>
@@ -221,6 +244,18 @@ namespace osu_common.Libraries.Osz2
         private void doPostProcessing(BinaryReader br)
         {
             HasPostProcessed = true;
+
+
+            //check whether we have the correct key by comparing to a known plain.
+            using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XTEA, KEY))
+            {
+                byte[] decryptedPlain = new byte[64];
+                decryptor.Read(decryptedPlain, 0, 64);
+                if (!GeneralHelper.CompareByteSequence(decryptedPlain, knownPlain))
+                    throw new Exception("Invalid key");
+
+            }
+
 
             //read data and perform integrity checks
 
@@ -261,7 +296,7 @@ namespace osu_common.Libraries.Osz2
                 aes.Key = KEY; //TODO: key etc etc
 
                 using (MemoryStream memstream = new MemoryStream(fileinfo))
-
+                
 #if STRONG_ENCRYPTION
                 using (CryptoStream cstream = new CryptoStream(memstream, aes.CreateDecryptor(), CryptoStreamMode.Read))
 #elif NO_ENCRYPTION
@@ -276,11 +311,8 @@ namespace osu_common.Libraries.Osz2
 
                     // check hash
                     byte[] hash = GetOszHash(fileinfo, count * 4, 0xd1);
-                    for (int i = 0; i < 16; i++)
-                    {
-                        if (hash[i] != hash_info[i])
-                            throw new IOException("File failed integrity check.");
-                    }
+                    if (!GeneralHelper.CompareByteSequence(hash, hash_info))
+                        throw new IOException("File failed integrity check.");
 
                     // add files and offsets to dictionary and list
                     int offset_cur = reader.ReadInt32();
@@ -288,7 +320,9 @@ namespace osu_common.Libraries.Osz2
                     {
                         string name = reader.ReadString();
                         byte[] fileHash = reader.ReadBytes(16);
-
+                        DateTime fileDateCreated = DateTime.FromBinary(reader.ReadInt64());
+                        DateTime fileDateModified = DateTime.FromBinary(reader.ReadInt64());
+                        
                         // get next offset in order to calculate length of file
                         int offset_next;
                         if (i + 1 < count)
@@ -307,15 +341,36 @@ namespace osu_common.Libraries.Osz2
                         {
                             bool invalid = false;
                             long oldPos = br.BaseStream.Position;
-                            long newPos = fOffsetData + offset_cur + fileLength / 2 - 512;
-                            if (br.BaseStream.Length >= fileLength || fileLength < 1024)
+                            long newPos = fOffsetData + offset_cur + fileLength / 2 - 512 + 4;
+                            
+                            
+                            if (newPos >= br.BaseStream.Length || fileLength < 1024)
                                 invalid = true;
                             else
                             {
-                                br.BaseStream.Position = newPos;
                                 byte[] footData = new byte[1024];
-                                br.BaseStream.Read(footData, 0, 1024);
-                                string videoHash = GeneralHelper.rawBytesToString(fHasher.ComputeHash(footData));
+                               
+                                byte[] videoData = new byte[fileLength - 4];
+                                //decrypt data then check videhash
+                                using (MapStream ms = new MapStream(Filename, fOffsetData + offset_cur, fileLength - 4, fIV, KEY))
+                                //using (FastEncryptorStream ms = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XXTEA, KEY))
+                                {
+                                    int halfLength = (fileLength - 4) / 2;
+                                    //(data.LongLength / 2) - ((data.LongLength / 2) % 16) - 512 + 16
+                                    //ms.Position = fOffsetData + offset_cur + halfLength - (halfLength % 16) - 512 + 16 + 4;
+                                    ////ms.Position = fOffsetData + offset_cur + 4;
+                                    //br.BaseStream.Position = newPos;
+                                    //br.BaseStream.Read(footData, 0, 1024);
+                                    //br.BaseStream.Position = oldPos;
+                                    //ms.Read(footData, 0, 1024);
+                                    ms.Seek(halfLength - (halfLength % 16) - 512 + 16, SeekOrigin.Begin);
+                                    ms.Read(footData, 0, 1024);
+                                    br.BaseStream.Position = oldPos;
+
+                                    //Array.Copy(videoData, halfLength - (halfLength % 16) - 512 + 16, footData, 0, 1024);
+
+                                }
+                                string videoHash = BitConverter.ToString(fHasher.ComputeHash(footData)).Replace("-", "");
                                 invalid = !videoHash.Equals(fMetadata[MapMetaType.VideoHash]);
                             }
                             if (invalid)
@@ -323,13 +378,14 @@ namespace osu_common.Libraries.Osz2
                                 //hash is invalid so we skip adding the file
                                 //we also mark the file as unsavable as it's missing data
                                 fSavable = false;
+                                NoVideoVersion = true;
                                 offset_cur = offset_next;
                                 continue;
                             }
 
                         }
 
-                        fFiles.Add(name, new FileInfo(name, offset_cur, fileLength, fileHash));
+                        fFiles.Add(name, new FileInfo(name, offset_cur, fileLength, fileHash, fileDateCreated, fileDateModified));
 
                         offset_cur = offset_next;
                     }
@@ -340,12 +396,14 @@ namespace osu_common.Libraries.Osz2
                 aes.Clear();
             }
 
+            fHandle.Seek(0, SeekOrigin.Begin);
 
+            
         }
 
         #region Data processing methods
 
-        private static void EncryptData(Dictionary<string, byte[]> files, ICryptoTransform encryptor)
+        private void EncryptData(Dictionary<string, byte[]> files, ICryptoTransform encryptor)
         {
             // we are going to modify the collection, so we can't foreach it directly
             string[] keys = new string[files.Keys.Count];
@@ -398,7 +456,8 @@ namespace osu_common.Libraries.Osz2
             }
         }
 
-        private byte[] EncryptFileinfo(SortedDictionary<string, byte[]> files, Dictionary<string, byte[]> filesHashes, ICryptoTransform encryptor)
+        private byte[] EncryptFileinfo(SortedDictionary<string, byte[]> files, Dictionary<string, byte[]> filesHashes, 
+            Dictionary<string, DateTime> filesTimeCreated, Dictionary<string, DateTime> filesTimeModified, ICryptoTransform encryptor)
         {
             using (MemoryStream memstream = new MemoryStream())
 #if STRONG_ENCRYPTION
@@ -418,22 +477,22 @@ namespace osu_common.Libraries.Osz2
                 {
                     writer.Write(offset);
                     writer.Write(pair.Key);
-
+                   
                     //temporarily decrypt it so we can hash
 #if NO_ENCRYPTION
                     using (Stream decryptor = new MemoryStream(pair.Value, false))
 #else
                     using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.XXTEA,KEY))
 #endif
-
                     {
                         byte[] decrypted = new byte[pair.Value.Length];
-                        decryptor.Read(decrypted, 0, pair.Value.Length);
+                        decryptor.Read(decrypted,0,pair.Value.Length);
                         byte[] hash = fHasher.ComputeHash(decrypted, 4, pair.Value.Length - 4);
                         writer.Write(hash);
+                        writer.Write(filesTimeCreated[pair.Key].ToBinary());
+                        writer.Write(filesTimeCreated[pair.Key].ToBinary());
                         filesHashes[pair.Key] = hash;
                     }
-
                     offset += pair.Value.Length;
                 }
 #if STRONG_ENCRYPTION
@@ -460,7 +519,7 @@ namespace osu_common.Libraries.Osz2
                 writer.Write(data.Count);
                 foreach (KeyValuePair<MapMetaType, string> pair in data)
                 {
-                    writer.Write((ushort)pair.Key);
+                    writer.Write((ushort) pair.Key);
                     //todo: do we want to use empty strings or something else here?
                     writer.Write(pair.Value ?? string.Empty);
                 }
@@ -470,7 +529,7 @@ namespace osu_common.Libraries.Osz2
                 return memstream.ToArray();
             }
         }
-
+        
         //todo: give stream instead so we don't copy memory unnecesseraly
         private static byte[] GetOszHash(byte[] buffer, int pos, byte swap)
         {
@@ -511,7 +570,7 @@ namespace osu_common.Libraries.Osz2
                 long VideoLength = Convert.ToInt64(GetMetadata(MapMetaType.VideoDataLength));
                 //ignore video data while hashing
                 toBeHashed = new byte[bytesLeft - VideoLength];
-                data.Read(toBeHashed, 0, (int)(VideoOffset));
+                data.Read(toBeHashed, 0, (int) (VideoOffset));
                 long newPos = data.Position + VideoLength;
                 if (newPos >= data.Length)
                 {
@@ -575,9 +634,9 @@ namespace osu_common.Libraries.Osz2
             MapMetaType value;
             try
             {
-                value = (MapMetaType)Enum.Parse(typeof(MapMetaType), meta, true);
+                value = (MapMetaType) Enum.Parse(typeof(MapMetaType), meta, true);
             }
-            catch (Exception)
+            catch(Exception)
             {
                 return MapMetaType.Unknown;
             }
@@ -608,14 +667,14 @@ namespace osu_common.Libraries.Osz2
             {
                 CheckClosed();
                 string[] fMapFiles = new string[fMapIDsFiles.Count];
-                fMapIDsFiles.Keys.CopyTo(fMapFiles, 0);
+                fMapIDsFiles.Keys.CopyTo(fMapFiles,0);
                 return fMapFiles;
             }
         }
 
         public string GetMapByID(int id)
         {
-            foreach (KeyValuePair<string, int> mapIDPair in fMapIDsFiles)
+            foreach(KeyValuePair<string,int> mapIDPair in fMapIDsFiles)
                 if (id == mapIDPair.Value)
                     return mapIDPair.Key;
 
@@ -624,15 +683,14 @@ namespace osu_common.Libraries.Osz2
         public int GetIDByMap(string map)
         {
             //we don't use tryGetValue as int is not nullable
-            return fMapIDsFiles.ContainsKey(map) ? fMapIDsFiles[map] : -2;
+            return fMapIDsFiles.ContainsKey(map)? fMapIDsFiles[map] : -2;
         }
 
         public void SetMapID(string map, int id)
         {
             if (!fMapIDsFiles.ContainsKey(map))
                 throw new Exception("Map does not exist in this mappackage");
-
-            if (fMapIDsFiles.ContainsValue(id) && id != -1 && GetIDByMap(map) != id)
+            if (fMapIDsFiles.ContainsValue(id) && id != -1 && GetIDByMap(map)!=id)
                 throw new Exception("An other map already has this ID set");
 
             fMapIDsFiles[map] = id;
@@ -692,7 +750,7 @@ namespace osu_common.Libraries.Osz2
             }
 
             return GetMD5Hash(buffer);
-
+            
         }
         //only works for saved files.
         public byte[] GetCachedFileHash(string filename)
@@ -729,8 +787,8 @@ namespace osu_common.Libraries.Osz2
 
             if (fFiles.ContainsKey(filename))
             {
-                // offset needs +16 to skip hash
-                MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, KEY); //TODO: fix key
+                
+                MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, KEY);
                 fMapStreamsOpen.Add(ms);
                 ms.OnStreamClosed += MapStream_OnStreamClosed;
                 stream = ms;
@@ -761,6 +819,22 @@ namespace osu_common.Libraries.Osz2
             CheckClosed();
             fMetadata[type] = data;
             fMetadataChanged = true;
+            switch (type)
+            {
+                case MapMetaType.Creator:
+                case MapMetaType.BeatmapSetID:
+                    string creator;
+                    string beatmapSetID;
+
+                    fMetadata.TryGetValue(MapMetaType.Creator, out creator);
+                    fMetadata.TryGetValue(MapMetaType.BeatmapSetID, out beatmapSetID);
+                    if (creator == null || beatmapSetID == null)
+                        return;
+
+                    string seed = creator + "yhxyfjo5" + beatmapSetID;
+                    KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
+                    break;
+            }
         }
 
         /// <summary>
@@ -819,7 +893,7 @@ namespace osu_common.Libraries.Osz2
                 if (IsPackageFile(p))
                     continue;
 
-                AddFile(p.Replace(path, ""), p);
+                AddFile(p.Replace(path, ""), p, File.GetCreationTimeUtc(p), File.GetLastWriteTimeUtc(p));
             }
 
             fFiledataChanged = true;
@@ -830,7 +904,7 @@ namespace osu_common.Libraries.Osz2
         /// </summary>
         /// <param name="filename">The internal path used to reference this file.</param>
         /// <param name="path">The path to this file on disk.</param>
-        public void AddFile(string filename, string path)
+        public void AddFile(string filename, string path, DateTime creationTime, DateTime modifiedTime)
         {
             CheckClosed();
 
@@ -842,11 +916,11 @@ namespace osu_common.Libraries.Osz2
             using (FileStream fs = File.OpenRead(path))
             {
                 data = new byte[fs.Length];
-                fs.Read(data, 0, (int)fs.Length);
+                fs.Read(data, 0, (int) fs.Length);
                 fs.Close();
             }
 
-            AddFile(filename, data);
+            AddFile(filename, data, creationTime, modifiedTime);
 
             fFiledataChanged = true;
         }
@@ -856,7 +930,7 @@ namespace osu_common.Libraries.Osz2
         /// </summary>
         /// <param name="filename">The internal path used to reference this file.</param>
         /// <param name="data">The contents of the file in a byte array.</param>
-        public void AddFile(string filename, byte[] data)
+        public void AddFile(string filename, byte[] data, DateTime creationTime, DateTime modifiedTime)
         {
             CheckClosed();
 
@@ -865,7 +939,7 @@ namespace osu_common.Libraries.Osz2
 
 
             if (IsMapFile(filename) && !fMapIDsFiles.ContainsKey(filename))
-                fMapIDsFiles.Add(filename, -1);
+                fMapIDsFiles.Add(filename,-1);
 
             if (IsVideoFile(filename))
             {
@@ -874,17 +948,21 @@ namespace osu_common.Libraries.Osz2
                 long offset = fFilesAddedBytes;
                 foreach (KeyValuePair<string, FileInfo> pair in fFiles)
                     offset += pair.Value.Length;
-
-                byte[] videoHash = fHasher.ComputeHash(data, (int)(data.LongLength / 2 - 512), 1024);
-
+                byte[] footData = new byte[1024];
+                Array.Copy(data, (data.LongLength / 2) - ((data.LongLength / 2) % 16) - 512 + 16, footData, 0, 1024);
+                //Array.Copy(data, 0, footData, 0, 1024);
+                //byte[] videoHash = fHasher.ComputeHash(data, (int) (data.LongLength/2 - 512), 1024);
+                byte[] videoHash = fHasher.ComputeHash(footData);
                 AddMetadata(MapMetaType.VideoDataOffset, Convert.ToString(offset));
                 AddMetadata(MapMetaType.VideoDataLength, Convert.ToString(data.Length));
-                AddMetadata(MapMetaType.VideoHash, GeneralHelper.rawBytesToString(videoHash));
+                AddMetadata(MapMetaType.VideoHash, BitConverter.ToString(videoHash).Replace("-", ""));
                 fMetadataChanged = true;
 
             }
 
             fFilesToAdd[filename] = data;
+            fFilesToAddDateCreated[filename] = creationTime;
+            fFilesToAddDateModified[filename] = modifiedTime;
             fFilesAddedBytes += data.LongLength;
 
             if (fFiles.ContainsKey(filename))
@@ -913,6 +991,8 @@ namespace osu_common.Libraries.Osz2
             if (fFilesToAdd.ContainsKey(filename))
             {
                 fFilesToAdd.Remove(filename);
+                fFilesToAddDateCreated.Remove(filename);
+                fFilesToAddDateModified.Remove(filename);
                 removed = true;
             }
 
@@ -966,11 +1046,11 @@ namespace osu_common.Libraries.Osz2
                             // so in order to speed up the process only copy if lengths are identical
                             //if (old.Length == fi.Length)
                             //{
-                            byte[] data = new byte[fi.Length];
-                            bw.Seek(fi.Offset + dataOffset, SeekOrigin.Begin);
-                            f.Seek(old.Offset + oldDataOffset, SeekOrigin.Begin);
-                            f.Read(data, 0, data.Length);
-                            bw.Write(data);
+                                byte[] data = new byte[fi.Length];
+                                bw.Seek(fi.Offset + dataOffset, SeekOrigin.Begin);
+                                f.Seek(old.Offset + oldDataOffset, SeekOrigin.Begin);
+                                f.Read(data, 0, data.Length);
+                                bw.Write(data);
                             //}
                         }
                     }
@@ -980,7 +1060,7 @@ namespace osu_common.Libraries.Osz2
                 bw.Seek(0, SeekOrigin.Begin);
                 using (FileStream f = File.Open(path, FileMode.Create))
                 {
-                    const int SIZE = 8 * 1024;
+                    const int SIZE = 8*1024;
                     byte[] buffer = new byte[SIZE];
                     Stream s = bw.BaseStream;
                     int count;
@@ -1016,7 +1096,7 @@ namespace osu_common.Libraries.Osz2
         }
 #endif
 
-        public void getVideoOffset(out int offset, out int length)
+        public void getVideoOffset (out int offset, out int length)
         {
             CheckClosed();
             offset = -1;
@@ -1048,7 +1128,8 @@ namespace osu_common.Libraries.Osz2
         /// </summary>
         public List<FileInfo> GetFileInfo()
         {
-            Save();
+    
+            //Save();
 
             List<FileInfo> ret = new List<FileInfo>();
             foreach (FileInfo fi in fFiles.Values)
@@ -1104,13 +1185,16 @@ namespace osu_common.Libraries.Osz2
                 aes.Key = KEY; //TODO: key stuff
 
                 // header
-                bw.Write(new byte[] { 0xEC, (byte)'H', (byte)'O' });
+                bw.Write(new byte[] {0xEC, (byte) 'H', (byte) 'O'});
                 bw.Write(VERSION_EXPORT);
 
 
                 // get encrypted file data
                 SortedDictionary<string, byte[]> files = new SortedDictionary<string, byte[]>(new FileComparer());
                 Dictionary<string, byte[]> filesHashes = new Dictionary<string, byte[]>();
+                Dictionary<string, DateTime> filesDateCreated = new Dictionary<string, DateTime>();
+                Dictionary<string, DateTime> filesDateModified = new Dictionary<string, DateTime>();
+                
 
                 byte[] file_data;
                 if (fFiledataChanged)
@@ -1121,12 +1205,16 @@ namespace osu_common.Libraries.Osz2
                         byte[] data = new byte[pair.Value.Length];
                         Array.Copy(file, fOffsetData + pair.Value.Offset, data, 0, data.Length);
                         files.Add(pair.Key, data);
+                        filesDateCreated[pair.Key] = pair.Value.CreationTime;
+                        filesDateModified[pair.Key] = pair.Value.ModifiedTime;
                     }
 
                     EncryptData(fFilesToAdd, aes.CreateEncryptor());
                     foreach (KeyValuePair<string, byte[]> pair in fFilesToAdd)
                     {
-                        files.Add(pair.Key, pair.Value);
+                        files.Add(pair.Key, pair.Value );
+                        filesDateCreated[pair.Key] = fFilesToAddDateCreated[pair.Key];
+                        filesDateModified[pair.Key] = fFilesToAddDateModified[pair.Key];
                     }
 
                     file_data = BytifyData(files);
@@ -1141,7 +1229,7 @@ namespace osu_common.Libraries.Osz2
                 // write iv
                 byte[] iv = new byte[fIV.Length];
                 for (int i = 0; i < iv.Length; i++)
-                    iv[i] = (byte)(fIV[i] ^ file_data[i]);
+                    iv[i] = (byte) (fIV[i] ^ file_data[i]);
                 bw.Write(iv);
 
                 // hashes inserted here when writing to file
@@ -1158,6 +1246,14 @@ namespace osu_common.Libraries.Osz2
                         bw.Write(mapID.Key);
                         bw.Write(mapID.Value);
                     }
+                    
+                    using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream, 
+                        EncryptionMethod.XTEA, KEY))
+                    {
+                        encryptor.Write(knownPlain, 0, 64);
+                    }
+
+                    
 
                 }
                 else
@@ -1170,13 +1266,13 @@ namespace osu_common.Libraries.Osz2
                 }
 
                 // update offset to fileinfo
-                int tOffsetFileinfo = (int)bw.BaseStream.Position;
+                int tOffsetFileinfo = (int) bw.BaseStream.Position;
 
                 // get fileinfo
                 byte[] info_data;
                 if (fFiledataChanged)
                 {
-                    info_data = EncryptFileinfo(files, filesHashes, aes.CreateEncryptor());
+                    info_data = EncryptFileinfo(files, filesHashes, filesDateCreated, filesDateModified, aes.CreateEncryptor());
 
                     // info hash must be calculated here in order to obfuscate length
                     hash_info = GetOszHash(info_data, files.Count * 4, 0xd1);
@@ -1199,19 +1295,19 @@ namespace osu_common.Libraries.Osz2
                 }
 
                 // update offset to data
-                int tOffsetData = (int)bw.BaseStream.Position;
+                int tOffsetData = (int) bw.BaseStream.Position;
 
                 // write file data
                 bw.Write(file_data);
-
+                
                 // calculate remaining hashes
                 hash_meta = GetOszHash(meta_data, fMetadata.Count * 3, 0xa7);
                 hash_body = GetBodyHash(new MemoryStream(file_data, false), file_data.Length / 2, 0x9f);
-
+                
                 //TODO: maybe an async write while getting the hash to speed things up
                 using (FileStream fs = File.Open(fFilename, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    const int blockSize = 1024 * 8;
+                    const int blockSize = 1024*8;
                     byte[] buffer = new byte[blockSize];
                     int count;
 
@@ -1245,7 +1341,8 @@ namespace osu_common.Libraries.Osz2
                     int offset = 0;
                     foreach (KeyValuePair<string, byte[]> pair in files)
                     {
-                        fFiles.Add(pair.Key, new FileInfo(pair.Key, offset, pair.Value.Length, filesHashes[pair.Key]));
+                        fFiles.Add(pair.Key, new FileInfo(pair.Key, offset, pair.Value.Length, 
+                            filesHashes[pair.Key], filesDateCreated[pair.Key], filesDateModified[pair.Key]));
                         offset += pair.Value.Length;
                     }
                 }
@@ -1256,6 +1353,8 @@ namespace osu_common.Libraries.Osz2
                 fNotOnDisk = false;
                 fMetadataChanged = false;
                 fFiledataChanged = false;
+                fFilesToAddDateCreated.Clear();
+                fFilesToAddDateModified.Clear();
                 fFilesToAdd.Clear();
             }
 
@@ -1272,12 +1371,12 @@ namespace osu_common.Libraries.Osz2
         {
             //If the object is already closed, just return gracefully.
             if (fClosed) return;
-
+            
             if (fMapStreamsOpen != null)
                 fMapStreamsOpen.ForEach(s => s.Close());
-
-            if (fSavable)
-                Save();
+            
+            //if(fSavable)
+            //    Save();
 
             if (fIV != null)
                 Array.Clear(fIV, 0, fIV.Length);
@@ -1285,18 +1384,24 @@ namespace osu_common.Libraries.Osz2
 
             if (fFiles != null) fFiles.Clear();
             if (fFilesToAdd != null) fFilesToAdd.Clear();
+            if (fFilesToAddDateCreated != null) fFilesToAddDateCreated.Clear();
+            if (fFilesToAddDateModified != null) fFilesToAddDateModified.Clear();
             if (fMetadata != null) fMetadata.Clear();
 
-            if (fHandle != null) fHandle.Close();
+            if (fHandle != null)
+            {
+                fHandle.Close();
+                fHandle.Dispose();
+            }
 
             fClosed = true;
         }
 
         object packageLock = new object();
-
+ 
         public bool AcquireLock(int timeOut, bool releaseFileLock)
         {
-
+           
             //is safe from deadlocks as the same thread can enter the same object multiple times
             try
             {
@@ -1308,19 +1413,19 @@ namespace osu_common.Libraries.Osz2
                 return false;
             }
 
-            if (releaseFileLock && fHandle != null)
+            if (releaseFileLock && fHandle!=null)
             {
                 fHandle.Close();
                 fHandle = null;
             }
-
+     
             return true;
 
         }
 
         public void Unlock()
         {
-            if (fHandle == null)
+            if(fHandle == null)
                 fHandle = File.Open(fFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             Monitor.Exit(packageLock);
@@ -1376,18 +1481,24 @@ namespace osu_common.Libraries.Osz2
 
     public struct FileInfo : bSerializable
     {
-        public string Filename { get; private set; }
+        public string Filename { get; private set;}
         public int Length { get; private set; }
         public int Offset { get; private set; }
-        public byte[/*16*/] Hash { get; private set; }
+        public byte[/*16*/] Hash  { get; private set; }
+        public DateTime CreationTime { get; private set; }
+        public DateTime ModifiedTime { get; private set; }
 
-        public FileInfo(string filename, int offset, int length, byte[] hash)
-            : this()
+
+        public FileInfo(string filename, int offset, int length, byte[] hash, DateTime creationTime, DateTime modifiedTime) : this()
         {
             Filename = filename;
             Offset = offset;
             Length = length;
             Hash = hash;
+            CreationTime = creationTime;
+            ModifiedTime = modifiedTime;
+
+
         }
 
         public void ReadFromStream(SerializationReader sr)
@@ -1396,6 +1507,9 @@ namespace osu_common.Libraries.Osz2
             Length = sr.ReadInt32();
             Offset = sr.ReadInt32();
             Hash = sr.ReadByteArray();
+            CreationTime = (DateTime)sr.ReadObject();
+            ModifiedTime = (DateTime)sr.ReadObject();
+            
 
         }
 
@@ -1405,6 +1519,8 @@ namespace osu_common.Libraries.Osz2
             sw.Write(Length);
             sw.Write(Offset);
             sw.WriteByteArray(Hash);
+            sw.WriteObject(CreationTime);
+            sw.WriteObject(ModifiedTime);
         }
     }
 

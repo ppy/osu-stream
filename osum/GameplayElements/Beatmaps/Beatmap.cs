@@ -31,7 +31,7 @@ namespace osum.GameplayElements.Beatmaps
             }
 
         }
-        public string AudioFilename;
+        public string AudioFilename = "audio.mp3";
 
         public Beatmap()
         {

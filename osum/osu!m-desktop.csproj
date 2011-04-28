@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\osu!m\</OutputPath>
-    <DefineConstants>DEBUG MONO NO_ENCRYPTION OSUM</DefineConstants>
+    <DefineConstants>DEBUG MONO OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -91,8 +91,13 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Helpers\osu!common\Aes.cs" />
+    <Compile Include="Helpers\osu!common\AesManaged.cs" />
     <Compile Include="Helpers\osu!common\bSerializable.cs" />
     <Compile Include="Helpers\osu!common\DynamicDeserializer.cs" />
+    <Compile Include="Helpers\osu!common\FastEncryptionProvider.cs" />
+    <Compile Include="Helpers\osu!common\FastEncryptorStream.cs" />
+    <Compile Include="Helpers\osu!common\FastRandom.cs" />
     <Compile Include="Helpers\osu!common\FastSerializer.cs" />
     <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
     <Compile Include="Helpers\osu!common\MapPackage.cs" />

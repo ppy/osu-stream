@@ -237,21 +237,27 @@ namespace osum.GameModes
 #if iOS
             string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             
-            foreach (string s in Directory.GetFiles(docs,"*.osc"))
+            foreach (string s in Directory.GetFiles(docs,"*.osz2"))
             {
-                Beatmap b = new Beatmap(docs);
-                b.BeatmapFilename = Path.GetFileName(s);
-                
-                BeatmapPanel panel = new BeatmapPanel(b, this);
-                spriteManager.Add(panel);
+                Beatmap reader = new Beatmap(s);
 
-                availableMaps.Add(b);
-                panels.Add(panel);
+                string[] files = reader.Package == null ? Directory.GetFiles(s, "*.osc") : reader.Package.MapFiles;
+                foreach (string file in files)
+                {
+                    Beatmap b = new Beatmap(s);
+                    b.BeatmapFilename = Path.GetFileName(file);
+
+                    BeatmapPanel panel = new BeatmapPanel(b, this);
+                    spriteManager.Add(panel);
+
+                    availableMaps.Add(b);
+                    panels.Add(panel);
+                }
             }
 #endif
 
             if (Directory.Exists(BEATMAP_DIRECTORY))
-                foreach (string s in Directory.GetDirectories(BEATMAP_DIRECTORY))
+                foreach (string s in Directory.GetFiles(BEATMAP_DIRECTORY))
                 {
                     Beatmap reader = new Beatmap(s);
 
