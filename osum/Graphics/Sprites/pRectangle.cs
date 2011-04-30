@@ -57,6 +57,31 @@ namespace osum.Graphics.Drawables
         float[] coordinates = new float[8];
         float[] vertices = new float[8];
 
+        internal override bool IsOnScreen
+        {
+            get
+            {
+                Vector2 scale = Scale * GameBase.BaseToNativeRatio;
+                Vector2 pos = FieldPosition;
+
+                //check (x1,y1)
+                if (pos.X < GameBase.NativeSize.Width && pos.X >= 0)
+                    return true;
+                if (pos.Y < GameBase.NativeSize.Height && pos.Y >= 0)
+                    return true;
+
+                pos += scale;
+
+                //check (x2,y2)
+                if (pos.X < GameBase.NativeSize.Width && pos.X >= 0)
+                    return true;
+                if (pos.Y < GameBase.NativeSize.Height && pos.Y >= 0)
+                    return true;
+                
+                return true;
+            }
+        }
+
         public override bool Draw()
         {
             if (base.Draw())
@@ -64,7 +89,7 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
                 Vector2 pos = FieldPosition;
-                Vector2 scale = FieldScale;
+                Vector2 scale = Scale * GameBase.BaseToNativeRatio;
 
                 GL.Color4(c.R, c.G, c.B, c.A);
 
@@ -73,7 +98,7 @@ namespace osum.Graphics.Drawables
                 float vTop = -OriginVector.Y;
                 float vRight = -OriginVector.X + scale.X;
                 float vBottom = -OriginVector.Y + scale.Y;
-                
+
                 if (Rotation != 0)
                 {
                     float cos = (float)Math.Cos(Rotation);
