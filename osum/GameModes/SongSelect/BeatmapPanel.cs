@@ -6,13 +6,14 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Helpers;
 using System.Text.RegularExpressions;
+using osum.Graphics.Drawables;
 namespace osum.GameModes.SongSelect
 {
     internal class BeatmapPanel : pSpriteCollection
     {
         internal Beatmap Beatmap;
 
-        internal pSprite s_BackingPlate;
+        internal pDrawable s_BackingPlate;
         internal pText s_Text;
 
         float base_depth = 0.5f;
@@ -20,16 +21,11 @@ namespace osum.GameModes.SongSelect
         static Color4 colourNormal = new Color4(28, 139, 242, 255);
         static Color4 colourHover = new Color4(27, 197, 241, 255);
 
-        internal const int PANEL_HEIGHT = 80;
+        internal const int PANEL_HEIGHT = 60;
 
         internal BeatmapPanel(Beatmap beatmap, SongSelectMode select)
         {
-            s_BackingPlate = pSprite.FullscreenWhitePixel;
-            s_BackingPlate.Alpha = 1;
-            s_BackingPlate.AlwaysDraw = true;
-            s_BackingPlate.Colour = colourNormal;
-            s_BackingPlate.Scale.Y = PANEL_HEIGHT;
-            s_BackingPlate.DrawDepth = base_depth;
+            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, PANEL_HEIGHT), true, base_depth, colourNormal);
             Sprites.Add(s_BackingPlate);
 
             Beatmap = beatmap;
