@@ -13,6 +13,7 @@ using OpenTK.Graphics;
 using osum.GameModes.Play.Components;
 using osum.Graphics.Drawables;
 using osum.GameplayElements;
+using System.Threading;
 
 namespace osum.GameModes
 {
@@ -85,10 +86,12 @@ namespace osum.GameModes
 
         private void InitializePostSelectionOptions()
         {
-            const int ypos = 140;
-            const int spacing = 20;
+            Vector2 border = new Vector2(4, 4);
 
-            Vector2 buttonSize = new Vector2(185, 100);
+            int ypos = 124;
+            float spacing = border.X;
+
+            Vector2 buttonSize = new Vector2((GameBase.BaseSize.Width - spacing * 4) / 3f, 100);
 
             float currX = spacing;
 
@@ -106,8 +109,9 @@ namespace osum.GameModes
 
             spritesDifficultySelection.Add(s_ButtonStandard);
 
-            Vector2 border = new Vector2(4, 4);
-
+            s_DifficultySelectionRectangle = new pRectangle(new Vector2(0, ypos - border.Y), new Vector2(GameBase.BaseSize.Width, buttonSize.Y + border.Y * 2), true, 0.3f, Color4.Gray);
+            spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
+            
             s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.LightGray) { Offset = -border };
             spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
 
@@ -115,16 +119,20 @@ namespace osum.GameModes
 
             s_ButtonExpert = new pButton("Expert", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_WARNING, difficultySelected);
 
-            s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false);
+            s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.LightGray, false);
             s_ButtonExpert.Sprites.Add(s_ButtonExpertUnlock);
 
             spritesDifficultySelection.Add(s_ButtonExpert);
 
             currX += buttonSize.X + spacing;
 
-            //s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSizeHalf.Width * 0.5f, ypos + 120), new Vector2(GameBase.BaseSizeHalf.Width, 40), Color4.MistyRose, gameStart);
-            //s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
-            //spritesDifficultySelection.Add(s_ButtonStart);
+            s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSize.Width * 0.675f, ypos + 120), new Vector2(140, 40), Color4.DarkViolet, gameStart);
+            s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
+            spritesDifficultySelection.Add(s_ButtonStart);
+
+            s_ButtonBack = new pButton("Back", new Vector2(GameBase.BaseSize.Width * 0.125f, ypos + 120), new Vector2(140, 40), Color4.DarkViolet, backToSelect);
+            s_ButtonBack.s_Text.Offset = new Vector2(0, 8);
+            spritesDifficultySelection.Add(s_ButtonBack);
 
             spriteManager.Add(spritesDifficultySelection);
             spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
@@ -156,17 +164,14 @@ namespace osum.GameModes
             {
                 if (p == panel)
                 {
-                    panel.s_BackingPlate.UnbindAllEvents();
                     panel.s_BackingPlate.FlashColour(Color4.White, 600);
 
-                    foreach (pSprite s in p.Sprites)
-                    {
+                    foreach (pDrawable s in p.Sprites)
                         s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
-                    }
                 }
                 else
                 {
-                    foreach (pSprite s in p.Sprites)
+                    foreach (pDrawable s in p.Sprites)
                         s.FadeOut(100);
                 }
             }
@@ -207,6 +212,21 @@ namespace osum.GameModes
         }
 
         bool hasStarted;
+        private pButton s_ButtonStart;
+        private pButton s_ButtonBack;
+
+        private void backToSelect(object sender, EventArgs args)
+        {
+            hasSelected = false;
+
+            foreach (BeatmapPanel p in panels)
+                foreach (pDrawable d in p.Sprites)
+                    d.FadeIn(200);
+
+            spritesDifficultySelection.Sprites.ForEach(s => s.FadeOut(50));
+
+        }
+
         private void gameStart(object sender, EventArgs args)
         {
             if (hasStarted) return;
