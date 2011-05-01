@@ -196,7 +196,7 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.NativeScaled:
                         return Scale;
                     default:
-                        return Scale * GameBase.SpriteToNativeRatio * (UsesTextures ? 1 : GameBase.BaseToNativeRatio);
+                        return Scale * (UsesTextures ? GameBase.SpriteToNativeRatio : GameBase.BaseToNativeRatio);
                 }
             }
         }
@@ -206,7 +206,10 @@ namespace osum.Graphics.Sprites
             get
             {
                 if (SpriteManager.UniversalDim > 0)
-                    return new Color4(Colour.R - SpriteManager.UniversalDim, Colour.G - SpriteManager.UniversalDim, Colour.B - SpriteManager.UniversalDim, Alpha * Colour.A);
+                {
+                    float dim = 1 - SpriteManager.UniversalDim;
+                    return new Color4(Colour.R * dim, Colour.G * dim, Colour.B * dim, Alpha * Colour.A);
+                }
 
                 return Alpha < 1 ? new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A) : Colour;
             }

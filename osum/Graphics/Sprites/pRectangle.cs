@@ -61,7 +61,7 @@ namespace osum.Graphics.Drawables
         {
             get
             {
-                Vector2 scale = Scale * GameBase.BaseToNativeRatio;
+                Vector2 scale = FieldScale;
                 Vector2 pos = FieldPosition;
 
                 //check (x1,y1)
@@ -89,7 +89,7 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
                 Vector2 pos = FieldPosition;
-                Vector2 scale = Scale * GameBase.BaseToNativeRatio;
+                Vector2 scale = FieldScale;
 
                 GL.Color4(c.R, c.G, c.B, c.A);
 
