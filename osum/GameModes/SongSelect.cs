@@ -183,30 +183,33 @@ namespace osum.GameModes
                 AudioEngine.Music.SeekTo(30000);
                 previewLoaded = true;
 
-                foreach (pDrawable s in panel.Sprites)
-                    s.MoveTo(new Vector2(0, 30), 500, EasingTypes.InDouble);
-
-                spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
-
-                bool requiresUnlock = true;
-
-                if (!requiresUnlock)
+                GameBase.Scheduler.Add(delegate
                 {
-                    s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
-                    s_ButtonExpertUnlock.Transformations.Clear();
-                    s_ButtonExpert.Enabled = true;
-                }
-                else
-                {
-                    s_ButtonExpert.Colour = Color4.Gray;
-                    s_ButtonExpert.Enabled = false;
-                }
+                    foreach (pDrawable s in panel.Sprites)
+                        s.MoveTo(new Vector2(0, 30), 500, EasingTypes.InDouble);
 
-                s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -19), Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
-                s_Header.Transform(new Transformation(TransformationType.Rotation, 0, 0.03f, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+                    spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
 
-                s_Footer.Transform(new Transformation(new Vector2(-60, -35), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                    bool requiresUnlock = true;
+
+                    if (!requiresUnlock)
+                    {
+                        s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
+                        s_ButtonExpertUnlock.Transformations.Clear();
+                        s_ButtonExpert.Enabled = true;
+                    }
+                    else
+                    {
+                        s_ButtonExpert.Colour = Color4.Gray;
+                        s_ButtonExpert.Enabled = false;
+                    }
+
+                    s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -19), Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+                    s_Header.Transform(new Transformation(TransformationType.Rotation, 0, 0.03f, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+
+                    s_Footer.Transform(new Transformation(new Vector2(-60, -35), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                    s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                }, true);
             }, 400);
         }
 
@@ -234,23 +237,26 @@ namespace osum.GameModes
             hasSelected = false;
             previewLoaded = false;
 
-            foreach (BeatmapPanel p in panels)
-            {
-                p.s_BackingPlate.HandleInput = true;
-
-                foreach (pDrawable d in p.Sprites)
-                    d.FadeIn(200);
-            }
-
-            spritesDifficultySelection.Sprites.ForEach(s => s.FadeOut(50));
-
-            s_Header.Transform(new Transformation(new Vector2(0, -19), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
-
-            s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -35), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.06f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-
             InitializeBgm();
+
+            GameBase.Scheduler.Add(delegate
+            {
+                foreach (BeatmapPanel p in panels)
+                {
+                    p.s_BackingPlate.HandleInput = true;
+
+                    foreach (pDrawable d in p.Sprites)
+                        d.FadeIn(200);
+                }
+
+                spritesDifficultySelection.Sprites.ForEach(s => s.FadeOut(50));
+
+                s_Header.Transform(new Transformation(new Vector2(0, -19), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+                s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+
+                s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -35), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.06f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            }, true);
         }
 
         private void gameStart(object sender, EventArgs args)
@@ -280,20 +286,22 @@ namespace osum.GameModes
         {
             availableMaps = new List<Beatmap>();
 
+            int index = 0;
+
 #if iOS
             string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             
-            foreach (string s in Directory.GetFiles(docs,"*.osz2"))
+            foreach (string s in Directory.GetFiles(docs,"*.osc"))
             {
                 Beatmap reader = new Beatmap(s);
 
-                string[] files = reader.Package == null ? Directory.GetFiles(s, "*.osc") : reader.Package.MapFiles;
+                string[] files = reader.Package == null ? new string[]{s} : reader.Package.MapFiles;
                 foreach (string file in files)
                 {
                     Beatmap b = new Beatmap(s);
                     b.BeatmapFilename = Path.GetFileName(file);
 
-                    BeatmapPanel panel = new BeatmapPanel(b, this);
+                    BeatmapPanel panel = new BeatmapPanel(b, this, index++);
                     spriteManager.Add(panel);
 
                     availableMaps.Add(b);
@@ -301,8 +309,6 @@ namespace osum.GameModes
                 }
             }
 #endif
-
-            int index = 0;
 
             if (Directory.Exists(BEATMAP_DIRECTORY))
                 foreach (string s in Directory.GetFiles(BEATMAP_DIRECTORY))

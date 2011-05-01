@@ -551,11 +551,7 @@ namespace osum.Graphics.Sprites
 
             int now = Clock.GetTime(Clocking);
 
-            Transformation tr =
-                new Transformation(Position, destination,
-                                   now - (int)Math.Max(1, GameBase.ElapsedMilliseconds),
-                                   now + duration, easing);
-            Transform(tr);
+            Transform(new Transformation(Position, destination, now, now + duration, easing));
         }
 
         #region IDrawable Members
