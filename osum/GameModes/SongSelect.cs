@@ -291,7 +291,7 @@ namespace osum.GameModes
 #if iOS
             string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             
-            foreach (string s in Directory.GetFiles(docs,"*.osc"))
+            foreach (string s in Directory.GetFiles(docs,"*.osz2"))
             {
                 Beatmap reader = new Beatmap(s);
 
