@@ -57,7 +57,7 @@ namespace osum.GameModes.SongSelect
             s_Text = new pText(m.Groups[1].Value, 56, Vector2.Zero, new Vector2(256, 60), base_depth + 0.01f, true, new Color4(255, 255, 255, 128), false);
             s_Text.TextAlignment = TextAlignment.Right;
             s_Text.Origin = OriginTypes.TopRight;
-            s_Text.Offset = new Vector2(GameBase.BaseSize.Width, 10);
+            s_Text.Offset = new Vector2(GameBase.BaseSize.Width, 7);
             Sprites.Add(s_Text);
 
             s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
