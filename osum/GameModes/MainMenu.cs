@@ -130,6 +130,9 @@ namespace osum.GameModes
             {
                 elapsedRotation += GameBase.ElapsedMilliseconds;
                 osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
+
+                menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00001 * GameBase.ElapsedMilliseconds);
+                menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00001 * GameBase.ElapsedMilliseconds);
             }
 
             explosions.ForEach(s =>
