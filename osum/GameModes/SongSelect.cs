@@ -53,6 +53,24 @@ namespace osum.GameModes
             InputManager.OnMove += InputManager_OnMove;
 
 
+            InitializeBgm();
+
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
+
+            s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
+            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
+
+            spriteManager.Add(s_Header);
+
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(0, -100), 1, true, Color4.White);
+            s_Footer.OnClick += gameStart;
+            spriteManager.Add(s_Footer);
+
+            InitializePostSelectionOptions();
+        }
+
+        private void InitializeBgm()
+        {
             //Start playing song select BGM.
 #if iOS
             AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
@@ -60,19 +78,6 @@ namespace osum.GameModes
             AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
 #endif
             AudioEngine.Music.Play();
-
-            s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
-
-            s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
-            
-            spriteManager.Add(s_Header);
-
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(0,-100), 1, true, Color4.White);
-            s_Footer.OnClick += gameStart;
-            spriteManager.Add(s_Footer);
-
-            InitializePostSelectionOptions();
         }
 
         private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
@@ -88,7 +93,7 @@ namespace osum.GameModes
         {
             Vector2 border = new Vector2(4, 4);
 
-            int ypos = 124;
+            int ypos = 94;
             float spacing = border.X;
 
             Vector2 buttonSize = new Vector2((GameBase.BaseSize.Width - spacing * 4) / 3f, 100);
@@ -96,8 +101,8 @@ namespace osum.GameModes
             float currX = spacing;
 
             s_ButtonEasy = new pButton("Easy", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_EASY, difficultySelected);
-            
-            s_ButtonEasy.Sprites.Add(new pText("Recommended for beginners! You can't fail!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
+
+            s_ButtonEasy.Sprites.Add(new pText("- For Beginners\n- Locked to Easy stream\n- No Fail", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
 
             spritesDifficultySelection.Add(s_ButtonEasy);
 
@@ -105,13 +110,13 @@ namespace osum.GameModes
 
             s_ButtonStandard = new pButton("Standard", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_STANDARD, difficultySelected);
 
-            s_ButtonStandard.Sprites.Add(new pText("Stream-based challenge!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
+            s_ButtonStandard.Sprites.Add(new pText("- Standard gameplay\n- Three streams\n- Can Fail", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
 
             spritesDifficultySelection.Add(s_ButtonStandard);
 
             s_DifficultySelectionRectangle = new pRectangle(new Vector2(0, ypos - border.Y), new Vector2(GameBase.BaseSize.Width, buttonSize.Y + border.Y * 2), true, 0.3f, Color4.Gray);
             spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
-            
+
             s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.LightGray) { Offset = -border };
             spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
 
@@ -139,6 +144,7 @@ namespace osum.GameModes
         }
 
         bool hasSelected;
+        bool previewLoaded;
 
         /// <summary>
         /// Called when a panel has been selected.
@@ -152,48 +158,56 @@ namespace osum.GameModes
 
             Player.SetBeatmap(panel.Beatmap);
 
-            AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false);
-            
-            AudioEngine.Music.Play();
-            AudioEngine.Music.Volume = 0;
-            AudioEngine.Music.SeekTo(30000);
-
             hasSelected = true;
 
             foreach (BeatmapPanel p in panels)
             {
-                if (p == panel)
-                {
-                    panel.s_BackingPlate.FlashColour(Color4.White, 600);
+                p.s_BackingPlate.HandleInput = false;
 
-                    foreach (pDrawable s in p.Sprites)
-                        s.MoveTo(new Vector2(0, 60), 500, EasingTypes.InDouble);
+                if (p == panel) continue;
+
+                foreach (pDrawable s in p.Sprites)
+                {
+                    //s.MoveTo(s.Position + new Vector2(-400, 0), 500, EasingTypes.InDouble);
+                    s.FadeOut(100);
+                }
+            }
+
+            panel.s_BackingPlate.FlashColour(Color4.White, 500);
+
+            GameBase.Scheduler.Add(delegate
+            {
+                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false);
+                AudioEngine.Music.Play();
+                AudioEngine.Music.Volume = 0;
+                AudioEngine.Music.SeekTo(30000);
+                previewLoaded = true;
+
+                foreach (pDrawable s in panel.Sprites)
+                    s.MoveTo(new Vector2(0, 30), 500, EasingTypes.InDouble);
+
+                spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
+
+                bool requiresUnlock = true;
+
+                if (!requiresUnlock)
+                {
+                    s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
+                    s_ButtonExpertUnlock.Transformations.Clear();
+                    s_ButtonExpert.Enabled = true;
                 }
                 else
                 {
-                    foreach (pDrawable s in p.Sprites)
-                        s.FadeOut(100);
+                    s_ButtonExpert.Colour = Color4.Gray;
+                    s_ButtonExpert.Enabled = false;
                 }
-            }
 
-            spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
+                s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -19), Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+                s_Header.Transform(new Transformation(TransformationType.Rotation, 0, 0.03f, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
 
-            bool requiresUnlock = true;
-
-            if (!requiresUnlock)
-            {
-                s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
-                s_ButtonExpertUnlock.Transformations.Clear();
-                s_ButtonExpert.Enabled = true;
-            }
-            else
-            {
-                s_ButtonExpert.Colour = Color4.Gray;
-                s_ButtonExpert.Enabled = false;
-            }
-
-            s_Footer.Transform(new Transformation(new Vector2(-60, -15), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(new Vector2(-60, -35), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            }, 400);
         }
 
         private void difficultySelected(object sender, EventArgs args)
@@ -218,13 +232,25 @@ namespace osum.GameModes
         private void backToSelect(object sender, EventArgs args)
         {
             hasSelected = false;
+            previewLoaded = false;
 
             foreach (BeatmapPanel p in panels)
+            {
+                p.s_BackingPlate.HandleInput = true;
+
                 foreach (pDrawable d in p.Sprites)
                     d.FadeIn(200);
+            }
 
             spritesDifficultySelection.Sprites.ForEach(s => s.FadeOut(50));
 
+            s_Header.Transform(new Transformation(new Vector2(0, -19), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+            s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 300, EasingTypes.In));
+
+            s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -35), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.06f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+
+            InitializeBgm();
         }
 
         private void gameStart(object sender, EventArgs args)
@@ -276,6 +302,8 @@ namespace osum.GameModes
             }
 #endif
 
+            int index = 0;
+
             if (Directory.Exists(BEATMAP_DIRECTORY))
                 foreach (string s in Directory.GetFiles(BEATMAP_DIRECTORY))
                 {
@@ -287,7 +315,7 @@ namespace osum.GameModes
                         Beatmap b = new Beatmap(s);
                         b.BeatmapFilename = Path.GetFileName(file);
 
-                        BeatmapPanel panel = new BeatmapPanel(b, this);
+                        BeatmapPanel panel = new BeatmapPanel(b, this, index++);
                         spriteManager.Add(panel);
 
                         availableMaps.Add(b);
@@ -314,6 +342,11 @@ namespace osum.GameModes
         {
             base.Update();
 
+            if (hasSelected && !previewLoaded)
+            {
+                if (AudioEngine.Music.Volume > 0)
+                    AudioEngine.Music.Volume -= 0.05f;
+            }
             if (AudioEngine.Music.Volume < 1)
                 AudioEngine.Music.Volume += 0.005f;
 

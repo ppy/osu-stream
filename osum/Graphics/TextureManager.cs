@@ -138,7 +138,9 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
-            textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 86, 1024, 85));
+            textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 87, 1024, 84));
+
+            textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 0, 190, 103, 85));
 
             GameBase.OnScreenLayoutChanged += delegate
             {
@@ -459,6 +461,7 @@ namespace osum.Graphics.Skins
         playfield,
         songselect_header,
         stream_changing,
-        songselect_footer
+        songselect_footer,
+        songselect_thumbnail
     }
 }
