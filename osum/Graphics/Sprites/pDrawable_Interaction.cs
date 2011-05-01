@@ -48,19 +48,37 @@ namespace osum.Graphics.Sprites
 
         internal bool HandleClickOnUp;
 
+        private bool handleInput;
+        internal bool HandleInput
+        {
+            get { return handleInput; }
+            set
+            {
+                handleInput = value;
+
+                if (inputIsHovering && handleInput)
+                //might have a pending unhover state animation to apply.
+                {
+                    inputIsHovering = false;
+                    if (onHoverLost != null)
+                        onHoverLost(this, null);
+                }
+            }
+        }
+
         bool inputEventsBound;
 
         private event EventHandler onClick;
         internal event EventHandler OnClick
         {
-            add { onClick += value; updateInputBindings(); }
+            add { onClick += value; updateInputBindings(); HandleInput = true; }
             remove { onClick -= value; updateInputBindings(); }
         }
 
         private event EventHandler onHover;
         internal event EventHandler OnHover
         {
-            add { onHover += value; updateInputBindings(); }
+            add { onHover += value; updateInputBindings(); HandleInput = true; }
             remove { onHover -= value; updateInputBindings(); }
         }
 
@@ -108,7 +126,7 @@ namespace osum.Graphics.Sprites
         {
             if (Alpha == 0)
                 return false;
-            
+
             Box2 rect = DisplayRectangle;
 
             return rect.Left < position.X &&
@@ -119,6 +137,8 @@ namespace osum.Graphics.Sprites
 
         void inputUpdateHoverState(TrackingPoint trackingPoint)
         {
+            if (!HandleInput) return;
+
             bool isNowHovering = inputCheckHover(trackingPoint.WindowPosition);
 
             if (isNowHovering != inputIsHovering)
@@ -152,6 +172,8 @@ namespace osum.Graphics.Sprites
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            if (!HandleInput) return;
+
             inputUpdateHoverState(trackingPoint);
             if (inputIsHovering)
             {
@@ -167,10 +189,13 @@ namespace osum.Graphics.Sprites
 
         void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            if (!HandleInput) return;
+
             if (inputIsHovering && acceptableUpClick > 0)
                 Click();
 
-            if (inputIsHovering)
+            if (inputIsHovering && HandleInput)
+            //check HandleInput again here so we can cancel the unhover for the time being.
             {
                 inputIsHovering = false;
                 if (onHoverLost != null)
