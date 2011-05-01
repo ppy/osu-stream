@@ -45,7 +45,8 @@ namespace osum.GameplayElements.Beatmaps
         public Stream GetFileStream(string filename)
         {
             if (Package == null)
-                return new FileStream(ContainerFilename + "/" + filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+                return new FileStream(
+                    (ContainerFilename.EndsWith(".osc") ? Environment.GetFolderPath(Environment.SpecialFolder.Personal) :  ContainerFilename) + "/" + filename, FileMode.Open, FileAccess.Read, FileShare.Read);
             return Package.GetFile(filename);
         }
 
