@@ -5,6 +5,7 @@ using System.Text;
 using Un4seen.Bass;
 using System.IO;
 using System.Runtime.InteropServices;
+using osum.Helpers;
 
 namespace osum.Audio
 {
@@ -125,7 +126,7 @@ namespace osum.Audio
             {
                 if (audioStream == 0) return;
 				
-				Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, value);
+				Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(value));
             }
         }
 
