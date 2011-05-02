@@ -145,6 +145,12 @@ namespace osum.Graphics.Skins
             
             textureLocations.Add(OsuTexture.songselect_tab_bar, new SpriteSheetTexture("songselect", 0, 626, 1024, 81));
 
+            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 0, 279, 37, 43));
+            
+            textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 478, 193, 333, 136));
+            textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 19, 721, 333, 136));
+            textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 369, 721, 333, 136));
+
             GameBase.OnScreenLayoutChanged += delegate
             {
                 DisposeDisposable();
@@ -468,6 +474,10 @@ namespace osum.Graphics.Skins
         songselect_thumbnail,
         songselect_back_hexagon,
         songselect_back_arrow,
-        songselect_tab_bar
+        songselect_tab_bar,
+        songselect_mode_arrow,
+        songselect_mode_stream,
+        songselect_mode_easy,
+        songselect_mode_expert
     }
 }

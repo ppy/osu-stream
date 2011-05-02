@@ -21,17 +21,26 @@ namespace osum.GameModes
     {
         private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
 
-        private pButton s_ButtonEasy;
-        private pButton s_ButtonStandard;
-        private pButton s_ButtonExpert;
-        private pDrawable s_ButtonExpertUnlock;
-
-        private pRectangle s_DifficultySelectionRectangle;
         private pSprite s_TabBarBackground;
+
+        private pSprite s_ModeButtonStream;
+
+        private pSprite s_ModeArrowLeft;
+        private pSprite s_ModeArrowRight;
+        private pSprite s_ModeButtonEasy;
+        private pSprite s_ModeButtonExpert;
+
+        /// <summary>
+        /// True when expert mode is not yet unlocked for the current map.
+        /// </summary>
+        bool mapRequiresUnlock
+        {
+            get { return false; }
+        }
 
         private void showDifficultySelection()
         {
-            if (s_ButtonEasy == null)
+            if (s_ModeButtonStream == null)
             {
                 Vector2 border = new Vector2(4, 4);
 
@@ -42,28 +51,29 @@ namespace osum.GameModes
 
                 float currX = spacing;
 
-                s_ButtonEasy = new pButton("Easy", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_EASY, onDifficultyButtonPressed);
-                s_ButtonEasy.Sprites.Add(new pText("- For Beginners\n- Locked to Easy stream\n- No Fail", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
-                spritesDifficultySelection.Add(s_ButtonEasy);
+                s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, 0), 0.45f, true, Color4.White);
+                s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
+                s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
+                s_ModeArrowLeft.OnClick += onSelectPreviousMode;
 
-                currX += buttonSize.X + spacing;
+                spritesDifficultySelection.Add(s_ModeArrowLeft);
 
-                s_ButtonStandard = new pButton("Standard", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_STANDARD, onDifficultyButtonPressed);
-                s_ButtonStandard.Sprites.Add(new pText("- Standard gameplay\n- Three streams\n- Can Fail", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.White, false));
-                spritesDifficultySelection.Add(s_ButtonStandard);
+                s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, 0), 0.45f, true, Color4.DarkGray);
+                s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
+                s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
+                s_ModeArrowRight.OnClick += onSelectNextMode;
 
-                s_DifficultySelectionRectangle = new pRectangle(new Vector2(0, ypos - border.Y), new Vector2(GameBase.BaseSize.Width, buttonSize.Y + border.Y * 2), true, 0.3f, Color4.Gray);
-                spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
+                s_ModeArrowRight.Rotation = 1;
+                spritesDifficultySelection.Add(s_ModeArrowRight);
 
-                s_DifficultySelectionRectangle = new pRectangle(new Vector2(currX, ypos), buttonSize + border * 2, true, 0.4f, Color4.LightGray) { Offset = -border };
-                spritesDifficultySelection.Add(s_DifficultySelectionRectangle);
+                s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White);
+                spritesDifficultySelection.Add(s_ModeButtonStream);
 
-                currX += buttonSize.X + spacing;
+                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-mode_button_width, 0), 0.4f, true, Color4.White);
+                spritesDifficultySelection.Add(s_ModeButtonEasy);
 
-                s_ButtonExpert = new pButton("Expert", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_WARNING, onDifficultyButtonPressed);
-                s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.LightGray, false);
-                s_ButtonExpert.Sprites.Add(s_ButtonExpertUnlock);
-                spritesDifficultySelection.Add(s_ButtonExpert);
+                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(mode_button_width, 0), 0.4f, true, Color4.White);
+                spritesDifficultySelection.Add(s_ModeButtonExpert);
 
                 currX += buttonSize.X + spacing;
 
@@ -85,25 +95,83 @@ namespace osum.GameModes
 
             spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
 
-            bool requiresUnlock = true;
-
-            if (!requiresUnlock)
-            {
-                s_ButtonExpert.Colour = PlayfieldBackground.COLOUR_WARNING;
-                s_ButtonExpertUnlock.Transformations.Clear();
-                s_ButtonExpert.Enabled = true;
-            }
-            else
-            {
-                s_ButtonExpert.Colour = Color4.Gray;
-                s_ButtonExpert.Enabled = false;
-            }
-
             s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -59), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
             s_Footer.Transform(new Transformation(new Vector2(-60, -105), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+
+            updateModeSelectionArrows();
+        }
+
+        void onSelectPreviousMode(object sender, EventArgs e)
+        {
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Normal:
+                    Player.Difficulty = Difficulty.Easy;
+                    break;
+                case Difficulty.Expert:
+                    Player.Difficulty = Difficulty.Normal;
+                    break;
+            }
+
+            updateModeSelectionArrows();
+        }
+
+        void onSelectNextMode(object sender, EventArgs e)
+        {
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    Player.Difficulty = Difficulty.Normal;
+                    break;
+                case Difficulty.Normal:
+                    Player.Difficulty = Difficulty.Expert;
+                    break;
+            }
+
+            updateModeSelectionArrows();
+        }
+
+        const float mode_button_width = 300;
+
+        /// <summary>
+        /// Updates the states of mode selection arrows depending on the current mode selection.
+        /// </summary>
+        private void updateModeSelectionArrows()
+        {
+            bool hasPrevious = false;
+            bool hasNext = false;
+
+            float horizontalPosition = 0;
+
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    hasNext = true;
+                    horizontalPosition = mode_button_width;
+                    break;
+                case Difficulty.Normal:
+                    hasPrevious = true;
+                    hasNext = !mapRequiresUnlock;
+                    break;
+                case Difficulty.Expert:
+                    hasPrevious = true;
+                    horizontalPosition = -mode_button_width;
+                    break;
+            }
+
+            s_ModeArrowLeft.Colour = hasPrevious ? Color4.White : Color4.DarkGray;
+            s_ModeArrowLeft.HandleInput = hasPrevious;
+
+            s_ModeArrowRight.Colour = hasNext ? Color4.White : Color4.DarkGray;
+            s_ModeArrowRight.HandleInput = hasNext;
+
+            s_ModeButtonEasy.MoveTo(new Vector2(horizontalPosition - mode_button_width, 0), 500, EasingTypes.In);
+            s_ModeButtonStream.MoveTo(new Vector2(horizontalPosition, 0), 500, EasingTypes.In);
+            s_ModeButtonExpert.MoveTo(new Vector2(horizontalPosition + mode_button_width, 0), 500, EasingTypes.In);
+
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)
@@ -132,21 +200,6 @@ namespace osum.GameModes
             }, true);
         }
 
-        private void onDifficultyButtonPressed(object sender, EventArgs args)
-        {
-            pButton button = sender as pButton;
-            if (button == null) return;
-
-            if (button == s_ButtonEasy)
-                Player.SetDifficulty(Difficulty.Easy);
-            else if (button == s_ButtonExpert)
-                Player.SetDifficulty(Difficulty.Expert);
-            else
-                Player.SetDifficulty(Difficulty.Normal);
-
-            s_DifficultySelectionRectangle.MoveTo(((pButton)sender).Position, 500, EasingTypes.In);
-        }
-
         private void onStartButtonPressed(object sender, EventArgs args)
         {
             if (State == SelectState.Starting)
@@ -154,9 +207,12 @@ namespace osum.GameModes
 
             State = SelectState.Starting;
 
-            if (sender != s_ButtonEasy) s_ButtonEasy.Sprites.ForEach(s => s.FadeOut(200));
-            if (sender != s_ButtonStandard) s_ButtonStandard.Sprites.ForEach(s => s.FadeOut(200));
-            if (sender != s_ButtonExpert) s_ButtonExpert.Sprites.ForEach(s => s.FadeOut(200));
+            if (Player.Difficulty != Difficulty.Easy) s_ModeButtonEasy.FadeOut(200);
+            if (Player.Difficulty != Difficulty.Normal) s_ModeButtonStream.FadeOut(200);
+            if (Player.Difficulty != Difficulty.Expert) s_ModeButtonExpert.FadeOut(200);
+
+            s_ModeArrowLeft.FadeOut(200);
+            s_ModeArrowRight.FadeOut(200);
 
             GameBase.Scheduler.Add(delegate
             {
