@@ -55,24 +55,44 @@ namespace osum.GameModes
         private pSprite s_Footer;
         private BeatmapPanel SelectedPanel;
 
+        private pDrawable s_ButtonBack;
+        
         internal override void Initialize()
         {
-            InitializeBeatmaps();
-
             Player.SetDifficulty(Difficulty.Normal);
 
             InputManager.OnMove += InputManager_OnMove;
 
             InitializeBgm();
 
+            s_ButtonBack = new BackButton(onBackPressed);
+            spriteManager.Add(s_ButtonBack);
+
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
             spriteManager.Add(s_Header);
 
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(0, -100), 1, true, Color4.White);
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 1, true, new Color4(200, 200, 200, 255));
+            s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
+            s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(200, 200, 200, 255), 100); };
             s_Footer.OnClick += onStartButtonPressed;
             spriteManager.Add(s_Footer);
+
+            InitializeBeatmaps();
+        }
+
+        private void onBackPressed(object sender, EventArgs args)
+        {
+            switch (State)
+            {
+                case SelectState.SongSelect:
+                    Director.ChangeMode(OsuMode.MainMenu);
+                    break;
+                default:
+                    leaveDifficultySelection(sender, args);
+                    break;
+            }
         }
 
         private void InitializeBeatmaps()
@@ -156,10 +176,7 @@ namespace osum.GameModes
                 if (p == panel) continue;
 
                 foreach (pDrawable s in p.Sprites)
-                {
-                    //s.MoveTo(s.Position + new Vector2(-400, 0), 500, EasingTypes.InDouble);
                     s.FadeOut(100);
-                }
             }
 
             panel.s_BackingPlate.FlashColour(Color4.White, 500);

@@ -19,9 +19,6 @@ namespace osum.GameModes
 {
     public partial class SongSelectMode : GameMode
     {
-        private pButton s_ButtonStart;
-        private pButton s_ButtonBack;
-
         private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
 
         private pButton s_ButtonEasy;
@@ -30,6 +27,7 @@ namespace osum.GameModes
         private pDrawable s_ButtonExpertUnlock;
 
         private pRectangle s_DifficultySelectionRectangle;
+        private pSprite s_TabBarBackground;
 
         private void showDifficultySelection()
         {
@@ -37,7 +35,7 @@ namespace osum.GameModes
             {
                 Vector2 border = new Vector2(4, 4);
 
-                int ypos = 94;
+                int ypos = 140;
                 float spacing = border.X;
 
                 Vector2 buttonSize = new Vector2((GameBase.BaseSize.Width - spacing * 4) / 3f, 100);
@@ -65,18 +63,12 @@ namespace osum.GameModes
                 s_ButtonExpert = new pButton("Expert", new Vector2(currX, ypos), buttonSize, PlayfieldBackground.COLOUR_WARNING, onDifficultyButtonPressed);
                 s_ButtonExpertUnlock = new pText("Unlock by passing on standard play first!", 13, new Vector2(currX, ypos + 40), buttonSize, 0.55f, true, Color4.LightGray, false);
                 s_ButtonExpert.Sprites.Add(s_ButtonExpertUnlock);
-
                 spritesDifficultySelection.Add(s_ButtonExpert);
 
                 currX += buttonSize.X + spacing;
 
-                s_ButtonStart = new pButton("Start!", new Vector2(GameBase.BaseSize.Width * 0.675f, ypos + 120), new Vector2(140, 40), Color4.DarkViolet, onStartButtonPressed);
-                s_ButtonStart.s_Text.Offset = new Vector2(0, 8);
-                spritesDifficultySelection.Add(s_ButtonStart);
-
-                s_ButtonBack = new pButton("Back", new Vector2(GameBase.BaseSize.Width * 0.125f, ypos + 120), new Vector2(140, 40), Color4.DarkViolet, leaveDifficultySelection);
-                s_ButtonBack.s_Text.Offset = new Vector2(0, 8);
-                spritesDifficultySelection.Add(s_ButtonBack);
+                s_TabBarBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_tab_bar), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.4f, true, Color4.White);
+                spritesDifficultySelection.Add(s_TabBarBackground);
 
                 spriteManager.Add(spritesDifficultySelection);
                 spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
@@ -87,6 +79,9 @@ namespace osum.GameModes
 
             foreach (pDrawable s in SelectedPanel.Sprites)
                 s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
+
+            s_TabBarBackground.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_TabBarBackground.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In));
 
             spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
 
@@ -107,8 +102,8 @@ namespace osum.GameModes
             s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -59), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-            s_Footer.Transform(new Transformation(new Vector2(-60, -35), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.06f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new Transformation(new Vector2(-60, -105), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)
@@ -132,8 +127,8 @@ namespace osum.GameModes
                 s_Header.Transform(new Transformation(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -35), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.06f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -105), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             }, true);
         }
 
@@ -156,7 +151,7 @@ namespace osum.GameModes
         {
             if (State == SelectState.Starting)
                 return;
-            
+
             State = SelectState.Starting;
 
             if (sender != s_ButtonEasy) s_ButtonEasy.Sprites.ForEach(s => s.FadeOut(200));
