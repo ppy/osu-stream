@@ -59,7 +59,7 @@ namespace osum.GameModes
         
         internal override void Initialize()
         {
-            Player.SetDifficulty(Difficulty.Normal);
+            Player.Difficulty = Difficulty.Normal;
 
             InputManager.OnMove += InputManager_OnMove;
 
@@ -164,7 +164,7 @@ namespace osum.GameModes
             BeatmapPanel panel = sender as BeatmapPanel;
             if (panel == null || State != SelectState.SongSelect) return;
 
-            Player.SetBeatmap(panel.Beatmap);
+            Player.Beatmap = panel.Beatmap;
 
             SelectedPanel = panel;
             State = SelectState.LoadingPreview;

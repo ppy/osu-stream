@@ -38,9 +38,12 @@ namespace osum.GameModes
         /// <summary>
         /// The beatmap currently being played.
         /// </summary>
-        static Beatmap Beatmap;
+        internal static Beatmap Beatmap;
 
-        static Difficulty Difficulty;
+        /// <summary>
+        /// The difficulty which will be used for play mode (Easy/Standard/Expert).
+        /// </summary>
+        internal static Difficulty Difficulty;
 
         /// <summary>
         /// Is autoplay activated?
@@ -383,16 +386,6 @@ namespace osum.GameModes
 
             queuedStreamSwitchTime = switchTime;
             return true;
-        }
-
-        internal static void SetBeatmap(Beatmap beatmap)
-        {
-            Beatmap = beatmap;
-        }
-
-        internal static void SetDifficulty(Difficulty difficulty)
-        {
-            Difficulty = difficulty;
         }
     }
 }
