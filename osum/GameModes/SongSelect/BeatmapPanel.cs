@@ -35,7 +35,7 @@ namespace osum.GameModes.SongSelect
 
             Beatmap = beatmap;
 
-            s_BackingPlate.OnClick += delegate { select.SongSelected(this, null); };
+            s_BackingPlate.OnClick += delegate { select.onSongSelected(this, null); };
 
             s_BackingPlate.HandleClickOnUp = true;
 

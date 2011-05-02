@@ -55,6 +55,7 @@
     <Compile Include="GameModes\Ranking.cs" />
     <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect_DifficultySelection.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
     <Compile Include="GameplayElements\Beatmaps\ControlPoint.cs" />
