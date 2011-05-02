@@ -147,11 +147,12 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio;
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio;
                 Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
-                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + DrawWidth * scale.X,
-                                pos.Y + DrawHeight * scale.Y);
+                return new Box2(pos.X, pos.Y,
+                    pos.X + (float)DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
+                    pos.Y + (float)DrawHeight / GameBase.BaseToNativeRatio * Scale.Y);
             }
         }
 

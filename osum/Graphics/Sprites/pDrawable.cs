@@ -119,6 +119,9 @@ namespace osum.Graphics.Sprites
             set { BlendingMode = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
         }
 
+        /// <summary>
+        /// Gets the display rectangle (base size).
+        /// </summary>
         protected virtual Box2 DisplayRectangle
         {
             get
