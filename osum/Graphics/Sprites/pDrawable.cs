@@ -538,12 +538,13 @@ namespace osum.Graphics.Sprites
             Transform(flash);
         }
 
-        internal void MoveTo(Vector2 destination, int duration)
-        {
-            MoveTo(destination, duration, EasingTypes.None);
-        }
-
-        internal void MoveTo(Vector2 destination, int duration, EasingTypes easing)
+        /// <summary>
+        /// Moves the sprite to a specified desintation, using the current location as the source.
+        /// </summary>
+        /// <param name="destination">The destination.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="easing">The easing.</param>
+        internal void MoveTo(Vector2 destination, int duration, EasingTypes easing = EasingTypes.None)
         {
             Transformations.RemoveAll(t => (t.Type & TransformationType.Movement) > 0);
 
@@ -556,6 +557,27 @@ namespace osum.Graphics.Sprites
             int now = Clock.GetTime(Clocking);
 
             Transform(new Transformation(Position, destination, now, now + duration, easing));
+        }
+
+        /// <summary>
+        /// Scales the sprite to a specified desintation, using the current location as the source.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="easing">The easing.</param>
+        internal void ScaleTo(float target, int duration, EasingTypes easing)
+        {
+            Transformations.RemoveAll(t => (t.Type & TransformationType.Scale) > 0);
+
+            if (target == ScaleScalar)
+                return;
+
+            if (duration == 0)
+                ScaleScalar = target;
+
+            int now = Clock.GetTime(Clocking);
+
+            Transform(new Transformation(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
         }
 
         #region IDrawable Members
