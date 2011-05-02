@@ -35,7 +35,7 @@ namespace osum.GameModes
         /// </summary>
         bool mapRequiresUnlock
         {
-            get { return false; }
+            get { return true; }
         }
 
         private void showDifficultySelection()
@@ -69,10 +69,11 @@ namespace osum.GameModes
                 s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White);
                 spritesDifficultySelection.Add(s_ModeButtonStream);
 
-                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-mode_button_width, 0), 0.4f, true, Color4.White);
+                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, 0) };
+
                 spritesDifficultySelection.Add(s_ModeButtonEasy);
 
-                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(mode_button_width, 0), 0.4f, true, Color4.White);
+                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(mode_button_width, 0) };
                 spritesDifficultySelection.Add(s_ModeButtonExpert);
 
                 currX += buttonSize.X + spacing;
@@ -144,21 +145,20 @@ namespace osum.GameModes
             bool hasPrevious = false;
             bool hasNext = false;
 
-            float horizontalPosition = 0;
-
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
                     hasNext = true;
-                    horizontalPosition = mode_button_width;
+                    difficultySelectOffset = mode_button_width;
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
+                    difficultySelectOffset = 0;
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
-                    horizontalPosition = -mode_button_width;
+                    difficultySelectOffset = -mode_button_width;
                     break;
             }
 
@@ -167,11 +167,6 @@ namespace osum.GameModes
 
             s_ModeArrowRight.Colour = hasNext ? Color4.White : Color4.DarkGray;
             s_ModeArrowRight.HandleInput = hasNext;
-
-            s_ModeButtonEasy.MoveTo(new Vector2(horizontalPosition - mode_button_width, 0), 500, EasingTypes.In);
-            s_ModeButtonStream.MoveTo(new Vector2(horizontalPosition, 0), 500, EasingTypes.In);
-            s_ModeButtonExpert.MoveTo(new Vector2(horizontalPosition + mode_button_width, 0), 500, EasingTypes.In);
-
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)

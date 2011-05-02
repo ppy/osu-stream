@@ -32,7 +32,8 @@ namespace osum.GameModes
         private static List<Beatmap> availableMaps;
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
-        private float offset;
+        private float songSelectOffset;
+        private float difficultySelectOffset;
         private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
         private float offset_max = 0;
 
@@ -47,7 +48,7 @@ namespace osum.GameModes
         {
             get
             {
-                return Math.Min(offset_max, Math.Max(offset_min, offset));
+                return Math.Min(offset_max, Math.Max(offset_min, songSelectOffset));
             }
         }
 
@@ -56,7 +57,7 @@ namespace osum.GameModes
         private BeatmapPanel SelectedPanel;
 
         private pDrawable s_ButtonBack;
-        
+
         internal override void Initialize()
         {
             Player.Difficulty = Difficulty.Normal;
@@ -201,39 +202,87 @@ namespace osum.GameModes
 
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (InputManager.IsPressed)
+            switch (State)
             {
-                float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-                float bound = offsetBound;
+                case SelectState.SongSelect:
+                    if (!InputManager.IsPressed) break;
+                    {
+                        float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+                        float bound = offsetBound;
 
-                if ((offset - bound < 0 && change < 0) || (offset - bound > 0 && change > 0))
-                    change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(offset - bound)));
-                offset = offset + change;
-                velocity = change;
+                        if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
+                            change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
+                        songSelectOffset = songSelectOffset + change;
+                        velocity = change;
+                    }
+                    break;
+                case SelectState.DifficultySelect:
+                    if (!InputManager.IsPressed) break;
+                    {
+                        float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
+                        float bound = Math.Min(mode_button_width, Math.Max(mapRequiresUnlock ? 0 : -mode_button_width, difficultySelectOffset));
+
+                        if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
+                            change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
+                        difficultySelectOffset = difficultySelectOffset + change;
+                        velocity = change;
+                    }
+                    break;
             }
         }
 
+        bool pendingModeChange;
         public override void Update()
         {
             base.Update();
 
+            //handle touch scrolling
             switch (State)
             {
+                case SelectState.DifficultySelect:
+                    if (InputManager.IsPressed)
+                        pendingModeChange = true;
+                    else if (pendingModeChange)
+                    {
+                        difficultySelectOffset += velocity;
+                        
+                        
+                        if (difficultySelectOffset > mode_button_width / 2)
+                            Player.Difficulty = Difficulty.Easy;
+                        else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)
+                            Player.Difficulty = Difficulty.Expert;
+                        else
+                            Player.Difficulty = Difficulty.Normal;
+
+                        pendingModeChange = false;
+
+                        updateModeSelectionArrows();
+                    }
+
+                    if (Director.PendingMode == OsuMode.Unknown)
+                    {
+                        Vector2 pos = new Vector2(difficultySelectOffset, 0);
+                        s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
+                        s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
+                        s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
+                    }
+
+                    break;
                 case SelectState.SongSelect:
                     if (!InputManager.IsPressed)
                     {
                         float bound = offsetBound;
 
-                        if (offset != bound)
+                        if (songSelectOffset != bound)
                             velocity = 0;
 
-                        offset = offset * 0.8f + bound * 0.2f + velocity;
+                        songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
                         velocity *= 0.9f;
                     }
 
                     if (Director.PendingMode == OsuMode.Unknown)
                     {
-                        Vector2 pos = new Vector2(0, 60 + offset);
+                        Vector2 pos = new Vector2(0, 60 + songSelectOffset);
                         foreach (BeatmapPanel p in panels)
                         {
                             p.MoveTo(pos);
@@ -241,6 +290,11 @@ namespace osum.GameModes
                         }
                     }
                     break;
+            }
+
+            //handle audio adjustments
+            switch (State)
+            {
                 case SelectState.LoadingPreview:
                     if (AudioEngine.Music.Volume > 0)
                         AudioEngine.Music.Volume -= 0.05f;
@@ -251,6 +305,7 @@ namespace osum.GameModes
                         AudioEngine.Music.Volume += 0.005f;
                     break;
             }
+
         }
     }
 }
