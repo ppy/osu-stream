@@ -137,9 +137,21 @@ namespace osum.Graphics.Sprites
 
         void inputUpdateHoverState(TrackingPoint trackingPoint)
         {
-            if (!HandleInput) return;
+            if (!HandleInput)
+            {
+                if (trackingPoint.HoveringObject == this)
+                    trackingPoint.HoveringObject = null;
+                return;
+            }
 
-            bool isNowHovering = inputCheckHover(trackingPoint.WindowPosition);
+            bool isNowHovering =
+                (trackingPoint.HoveringObject == null || trackingPoint.HoveringObject == this) &&
+                inputCheckHover(trackingPoint.WindowPosition);
+
+            if (inputIsHovering)
+                trackingPoint.HoveringObject = this;
+            else if (trackingPoint.HoveringObject == this)
+                trackingPoint.HoveringObject = null;
 
             if (isNowHovering != inputIsHovering)
             {
@@ -177,9 +189,10 @@ namespace osum.Graphics.Sprites
             inputUpdateHoverState(trackingPoint);
             if (inputIsHovering)
             {
-                acceptableUpClick = HANDLE_UP_MOVEMENT_ALLOWANCE;
                 if (!HandleClickOnUp)
                     Click();
+                else
+                    acceptableUpClick = HANDLE_UP_MOVEMENT_ALLOWANCE;
             }
             else
             {

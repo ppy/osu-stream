@@ -29,6 +29,8 @@ namespace osum
         /// </summary>
         int validity;
         
+        public object HoveringObject;
+        
         /// <summary>
         /// Is this point still valid (active)?
         /// </summary>

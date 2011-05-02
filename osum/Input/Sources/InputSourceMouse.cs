@@ -32,6 +32,9 @@ namespace osum.Input.Sources
         {
             updateTrackingPosition(e.Position);
 
+            //because mouse movement is continuous, we want to track a new hover object every position change.
+            trackingPoints[0].HoveringObject = null;
+
             TriggerOnMove(trackingPoints[0]);
         }
 

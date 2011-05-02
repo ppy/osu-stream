@@ -154,6 +154,10 @@ namespace osum.Graphics.Sprites
                         fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
                                                     GameBase.NativeSize.Height - pos.Y);
                         break;
+                    case FieldTypes.StandardSnapTopCentre:
+                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                    pos.Y);
+                        break;
                     case FieldTypes.StandardSnapRight:
                         fieldPosition = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
                         break;
