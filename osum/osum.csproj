@@ -256,6 +256,7 @@
     <Compile Include="Helpers\osu!common\Scheduler.cs" />
     <Compile Include="GameModes\SongSelect\BackButton.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect_DifficultySelection.cs" />
+    <Compile Include="GameModes\SongSelect\pTabController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

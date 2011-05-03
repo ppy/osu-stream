@@ -197,6 +197,8 @@ namespace osum.GameModes
         {
             base.Dispose();
 
+            if (tabController != null) tabController.Dispose();
+
             InputManager.OnMove -= InputManager_OnMove;
         }
 
@@ -205,7 +207,7 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.SongSelect:
-                    if (!InputManager.IsPressed) break;
+                    if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) break;
                     {
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
                         float bound = offsetBound;
@@ -217,7 +219,7 @@ namespace osum.GameModes
                     }
                     break;
                 case SelectState.DifficultySelect:
-                    if (!InputManager.IsPressed) break;
+                    if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) break;
                     {
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
                         float bound = Math.Min(mode_button_width, Math.Max(mapRequiresUnlock ? 0 : -mode_button_width, difficultySelectOffset));
@@ -231,10 +233,19 @@ namespace osum.GameModes
             }
         }
 
+        public override bool Draw()
+        {
+            if (tabController != null) tabController.Draw();
+
+            return base.Draw();
+        }
+
         bool pendingModeChange;
         public override void Update()
         {
             base.Update();
+
+            if (tabController != null) tabController.Update();
 
             //handle touch scrolling
             switch (State)
@@ -245,8 +256,8 @@ namespace osum.GameModes
                     else if (pendingModeChange)
                     {
                         difficultySelectOffset += velocity;
-                        
-                        
+
+
                         if (difficultySelectOffset > mode_button_width / 2)
                             Player.Difficulty = Difficulty.Easy;
                         else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)

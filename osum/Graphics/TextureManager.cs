@@ -143,7 +143,10 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_back_hexagon, new SpriteSheetTexture("songselect", 227, 192, 250, 251));
             textureLocations.Add(OsuTexture.songselect_back_arrow, new SpriteSheetTexture("songselect", 104, 192, 122, 125));
             
-            textureLocations.Add(OsuTexture.songselect_tab_bar, new SpriteSheetTexture("songselect", 0, 626, 1024, 81));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_background, new SpriteSheetTexture("songselect", 0, 626, 2, 80));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_play, new SpriteSheetTexture("songselect", 67, 629, 249, 76));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_rank, new SpriteSheetTexture("songselect", 356, 629, 249, 76));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_other, new SpriteSheetTexture("songselect", 660, 629, 249, 76));
 
             textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 0, 279, 37, 43));
             
@@ -474,10 +477,13 @@ namespace osum.Graphics.Skins
         songselect_thumbnail,
         songselect_back_hexagon,
         songselect_back_arrow,
-        songselect_tab_bar,
+        songselect_tab_bar_background,
         songselect_mode_arrow,
         songselect_mode_stream,
         songselect_mode_easy,
-        songselect_mode_expert
+        songselect_mode_expert,
+        songselect_tab_bar_play,
+        songselect_tab_bar_rank,
+        songselect_tab_bar_other
     }
 }

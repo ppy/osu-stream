@@ -22,8 +22,6 @@ namespace osum.GameModes
     {
         private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
 
-        private pSprite s_TabBarBackground;
-
         private pSprite s_ModeButtonStream;
 
         private pSprite s_ModeArrowLeft;
@@ -82,12 +80,14 @@ namespace osum.GameModes
                 s_ModeButtonExpert.OnClick += onModeButtonClick;
                 spritesDifficultySelection.Add(s_ModeButtonExpert);
 
-                currX += buttonSize.X + spacing;
+                tabController = new pTabController();
+                tabController.Add(OsuTexture.songselect_tab_bar_play);
+                tabController.Add(OsuTexture.songselect_tab_bar_rank);
+                tabController.Add(OsuTexture.songselect_tab_bar_other);
 
-                s_TabBarBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_tab_bar), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.4f, true, Color4.White);
-                spritesDifficultySelection.Add(s_TabBarBackground);
+                spritesDifficultySelection.Add(tabController.Sprites);
 
-                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 40), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
+                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
                 s_ModeDescriptionText.TextAlignment = TextAlignment.Centre;
 
                 spritesDifficultySelection.Add(s_ModeDescriptionText);
@@ -102,8 +102,8 @@ namespace osum.GameModes
             foreach (pDrawable s in SelectedPanel.Sprites)
                 s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
 
-            s_TabBarBackground.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_TabBarBackground.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In));
+            tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
+            tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
 
             spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
 
@@ -115,6 +115,7 @@ namespace osum.GameModes
 
             updateModeSelectionArrows();
         }
+
 
         void onModeButtonClick(object sender, EventArgs e)
         {
@@ -170,6 +171,10 @@ namespace osum.GameModes
         }
 
         const float mode_button_width = 300;
+        private pSprite s_TabBarPlay;
+        private pSprite s_TabBarRank;
+        private pDrawable s_TabBarOther;
+        private pTabController tabController;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.

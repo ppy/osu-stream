@@ -219,6 +219,13 @@ namespace osum.Graphics.Sprites
 
         internal void Click()
         {
+            if (!inputIsHovering)
+            {
+                //force hovering. this is necessary if a click is manually triggered, to get animations etc.
+                inputIsHovering = true;
+                onHover(this, null);
+            }
+
             if (onClick != null)
                 onClick(this, null);
         }

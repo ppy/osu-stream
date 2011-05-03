@@ -36,6 +36,11 @@ namespace osum.Graphics.Sprites
             Sprites.Add(p);
         }
 
+        internal void Add(List<pDrawable> p)
+        {
+            Sprites.AddRange(p);
+        }
+
         internal void Add(pSpriteCollection sc)
         {
             Sprites.AddRange(sc.Sprites);
