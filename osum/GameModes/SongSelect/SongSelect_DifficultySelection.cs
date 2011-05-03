@@ -265,7 +265,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
-                Director.ChangeMode(OsuMode.Play);
+                Director.ChangeMode(OsuMode.SongSelect);
             }, 900);
         }
     }
