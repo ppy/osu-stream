@@ -14,6 +14,7 @@ using osum.GameModes.Play.Components;
 using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
+using osum.Graphics.Renderers;
 
 namespace osum.GameModes
 {
@@ -29,6 +30,7 @@ namespace osum.GameModes
         private pSprite s_ModeArrowRight;
         private pSprite s_ModeButtonEasy;
         private pSprite s_ModeButtonExpert;
+        private pText s_ModeDescriptionText;
 
         /// <summary>
         /// True when expert mode is not yet unlocked for the current map.
@@ -51,14 +53,16 @@ namespace osum.GameModes
 
                 float currX = spacing;
 
-                s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, 0), 0.45f, true, Color4.White);
+                float yOffset = -40;
+
+                s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, yOffset), 0.45f, true, Color4.White);
                 s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
                 s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
                 s_ModeArrowLeft.OnClick += onSelectPreviousMode;
 
                 spritesDifficultySelection.Add(s_ModeArrowLeft);
 
-                s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, 0), 0.45f, true, Color4.DarkGray);
+                s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, yOffset), 0.45f, true, Color4.DarkGray);
                 s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
                 s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
                 s_ModeArrowRight.OnClick += onSelectNextMode;
@@ -66,15 +70,15 @@ namespace osum.GameModes
                 s_ModeArrowRight.Rotation = 1;
                 spritesDifficultySelection.Add(s_ModeArrowRight);
 
-                s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { HandleClickOnUp = true };
+                s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
                 s_ModeButtonStream.OnClick += onModeButtonClick;
                 spritesDifficultySelection.Add(s_ModeButtonStream);
 
-                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, 0), HandleClickOnUp = true };
+                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
                 s_ModeButtonEasy.OnClick += onModeButtonClick;
                 spritesDifficultySelection.Add(s_ModeButtonEasy);
 
-                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, 0), HandleClickOnUp = true };
+                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
                 s_ModeButtonExpert.OnClick += onModeButtonClick;
                 spritesDifficultySelection.Add(s_ModeButtonExpert);
 
@@ -82,6 +86,11 @@ namespace osum.GameModes
 
                 s_TabBarBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_tab_bar), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.4f, true, Color4.White);
                 spritesDifficultySelection.Add(s_TabBarBackground);
+
+                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 40), new Vector2(GameBase.BaseSize.Width, 64), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
+                s_ModeDescriptionText.TextAlignment = TextAlignment.Centre;
+
+                spritesDifficultySelection.Add(s_ModeDescriptionText);
 
                 spriteManager.Add(spritesDifficultySelection);
                 spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
@@ -176,25 +185,42 @@ namespace osum.GameModes
                 //todo: show an alert that this needs an unlock.
             }
 
+            string text = null;
+
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
                     hasNext = true;
                     difficultySelectOffset = mode_button_width;
+                    text = "Toned-down difficulty. You can't fail.";
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
                     difficultySelectOffset = 0;
+                    text = "Standard triple-stream gameplay. Difficulty changes based on your performance.";
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
                     difficultySelectOffset = -mode_button_width;
+                    text = "Unlockable challenge.";
                     break;
             }
 
             s_ModeArrowLeft.Colour = hasPrevious ? Color4.White : Color4.DarkGray;
             s_ModeArrowRight.Colour = hasNext ? Color4.White : Color4.DarkGray;
+
+            if (s_ModeDescriptionText.Text != text)
+            {
+                pSprite clone = s_ModeDescriptionText.Clone();
+                clone.FadeOut(200);
+                clone.AlwaysDraw = false;
+                spriteManager.Add(clone); 
+
+                s_ModeDescriptionText.Text = text;
+                s_ModeDescriptionText.Alpha = 0;
+                s_ModeDescriptionText.FadeInFromZero(200);
+            }
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)
