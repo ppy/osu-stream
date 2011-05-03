@@ -237,17 +237,7 @@ namespace osum.Graphics.Sprites
 
         internal Transformation Clone()
         {
-            Transformation t = new Transformation();
-            t.StartFloat = StartFloat;
-            t.StartColour = StartColour;
-            t.StartVector = StartVector;
-            t.EndFloat = EndFloat;
-            t.EndColour = EndColour;
-            t.EndVector = EndVector;
-            t.Easing = Easing;
-            t.StartTime = StartTime;
-            t.EndTime = EndTime;
-            t.Type = Type;
+            Transformation t = (Transformation)this.MemberwiseClone();
 
             return t;
         }

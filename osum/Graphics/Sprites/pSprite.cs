@@ -249,21 +249,11 @@ namespace osum.Graphics.Sprites
 
         public virtual pSprite Clone()
         {
-            pSprite clone = new pSprite(Texture, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
-            clone.Position = Position;
 
-            clone.DrawLeft = DrawLeft;
-            clone.DrawTop = DrawTop;
-            clone.DrawWidth = DrawWidth;
-            clone.DrawHeight = DrawHeight;
-
-            clone.OriginVector = OriginVector;
-
-            clone.Scale = Scale;
-            clone.Rotation = Rotation;
+            pSprite clone = (pSprite)this.MemberwiseClone();
+            clone.Transformations = new pList<Transformation>();
 
             foreach (Transformation t in Transformations)
-                //if (!t.IsLoopStatic) 
                 clone.Transform(t.Clone());
 
             /*
