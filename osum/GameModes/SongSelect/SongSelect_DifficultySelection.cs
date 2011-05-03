@@ -87,7 +87,7 @@ namespace osum.GameModes
                 s_TabBarBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_tab_bar), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.4f, true, Color4.White);
                 spritesDifficultySelection.Add(s_TabBarBackground);
 
-                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 40), new Vector2(GameBase.BaseSize.Width, 64), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
+                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 40), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
                 s_ModeDescriptionText.TextAlignment = TextAlignment.Centre;
 
                 spritesDifficultySelection.Add(s_ModeDescriptionText);
