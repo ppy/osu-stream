@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using osu_common.Helpers;
 
+
 namespace osu_common.Libraries.Osz2
 {
     public class MapStream : Stream
@@ -20,12 +21,15 @@ namespace osu_common.Libraries.Osz2
 #if STRONG_ENCRYPTION
         private readonly Aes fAes;
         private readonly CryptoStream fStream;
+#elif NO_ENCRYPTION
+        private FileStream internalStream;
 #else
+        private FileStream internalStream;
+        //private byte[] internalBuffer;
+        private byte[] decryptedBuffer;
+        private byte[] skipBuffer = new byte[64];
         private FastEncryptionProvider encryptor = new FastEncryptionProvider();
 #endif
-        private FileStream internalStream;
-
-        private byte[] skipBuffer = new byte[64];
         private int fOffset;
         private long fPosition;
         
@@ -38,11 +42,7 @@ namespace osu_common.Libraries.Osz2
             internalStream = file;
             internalStream.Position = fOffset = offset + 4;
 
-#if NO_ENCRYPTION
-            using (Stream fStream = new MemoryStream(data))
-                fLength = fStream.ReadByte() | (fStream.ReadByte() << 8) | (fStream.ReadByte() << 16) | (fStream.ReadByte() << 24);
-            fPosition = 4;
-#elif STRONG_ENCRYPTION
+#if STRONG_ENCRYPTION
             // create decryptor
             fAes = new AesManaged();
             fAes.Key = key;
@@ -54,7 +54,14 @@ namespace osu_common.Libraries.Osz2
             // read length as an int
             fLength = fStream.ReadByte() | (fStream.ReadByte() << 8) | (fStream.ReadByte() << 16) | (fStream.ReadByte() << 24);
             fPosition = 0;
+#elif NO_ENCRYPTION
+
+            //fLength = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
+            fLength = length - 4;
+            fPosition = fOffset;
 #else
+
+
             uint[] uKey = new uint[4];
             unsafe
             {
@@ -75,6 +82,7 @@ namespace osu_common.Libraries.Osz2
             encryptor.Decrypt(lengthB, 0, 4);
             fLength = lengthB[0] | (lengthB[1] << 8) | (lengthB[2] << 16) | (lengthB[3] << 24);
             fPosition = fOffset;
+
 #if STREAM_DEBUG
             decryptedBuffer = new byte[fLength];
             internalStream.Read(decryptedBuffer, 0, fLength);
@@ -128,7 +136,7 @@ namespace osu_common.Libraries.Osz2
             {
                 
 #if !STRONG_ENCRYPTION
-                internalStream.Seek(Position, SeekOrigin.Begin);
+                internalStream.Seek(value, SeekOrigin.Begin);
 #else
                 fPosition = value + fOffset;
 #endif

@@ -12,7 +12,11 @@ namespace osu_common.Libraries.Osz2
     public class MapPackage : IDisposable
     {
 
+#if OSUM
         private const string EXT_MAP = "osc";
+#else
+        private const string EXT_MAP = "osu";
+#endif
         private const string EXT_PACKAGE = "osz2";
         private const string EXT_PACKAGE_OLD = "osz";
         private const int F_OFFSET_METADATA = 68;
@@ -39,7 +43,8 @@ namespace osu_common.Libraries.Osz2
         //private readonly List<string> fMapFiles;
         private readonly SortedDictionary<string, int> fMapIDsFiles;
         private readonly Dictionary<string, DateTime> fFilesToAddDateCreated;
-        private readonly Dictionary<string, DateTime> fFilesToAddDateModified; 
+        private readonly Dictionary<string, DateTime> fFilesToAddDateModified;
+        private readonly Dictionary<string, bool> fFilesToAddDateEncrypted; 
 
         private readonly List<MapStream> fMapStreamsOpen;
         private readonly Dictionary<MapMetaType, string> fMetadata;
@@ -117,6 +122,7 @@ namespace osu_common.Libraries.Osz2
             fMapIDsFiles = new SortedDictionary<string, int>();
             fFilesToAddDateCreated = new Dictionary<string, DateTime>();
             fFilesToAddDateModified = new Dictionary<string, DateTime>();
+            fFilesToAddDateEncrypted = new Dictionary<string, bool>();
             fMapStreamsOpen = new List<MapStream>();
             fFilesToAdd = new Dictionary<string, byte[]>(StringComparer.CurrentCultureIgnoreCase);
 
@@ -246,6 +252,7 @@ namespace osu_common.Libraries.Osz2
             HasPostProcessed = true;
 
 
+#if !NO_ENCRYPTION
             //check whether we have the correct key by comparing to a known plain.
             using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XTEA, KEY))
             {
@@ -255,6 +262,7 @@ namespace osu_common.Libraries.Osz2
                     throw new Exception("Invalid key");
 
             }
+#endif
 
 
             //read data and perform integrity checks
@@ -423,7 +431,10 @@ namespace osu_common.Libraries.Osz2
                 {
                     // include original length
                     writer.Write(files[key].Length);
-                    writer.Write(files[key]);
+                    if (!fFilesToAddDateEncrypted[key])
+                        writer.Write(files[key]);
+                    else
+                        memstream.Write(files[key], 0, files[key].Length);
 #if STRONG_ENCRYPTION
                     cstream.FlushFinalBlock();
 #else
@@ -490,7 +501,7 @@ namespace osu_common.Libraries.Osz2
                         byte[] hash = fHasher.ComputeHash(decrypted, 4, pair.Value.Length - 4);
                         writer.Write(hash);
                         writer.Write(filesTimeCreated[pair.Key].ToBinary());
-                        writer.Write(filesTimeCreated[pair.Key].ToBinary());
+                        writer.Write(filesTimeModified[pair.Key].ToBinary());
                         filesHashes[pair.Key] = hash;
                     }
                     offset += pair.Value.Length;
@@ -690,8 +701,10 @@ namespace osu_common.Libraries.Osz2
         {
             if (!fMapIDsFiles.ContainsKey(map))
                 throw new Exception("Map does not exist in this mappackage");
+#if !DEBUG
             if (fMapIDsFiles.ContainsValue(id) && id != -1 && GetIDByMap(map)!=id)
                 throw new Exception("An other map already has this ID set");
+#endif
 
             fMapIDsFiles[map] = id;
         }
@@ -775,11 +788,21 @@ namespace osu_common.Libraries.Osz2
             return o;
         }
 
+
         /// <summary>
         /// Get a Stream to the specified file within this map package.
         /// </summary>
         /// <returns>A Stream that can be used to access the file, or null if the file does not exist.</returns>
         public Stream GetFile(string filename)
+        {
+            return GetFile(filename, false);
+        }
+
+        /// <summary>
+        /// Get a Stream to the specified file within this map package.
+        /// </summary>
+        /// <returns>A Stream that can be used to access the file, or null if the file does not exist.</returns>
+        public Stream GetFile(string filename, bool raw)
         {
             CheckClosed();
 
@@ -787,11 +810,23 @@ namespace osu_common.Libraries.Osz2
 
             if (fFiles.ContainsKey(filename))
             {
+                if (!raw)
+                {
+                    MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, KEY);
+                    fMapStreamsOpen.Add(ms);
+                    ms.OnStreamClosed += MapStream_OnStreamClosed;
+                    stream = ms;
+                }
+                else
+                {
+                    byte[] file = new byte[fFiles[filename].Length - 4];
+                    FileStream fs =  File.Open(fFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    fs.Seek(fOffsetData + fFiles[filename].Offset + 4, SeekOrigin.Begin);
+                    fs.Read(file, 0, file.Length);
+                    stream = new MemoryStream(file, false);
+                }
+
                 
-                MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, KEY);
-                fMapStreamsOpen.Add(ms);
-                ms.OnStreamClosed += MapStream_OnStreamClosed;
-                stream = ms;
             }
             else if (fFilesToAdd.ContainsKey(filename))
             {
@@ -932,6 +967,16 @@ namespace osu_common.Libraries.Osz2
         /// <param name="data">The contents of the file in a byte array.</param>
         public void AddFile(string filename, byte[] data, DateTime creationTime, DateTime modifiedTime)
         {
+            AddFile(filename, data, creationTime, modifiedTime, false);
+        }
+
+        /// <summary>
+        /// Add a file to this map package. If there is a name collision, the old file will be overwritten.
+        /// </summary>
+        /// <param name="filename">The internal path used to reference this file.</param>
+        /// <param name="data">The contents of the file in a byte array.</param>
+        public void AddFile(string filename, byte[] data, DateTime creationTime, DateTime modifiedTime, bool alreadyEncrypted)
+        {
             CheckClosed();
 
             if (IsPackageFile(filename))
@@ -963,6 +1008,7 @@ namespace osu_common.Libraries.Osz2
             fFilesToAdd[filename] = data;
             fFilesToAddDateCreated[filename] = creationTime;
             fFilesToAddDateModified[filename] = modifiedTime;
+            fFilesToAddDateEncrypted[filename] = alreadyEncrypted;
             fFilesAddedBytes += data.LongLength;
 
             if (fFiles.ContainsKey(filename))
@@ -993,6 +1039,7 @@ namespace osu_common.Libraries.Osz2
                 fFilesToAdd.Remove(filename);
                 fFilesToAddDateCreated.Remove(filename);
                 fFilesToAddDateModified.Remove(filename);
+                fFilesToAddDateEncrypted.Remove(filename);
                 removed = true;
             }
 
@@ -1094,7 +1141,6 @@ namespace osu_common.Libraries.Osz2
             return true;
 
         }
-#endif
 
         public void getVideoOffset (out int offset, out int length)
         {
@@ -1112,6 +1158,7 @@ namespace osu_common.Libraries.Osz2
                 }
             }
         }
+#endif
 
         public byte[] getRawHeader()
         {
@@ -1123,6 +1170,7 @@ namespace osu_common.Libraries.Osz2
             return header;
         }
 
+#if !OSUM
         /// <summary>
         /// Returns a list of FileInfo representing the files in this package. For use with padding.
         /// </summary>
@@ -1137,6 +1185,7 @@ namespace osu_common.Libraries.Osz2
 
             return ret;
         }
+#endif
 
         /// <summary>
         /// Save the current map package to disk.
@@ -1246,15 +1295,13 @@ namespace osu_common.Libraries.Osz2
                         bw.Write(mapID.Key);
                         bw.Write(mapID.Value);
                     }
-                    
+#if !NO_ENCRYPTION
                     using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream, 
                         EncryptionMethod.XTEA, KEY))
                     {
                         encryptor.Write(knownPlain, 0, 64);
                     }
-
-                    
-
+#endif
                 }
                 else
                 {
@@ -1386,6 +1433,7 @@ namespace osu_common.Libraries.Osz2
             if (fFilesToAdd != null) fFilesToAdd.Clear();
             if (fFilesToAddDateCreated != null) fFilesToAddDateCreated.Clear();
             if (fFilesToAddDateModified != null) fFilesToAddDateModified.Clear();
+            if (fFilesToAddDateEncrypted != null) fFilesToAddDateEncrypted.Clear();
             if (fMetadata != null) fMetadata.Clear();
 
             if (fHandle != null)
@@ -1405,8 +1453,11 @@ namespace osu_common.Libraries.Osz2
             //is safe from deadlocks as the same thread can enter the same object multiple times
             try
             {
-                if (!Monitor.TryEnter(packageLock, timeOut))
-                    return false;
+                lock (packageLock)
+                {
+                    if (!Monitor.TryEnter(packageLock, timeOut))
+                        return false;
+                }
             }
             catch
             {
@@ -1427,8 +1478,10 @@ namespace osu_common.Libraries.Osz2
         {
             if(fHandle == null)
                 fHandle = File.Open(fFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            Monitor.Exit(packageLock);
+            lock(packageLock)
+            {
+                Monitor.Exit(packageLock);
+            }
         }
 
         public void Dispose()

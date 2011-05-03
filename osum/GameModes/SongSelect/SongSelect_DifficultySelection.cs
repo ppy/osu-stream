@@ -35,7 +35,7 @@ namespace osum.GameModes
         /// </summary>
         bool mapRequiresUnlock
         {
-            get { return false; }
+            get { return true; }
         }
 
         private void showDifficultySelection()
@@ -270,7 +270,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
-                Director.ChangeMode(OsuMode.SongSelect);
+                Director.ChangeMode(OsuMode.Play);
             }, 900);
         }
     }
