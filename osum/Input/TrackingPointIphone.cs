@@ -12,7 +12,7 @@ namespace osum
 		public override OpenTK.Vector2 WindowDelta {
 			get
 			{
-				return new Vector2(-(GameBase.ScaleFactor * Delta.Y / GameBase.NativeSize.Width) * GameBase.BaseSize.Width,
+				return new Vector2((GameBase.ScaleFactor * Delta.Y / GameBase.NativeSize.Width) * GameBase.BaseSize.Width,
 					                   -((GameBase.ScaleFactor * Delta.X / GameBase.NativeSize.Height) * GameBase.BaseSize.Height));	
 			}
 		}

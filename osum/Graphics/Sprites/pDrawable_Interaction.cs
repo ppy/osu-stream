@@ -148,7 +148,7 @@ namespace osum.Graphics.Sprites
                 (trackingPoint.HoveringObject == null || trackingPoint.HoveringObject == this) &&
                 inputCheckHover(trackingPoint.WindowPosition);
 
-            if (inputIsHovering)
+            if (isNowHovering)
                 trackingPoint.HoveringObject = this;
             else if (trackingPoint.HoveringObject == this)
                 trackingPoint.HoveringObject = null;
@@ -187,6 +187,7 @@ namespace osum.Graphics.Sprites
             if (!HandleInput) return;
 
             inputUpdateHoverState(trackingPoint);
+
             if (inputIsHovering)
             {
                 if (!HandleClickOnUp)
