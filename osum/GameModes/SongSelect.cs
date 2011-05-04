@@ -66,21 +66,21 @@ namespace osum.GameModes
 
             InitializeBgm();
 
-            s_ButtonBack = new BackButton(onBackPressed);
-            spriteManager.Add(s_ButtonBack);
+            InitializeBeatmaps();
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
             spriteManager.Add(s_Header);
 
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 1, true, new Color4(200, 200, 200, 255));
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.99f, true, new Color4(200, 200, 200, 255));
             s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
             s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(200, 200, 200, 255), 100); };
             s_Footer.OnClick += onStartButtonPressed;
             spriteManager.Add(s_Footer);
 
-            InitializeBeatmaps();
+            s_ButtonBack = new BackButton(onBackPressed);
+            spriteManager.Add(s_ButtonBack);
         }
 
         private void onBackPressed(object sender, EventArgs args)

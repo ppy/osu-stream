@@ -42,6 +42,7 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
+using osum.Graphics.Renderers;
 #endif
 
 
@@ -89,7 +90,7 @@ namespace osum
         /// <summary>
         /// Top-level sprite manager. Draws above everything else.
         /// </summary>
-        internal readonly SpriteManager MainSpriteManager = new SpriteManager();
+        internal static SpriteManager MainSpriteManager = new SpriteManager();
 
         /// <summary>
         /// May be set in the update loop to force the next frame to have an ElapsedMilliseconds of 0
@@ -272,6 +273,8 @@ namespace osum
 
             TextureManager.Update();
 
+            MainSpriteManager.Update();
+
             if (Director.Update())
             {
                 ignoreNextFrameTime = true;
@@ -283,8 +286,6 @@ namespace osum
             InputManager.Update();
 
             Components.ForEach(c => c.Update());
-
-            MainSpriteManager.Update();
 
             return true;
         }
@@ -313,6 +314,29 @@ namespace osum
         {
             if (OnScreenLayoutChanged != null)
                 OnScreenLayoutChanged();
+        }
+
+        internal static void Notify(string text)
+        {
+            pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White);
+
+            pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game };
+
+            Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
+            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
+            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, Clock.Time + 10000, Clock.Time + 10200);
+
+            t.Transform(bounce, fadeIn, fadeOut);
+            back.Transform(bounce, fadeIn, fadeOut);
+
+            back.OnClick += delegate {
+                back.HandleInput = false;
+                back.FadeOut(100);
+                t.FadeOut(100);
+            };
+
+            MainSpriteManager.Add(t);
+            MainSpriteManager.Add(back);
         }
     }
 }

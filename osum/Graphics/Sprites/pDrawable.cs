@@ -228,6 +228,12 @@ namespace osum.Graphics.Sprites
             Transformations.AddInPlace(transform);
         }
 
+        internal void Transform(params Transformation[] transforms)
+        {
+            foreach (Transformation t in transforms)
+                Transform(t);
+        }
+
         internal void Transform(IEnumerable<Transformation> transforms)
         {
             foreach (Transformation t in transforms)

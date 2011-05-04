@@ -147,7 +147,7 @@ namespace osum.GameModes
             //Performance testing code.
             fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
             fpsTotalCount.FadeOutFromOne(15000);
-            GameBase.Instance.MainSpriteManager.Add(fpsTotalCount);
+            GameBase.MainSpriteManager.Add(fpsTotalCount);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)

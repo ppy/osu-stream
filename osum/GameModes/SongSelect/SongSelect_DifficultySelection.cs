@@ -97,6 +97,18 @@ namespace osum.GameModes
             const float yOffset = -40;
             List<pDrawable> sprites = new List<pDrawable>();
 
+            s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
+            s_ModeButtonStream.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonStream);
+
+            s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
+            s_ModeButtonEasy.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonEasy);
+
+            s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
+            s_ModeButtonExpert.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonExpert);
+
             s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, yOffset), 0.45f, true, Color4.White);
             s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
@@ -111,18 +123,6 @@ namespace osum.GameModes
 
             s_ModeArrowRight.Rotation = 1;
             sprites.Add(s_ModeArrowRight);
-
-            s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
-            s_ModeButtonStream.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonStream);
-
-            s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
-            s_ModeButtonEasy.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonEasy);
-
-            s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
-            s_ModeButtonExpert.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonExpert);
 
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
@@ -200,6 +200,10 @@ namespace osum.GameModes
             if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
             {
                 Player.Difficulty = Difficulty.Normal;
+
+                GameBase.Notify("You need to unlock Expert by completing this level on Stream mode first!");
+                
+
                 //todo: show an alert that this needs an unlock.
             }
 

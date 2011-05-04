@@ -41,7 +41,7 @@ namespace osum.Support
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
                 fpsDisplay.ScaleScalar = 0.6f;
-                GameBase.Instance.MainSpriteManager.Add(fpsDisplay);
+                GameBase.MainSpriteManager.Add(fpsDisplay);
 #endif
             }
 
