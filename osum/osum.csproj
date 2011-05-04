@@ -25,9 +25,9 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>iOS DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchI18n />
     <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
@@ -48,7 +48,7 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchMinimumOS>3.0</MtouchMinimumOS>
     <MtouchDebug>False</MtouchDebug>
     <ConsolePause>false</ConsolePause>
