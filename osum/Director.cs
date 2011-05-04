@@ -153,6 +153,10 @@ namespace osum
                     ActiveTransition = null;
                 }
             }
+            else if (GameBase.ActiveNotification != null && GameBase.ActiveNotification.Alpha > 0)
+                SpriteManager.UniversalDim = GameBase.ActiveNotification.Alpha * 0.7f;
+            else
+                SpriteManager.UniversalDim = 0;
 
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.

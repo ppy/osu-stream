@@ -208,11 +208,16 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        /// <summary>
+        /// If true, this sprite is not affected by universal dimming.
+        /// </summary>
+        internal bool DimImmune;
+
         internal Color4 AlphaAppliedColour
         {
             get
             {
-                if (SpriteManager.UniversalDim > 0)
+                if (SpriteManager.UniversalDim > 0 && !DimImmune)
                 {
                     float dim = 1 - SpriteManager.UniversalDim;
                     return new Color4(Colour.R * dim, Colour.G * dim, Colour.B * dim, Alpha * Colour.A);

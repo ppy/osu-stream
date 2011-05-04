@@ -316,11 +316,13 @@ namespace osum
                 OnScreenLayoutChanged();
         }
 
+        internal static pSprite ActiveNotification;
         internal static void Notify(string text)
         {
-            pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White);
+            pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
+            ActiveNotification = back;
 
-            pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game };
+            pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
 
             Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
@@ -329,10 +331,18 @@ namespace osum
             t.Transform(bounce, fadeIn, fadeOut);
             back.Transform(bounce, fadeIn, fadeOut);
 
-            back.OnClick += delegate {
+            back.OnClick += delegate
+            {
                 back.HandleInput = false;
-                back.FadeOut(100);
-                t.FadeOut(100);
+
+                Transformation bounce2 = new TransformationBounce(Clock.Time, Clock.Time + 300, 1.05f, 0.05f, 3);
+                Transformation fadeOut2 = new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 300);
+
+                back.Transformations.Clear();
+                t.Transformations.Clear();
+
+                back.Transform(bounce2, fadeOut2);
+                t.Transform(bounce2, fadeOut2);
             };
 
             MainSpriteManager.Add(t);
