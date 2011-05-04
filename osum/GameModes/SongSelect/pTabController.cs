@@ -18,6 +18,9 @@ namespace osum.GameModes.SongSelect
 
         List<pDrawable> tabs = new List<pDrawable>();
 
+        Dictionary<pDrawable, SpriteManager> spriteManagers = new Dictionary<pDrawable, SpriteManager>();
+        SpriteManager activeSpriteManager;
+
         internal pTabController()
         {
             Initialize();
@@ -31,7 +34,7 @@ namespace osum.GameModes.SongSelect
             spriteManager.Add(s_TabBarBackground);
         }
 
-        internal void Add(OsuTexture tabTexture)
+        internal pDrawable Add(OsuTexture tabTexture, List<pDrawable> sprites)
         {
             pSprite tab = new pSprite(TextureManager.Load(tabTexture), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.41f, true, Color4.Gray);
             tab.OnClick += onTabClick;
@@ -40,33 +43,65 @@ namespace osum.GameModes.SongSelect
 
             spriteManager.Add(tab);
 
+            spriteManagers.Add(tab, sprites != null ? new SpriteManager(sprites) : new SpriteManager());
+
             if (tabs.Count == 0) tab.Click();
 
             tabs.Add(tab);
-            
-            float x = -(Math.Max(0,tabs.Count - 1) * 200f) / 2;
+
+            float x = -(Math.Max(0, tabs.Count - 1) * 200f) / 2;
             for (int i = 0; i < tabs.Count; i++)
             {
                 tabs[i].Offset = new Vector2(x, 0);
                 x += 200;
             }
+
+            return tab;
         }
 
-        pSprite selectedTab;
+        internal pSprite SelectedTab;
         void onTabClick(object sender, EventArgs e)
         {
-            if (selectedTab != null)
+            if (SelectedTab != null)
             {
-                if (selectedTab == sender) return;
-                selectedTab.HandleInput = true;
+                if (SelectedTab == sender) return;
+                SelectedTab.HandleInput = true;
             }
 
             pSprite s = sender as pSprite;
             if (s == null) return;
 
-            selectedTab = s;
+            SelectedTab = s;
+            activeSpriteManager = spriteManagers[SelectedTab];
+            activeSpriteManager.Sprites.ForEach(d => d.FadeInFromZero(250));
+
             s.HandleInput = false;
         }
 
+        public override void Update()
+        {
+            if (activeSpriteManager != null) activeSpriteManager.Update();
+
+            base.Update();
+        }
+
+        public override bool Draw()
+        {
+            if (activeSpriteManager != null) activeSpriteManager.Draw();
+
+            return base.Draw();
+        }
+
+        internal void Hide()
+        {
+            if (activeSpriteManager != null) activeSpriteManager.Sprites.ForEach(s => s.FadeOut(250));
+            spriteManager.Sprites.ForEach(s => s.FadeOut(250));
+        }
+
+        internal void Show()
+        {
+            if (activeSpriteManager != null) activeSpriteManager.Sprites.ForEach(s => s.FadeInFromZero(250));
+            spriteManager.Sprites.ForEach(s => s.FadeInFromZero(250));
+        }
     }
 }

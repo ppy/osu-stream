@@ -64,7 +64,7 @@ namespace osum.Graphics.Sprites
         internal pText(string text, float textSize, Vector2 startPosition, Vector2 bounds, float drawDepth,
                        bool alwaysDraw, Color4 colour, bool shadow)
             : base(
-                null, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Game, startPosition, drawDepth, alwaysDraw,
+                null, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, startPosition, drawDepth, alwaysDraw,
                 colour)
         {
             Text = text;

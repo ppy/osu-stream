@@ -20,8 +20,6 @@ namespace osum.GameModes
 {
     public partial class SongSelectMode : GameMode
     {
-        private pSpriteCollection spritesDifficultySelection = new pSpriteCollection();
-
         private pSprite s_ModeButtonStream;
 
         private pSprite s_ModeArrowLeft;
@@ -42,59 +40,18 @@ namespace osum.GameModes
         {
             if (s_ModeButtonStream == null)
             {
-                Vector2 border = new Vector2(4, 4);
-
-                int ypos = 140;
-                float spacing = border.X;
-
-                Vector2 buttonSize = new Vector2((GameBase.BaseSize.Width - spacing * 4) / 3f, 100);
-
-                float currX = spacing;
-
-                float yOffset = -40;
-
-                s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, yOffset), 0.45f, true, Color4.White);
-                s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
-                s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
-                s_ModeArrowLeft.OnClick += onSelectPreviousMode;
-
-                spritesDifficultySelection.Add(s_ModeArrowLeft);
-
-                s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, yOffset), 0.45f, true, Color4.DarkGray);
-                s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
-                s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
-                s_ModeArrowRight.OnClick += onSelectNextMode;
-
-                s_ModeArrowRight.Rotation = 1;
-                spritesDifficultySelection.Add(s_ModeArrowRight);
-
-                s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
-                s_ModeButtonStream.OnClick += onModeButtonClick;
-                spritesDifficultySelection.Add(s_ModeButtonStream);
-
-                s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
-                s_ModeButtonEasy.OnClick += onModeButtonClick;
-                spritesDifficultySelection.Add(s_ModeButtonEasy);
-
-                s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
-                s_ModeButtonExpert.OnClick += onModeButtonClick;
-                spritesDifficultySelection.Add(s_ModeButtonExpert);
-
+                
                 tabController = new pTabController();
-                tabController.Add(OsuTexture.songselect_tab_bar_play);
-                tabController.Add(OsuTexture.songselect_tab_bar_rank);
-                tabController.Add(OsuTexture.songselect_tab_bar_other);
 
-                spritesDifficultySelection.Add(tabController.Sprites);
+                
 
-                s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre };
-                s_ModeDescriptionText.TextAlignment = TextAlignment.Centre;
-
-                spritesDifficultySelection.Add(s_ModeDescriptionText);
-
-                spriteManager.Add(spritesDifficultySelection);
-                spritesDifficultySelection.Sprites.ForEach(s => s.Alpha = 0);
+                initializeTabPlay();
+                initializeTabRank();
+                initializeTabOptions();
             }
+
+            tabController.Show();
+
 
             //preview has finished loading.
             State = SelectState.DifficultySelect;
@@ -105,8 +62,6 @@ namespace osum.GameModes
             tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
             tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
 
-            spritesDifficultySelection.Sprites.ForEach(s => s.FadeIn(200));
-
             s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -59), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
@@ -116,6 +71,64 @@ namespace osum.GameModes
             updateModeSelectionArrows();
         }
 
+        private void initializeTabOptions()
+        {
+            List<pDrawable> sprites = new List<pDrawable>();
+
+            pSprite text = new pText("Not sure what to put here!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            sprites.Add(text);
+
+            
+            s_TabBarOther = tabController.Add(OsuTexture.songselect_tab_bar_other, sprites);
+        }
+
+        private void initializeTabRank()
+        {
+            List<pDrawable> sprites = new List<pDrawable>();
+
+            pSprite text = new pText("Not yet implemented!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            sprites.Add(text);
+
+            s_TabBarRank = tabController.Add(OsuTexture.songselect_tab_bar_rank, sprites);
+        }
+
+        private void initializeTabPlay()
+        {
+            const float yOffset = -40;
+            List<pDrawable> sprites = new List<pDrawable>();
+
+            s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, yOffset), 0.45f, true, Color4.White);
+            s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
+            s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
+            s_ModeArrowLeft.OnClick += onSelectPreviousMode;
+
+            sprites.Add(s_ModeArrowLeft);
+
+            s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, yOffset), 0.45f, true, Color4.DarkGray);
+            s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
+            s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
+            s_ModeArrowRight.OnClick += onSelectNextMode;
+
+            s_ModeArrowRight.Rotation = 1;
+            sprites.Add(s_ModeArrowRight);
+
+            s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
+            s_ModeButtonStream.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonStream);
+
+            s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
+            s_ModeButtonEasy.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonEasy);
+
+            s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
+            s_ModeButtonExpert.OnClick += onModeButtonClick;
+            sprites.Add(s_ModeButtonExpert);
+
+            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            sprites.Add(s_ModeDescriptionText);
+
+            s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
+        }
 
         void onModeButtonClick(object sender, EventArgs e)
         {
@@ -171,10 +184,10 @@ namespace osum.GameModes
         }
 
         const float mode_button_width = 300;
-        private pSprite s_TabBarPlay;
-        private pSprite s_TabBarRank;
-        private pDrawable s_TabBarOther;
         private pTabController tabController;
+        private pDrawable s_TabBarPlay;
+        private pDrawable s_TabBarRank;
+        private pDrawable s_TabBarOther;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
@@ -244,7 +257,7 @@ namespace osum.GameModes
                         d.FadeIn(200);
                 }
 
-                spritesDifficultySelection.Sprites.ForEach(s => s.FadeOut(50));
+                tabController.Hide();
 
                 s_Header.Transform(new Transformation(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));

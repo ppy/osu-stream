@@ -36,7 +36,7 @@ namespace osum.GameModes
         private float difficultySelectOffset;
         private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
         private float offset_max = 0;
-
+        
         private float velocity;
 
         SelectState State;
@@ -251,31 +251,34 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.DifficultySelect:
-                    if (InputManager.IsPressed)
-                        pendingModeChange = true;
-                    else if (pendingModeChange)
+                    if (tabController.SelectedTab == s_TabBarPlay)
                     {
-                        difficultySelectOffset += velocity;
+                        if (InputManager.IsPressed)
+                            pendingModeChange = true;
+                        else if (pendingModeChange)
+                        {
+                            difficultySelectOffset += velocity;
 
 
-                        if (difficultySelectOffset > mode_button_width / 2)
-                            Player.Difficulty = Difficulty.Easy;
-                        else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)
-                            Player.Difficulty = Difficulty.Expert;
-                        else
-                            Player.Difficulty = Difficulty.Normal;
+                            if (difficultySelectOffset > mode_button_width / 2)
+                                Player.Difficulty = Difficulty.Easy;
+                            else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)
+                                Player.Difficulty = Difficulty.Expert;
+                            else
+                                Player.Difficulty = Difficulty.Normal;
 
-                        pendingModeChange = false;
+                            pendingModeChange = false;
 
-                        updateModeSelectionArrows();
-                    }
+                            updateModeSelectionArrows();
+                        }
 
-                    if (Director.PendingMode == OsuMode.Unknown)
-                    {
-                        Vector2 pos = new Vector2(difficultySelectOffset, 0);
-                        s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
-                        s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
-                        s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
+                        if (Director.PendingMode == OsuMode.Unknown)
+                        {
+                            Vector2 pos = new Vector2(difficultySelectOffset, 0);
+                            s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
+                        }
                     }
 
                     break;
