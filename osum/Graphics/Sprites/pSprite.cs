@@ -156,16 +156,12 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal static pSprite FullscreenWhitePixel
+        internal static pDrawable FullscreenWhitePixel
         {
             get
             {
-                pSprite whiteLayer =
-                    new pSprite(TextureManager.Load("white"), FieldTypes.Standard,
-                                OriginTypes.TopLeft, ClockTypes.Mode, Vector2.Zero, 1, false, Color4.White);
-
-                whiteLayer.Scale = new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height) /
-                                   GameBase.SpriteToBaseRatio;
+                pDrawable whiteLayer =
+                    new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), false, 1, Color4.White);
                 return whiteLayer;
             }
         }

@@ -14,9 +14,9 @@ namespace osum.GameModes
     {
         internal static Score RankableScore;
 
-        pSprite fill1;
-        pSprite fill2;
-        pSprite fill3;
+        pDrawable fill1;
+        pDrawable fill2;
+        pDrawable fill3;
 
         List<pDrawable> fillSprites = new List<pDrawable>();
 
