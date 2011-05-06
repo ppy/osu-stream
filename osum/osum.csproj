@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>osu</BundleIdentifier>
-    <BundleVersion>1060</BundleVersion>
+    <BundleVersion>1070</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
