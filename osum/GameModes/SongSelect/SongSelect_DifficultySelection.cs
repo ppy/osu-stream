@@ -43,8 +43,6 @@ namespace osum.GameModes
                 
                 tabController = new pTabController();
 
-                
-
                 initializeTabPlay();
                 initializeTabRank();
                 initializeTabOptions();

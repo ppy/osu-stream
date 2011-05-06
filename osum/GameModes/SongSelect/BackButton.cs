@@ -11,37 +11,34 @@ using osum.Helpers;
 
 namespace osum.GameModes.SongSelect
 {
-    class BackButton : pDrawable
+    class BackButton : pSprite
     {
-        pSprite background;
         pSprite arrow;
 
         SpriteManager sm = new SpriteManager();
 
         EventHandler Action;
+        const float offset = 30;
 
         public BackButton(EventHandler action)
+            : base(TextureManager.Load(OsuTexture.songselect_back_hexagon), FieldTypes.StandardSnapBottomLeft,
+                OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset, offset), 0.99f, true, new Color4(200,200,200,255))
         {
             AlwaysDraw = true;
             Alpha = 1;
-            DrawDepth = 1;
             Action = action;
+            HandleInput = true;
 
-            float offset = 30;
-
-            background = new pSprite(TextureManager.Load(OsuTexture.songselect_back_hexagon), FieldTypes.StandardSnapBottomLeft, OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset, offset), 0.99f, true, new Color4(200,200,200,255));
-            background.OnClick += OnBackgroundOnClick;
-            background.OnHover += delegate { background.FadeColour(new Color4(255, 255, 255, 255), 100); };
-            background.OnHoverLost += delegate { background.FadeColour(new Color4(200, 200, 200, 255), 100); };
-
+            OnClick += OnBackgroundOnClick;
+            OnHover += delegate { FadeColour(new Color4(255, 255, 255, 255), 100); };
+            OnHoverLost += delegate { FadeColour(new Color4(200, 200, 200, 255), 100); };
             arrow = new pSprite(TextureManager.Load(OsuTexture.songselect_back_arrow), FieldTypes.StandardSnapBottomLeft, OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset + 15, offset + 15), 1, true, Color4.White);
-            sm.Add(background);
             sm.Add(arrow);
         }
 
         void OnBackgroundOnClick(object sender, EventArgs e)
         {
-            background.Transform(new TransformationBounce(Clock.ModeTime - 300, Clock.ModeTime + 700, 1, 1, 2));
+            Transform(new TransformationBounce(Clock.ModeTime - 300, Clock.ModeTime + 700, 1, 1, 2));
             arrow.Transform(new TransformationBounce(Clock.ModeTime - 300, Clock.ModeTime + 700, 1, 1, 2));
 
             Action(sender, e);
@@ -77,7 +74,7 @@ namespace osum.GameModes.SongSelect
 
             sm.Update();
 
-            background.Rotation += (float)GameBase.ElapsedMilliseconds * 0.0005f;
+            Rotation += (float)GameBase.ElapsedMilliseconds * 0.0005f;
         }
     }
 }

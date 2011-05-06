@@ -10,7 +10,7 @@ using osum.Helpers;
 
 namespace osum.GameModes.SongSelect
 {
-    internal class pTabController : GameMode
+    internal class pTabController : GameComponent
     {
         private pSprite s_TabBarBackground;
 
@@ -23,9 +23,16 @@ namespace osum.GameModes.SongSelect
 
         internal pTabController()
         {
-            Initialize();
         }
 
+        public override void Dispose()
+        {
+            foreach (SpriteManager s in spriteManagers.Values)
+                s.Dispose();
+            spriteManagers.Clear();
+
+            base.Dispose();
+        }
 
         internal override void Initialize()
         {

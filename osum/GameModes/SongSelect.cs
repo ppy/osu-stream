@@ -73,13 +73,14 @@ namespace osum.GameModes
             s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
             spriteManager.Add(s_Header);
 
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.99f, true, new Color4(200, 200, 200, 255));
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, new Color4(200, 200, 200, 255));
             s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
             s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(200, 200, 200, 255), 100); };
             s_Footer.OnClick += onStartButtonPressed;
             spriteManager.Add(s_Footer);
 
             s_ButtonBack = new BackButton(onBackPressed);
+
             spriteManager.Add(s_ButtonBack);
         }
 
