@@ -50,6 +50,7 @@ namespace osum.Graphics.Drawables
             StartPosition = position;
             Position = position;
             Colour = colour;
+            Clocking = ClockTypes.Mode;
             Field = FieldTypes.Standard;
             Scale = size;
         }
