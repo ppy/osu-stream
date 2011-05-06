@@ -260,6 +260,7 @@ namespace osum.Graphics.Sprites
         internal bool Draw()
         {
             pTexture currentBatchTexture = null;
+            TexturesEnabled = false;
 
             foreach (pDrawable p in Sprites)
             {
@@ -321,6 +322,7 @@ namespace osum.Graphics.Sprites
             texturesEnabled = true;
             TexturesEnabled = false; //force a reset
             lastBlend = BlendingFactorDest.OneMinusDstAlpha;
+            TextureGl.Reset();
         }
 
         /// <summary>
