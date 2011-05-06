@@ -10,6 +10,8 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Support;
+using osum.Graphics.Renderers;
+
 #if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -42,7 +44,6 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
-using osum.Graphics.Renderers;
 #endif
 
 
@@ -322,7 +323,7 @@ namespace osum
             pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
             ActiveNotification = back;
 
-            pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
+            pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 200), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
 
             Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
