@@ -6,6 +6,7 @@ using osu_common.Helpers;
 using osum.GameplayElements;
 using osum.Helpers;
 using osum.Graphics.Skins;
+using osum.Graphics.Drawables;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -151,8 +152,8 @@ namespace osum.Graphics.Sprites
                 Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X, pos.Y,
-                    pos.X + (float)DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
-                    pos.Y + (float)DrawHeight / GameBase.BaseToNativeRatio * Scale.Y);
+                    pos.X + (float)DrawWidth * GameBase.SpriteToBaseRatio * Scale.X,
+                    pos.Y + (float)DrawHeight * GameBase.SpriteToBaseRatio * Scale.Y);
             }
         }
 
