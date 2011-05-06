@@ -14,13 +14,11 @@ namespace osum.GameplayElements.Scoring
 {
     internal class HealthBar : GameComponent
     {
-        protected pAnimation s_barFill;
+        protected pSprite s_barFill;
         protected internal pSprite s_barBg;
         protected pSprite s_kiIcon;
         private pSprite s_kiExplode;
 
-        protected pTexture t_kiDanger;
-        protected pTexture t_kiDanger2;
         protected pTexture t_kiNormal;
 
         internal const int HP_BAR_MAXIMUM = 200;
@@ -117,13 +115,6 @@ namespace osum.GameplayElements.Scoring
         {
             base.Update();
 
-            if (DisplayHp < HP_BAR_MAXIMUM * 0.2)
-                s_kiIcon.Texture = t_kiDanger2;
-            else if (DisplayHp < HP_BAR_MAXIMUM * 0.5)
-                s_kiIcon.Texture = t_kiDanger;
-            else if (s_kiIcon.Texture != t_kiNormal)
-                s_kiIcon.Texture = t_kiNormal;
-
             //HP Bar
             if (DisplayHp < CurrentHp)
             {
@@ -149,8 +140,8 @@ namespace osum.GameplayElements.Scoring
             s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
 
             //Sync Ki icon position with the end of the scorebar fill.
-            s_kiIcon.Position = new Vector2(CurrentXPosition, s_kiIcon.Position.Y);
-
+            s_kiIcon.Position.X = CurrentXPosition;
+            s_kiExplode.Position = s_kiIcon.Position;
         }
 
         internal virtual void KiBulge()
@@ -165,8 +156,8 @@ namespace osum.GameplayElements.Scoring
         {
             if (!visible) return;
 
-            s_kiExplode.Transform(new Transformation(TransformationType.Scale, 1, 1.6F, Clock.Time, Clock.Time + 120, EasingTypes.In));
-            s_kiExplode.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 120, EasingTypes.In));
+            s_kiExplode.Transform(new Transformation(TransformationType.Scale, 1, 2F, Clock.Time, Clock.Time + 180, EasingTypes.In));
+            s_kiExplode.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 180, EasingTypes.None));
         }
 
         internal virtual void SetCurrentHp(double amount)
@@ -189,7 +180,8 @@ namespace osum.GameplayElements.Scoring
         {
             if (InitialIncrease) InitialIncrease = false;
 
-            KiBulge();
+            //KiBulge();
+            KiExplode();
 
             CurrentHpUncapped += amount;
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, CurrentHp + amount));
@@ -197,29 +189,22 @@ namespace osum.GameplayElements.Scoring
 
         internal override void Initialize()
         {
-            s_barFill =
-    new pAnimation(TextureManager.LoadAnimation("scorebar-colour"), FieldTypes.Standard, OriginTypes.TopLeft,
-                   ClockTypes.Game, new Vector2(3, 10), 0.965F, true, Color4.White);
-            s_barFill.SetFramerateFromSkin();
-            s_barFill.DrawDimensionsManualOverride = true;
-
-
-            t_kiNormal = TextureManager.Load("scorebar-ki");
-            t_kiDanger = TextureManager.Load("scorebar-kidanger");
-            t_kiDanger2 = TextureManager.Load("scorebar-kidanger2");
+            s_barFill = new pSprite(TextureManager.Load(OsuTexture.scorebar_colour), FieldTypes.Standard, OriginTypes.TopLeft,
+                   ClockTypes.Game, new Vector2(4, 10f), 0.965F, true, Color4.White);
 
             s_kiIcon =
-                new pSprite(t_kiNormal, FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
-                            new Vector2(0, 10), 0.97F, true, Color4.White);
+                new pSprite(TextureManager.Load(OsuTexture.scorebar_marker), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
+                            new Vector2(0, 14), 0.97F, true, Color4.White);
 
-            s_barBg = new pSprite(TextureManager.Load("scorebar-bg"), FieldTypes.Standard, OriginTypes.TopLeft,
+            s_barBg = new pSprite(TextureManager.Load(OsuTexture.scorebar_background), FieldTypes.Standard, OriginTypes.TopLeft,
                                     ClockTypes.Game,
                                     Vector2.Zero, 0.96F, true, Color4.White);
 
             s_kiExplode =
-                    new pSprite(t_kiNormal, FieldTypes.NativeStandardScale, OriginTypes.Centre, ClockTypes.Game,
+                    new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.NativeStandardScale, OriginTypes.Centre, ClockTypes.Game,
                                 Vector2.Zero, 1, true, Color4.White);
             s_kiExplode.Alpha = 0;
+            s_kiExplode.Additive = true;
 
             spriteManager.Add(s_barBg);
             spriteManager.Add(s_barFill);

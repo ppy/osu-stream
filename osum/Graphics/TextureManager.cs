@@ -135,6 +135,11 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
 
+            textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
+            textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
+            textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 13));
+            textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 759, 742, 59));
+
             textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
@@ -484,6 +489,10 @@ namespace osum.Graphics.Skins
         songselect_mode_expert,
         songselect_tab_bar_play,
         songselect_tab_bar_rank,
-        songselect_tab_bar_other
+        songselect_tab_bar_other,
+        scorebar_marker_hit,
+        scorebar_marker,
+        scorebar_colour,
+        scorebar_background
     }
 }

@@ -377,6 +377,13 @@ namespace osum.Graphics
                 GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth / (int)Math.Pow(2, level), textureHeight / (int)Math.Pow(2, level), 0, format,
                                    PixelType.UnsignedByte, dataPointer);
             }
+
+            Reset();
+        }
+
+        internal static void Reset()
+        {
+            lastDrawTexture = -1;
         }
     }
 }

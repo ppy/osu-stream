@@ -298,15 +298,7 @@
     </Content>
     <Content Include="Skins\Default\spinner-metre.png">
     </Content>
-    <Content Include="Skins\Default\scorebar-kidanger2.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-ki.png">
-    </Content>
     <Content Include="Skins\Default\spinner-rpm.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-kidanger.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-bg.png">
     </Content>
     <Content Include="Skins\Default\sliderpoint30.png">
     </Content>
@@ -317,14 +309,6 @@
     <Content Include="Skins\Default\star.png">
     </Content>
     <Content Include="Skins\Default\star2.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-colour-1.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-colour-2.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-colour-0.png">
-    </Content>
-    <Content Include="Skins\Default\scorebar-colour-3.png">
     </Content>
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
@@ -344,11 +328,10 @@
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="Skins\Default\menu-explosion.png" />
-    <Content Include="Skins\Default\menu-back.png" />
     <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\hit.png" />
     <Content Include="Skins\Default\select.m4a" />
-    <Content Include="Skins\Default\white.png" />
     <Content Include="Skins\Default\songselect.png" />
+    <Content Include="Skins\Default\notification.png" />
   </ItemGroup>
 </Project>
