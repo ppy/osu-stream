@@ -121,61 +121,37 @@ namespace osum
 
         #region Outgoing Events
 
-        static event InputHandler onDown;
-        static public event InputHandler OnDown
-        {
-            add { onDown = value + onDown; }
-            remove { onDown -= value; }
-        }
-
+        static public event InputHandler OnDown;
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
             point.IncreaseValidity();
 
-            if (onDown != null)
-                onDown(source, point);
+            if (OnDown != null)
+                OnDown(source, point);
         }
 
-        static event InputHandler onUp;
-        static public event InputHandler OnUp
-        {
-            add { onUp = value + onUp; }
-            remove { onUp -= value; }
-        }
-
+        static public event InputHandler OnUp;
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             //tracking is no longer valid.
             point.DecreaseValidity();
 
-            if (onUp != null)
-                onUp(source, point);
+            if (OnUp != null)
+                OnUp(source, point);
         }
 
-        static event InputHandler onClick;
-        static public event InputHandler OnClick
-        {
-            add { onClick = value + onClick; }
-            remove { onClick -= value; }
-        }
-
+        static public event InputHandler OnClick;
         private static void TriggerOnClick(InputSource source, TrackingPoint point)
         {
-            if (onClick != null)
-                onClick(source, point);
+            if (OnClick != null)
+                OnClick(source, point);
         }
 
-        static event InputHandler onMove;
-        static public event InputHandler OnMove
-        {
-            add { onMove = value + onMove; }
-            remove { onMove -= value; }
-        }
-
+        static public event InputHandler OnMove;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
-            if (onMove != null)
-                onMove(source, point);
+            if (OnMove != null)
+                OnMove(source, point);
         }
 
         #endregion

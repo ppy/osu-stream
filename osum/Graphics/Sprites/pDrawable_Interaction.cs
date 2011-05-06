@@ -66,20 +66,18 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        bool inputEventsBound;
-
         private event EventHandler onClick;
         internal event EventHandler OnClick
         {
-            add { onClick += value; updateInputBindings(); HandleInput = true; }
-            remove { onClick -= value; updateInputBindings(); }
+            add { onClick += value; HandleInput = true; }
+            remove { onClick -= value; }
         }
 
         private event EventHandler onHover;
         internal event EventHandler OnHover
         {
-            add { onHover += value; updateInputBindings(); HandleInput = true; }
-            remove { onHover -= value; updateInputBindings(); }
+            add { onHover += value; HandleInput = true; }
+            remove { onHover -= value; }
         }
 
         private event EventHandler onHoverLost;
@@ -94,30 +92,6 @@ namespace osum.Graphics.Sprites
             onClick = null;
             onHover = null;
             onHoverLost = null;
-
-            updateInputBindings();
-        }
-
-        private void updateInputBindings()
-        {
-            bool needEventsBound = onClick != null || onHover != null;
-
-            if (needEventsBound == inputEventsBound) return;
-
-            inputEventsBound = needEventsBound;
-
-            if (needEventsBound)
-            {
-                InputManager.OnDown += InputManager_OnDown;
-                InputManager.OnMove += InputManager_OnMove;
-                InputManager.OnUp += InputManager_OnUp;
-            }
-            else
-            {
-                InputManager.OnDown -= InputManager_OnDown;
-                InputManager.OnMove -= InputManager_OnMove;
-                InputManager.OnUp -= InputManager_OnUp;
-            }
         }
 
         bool inputIsHovering;
@@ -172,8 +146,10 @@ namespace osum.Graphics.Sprites
 
         float acceptableUpClick;
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            if (!HandleInput) return;
+
             inputUpdateHoverState(trackingPoint);
 
             if (acceptableUpClick > 0)
@@ -182,7 +158,7 @@ namespace osum.Graphics.Sprites
 
         const float HANDLE_UP_MOVEMENT_ALLOWANCE = 5;
 
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleOnDown(InputSource source, TrackingPoint trackingPoint)
         {
             if (!HandleInput) return;
 
@@ -195,20 +171,16 @@ namespace osum.Graphics.Sprites
                 else
                     acceptableUpClick = HANDLE_UP_MOVEMENT_ALLOWANCE;
             }
-            else
-            {
-                acceptableUpClick = 0;
-            }
         }
 
-        void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!HandleInput) return;
+            if (!HandleInput || !inputIsHovering) return;
 
-            if (inputIsHovering && acceptableUpClick > 0)
+            if (acceptableUpClick > 0)
                 Click();
 
-            if (inputIsHovering && HandleInput)
+            if (HandleInput)
             //check HandleInput again here so we can cancel the unhover for the time being.
             {
                 inputIsHovering = false;
@@ -228,6 +200,8 @@ namespace osum.Graphics.Sprites
 
             if (onClick != null)
                 onClick(this, null);
+
+            acceptableUpClick = 0;
         }
     }
 }

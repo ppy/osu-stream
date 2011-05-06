@@ -48,14 +48,35 @@ namespace osum.Graphics.Sprites
 
         int creationTime = Clock.Time;
 
-        internal SpriteManager()
+        internal SpriteManager() : this(new List<pDrawable>())
         {
-            this.Sprites = new List<pDrawable>();
+        }
+
+        void HandleInputManagerOnUp (InputSource source, TrackingPoint trackingPoint)
+        {
+            for (int i = Sprites.Count - 1; i >= 0; i--)
+                Sprites[i].HandleOnUp(source, trackingPoint);
+        }
+
+        void HandleInputManagerOnDown (InputSource source, TrackingPoint trackingPoint)
+        {
+            for (int i = Sprites.Count - 1; i >= 0; i--)
+                Sprites[i].HandleOnDown(source, trackingPoint);
+        }
+
+        void HandleInputManagerOnMove (InputSource source, TrackingPoint trackingPoint)
+        {
+            for (int i = Sprites.Count - 1; i >= 0; i--)
+                Sprites[i].HandleOnMove(source, trackingPoint);
         }
 
         internal SpriteManager(IEnumerable<pDrawable> sprites)
         {
             this.Sprites = new List<pDrawable>(sprites);
+
+            InputManager.OnMove += HandleInputManagerOnMove;
+            InputManager.OnDown += HandleInputManagerOnDown;
+            InputManager.OnUp += HandleInputManagerOnUp;
         }
 
         pDrawableDepthComparer depth = new pDrawableDepthComparer();
@@ -338,6 +359,10 @@ namespace osum.Graphics.Sprites
                 p.Dispose();
 
             Sprites = null;
+
+            InputManager.OnMove -= HandleInputManagerOnMove;
+            InputManager.OnDown -= HandleInputManagerOnDown;
+            InputManager.OnUp -= HandleInputManagerOnUp;
         }
     }
 }
