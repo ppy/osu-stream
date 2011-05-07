@@ -60,7 +60,7 @@ namespace osum.GameModes
             const int time_between_fills = 500;
 
             int i = 0;
-            foreach (pSprite p in fillSprites)
+            foreach (pDrawable p in fillSprites)
             {
                 p.Alpha = 1;
                 p.AlwaysDraw = true;
@@ -97,7 +97,7 @@ namespace osum.GameModes
             base.Update();
 
             //set the x scale back to the default value (override the bounce transformation).
-            foreach (pSprite p in fillSprites)
+            foreach (pDrawable p in fillSprites)
                 p.Scale.X = actualSpriteScaleX / 2;
 
             fill2.Position.Y = 1 + fill1.Position.Y + fill1.Scale.Y * GameBase.SpriteToBaseRatio;

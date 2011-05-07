@@ -36,7 +36,7 @@ namespace osum.GameModes
         private float difficultySelectOffset;
         private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
         private float offset_max = 0;
-        
+
         private float velocity;
 
         SelectState State;
