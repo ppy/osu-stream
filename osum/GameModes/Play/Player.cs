@@ -113,11 +113,13 @@ namespace osum.GameModes
             //AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false);
             Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
 
-            if (fpsTotalCount != null)
-            {
-                fpsTotalCount.AlwaysDraw = false;
-                fpsTotalCount = null;
-            }
+            //if (fpsTotalCount != null)
+            //{
+            //    fpsTotalCount.AlwaysDraw = false;
+            //    fpsTotalCount = null;
+            //}
+
+            //gcAtStart = GC.CollectionCount(0);
 
             s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Height), 1, true, Color.White);
             s_streamSwitchWarningArrow.Additive = true;
@@ -125,11 +127,11 @@ namespace osum.GameModes
 
             spriteManager.Add(s_streamSwitchWarningArrow);
 
-            gcAtStart = GC.CollectionCount(0);
+            
         }
 
-        static pSprite fpsTotalCount;
-        int gcAtStart;
+        //static pSprite fpsTotalCount;
+        //int gcAtStart;
 
         public override void Dispose()
         {
@@ -145,9 +147,9 @@ namespace osum.GameModes
             base.Dispose();
 
             //Performance testing code.
-            fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
-            fpsTotalCount.FadeOutFromOne(15000);
-            GameBase.MainSpriteManager.Add(fpsTotalCount);
+            //fpsTotalCount = new pText("Total Player.cs frames: " + frameCount + " of " + Math.Round(msCount / 16.666667f) + " (GC: " + (GC.CollectionCount(0) - gcAtStart) + ")", 16, new Vector2(0, 100), new Vector2(512, 256), 0, false, Color4.White, false);
+            //fpsTotalCount.FadeOutFromOne(15000);
+            //GameBase.MainSpriteManager.Add(fpsTotalCount);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
