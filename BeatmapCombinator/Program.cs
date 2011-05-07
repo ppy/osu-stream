@@ -92,6 +92,8 @@ namespace BeatmapCombinator
 
                 foreach (string line in File.ReadAllLines(f))
                 {
+                    string writeLine = line;
+
                     if (line.StartsWith("Version:"))
                     {
                         bd.VersionName = line.Replace("Version:", "");
@@ -114,6 +116,14 @@ namespace BeatmapCombinator
 
                         switch (currentSection)
                         {
+                            case "General":
+                                switch (key)
+                                {
+                                    case "AudioFilename":
+                                        writeLine = "AudioFilename: audio.mp3";
+                                        break;
+                                }
+                                break;
                             case "Metadata":
                                 switch (key)
                                 {
@@ -190,7 +200,7 @@ namespace BeatmapCombinator
                         }
                     }
 
-                    bd.HeaderLines.Add(line);
+                    bd.HeaderLines.Add(writeLine);
                 }
             }
 
@@ -250,7 +260,7 @@ namespace BeatmapCombinator
                 foreach (string file in Directory.GetFiles(dir, "*.osc"))
                     package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
                 foreach (string file in Directory.GetFiles(dir, "*.mp3"))
-                    package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
+                    package.AddFile("audio.mp3", file, DateTime.MinValue, DateTime.MinValue);
                 package.Save();
             }
         }
