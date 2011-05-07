@@ -97,33 +97,33 @@ namespace osum.GameplayElements
 
             //Check for a jpg background for beatmap-based skins (used to reduce filesize), then fallback to png.
             spriteBackground =
-                new pSprite(TextureManager.Load("spinner-background.jpg") ?? TextureManager.Load("spinner-background"),
-                            FieldTypes.StandardSnapCentre, OriginTypes.Centre , ClockTypes.Audio,
-                            new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, fade);
+                new pSprite(TextureManager.Load(OsuTexture.spinner_background),
+                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre , ClockTypes.Audio,
+                            new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(StartTime - 1), false, fade);
             Sprites.Add(spriteBackground);
 
             spriteCircle =
-                new pSprite(TextureManager.Load("spinner-circle"),
+                new pSprite(TextureManager.Load(OsuTexture.spinner_circle),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.BaseSize.Width / 2, (SPINNER_TOP + GameBase.BaseSize.Height) / 2), SpriteManager.drawOrderFwdLowPrio(StartTime), false, fade);
             Sprites.Add(spriteCircle);
 
             spriteScoreMetre =
-                new pSprite(TextureManager.Load("spinner-metre"),
+                new pSprite(null,
                             FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Audio,
                             new Vector2(0, SPINNER_TOP), SpriteManager.drawOrderFwdLowPrio(StartTime + 1), false, fade);
             spriteScoreMetre.DrawHeight = 0;
             Sprites.Add(spriteScoreMetre);
 
             spriteRpmBackground =
-                new pSprite(TextureManager.Load("spinner-rpm"),
+                new pSprite(TextureManager.Load(OsuTexture.spinner_spm),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
                             Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             Sprites.Add(spriteRpmBackground);
 
             spriteRpmText = new pSpriteText("100", "score", 3,
                                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
-                                            Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, fade);
+                                            new Vector2(10,0), SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, fade);
             spriteRpmText.ScaleScalar = 0.9f;
             Sprites.Add(spriteRpmText);
 
@@ -139,7 +139,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteBonus);
 
             SpriteSpin =
-                new pSprite(TextureManager.Load("spinner-spin"),
+                new pSprite(TextureManager.Load(OsuTexture.spinner_spin),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height + SPINNER_TOP) * 3 / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, fade);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
@@ -157,7 +157,7 @@ namespace osum.GameplayElements
 			ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.75f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
-                new pSprite(TextureManager.Load("spinner-clear"),
+                new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Audio,
                             new Vector2(GameBase.BaseSize.Width / 2, (GameBase.BaseSize.Height + SPINNER_TOP * 3) / 4), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, fade);
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));

@@ -101,6 +101,13 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
 
+            //spinner
+            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 820, 1024 , 690));
+            textureLocations.Add(OsuTexture.spinner_circle, new SpriteSheetTexture("hit", 1046, 831, 666, 666));
+            textureLocations.Add(OsuTexture.spinner_clear, new SpriteSheetTexture("hit", 21, 1533, 333, 136));
+            textureLocations.Add(OsuTexture.spinner_spin, new SpriteSheetTexture("hit", 21, 1685, 333, 147));
+            textureLocations.Add(OsuTexture.spinner_spm, new SpriteSheetTexture("hit", 354, 1779, 285, 61));
+
             //hitobject misc.
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
             textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
@@ -493,6 +500,11 @@ namespace osum.Graphics.Skins
         scorebar_marker_hit,
         scorebar_marker,
         scorebar_colour,
-        scorebar_background
+        scorebar_background,
+        spinner_background,
+        spinner_circle,
+        spinner_clear,
+        spinner_spin,
+        spinner_spm
     }
 }
