@@ -323,6 +323,8 @@ namespace osum.GameplayElements
             processedTo = activeObjects.Count - 1;
             //initialise to the last object. if we don't find an earlier one below, this wil be used.
 
+            ActiveObject = null;
+
             for (int i = processFrom; i < activeObjects.Count; i++)
             {
                 HitObject h = activeObjects[i];
@@ -330,6 +332,9 @@ namespace osum.GameplayElements
                 if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
+
+                    if (h.StartTime <= Clock.AudioTime && h.EndTime > Clock.AudioTime)
+                        ActiveObject = h;
 
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
@@ -427,6 +432,7 @@ namespace osum.GameplayElements
         /// Cached value of the first beat length for the current beatmap. Used for general calculations (circle dimming).
         /// </summary>
         public double FirstBeatLength;
+        public HitObject ActiveObject;
 
         private void TriggerScoreChange(ScoreChange change, HitObject hitObject)
         {

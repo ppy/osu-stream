@@ -297,6 +297,12 @@ namespace osum.GameModes
 
             hitObjectManager.Update();
 
+            Spinner s = hitObjectManager.ActiveObject as Spinner;
+            if (s != null)
+                s_Playfield.Alpha = 1 - s.SpriteBackground.Alpha;
+            else
+                s_Playfield.Alpha = 1;
+
             healthBar.Update();
 
             UpdateStream();
