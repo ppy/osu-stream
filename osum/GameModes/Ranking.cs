@@ -8,6 +8,7 @@ using OpenTK.Graphics;
 using System.Collections;
 using System.Collections.Generic;
 using osum.Audio;
+using osum.GameModes.SongSelect;
 namespace osum.GameModes
 {
     public class Ranking : GameMode
@@ -24,18 +25,6 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
-            //add a temporary button to allow returning to song select
-            pSprite backButton = new pSprite(TextureManager.Load("menu-back"), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft,
-                                     ClockTypes.Game, Vector2.Zero, 1, true, new Color4(1, 1, 1, 0.4f));
-
-            backButton.OnClick += delegate
-            {
-                backButton.UnbindAllEvents();
-                Director.ChangeMode(OsuMode.SongSelect);
-            };
-
-            spriteManager.Add(backButton);
-
             float ratio300 = (float)RankableScore.count300 / RankableScore.totalHits;
             float ratio100 = (float)RankableScore.count100 / RankableScore.totalHits;
             float ratio50 = (float)RankableScore.count50 / RankableScore.totalHits;
@@ -63,6 +52,7 @@ namespace osum.GameModes
             foreach (pDrawable p in fillSprites)
             {
                 p.Alpha = 1;
+                p.DrawDepth = 0.98f;
                 p.AlwaysDraw = true;
 
                 int offset = i++ * time_between_fills;
@@ -70,7 +60,6 @@ namespace osum.GameModes
                 p.Transform(new Transformation(Color4.LightGray, Color4.LightGray, 0, start_colour_change + offset));
                 p.Transform(new Transformation(Color4.White, p.Colour, start_colour_change + offset, start_colour_change + colour_change_length + offset));
                 //force the initial colour to be an ambiguous gray.
-
             }
 
             actualSpriteScaleX = fill1.Scale.X;
@@ -80,6 +69,10 @@ namespace osum.GameModes
             fill3.Transform(new TransformationBounce(time_between_fills * 2, end_bouncing, fill3.Scale.Y * ratio50, fill3.Scale.Y * ratio50, 1));
 
             spriteManager.Add(fillSprites);
+
+            //add a temporary button to allow returning to song select
+            pDrawable s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
+            spriteManager.Add(s_ButtonBack);
         }
 
         public override void Dispose()

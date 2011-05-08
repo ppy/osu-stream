@@ -160,8 +160,8 @@ namespace osum.GameModes
 
             if (InputManager.TrackingPoints.Count == 2)
             {
-                Vector2 p1 = InputManager.TrackingPoints[0].WindowPosition;
-                Vector2 p2 = InputManager.TrackingPoints[1].WindowPosition;
+                Vector2 p1 = InputManager.TrackingPoints[0].BasePosition;
+                Vector2 p2 = InputManager.TrackingPoints[1].BasePosition;
 
                 if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
                     Math.Min(p1.X, p2.X) < 40 &&
