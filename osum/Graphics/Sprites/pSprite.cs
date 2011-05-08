@@ -134,8 +134,8 @@ namespace osum.Graphics.Sprites
 
                 texture = value;
 
-                UpdateTextureSize();
-                UpdateTextureAlignment();
+                if (texture != null)
+                    UpdateTextureSize();
             }
         }
 
@@ -197,51 +197,44 @@ namespace osum.Graphics.Sprites
 
         #endregion
 
-        internal virtual void UpdateTextureAlignment()
-        {
-            //if (Type == SpriteTypes.NativeText || Type == SpriteTypes.SpriteText)
-            //    return;
-            if (texture == null)
-                return;
-
-            switch (Origin)
-            {
-                case OriginTypes.TopLeft:
-                    OriginVector = Vector2.Zero;
-                    break;
-                case OriginTypes.TopCentre:
-                    OriginVector = new Vector2(TextureWidth / 2, 0);
-                    break;
-                case OriginTypes.TopRight:
-                    OriginVector = new Vector2(TextureWidth, 0);
-                    break;
-                case OriginTypes.CentreLeft:
-                    OriginVector = new Vector2(0, TextureHeight / 2);
-                    break;
-                case OriginTypes.Centre:
-                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight / 2);
-                    break;
-                case OriginTypes.CentreRight:
-                    OriginVector = new Vector2(TextureWidth, TextureHeight / 2);
-                    break;
-                case OriginTypes.BottomLeft:
-                    OriginVector = new Vector2(0, TextureHeight);
-                    break;
-                case OriginTypes.BottomCentre:
-                    OriginVector = new Vector2(TextureWidth / 2, TextureHeight);
-                    break;
-                case OriginTypes.BottomRight:
-                    OriginVector = new Vector2(TextureWidth, TextureHeight);
-                    break;
-            }
-        }
-
         internal virtual void UpdateTextureSize()
         {
             DrawWidth = TextureWidth;
             DrawHeight = TextureHeight;
             DrawTop = TextureY;
             DrawLeft = TextureX;
+        }
+
+        internal override Vector2 OriginVector
+        {
+            get
+            {
+                if (texture == null)
+                    return Vector2.Zero;
+
+                switch (Origin)
+                {
+                    default:
+                    case OriginTypes.TopLeft:
+                        return Vector2.Zero;
+                    case OriginTypes.TopCentre:
+                        return new Vector2(TextureWidth / 2, 0);
+                    case OriginTypes.TopRight:
+                        return new Vector2(TextureWidth, 0);
+                    case OriginTypes.CentreLeft:
+                        return new Vector2(0, TextureHeight / 2);
+                    case OriginTypes.Centre:
+                        return new Vector2(TextureWidth / 2, TextureHeight / 2);
+                    case OriginTypes.CentreRight:
+                        return new Vector2(TextureWidth, TextureHeight / 2);
+                    case OriginTypes.BottomLeft:
+                        return new Vector2(0, TextureHeight);
+                    case OriginTypes.BottomCentre:
+                        return new Vector2(TextureWidth / 2, TextureHeight);
+                    case OriginTypes.BottomRight:
+                        return new Vector2(TextureWidth, TextureHeight);
+                }
+            }
         }
 
         public virtual pSprite Clone()

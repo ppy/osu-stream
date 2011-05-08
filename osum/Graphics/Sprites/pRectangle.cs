@@ -83,6 +83,35 @@ namespace osum.Graphics.Drawables
             }
         }
 
+        internal override Vector2 OriginVector
+        {
+            get
+            {
+                switch (Origin)
+                {
+                    default:
+                    case OriginTypes.TopLeft:
+                        return Vector2.Zero;
+                    case OriginTypes.TopCentre:
+                        return new Vector2(Scale.X / 2, 0);
+                    case OriginTypes.TopRight:
+                        return new Vector2(Scale.X, 0);
+                    case OriginTypes.CentreLeft:
+                        return new Vector2(0, Scale.Y / 2);
+                    case OriginTypes.Centre:
+                        return new Vector2(Scale.X / 2, Scale.Y / 2);
+                    case OriginTypes.CentreRight:
+                        return new Vector2(Scale.X, Scale.Y / 2);
+                    case OriginTypes.BottomLeft:
+                        return new Vector2(0, Scale.Y);
+                    case OriginTypes.BottomCentre:
+                        return new Vector2(Scale.X / 2, Scale.Y);
+                    case OriginTypes.BottomRight:
+                        return new Vector2(Scale.X, Scale.Y);
+                }
+            }
+        }
+
         public override bool Draw()
         {
             if (base.Draw())
@@ -91,14 +120,15 @@ namespace osum.Graphics.Drawables
                 Color4 c = AlphaAppliedColour;
                 Vector2 pos = FieldPosition;
                 Vector2 scale = FieldScale;
+                Vector2 origin = OriginVector * GameBase.BaseToNativeRatio;
 
                 GL.Color4(c.R, c.G, c.B, c.A);
 
                 //first move everything so it is centered on (0,0)
-                float vLeft = -OriginVector.X;
-                float vTop = -OriginVector.Y;
-                float vRight = -OriginVector.X + scale.X;
-                float vBottom = -OriginVector.Y + scale.Y;
+                float vLeft = -origin.X;
+                float vTop = -origin.Y;
+                float vRight = -origin.X + scale.X;
+                float vBottom = -origin.Y + scale.Y;
 
                 if (Rotation != 0)
                 {
@@ -130,6 +160,8 @@ namespace osum.Graphics.Drawables
                     vertices[6] = vLeft;
                     vertices[7] = vBottom;
                 }
+
+                SpriteManager.TexturesEnabled = false;
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);

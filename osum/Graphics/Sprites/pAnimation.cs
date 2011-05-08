@@ -133,13 +133,7 @@ namespace osum.Graphics.Sprites
 
             if (lastFrame != currentFrame)
             {
-                texture = hasCustomSequence ? TextureArray[CustomSequence[currentFrame]] : TextureArray[currentFrame];
-
-                if (texture != null)
-                {
-                    UpdateTextureSize();
-                    UpdateTextureAlignment();
-                }
+                Texture = hasCustomSequence ? TextureArray[CustomSequence[currentFrame]] : TextureArray[currentFrame];
             }
 
             lastFrame = currentFrame;

@@ -67,7 +67,7 @@ namespace osum.Graphics.Sprites
         public int TagNumeric;
         internal FieldTypes Field = FieldTypes.Standard;
         internal OriginTypes Origin;
-        internal Vector2 OriginVector;
+        internal virtual Vector2 OriginVector { get { return Vector2.Zero; } }
         internal Vector2 Position;
         internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
 
@@ -128,9 +128,8 @@ namespace osum.Graphics.Sprites
             {
                 Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio;
                 Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
-
-                return new Box2(pos.X - OriginVector.X, pos.Y - OriginVector.Y, pos.X + scale.X,
-                                pos.Y + scale.Y);
+                Vector2 origin = OriginVector;
+                return new Box2(pos.X - origin.X, pos.Y - origin.Y, pos.X + scale.X, pos.Y + scale.Y);
             }
         }
 

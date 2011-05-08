@@ -101,7 +101,9 @@ namespace osum.Graphics.Sprites
 
                 return texture;
             }
-            set { }
+            set {
+                base.Texture = value;
+            }
         }
 
         private Vector2 lastMeasure;
@@ -145,13 +147,10 @@ namespace osum.Graphics.Sprites
 			
 			Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
 			
-            texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
+            Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 			
 			TextureManager.RegisterDisposable(texture);
-
-            UpdateTextureSize();
-            UpdateTextureAlignment();
 
             return texture;
         }

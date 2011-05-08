@@ -63,10 +63,10 @@ namespace osum.Graphics.Sprites
             {
                 if (value.Length != textArray.Length)
                     textArray = new char[value.Length];
-                
+
                 for (int i = 0; i < textArray.Length; i++)
                     textArray[i] = value[i];
-                
+
                 textChanged = true;
             }
         }
@@ -148,37 +148,33 @@ namespace osum.Graphics.Sprites
             if (textChanged)
                 refreshTexture();
 
-            UpdateTextureAlignment();
-
             return lastMeasure;
         }
 
-        internal override void UpdateTextureAlignment()
+        internal override Vector2 OriginVector
         {
-            switch (Origin)
+            get
             {
-                case OriginTypes.Centre:
-                    OriginVector = lastMeasure * 0.5F;
-                    break;
-                case OriginTypes.TopCentre:
-                    OriginVector.X = lastMeasure.X * 0.5F;
-                    break;
-                case OriginTypes.TopRight:
-                    OriginVector.X = lastMeasure.X;
-                    break;
-                case OriginTypes.BottomCentre:
-                    OriginVector.X = lastMeasure.X / 2;
-                    OriginVector.Y = lastMeasure.Y;
-                    break;
-                case OriginTypes.BottomRight:
-                    OriginVector.X = lastMeasure.X;
-                    OriginVector.Y = lastMeasure.Y;
-                    break;
-                case OriginTypes.BottomLeft:
-                    OriginVector.Y = lastMeasure.Y;
-                    break;
+                switch (Origin)
+                {
+                    default:
+                        return Vector2.Zero;
+                    case OriginTypes.Centre:
+                        return lastMeasure * 0.5F;
+                    case OriginTypes.TopCentre:
+                        return new Vector2(lastMeasure.X * 0.5F, 0);
+                    case OriginTypes.TopRight:
+                        return new Vector2(lastMeasure.X, 0);
+                    case OriginTypes.BottomCentre:
+                        return new Vector2(lastMeasure.X / 2,lastMeasure.Y);
+                    case OriginTypes.BottomRight:
+                        return lastMeasure;
+                    case OriginTypes.BottomLeft:
+                        return new Vector2(0, lastMeasure.Y);
+                }
             }
         }
+
 
 
         Dictionary<char, pTexture> textureCache = new Dictionary<char, pTexture>();
@@ -293,8 +289,6 @@ namespace osum.Graphics.Sprites
             width = currentX;
 
             lastMeasure = new Vector2(width, height);
-
-            UpdateTextureAlignment();
         }
 
         public override void Update()
@@ -329,10 +323,10 @@ namespace osum.Graphics.Sprites
             return false;
         }
 
-        internal void ShowInt(int number, int padding = 0, bool separators = false,  char suffix = (char)0)
+        internal void ShowInt(int number, int padding = 0, bool separators = false, char suffix = (char)0)
         {
             int numberLength = 1;
-            while (number / (int)Math.Pow(10,numberLength) > 0)
+            while (number / (int)Math.Pow(10, numberLength) > 0)
                 numberLength++;
 
             if (numberLength < padding)
@@ -343,11 +337,11 @@ namespace osum.Graphics.Sprites
             if (textArray.Length != totalLength)
                 //todo: can optimise this to avoid reacllocation when shrinking.
                 textArray = new char[totalLength];
-            
+
             int zero_offset = 48;
 
             int cChar = 0;
-            
+
             for (int i = numberLength - 1; i >= 0; i--)
             {
                 UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
@@ -382,7 +376,7 @@ namespace osum.Graphics.Sprites
                 UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
 
 
-            UpdateCharacterAt(cChar++,'.');
+            UpdateCharacterAt(cChar++, '.');
 
             double decimalPart = number - (int)number;
 
