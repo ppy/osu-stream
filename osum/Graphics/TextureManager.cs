@@ -102,8 +102,8 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
 
             //spinner
-            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 820, 1024 , 690));
-            textureLocations.Add(OsuTexture.spinner_circle, new SpriteSheetTexture("hit", 1046, 831, 666, 666));
+            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 819, 1024 , 640));
+            textureLocations.Add(OsuTexture.spinner_circle, new SpriteSheetTexture("hit", 1046, 831, 614, 615));
             textureLocations.Add(OsuTexture.spinner_clear, new SpriteSheetTexture("hit", 21, 1533, 333, 136));
             textureLocations.Add(OsuTexture.spinner_spin, new SpriteSheetTexture("hit", 21, 1685, 333, 147));
             textureLocations.Add(OsuTexture.spinner_spm, new SpriteSheetTexture("hit", 354, 1779, 285, 61));

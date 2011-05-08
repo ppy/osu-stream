@@ -69,7 +69,7 @@ namespace osum
         private static void UpdatePointerPosition(TrackingPoint point)
         {
             if (PrimaryTrackingPoint == point)
-                MainPointerPosition = point.WindowPosition;
+                MainPointerPosition = point.BasePosition;
 
             TrackingPoints.Clear();
             foreach (InputSource source in RegisteredSources)

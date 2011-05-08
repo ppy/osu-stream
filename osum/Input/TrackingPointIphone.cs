@@ -17,7 +17,7 @@ namespace osum
 			}
 		}
 		
-		public override OpenTK.Vector2 WindowPosition {
+		public override OpenTK.Vector2 BasePosition {
 			get
 			{
 				return new Vector2((GameBase.ScaleFactor * Location.Y / GameBase.NativeSize.Width) * GameBase.BaseSize.Width,

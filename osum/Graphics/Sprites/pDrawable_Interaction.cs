@@ -120,7 +120,7 @@ namespace osum.Graphics.Sprites
 
             bool isNowHovering =
                 (trackingPoint.HoveringObject == null || trackingPoint.HoveringObject == this) &&
-                inputCheckHover(trackingPoint.WindowPosition);
+                inputCheckHover(trackingPoint.BasePosition);
 
             if (isNowHovering)
                 trackingPoint.HoveringObject = this;

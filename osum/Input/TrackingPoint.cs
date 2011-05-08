@@ -45,7 +45,7 @@ namespace osum
 			Tag = tag;
 		}
 
-		public virtual Vector2 WindowPosition
+		public virtual Vector2 BasePosition
 		{
 			get
 			{
@@ -65,7 +65,7 @@ namespace osum
         {
             get
             {
-                return GameBase.StandardToGamefield(WindowPosition);
+                return GameBase.StandardToGamefield(BasePosition);
             }
         }
 
