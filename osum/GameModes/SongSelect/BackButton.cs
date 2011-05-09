@@ -72,6 +72,8 @@ namespace osum.GameModes.SongSelect
         {
             base.Update();
 
+            arrow.Alpha = this.Alpha;
+
             sm.Update();
 
             Rotation += (float)GameBase.ElapsedMilliseconds * 0.0005f;
