@@ -233,7 +233,7 @@ namespace osum.GameModes
                         if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
                         songSelectOffset = songSelectOffset + change;
-                        velocity = change * 5;
+                        velocity = change;
                     }
                     break;
                 case SelectState.DifficultySelect:
@@ -245,7 +245,7 @@ namespace osum.GameModes
                         if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
                         difficultySelectOffset = difficultySelectOffset + change;
-                        velocity = change * 5;
+                        velocity = change;
                     }
                     break;
             }
@@ -306,10 +306,10 @@ namespace osum.GameModes
                     {
                         float bound = offsetBound;
 
-                        songSelectOffset = songSelectOffset * 0.1f + bound * 0.9f + velocity;
+                        songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
 
                         if (songSelectOffset != bound)
-                            velocity *= 0.88f;
+                            velocity *= 0.7f;
                         else
                             velocity *= 0.94f;
                     }

@@ -72,7 +72,7 @@ namespace osum.GameModes.SongSelect
 
         internal void MoveTo(Vector2 location)
         {
-            Sprites.ForEach(s => s.MoveTo(location, 150));
+            Sprites.ForEach(s => s.MoveTo(location, 40));
         }
     }
 }
