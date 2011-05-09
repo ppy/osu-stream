@@ -479,7 +479,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 return ScoreChange.SliderEnd;
             }
 
-            return ScoreChange.MissNoCross;
+            return ScoreChange.MissMinor;
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 lastJudgedScoringPoint = -1;
 
-                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissNoCross;
+                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
             }
             else
             {
@@ -657,7 +657,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         return ScoreChange.SliderTick;
                     }
 
-                    return ScoreChange.MissNoCross;
+                    return ScoreChange.MissMinor;
                 }
             }
 

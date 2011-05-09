@@ -40,7 +40,7 @@ namespace osum.GameplayElements
     internal enum ScoreChange
     {
         MissHpOnlyNoCombo = -524288,
-        MissNoCross = -262144,
+        MissMinor = -262144,
         Miss = -131072,
         Ignore = 0,
         MuAddition = 1,

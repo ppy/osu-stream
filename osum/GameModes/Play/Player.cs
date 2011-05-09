@@ -208,14 +208,18 @@ namespace osum.GameModes
             if (currentScore.totalHits == 0)
                 s_Playfield.ChangeColour(Difficulty);
 
+            double healthChange = 0;
+
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
             {
                 case ScoreChange.SpinnerBonus:
                     currentScore.totalScore += 1000;
+                    healthChange = 2;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
                     currentScore.totalScore += 500;
+                    healthChange = 1;
                     break;
                 case ScoreChange.SpinnerSpin:
                     break;
@@ -223,40 +227,47 @@ namespace osum.GameModes
                 case ScoreChange.SliderEnd:
                     currentScore.totalScore += 30;
                     comboCounter.IncreaseCombo();
+                    healthChange = 4;
                     break;
                 case ScoreChange.SliderTick:
                     currentScore.totalScore += 10;
                     comboCounter.IncreaseCombo();
+                    healthChange = 1;
                     break;
                 case ScoreChange.Hit50:
                     currentScore.totalScore += 50;
                     currentScore.count50++;
                     comboCounter.IncreaseCombo();
+                    healthChange = -3;
                     break;
                 case ScoreChange.Hit100:
                     currentScore.totalScore += 100;
                     currentScore.count100++;
                     comboCounter.IncreaseCombo();
+                    healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
                     currentScore.totalScore += 300;
                     currentScore.count300++;
                     comboCounter.IncreaseCombo();
+                    healthChange = 5;
                     break;
-                case ScoreChange.MissHpOnlyNoCombo:
+                case ScoreChange.MissMinor:
+                    comboCounter.SetCombo(0);
+                    healthChange = -4;
                     break;
-                case ScoreChange.MissNoCross:
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
                     comboCounter.SetCombo(0);
+                    healthChange = -20;
                     break;
             }
 
             //then handle the hp addition
-            if (change < 0)
-                healthBar.ReduceCurrentHp(20);
+            if (healthChange < 0)
+                healthBar.ReduceCurrentHp(-healthChange);
             else
-                healthBar.IncreaseCurrentHp(5);
+                healthBar.IncreaseCurrentHp(healthChange);
 
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
