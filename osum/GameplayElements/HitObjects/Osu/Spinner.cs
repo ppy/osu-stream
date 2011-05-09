@@ -109,7 +109,9 @@ namespace osum.GameplayElements
             spriteScoreMetreBackground =
                 new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 3), new Color4(20, 20, 20, 255))
                 {
-                    Clocking = ClockTypes.Audio
+                    Clocking = ClockTypes.Audio,
+                    Field = FieldTypes.StandardSnapBottomCentre,
+                    Origin = OriginTypes.BottomCentre
                 };
 
             Sprites.Add(spriteScoreMetreBackground);
@@ -152,6 +154,7 @@ namespace osum.GameplayElements
                 p.Transformations.Clear();
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
                 p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut));
+                p.AlignToSprites = true;
             }
 
             SpriteSpin =
@@ -160,6 +163,7 @@ namespace osum.GameplayElements
                             spinnerCentre, SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, white);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
+            SpriteSpin.AlignToSprites = true;
             Sprites.Add(SpriteSpin);
 
             ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.47f, 0.1f, StartTime, EndTime));
@@ -168,6 +172,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
                             spinnerCentre + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
+            SpriteClear.AlignToSprites = true;
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
 

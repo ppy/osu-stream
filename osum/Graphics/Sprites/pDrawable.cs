@@ -146,6 +146,9 @@ namespace osum.Graphics.Sprites
 
                 pos *= GameBase.BaseToNativeRatio;
 
+                if (AlignToSprites)
+                    pos *= 960f / GameBase.SpriteResolution;
+
                 switch (Field)
                 {
                     case FieldTypes.StandardSnapCentre:
@@ -188,6 +191,12 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        /// <summary>
+        /// Because the resolution of sprites is not 1:1 to the resizing of the window (ie. between 960-1024 widths, where it stays constant)
+        /// an extra ratio calculation must be applied to keep sprites aligned.
+        /// </summary>
+        internal bool AlignToSprites;
+
         internal Vector2 FieldScale
         {
             get
@@ -202,7 +211,12 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.NativeScaled:
                         return Scale;
                     default:
-                        return Scale * (UsesTextures ? GameBase.SpriteToNativeRatio : GameBase.BaseToNativeRatio);
+                        if (UsesTextures)
+                            return Scale * GameBase.SpriteToNativeRatio;
+                        if (AlignToSprites)
+                            return Scale * 960f / GameBase.SpriteResolution * GameBase.BaseToNativeRatio;
+                        else
+                            return Scale * GameBase.BaseToNativeRatio;
                 }
             }
         }
