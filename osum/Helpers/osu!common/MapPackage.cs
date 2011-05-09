@@ -145,10 +145,6 @@ namespace osu_common.Libraries.Osz2
                 return;
             }
 
-            // lock the file from writes
-            fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            
-
             // read data and perform integrity checks
             using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
             {
@@ -216,6 +212,8 @@ namespace osu_common.Libraries.Osz2
                     KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
                 }
 
+                // lock the file from writes
+                fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
               
                 //all metadata is now loaded.
                 if (metadataOnly)
