@@ -230,7 +230,6 @@
     <Compile Include="GameplayElements\Scoring\Score.cs" />
     <Compile Include="GameModes\Ranking.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
-    <Compile Include="GameModes\SongSelect.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
     <Compile Include="Support\DebugOverlay.cs" />
     <Compile Include="Graphics\Sprites\pDrawable.cs" />
@@ -257,6 +256,8 @@
     <Compile Include="GameModes\SongSelect\BackButton.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect_DifficultySelection.cs" />
     <Compile Include="GameModes\SongSelect\pTabController.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect.cs" />
+    <Compile Include="GameModes\Store\StoreMode.cs" />
     <Compile Include="Libraries\NetLib\AsyncAcceptStatusObject.cs" />
     <Compile Include="Libraries\NetLib\AsyncStatusObject.cs" />
     <Compile Include="Libraries\NetLib\AuthenticationType.cs" />
@@ -350,33 +351,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Skins\Default\spinner-circle.png">
-    </Content>
     <Content Include="Skins\Default\menu-osu.png">
     </Content>
-    <Content Include="Skins\Default\spinner-background.png">
-    </Content>
     <Content Include="Skins\Default\menu-background.png">
-    </Content>
-    <Content Include="Skins\Default\spinner-clear.png">
-    </Content>
-    <Content Include="Skins\Default\spinner-spin.png">
-    </Content>
-    <Content Include="Skins\Default\spinner-osu.png">
-    </Content>
-    <Content Include="Skins\Default\spinner-metre.png">
-    </Content>
-    <Content Include="Skins\Default\spinner-rpm.png">
-    </Content>
-    <Content Include="Skins\Default\sliderpoint30.png">
-    </Content>
-    <Content Include="Skins\Default\sliderpoint10.png">
-    </Content>
-    <Content Include="Skins\Default\star3.png">
-    </Content>
-    <Content Include="Skins\Default\star.png">
-    </Content>
-    <Content Include="Skins\Default\star2.png">
     </Content>
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />

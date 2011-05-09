@@ -12,7 +12,8 @@ namespace osum.GameModes
         MainMenu,
         SongSelect,
         Play,
-        Ranking
+        Ranking,
+        Store
     }
 
     /// <summary>

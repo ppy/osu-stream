@@ -318,7 +318,7 @@ namespace osum
         }
 
         internal static pSprite ActiveNotification;
-        internal static void Notify(string text)
+        internal static void Notify(string text, VoidDelegate action = null)
         {
             pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
             ActiveNotification = back;
@@ -344,6 +344,9 @@ namespace osum
 
                 back.Transform(bounce2, fadeOut2);
                 t.Transform(bounce2, fadeOut2);
+
+                if (action != null)
+                    action();
             };
 
             MainSpriteManager.Add(t);

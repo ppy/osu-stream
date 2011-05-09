@@ -28,7 +28,12 @@ namespace osum.GameModes
 
     public partial class SongSelectMode : GameMode
     {
-        private const string BEATMAP_DIRECTORY = "Beatmaps";
+#if iOS
+        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
+#else
+        public static string BeatmapPath { get { return "Beatmaps"; } }
+#endif
+
         private static List<Beatmap> availableMaps;
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
@@ -103,14 +108,28 @@ namespace osum.GameModes
 
             int index = 0;
 
-#if iOS
-            string docs = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            
-            foreach (string s in Directory.GetFiles(docs,"*.osz2"))
-            {
-                Beatmap reader = new Beatmap(s);
+            string docs = BeatmapPath;
 
-                string[] files = reader.Package == null ? new string[]{s} : reader.Package.MapFiles;
+            foreach (string s in Directory.GetFiles(docs, "*.osz2"))
+            {
+                Beatmap map = new Beatmap(s);
+
+                string[] files;
+
+                try
+                {
+                    if (map.Package == null)
+                        files = new string[] { s };
+                    else
+                        files = map.Package.MapFiles;
+                }
+                catch
+                {
+                    //possibly corrupt file. just delete for now.
+                    File.Delete(s);
+                    continue;
+                }
+
                 foreach (string file in files)
                 {
                     Beatmap b = new Beatmap(s);
@@ -123,26 +142,18 @@ namespace osum.GameModes
                     panels.Add(panel);
                 }
             }
-#endif
 
-            if (Directory.Exists(BEATMAP_DIRECTORY))
-                foreach (string s in Directory.GetFiles(BEATMAP_DIRECTORY))
-                {
-                    Beatmap reader = new Beatmap(s);
+            panelDownloadMore = new BeatmapPanel(null, this, index++);
+            panelDownloadMore.s_Text.Text = "Download more songs...";
+            panelDownloadMore.s_Text.Colour = new Color4(201, 108, 255, 255);
+            panels.Add(panelDownloadMore);
+            spriteManager.Add(panelDownloadMore);
 
-                    string[] files = reader.Package == null ? Directory.GetFiles(s, "*.osc") : reader.Package.MapFiles;
-                    foreach (string file in files)
-                    {
-                        Beatmap b = new Beatmap(s);
-                        b.BeatmapFilename = Path.GetFileName(file);
-
-                        BeatmapPanel panel = new BeatmapPanel(b, this, index++);
-                        spriteManager.Add(panel);
-
-                        availableMaps.Add(b);
-                        panels.Add(panel);
-                    }
-                }
+            //onSongSelected(panels[panels.Count - 2], null);
+            //GameBase.Scheduler.Add(delegate
+            //{
+            //    Director.ChangeMode(OsuMode.Play);
+            //}, 500);
         }
 
         private void InitializeBgm()
@@ -165,6 +176,12 @@ namespace osum.GameModes
         {
             BeatmapPanel panel = sender as BeatmapPanel;
             if (panel == null || State != SelectState.SongSelect) return;
+
+            if (panel == panelDownloadMore)
+            {
+                Director.ChangeMode(OsuMode.Store);
+                return;
+            }
 
             Player.Beatmap = panel.Beatmap;
 
@@ -242,6 +259,7 @@ namespace osum.GameModes
         }
 
         bool pendingModeChange;
+        private BeatmapPanel panelDownloadMore;
         public override void Update()
         {
             base.Update();
@@ -320,7 +338,6 @@ namespace osum.GameModes
                         AudioEngine.Music.Volume += 0.005f;
                     break;
             }
-
         }
     }
 }
