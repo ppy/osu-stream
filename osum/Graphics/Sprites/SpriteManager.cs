@@ -48,24 +48,31 @@ namespace osum.Graphics.Sprites
 
         int creationTime = Clock.Time;
 
-        internal SpriteManager() : this(new List<pDrawable>())
+        internal SpriteManager()
+            : this(new List<pDrawable>())
         {
         }
 
-        void HandleInputManagerOnUp (InputSource source, TrackingPoint trackingPoint)
+        void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            if (lastUpdate != Clock.Time) return;
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnUp(source, trackingPoint);
         }
 
-        void HandleInputManagerOnDown (InputSource source, TrackingPoint trackingPoint)
+        void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            if (lastUpdate != Clock.Time) return;
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnDown(source, trackingPoint);
         }
 
-        void HandleInputManagerOnMove (InputSource source, TrackingPoint trackingPoint)
+        void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            if (lastUpdate != Clock.Time) return;
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
         }
@@ -167,12 +174,15 @@ namespace osum.Graphics.Sprites
         bool firstRender = true;
         List<int> removableSprites = new List<int>();
 
+
+        int lastUpdate;
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
         /// </summary>
         internal void Update()
         {
             texturesEnabled = false; //reset on new frame.
+            lastUpdate = Clock.Time;
 
             if (firstRender)
             {
