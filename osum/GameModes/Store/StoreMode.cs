@@ -18,9 +18,10 @@ namespace osum.GameModes.Store
     {
         private pText loading;
         private pRectangle loadingRect;
+        private BackButton s_ButtonBack;
         internal override void Initialize()
         {
-            pDrawable s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
             spriteManager.Add(s_ButtonBack);
 
             StringNetRequest netRequest = new StringNetRequest("http://osu.ppy.sh/osum/");
@@ -31,7 +32,8 @@ namespace osum.GameModes.Store
             {
                 TextAlignment = TextAlignment.Centre,
                 Origin = OriginTypes.Centre,
-                Field = FieldTypes.StandardSnapCentre
+                Field = FieldTypes.StandardSnapCentre,
+                Bold = true
             };
 
             spriteManager.Add(loading);
@@ -81,10 +83,13 @@ namespace osum.GameModes.Store
                         loadingRect.FadeOut(200);
                         loading.FadeOut(200);
                         text.FadeOut(200);
+                        s_ButtonBack.FadeIn(200);
                     };
 
                     fnr.onUpdate += fnr_onUpdate;
                     NetManager.AddRequest(fnr);
+
+                    s_ButtonBack.FadeOut(200);
 
                     loading.FadeIn(200);
                     loading.Text = "Starting download...";
