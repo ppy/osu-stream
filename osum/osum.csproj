@@ -329,6 +329,7 @@
     <Compile Include="Online\OnlineHelper.cs" />
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineServicesIOS.cs" />
+    <Compile Include="Support\iPhone\OverlayViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

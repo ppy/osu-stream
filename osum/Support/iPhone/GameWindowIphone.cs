@@ -39,6 +39,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 using System.Drawing;
 using osum.Graphics.Skins;
+using osum.Support.iPhone;
 
 namespace osum
 {
@@ -94,13 +95,19 @@ namespace osum
 		
 		protected override void OnUpdateFrame (FrameEventArgs e)
 		{
-			base.OnUpdateFrame(e);
+            if (AppDelegate.UsingViewController)
+                return;
+
+            base.OnUpdateFrame(e);
 			GameBase.Instance.Update(e);
 		}
 		
 		protected override void OnRenderFrame (FrameEventArgs e)
 		{
-			base.OnRenderFrame(e);
+            if (AppDelegate.UsingViewController)
+                return;
+
+            base.OnRenderFrame(e);
 			GameBase.Instance.Draw(e);
 			SwapBuffers();
 		}

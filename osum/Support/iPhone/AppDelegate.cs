@@ -72,7 +72,7 @@ namespace osum.Support.iPhone
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated(UIApplication app)
 		{
-			glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
+            glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
 			
 			GameBase.ScaleFactor = glView.ContentScaleFactor;
 			GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor), 
@@ -88,6 +88,27 @@ namespace osum.Support.iPhone
 			//start the run loop.
 			glView.Run(100000);
 		}
+
+        static bool usingViewController;
+        public static bool UsingViewController
+        {
+            get { return usingViewController; }
+            set
+            {
+                if (value == usingViewController) return;
+                usingViewController = value;
+
+                if (usingViewController)
+                    Instance.window.AddSubview(Instance.viewController.View);
+                else
+                    Instance.viewController.View.RemoveFromSuperview();
+            }
+        }
+
+        public static UIViewController ViewController
+        {
+            get { return Instance.viewController; }
+        }
 	}
 }
 
