@@ -74,8 +74,21 @@ namespace osum.Graphics.Sprites
             TextSize = textSize;
             TextAlignment = TextAlignment.Left;
             TextBounds = bounds;
+        }
 
-            Field = FieldTypes.Native;
+        internal override Vector2 FieldScale
+        {
+            get
+            {
+                switch (Field)
+                {
+                    default:
+                        if (AlignToSprites)
+                            return Scale * 960f / GameBase.SpriteResolution;
+                        else
+                            return Scale;
+                }
+            }
         }
 
         public override void Dispose()

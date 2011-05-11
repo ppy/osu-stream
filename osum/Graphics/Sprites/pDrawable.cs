@@ -197,7 +197,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal bool AlignToSprites;
 
-        internal Vector2 FieldScale
+        internal virtual Vector2 FieldScale
         {
             get
             {
