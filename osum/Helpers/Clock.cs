@@ -20,7 +20,7 @@ namespace osum.Helpers
         private static double time = 0;
 
 #if iOS
-        private const int UNIVERSAL_OFFSET = 65;
+        private const int UNIVERSAL_OFFSET = 45;
 #else
         private const int UNIVERSAL_OFFSET = 20;
 #endif
