@@ -11,6 +11,7 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Support;
 using osum.Graphics.Renderers;
+using osum.Online;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -39,7 +40,6 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-
 using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
@@ -226,6 +226,8 @@ namespace osum
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
+
+            OnlineHelper.Initialize();
         }
 
         /// <summary>

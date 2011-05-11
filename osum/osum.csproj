@@ -326,6 +326,9 @@
     <Compile Include="Libraries\NetLib\UrlParser.cs" />
     <Compile Include="Libraries\NetLib\Utils.cs" />
     <Compile Include="Helpers\osu!common\CryptoHelper.cs" />
+    <Compile Include="Online\OnlineHelper.cs" />
+    <Compile Include="Online\IOnlineServices.cs" />
+    <Compile Include="Online\OnlineServicesIOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
