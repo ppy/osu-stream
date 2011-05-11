@@ -44,50 +44,50 @@ using osum.Graphics.Skins;
 
 namespace osum
 {
-	public class GameBaseIphone : GameBase
-	{
-		GameWindowIphone gameWindow;
-		
-		public GameBaseIphone()
-		{
-		}
-		
-		override public void MainLoop()
-		{
-			MonoTouch.UIKit.UIApplication.Main(new string[]{});
-		}
-		
-		public override void Initialize()
-		{
-			gameWindow = GameWindowIphone.Instance;
-			base.Initialize();
-		}
-		
-		public override void SetViewport()
-		{
-			base.SetViewport();
-			
-			float width = GameBase.NativeSize.Height;
-			float height = GameBase.NativeSize.Width;
-			GL.Translate(width / 2, height / 2, 0);
-			GL.Rotate(90, 0, 0, 1);
-			GL.Translate(-height / 2, -width / 2, 0);
-		}
-		
-		protected override IBackgroundAudioPlayer InitializeBackgroundAudio ()
-		{
-			//only initialise the first time (we may be here from a resume operation)
-			return new BackgroundAudioPlayerIphone();
-		}
-		
-		protected override void InitializeInput ()
-		{
-			InputSource source = new InputSourceIphone(gameWindow);
-			gameWindow.SetInputHandler(source);
-			InputManager.AddSource(source);
-		}
-		
-		
-	}
+    public class GameBaseIphone : GameBase
+    {
+        GameWindowIphone gameWindow;
+
+        public GameBaseIphone()
+        {
+        }
+
+        override public void MainLoop()
+        {
+            MonoTouch.UIKit.UIApplication.Main(new string[]{});
+        }
+
+        public override void Initialize()
+        {
+            gameWindow = GameWindowIphone.Instance;
+            base.Initialize();
+        }
+
+        public override void SetViewport()
+        {
+            base.SetViewport();
+
+            float width = GameBase.NativeSize.Height;
+            float height = GameBase.NativeSize.Width;
+            GL.Translate(width / 2, height / 2, 0);
+            GL.Rotate(90, 0, 0, 1);
+            GL.Translate(-height / 2, -width / 2, 0);
+        }
+
+        protected override IBackgroundAudioPlayer InitializeBackgroundAudio()
+        {
+            //only initialise the first time (we may be here from a resume operation)
+            return new BackgroundAudioPlayerIphone ();
+        }
+
+        protected override void InitializeInput()
+        {
+            InputSource source = new InputSourceIphone (gameWindow);
+            gameWindow.SetInputHandler(source);
+            InputManager.AddSource(source);
+        }
+
+
+    }
 }
 
