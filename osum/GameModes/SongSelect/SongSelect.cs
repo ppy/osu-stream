@@ -14,6 +14,7 @@ using osum.GameModes.Play.Components;
 using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
+using osum.GameplayElements.Scoring;
 
 namespace osum.GameModes
 {
@@ -149,11 +150,29 @@ namespace osum.GameModes
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
 
-            //onSongSelected(panels[panels.Count - 2], null);
-            //GameBase.Scheduler.Add(delegate
-            //{
-            //    Director.ChangeMode(OsuMode.Play);
-            //}, 500);
+            /*if (panels.Count > 1)
+            {
+                onSongSelected(panels[panels.Count - 2], null);
+                Ranking.RankableScore = new Score()
+                {
+                    count100 = 80,
+                    count300 = 20,
+                    count50 = 35,
+                    countGeki = 4,
+                    countKatu = 8,
+                    countMiss = 12,
+                    date = DateTime.Now,
+                    maxCombo = 60,
+                    totalScore = 987654,
+                };
+    
+    
+                GameBase.Scheduler.Add(delegate
+                {
+                    Director.ChangeMode(OsuMode.Ranking);
+                }, 500);
+            }*/
+
         }
 
         private void InitializeBgm()

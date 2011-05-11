@@ -9,70 +9,144 @@ using System.Collections;
 using System.Collections.Generic;
 using osum.Audio;
 using osum.GameModes.SongSelect;
+using osum.Graphics;
 namespace osum.GameModes
 {
     public class Ranking : GameMode
     {
         internal static Score RankableScore;
 
-        pDrawable fill1;
-        pDrawable fill2;
-        pDrawable fill3;
-
         List<pDrawable> fillSprites = new List<pDrawable>();
+        List<pDrawable> fallingSprites = new List<pDrawable>();
+        List<pDrawable> countSprites = new List<pDrawable>();
+        List<pDrawable> resultSprites = new List<pDrawable>();
 
-        float actualSpriteScaleX;
+        const int colour_change_length = 500;
+        const int end_bouncing = 600;
+        const int time_between_fills = 600;
+
+        const float fill_height = 80;
+        const float count_height = 80;
 
         internal override void Initialize()
         {
-            float ratio300 = (float)RankableScore.count300 / RankableScore.totalHits;
-            float ratio100 = (float)RankableScore.count100 / RankableScore.totalHits;
-            float ratio50 = (float)RankableScore.count50 / RankableScore.totalHits;
 
-            fill1 = pSprite.FullscreenWhitePixel;
-            fill2 = pSprite.FullscreenWhitePixel;
-            fill3 = pSprite.FullscreenWhitePixel;
+            pText performance = new pText("Play Performance", 50, new Vector2(0, 0), 1, true, Color4.White);
+            performance.Alpha = 0.2f;
+            performance.Additive = true;
+            performance.Bold = true;
+            spriteManager.Add(performance);
 
-            fill1.Colour = new Color4(1, 0.63f, 0.01f, 1);
-            fill2.Colour = new Color4(0.55f, 0.84f, 0, 1);
-            fill3.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
+            pDrawable fill = pSprite.FullscreenWhitePixel;
+            fill.Scale.X *= (float)RankableScore.count300 / RankableScore.totalHits;
+            fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
+            fillSprites.Add(fill);
 
-            fillSprites.Add(fill1);
-            fillSprites.Add(fill2);
-            fillSprites.Add(fill3);
+            pSpriteText count = new pSpriteText(RankableScore.count300.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
+            countSprites.Add(count);
 
-            const int start_colour_change = 3000;
-            const int colour_change_length = 700;
+            fill = pSprite.FullscreenWhitePixel;
+            fill.Scale.X *= (float)RankableScore.count100 / RankableScore.totalHits;
+            fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
+            fillSprites.Add(fill);
 
-            const int end_bouncing = 4000;
+            count = new pSpriteText(RankableScore.count100.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
+            countSprites.Add(count);
 
-            const int time_between_fills = 500;
+            fill = pSprite.FullscreenWhitePixel;
+            fill.Scale.X *= (float)RankableScore.count50 / RankableScore.totalHits;
+            fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
+            fillSprites.Add(fill);
+
+            count = new pSpriteText(RankableScore.count50.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
+            countSprites.Add(count);
+
+            fill = pSprite.FullscreenWhitePixel;
+            fill.Scale.X *= (float)RankableScore.countMiss / RankableScore.totalHits;
+            fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
+            fillSprites.Add(fill);
+
+            count = new pSpriteText(RankableScore.countMiss.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
+            countSprites.Add(count);
 
             int i = 0;
+
+            foreach (pDrawable p in countSprites)
+            {
+                p.ScaleScalar = 0.6f;
+                p.Alpha = 0;
+                p.Additive = true;
+
+                int offset = i++ * time_between_fills;
+                p.Transform(new Transformation(TransformationType.Fade, 0, 1 - i * 0.2f, offset, offset + 100));
+            }
+
+
+            i = 0;
+
             foreach (pDrawable p in fillSprites)
             {
                 p.Alpha = 1;
+                //p.Additive = true;
                 p.DrawDepth = 0.98f;
                 p.AlwaysDraw = true;
 
                 int offset = i++ * time_between_fills;
 
-                p.Transform(new Transformation(Color4.LightGray, Color4.LightGray, 0, start_colour_change + offset));
-                p.Transform(new Transformation(Color4.White, p.Colour, start_colour_change + offset, start_colour_change + colour_change_length + offset));
+                p.Transform(new Transformation(Color4.Gray, Color4.Gray, 0, end_bouncing + offset));
+                p.Transform(new Transformation(Color4.White, p.Colour, end_bouncing + offset, end_bouncing + colour_change_length + offset));
                 //force the initial colour to be an ambiguous gray.
+
+                p.Transform(new TransformationBounce(offset, offset + end_bouncing, p.Scale.X, p.Scale.X, 5));
             }
 
-            actualSpriteScaleX = fill1.Scale.X;
-
-            fill1.Transform(new TransformationBounce(0, end_bouncing, fill1.Scale.Y * ratio300, fill1.Scale.Y * ratio300, 1));
-            fill2.Transform(new TransformationBounce(time_between_fills, end_bouncing, fill2.Scale.Y * ratio100, fill2.Scale.Y * ratio100, 1));
-            fill3.Transform(new TransformationBounce(time_between_fills * 2, end_bouncing, fill3.Scale.Y * ratio50, fill3.Scale.Y * ratio50, 1));
-
             spriteManager.Add(fillSprites);
+            spriteManager.Add(countSprites);
+
+            performance = new pText("Total Score", 60, new Vector2(20, 100), 0.5f, true, Color4.SkyBlue);
+            performance.Alpha = 0.2f;
+            performance.Additive = true;
+            performance.Bold = true;
+            resultSprites.Add(performance);
+
+            count = new pSpriteText(RankableScore.totalScore.ToString("#,0"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 140), 1, true, Color4.White);
+            resultSprites.Add(count);
+
+            performance = new pText("Accuracy", 60, new Vector2(20, 200), 0.5f, true, Color4.SkyBlue);
+            performance.Alpha = 0.2f;
+            performance.Additive = true;
+            performance.Bold = true;
+            resultSprites.Add(performance);
+
+            count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00") + "%", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 240), 1, true, Color4.White);
+            resultSprites.Add(count);
+
+            performance = new pText("Max Combo", 60, new Vector2(20, 300), 0.5f, true, Color4.SkyBlue);
+            performance.Alpha = 0.2f;
+            performance.Additive = true;
+            performance.Bold = true;
+            resultSprites.Add(performance);
+
+            count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 340), 1, true, Color4.White);
+            resultSprites.Add(count);
+
+            foreach (pDrawable p in resultSprites)
+            {
+                p.Field = FieldTypes.StandardSnapRight;
+                p.Origin = OriginTypes.TopRight;
+                p.Alpha = 0;
+                spriteManager.Add(p);
+            }
+
 
             //add a temporary button to allow returning to song select
-            pDrawable s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
+            pDrawable s_ButtonBack = new BackButton(returnToSelect);
             spriteManager.Add(s_ButtonBack);
+        }
+
+        void returnToSelect(object sender, EventArgs args)
+        {
+            Director.ChangeMode(OsuMode.SongSelect);
         }
 
         public override void Dispose()
@@ -85,16 +159,74 @@ namespace osum.GameModes
         {
         }
 
+
+        bool wasBouncing = true;
         public override void Update()
         {
+            bool bouncing = fillSprites[3].Transformations.Count > 1;
+
+            if (bouncing != wasBouncing)
+            {
+                pDrawable flash = pSprite.FullscreenWhitePixel;
+                flash.Additive = false;
+                flash.FadeOutFromOne(500);
+                spriteManager.Add(flash);
+
+                resultSprites.ForEach(s => s.Alpha = 1);
+            }
+
             base.Update();
 
-            //set the x scale back to the default value (override the bounce transformation).
-            foreach (pDrawable p in fillSprites)
-                p.Scale.X = actualSpriteScaleX / 2;
+            wasBouncing = bouncing;
 
-            fill2.Position.Y = 1 + fill1.Position.Y + fill1.Scale.Y * GameBase.SpriteToBaseRatio;
-            fill3.Position.Y = 1 + fill2.Position.Y + fill2.Scale.Y * GameBase.SpriteToBaseRatio;
+
+            //set the x scale back to the default value (override the bounce transformation).
+            float lastPos = 0;
+
+            for (int i = 0; i < fillSprites.Count; i++)
+            {
+                pDrawable fill = fillSprites[i];
+                pDrawable count = countSprites[i];
+
+                fill.Scale.Y = bouncing ? GameBase.BaseSize.Height : fill_height;
+
+                if (lastPos != 0) fill.Position.X = lastPos;
+                lastPos = fill.Position.X + fill.Scale.X + 1;
+
+                count.Position.X = lastPos - 3;
+            }
+
+            if (!bouncing)
+            {
+
+                float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSize.Width;
+
+                pTexture tex = null;
+                if (pos < fillSprites[1].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit300);
+                else if (pos < fillSprites[2].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit100);
+                else if (pos < fillSprites[3].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit50);
+
+                fallingSprites.RemoveAll(p => p.Alpha == 0);
+                foreach (pSprite p in fallingSprites)
+                {
+                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
+                }
+
+
+                if (tex != null)
+                {
+                    pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fill_height - 20), 1f, false, Color4.White);
+                    f.ScaleScalar = 0.2f;
+                    f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
+                    f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
+                    fallingSprites.Add(f);
+                    spriteManager.Add(f);
+                }
+            }
+
         }
 
     }
