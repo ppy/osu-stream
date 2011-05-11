@@ -12,7 +12,7 @@
     <MainNibFile>MainWindow.nib</MainNibFile>
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
-    <BundleIdentifier>osu</BundleIdentifier>
+    <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
     <BundleVersion>1100</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
@@ -348,6 +348,7 @@
     <Folder Include="GameModes\SongSelect\" />
     <Folder Include="GameModes\" />
     <Folder Include="Graphics\Drawables\" />
+    <Folder Include="Online\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
