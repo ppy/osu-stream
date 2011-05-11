@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using osum.Audio;
 using osum.GameModes.SongSelect;
 using osum.Graphics;
+using osum.Online;
+using osu_common.Helpers;
 namespace osum.GameModes
 {
     public class Ranking : GameMode
@@ -142,6 +144,7 @@ namespace osum.GameModes
             //add a temporary button to allow returning to song select
             pDrawable s_ButtonBack = new BackButton(returnToSelect);
             spriteManager.Add(s_ButtonBack);
+            OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename), RankableScore.totalScore);
         }
 
         void returnToSelect(object sender, EventArgs args)
@@ -218,7 +221,7 @@ namespace osum.GameModes
 
                 if (tex != null)
                 {
-                    pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fill_height - 20), 1f, false, Color4.White);
+                    pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fill_height - 25), 1f, false, Color4.White);
                     f.ScaleScalar = 0.2f;
                     f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
                     f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));

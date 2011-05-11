@@ -30,6 +30,22 @@ namespace osum.Online
             return onlineServices != null;
         }
 
+        public static bool ShowRanking(string id)
+        {
+            if (!Initialize()) return false;
+
+            onlineServices.ShowLeaderboard(id);
+            return true;
+        }
+
+        public static bool SubmitScore(string id, int score)
+        {
+            if (!Initialize()) return false;
+
+            onlineServices.SubmitScore(id, score);
+            return true;
+        }
+
         static IOnlineServices onlineServices;
     }
 }
