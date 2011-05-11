@@ -99,7 +99,7 @@
     <DefineConstants>iOS OSUM NO_ENCRYPTION</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
