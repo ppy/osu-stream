@@ -46,6 +46,9 @@ namespace osum
                 case 'a':
                     Player.Autoplay = !Player.Autoplay;
                     break;
+                case 'r':
+                    Director.ChangeMode(Director.CurrentOsuMode);
+                    break;
             }
         }
 
