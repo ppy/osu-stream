@@ -209,6 +209,7 @@ namespace osum.GameModes
                 s_Playfield.ChangeColour(Difficulty);
 
             double healthChange = 0;
+            bool increaseCombo = false;
 
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
@@ -226,30 +227,30 @@ namespace osum.GameModes
                 case ScoreChange.SliderRepeat:
                 case ScoreChange.SliderEnd:
                     currentScore.totalScore += 30;
-                    comboCounter.IncreaseCombo();
+                    increaseCombo = true;
                     healthChange = 4;
                     break;
                 case ScoreChange.SliderTick:
                     currentScore.totalScore += 10;
-                    comboCounter.IncreaseCombo();
+                    increaseCombo = true;
                     healthChange = 1;
                     break;
                 case ScoreChange.Hit50:
                     currentScore.totalScore += 50;
                     currentScore.count50++;
-                    comboCounter.IncreaseCombo();
+                    increaseCombo = true;
                     healthChange = -3;
                     break;
                 case ScoreChange.Hit100:
                     currentScore.totalScore += 100;
                     currentScore.count100++;
-                    comboCounter.IncreaseCombo();
+                    increaseCombo = true;
                     healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
                     currentScore.totalScore += 300;
                     currentScore.count300++;
-                    comboCounter.IncreaseCombo();
+                    increaseCombo = true;
                     healthChange = 5;
                     break;
                 case ScoreChange.MissMinor:
@@ -261,6 +262,12 @@ namespace osum.GameModes
                     comboCounter.SetCombo(0);
                     healthChange = -20;
                     break;
+            }
+
+            if (increaseCombo)
+            {
+                comboCounter.IncreaseCombo();
+                currentScore.maxCombo = comboCounter.currentCombo;
             }
 
             //then handle the hp addition
