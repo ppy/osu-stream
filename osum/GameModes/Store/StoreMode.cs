@@ -66,8 +66,9 @@ namespace osum.GameModes.Store
                     if (checksumLocal == checksum) continue;
 				}
 
+                int thisY = y;
                 GameBase.Scheduler.Add(delegate {
-                    pText text = new pText(filename, 20, new Vector2(10, 50 + y * 50), 0.5f, true, Color4.White);
+                    pText text = new pText(filename, 20, new Vector2(10, 50 + thisY * 50), 0.5f, true, Color4.White);
                     text.BackgroundColour = Color4.SkyBlue;
                     text.TextShadow = true;
                     text.FadeInFromZero(200);
