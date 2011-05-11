@@ -43,11 +43,7 @@ namespace osum.GameModes.Store
         {
             if (e != null || string.IsNullOrEmpty(_result))
             {
-                GameBase.Scheduler.Add(delegate
-                {
-                    GameBase.Notify("Error while downloading song listing.", delegate { Director.ChangeMode(OsuMode.SongSelect); });
-                });
-				
+                GameBase.Notify("Error while downloading song listing.", delegate { Director.ChangeMode(OsuMode.SongSelect); });
 				return;
             }
 
@@ -70,36 +66,38 @@ namespace osum.GameModes.Store
                     if (checksumLocal == checksum) continue;
 				}
 
-                pText text = new pText(filename, 20, new Vector2(10, 50 + y * 50), 0.5f, true, Color4.White);
-                text.BackgroundColour = Color4.SkyBlue;
-                text.TextShadow = true;
-                text.FadeInFromZero(200);
-				
-                text.OnClick += delegate
-                {
-                    FileNetRequest fnr = new FileNetRequest(path, "http://osu.ppy.sh/osum/" + filename);
-                    fnr.onFinish += delegate
+                GameBase.Scheduler.Add(delegate {
+                    pText text = new pText(filename, 20, new Vector2(10, 50 + y * 50), 0.5f, true, Color4.White);
+                    text.BackgroundColour = Color4.SkyBlue;
+                    text.TextShadow = true;
+                    text.FadeInFromZero(200);
+
+                    text.OnClick += delegate
                     {
-                        loadingRect.FadeOut(200);
-                        loading.FadeOut(200);
-                        text.FadeOut(200);
-                        s_ButtonBack.FadeIn(200);
+                        FileNetRequest fnr = new FileNetRequest(path, "http://osu.ppy.sh/osum/" + filename);
+                        fnr.onFinish += delegate
+                        {
+                            loadingRect.FadeOut(200);
+                            loading.FadeOut(200);
+                            text.FadeOut(200);
+                            s_ButtonBack.FadeIn(200);
+                        };
+    
+                        fnr.onUpdate += fnr_onUpdate;
+                        NetManager.AddRequest(fnr);
+    
+                        s_ButtonBack.FadeOut(200);
+    
+                        loading.FadeIn(200);
+                        loading.Text = "Starting download...";
+    
+                        loadingRect = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), true, 0.96f, Color4.Black);
+                        loadingRect.FadeInFromZero(200);
+                        spriteManager.Add(loadingRect);
                     };
-
-                    fnr.onUpdate += fnr_onUpdate;
-                    NetManager.AddRequest(fnr);
-
-                    s_ButtonBack.FadeOut(200);
-
-                    loading.FadeIn(200);
-                    loading.Text = "Starting download...";
-
-                    loadingRect = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), true, 0.96f, Color4.Black);
-                    loadingRect.FadeInFromZero(200);
-                    spriteManager.Add(loadingRect);
-                };
-
-                spriteManager.Add(text);
+    
+                    spriteManager.Add(text);
+                });
 
                 y++;
             }
@@ -108,10 +106,7 @@ namespace osum.GameModes.Store
 
             if (y == 0)
             {
-                GameBase.Scheduler.Add(delegate
-                {
-                    GameBase.Notify("You already have all available maps!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
-                });
+                GameBase.Notify("You already have all available maps!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
             }
         }
 
