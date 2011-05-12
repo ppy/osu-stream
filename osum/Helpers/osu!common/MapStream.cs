@@ -83,7 +83,7 @@ namespace osu_common.Libraries.Osz2
             fLength = lengthB[0] | (lengthB[1] << 8) | (lengthB[2] << 16) | (lengthB[3] << 24);
             fPosition = fOffset;
 
-#if STREAM_DEBUG
+#if STREAM_DEBUG || SAFE_ENCRYPTION
             decryptedBuffer = new byte[fLength];
             internalStream.Read(decryptedBuffer, 0, fLength);
             //Array.Copy(internalBuffer, 4, decryptedBuffer, 0, fLength);
@@ -233,6 +233,9 @@ namespace osu_common.Libraries.Osz2
             int bytes = fStream.Read(buffer, offset, count);
 #elif NO_ENCRYPTION
             int bytes = internalStream.Read(buffer, offset, count);
+#elif SAFE_ENCRYPTION
+            int bytes = count;
+            Array.Copy(decryptedBuffer, Position, buffer, offset, count);
 #else
             long rPosition = fPosition - fOffset;
             long  seekablePosition = rPosition & ~0x3FL;
@@ -285,7 +288,7 @@ namespace osu_common.Libraries.Osz2
                     byte[] bufferB = new byte[count];
                     Array.Copy(buffer, i + offset, bufferA, 0, count - i);
                     Array.Copy(decryptedBuffer, i + Position, bufferB, 0, count - i);
-                    //System.Diagnostics.Debugger.Break();
+                    System.Diagnostics.Debugger.Break();
                 }
             }
 #endif

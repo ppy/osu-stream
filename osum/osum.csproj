@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1100</BundleVersion>
+    <BundleVersion>1105</BundleVersion>
     <BundleDisplayName>osu!m</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG SIMULATOR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchI18n />
@@ -56,7 +56,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchI18n />
     <MtouchSdkVersion>3.0</MtouchSdkVersion>
-    <DefineConstants>iOS DEBUG SIMULATOR NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS DEBUG SIMULATOR</DefineConstants>
     <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchUseThumb>false</MtouchUseThumb>
@@ -69,7 +69,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -96,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseLlvm>false</MtouchUseLlvm>
@@ -111,7 +111,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Testflight</OutputPath>
-    <DefineConstants>iOS OSUM NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>

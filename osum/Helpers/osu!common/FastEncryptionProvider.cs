@@ -16,6 +16,7 @@ namespace osu_common.Helpers
     {
 
         private uint[] key;
+        private byte[] keyB;
         private const UInt32 DELTA = 0x9e3779b9;
         private const UInt32 ROUNDS = 32;
         public EncryptionMethod CurrentMethod = EncryptionMethod.None;
@@ -34,6 +35,9 @@ namespace osu_common.Helpers
 
             key = pkey;
             CurrentMethod = EM;
+#if SAFE_ENCRYPTION
+            keyB = GeneralHelper.ConvertArray<uint, byte>(pkey);
+#endif
         }
 
 
@@ -42,6 +46,65 @@ namespace osu_common.Helpers
             if (CurrentMethod == EncryptionMethod.None)
                 new ArgumentException("Encryption method has to be set first");
         }
+
+
+
+        private void EncryptDecryptXXTEASafe(byte[] buffer, bool encrypt, int count, int offset)
+        {
+            uint fullWordCount = unchecked((uint)count / nMAXBytes);
+            uint leftover = unchecked((uint)count) % nMAXBytes;
+
+            uint na = nMAX;
+            n = nMAX;
+            UInt32 rounds = 6 + 52 / n;
+
+            byte[] bufferCut = new byte[fullWordCount * nMAXBytes];
+            Buffer.BlockCopy(buffer, offset, bufferCut, 0, (int) (fullWordCount * nMAXBytes));
+            uint[] bufferCutWords = GeneralHelper.ConvertArray<byte, uint>(bufferCut);
+
+            if (encrypt)
+                for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
+                {
+                    EncryptWordsXXTEASafe(bufferCutWords, (int) (wordCount * nMAX));
+                }
+            else //copy pasta because we dont want to waste time on a cmp each iteration
+                for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
+                {
+                    DecryptWordsXXTEASafe(bufferCutWords, (int) (wordCount * nMAX));
+                }
+
+            byte[] bufferProcessed = GeneralHelper.ConvertArray<uint, byte>(bufferCutWords);
+            Buffer.BlockCopy(bufferProcessed, 0, buffer, offset, (int) (fullWordCount * nMAXBytes));
+
+            n = leftover / 4;
+            byte[] leftoverBuffer = new byte[n*4];
+            Buffer.BlockCopy(buffer, (int) (offset + fullWordCount * nMAXBytes), leftoverBuffer, 0, (int) n * 4);
+            uint[] leftoverBufferWords = GeneralHelper.ConvertArray<byte, uint>(leftoverBuffer);
+            
+            if (n > 1)
+            {
+                if (encrypt)
+                    EncryptWordsXXTEASafe(leftoverBufferWords, 0);
+                else
+                    DecryptWordsXXTEASafe(leftoverBufferWords, 0);
+
+                leftover -= n * 4;
+                if (leftover == 0)
+                    return;
+            }
+            byte[] leftoverBufferProcessed = GeneralHelper.ConvertArray<uint, byte>(leftoverBufferWords);
+            Buffer.BlockCopy(leftoverBufferProcessed, 0, buffer, (int)(offset + fullWordCount * nMAXBytes), (int) n * 4);
+
+
+            if (encrypt)
+                simpleEncryptBytesSafe(buffer, (int) (count - leftover) + offset, count);
+            else
+                simpleDecryptBytesSafe(buffer, (int) (count - leftover) + offset, count);
+
+        }
+
+
+
 
         private unsafe void EncryptDecryptXXTEA(byte* bufferPtr, int bufferLength, bool encrypt)
         {
@@ -189,7 +252,7 @@ namespace osu_common.Helpers
 
         private unsafe void EncryptDecrypt(byte* bufferPtr,int bufferLength, bool encrypt)
         {
-            //if (buffer.Length % 8 != 0)
+            //if (buffer.Length % 64 != 0)
             //    throw new ArgumentException("buffer size has to be a multiple of 8");
 
             switch (CurrentMethod)
@@ -212,7 +275,7 @@ namespace osu_common.Helpers
 
         private unsafe void EncryptDecrypt(byte* bufferPtr, byte* outputPtr, int bufferLength, bool encrypt)
         {
-            //if (buffer.Length % 8 != 0)
+            //if (buffer.Length % 64 != 0)
             //throw new ArgumentException("buffer size has to be a multiple of 8");
 
 
@@ -235,6 +298,9 @@ namespace osu_common.Helpers
 
         public unsafe void EncryptDecrypt(byte[] buffer, byte[] output, int bufStart, int outputStart, int count, bool encrypt)
         {
+
+#if !SAFE_ENCRYPTION
+
             fixed (byte* bufferPtr = buffer,
                 outputPtr = output)
             {
@@ -243,6 +309,13 @@ namespace osu_common.Helpers
                 else
                     EncryptDecrypt(bufferPtr + bufStart, outputPtr+outputStart, count, encrypt);
             }
+#else
+            //only xxtea is ported to managed code, so the encryption method is ignored
+            if (output != null)
+                throw new NotSupportedException("Custom output is not supported when SAFE_ENCRYPTION is enabled.");
+            EncryptDecryptXXTEASafe(buffer, encrypt, count, bufStart);
+#endif
+
         }
     
 
@@ -335,7 +408,53 @@ namespace osu_common.Helpers
         private uint n;
         public const uint nMAX = 16;
         public const uint nMAXBytes = nMAX * 4;
-        
+
+
+        private void EncryptWordsXXTEASafe(uint[] v, int offset)
+        {
+            UInt32 y, z, sum;
+            UInt32 p, e;
+            UInt32 rounds = 6 + 52 / n;
+            sum = 0;
+            z = v[n - 1 + offset];
+            do
+            {
+                sum += DELTA;
+                e = (sum >> 2) & 3;
+                for (p = 0; p < n - 1; p++)
+                {
+                    y = v[p + 1 + offset];
+                    z = v[p + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                }
+                y = v[offset];
+                z = v[n - 1 + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+            }
+            while (--rounds > 0);
+        }
+
+        unsafe private void DecryptWordsXXTEASafe(uint[] v, int offset)
+        {
+            UInt32 y, z, sum;
+            UInt32 p, e;
+            UInt32 rounds = 6 + 52 / n;
+            sum = rounds * DELTA;
+            y = v[offset];
+            do
+            {
+                e = (sum >> 2) & 3;
+                for (p = n - 1; p > 0; p--)
+                {
+                    z = v[p - 1 + offset];
+                    y = v[p+ offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                }
+                z = v[n - 1 + offset];
+                y = v[offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+            }
+            while ((sum -= DELTA) != 0);
+
+        }
+
+
         //uses a modified version of XXTEA
         unsafe private void EncryptWordsXXTEA(uint* v/*[n]*/) 
         {
@@ -396,7 +515,7 @@ namespace osu_common.Helpers
                 for (int i = 0; i < length; i++)
                 {
                     buf[i] = unchecked ((byte) ((buf[i] + (keyB[i%16] >> 2))%256));
-                    buf[i] ^= rotateLeft(keyB[16 - i%16], (byte)((prevE + length - i) % 7));
+                    buf[i] ^= rotateLeft(keyB[15 - i%16], (byte)((prevE + length - i) % 7));
                     buf[i] = rotateRight(buf[i], (byte)((~(uint)(prevE)) % 7));
 
                     prevE = buf[i];
@@ -415,13 +534,45 @@ namespace osu_common.Helpers
                 {
                     byte tmpE = buf[i];
                     buf[i] = rotateLeft(buf[i], (byte)((~(uint)(prevE)) % 7));
-                    buf[i]^= rotateLeft(keyB[16 - i%16], (byte) ((prevE + length - i)%7));
+                    buf[i]^= rotateLeft(keyB[15 - i%16], (byte) ((prevE + length - i)%7));
                     buf[i] = unchecked((byte) ((buf[i] - (keyB[i%16] >> 2))%256));
 
                     prevE = tmpE;
                 }
             }
         }
+
+        private void simpleEncryptBytesSafe(byte[] buf, int offset, int count)
+        {
+
+            byte prevE = 0; // previous encrypted
+            for (int i = offset; i < count; i++)
+            {
+                buf[i] = unchecked((byte)((int)(buf[i] + (keyB[i % 16] >> 2)) % 256));
+                buf[i] ^= rotateLeft(keyB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
+                buf[i] = rotateRight(buf[i], (byte)((~(uint)(prevE)) % 7));
+
+                prevE = buf[i];
+            }
+
+        }
+
+        private void simpleDecryptBytesSafe(byte[] buf, int offset, int count)
+        {
+
+            byte prevE = 0; // previous encrypted
+            for (int i = offset; i < count; i++)
+            {
+                byte tmpE = buf[i];
+                buf[i] = rotateLeft(buf[i], (byte)((~(uint)(prevE)) % 7));
+                buf[i] ^= rotateLeft(keyB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
+                buf[i] = unchecked((byte)((int)(buf[i] - (keyB[i % 16] >> 2) + 256) % 256));
+
+                prevE = tmpE;
+            }
+
+        }
+
 
         private static byte rotateLeft(byte val, byte n)
         {

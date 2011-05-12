@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Text;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
 
 namespace osu_common.Helpers
 {
@@ -409,6 +410,42 @@ namespace osu_common.Helpers
                 if ((l & 1) != 0) if (*((byte*)x1) != *((byte*)x2)) return false;
                 return true;
             }
+        }
+
+         public static TDest[] ConvertArray<TSource, TDest>(TSource[] source)
+        where TSource : struct
+        where TDest : struct {
+    
+        if (source == null)
+            throw new ArgumentNullException("source");
+    
+            var sourceType = typeof(TSource);
+            var destType = typeof(TDest);
+    
+            if (sourceType == typeof(char) || destType == typeof(char))
+                throw new NotSupportedException(
+                    "Can not convert from/to a char array. Char is special " +
+                    "in a somewhat unknown way (like enums can't be based on " +
+                    "char either), and Marshal.SizeOf returns 1 even when the " +
+                    "values held by a char can be above 255."
+                );
+    
+            var sourceByteSize = Buffer.ByteLength(source);
+            var destTypeSize = Marshal.SizeOf(destType);
+            if (sourceByteSize % destTypeSize != 0)
+                throw new Exception(
+                    "The source array is " + sourceByteSize + " bytes, which can " +
+                    "not be transfered to chunks of " + destTypeSize + ", the size " +
+                    "of type " + typeof(TDest).Name + ". Change destination type or " +
+                    "pad the source array with additional values."
+                );
+    
+            var destCount = sourceByteSize / destTypeSize;
+            var destArray = new TDest[destCount];
+    
+            Buffer.BlockCopy(source, 0, destArray, 0, sourceByteSize);
+    
+            return destArray;
         }
     }
 }
