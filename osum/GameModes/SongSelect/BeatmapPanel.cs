@@ -43,13 +43,12 @@ namespace osum.GameModes.SongSelect
             s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(colourHover, 80); };
             s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(colourNormal, 80); };
 
-            s_Text = new pText(string.Empty, 32, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, PANEL_HEIGHT), base_depth + 0.01f, true, Color4.White, false);
+            s_Text = new pText(string.Empty, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(74, 14);
-            if (s_Text.Texture != null)
-                Sprites.Add(s_Text);
+            Sprites.Add(s_Text);
 
-            s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, new Vector2(256, 60), base_depth + 0.01f, true, new Color4(255, 255, 255, 128), false);
+            s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, new Color4(255, 255, 255, 128), false);
             s_TextArtist.TextAlignment = TextAlignment.Right;
             s_TextArtist.Origin = OriginTypes.TopRight;
             s_TextArtist.Offset = new Vector2(GameBase.BaseSize.Width, 7);
@@ -68,11 +67,6 @@ namespace osum.GameModes.SongSelect
             s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             s_Thumbnail.Offset = new Vector2(2, 2);
             Sprites.Add(s_Thumbnail);
-        }
-
-        internal void MoveTo(Vector2 location)
-        {
-            Sprites.ForEach(s => s.MoveTo(location, 40));
         }
     }
 }
