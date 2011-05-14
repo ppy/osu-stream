@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK;
 
 namespace osum.Graphics.Sprites
 {
@@ -44,6 +45,11 @@ namespace osum.Graphics.Sprites
         internal void Add(pSpriteCollection sc)
         {
             Sprites.AddRange(sc.Sprites);
+        }
+
+        internal void MoveTo(Vector2 location, int duration)
+        {
+            Sprites.ForEach(s => s.MoveTo(location, duration));
         }
     }
 }
