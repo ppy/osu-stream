@@ -335,7 +335,7 @@ namespace osum
     
                 t.Transform(bounce, fadeIn, fadeOut);
                 back.Transform(bounce, fadeIn, fadeOut);
-    
+
                 back.OnClick += delegate
                 {
                     back.HandleInput = false;
