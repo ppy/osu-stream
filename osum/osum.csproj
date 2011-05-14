@@ -330,6 +330,7 @@
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineServicesIOS.cs" />
     <Compile Include="Support\iPhone\OverlayViewController.cs" />
+    <Compile Include="GameModes\Store\PackPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

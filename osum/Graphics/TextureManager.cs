@@ -161,6 +161,8 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_tab_bar_other, new SpriteSheetTexture("songselect", 660, 629, 249, 76));
 
             textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 0, 279, 37, 43));
+            textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("songselect", 104, 317, 54, 53));
+            textureLocations.Add(OsuTexture.songselect_audio_preview_pause, new SpriteSheetTexture("songselect", 104, 377, 54, 53));
             
             textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 478, 193, 333, 136));
             textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 19, 721, 333, 136));
@@ -491,6 +493,8 @@ namespace osum.Graphics.Skins
         songselect_back_arrow,
         songselect_tab_bar_background,
         songselect_mode_arrow,
+        songselect_audio_preview,
+        songselect_audio_preview_pause,
         songselect_mode_stream,
         songselect_mode_easy,
         songselect_mode_expert,
