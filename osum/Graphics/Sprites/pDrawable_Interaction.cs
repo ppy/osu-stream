@@ -189,9 +189,9 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal void Click()
+        internal void Click(bool forceHover = true)
         {
-            if (!inputIsHovering)
+            if (!inputIsHovering && forceHover)
             {
                 //force hovering. this is necessary if a click is manually triggered, to get animations etc.
                 inputIsHovering = true;
