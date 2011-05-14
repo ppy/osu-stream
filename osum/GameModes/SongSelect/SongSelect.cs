@@ -40,13 +40,15 @@ namespace osum.GameModes
 
         private float songSelectOffset;
         private float difficultySelectOffset;
-        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight; } }
-        private float offset_max = 0;
 
-        private float velocity;
+        
 
         SelectState State;
 
+
+        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight - 80; } }
+        private float offset_max = 0;
+        private float velocity;
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
@@ -163,7 +165,7 @@ namespace osum.GameModes
                     countMiss = 12,
                     date = DateTime.Now,
                     maxCombo = 60,
-                    totalScore = 987654,
+                    totalScore = 1,
                 };
     
     
@@ -338,7 +340,7 @@ namespace osum.GameModes
                         Vector2 pos = new Vector2(0, 60 + songSelectOffset);
                         foreach (BeatmapPanel p in panels)
                         {
-                            p.MoveTo(pos);
+                            p.MoveTo(pos, 40);
                             pos.Y += 70;
                         }
                     }
