@@ -126,10 +126,9 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio;
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector;
                 Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
-                Vector2 origin = OriginVector;
-                return new Box2(pos.X - origin.X, pos.Y - origin.Y, pos.X + scale.X, pos.Y + scale.Y);
+                return new Box2(pos.X, pos.Y, pos.X + scale.X, pos.Y + scale.Y);
             }
         }
 
@@ -579,7 +578,10 @@ namespace osum.Graphics.Sprites
                 return;
 
             if (duration == 0)
+            {
                 Position = destination;
+                return;
+            }
 
             int now = Clock.GetTime(Clocking);
 
