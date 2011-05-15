@@ -83,10 +83,7 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     default:
-                        if (AlignToSprites)
-                            return Scale * 960f / GameBase.SpriteResolution;
-                        else
-                            return Scale;
+                        return Scale;
                 }
             }
         }
@@ -156,7 +153,7 @@ namespace osum.Graphics.Sprites
                 return null;
             }
 
-            float size = GameBase.BaseToNativeRatio * TextSize;
+            float size = GameBase.BaseToNativeRatio * TextSize * 960f / GameBase.SpriteResolution;
 			
 			Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
 			

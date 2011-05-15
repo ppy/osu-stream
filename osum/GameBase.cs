@@ -56,6 +56,7 @@ namespace osum
         public static Random Random = new Random();
 
         internal static Size BaseSize = new Size(640, 426);
+        internal static Size BaseSizeWidthAdjusted = new Size(640, 426);
         internal static Size GamefieldBaseSize = new Size(512, 384);
 
         internal static int SpriteResolution;
@@ -74,6 +75,12 @@ namespace osum
         /// The ratio of actual-pixel window size in relation to the base resolution used internally.
         /// </summary>
         internal static float BaseToNativeRatio;
+
+        /// <summary>
+        /// The ratio of actual-pixel window size in relation to the base resolution used internally.
+        /// Includes realignment for the range of widths where sprite ratio does not change.
+        /// </summary>
+        internal static float BaseToNativeRatioAligned;
 
         internal static Vector2 GamefieldOffsetVector1;
 
@@ -183,7 +190,11 @@ namespace osum
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
 
-            SpriteToBaseRatio = (float)BaseSize.Width / SpriteResolution;
+            BaseToNativeRatioAligned = BaseToNativeRatio * (960f / GameBase.SpriteResolution);
+
+            SpriteToBaseRatio = (float)BaseSize.Width / 960;
+
+            BaseSizeWidthAdjusted = new Size((int)(BaseSize.Width * (960f / GameBase.SpriteResolution)), BaseSize.Height);
 
             SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1

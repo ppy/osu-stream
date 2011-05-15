@@ -51,7 +51,8 @@ namespace osum.GameModes.SongSelect
             s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, new Color4(255, 255, 255, 128), false);
             s_TextArtist.TextAlignment = TextAlignment.Right;
             s_TextArtist.Origin = OriginTypes.TopRight;
-            s_TextArtist.Offset = new Vector2(GameBase.BaseSize.Width, 7);
+            s_TextArtist.Field = FieldTypes.StandardSnapRight;
+            s_TextArtist.Offset = new Vector2(0, 7);
             Sprites.Add(s_TextArtist);
 
             if (beatmap != null)

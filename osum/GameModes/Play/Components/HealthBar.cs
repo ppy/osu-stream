@@ -78,7 +78,10 @@ namespace osum.GameplayElements.Scoring
 
         internal float CurrentXPosition
         {
-            get { return s_barFill.Position.X + s_barFill.DrawWidth * GameBase.SpriteToBaseRatio; }
+            get
+            {
+                return s_barFill.DisplayRectangle.Right;
+            }
         }
 
         internal HealthBar()
@@ -201,7 +204,7 @@ namespace osum.GameplayElements.Scoring
                                     Vector2.Zero, 0.96F, true, Color4.White);
 
             s_kiExplode =
-                    new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.NativeStandardScale, OriginTypes.Centre, ClockTypes.Game,
+                    new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
                                 Vector2.Zero, 1, true, Color4.White);
             s_kiExplode.Alpha = 0;
             s_kiExplode.Additive = true;

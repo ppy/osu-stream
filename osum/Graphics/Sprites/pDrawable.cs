@@ -122,7 +122,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Gets the display rectangle (base size).
         /// </summary>
-        protected virtual Box2 DisplayRectangle
+        internal virtual Box2 DisplayRectangle
         {
             get
             {
@@ -143,10 +143,7 @@ namespace osum.Graphics.Sprites
                 if (Offset != Vector2.Zero)
                     pos += Offset;
 
-                pos *= GameBase.BaseToNativeRatio;
-
-                if (AlignToSprites)
-                    pos *= 960f / GameBase.SpriteResolution;
+                pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
 
                 switch (Field)
                 {
@@ -194,7 +191,7 @@ namespace osum.Graphics.Sprites
         /// Because the resolution of sprites is not 1:1 to the resizing of the window (ie. between 960-1024 widths, where it stays constant)
         /// an extra ratio calculation must be applied to keep sprites aligned.
         /// </summary>
-        internal bool AlignToSprites;
+        internal bool AlignToSprites = true;
 
         internal virtual Vector2 FieldScale
         {
@@ -212,10 +209,18 @@ namespace osum.Graphics.Sprites
                     default:
                         if (UsesTextures)
                             return Scale * GameBase.SpriteToNativeRatio;
+
                         if (AlignToSprites)
-                            return Scale * 960f / GameBase.SpriteResolution * GameBase.BaseToNativeRatio;
-                        else
-                            return Scale * GameBase.BaseToNativeRatio;
+                        {
+                            if (Scale.X != GameBase.BaseSize.Width)
+                                return Scale * GameBase.BaseToNativeRatioAligned;
+
+                            //special case for drawables which take up the full screen width.
+                            return new Vector2(Scale.X * GameBase.BaseToNativeRatio, Scale.Y * GameBase.BaseToNativeRatioAligned);
+                        }
+
+                        return Scale * GameBase.BaseToNativeRatio;
+
                 }
             }
         }
