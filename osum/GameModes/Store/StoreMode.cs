@@ -27,7 +27,7 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
             spriteManager.Add(s_ButtonBack);
 
-            StringNetRequest netRequest = new StringNetRequest("http://osu.ppy.sh/osum/getpacks.php");
+            StringNetRequest netRequest = new StringNetRequest("http://osu.ppy.sh/osum/");
             netRequest.onFinish += netRequest_onFinish;
             NetManager.AddRequest(netRequest);
 
@@ -70,22 +70,21 @@ namespace osum.GameModes.Store
 
 
             PackPanel pp = null;
-            bool newPack = true;
 
             int i = 0;
 
             foreach (string line in _result.Split('\n'))
             {
-                if (line.Length == 0)
-                {
-                    newPack = true;
-                    Console.WriteLine("Reading new pack");
-                    continue;
-                }
-
                 string[] split = line.Split('\t');
 
-                if (newPack)
+                if (split.Length < 2) continue;
+
+                string filename = split[0];
+                string checksum = split[1];
+
+                string path = SongSelectMode.BeatmapPath + "/" + filename;
+
+                if (i++ % 3 == 0)
                 {
                     GameBase.Scheduler.Add(delegate
                     {
@@ -95,39 +94,9 @@ namespace osum.GameModes.Store
                             packs.Add(pp);
                         }
 
-                        Console.WriteLine("Adding pack: " + split[0]);
-                        pp = new PackPanel(split[0], split[1], delegate {
-                            FileNetRequest fnr = new FileNetRequest(path, "http://osu.ppy.sh/osum/");
-                            fnr.onFinish += delegate
-                            {
-                                loadingRect.FadeOut(200);
-                                loading.FadeOut(200);
-                                text.FadeOut(200);
-                                s_ButtonBack.FadeIn(200);
-                            };
-    
-                            fnr.onUpdate += fnr_onUpdate;
-                            NetManager.AddRequest(fnr);
-    
-                            s_ButtonBack.FadeOut(200);
-    
-                            loading.FadeIn(200);
-                            loading.Text = "Starting download...";
-    
-                            loadingRect = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), true, 0.96f, Color4.Black);
-                            loadingRect.FadeInFromZero(200);
-                            spriteManager.Add(loadingRect);
-                        });
+                        pp = new PackPanel("Free Pack #" + (i / 3 + 1), "Free", delegate { });
                     });
-
-                    newPack = false;
-                    continue;
                 }
-
-                string filename = split[0];
-                string checksum = split[1];
-
-                string path = SongSelectMode.BeatmapPath + "/" + filename;
 
                 if (File.Exists(path))
                 {
@@ -137,11 +106,42 @@ namespace osum.GameModes.Store
 
                 int thisY = y;
 
-                Console.WriteLine("Adding beatmap: " + filename);
-
                 GameBase.Scheduler.Add(delegate
                 {
+
                     pp.Add(filename);
+
+
+                    /*pText text = new pText(filename, 20, new Vector2(10, 50 + thisY * 50), 0.5f, true, Color4.White);
+                    text.BackgroundColour = Color4.SkyBlue;
+                    text.TextShadow = true;
+                    text.FadeInFromZero(200);
+
+                    text.OnClick += delegate
+                    {
+                        FileNetRequest fnr = new FileNetRequest(path, "http://osu.ppy.sh/osum/" + filename);
+                        fnr.onFinish += delegate
+                        {
+                            loadingRect.FadeOut(200);
+                            loading.FadeOut(200);
+                            text.FadeOut(200);
+                            s_ButtonBack.FadeIn(200);
+                        };
+    
+                        fnr.onUpdate += fnr_onUpdate;
+                        NetManager.AddRequest(fnr);
+    
+                        s_ButtonBack.FadeOut(200);
+    
+                        loading.FadeIn(200);
+                        loading.Text = "Starting download...";
+    
+                        loadingRect = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), true, 0.96f, Color4.Black);
+                        loadingRect.FadeInFromZero(200);
+                        spriteManager.Add(loadingRect);
+                    };
+    
+                    spriteManager.Add(text);*/
                 });
 
                 y++;
