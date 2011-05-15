@@ -40,6 +40,7 @@ namespace osum.GameModes
             spriteManager.Add(performance);
 
             pDrawable fill = pSprite.FullscreenWhitePixel;
+            fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.count300 / RankableScore.totalHits;
             fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
             fillSprites.Add(fill);
@@ -48,6 +49,7 @@ namespace osum.GameModes
             countSprites.Add(count);
 
             fill = pSprite.FullscreenWhitePixel;
+            fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.count100 / RankableScore.totalHits;
             fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
             fillSprites.Add(fill);
@@ -56,6 +58,7 @@ namespace osum.GameModes
             countSprites.Add(count);
 
             fill = pSprite.FullscreenWhitePixel;
+            fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.count50 / RankableScore.totalHits;
             fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
             fillSprites.Add(fill);
@@ -64,6 +67,7 @@ namespace osum.GameModes
             countSprites.Add(count);
 
             fill = pSprite.FullscreenWhitePixel;
+            fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.countMiss / RankableScore.totalHits;
             fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
             fillSprites.Add(fill);
@@ -191,7 +195,7 @@ namespace osum.GameModes
                 pDrawable fill = fillSprites[i];
                 pDrawable count = countSprites[i];
 
-                fill.Scale.Y = bouncing ? GameBase.BaseSize.Height : fill_height;
+                fill.Scale.Y = bouncing ? GameBase.BaseSizeFixedWidth.Height : fill_height;
 
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X + 1;
@@ -202,7 +206,7 @@ namespace osum.GameModes
             if (!bouncing)
             {
 
-                float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSize.Width;
+                float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.Width;
 
                 pTexture tex = null;
                 if (pos < fillSprites[1].Position.X)

@@ -73,7 +73,7 @@ namespace osum.GameModes
         {
             List<pDrawable> sprites = new List<pDrawable>();
 
-            pSprite text = new pText("Not sure what to put here!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            pSprite text = new pText("Not sure what to put here!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(text);
 
             
@@ -84,7 +84,7 @@ namespace osum.GameModes
         {
             List<pDrawable> sprites = new List<pDrawable>();
 
-            pSprite text = new pText("Not yet implemented!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            pSprite text = new pText("Not yet implemented!", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(text);
 
             s_TabBarRank = tabController.Add(OsuTexture.songselect_tab_bar_rank, sprites);
@@ -122,7 +122,7 @@ namespace osum.GameModes
             s_ModeArrowRight.Rotation = 1;
             sprites.Add(s_ModeArrowRight);
 
-            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSize.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);

@@ -46,7 +46,7 @@ namespace osum.GameModes
         SelectState State;
 
 
-        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSize.Height - s_Header.DrawHeight - 80; } }
+        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Height - s_Header.DrawHeight - 80; } }
         private float offset_max = 0;
         private float velocity;
         /// <summary>

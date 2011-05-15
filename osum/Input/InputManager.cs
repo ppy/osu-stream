@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using OpenTK;
 using osum.Helpers;
+using osum.Support;
 namespace osum
 {
     public static class InputManager
@@ -64,6 +65,9 @@ namespace osum
 
         internal static void Update()
         {
+#if DEBUG
+            DebugOverlay.AddLine("Cursor Position: " + MainPointerPosition + " in window: " + GameBase.BaseSizeFixedWidth);
+#endif
         }
 
         private static void UpdatePointerPosition(TrackingPoint point)

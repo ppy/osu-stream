@@ -37,7 +37,7 @@ namespace osum.GameModes.SongSelect
         internal override void Initialize()
         {
             s_TabBarBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_tab_bar_background), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, -100), 0.4f, true, Color4.White);
-            s_TabBarBackground.Scale = new Vector2(GameBase.BaseSize.Width, 1); //this isn't perfectly window width, for what it's worth.
+            s_TabBarBackground.Scale = new Vector2(GameBase.BaseSizeFixedWidth.Width, 1); //this isn't perfectly window width, for what it's worth.
             spriteManager.Add(s_TabBarBackground);
         }
 

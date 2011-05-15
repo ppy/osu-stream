@@ -107,7 +107,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteCircle);
 
             spriteScoreMetreBackground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 3), new Color4(20, 20, 20, 255))
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSizeFixedWidth.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 3), new Color4(20, 20, 20, 255))
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -117,7 +117,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteScoreMetreBackground);
 
             spriteScoreMetreForeground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 0), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 2), Color4.OrangeRed)
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 2), Color4.OrangeRed)
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -166,7 +166,7 @@ namespace osum.GameplayElements
             SpriteSpin.AlignToSprites = true;
             Sprites.Add(SpriteSpin);
 
-            ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSize.Height * 0.47f, 0.1f, StartTime, EndTime));
+            ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Height * 0.47f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),

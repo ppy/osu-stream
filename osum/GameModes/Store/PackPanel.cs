@@ -36,7 +36,7 @@ namespace osum.GameModes.Store
         {
             //base_depth += 0.001f * index;
 
-            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, PANEL_HEIGHT), true, base_depth, colourNormal);
+            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, PANEL_HEIGHT), true, base_depth, colourNormal);
             Sprites.Add(s_BackingPlate);
 
 
@@ -54,7 +54,7 @@ namespace osum.GameModes.Store
             s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(colourHover2, 80); };
             s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(colourNormal, 80); };
 
-            s_Text = new pText(packTitle, 32, Vector2.Zero, new Vector2(GameBase.BaseSize.Width, PANEL_HEIGHT), base_depth + 0.01f, true, Color4.White, false);
+            s_Text = new pText(packTitle, 32, Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, PANEL_HEIGHT), base_depth + 0.01f, true, Color4.White, false);
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(74, 14);
             if (s_Text.Texture != null)
@@ -63,7 +63,7 @@ namespace osum.GameModes.Store
             s_TextArtist = new pText(price, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, new Color4(255, 255, 255, 128), false);
             s_TextArtist.TextAlignment = TextAlignment.Right;
             s_TextArtist.Origin = OriginTypes.TopRight;
-            s_TextArtist.Offset = new Vector2(GameBase.BaseSize.Width, 7);
+            s_TextArtist.Offset = new Vector2(GameBase.BaseSizeFixedWidth.Width, 7);
             Sprites.Add(s_TextArtist);
 
             s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
@@ -100,7 +100,7 @@ namespace osum.GameModes.Store
             Sprites.Add(preview);
             songPreviewButtons.Add(preview);
 
-            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, 40), true, base_depth, Color4.Black);
+            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 40), true, base_depth, Color4.Black);
             back.HandleClickOnUp = true;
 
             back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40,40,40,255),200); };

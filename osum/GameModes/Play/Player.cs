@@ -163,15 +163,15 @@ namespace osum.GameModes
                 Vector2 p1 = InputManager.TrackingPoints[0].BasePosition;
                 Vector2 p2 = InputManager.TrackingPoints[1].BasePosition;
 
-                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSizeFixedWidth.Width - 40) &&
                     Math.Min(p1.X, p2.X) < 40 &&
                     p1.Y + p2.Y < 80)
                 {
                     Director.ChangeMode(OsuMode.SongSelect);
                 }
-                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSize.Width - 40) &&
+                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSizeFixedWidth.Width - 40) &&
                     Math.Min(p1.X, p2.X) < 40 &&
-                    p1.Y + p2.Y > (GameBase.BaseSize.Height * 2) - 40)
+                    p1.Y + p2.Y > (GameBase.BaseSizeFixedWidth.Height * 2) - 40)
                 {
                     Player.Autoplay = !Autoplay;
                 }

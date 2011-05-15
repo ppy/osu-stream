@@ -55,8 +55,8 @@ namespace osum
 
         public static Random Random = new Random();
 
+        internal static Size BaseSizeFixedWidth = new Size(640, 426);
         internal static Size BaseSize = new Size(640, 426);
-        internal static Size BaseSizeWidthAdjusted = new Size(640, 426);
         internal static Size GamefieldBaseSize = new Size(512, 384);
 
         internal static int SpriteResolution;
@@ -113,7 +113,7 @@ namespace osum
 
         internal static Size BaseSizeHalf
         {
-            get { return new Size(BaseSize.Width / 2, BaseSize.Height / 2); }
+            get { return new Size(BaseSizeFixedWidth.Width / 2, BaseSizeFixedWidth.Height / 2); }
         }
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
@@ -170,7 +170,7 @@ namespace osum
         public virtual void SetupScreen()
         {
             //Setup window...
-            BaseSize.Height = (int)(BaseSize.Width * (float)NativeSize.Height / NativeSize.Width);
+            BaseSizeFixedWidth.Height = (int)(BaseSizeFixedWidth.Width * (float)NativeSize.Height / NativeSize.Width);
 
             GL.Disable(EnableCap.DepthTest);
             GL.EnableClientState(ArrayCap.VertexArray);
@@ -181,10 +181,10 @@ namespace osum
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
             SetViewport();
 
-            BaseToNativeRatio = (float)NativeSize.Width / BaseSize.Width;
+            BaseToNativeRatio = (float)NativeSize.Width / BaseSizeFixedWidth.Width;
 
-            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.Width - GamefieldBaseSize.Width) / 2,
-                                                 (float)(BaseSize.Height - GamefieldBaseSize.Height) / 4 * 3);
+            GamefieldOffsetVector1 = new Vector2((float)(BaseSizeFixedWidth.Width - GamefieldBaseSize.Width) / 2,
+                                                 (float)(BaseSizeFixedWidth.Height - GamefieldBaseSize.Height) / 4 * 3);
 
             SpriteResolution = Math.Max(960, Math.Min(1024, NativeSize.Width));
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
@@ -192,14 +192,18 @@ namespace osum
 
             BaseToNativeRatioAligned = BaseToNativeRatio * (960f / GameBase.SpriteResolution);
 
-            SpriteToBaseRatio = (float)BaseSize.Width / 960;
+            SpriteToBaseRatio = (float)BaseSizeFixedWidth.Width / 960;
 
-            BaseSizeWidthAdjusted = new Size((int)(BaseSize.Width * (960f / GameBase.SpriteResolution)), BaseSize.Height);
+            BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
 
             SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
+
+#if DEBUG
+            Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
+#endif
 
             TriggerLayoutChanged();
         }
@@ -338,7 +342,7 @@ namespace osum
                 pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
                 ActiveNotification = back;
 
-                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSize.Width - 50, 200), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
+                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width - 50, 200), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
     
                 Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
                 Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);

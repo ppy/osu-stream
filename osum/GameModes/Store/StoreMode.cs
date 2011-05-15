@@ -197,7 +197,7 @@ namespace osum.GameModes.Store
                 foreach (PackPanel p in packs)
                     totalHeight += p.Height;
 
-                return -totalHeight + GameBase.BaseSize.Height - 80;
+                return -totalHeight + GameBase.BaseSizeFixedWidth.Height - 80;
             }
         }
         private float offset_max = 0;

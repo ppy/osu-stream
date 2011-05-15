@@ -212,7 +212,7 @@ namespace osum.Graphics.Sprites
 
                         if (AlignToSprites)
                         {
-                            if (Scale.X != GameBase.BaseSize.Width)
+                            if (Scale.X != GameBase.BaseSizeFixedWidth.Width)
                                 return Scale * GameBase.BaseToNativeRatioAligned;
 
                             //special case for drawables which take up the full screen width.

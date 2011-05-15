@@ -96,8 +96,8 @@ namespace osum.Graphics.Sprites
 
                 Box2 rect = DisplayRectangle;
 
-                if (rect.Left > GameBase.BaseSizeWidthAdjusted.Width || rect.Right < 0 ||
-                    rect.Top > GameBase.BaseSizeWidthAdjusted.Height || rect.Bottom < 0)
+                if (rect.Left > GameBase.BaseSize.Width || rect.Right < 0 ||
+                    rect.Top > GameBase.BaseSize.Height || rect.Bottom < 0)
                     return false;
 
                 return true;
@@ -148,8 +148,8 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition / (AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio) - OriginVector * GameBase.SpriteToBaseRatio;
-                Vector2 scale = FieldScale / (AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio);
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio;
+                Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X, pos.Y,
                     pos.X + (float)DrawWidth * GameBase.SpriteToBaseRatio * Scale.X,
@@ -162,7 +162,7 @@ namespace osum.Graphics.Sprites
             get
             {
                 pDrawable whiteLayer =
-                    new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), false, 1, Color4.White);
+                    new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSizeFixedWidth.Height), false, 1, Color4.White);
                 whiteLayer.AlignToSprites = false;
                 return whiteLayer;
             }
