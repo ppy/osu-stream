@@ -29,7 +29,7 @@ namespace osum.GameModes.Store
 
         internal const int PANEL_HEIGHT = 60;
 
-        internal float Height = PANEL_HEIGHT;
+        internal float Height = PANEL_HEIGHT + 4;
         
 
         public PackPanel(string packTitle, string price, EventHandler action)
@@ -127,7 +127,7 @@ namespace osum.GameModes.Store
             songPreviewBacks.Add(back);
 
             back.Origin = OriginTypes.CentreLeft;
-            back.Offset = new Vector2(0, Height + 45/2);
+            back.Offset = new Vector2(0, Height + 20);
             Sprites.Add(back);
 
             Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
@@ -135,16 +135,16 @@ namespace osum.GameModes.Store
 
             pText artist = new pText(m.Groups[1].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;
-            artist.Offset = new Vector2(110, Height + 6);
+            artist.Offset = new Vector2(110, Height + 4);
             Sprites.Add(artist);
 
             pText title = new pText(m.Groups[2].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
 
-            title.Offset = new Vector2(120 + artist.MeasureText().X / GameBase.BaseToNativeRatio, Height + 6);
+            title.Offset = new Vector2(120 + artist.MeasureText().X / GameBase.BaseToNativeRatio, Height + 4);
             Sprites.Add(title);
 
 
-            Height += 45;
+            Height += 43;
         }
     }
 }
