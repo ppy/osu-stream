@@ -111,7 +111,6 @@ namespace osum.GameModes.Store
 
                     pp.Add(filename);
 
-
                     /*pText text = new pText(filename, 20, new Vector2(10, 50 + thisY * 50), 0.5f, true, Color4.White);
                     text.BackgroundColour = Color4.SkyBlue;
                     text.TextShadow = true;
