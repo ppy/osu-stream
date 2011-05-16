@@ -177,7 +177,10 @@ namespace osum.GameModes
 
         }
 
-        private void InitializeBgm()
+        /// <summary>
+        /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
+        /// </summary>
+        internal static void InitializeBgm()
         {
             //Start playing song select BGM.
 #if iOS
