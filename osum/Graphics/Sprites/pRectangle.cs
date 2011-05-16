@@ -58,28 +58,6 @@ namespace osum.Graphics.Drawables
         float[] coordinates = new float[8];
         float[] vertices = new float[8];
 
-        internal override bool IsOnScreen
-        {
-            get
-            {
-                Vector2 pos = FieldPosition;
-
-                //check (x1,y1)
-                if (pos.X <= GameBase.NativeSize.Width && pos.X >= 0 &&
-                    pos.Y <= GameBase.NativeSize.Height && pos.Y >= 0)
-                    return true;
-
-                pos += FieldScale;
-
-                //check (x2,y2)
-                if (pos.X <= GameBase.NativeSize.Width && pos.X >= 0 &&
-                    pos.Y <= GameBase.NativeSize.Height && pos.Y >= 0)
-                    return true;
-                
-                return false;
-            }
-        }
-
         internal override Vector2 OriginVector
         {
             get

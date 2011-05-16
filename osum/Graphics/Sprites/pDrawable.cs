@@ -75,10 +75,10 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition;
+                Box2 rect = DisplayRectangle;
 
-                if (pos.X > GameBase.NativeSize.Width || pos.X < 0 ||
-                    pos.Y > GameBase.NativeSize.Height || pos.Y < 0)
+                if (rect.Left > GameBase.BaseSizeFixedWidth.Width || rect.Right < 0 ||
+                    rect.Top > GameBase.BaseSizeFixedWidth.Height || rect.Bottom < 0)
                     return false;
 
                 return true;
