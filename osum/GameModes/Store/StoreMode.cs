@@ -11,6 +11,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Graphics.Renderers;
 using osum.Graphics.Drawables;
+using osum.Audio;
 
 namespace osum.GameModes.Store
 {
@@ -89,35 +90,15 @@ namespace osum.GameModes.Store
                 {
                     GameBase.Scheduler.Add(delegate
                     {
-                        if (pp != null)
+                        if (pp != null && pp.BeatmapCount > 0)
                         {
                             spriteManager.Add(pp);
                             packs.Add(pp);
                         }
 
+
                         Console.WriteLine("Adding pack: " + split[0]);
-                        pp = new PackPanel(split[0], split[1], delegate {
-                            FileNetRequest fnr = new FileNetRequest(path, "http://osu.ppy.sh/osum/");
-                            fnr.onFinish += delegate
-                            {
-                                loadingRect.FadeOut(200);
-                                loading.FadeOut(200);
-                                text.FadeOut(200);
-                                s_ButtonBack.FadeIn(200);
-                            };
-    
-                            fnr.onUpdate += fnr_onUpdate;
-                            NetManager.AddRequest(fnr);
-    
-                            s_ButtonBack.FadeOut(200);
-    
-                            loading.FadeIn(200);
-                            loading.Text = "Starting download...";
-    
-                            loadingRect = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, GameBase.BaseSize.Height), true, 0.96f, Color4.Black);
-                            loadingRect.FadeInFromZero(200);
-                            spriteManager.Add(loadingRect);
-                        });
+                        pp = new PackPanel(split[0], split[1], null);
                     });
 
                     newPack = false;
@@ -147,7 +128,8 @@ namespace osum.GameModes.Store
                 y++;
             }
 
-            GameBase.Scheduler.Add(delegate { spriteManager.Add(pp); packs.Add(pp); });
+            if (pp != null && pp.BeatmapCount > 0)
+                GameBase.Scheduler.Add(delegate { spriteManager.Add(pp); packs.Add(pp); });
 
             loading.FadeOut(200);
 
@@ -177,13 +159,33 @@ namespace osum.GameModes.Store
             return base.Draw();
         }
 
-        public static void ResetAllPreviews()
+        public static void ResetAllPreviews(bool isPausing)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
             foreach (PackPanel p in instance.packs)
                 p.ResetPreviews();
+
+            if (isPausing)
+                SongSelectMode.InitializeBgm();
+        }
+
+        public static void DownloadComplete(PackPanel pp)
+        {
+            StoreMode instance = Director.CurrentMode as StoreMode;
+            if (instance == null) return;
+
+            pp.Sprites.ForEach(s => s.FadeOut(100));
+            instance.packs.Remove(pp);
+        }
+
+        public static void EnsureVisible(pDrawable sprite)
+        {
+            StoreMode instance = Director.CurrentMode as StoreMode;
+            if (instance == null) return;
+
+            instance.scrollOffset = Math.Max(instance.offset_min, instance.scrollOffset - sprite.Position.Y);
         }
 
         private float offset_min
