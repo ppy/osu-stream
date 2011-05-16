@@ -46,8 +46,8 @@ namespace osum.Graphics.Sprites
 				if (exactCoordinates)
 				{
 					Vector2 pos = base.FieldPosition;
-					pos.X = (int)pos.X;
-					pos.Y = (int) pos.Y;
+					pos.X = (int)Math.Round(pos.X);
+					pos.Y = (int)Math.Round(pos.Y);
 					return pos;
 				}
 				
@@ -120,14 +120,30 @@ namespace osum.Graphics.Sprites
         internal Vector2 MeasureText()
         {
             if (textChanged)
-            {
                 refreshTexture();
-                
-                DrawWidth = (int)Math.Round(lastMeasure.X);
-                DrawHeight = (int)Math.Round(lastMeasure.Y);
-            }
 
             return lastMeasure;
+        }
+
+        internal override Box2 DisplayRectangle
+        {
+            get
+            {
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio;
+                Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
+
+                return new Box2(pos.X, pos.Y,
+                    pos.X + (float)DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
+                    pos.Y + (float)DrawHeight / GameBase.BaseToNativeRatio * Scale.Y);
+            }
+        }
+
+        internal override void UpdateTextureSize()
+        {
+            DrawWidth = (int)Math.Round(lastMeasure.X);
+            DrawHeight = (int)Math.Round(lastMeasure.Y);
+            DrawTop = TextureY;
+            DrawLeft = TextureX;
         }
 		
         /// <summary>

@@ -62,24 +62,21 @@ namespace osum.Graphics.Drawables
         {
             get
             {
-                Vector2 scale = FieldScale;
                 Vector2 pos = FieldPosition;
 
                 //check (x1,y1)
-                if (pos.X < GameBase.NativeSize.Width && pos.X >= 0)
-                    return true;
-                if (pos.Y < GameBase.NativeSize.Height && pos.Y >= 0)
+                if (pos.X <= GameBase.NativeSize.Width && pos.X >= 0 &&
+                    pos.Y <= GameBase.NativeSize.Height && pos.Y >= 0)
                     return true;
 
-                pos += scale;
+                pos += FieldScale;
 
                 //check (x2,y2)
-                if (pos.X < GameBase.NativeSize.Width && pos.X >= 0)
-                    return true;
-                if (pos.Y < GameBase.NativeSize.Height && pos.Y >= 0)
+                if (pos.X <= GameBase.NativeSize.Width && pos.X >= 0 &&
+                    pos.Y <= GameBase.NativeSize.Height && pos.Y >= 0)
                     return true;
                 
-                return true;
+                return false;
             }
         }
 

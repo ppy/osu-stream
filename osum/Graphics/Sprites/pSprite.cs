@@ -96,9 +96,13 @@ namespace osum.Graphics.Sprites
 
                 Box2 rect = DisplayRectangle;
 
-                if (rect.Left > GameBase.BaseSize.Width || rect.Right < 0 ||
-                    rect.Top > GameBase.BaseSize.Height || rect.Bottom < 0)
+
+
+                if (rect.Left > GameBase.BaseSizeFixedWidth.Width || rect.Right < 0 ||
+                    rect.Top > GameBase.BaseSizeFixedWidth.Height || rect.Bottom < 0)
+                {
                     return false;
+                }
 
                 return true;
             }
@@ -197,6 +201,17 @@ namespace osum.Graphics.Sprites
         }
 
         #endregion
+
+        internal void AdditiveFlash(int duration, float brightness)
+        {
+            pSprite clone = this.Clone();
+            GameBase.MainSpriteManager.Add(clone);
+
+            clone.Alpha *= brightness;
+            clone.Additive = true;
+            clone.FadeOut(duration);
+            clone.AlwaysDraw = false;
+        }
 
         internal virtual void UpdateTextureSize()
         {
