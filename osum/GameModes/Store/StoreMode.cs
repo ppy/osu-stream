@@ -128,8 +128,11 @@ namespace osum.GameModes.Store
                 y++;
             }
 
-            if (pp != null && pp.BeatmapCount > 0)
-                GameBase.Scheduler.Add(delegate { spriteManager.Add(pp); packs.Add(pp); });
+            GameBase.Scheduler.Add(delegate
+            {
+                if (pp != null && pp.BeatmapCount > 0)
+                    spriteManager.Add(pp); packs.Add(pp);
+            });
 
             loading.FadeOut(200);
 
@@ -242,7 +245,7 @@ namespace osum.GameModes.Store
                 }
             }
 
-            
+
         }
     }
 }
