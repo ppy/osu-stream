@@ -174,7 +174,7 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.GamefieldExact:
                         fieldPosition = Position;
                         GameBase.GamefieldToStandard(ref fieldPosition);
-                        Vector2.Multiply(ref fieldPosition, GameBase.BaseToNativeRatio, out fieldPosition);
+                        Vector2.Multiply(ref fieldPosition, AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio, out fieldPosition);
                         break;
                     case FieldTypes.NativeScaled:
                         return Position;
