@@ -940,17 +940,16 @@ namespace osum.GameplayElements.HitObjects.Osu
             DisposePathTexture();
 
             RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusGamefield);
-            //the fact we need to divide by DifficultyManager.HitObjectActualSpriteRatio here baffles me.
 
             trackBounds.X = (int)(rectf.X);
             trackBounds.Y = (int)(rectf.Y);
             trackBounds.Width = (int)rectf.Width + 1;
             trackBounds.Height = (int)rectf.Height + 1;
 
-            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatio);
-            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatio);
-            trackBoundsNative.Width = (int)(rectf.Width * GameBase.BaseToNativeRatio) + 1;
-            trackBoundsNative.Height = (int)(rectf.Height * GameBase.BaseToNativeRatio) + 1;
+            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatioAligned);
+            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatioAligned);
+            trackBoundsNative.Width = (int)(rectf.Width * GameBase.BaseToNativeRatioAligned) + 1;
+            trackBoundsNative.Height = (int)(rectf.Height * GameBase.BaseToNativeRatioAligned) + 1;
 
             lengthDrawn = 0;
             lastDrawnSegmentIndex = -1;
