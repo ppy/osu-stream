@@ -199,7 +199,7 @@ namespace osum.GameModes
             {
                 Player.Difficulty = Difficulty.Normal;
 
-                GameBase.Notify("You need to unlock Expert by completing this level on Stream mode first!");
+                GameBase.Notify("Unlock Expert by completing this level on Stream mode first!");
                 
 
                 //todo: show an alert that this needs an unlock.
