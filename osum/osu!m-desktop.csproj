@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\osu!m\</OutputPath>
-    <DefineConstants>DEBUG MONO OSUM FULL_DEBUG</DefineConstants>
+    <DefineConstants>DEBUG MONO OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
