@@ -115,10 +115,14 @@ namespace osum.GameModes.Store
                 b.Scale.X = 0;
                 b.Colour = Color4.DarkBlue;
             });
+
+            StoreMode.PurchaseInitiated(this);
         }
 
         void startNextDownload()
         {
+            Downloading = true;
+
             string filename = filenames[currentDownload];
             string path = SongSelectMode.BeatmapPath + "/" + filename;
             string downloadPath = "http://osu.ppy.sh/osum/" + s_Text.Text + "/" + filename;
@@ -133,6 +137,7 @@ namespace osum.GameModes.Store
                     startNextDownload();
                 else
                 {
+                    Downloading = false;
                     GameBase.Scheduler.Add(delegate { StoreMode.DownloadComplete(this); });
                 }
 
@@ -233,5 +238,7 @@ namespace osum.GameModes.Store
 
             Height += 43;
         }
+
+        public bool Downloading { get; private set; }
     }
 }

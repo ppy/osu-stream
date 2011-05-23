@@ -138,17 +138,7 @@ namespace osum.GameModes.Store
 
             if (y == 0)
             {
-                GameBase.Notify("You already have all available maps!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
-            }
-        }
-
-        void fnr_onUpdate(object sender, long current, long total)
-        {
-            if (loadingRect != null)
-            {
-                float completion = (float)current / total;
-                loadingRect.Colour = new Color4(completion, completion, completion, 1.0f);
-                loading.Text = "Downloading... " + Math.Round(completion * 100, 0) + "%";
+                GameBase.Notify("You already have all available levels!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
             }
         }
 
@@ -174,6 +164,14 @@ namespace osum.GameModes.Store
                 SongSelectMode.InitializeBgm();
         }
 
+        internal static void PurchaseInitiated(PackPanel packPanel)
+        {
+            StoreMode instance = Director.CurrentMode as StoreMode;
+            if (instance == null) return;
+
+            instance.s_ButtonBack.FadeOut(100);
+        }
+
         public static void DownloadComplete(PackPanel pp)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
@@ -181,6 +179,12 @@ namespace osum.GameModes.Store
 
             pp.Sprites.ForEach(s => s.FadeOut(100));
             instance.packs.Remove(pp);
+
+            if (instance.packs.Count == 0)
+                GameBase.Notify("You have all available packs.\nCheck back later!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+
+            if (instance.packs.TrueForAll(p => !p.Downloading))
+                instance.s_ButtonBack.FadeIn(100);
         }
 
         public static void EnsureVisible(pDrawable sprite)
@@ -244,8 +248,6 @@ namespace osum.GameModes.Store
                     pos.Y += p.Height;
                 }
             }
-
-
         }
     }
 }
