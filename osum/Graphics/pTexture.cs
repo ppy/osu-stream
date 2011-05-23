@@ -115,9 +115,10 @@ namespace osum.Graphics
 #if iOS
 	                GL.Oes.DeleteFramebuffers(1,ref fboId);
 	                fboId = -1;
+#else
+                    GL.DeleteFramebuffers(1, ref fboId);
+                    fboId = -1;
 #endif
-
-                    //todo: cleanup fbo on desktop builds.
                 }
 
                 TextureGl.Dispose();
