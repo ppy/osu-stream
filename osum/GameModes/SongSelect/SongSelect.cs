@@ -129,7 +129,11 @@ namespace osum.GameModes
                 catch
                 {
                     //possibly corrupt file. just delete for now.
-                    File.Delete(s);
+                    try
+                    {
+                        File.Delete(s);
+                    }
+                    catch { }
                     continue;
                 }
 
