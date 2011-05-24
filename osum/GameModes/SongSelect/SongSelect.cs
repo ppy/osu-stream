@@ -283,7 +283,7 @@ namespace osum.GameModes
                         if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
                         difficultySelectOffset = difficultySelectOffset + change;
-                        velocity = change;
+                        velocity = change * 100;
                     }
                     break;
             }
