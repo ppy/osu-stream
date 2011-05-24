@@ -41,7 +41,7 @@ namespace osum.GameModes
         private float songSelectOffset;
         private float difficultySelectOffset;
 
-        
+
 
         SelectState State;
 
@@ -156,6 +156,13 @@ namespace osum.GameModes
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
 
+            Vector2 pos = new Vector2(1000, 60 + songSelectOffset);
+            foreach (BeatmapPanel p in panels)
+            {
+                p.MoveTo(pos, 0);
+                pos.Y += 70;
+            }
+
             /*if (panels.Count > 1)
             {
                 onSongSelected(panels[panels.Count - 2], null);
@@ -248,12 +255,16 @@ namespace osum.GameModes
             InputManager.OnMove -= InputManager_OnMove;
         }
 
+        bool touchingBegun;
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) return;
+
+            touchingBegun = true;
+
             switch (State)
             {
                 case SelectState.SongSelect:
-                    if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) break;
                     {
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
                         float bound = offsetBound;
@@ -265,7 +276,6 @@ namespace osum.GameModes
                     }
                     break;
                 case SelectState.DifficultySelect:
-                    if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) break;
                     {
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
                         float bound = Math.Min(mode_button_width, Math.Max(mapRequiresUnlock ? 0 : -mode_button_width, difficultySelectOffset));
@@ -347,7 +357,8 @@ namespace osum.GameModes
                         Vector2 pos = new Vector2(0, 60 + songSelectOffset);
                         foreach (BeatmapPanel p in panels)
                         {
-                            p.MoveTo(pos, 40);
+
+                            p.MoveTo(pos, touchingBegun ? 40 : 300);
                             pos.Y += 70;
                         }
                     }
