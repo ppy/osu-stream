@@ -140,7 +140,7 @@ namespace osum.Graphics.Sprites
 
                 Vector2 pos = Position;
 
-                if (Offset != Vector2.Zero)
+                if (Origin != OriginTypes.Custom && Offset != Vector2.Zero)
                     pos += Offset;
 
                 pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;

@@ -249,6 +249,8 @@ namespace osum.Graphics.Sprites
                         return new Vector2(TextureWidth / 2, TextureHeight);
                     case OriginTypes.BottomRight:
                         return new Vector2(TextureWidth, TextureHeight);
+                    case OriginTypes.Custom:
+                        return Offset;
                 }
             }
         }
