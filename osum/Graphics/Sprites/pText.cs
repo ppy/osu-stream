@@ -22,7 +22,7 @@ namespace osum.Graphics.Sprites
         internal Color4 TextColour;
         internal bool TextShadow;
         internal float TextSize;
-		internal bool Bold;
+        internal bool Bold;
         internal string FontFace = "Tahoma";
 
         private string text;
@@ -39,21 +39,23 @@ namespace osum.Graphics.Sprites
         }
 
         private bool textChanged = true;
-        private bool exactCoordinates = true;
-		
-		internal override Vector2 FieldPosition {
-			get {
-				if (exactCoordinates)
-				{
-					Vector2 pos = base.FieldPosition;
-					pos.X = (int)Math.Round(pos.X);
-					pos.Y = (int)Math.Round(pos.Y);
-					return pos;
-				}
-				
-				return base.FieldPosition;
-			}
-		}
+        private bool exactCoordinates = false;
+
+        internal override Vector2 FieldPosition
+        {
+            get
+            {
+                if (exactCoordinates)
+                {
+                    Vector2 pos = base.FieldPosition;
+                    pos.X = (int)Math.Round(pos.X);
+                    pos.Y = (int)Math.Round(pos.Y);
+                    return pos;
+                }
+
+                return base.FieldPosition;
+            }
+        }
 
 #if iOS
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
@@ -93,7 +95,7 @@ namespace osum.Graphics.Sprites
             base.Dispose();
         }
 
-		public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
+        public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
             this(text, textSize, startPosition, Vector2.Zero, drawDepth, alwaysDraw, colour, false)
         {
         }
@@ -111,7 +113,8 @@ namespace osum.Graphics.Sprites
 
                 return texture;
             }
-            set {
+            set
+            {
                 base.Texture = value;
             }
         }
@@ -145,7 +148,7 @@ namespace osum.Graphics.Sprites
             DrawTop = TextureY;
             DrawLeft = TextureX;
         }
-		
+
         /// <summary>
         /// don't call this directly for the moment; we need MeasureText to be called to set DrawWidth/DrawHeight
         /// (this could do with some tidying)
@@ -156,8 +159,8 @@ namespace osum.Graphics.Sprites
             if (texture != null && !texture.IsDisposed)
             {
                 TextureManager.DisposableTextures.Remove(texture);
-				
-				texture.Dispose();
+
+                texture.Dispose();
                 texture = null;
             }
 
@@ -170,13 +173,13 @@ namespace osum.Graphics.Sprites
             }
 
             float size = GameBase.BaseToNativeRatio * TextSize * 960f / GameBase.SpriteResolution;
-			
-			Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
-			
+
+            Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
+
             Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
-			
-			TextureManager.RegisterDisposable(texture);
+
+            TextureManager.RegisterDisposable(texture);
 
             return texture;
         }
