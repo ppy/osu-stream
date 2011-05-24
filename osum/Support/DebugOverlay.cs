@@ -40,7 +40,11 @@ namespace osum.Support
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
+#if iOS
                 fpsDisplay.ScaleScalar = 0.6f;
+#else
+                fpsDisplay.ScaleScalar = 0.3f;
+#endif
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #endif
             }
@@ -49,7 +53,7 @@ namespace osum.Support
 
             if (GameBase.ElapsedMilliseconds > 25)
             {
-                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 10);
+                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 5);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
             }
 
@@ -58,7 +62,7 @@ namespace osum.Support
             if (gcCount < newGcCount)
             {
                 gcCount = newGcCount;
-                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 100, fpsDisplay.Position.Y);
+                fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 40, fpsDisplay.Position.Y);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
             }
 
@@ -93,6 +97,7 @@ namespace osum.Support
 				                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
                 fpsDisplay.ShowInt((int)Math.Round(Math.Min(60, fps), 0));
+                fpsDisplay.Alpha = fps < 59.9f ? 1 : 0.3f;
 #endif
             }
         }
