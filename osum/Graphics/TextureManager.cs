@@ -307,7 +307,8 @@ namespace osum.Graphics.Skins
             if (destinationCache.TryGetValue(name, out texture))
                 return texture;
 
-            string path = name.IndexOf('.') < 0 ? string.Format(@"Skins/Default/{0}.png", name) : @"Skins/Default/" + name;
+
+            string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution) + ".png";
 
             if (File.Exists(path))
             {
