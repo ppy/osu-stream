@@ -49,6 +49,7 @@ namespace osum.Graphics.Drawables
         {
             AlwaysDraw = alwaysDraw;
             DrawDepth = drawDepth;
+            Field = FieldTypes.GamefieldExact;
             StartPosition = position;
             Position = position;
             Radius = radius;

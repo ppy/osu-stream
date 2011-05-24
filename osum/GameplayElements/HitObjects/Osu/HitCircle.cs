@@ -45,7 +45,6 @@ namespace osum.GameplayElements
 
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
-            SpriteApproachCircle.Field = FieldTypes.GamefieldExact;
             Sprites.Add(SpriteApproachCircle);
 
             SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
