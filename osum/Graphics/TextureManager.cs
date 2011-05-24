@@ -44,11 +44,25 @@ namespace osum.Graphics.Skins
 {
     internal class SpriteSheetTexture
     {
-        internal string SheetName;
+        private string sheetName;
+        internal string SheetName
+        {
+            get
+            {
+                return sheetName + "_" + GameBase.SpriteSheetResolution;
+            }
+            set
+            {
+                sheetName = value;
+            }
+
+        }
+
         internal int X;
         internal int Y;
         internal int Width;
         internal int Height;
+
 
         public SpriteSheetTexture(string name, int x, int y, int width, int height)
         {
@@ -102,7 +116,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
 
             //spinner
-            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 819, 1024 , 640));
+            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 819, 1024, 640));
             textureLocations.Add(OsuTexture.spinner_circle, new SpriteSheetTexture("hit", 1046, 831, 614, 615));
             textureLocations.Add(OsuTexture.spinner_clear, new SpriteSheetTexture("hit", 21, 1533, 333, 136));
             textureLocations.Add(OsuTexture.spinner_spin, new SpriteSheetTexture("hit", 21, 1685, 333, 147));
@@ -152,7 +166,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 0, 190, 103, 85));
             textureLocations.Add(OsuTexture.songselect_back_hexagon, new SpriteSheetTexture("songselect", 227, 192, 250, 251));
             textureLocations.Add(OsuTexture.songselect_back_arrow, new SpriteSheetTexture("songselect", 104, 192, 122, 125));
-            
+
             textureLocations.Add(OsuTexture.songselect_tab_bar_background, new SpriteSheetTexture("songselect", 0, 626, 2, 80));
             textureLocations.Add(OsuTexture.songselect_tab_bar_play, new SpriteSheetTexture("songselect", 67, 629, 249, 76));
             textureLocations.Add(OsuTexture.songselect_tab_bar_rank, new SpriteSheetTexture("songselect", 356, 629, 249, 76));
@@ -163,7 +177,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_audio_preview_pause, new SpriteSheetTexture("songselect", 104, 377, 54, 53));
 
             textureLocations.Add(OsuTexture.songselect_store_buy_background, new SpriteSheetTexture("songselect", 479, 330, 230, 87));
-            
+
             textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 478, 193, 333, 136));
             textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 19, 721, 333, 136));
             textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 369, 721, 333, 136));
@@ -219,12 +233,25 @@ namespace osum.Graphics.Skins
             availableSurfaces = null;
         }
 
-        public static void ReloadAll()
+        public static void ReloadAll(bool forceUnload = false)
         {
-            foreach (pTexture p in SpriteCache.Values)
+            List<pTexture> cache = SpriteCache.Values.ToList();
+            if (forceUnload) SpriteCache.Clear();
+
+            foreach (pTexture p in cache)
+            {
+                if (forceUnload) p.TextureGl.Delete();
                 p.ReloadIfPossible();
-            foreach (pTexture p in SpriteCachePermanent.Values)
+            }
+
+            cache = SpriteCachePermanent.Values.ToList();
+            if (forceUnload) SpriteCachePermanent.Clear();
+
+            foreach (pTexture p in cache)
+            {
+                if (forceUnload) p.TextureGl.Delete();
                 p.ReloadIfPossible();
+            }
 
             PopulateSurfaces();
 
@@ -247,7 +274,9 @@ namespace osum.Graphics.Skins
 
             if (textureLocations.TryGetValue(texture, out info))
             {
-                pTexture tex = Load(info.SheetName, info.SheetName == "hit");
+                pTexture tex = Load(info.SheetName, info.SheetName.StartsWith("hit"));
+                tex.OsuTextureInfo = texture; //set this so if we need to do a reload we will get the correct sheet.
+
                 tex = tex.Clone(); //make a new instance because we may be using different coords.
                 tex.X = info.X;
                 tex.Y = info.Y;

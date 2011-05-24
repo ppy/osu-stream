@@ -97,8 +97,6 @@ namespace osum.Graphics
         /// </summary>
         internal void TemporalDispose()
         {
-            IsDisposed = true;
-
             if (TextureGl != null)
             {
                 TextureGl.Dispose();
@@ -146,11 +144,14 @@ namespace osum.Graphics
             {
                 if (assetName != null)
                 {
-                    pTexture reloadedTexture = FromFile(assetName);
+                    
+                    pTexture reloadedTexture = OsuTextureInfo != OsuTexture.None ? TextureManager.Load(OsuTextureInfo) : FromFile(assetName);
                     if (TextureGl == null)
                         TextureGl = reloadedTexture.TextureGl;
                     else
+                    {
                         TextureGl.Id = reloadedTexture.TextureGl.Id;
+                    }
 
                     reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
 
@@ -299,8 +300,10 @@ namespace osum.Graphics
         {
             try
             {
+
+                pTexture pt;
 #if iOS
-				return FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
+				pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
@@ -314,12 +317,23 @@ namespace osum.Graphics
                         File.WriteAllBytes(assetname, bitmap);
                     }
 
-                    pTexture tex = FromRawBytes(data.Scan0, b.Width, b.Height);
-                    tex.assetName = assetname;
+                    pt = FromRawBytes(data.Scan0, b.Width, b.Height);
+                    pt.assetName = assetname;
                     b.UnlockBits(data);
-                    return tex;
+
                 }
 #endif
+
+                //This makes sure we are always at the correct sprite resolution.
+                //Fucking hack, or fucking hax?
+                pt.Width = (int)(pt.Width * 960f / GameBase.SpriteSheetResolution);
+                pt.Height = (int)(pt.Height * 960f / GameBase.SpriteSheetResolution);
+                pt.TextureGl.textureWidth = pt.Width;
+                pt.TextureGl.textureHeight = pt.Height;
+                pt.TextureGl.potWidth = pt.Width;
+                pt.TextureGl.potHeight = pt.Height;
+
+                return pt;
             }
             catch (Exception e)
             {
@@ -343,6 +357,7 @@ namespace osum.Graphics
         public static pTexture FromRawBytes(IntPtr location, int width, int height)
         {
             pTexture pt = new pTexture();
+
             pt.Width = width;
             pt.Height = height;
 
@@ -350,7 +365,6 @@ namespace osum.Graphics
             {
                 pt.TextureGl = new TextureGl(pt.Width, pt.Height);
                 pt.TextureGl.SetData(location, 0, 0);
-
             }
             catch
             {

@@ -186,13 +186,32 @@ namespace osum
             GamefieldOffsetVector1 = new Vector2((float)(BaseSizeFixedWidth.Width - GamefieldBaseSize.Width) / 2,
                                                  (float)(BaseSizeFixedWidth.Height - GamefieldBaseSize.Height) / 4 * 3);
 
-            SpriteResolution = Math.Max(960, Math.Min(1024, NativeSize.Width));
+
+            int oldResolution = SpriteSheetResolution;
+
+            //define any available sprite sheets here.
+            if (NativeSize.Width < 720)
+                SpriteSheetResolution = 480;
+            else
+                SpriteSheetResolution = 960;
+            
+            //if we are switching to a new sprite sheet (resizing window on PC) let's refresh our textures.
+            if (SpriteSheetResolution != oldResolution && oldResolution > 0)
+                TextureManager.ReloadAll(true);
+
+            //calculations and internally, all textures are at 960-width-compatible sizes.
+            const float base_sprite_res = 960;
+
+            //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
+            int testWidth = NativeSize.Width < 512 ? NativeSize.Width * 2 : NativeSize.Width;
+
+            SpriteResolution = (int)(Math.Max(base_sprite_res, Math.Min(1024, testWidth)));
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
 
-            BaseToNativeRatioAligned = BaseToNativeRatio * (960f / GameBase.SpriteResolution);
+            BaseToNativeRatioAligned = BaseToNativeRatio * (base_sprite_res / GameBase.SpriteResolution);
 
-            SpriteToBaseRatio = (float)BaseSizeFixedWidth.Width / 960;
+            SpriteToBaseRatio = BaseSizeFixedWidth.Width / base_sprite_res;
 
             BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
 
@@ -335,6 +354,9 @@ namespace osum
         }
 
         internal static pSprite ActiveNotification;
+        internal static int SpriteSheetResolution;
+
+       
         internal static void Notify(string text, VoidDelegate action = null)
         {
             GameBase.Scheduler.Add(delegate
