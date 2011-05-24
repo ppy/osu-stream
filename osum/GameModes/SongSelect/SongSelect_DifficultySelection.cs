@@ -245,6 +245,9 @@ namespace osum.GameModes
 
         private void leaveDifficultySelection(object sender, EventArgs args)
         {
+            touchingBegun = false;
+            velocity = 0;
+
             State = SelectState.SongSelect;
 
             InitializeBgm();
@@ -256,7 +259,7 @@ namespace osum.GameModes
                     p.s_BackingPlate.HandleInput = true;
 
                     foreach (pDrawable d in p.Sprites)
-                        d.FadeIn(200);
+                        d.FadeIn(500);
                 }
 
                 tabController.Hide();

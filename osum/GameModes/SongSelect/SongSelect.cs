@@ -77,8 +77,8 @@ namespace osum.GameModes
             InitializeBeatmaps();
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
-            s_Header.Transform(new Transformation(new Vector2(-60, 0), Vector2.Zero, 0, 500, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 500, EasingTypes.In));
+            s_Header.Transform(new Transformation(new Vector2(-80, -10), Vector2.Zero, 0, 800, EasingTypes.In));
+            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
             spriteManager.Add(s_Header);
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, new Color4(200, 200, 200, 255));
@@ -156,11 +156,12 @@ namespace osum.GameModes
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
 
-            Vector2 pos = new Vector2(1000, 60 + songSelectOffset);
+            Vector2 pos = new Vector2(600, 0);
             foreach (BeatmapPanel p in panels)
             {
                 p.MoveTo(pos, 0);
                 pos.Y += 70;
+                pos.X += 300;
             }
 
             /*if (panels.Count > 1)
@@ -230,7 +231,10 @@ namespace osum.GameModes
                 if (p == panel) continue;
 
                 foreach (pDrawable s in p.Sprites)
-                    s.FadeOut(100);
+                {
+                    s.FadeOut(400);
+                    s.MoveTo(new Vector2(200, s.Position.Y), 500, EasingTypes.In);
+                }
             }
 
             panel.s_BackingPlate.FlashColour(Color4.White, 500);
