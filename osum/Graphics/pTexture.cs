@@ -328,10 +328,8 @@ namespace osum.Graphics
                 //Fucking hack, or fucking hax?
                 pt.Width = (int)(pt.Width * 960f / GameBase.SpriteSheetResolution);
                 pt.Height = (int)(pt.Height * 960f / GameBase.SpriteSheetResolution);
-                pt.TextureGl.textureWidth = pt.Width;
-                pt.TextureGl.textureHeight = pt.Height;
-                pt.TextureGl.potWidth = pt.Width;
-                pt.TextureGl.potHeight = pt.Height;
+                pt.TextureGl.TextureWidth = pt.Width;
+                pt.TextureGl.TextureHeight = pt.Height;
 
                 return pt;
             }

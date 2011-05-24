@@ -44,24 +44,39 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
-        internal int potHeight;
-        internal int potWidth;
-        internal int textureHeight;
-        internal int textureWidth;
+        internal int potHeight { get; private set; }
+        internal int potWidth { get; private set; }
+
+        private int textureHeight;
+        internal int TextureHeight
+        {
+            get { return textureHeight; }
+            set
+            {
+                textureHeight = value;
+                potHeight = GetPotDimension(value);
+            }
+        }
+
+        private int textureWidth;
+        internal int TextureWidth
+        {
+            get { return textureWidth; }
+            set
+            {
+                textureWidth = value;
+                potWidth = GetPotDimension(value);
+            }
+        }
+
         public int Id;
         public bool Loaded { get { return Id > 0; } }
 
         public TextureGl(int width, int height)
         {
             Id = -1;
-            textureWidth = width;
-            textureHeight = height;
-
-            if (SURFACE_TYPE == TextureGl.SURFACE_TYPE)
-            {
-                potWidth = GetPotDimension(width);
-                potHeight = GetPotDimension(height);
-            }
+            TextureWidth = width;
+            TextureHeight = height;
         }
 
         #region IDisposable Members
@@ -182,7 +197,7 @@ namespace osum.Graphics
         {
             if (Id < 0) return;
 
-            Box2 drawRect = srcRect == null ? new Box2(0, 0, textureWidth, textureHeight) : srcRect.Value;
+            Box2 drawRect = srcRect == null ? new Box2(0, 0, TextureWidth, TextureHeight) : srcRect.Value;
 
             float drawHeight = drawRect.Height * scaleVector.Y;
             float drawWidth = drawRect.Width * scaleVector.X;
@@ -352,7 +367,7 @@ namespace osum.Graphics
             {
                 if (SURFACE_TYPE == TextureTarget.Texture2D)
                 {
-                    if (potWidth == textureWidth && potHeight == textureHeight || dataPointer == IntPtr.Zero)
+                    if (potWidth == TextureWidth && potHeight == TextureHeight || dataPointer == IntPtr.Zero)
                     {
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, dataPointer);
@@ -362,19 +377,19 @@ namespace osum.Graphics
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
                                         PixelType.UnsignedByte, IntPtr.Zero);
 
-                        GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, textureWidth, textureHeight, format,
+                        GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, TextureWidth, TextureHeight, format,
                                           PixelType.UnsignedByte, dataPointer);
                     }
                 }
                 else
                 {
-                    GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth, textureHeight, 0, format,
+                    GL.TexImage2D(SURFACE_TYPE, level, internalFormat, TextureWidth, TextureHeight, 0, format,
                                     PixelType.UnsignedByte, dataPointer);
                 }
             }
             else
             {
-                GL.TexImage2D(SURFACE_TYPE, level, internalFormat, textureWidth / (int)Math.Pow(2, level), textureHeight / (int)Math.Pow(2, level), 0, format,
+                GL.TexImage2D(SURFACE_TYPE, level, internalFormat, TextureWidth / (int)Math.Pow(2, level), TextureHeight / (int)Math.Pow(2, level), 0, format,
                                    PixelType.UnsignedByte, dataPointer);
             }
 
