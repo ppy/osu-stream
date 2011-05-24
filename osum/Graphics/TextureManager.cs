@@ -147,8 +147,6 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 13));
             textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 759, 742, 59));
 
-            textureLocations.Add(OsuTexture.playfield, new SpriteSheetTexture("hit", 1024, 0, 1024, 768));
-
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
             textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 443, 1024, 121));
             textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 0, 190, 103, 85));
@@ -169,6 +167,13 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 478, 193, 333, 136));
             textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 19, 721, 333, 136));
             textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 369, 721, 333, 136));
+
+            //main menu
+            textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 768));
+            textureLocations.Add(OsuTexture.menu_osu, new SpriteSheetTexture("menu", 1292, 17, 617, 617));
+            textureLocations.Add(OsuTexture.menu_osugloss, new SpriteSheetTexture("menu", 1535, 640, 511, 310));
+            textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1286, 635, 246, 248));
+            textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 8, 820, 1178, 141));
 
             GameBase.OnScreenLayoutChanged += delegate
             {
@@ -512,6 +517,11 @@ namespace osum.Graphics.Skins
         spinner_circle,
         spinner_clear,
         spinner_spin,
-        spinner_spm
+        spinner_spm,
+        menu_background,
+        menu_osu,
+        menu_circle,
+        menu_stream,
+        menu_osugloss
     }
 }

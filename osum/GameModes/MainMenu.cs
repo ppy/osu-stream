@@ -53,6 +53,7 @@ namespace osum.GameModes
     class MainMenu : GameMode
     {
         pSprite osuLogo;
+        pSprite osuLogoGloss;
 
         List<pSprite> explosions = new List<pSprite>();
 
@@ -61,28 +62,48 @@ namespace osum.GameModes
         internal override void Initialize()
         {
             menuBackground =
-                new pSprite(TextureManager.Load(@"menu-background"), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
             spriteManager.Add(menuBackground);
 
-            osuLogo = new pSprite(TextureManager.Load(@"menu-osu"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.9f, true, Color4.White);
+            const int logo_stuff_v_offset = -30;
+
+            osuLogo = new pSprite(TextureManager.Load(OsuTexture.menu_osu), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0,logo_stuff_v_offset), 0.9f, true, Color4.White);
             osuLogo.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
             spriteManager.Add(osuLogo);
 
-            pSprite explosion = new pSprite(TextureManager.Load(@"menu-explosion"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110, -110), 0.8f, true, new Color4(252, 6, 127, 255));
+            //gloss
+            osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_osugloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, Color4.White);
+            osuLogoGloss.Offset = new Vector2(255,250);
+            osuLogoGloss.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
+            spriteManager.Add(osuLogoGloss);
+
+            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110, -110 + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255));
             explosion.Transform(new TransformationBounce(initial_display + 50, initial_display + 2600, 1, 1f, 7));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(@"menu-explosion"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(140, 10), 0.8f, true, new Color4(255, 212, 27, 255));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(140, 10 + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255));
             explosion.Transform(new TransformationBounce(initial_display + 200, initial_display + 2900, 1.4f, 1.4f, 8));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(@"menu-explosion"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-120, 60), 0.8f, true, new Color4(29, 209, 255, 255));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-120, 60 + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255));
             explosion.Transform(new TransformationBounce(initial_display + 400, initial_display + 3200, 1.2f, 1.7f, 5));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
+
+            stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0,170), 0.95f, true, Color4.White);
+            stream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 900, initial_display + 1300));
+            spriteManager.Add(stream);
+
+            pSprite additiveStream = stream.Clone();
+            additiveStream.Additive = true;
+            additiveStream.DrawDepth = 0.96f;
+            additiveStream.Alpha = 0;
+            additiveStream.AlwaysDraw = false;
+            additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 1300, initial_display + 2000));
+            spriteManager.Add(additiveStream);
 
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
@@ -113,7 +134,13 @@ namespace osum.GameModes
 
                 osuLogo.Transformations.Clear();
                 osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
-                osuLogo.Transform(new Transformation(TransformationType.Rotation, 0, 1.4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+                osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 1.4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+
+                osuLogoGloss.Transformations.Clear();
+                osuLogoGloss.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+
+                stream.FadeOut(150);
+
 
                 Director.ChangeMode(OsuMode.SongSelect, new FadeTransition());
             }
@@ -121,6 +148,7 @@ namespace osum.GameModes
 
         double elapsedRotation;
         private pSprite menuBackground;
+        private pSprite stream;
 
         public override void Update()
         {
