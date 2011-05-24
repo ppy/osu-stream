@@ -29,6 +29,8 @@ namespace osum.GameModes.SongSelect
             Action = action;
             HandleInput = true;
 
+            HandleClickOnUp = true;
+
             OnClick += OnBackgroundOnClick;
             OnHover += delegate { FadeColour(new Color4(255, 255, 255, 255), 100); };
             OnHoverLost += delegate { FadeColour(new Color4(200, 200, 200, 255), 100); };
