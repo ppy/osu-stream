@@ -156,7 +156,7 @@ namespace osum.Graphics.Sprites
                 acceptableUpClick -= Math.Abs(trackingPoint.WindowDelta.X) + Math.Abs(trackingPoint.WindowDelta.Y);
         }
 
-        const float HANDLE_UP_MOVEMENT_ALLOWANCE = 5;
+        const float HANDLE_UP_MOVEMENT_ALLOWANCE = 15;
 
         internal virtual void HandleOnDown(InputSource source, TrackingPoint trackingPoint)
         {
