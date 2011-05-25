@@ -376,12 +376,14 @@ namespace osum.GameModes
             {
                 case SelectState.LoadingPreview:
                     if (AudioEngine.Music.Volume > 0)
-                        AudioEngine.Music.Volume -= 0.05f;
+                        AudioEngine.Music.Volume = Math.Max(0.5f, AudioEngine.Music.Volume * 0.97f);
                     break;
                 case SelectState.RankingDisplay:
                 case SelectState.DifficultySelect:
                     if (AudioEngine.Music.Volume < 1)
-                        AudioEngine.Music.Volume += 0.005f;
+                        AudioEngine.Music.Volume = Math.Min(1, AudioEngine.Music.Volume + 0.02f);
+                    break;
+                default:
                     break;
             }
         }
