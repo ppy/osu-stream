@@ -39,20 +39,12 @@ namespace osum.Graphics.Sprites
         }
 
         private bool textChanged = true;
-        private bool exactCoordinates = false;
 
         internal override Vector2 FieldPosition
         {
             get
             {
-                if (exactCoordinates)
-                {
-                    Vector2 pos = base.FieldPosition;
-                    pos.X = (int)Math.Round(pos.X);
-                    pos.Y = (int)Math.Round(pos.Y);
-                    return pos;
-                }
-
+                ExactCoordinates = Transformations.Find(t => t.Type == TransformationType.Movement) == null;
                 return base.FieldPosition;
             }
         }

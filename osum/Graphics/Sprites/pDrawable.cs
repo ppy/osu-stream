@@ -132,12 +132,13 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        internal bool ExactCoordinates;
+
+
         internal virtual Vector2 FieldPosition
         {
             get
             {
-                Vector2 fieldPosition;
-
                 Vector2 pos = Position;
 
                 if (Origin != OriginTypes.Custom && Offset != Vector2.Zero)
@@ -148,42 +149,48 @@ namespace osum.Graphics.Sprites
                 switch (Field)
                 {
                     case FieldTypes.StandardSnapCentre:
-                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
                                                     GameBase.NativeSize.Height / 2 + pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomCentre:
-                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
                                                     GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapTopCentre:
-                        fieldPosition = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
                                                     pos.Y);
                         break;
                     case FieldTypes.StandardSnapRight:
-                        fieldPosition = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
+                        pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomLeft:
-                        fieldPosition = new Vector2(pos.X, GameBase.NativeSize.Height - pos.Y);
+                        pos = new Vector2(pos.X, GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.StandardSnapBottomRight:
-                        fieldPosition = new Vector2(GameBase.NativeSize.Width - pos.X,
+                        pos = new Vector2(GameBase.NativeSize.Width - pos.X,
                                                     GameBase.NativeSize.Height - pos.Y);
                         break;
                     case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.GamefieldSprites:
                     case FieldTypes.GamefieldExact:
-                        fieldPosition = Position;
-                        GameBase.GamefieldToStandard(ref fieldPosition);
-                        Vector2.Multiply(ref fieldPosition, AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio, out fieldPosition);
+                        pos = Position;
+                        GameBase.GamefieldToStandard(ref pos);
+                        Vector2.Multiply(ref pos, AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio, out pos);
                         break;
                     case FieldTypes.NativeScaled:
                         return Position;
                     case FieldTypes.Native:
                     default:
-                        return pos;
+                        break;
                 }
 
-                return fieldPosition;
+                if (ExactCoordinates)
+                {
+                    pos.X = (int)Math.Round(pos.X);
+                    pos.Y = (int)Math.Round(pos.Y);
+                }
+
+                return pos;
             }
         }
 
