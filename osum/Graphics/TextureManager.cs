@@ -188,6 +188,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.menu_osugloss, new SpriteSheetTexture("menu", 1535, 640, 511, 310));
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1286, 635, 246, 248));
             textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 8, 820, 1178, 141));
+            textureLocations.Add(OsuTexture.menu_headphones, new SpriteSheetTexture("menu", 9, 962, 382, 469));
 
             GameBase.OnScreenLayoutChanged += delegate
             {
@@ -552,6 +553,7 @@ namespace osum.Graphics.Skins
         menu_osu,
         menu_circle,
         menu_stream,
-        menu_osugloss
+        menu_osugloss,
+        menu_headphones
     }
 }

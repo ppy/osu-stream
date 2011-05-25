@@ -57,7 +57,7 @@ namespace osum.GameModes
 
         List<pSprite> explosions = new List<pSprite>();
 
-        const int initial_display = 500;
+        const int initial_display = 2950;
 
         internal override void Initialize()
         {
@@ -68,32 +68,38 @@ namespace osum.GameModes
 
             const int logo_stuff_v_offset = -30;
 
-            osuLogo = new pSprite(TextureManager.Load(OsuTexture.menu_osu), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0,logo_stuff_v_offset), 0.9f, true, Color4.White);
+            pSprite headphones = new pSprite(TextureManager.Load(OsuTexture.menu_headphones), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.9f, false, Color4.White);
+            headphones.Additive = true;
+            headphones.Transform(new Transformation(TransformationType.Fade, 0, 1, 50, 100));
+            headphones.Transform(new Transformation(TransformationType.Fade, 1, 1, 1000, initial_display));
+            spriteManager.Add(headphones);
+
+            osuLogo = new pSprite(TextureManager.Load(OsuTexture.menu_osu), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.9f, true, Color4.White);
             osuLogo.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
             spriteManager.Add(osuLogo);
 
             //gloss
             osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_osugloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, Color4.White);
-            osuLogoGloss.Offset = new Vector2(255,250);
+            osuLogoGloss.Offset = new Vector2(255, 250);
             osuLogoGloss.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
             spriteManager.Add(osuLogoGloss);
 
-            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110, -110 + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255));
+            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(-110, -110 + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255));
             explosion.Transform(new TransformationBounce(initial_display + 50, initial_display + 2600, 1, 1f, 7));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(140, 10 + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(140, 10 + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255));
             explosion.Transform(new TransformationBounce(initial_display + 200, initial_display + 2900, 1.4f, 1.4f, 8));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-120, 60 + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(-120, 60 + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255));
             explosion.Transform(new TransformationBounce(initial_display + 400, initial_display + 3200, 1.2f, 1.7f, 5));
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0,170), 0.95f, true, Color4.White);
+            stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 170), 0.95f, true, Color4.White);
             stream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 900, initial_display + 1300));
             spriteManager.Add(stream);
 
@@ -113,10 +119,27 @@ namespace osum.GameModes
             //whiteLayer.Additive = true;
             spriteManager.Add(whiteLayer);
 
+            whiteLayer.Transform(new Transformation(TransformationType.Fade, 0, 0.125f, 800, initial_display - 200));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 0.125f, 1f, initial_display - 200, initial_display));
             whiteLayer.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
 
             InputManager.OnDown += InputManager_OnDown;
+
+            InitializeBgm();
+        }
+
+        /// <summary>
+        /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
+        /// </summary>
+        internal static void InitializeBgm()
+        {
+            //Start playing song select BGM.
+#if iOS
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
+#else
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.mp3"), true);
+#endif
+            AudioEngine.Music.Play();
         }
 
         public override void Dispose()
@@ -128,7 +151,7 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (!Director.IsTransitioning)
+            if (!Director.IsTransitioning && Clock.ModeTime > initial_display)
             {
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
 
@@ -150,6 +173,11 @@ namespace osum.GameModes
         private pSprite menuBackground;
         private pSprite stream;
 
+        int lastBgmBeat = 0;
+        float between_beats = 375 / 2;
+        int offset = initial_display;
+        const int bar = 8;
+
         public override void Update()
         {
             base.Update();
@@ -159,17 +187,55 @@ namespace osum.GameModes
                 elapsedRotation += GameBase.ElapsedMilliseconds;
                 osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
 
-                menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00001 * GameBase.ElapsedMilliseconds);
-                menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00001 * GameBase.ElapsedMilliseconds);
+                menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
             }
 
-            explosions.ForEach(s =>
+            
+
+            int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
+
+            if (newBeat > 15)
             {
-                if (s.Transformations.Count == 0)
-                    s.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 900, s.ScaleScalar, 0.1f, 2));
-            });
+                if (lastBgmBeat != newBeat)
+                {
+                    switch (newBeat % 8)
+                    {
+                        case 0:
+                            explode(0);
+                            osuLogo.ScaleScalar -= 0.03f;
+                            osuLogoGloss.ScaleScalar -= 0.03f;
+                            break;
+                        case 2:
+                            explode(1);
+                            osuLogo.ScaleScalar += 0.03f;
+                            osuLogoGloss.ScaleScalar += 0.03f;
+                            break;
+                        case 5:
+                            explode(0);
+                            osuLogo.ScaleScalar -= 0.03f;
+                            osuLogoGloss.ScaleScalar -= 0.03f;
+                            break;
+                        case 6:
+                            explode(1);
+                            osuLogo.ScaleScalar += 0.03f;
+                            osuLogoGloss.ScaleScalar += 0.03f;
+                            break;
+                        case 7:
+                            explode(2);
+                            break;
+                    }
 
+                    lastBgmBeat = newBeat;
+                }
+            }
+        }
 
+        private void explode(int beat)
+        {
+            if (explosions[beat].Transformations.Count > 0) return;
+
+            explosions[beat].Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + (int)(between_beats * 2), explosions[beat].ScaleScalar, (1.3f - explosions[beat].ScaleScalar) * 0.5f, 3));
         }
 
         public override bool Draw()
