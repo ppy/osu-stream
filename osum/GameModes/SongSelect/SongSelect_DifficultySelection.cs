@@ -44,35 +44,41 @@ namespace osum.GameModes
             AudioEngine.Music.Volume = 0;
             AudioEngine.Music.SeekTo(30000);
 
-            if (s_ModeButtonStream == null)
-            {
+            //do a second callback so we account for lost gametime due to the above audio load.
+            GameBase.Scheduler.Add(delegate {
 
-                tabController = new pTabController();
+                if (State != SelectState.LoadingPreview) return;
 
-                initializeTabPlay();
-                initializeTabRank();
-                initializeTabOptions();
-            }
+                if (s_ModeButtonStream == null)
+                {
 
-            tabController.Show();
-
-
-            //preview has finished loading.
-            State = SelectState.DifficultySelect;
-
-            foreach (pDrawable s in SelectedPanel.Sprites)
-                s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
-
-            tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
-            tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
-
-            s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-
-            s_Footer.Transform(new Transformation(new Vector2(-60, -105), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-
-            updateModeSelectionArrows();
+                    tabController = new pTabController();
+    
+                    initializeTabPlay();
+                    initializeTabRank();
+                    initializeTabOptions();
+                }
+    
+                tabController.Show();
+    
+    
+                //preview has finished loading.
+                State = SelectState.DifficultySelect;
+    
+                foreach (pDrawable s in SelectedPanel.Sprites)
+                    s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
+    
+                tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
+                tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
+    
+                s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+    
+                s_Footer.Transform(new Transformation(new Vector2(-60, -105), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+    
+                updateModeSelectionArrows();
+            },true);
         }
 
         private void initializeTabOptions()
