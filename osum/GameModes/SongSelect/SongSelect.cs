@@ -159,7 +159,7 @@ namespace osum.GameModes
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
 
-            Vector2 pos = new Vector2(600, 0);
+            Vector2 pos = new Vector2(400, 0);
             foreach (BeatmapPanel p in panels)
             {
                 p.MoveTo(pos, 0);
@@ -363,8 +363,8 @@ namespace osum.GameModes
                         Vector2 pos = new Vector2(0, 60 + songSelectOffset);
                         foreach (BeatmapPanel p in panels)
                         {
-
-                            p.MoveTo(pos, touchingBegun ? 40 : 300);
+                            if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
+                                p.MoveTo(pos, touchingBegun ? 40 : 300);
                             pos.Y += 70;
                         }
                     }
