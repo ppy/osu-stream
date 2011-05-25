@@ -51,8 +51,8 @@ namespace osum.GameModes.Play.Components
     /// </summary>
     class PlayfieldBackground : pDrawable
     {
-        float[] vertices = new float[20 * 2];
-        float[] colours = new float[20 * 4];
+        float[] vertices = new float[24 * 2];
+        float[] colours = new float[24 * 4];
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_EASY = new Color4(149, 207, 49, 255);
@@ -74,6 +74,9 @@ namespace osum.GameModes.Play.Components
             GameBase.OnScreenLayoutChanged += initialize;
         }
 
+        float curentXOffset;
+        float lineWidth = GameBase.NativeSize.Width * 0.2f;
+
         private void initialize()
         {
             float left = 0;
@@ -94,27 +97,33 @@ namespace osum.GameModes.Play.Components
             vertices[j++] = bottom;
 
             //diagonal lines
-            float diagonalWidth = GameBase.NativeSize.Width * 0.2f;
+            curentXOffset = 0;
+            calculateDiagonals();
+        }
 
-            float diagonalY = diagonalWidth;
-            float diagonalX = diagonalWidth;
+        private void calculateDiagonals()
+        {
+            int j = 8;
 
-            for (int k = 0; k < 4; k++)
+            float diagonalY = curentXOffset - lineWidth;
+            float diagonalX = curentXOffset - lineWidth;
+
+            for (int k = 0; k < 5; k++)
             {
                 vertices[j++] = diagonalX;
                 vertices[j++] = 0;
 
-                vertices[j++] = diagonalX + diagonalWidth;
+                vertices[j++] = diagonalX + lineWidth;
                 vertices[j++] = 0;
 
                 vertices[j++] = 0;
-                vertices[j++] = diagonalY + diagonalWidth;
+                vertices[j++] = diagonalY + lineWidth;
 
                 vertices[j++] = 0;
                 vertices[j++] = diagonalY;
 
-                diagonalY += diagonalWidth * 2;
-                diagonalX += diagonalWidth * 2;
+                diagonalY += lineWidth * 2;
+                diagonalX += lineWidth * 2;
             }
         }
 
@@ -125,6 +134,20 @@ namespace osum.GameModes.Play.Components
             base.Dispose();
         }
 
+        internal void Move(float amount)
+        {
+            curentXOffset += amount;
+
+            if (amount > 0 && curentXOffset - lineWidth > 0)
+                curentXOffset -= lineWidth * 2;
+            else if (amount < 0 && lineWidth - curentXOffset > 0)
+                curentXOffset += lineWidth * 2;
+
+            calculateDiagonals();
+        }
+
+        private float velocity;
+
         public override void Update()
         {
             base.Update();
@@ -132,8 +155,15 @@ namespace osum.GameModes.Play.Components
             Color4 colourTop = Colour;
             Color4 colourBottom = ColourHelper.Darken(Colour, 0.85f);
 
+            if (velocity != 0)
+            {
+                Move(velocity);
+                velocity *= 0.9f;
+            }
+            
+
             Color4 col = Colour;
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 24; i++)
             {
                 //change to the darker colour for bottom vertices and diagonals
                 if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
@@ -164,14 +194,26 @@ namespace osum.GameModes.Play.Components
             GL.DrawArrays(BeginMode.TriangleFan, 8, 4);
             GL.DrawArrays(BeginMode.TriangleFan, 12, 4);
             GL.DrawArrays(BeginMode.TriangleFan, 16, 4);
+            GL.DrawArrays(BeginMode.TriangleFan, 20, 4);
 
             GL.DisableClientState(ArrayCap.ColorArray);
 
             return true;
         }
 
+        Difficulty lastDifficulty;
         internal void ChangeColour(Difficulty difficulty)
         {
+            if (difficulty != lastDifficulty)
+            {
+                if (difficulty > lastDifficulty)
+                    velocity = 50;
+                else
+                    velocity = -50;
+            }
+            
+            lastDifficulty = difficulty;
+
             switch (difficulty)
             {
                 case Difficulty.Easy:

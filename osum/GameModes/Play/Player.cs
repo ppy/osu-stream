@@ -374,10 +374,17 @@ namespace osum.GameModes
                     switchStream(false);
                 }
             }
+            else
+            {
+                s_Playfield.Move((isIncreasingStream ? 1 : -1) * Math.Max(0,(2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
+            }
+
         }
 
+        bool isIncreasingStream;
         private bool switchStream(bool increase)
         {
+            isIncreasingStream = increase;
             if (increase && hitObjectManager.IsHighestStream)
                 return false;
             if (!increase && hitObjectManager.IsLowestStream)

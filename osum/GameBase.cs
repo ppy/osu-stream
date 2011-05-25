@@ -259,7 +259,11 @@ namespace osum
             DebugOverlay.Update();
 
             //Load the main menu initially.
+            //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- v2 (James).osz2");
+            //Player.Beatmap.BeatmapFilename = Player.Beatmap.Package.MapFiles[0];
+            //AudioEngine.Music.Load(Player.Beatmap.GetFileBytes(Player.Beatmap.AudioFilename), false);
             Director.ChangeMode(OsuMode.MainMenu, null);
+            
 
             OnlineHelper.Initialize();
         }
