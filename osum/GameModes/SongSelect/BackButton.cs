@@ -8,6 +8,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Graphics.Skins;
 using osum.Helpers;
+using osum.Audio;
 
 namespace osum.GameModes.SongSelect
 {
@@ -22,7 +23,7 @@ namespace osum.GameModes.SongSelect
 
         public BackButton(EventHandler action)
             : base(TextureManager.Load(OsuTexture.songselect_back_hexagon), FieldTypes.StandardSnapBottomLeft,
-                OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset, offset), 0.99f, true, new Color4(200,200,200,255))
+                OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset, offset), 0.99f, true, new Color4(200, 200, 200, 255))
         {
             AlwaysDraw = true;
             Alpha = 1;
@@ -40,6 +41,8 @@ namespace osum.GameModes.SongSelect
 
         void OnBackgroundOnClick(object sender, EventArgs e)
         {
+            AudioEngine.PlaySample(OsuSamples.MenuBack);
+
             Transform(new TransformationBounce(Clock.ModeTime - 300, Clock.ModeTime + 700, 1, 1, 2));
             arrow.Transform(new TransformationBounce(Clock.ModeTime - 300, Clock.ModeTime + 700, 1, 1, 2));
 

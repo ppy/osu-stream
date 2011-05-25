@@ -14,7 +14,8 @@ namespace osum.Audio
         HitFinish,
         MenuHit,
         SliderTick,
-        SliderSlide
+        SliderSlide,
+        MenuBack
     }
 
     internal static class AudioEngine
@@ -77,6 +78,9 @@ namespace osum.Audio
                     break;
                 case OsuSamples.MenuHit:
                     filename = "menuhit";
+                    break;
+                case OsuSamples.MenuBack:
+                    filename = "menuback";
                     break;
             }
 
