@@ -58,37 +58,6 @@ namespace osum.Graphics.Drawables
         float[] coordinates = new float[8];
         float[] vertices = new float[8];
 
-        internal override Vector2 OriginVector
-        {
-            get
-            {
-                Vector2 scale = AlignToSprites ? Scale * 960f / GameBase.SpriteResolution : Scale;
-
-                switch (Origin)
-                {
-                    default:
-                    case OriginTypes.TopLeft:
-                        return Vector2.Zero;
-                    case OriginTypes.TopCentre:
-                        return new Vector2(scale.X / 2, 0);
-                    case OriginTypes.TopRight:
-                        return new Vector2(scale.X, 0);
-                    case OriginTypes.CentreLeft:
-                        return new Vector2(0, scale.Y / 2);
-                    case OriginTypes.Centre:
-                        return new Vector2(scale.X / 2, scale.Y / 2);
-                    case OriginTypes.CentreRight:
-                        return new Vector2(scale.X, scale.Y / 2);
-                    case OriginTypes.BottomLeft:
-                        return new Vector2(0, scale.Y);
-                    case OriginTypes.BottomCentre:
-                        return new Vector2(scale.X / 2, scale.Y);
-                    case OriginTypes.BottomRight:
-                        return new Vector2(scale.X, scale.Y);
-                }
-            }
-        }
-
         public override bool Draw()
         {
             if (base.Draw())

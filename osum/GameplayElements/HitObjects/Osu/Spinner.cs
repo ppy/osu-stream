@@ -107,7 +107,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteCircle);
 
             spriteScoreMetreBackground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSizeFixedWidth.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 3), new Color4(20, 20, 20, 255))
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime - 3), new Color4(20, 20, 20, 255))
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,

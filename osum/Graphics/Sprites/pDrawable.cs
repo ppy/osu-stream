@@ -67,7 +67,38 @@ namespace osum.Graphics.Sprites
         public int TagNumeric;
         internal FieldTypes Field = FieldTypes.Standard;
         internal OriginTypes Origin;
-        internal virtual Vector2 OriginVector { get { return Vector2.Zero; } }
+
+        internal virtual Vector2 OriginVector
+        {
+            get
+            {
+                Vector2 scale = AlignToSprites ? new Vector2(Scale.X, Scale.Y * 960f / GameBase.SpriteResolution) : Scale;
+
+                switch (Origin)
+                {
+                    default:
+                    case OriginTypes.TopLeft:
+                        return Vector2.Zero;
+                    case OriginTypes.TopCentre:
+                        return new Vector2(scale.X / 2, 0);
+                    case OriginTypes.TopRight:
+                        return new Vector2(scale.X, 0);
+                    case OriginTypes.CentreLeft:
+                        return new Vector2(0, scale.Y / 2);
+                    case OriginTypes.Centre:
+                        return new Vector2(scale.X / 2, scale.Y / 2);
+                    case OriginTypes.CentreRight:
+                        return new Vector2(scale.X, scale.Y / 2);
+                    case OriginTypes.BottomLeft:
+                        return new Vector2(0, scale.Y);
+                    case OriginTypes.BottomCentre:
+                        return new Vector2(scale.X / 2, scale.Y);
+                    case OriginTypes.BottomRight:
+                        return new Vector2(scale.X, scale.Y);
+                }
+            }
+        }
+
         internal Vector2 Position;
         internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
 
