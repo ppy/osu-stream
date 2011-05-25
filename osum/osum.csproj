@@ -13,8 +13,8 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1120</BundleVersion>
-    <BundleDisplayName>osu!m</BundleDisplayName>
+    <BundleVersion>1151</BundleVersion>
+    <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
@@ -357,10 +357,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Content Include="Skins\Default\menu-osu.png">
-    </Content>
-    <Content Include="Skins\Default\menu-background.png">
-    </Content>
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
     <Content Include="Support\iPhone\loading-Landscape.png" />
@@ -378,11 +374,17 @@
     <Content Include="Skins\Default\soft-sliderslide.wav" />
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
-    <Content Include="Skins\Default\menu-explosion.png" />
     <Content Include="iTunesArtwork" />
-    <Content Include="Skins\Default\hit.png" />
-    <Content Include="Skins\Default\select.m4a" />
-    <Content Include="Skins\Default\songselect.png" />
-    <Content Include="Skins\Default\notification.png" />
+    <Content Include="Skins\Default\hit_480.png" />
+    <Content Include="Skins\Default\hit_960.png" />
+    <Content Include="Skins\Default\menu_480.png" />
+    <Content Include="Skins\Default\menu_960.png" />
+    <Content Include="Skins\Default\menuback.wav" />
+    <Content Include="Skins\Default\notification_480.png" />
+    <Content Include="Skins\Default\notification_960.png" />
+    <Content Include="Skins\Default\songselect_480.png" />
+    <Content Include="Skins\Default\songselect_960.png" />
+    <Content Include="Skins\Default\mainmenu.m4a" />
+    <Content Include="Skins\Default\songselect.m4a" />
   </ItemGroup>
 </Project>

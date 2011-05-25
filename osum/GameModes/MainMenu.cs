@@ -82,6 +82,7 @@ namespace osum.GameModes
             //gloss
             osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_osugloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, Color4.White);
             osuLogoGloss.Offset = new Vector2(255, 250);
+            osuLogoGloss.Additive = true;
             osuLogoGloss.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
             spriteManager.Add(osuLogoGloss);
 
@@ -137,7 +138,7 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.m4a"), true);
 #else
             AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.mp3"), true);
 #endif

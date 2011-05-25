@@ -234,7 +234,7 @@ namespace osum.Graphics.Skins
             availableSurfaces = null;
         }
 
-        public static void ReloadAll(bool forceUnload = false)
+        public static void ReloadAll(bool forceUnload = true)
         {
             List<pTexture> cache = SpriteCache.Values.ToList();
             if (forceUnload) SpriteCache.Clear();

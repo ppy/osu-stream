@@ -206,6 +206,13 @@ namespace osum.Graphics
                 using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
                     tex = FromStream(stream, filename);
 #endif
+
+                //This makes sure we are always at the correct sprite resolution.
+                //Fucking hack, or fucking hax?
+                tex.Width = (int)(tex.Width * 960f / GameBase.SpriteSheetResolution);
+                tex.Height = (int)(tex.Height * 960f / GameBase.SpriteSheetResolution);
+                tex.TextureGl.TextureWidth = tex.Width;
+                tex.TextureGl.TextureHeight = tex.Height;
             }
             catch
             {
@@ -323,14 +330,6 @@ namespace osum.Graphics
 
                 }
 #endif
-
-                //This makes sure we are always at the correct sprite resolution.
-                //Fucking hack, or fucking hax?
-                pt.Width = (int)(pt.Width * 960f / GameBase.SpriteSheetResolution);
-                pt.Height = (int)(pt.Height * 960f / GameBase.SpriteSheetResolution);
-                pt.TextureGl.TextureWidth = pt.Width;
-                pt.TextureGl.TextureHeight = pt.Height;
-
                 return pt;
             }
             catch (Exception e)
