@@ -198,7 +198,7 @@ namespace osum.GameModes
 #if iOS
             AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.m4a"), true);
 #else
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/select.mp3"), true);
+            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/songselect.mp3"), true);
 #endif
             AudioEngine.Music.Play();
         }
