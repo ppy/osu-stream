@@ -179,15 +179,8 @@ namespace osum.GameModes
             }
         }
 
-        int lastSeek;
         void InputManager_OnMove(InputSource source, TrackingPoint point)
         {
-            // fast forward for iphone
-            if (InputManager.TrackingPoints.Count >= 4 && Clock.Time - lastSeek > 250)
-            {
-                lastSeek = Clock.Time;
-                AudioEngine.Music.SeekTo(Clock.AudioTime + 2000);
-            }
         }
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
