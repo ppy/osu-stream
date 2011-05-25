@@ -183,7 +183,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 369, 721, 333, 136));
 
             //main menu
-            textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 768));
+            textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 800));
             textureLocations.Add(OsuTexture.menu_osu, new SpriteSheetTexture("menu", 1292, 17, 617, 617));
             textureLocations.Add(OsuTexture.menu_osugloss, new SpriteSheetTexture("menu", 1535, 640, 511, 310));
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1286, 635, 246, 248));

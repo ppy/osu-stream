@@ -64,9 +64,10 @@ namespace osum.GameModes
             menuBackground =
                 new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
+            menuBackground.ScaleScalar = 1.07f;
             spriteManager.Add(menuBackground);
 
-            const int logo_stuff_v_offset = -30;
+            const int logo_stuff_v_offset = -20;
 
             pSprite headphones = new pSprite(TextureManager.Load(OsuTexture.menu_headphones), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.9f, false, Color4.White);
             headphones.Additive = true;
@@ -99,8 +100,9 @@ namespace osum.GameModes
             explosions.Add(explosion);
             spriteManager.Add(explosion);
 
-            stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 170), 0.95f, true, Color4.White);
+            stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 186), 0.95f, true, Color4.White);
             stream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 900, initial_display + 1300));
+            stream.ExactCoordinates = true;
             spriteManager.Add(stream);
 
             pSprite additiveStream = stream.Clone();
