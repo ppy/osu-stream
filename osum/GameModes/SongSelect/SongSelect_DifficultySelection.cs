@@ -38,9 +38,15 @@ namespace osum.GameModes
 
         private void showDifficultySelection()
         {
+            if (State != SelectState.LoadingPreview) return;
+
+            AudioEngine.Music.Play();
+            AudioEngine.Music.Volume = 0;
+            AudioEngine.Music.SeekTo(30000);
+
             if (s_ModeButtonStream == null)
             {
-                
+
                 tabController = new pTabController();
 
                 initializeTabPlay();
@@ -76,7 +82,7 @@ namespace osum.GameModes
             pSprite text = new pText("Local record goes here.", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(text);
 
-            
+
             s_TabBarOther = tabController.Add(OsuTexture.songselect_tab_bar_other, sprites);
         }
 
@@ -200,7 +206,7 @@ namespace osum.GameModes
                 Player.Difficulty = Difficulty.Normal;
 
                 GameBase.Notify("Unlock Expert by completing this level on Stream mode first!");
-                
+
 
                 //todo: show an alert that this needs an unlock.
             }
@@ -235,7 +241,7 @@ namespace osum.GameModes
                 pSprite clone = s_ModeDescriptionText.Clone();
                 clone.FadeOut(200);
                 clone.AlwaysDraw = false;
-                spriteManager.Add(clone); 
+                spriteManager.Add(clone);
 
                 s_ModeDescriptionText.Text = text;
                 s_ModeDescriptionText.Alpha = 0;
@@ -262,13 +268,13 @@ namespace osum.GameModes
                         d.FadeIn(500);
                 }
 
-                tabController.Hide();
+                if (tabController != null) tabController.Hide();
 
                 s_Header.Transform(new Transformation(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
                 s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -105), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             }, true);
         }
 

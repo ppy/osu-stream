@@ -24,7 +24,8 @@ namespace osum.GameModes
         DifficultySelect,
         LoadingPreview,
         RankingDisplay,
-        Starting
+        Starting,
+        Exiting
     }
 
     public partial class SongSelectMode : GameMode
@@ -97,9 +98,11 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.SongSelect:
+                    State = SelectState.Exiting;
                     Director.ChangeMode(OsuMode.MainMenu);
                     break;
-                default:
+                case SelectState.DifficultySelect:
+                case SelectState.LoadingPreview:
                     leaveDifficultySelection(sender, args);
                     break;
             }
@@ -241,10 +244,9 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                if (State != SelectState.LoadingPreview) return;
+
                 AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false);
-                AudioEngine.Music.Play();
-                AudioEngine.Music.Volume = 0;
-                AudioEngine.Music.SeekTo(30000);
 
                 GameBase.Scheduler.Add(showDifficultySelection, true);
             }, 400);
