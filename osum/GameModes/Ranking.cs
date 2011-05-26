@@ -146,9 +146,9 @@ namespace osum.GameModes
 
 
             //add a temporary button to allow returning to song select
-            pDrawable s_ButtonBack = new BackButton(returnToSelect);
+            s_ButtonBack = new BackButton(returnToSelect);
+            s_ButtonBack.Alpha = 0;
             spriteManager.Add(s_ButtonBack);
-            OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename), RankableScore.totalScore);
         }
 
         void returnToSelect(object sender, EventArgs args)
@@ -166,8 +166,8 @@ namespace osum.GameModes
         {
         }
 
-
         bool wasBouncing = true;
+        private BackButton s_ButtonBack;
         public override void Update()
         {
             bool bouncing = fillSprites[3].Transformations.Count > 1;
@@ -180,6 +180,11 @@ namespace osum.GameModes
                 spriteManager.Add(flash);
 
                 resultSprites.ForEach(s => s.Alpha = 1);
+
+                //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
+                OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename), RankableScore.totalScore);
+
+                s_ButtonBack.FadeIn(150);
             }
 
             base.Update();
