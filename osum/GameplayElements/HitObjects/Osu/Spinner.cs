@@ -86,7 +86,7 @@ namespace osum.GameplayElements
         internal Spinner(HitObjectManager hitObjectManager, int startTime, int endTime, HitObjectSoundType soundType)
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
-            Position = new Vector2(GameBase.GamefieldBaseSize.Width / 2, GameBase.GamefieldBaseSize.Height / 2);
+            Position = (new Vector2(GameBase.BaseSize.Width / 2, GameBase.BaseSize.Height) - spinnerCentre) - GameBase.GamefieldOffsetVector1;
             EndTime = endTime;
             Type = HitObjectType.Spinner;
             Colour = Color4.Gray;
