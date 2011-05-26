@@ -18,16 +18,6 @@ using osum.GameplayElements.Scoring;
 
 namespace osum.GameModes
 {
-    enum SelectState
-    {
-        SongSelect,
-        DifficultySelect,
-        LoadingPreview,
-        RankingDisplay,
-        Starting,
-        Exiting
-    }
-
     public partial class SongSelectMode : GameMode
     {
 #if iOS
@@ -387,5 +377,15 @@ namespace osum.GameModes
                     break;
             }
         }
+    }
+
+    enum SelectState
+    {
+        SongSelect,
+        DifficultySelect,
+        LoadingPreview,
+        RankingDisplay,
+        Starting,
+        Exiting
     }
 }
