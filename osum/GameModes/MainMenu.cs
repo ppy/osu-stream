@@ -57,13 +57,15 @@ namespace osum.GameModes
 
         List<pSprite> explosions = new List<pSprite>();
 
+        MenuState State = MenuState.Logo;
+
         const int initial_display = 2950;
 
         internal override void Initialize()
         {
             menuBackground =
                 new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Audio, Vector2.Zero, 0, true, Color.White);
+                            ClockTypes.Mode, Vector2.Zero, 0, true, Color.White);
             menuBackground.ScaleScalar = 1.07f;
             spriteManager.Add(menuBackground);
 
@@ -161,22 +163,37 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (!Director.IsTransitioning && Clock.AudioTime > initial_display)
+            switch (State)
             {
-                AudioEngine.PlaySample(OsuSamples.MenuHit);
+                case MenuState.Logo:
+                    if (!Director.IsTransitioning && Clock.AudioTime > initial_display)
+                    {
 
-                osuLogo.Transformations.Clear();
-                osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
-                osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 1.4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
+                        State = MenuState.Select;
 
-                osuLogoGloss.Transformations.Clear();
-                osuLogoGloss.FadeOut(100);
-                osuLogoGloss.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
+                        AudioEngine.PlaySample(OsuSamples.MenuHit);
 
-                stream.FadeOut(150);
+                        osuLogo.Transformations.Clear();
+                        osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
+                        osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 1.4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
 
+                        osuLogoGloss.Transformations.Clear();
+                        osuLogoGloss.FadeOut(100);
+                        osuLogoGloss.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
 
-                Director.ChangeMode(OsuMode.SongSelect, new FadeTransition());
+                        stream.FadeOut(150);
+
+                        osuLogo.FadeOut(500);
+
+                        explosions.ForEach(s => s.FadeOut(100));
+
+                        //menuBackground.Transform(new Transformation(TransformationType.Rotation, menuBackground.Rotation, 0.4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+                        //menuBackground.Transform(new Transformation(TransformationType.Scale, menuBackground.ScaleScalar, 1.5f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+                        //menuBackground.Transform(new Transformation(menuBackground.Position, new Vector2(-60, 60), Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+
+                        Director.ChangeMode(OsuMode.SongSelect, new FadeTransition());
+                    }
+                    break;
             }
         }
 
@@ -193,7 +210,7 @@ namespace osum.GameModes
         {
             base.Update();
 
-            if (Clock.ModeTime > initial_display)
+            if (Clock.AudioTime > initial_display)
             {
                 elapsedRotation += GameBase.ElapsedMilliseconds;
                 osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
@@ -256,5 +273,11 @@ namespace osum.GameModes
 
             return true;
         }
+    }
+
+    enum MenuState
+    {
+        Logo,
+        Select
     }
 }
