@@ -234,6 +234,8 @@ namespace osum
         {
             SetupScreen();
 
+            InitializeAssetManager();
+
             TextureManager.Initialize();
 
             InputManager.Initialize();
@@ -286,6 +288,19 @@ namespace osum
         /// Initializes the input management subsystem.
         /// </summary>
         protected abstract void InitializeInput();
+
+
+        /// <summary>
+        /// Initializes the AssetManager. 
+        /// Assets are skins, hitsounds, textures that come with the game.
+        /// These are, depending on the platform, located in the executable itself.
+        /// Maps are not included as assets to prevent oversized executables.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual NativeAssetManager InitializeAssetManager()
+        {
+            return new NativeAssetManager();
+        }
 
         /// <summary>
         /// Main update cycle

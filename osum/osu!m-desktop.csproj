@@ -38,6 +38,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="AssetManager\NativeAssetManager.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerDesktop.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />

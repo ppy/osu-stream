@@ -51,11 +51,11 @@ namespace osum
         /// <returns>-1 on error, bufferId on success.</returns>
         public int Load(string filename)
         {
-            if (!File.Exists(filename)) return -1;
+            if (!NativeAssetManager.Instance.FileExists(filename)) return -1;
 
             int buffer = AL.GenBuffer();
 
-            using (Stream str = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (Stream str = NativeAssetManager.Instance.GetFileStream(filename))
             using (AudioReader sound = new AudioReader(str))
             {
                 byte[] readSound = sound.ReadToEnd().Data;

@@ -193,7 +193,7 @@ namespace osum.Graphics
         {
             //load base texture first...
 
-            if (!File.Exists(filename)) return null;
+            if (!NativeAssetManager.Instance.FileExists(filename)) return null;
 
             pTexture tex = null;
 
@@ -203,7 +203,7 @@ namespace osum.Graphics
 				using (UIImage image = UIImage.FromFile(filename))
                     tex = FromUIImage(image,filename);
 #else
-                using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (Stream stream = NativeAssetManager.Instance.GetFileStream(filename))
                     tex = FromStream(stream, filename);
 #endif
 
@@ -229,7 +229,7 @@ namespace osum.Graphics
                 do
                 {
                     string mmfilename = filename.Replace(".", mipmapLevel + ".");
-                    if (!File.Exists(mmfilename))
+                    if (!NativeAssetManager.Instance.FileExists(mmfilename))
                         break;
 
                     width /= 2;

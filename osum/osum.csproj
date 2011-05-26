@@ -150,6 +150,7 @@
     <None Include="icon72.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetManager\NativeAssetManager.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Helpers\Delegates.cs" />
