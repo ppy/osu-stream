@@ -10,6 +10,7 @@ using osum.GameModes;
 using osum.Support;
 using osum.Audio;
 using osum.Helpers;
+using osum.Graphics.Skins;
 
 namespace osum
 {
@@ -48,6 +49,9 @@ namespace osum
                     break;
                 case 'r':
                     Director.ChangeMode(Director.CurrentOsuMode);
+                    break;
+                case 'x':
+                    TextureManager.ReloadAll(true);
                     break;
             }
         }
