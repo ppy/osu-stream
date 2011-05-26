@@ -170,6 +170,7 @@ namespace osum.GameModes
                 osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 1.4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
 
                 osuLogoGloss.Transformations.Clear();
+                osuLogoGloss.FadeOut(100);
                 osuLogoGloss.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
 
                 stream.FadeOut(150);
@@ -200,8 +201,6 @@ namespace osum.GameModes
                 menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
                 menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
             }
-
-
 
             int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
 
