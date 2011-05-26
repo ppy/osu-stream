@@ -194,7 +194,7 @@ namespace osum
                 SpriteSheetResolution = 480;
             else
                 SpriteSheetResolution = 960;
-            
+
             //if we are switching to a new sprite sheet (resizing window on PC) let's refresh our textures.
             if (SpriteSheetResolution != oldResolution && oldResolution > 0)
                 TextureManager.ReloadAll(true);
@@ -263,7 +263,7 @@ namespace osum
             //Player.Beatmap.BeatmapFilename = Player.Beatmap.Package.MapFiles[0];
             //AudioEngine.Music.Load(Player.Beatmap.GetFileBytes(Player.Beatmap.AudioFilename), false);
             Director.ChangeMode(OsuMode.MainMenu, null);
-            
+
 
             OnlineHelper.Initialize();
         }
@@ -301,6 +301,10 @@ namespace osum
             Clock.Update(thisTime);
 
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
+
+            if (ElapsedMilliseconds > 1000)
+                ElapsedMilliseconds = 0;
+
             ignoreNextFrameTime = false;
 
             Scheduler.Update();
@@ -360,7 +364,7 @@ namespace osum
         internal static pSprite ActiveNotification;
         internal static int SpriteSheetResolution;
 
-       
+
         internal static void Notify(string text, VoidDelegate action = null)
         {
             GameBase.Scheduler.Add(delegate
@@ -369,31 +373,31 @@ namespace osum
                 ActiveNotification = back;
 
                 pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width - 50, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
-    
+
                 Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
                 Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
                 Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, Clock.Time + 10000, Clock.Time + 10200);
-    
+
                 t.Transform(bounce, fadeIn, fadeOut);
                 back.Transform(bounce, fadeIn, fadeOut);
 
                 back.OnClick += delegate
                 {
                     back.HandleInput = false;
-    
+
                     Transformation bounce2 = new TransformationBounce(Clock.Time, Clock.Time + 300, 1.05f, 0.05f, 3);
                     Transformation fadeOut2 = new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 300);
-    
+
                     back.Transformations.Clear();
                     t.Transformations.Clear();
-    
+
                     back.Transform(bounce2, fadeOut2);
                     t.Transform(bounce2, fadeOut2);
-    
+
                     if (action != null)
                         action();
                 };
-    
+
                 MainSpriteManager.Add(t);
                 MainSpriteManager.Add(back);
             });
