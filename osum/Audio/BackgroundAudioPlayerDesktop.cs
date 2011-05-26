@@ -138,7 +138,7 @@ namespace osum.Audio
                 int left = Utils.LowWord32(word);
                 int right = Utils.HighWord32(word);
 
-                return (left + right) / 65536 * 2f;
+                return (left + right) / 65536f * 2f;
             }
         }
 
