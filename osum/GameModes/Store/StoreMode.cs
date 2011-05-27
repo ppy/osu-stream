@@ -132,14 +132,14 @@ namespace osum.GameModes.Store
             {
                 if (pp != null && pp.BeatmapCount > 0)
                     spriteManager.Add(pp); packs.Add(pp);
+
+                loading.FadeOut(200);
+
+                if (y == 0)
+                {
+                    GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                }
             });
-
-            loading.FadeOut(200);
-
-            if (y == 0)
-            {
-                GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
-            }
         }
 
         public override void Dispose()
