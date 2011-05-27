@@ -138,7 +138,7 @@ namespace osum.GameModes.Store
 
             if (y == 0)
             {
-                GameBase.Notify("You already have all available levels!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
             }
         }
 
