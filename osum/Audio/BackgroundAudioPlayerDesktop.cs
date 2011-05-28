@@ -32,7 +32,7 @@ namespace osum.Audio
         /// <returns></returns>
         public bool Play()
         {
-            Bass.BASS_ChannelPlay(audioStream, true);
+            Bass.BASS_ChannelPlay(audioStream, false);
             return true;
         }
 

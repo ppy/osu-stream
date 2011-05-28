@@ -147,10 +147,12 @@ namespace osum.GameModes
 #else
             AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.mp3"), true);
 #endif
-            AudioEngine.Music.Play();
 
             if (!firstDisplay)
                 AudioEngine.Music.SeekTo(initial_display);
+
+            AudioEngine.Music.Play();
+
             firstDisplay = false;
         }
 
