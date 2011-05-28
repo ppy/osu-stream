@@ -96,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM NO_ENCRYPTION</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseLlvm>false</MtouchUseLlvm>
@@ -332,6 +332,7 @@
     <Compile Include="Online\OnlineServicesIOS.cs" />
     <Compile Include="Support\iPhone\OverlayViewController.cs" />
     <Compile Include="GameModes\Store\PackPanel.cs" />
+    <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
