@@ -112,6 +112,8 @@ namespace osum.Graphics.Sprites
 
         double timeSinceLastFrame;
 
+        int lastFrameSpriteTime;
+
         internal void UpdateFrame()
         {
             if ((!RunAnimation && lastFrame == currentFrame))
@@ -120,7 +122,11 @@ namespace osum.Graphics.Sprites
             if (TextureCount < 2)
                 return;
 
-            double spriteTime = Clock.GetTime(Clocking);
+            int spriteTime = Clock.GetTime(Clocking);
+
+            if (spriteTime == lastFrameSpriteTime)
+                return; //no time has elapsed; the clocking is likely paused.
+            lastFrameSpriteTime = spriteTime;
 
             timeSinceLastFrame += GameBase.ElapsedMilliseconds;
 
