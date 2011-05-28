@@ -12,6 +12,7 @@ using OpenTK.Graphics;
 using osum.Graphics.Renderers;
 using osum.Graphics.Drawables;
 using osum.Audio;
+using osum.Helpers;
 
 namespace osum.GameModes.Store
 {
@@ -37,6 +38,7 @@ namespace osum.GameModes.Store
                 TextAlignment = TextAlignment.Centre,
                 Origin = OriginTypes.Centre,
                 Field = FieldTypes.StandardSnapCentre,
+                Clocking = ClockTypes.Game,
                 Bold = true
             };
 
