@@ -57,8 +57,11 @@ namespace osum
 		{
 			if (player == null)
 				return false;
-			
-			player.Pause();
+
+            if (IsElapsing)
+                player.Pause();
+            else
+			    player.Play();
 			
 			return true;
 		}
