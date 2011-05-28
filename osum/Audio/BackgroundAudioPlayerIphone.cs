@@ -58,11 +58,7 @@ namespace osum
 			if (player == null)
 				return false;
 
-            if (IsElapsing)
-                player.Pause();
-            else
-			    player.Play();
-			
+            player.Pause();
 			return true;
 		}
 		
@@ -98,7 +94,7 @@ namespace osum
             using (NSUrl url = NSUrl.FromFilename(path))
 			{
 	            player = AVAudioPlayer.FromUrl(url,out error);
-	            player.MeteringEnabled = true;
+	            //player.MeteringEnabled = true;
 			}
 
             return error == null;
@@ -111,12 +107,12 @@ namespace osum
 			return true;
         }
 
-        public bool Stop ()
+        public bool Stop(bool reset = true)
         {
         	if (player != null)
 			{
 				player.Stop();
-                SeekTo(0);
+                if (reset) SeekTo(0);
 				return true;
 			}
 			

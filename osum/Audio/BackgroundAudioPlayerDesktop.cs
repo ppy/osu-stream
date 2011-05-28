@@ -40,10 +40,10 @@ namespace osum.Audio
         /// Stops the playing audio.
         /// </summary>
         /// <returns></returns>
-        public bool Stop()
+        public bool Stop(bool reset = true)
         {
             Bass.BASS_ChannelStop(audioStream);
-            SeekTo(0);
+            if (reset) SeekTo(0);
             return true;
         }
 
@@ -87,21 +87,18 @@ namespace osum.Audio
 
         public double CurrentTime
         {
-            get {
+            get
+            {
                 if (audioStream == 0) return 0;
 
                 long audioTimeRaw = Bass.BASS_ChannelGetPosition(audioStream);
-                return Bass.BASS_ChannelBytes2Seconds(audioStream, audioTimeRaw); 
+                return Bass.BASS_ChannelBytes2Seconds(audioStream, audioTimeRaw);
             }
         }
 
         public bool Pause()
         {
-            if (IsElapsing)
-                Bass.BASS_ChannelPause(audioStream);
-            else
-                Bass.BASS_ChannelPlay(audioStream, false);
-            
+            Bass.BASS_ChannelPause(audioStream);
             return true;
         }
 
@@ -129,14 +126,15 @@ namespace osum.Audio
             set
             {
                 if (audioStream == 0) return;
-				
-				Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(value));
+
+                Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(value));
             }
         }
 
         public float CurrentPower
         {
-            get {
+            get
+            {
 
                 int word = Bass.BASS_ChannelGetLevel(audioStream);
                 int left = Utils.LowWord32(word);
