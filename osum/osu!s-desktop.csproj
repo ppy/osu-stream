@@ -50,6 +50,7 @@
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu.cs" />
     <Compile Include="GameModes\Play\Components\ComboCounter.cs" />
+    <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="GameModes\Play\Components\PlayfieldBackground.cs" />
     <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />
     <Compile Include="GameModes\Play\Player.cs" />

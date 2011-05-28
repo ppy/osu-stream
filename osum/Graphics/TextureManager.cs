@@ -158,6 +158,13 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
             textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 2, 536, 307));
 
+            //play mode menu
+            textureLocations.Add(OsuTexture.play_menu_pull, new SpriteSheetTexture("hit", 379, 1461, 699, 77));
+            textureLocations.Add(OsuTexture.play_menu_background, new SpriteSheetTexture("hit", 358, 1552, 1024, 210));
+            textureLocations.Add(OsuTexture.play_menu_continue, new SpriteSheetTexture("hit", 643,1783, 316, 152));
+            textureLocations.Add(OsuTexture.play_menu_restart, new SpriteSheetTexture("hit", 959, 1783, 317, 152));
+            textureLocations.Add(OsuTexture.play_menu_quit, new SpriteSheetTexture("hit", 1276, 1783, 316, 152));
+
             textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
             textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
             textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 13));
@@ -557,6 +564,11 @@ namespace osum.Graphics.Skins
         menu_stream,
         menu_osugloss,
         menu_headphones,
-        failed
+        failed,
+        play_menu_pull,
+        play_menu_background,
+        play_menu_restart,
+        play_menu_quit,
+        play_menu_continue
     }
 }

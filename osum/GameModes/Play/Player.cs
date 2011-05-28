@@ -50,6 +50,8 @@ namespace osum.GameModes
         /// </summary>
         public static bool Autoplay;
 
+        private PauseMenu menu;
+
         private PlayfieldBackground s_Playfield;
 
         private bool stateCompleted; //todo: make this an enum state
@@ -127,7 +129,10 @@ namespace osum.GameModes
 
             spriteManager.Add(s_streamSwitchWarningArrow);
 
-
+            menu = new PauseMenu();
+            
+            //todo: don't make this so dodgy.
+            GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 1600);
         }
 
         //static pSprite fpsTotalCount;
@@ -143,6 +148,7 @@ namespace osum.GameModes
 
             healthBar.Dispose();
             scoreDisplay.Dispose();
+            menu.Dispose();
 
             base.Dispose();
 
@@ -193,7 +199,6 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-            AudioEngine.Music.Play();
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
@@ -286,6 +291,8 @@ namespace osum.GameModes
             healthBar.Draw();
             comboCounter.Draw();
 
+            menu.Draw();
+
             frameCount++;
 
             msCount += GameBase.ElapsedMilliseconds;
@@ -306,6 +313,7 @@ namespace osum.GameModes
                 }, 2000);
             }
 
+
             hitObjectManager.Update();
 
             Spinner s = hitObjectManager.ActiveObject as Spinner;
@@ -320,6 +328,8 @@ namespace osum.GameModes
 
             scoreDisplay.Update();
             comboCounter.Update();
+
+            menu.Update();
 
             base.Update();
         }
