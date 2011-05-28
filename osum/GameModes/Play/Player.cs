@@ -219,7 +219,7 @@ namespace osum.GameModes
                     currentScore.totalScore += 50;
                     currentScore.count50++;
                     increaseCombo = true;
-                    healthChange = -3;
+                    healthChange = -8;
                     break;
                 case ScoreChange.Hit100:
                     currentScore.totalScore += 100;
@@ -235,12 +235,12 @@ namespace osum.GameModes
                     break;
                 case ScoreChange.MissMinor:
                     comboCounter.SetCombo(0);
-                    healthChange = -4;
+                    healthChange = -10;
                     break;
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
                     comboCounter.SetCombo(0);
-                    healthChange = -20;
+                    healthChange = -40;
                     break;
             }
 
