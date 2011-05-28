@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!m-desktop", "osum\osu!m-desktop.csproj", "{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!s-desktop", "osum\osu!s-desktop.csproj", "{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapCombinator", "BeatmapCombinator\BeatmapCombinator.csproj", "{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}"
 EndProject
