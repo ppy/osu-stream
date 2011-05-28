@@ -185,7 +185,7 @@ namespace osum.GameModes
 
                         stream.FadeOut(150);
 
-                        osuLogo.FadeOut(500);
+                        //osuLogo.FadeOut(500);
 
                         explosions.ForEach(s => s.FadeOut(100));
 
