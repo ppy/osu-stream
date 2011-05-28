@@ -66,6 +66,8 @@ namespace osum.GameModes
         /// </summary>
         private pSprite s_streamSwitchWarningArrow;
 
+        private SpriteManager topMostSpriteManager;
+
 
         public Player()
             : base()
@@ -129,9 +131,11 @@ namespace osum.GameModes
             spriteManager.Add(s_streamSwitchWarningArrow);
 
             menu = new PauseMenu();
-            
+
             //todo: don't make this so dodgy.
             GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 1600);
+
+            topMostSpriteManager = new SpriteManager();
         }
 
         //static pSprite fpsTotalCount;
@@ -149,6 +153,8 @@ namespace osum.GameModes
             scoreDisplay.Dispose();
             menu.Dispose();
 
+            topMostSpriteManager.Dispose();
+
             base.Dispose();
 
             //Performance testing code.
@@ -161,7 +167,7 @@ namespace osum.GameModes
         {
             if (menu.MenuDisplayed)
                 return;
-            
+
             //pass on the event to hitObjectManager for handling.
             if (hitObjectManager.HandlePressAt(point))
                 return;
@@ -274,6 +280,7 @@ namespace osum.GameModes
             comboCounter.Draw();
 
             menu.Draw();
+            topMostSpriteManager.Draw();
 
             frameCount++;
 
@@ -295,7 +302,6 @@ namespace osum.GameModes
                 }, 2000);
             }
 
-
             hitObjectManager.Update();
 
             Spinner s = hitObjectManager.ActiveObject as Spinner;
@@ -310,6 +316,8 @@ namespace osum.GameModes
 
             scoreDisplay.Update();
             comboCounter.Update();
+
+            topMostSpriteManager.Update();
 
             menu.Update();
 
@@ -351,8 +359,8 @@ namespace osum.GameModes
                             failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
                             failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
 
-                            hitObjectManager.spriteManager.Add(fail);
-                            hitObjectManager.spriteManager.Add(failGlow);
+                            topMostSpriteManager.Add(fail);
+                            topMostSpriteManager.Add(failGlow);
 
                             AudioEngine.Music.Pause();
                             GameBase.Scheduler.Add(delegate
