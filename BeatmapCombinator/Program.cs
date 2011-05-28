@@ -75,7 +75,7 @@ namespace BeatmapCombinator
             if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
 
             Console.WriteLine("Files found:");
-            Console.WriteLine(string.Join("\n", orderedDifficulties));
+            Console.WriteLine(string.Join("\n", orderedDifficulties.ToArray()));
 
             List<BeatmapDifficulty> difficulties = new List<BeatmapDifficulty>();
 
