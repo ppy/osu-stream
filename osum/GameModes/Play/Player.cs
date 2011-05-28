@@ -376,8 +376,9 @@ namespace osum.GameModes
                             GameBase.Scheduler.Add(delegate
                             {
                                 Ranking.RankableScore = currentScore;
-                                Director.ChangeMode(OsuMode.SongSelect);
-                            }, 2000);
+                                menu.
+                                menu.MenuDisplayed = true;
+                            }, 1500);
                         }
                     }
                     else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
