@@ -154,7 +154,9 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
+            //play mode misc
             textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
+            textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 2, 536, 307));
 
             textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
             textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
@@ -554,6 +556,7 @@ namespace osum.Graphics.Skins
         menu_circle,
         menu_stream,
         menu_osugloss,
-        menu_headphones
+        menu_headphones,
+        failed
     }
 }

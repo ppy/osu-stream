@@ -127,7 +127,7 @@ namespace osum.GameModes
 
             spriteManager.Add(s_streamSwitchWarningArrow);
 
-            
+
         }
 
         //static pSprite fpsTotalCount;
@@ -345,6 +345,23 @@ namespace osum.GameModes
                         {
                             stateCompleted = true;
 
+                            pSprite fail = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.99f, true, Color4.White);
+
+                            pSprite failGlow = fail.Clone();
+
+                            fail.FadeInFromZero(500);
+                            fail.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+                            fail.Transform(new Transformation(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+
+                            failGlow.DrawDepth = 1;
+                            failGlow.ScaleScalar = 1.04f;
+                            failGlow.Additive = true;
+                            failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
+                            failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
+
+                            hitObjectManager.spriteManager.Add(fail);
+                            hitObjectManager.spriteManager.Add(failGlow);
+
                             AudioEngine.Music.Pause();
                             GameBase.Scheduler.Add(delegate
                             {
@@ -369,7 +386,7 @@ namespace osum.GameModes
             }
             else
             {
-                s_Playfield.Move((isIncreasingStream ? 1 : -1) * Math.Max(0,(2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
+                s_Playfield.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
         }
