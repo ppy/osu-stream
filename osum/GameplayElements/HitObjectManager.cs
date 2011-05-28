@@ -276,7 +276,7 @@ namespace osum.GameplayElements
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             connectingLine.Transform(h1.Sprites[0].Transformations);
-            
+
             h2.Sprites.Add(connectingLine);
             h2.SpriteCollectionDim.Add(connectingLine);
 
@@ -368,7 +368,7 @@ namespace osum.GameplayElements
             {
                 if (OnStreamChanged != null)
                     OnStreamChanged(ActiveStream);
-                
+
                 nextStreamChange = 0;
             }
         }
@@ -455,7 +455,7 @@ namespace osum.GameplayElements
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
                         change |= ScoreChange.GekiAddition;
-                    else if (ComboScoreCounts[ScoreChange.Miss] == 0)
+                    else if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
                         change |= ScoreChange.KatuAddition;
                     else
                         change |= ScoreChange.MuAddition;
@@ -463,7 +463,6 @@ namespace osum.GameplayElements
                     ResetComboCounts();
                 }
             }
-
 
             hitObject.HitAnimation(change);
 

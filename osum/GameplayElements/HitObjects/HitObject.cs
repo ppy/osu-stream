@@ -244,29 +244,29 @@ namespace osum.GameplayElements
 
             switch (action & ScoreChange.HitValuesOnly)
             {
-                case ScoreChange.Hit100:
-                    texture = OsuTexture.hit100;
-                    break;
-                case ScoreChange.Hit300:
-                    texture = OsuTexture.hit300;
-                    break;
-                case ScoreChange.Hit50:
-                    texture = OsuTexture.hit50;
-                    break;
-                case ScoreChange.Hit100k:
-                    texture = OsuTexture.hit100k;
-                    break;
                 case ScoreChange.Hit300g:
                     texture = OsuTexture.hit300g;
                     break;
                 case ScoreChange.Hit300k:
                     texture = OsuTexture.hit300k;
                     break;
+                case ScoreChange.Hit300:
+                    texture = OsuTexture.hit300;
+                    break;
+                case ScoreChange.Hit100k:
+                    texture = OsuTexture.hit100k;
+                    break;
+                case ScoreChange.Hit100:
+                    texture = OsuTexture.hit100;
+                    break;
+                case ScoreChange.Hit50:
+                    texture = OsuTexture.hit50;
+                    break;
+                default:
+                    if (action == ScoreChange.Miss)
+                        texture = OsuTexture.hit0;
+                    break;
             }
-
-            //because miss is negative, it can't be handled using HitValuesOnly
-            if (action == ScoreChange.Miss)
-                texture = OsuTexture.hit0;
 
             if (texture == OsuTexture.None)
                 return;
@@ -279,9 +279,9 @@ namespace osum.GameplayElements
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
             m_HitObjectManager.spriteManager.Add(p);
 
-            int HitFadeIn = 120;
-            int HitFadeOut = 600;
-            int PostEmpt = 500;
+            const int HitFadeIn = 120;
+            const int HitFadeOut = 600;
+            const int PostEmpt = 500;
 
             if (action > 0)
             {

@@ -112,7 +112,6 @@ namespace osum.GameModes
             spriteManager.Add(s_Playfield);
 
             AudioEngine.Music.Stop();
-            //AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false);
             Director.OnTransitionEnded += Director_OnTransitionEnded;
 
             //if (fpsTotalCount != null)

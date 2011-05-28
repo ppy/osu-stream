@@ -111,9 +111,16 @@ namespace osum.GameplayElements
 
         internal override void HitAnimation(ScoreChange action)
         {
+            SpriteHitCircle1.Transformations.Clear();
+            SpriteHitCircle2.Transformations.Clear();
+            SpriteHitCircleText.Transformations.Clear();
+            SpriteApproachCircle.Transformations.Clear();
+
+            if (connectedObject != null)
+                connectionSprite.FadeOut(100);
+
             if (action > 0)
             {
-
                 //Fade out the actual hit circle
                 Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
                     Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut, EasingTypes.InHalf);
@@ -135,17 +142,6 @@ namespace osum.GameplayElements
                 SpriteHitCircleText.Transformations.Clear();
                 SpriteHitCircleText.Transform(textScaleOut);
                 SpriteHitCircleText.Transform(circleFadeOut);
-
-
-                if (connectedObject != null)
-                    connectionSprite.FadeOut(100);
-
-                SpriteApproachCircle.Transformations.Clear();
-            }
-            else
-            {
-                foreach (pDrawable p in Sprites)
-                    p.Transformations.Clear();
             }
 
             base.HitAnimation(action);
