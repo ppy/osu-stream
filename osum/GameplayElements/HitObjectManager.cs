@@ -455,7 +455,7 @@ namespace osum.GameplayElements
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
                         change |= ScoreChange.GekiAddition;
-                    else if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
+                    else if (ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
                         change |= ScoreChange.KatuAddition;
                     else
                         change |= ScoreChange.MuAddition;
