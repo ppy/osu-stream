@@ -167,7 +167,7 @@ namespace osum.Graphics.Skins
 
             textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
             textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
-            textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 13));
+            textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 14));
             textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 759, 742, 59));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
