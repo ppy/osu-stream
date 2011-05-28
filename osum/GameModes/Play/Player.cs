@@ -113,7 +113,7 @@ namespace osum.GameModes
 
             AudioEngine.Music.Stop();
             //AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false);
-            Director.OnTransitionEnded += new VoidDelegate(Director_OnTransitionEnded);
+            Director.OnTransitionEnded += Director_OnTransitionEnded;
 
             //if (fpsTotalCount != null)
             //{
@@ -160,6 +160,9 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
+            if (menu.MenuDisplayed)
+                return;
+            
             //pass on the event to hitObjectManager for handling.
             if (hitObjectManager.HandlePressAt(point))
                 return;
