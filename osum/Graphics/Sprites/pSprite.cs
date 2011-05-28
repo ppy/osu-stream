@@ -205,9 +205,13 @@ namespace osum.Graphics.Sprites
         internal void AdditiveFlash(int duration, float brightness)
         {
             pSprite clone = this.Clone();
+            
+            clone.UnbindAllEvents();
+
             GameBase.MainSpriteManager.Add(clone);
 
             clone.Alpha *= brightness;
+            clone.Clocking = ClockTypes.Game;
             clone.Additive = true;
             clone.FadeOut(duration);
             clone.AlwaysDraw = false;
