@@ -58,17 +58,14 @@ namespace osum.Support.iPhone
 			Instance = this;
 		}
 		
-		public override void OnResignActivation (UIApplication app)
+		public override void OnResignActivation(UIApplication app)
 		{
-			TextureManager.UnloadAll(true);
-			
-			if (glView.EAGLContext != null)
-			    glView.Stop();
-			
-			if (AudioEngine.Music != null)
-				AudioEngine.Music.Pause();
+            TextureManager.UnloadAll(true);
+
+             if (glView.EAGLContext != null)
+                 glView.Stop();
 		}
-		
+
 		// This method is required in iPhoneOS 3.0
 		public override void OnActivated(UIApplication app)
 		{
@@ -77,11 +74,6 @@ namespace osum.Support.iPhone
 			GameBase.ScaleFactor = glView.ContentScaleFactor;
 			GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor), 
 			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
-			
-			//music may have started playing from a previously resigned execution, so let's restart it here.
-			//eventually we probably want to do something to give the user more notice before resuming gameplay...
-			if (AudioEngine.Music != null)
-				AudioEngine.Music.Play();
 			
 			GameBase.TriggerLayoutChanged();
 			

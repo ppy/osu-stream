@@ -40,6 +40,8 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Drawing;
 using osum.Graphics.Skins;
 using osum.Support.iPhone;
+using osum.GameModes;
+using osum.Audio;
 
 namespace osum
 {
@@ -82,18 +84,33 @@ namespace osum
 			else
 			{
 				GameBase.Instance.SetupScreen();
-				TextureManager.ReloadAll();	
+				TextureManager.ReloadAll();
+
+                pausedMusic = false;
 			}
 			
 			base.OnLoad(e);
 		}
+
+        bool pausedMusic;
+        protected override void OnUnload(EventArgs e)
+        {
+            Player p = Director.CurrentMode as Player;
+                if (p != null)
+            {
+                    p.Pause();
+                    AudioEngine.Music.Stop(false);
+            }
+
+            base.OnUnload(e);
+        }
 		
 		protected override void OnResize (EventArgs e)
 		{
 			base.OnResize(e);
 		}
 		
-		protected override void OnUpdateFrame (FrameEventArgs e)
+		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
             if (AppDelegate.UsingViewController)
                 return;

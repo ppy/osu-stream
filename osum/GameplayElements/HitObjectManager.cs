@@ -15,6 +15,7 @@ using osum.Support;
 using OpenTK.Graphics;
 using osum.Graphics.Primitives;
 using OpenTK;
+using osum.Audio;
 
 #endregion
 
@@ -342,7 +343,8 @@ namespace osum.GameplayElements
                     if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);
 
-                    TriggerScoreChange(h.CheckScoring(), h);
+                    if (AudioEngine.Music.IsElapsing)
+                        TriggerScoreChange(h.CheckScoring(), h);
 
                     if (lowestActiveObject < 0)
                         lowestActiveObject = i;

@@ -165,7 +165,7 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (menu.MenuDisplayed)
+            if (menu.MenuDisplayed || !AudioEngine.Music.IsElapsing)
                 return;
 
             //pass on the event to hitObjectManager for handling.
@@ -302,20 +302,20 @@ namespace osum.GameModes
                 }, 2000);
             }
 
+            //this needs to be run even when paused to draw sliders on resuming from resign.
             hitObjectManager.Update();
+
+            healthBar.Update();
+            UpdateStream();
+
+            scoreDisplay.Update();
+            comboCounter.Update();
 
             Spinner s = hitObjectManager.ActiveObject as Spinner;
             if (s != null)
                 s_Playfield.Alpha = 1 - s.SpriteBackground.Alpha;
             else
                 s_Playfield.Alpha = 1;
-
-            healthBar.Update();
-
-            UpdateStream();
-
-            scoreDisplay.Update();
-            comboCounter.Update();
 
             topMostSpriteManager.Update();
 
@@ -389,6 +389,11 @@ namespace osum.GameModes
                 s_Playfield.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
+        }
+
+        internal void Pause()
+        {
+            menu.ShowMenu();
         }
 
         bool isIncreasingStream;
