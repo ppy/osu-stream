@@ -22,7 +22,7 @@ namespace osum.GameModes.Play.Components
                 return menuDisplayed;
             }
 
-            private set
+            set
             {
                 menuDisplayed = value;
 
@@ -60,6 +60,18 @@ namespace osum.GameModes.Play.Components
             }
         }
 
+        internal bool Failed;
+
+        internal void ShowFailMenu()
+        {
+            MenuDisplayed = true;
+            Failed = true;
+
+            buttonContinue.Transformations.Clear();
+            buttonContinue.Alpha = 0;
+            buttonContinue.AlwaysDraw = false;
+        }
+
         private pSprite buttonContinue;
         private pSprite buttonRestart;
         private pSprite buttonQuit;
@@ -92,28 +104,55 @@ namespace osum.GameModes.Play.Components
                 s.Transform(fade);
             });
 
-            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, Color4.White) { Alpha = 0, Offset = new Vector2(-210, 0) };
+            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(-210, 0) };
             buttonContinue.OnClick += ButtonContinue_OnClick;
+            buttonContinue.OnHover += HandleButtonHover;
+            buttonContinue.OnHoverLost += HandleButtonHoverLost;
+            buttonContinue.HandleClickOnUp = true;
             spriteManager.Add(buttonContinue);
 
-            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, Color4.White) { Alpha = 0, Offset = new Vector2(0, 0) };
+            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(0, 0) };
             buttonRestart.OnClick += ButtonRestart_OnClick;
+            buttonRestart.OnHover += HandleButtonHover;
+            buttonRestart.OnHoverLost += HandleButtonHoverLost;
+            buttonRestart.HandleClickOnUp = true;
             spriteManager.Add(buttonRestart);
 
-            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, Color4.White) { Alpha = 0, Offset = new Vector2(210, 0) };
+            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(210, 0) };
             buttonQuit.OnClick += ButtonQuit_OnClick;
+            buttonQuit.OnHover += HandleButtonHover;
+            buttonQuit.OnHoverLost += HandleButtonHoverLost;
+            buttonQuit.HandleClickOnUp = true;
             spriteManager.Add(buttonQuit);
 
             InputManager.OnDown += InputManager_OnDown;
         }
 
+        void HandleButtonHover(object sender, EventArgs e)
+        {
+            pSprite s = sender as pSprite;
+            s.FadeColour(Color4.White,100);
+        }
+
+        void HandleButtonHoverLost(object sender, EventArgs e)
+        {
+            pSprite s = sender as pSprite;
+            s.FadeColour(new Color4(255,255,255,200),100);
+        }
+
         void ButtonQuit_OnClick(object sender, EventArgs e)
         {
+            pSprite s = sender as pSprite;
+            s.AdditiveFlash(500,1);
+
             Director.ChangeMode(OsuMode.SongSelect);
         }
 
         void ButtonRestart_OnClick(object sender, EventArgs e)
         {
+            pSprite s = sender as pSprite;
+            s.AdditiveFlash(500,1);
+
             Director.ChangeMode(OsuMode.Play);
         }
 
@@ -153,9 +192,9 @@ namespace osum.GameModes.Play.Components
 
         public override void Update()
         {
-            if (validPoint != null && Clock.ModeTime > 1600)
+            if (validPoint != null && Clock.ModeTime > 1600 && !Failed)
             {
-                float pulledAmount = Math.Min(1, (validPoint.BasePosition.Y - validPointOffset + (MenuDisplayed ? -offscreen_y : 30)) / (-offscreen_y));
+                float pulledAmount = Math.Min(1, (validPoint.BasePosition.Y - validPointOffset + (MenuDisplayed ? -offscreen_y : 30)) / -offscreen_y);
 
                 const float valid_pull = 0.7f;
 
