@@ -298,6 +298,8 @@ namespace osum.GameModes
             s_ModeArrowLeft.FadeOut(200);
             s_ModeArrowRight.FadeOut(200);
 
+            s_Footer.AdditiveFlash(500,0.5f);
+
             GameBase.Scheduler.Add(delegate
             {
                 Director.ChangeMode(OsuMode.Play);
