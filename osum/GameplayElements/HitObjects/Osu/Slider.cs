@@ -804,7 +804,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
 
-            if (IsVisible && (sliderBodyTexture == null || (Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)))
+            if (IsVisible && Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
@@ -855,19 +855,21 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (lengthDrawn == PathLength) return; //finished drawing already.
 
-            if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
-                CreatePathTexture();
-
-            if (sliderBodyTexture == null)
-                //creation failed
-                return;
-
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
-            if (lastDrawnSegmentIndex == -1) lastDrawnSegmentIndex++;
 
-            double drawProgress = (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
-                          (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd);
+            double drawProgress = Math.Max(0, (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
+                          (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd));
+
+            if (drawProgress <= 0) return; //haven't started drawing yet.
+
+            if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
+            {
+                CreatePathTexture();
+                if (sliderBodyTexture == null)
+                    //creation failed
+                    return;
+            }
 
             // Length of the curve we're drawing up to.
             lengthDrawn = PathLength * drawProgress;
@@ -887,7 +889,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
 
-            if (lastDrawnSegmentIndex >= FirstSegmentIndex)
+            if (lastDrawnSegmentIndex >= FirstSegmentIndex || FirstSegmentIndex == 0)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
 #if iOS

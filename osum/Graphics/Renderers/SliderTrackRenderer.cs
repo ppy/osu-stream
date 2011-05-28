@@ -461,7 +461,8 @@ namespace osum.Graphics.Renderers
                 prev = lineList[x - 1];
             }
 
-            DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
+            if (count > 0)
+                DrawLineOGL(prev, lineList[count - 1], null, globalRadius);
 
             if (renderingToTexture)
             {
