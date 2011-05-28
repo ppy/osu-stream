@@ -12,7 +12,7 @@ namespace osum.Support
         private int FadeInTime;
 
         public FadeTransition()
-            : this(500, 500)
+            : this(300, 300)
         { }
 
         public FadeTransition(int fadeOut, int fadeIn)
