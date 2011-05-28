@@ -166,7 +166,9 @@ namespace osum.GameModes
             switch (State)
             {
                 case MenuState.Logo:
+#if !DEBUG
                     if (!Director.IsTransitioning && Clock.AudioTime > initial_display)
+#endif
                     {
 
                         State = MenuState.Select;
