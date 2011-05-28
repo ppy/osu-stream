@@ -97,7 +97,11 @@ namespace osum.Audio
 
         public bool Pause()
         {
-            Bass.BASS_ChannelPause(audioStream);
+            if (IsElapsing)
+                Bass.BASS_ChannelPause(audioStream);
+            else
+                Bass.BASS_ChannelPlay(audioStream, false);
+            
             return true;
         }
 
