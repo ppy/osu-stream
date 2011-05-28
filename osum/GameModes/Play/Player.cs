@@ -166,26 +166,6 @@ namespace osum.GameModes
             //pass on the event to hitObjectManager for handling.
             if (hitObjectManager.HandlePressAt(point))
                 return;
-
-            if (InputManager.TrackingPoints.Count == 2)
-            {
-                Vector2 p1 = InputManager.TrackingPoints[0].BasePosition;
-                Vector2 p2 = InputManager.TrackingPoints[1].BasePosition;
-
-                if (Math.Max(p1.X, p2.X) > (GameBase.BaseSizeFixedWidth.Width - 40) &&
-                    Math.Min(p1.X, p2.X) < 40 &&
-                    p1.Y + p2.Y < 80)
-                {
-                    Director.ChangeMode(OsuMode.SongSelect);
-                }
-                else if (Math.Max(p1.X, p2.X) > (GameBase.BaseSizeFixedWidth.Width - 40) &&
-                    Math.Min(p1.X, p2.X) < 40 &&
-                    p1.Y + p2.Y > (GameBase.BaseSizeFixedWidth.Height * 2) - 40)
-                {
-                    Player.Autoplay = !Autoplay;
-                }
-
-            }
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint point)
@@ -379,8 +359,7 @@ namespace osum.GameModes
                             GameBase.Scheduler.Add(delegate
                             {
                                 Ranking.RankableScore = currentScore;
-                                menu.
-                                menu.MenuDisplayed = true;
+                                menu.ShowFailMenu();
                             }, 1500);
                         }
                     }
