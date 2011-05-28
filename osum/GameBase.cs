@@ -258,7 +258,9 @@ namespace osum
 
             AudioEngine.Initialize(effect, music);
 
+#if !RELEASE
             DebugOverlay.Update();
+#endif
 
             //Load the main menu initially.
             //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- v2 (James).osz2");
@@ -324,7 +326,9 @@ namespace osum
 
             Scheduler.Update();
 
+#if !RELEASE
             DebugOverlay.Update();
+#endif
 
 #if DEBUG
             DebugOverlay.AddLine("GC: 0:" + GC.CollectionCount(0) + " 1:" + GC.CollectionCount(1) + " 2:" + GC.CollectionCount(2));
