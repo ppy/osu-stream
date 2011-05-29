@@ -541,7 +541,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     //check each tracking point to find if any are usable
                     foreach (TrackingPoint p in InputManager.TrackingPoints)
                     {
-                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadius * DifficultyManager.HitObjectRadius)
+                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadiusSolidGamefieldHittable * DifficultyManager.HitObjectRadiusSolidGamefieldHittable)
                         {
                             trackingPoint = p;
                             break;
@@ -549,7 +549,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     }
                 }
             }
-            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadius * 2, 2))
+            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadiusSolidGamefieldHittable * 2, 2))
                 trackingPoint = null;
 
             //Check is the state of tracking changed.

@@ -15,6 +15,7 @@ namespace osum.GameplayElements
 
         internal static float HitObjectRadiusGamefield { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
         internal static float HitObjectRadiusSolidGamefield { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
+        internal static float HitObjectRadiusSolidGamefieldHittable { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio * 1.3f; } }
 
         public static float HitObjectSizeModifier = 1f;
 

@@ -483,7 +483,7 @@ namespace osum.GameplayElements
 
         internal virtual bool HitTestInitial(TrackingPoint tracking)
         {
-            float radius = 50;
+            float radius = DifficultyManager.HitObjectRadiusSolidGamefieldHittable;
 
             return (IsVisible &&
                     StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
