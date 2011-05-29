@@ -79,7 +79,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Velocity the cursor is "spinning" at.
         /// </summary>
-        protected double velocityFromInput;
+        protected double velocityFromInputPerMillisecond;
 
         Vector2 spinnerCentre = new Vector2(0, 210);
 
@@ -220,7 +220,7 @@ namespace osum.GameplayElements
         internal override ScoreChange CheckScoring()
         {
             //Update the angles
-            velocityFromInput = 0;
+            velocityFromInputPerMillisecond = 0;
 
             ScoreChange change = base.CheckScoring();
             if (change != ScoreChange.Ignore)
@@ -257,7 +257,7 @@ namespace osum.GameplayElements
             else if (oldAngle - newAngle < -Math.PI)
                 angleDiff = (-2 * Math.PI) - angleDiff;
 
-            velocityFromInput = angleDiff / Constants.SIXTY_FRAME_TIME;
+            velocityFromInputPerMillisecond = angleDiff / GameBase.ElapsedMilliseconds;
 
             ScoreChange score = ScoreChange.Ignore;
 
@@ -299,7 +299,7 @@ namespace osum.GameplayElements
             if (IsHit || Clock.AudioTime < StartTime) // || (!InputManager.ScorableFrame))
                 return;
 
-            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * Constants.SIXTY_FRAME_TIME * 60) / (Math.PI * 2) * 60;
+            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
 
             spriteRpmText.Text = string.Format("{0:#,0}", Rpm);
 
@@ -307,23 +307,23 @@ namespace osum.GameplayElements
 
             if (IsActive)
             {
-                double maxAccelPerSec = AccelerationCap * Constants.SIXTY_FRAME_TIME;
+                double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
 
-                if (velocityFromInput > velocityCurrent)
+                if (velocityFromInputPerMillisecond > velocityCurrent)
                 {
                     velocityCurrent = velocityCurrent +
-                        Math.Min(velocityFromInput - velocityCurrent / 4, maxAccelPerSec);
+                        Math.Min(velocityFromInputPerMillisecond - velocityCurrent / 4, maxAccelPerSec);
                 }
                 else
                 {
                     velocityCurrent = velocityCurrent +
-                        Math.Max(velocityFromInput - velocityCurrent / 4, -maxAccelPerSec);
+                        Math.Max(velocityFromInputPerMillisecond - velocityCurrent / 4, -maxAccelPerSec);
                 }
 
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
-                spriteCircle.Rotation = spriteCircle.Rotation + (float)(velocityCurrent * Constants.SIXTY_FRAME_TIME);
+                spriteCircle.Rotation = spriteCircle.Rotation + (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
 
 
                 if (velocityCurrent != 0)
