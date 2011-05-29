@@ -76,9 +76,21 @@ namespace osum.Support.iPhone
 			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
 			
 			GameBase.TriggerLayoutChanged();
-			
+
+            int targetFps = 1000;
+
+            switch (HardwareDetection.Version)
+            {
+                case HardwareVersion.iPhone:
+                case HardwareVersion.iPhone3G:
+                case HardwareVersion.iPod1G:
+                case HardwareVersion.iPod2G:
+                    targetFps = 40; //aim a bit lower with older devices.
+                    break;
+            }
+
 			//start the run loop.
-			glView.Run(100000);
+			glView.Run(targetFps);
 		}
 
         static bool usingViewController;
