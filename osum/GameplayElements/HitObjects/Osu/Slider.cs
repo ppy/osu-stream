@@ -848,6 +848,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         private double Velocity;
         private double TickDistance;
 
+        bool waitingForPathTextureClear;
+
         /// <summary>
         /// Updates the slider's path texture if required.
         /// </summary>
@@ -866,6 +868,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (sliderBodyTexture == null || sliderBodyTexture.IsDisposed) // Perform setup to begin drawing the slider track.
             {
                 CreatePathTexture();
+
                 if (sliderBodyTexture == null)
                     //creation failed
                     return;
@@ -894,14 +897,14 @@ namespace osum.GameplayElements.HitObjects.Osu
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
 #if iOS
                 int oldFBO = 0;
-				GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-				
-				GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
+                GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+                
+                GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
 
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
-				
-				GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                
+                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
                 if (FirstSegmentIndex == 0)
@@ -920,8 +923,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.LoadIdentity();
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                if (FirstSegmentIndex == 0)
+                if (waitingForPathTextureClear)
+                {
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+                    waitingForPathTextureClear = false;
+                }
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
@@ -965,6 +971,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
+
+            waitingForPathTextureClear = true;
         }
 
         internal override void Shake()
