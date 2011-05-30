@@ -68,6 +68,7 @@ namespace osum.GameModes.Play.Components
                     break;
                 case 4:
                     spriteManager.Sprites.ForEach(s => { s.FadeIn(200); });
+                    didChangeTexture = false; //don't flash on 4
                     break;
                 case 7:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_ready);
