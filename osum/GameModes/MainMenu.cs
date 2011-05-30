@@ -83,6 +83,9 @@ namespace osum.GameModes
 
             //gloss
             osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_osugloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Audio, new Vector2(0, logo_stuff_v_offset), 0.91f, true, Color4.White);
+#if MONO
+            osuLogoGloss.Colour = new Color4(255,255,255,100);
+#endif
             osuLogoGloss.Offset = new Vector2(255, 248);
             osuLogoGloss.Additive = true;
             osuLogoGloss.Transform(new TransformationBounce(initial_display, initial_display + 2000, 1, 0.4f, 2));
