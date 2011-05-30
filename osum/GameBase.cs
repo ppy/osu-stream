@@ -415,6 +415,9 @@ namespace osum
 
                     if (action != null)
                         action();
+
+                    ActiveNotification = null;
+                    SpriteManager.UniversalDim = 0;
                 };
 
                 MainSpriteManager.Add(t);
