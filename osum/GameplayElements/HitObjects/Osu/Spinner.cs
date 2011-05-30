@@ -309,16 +309,7 @@ namespace osum.GameplayElements
             {
                 double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
 
-                if (velocityFromInputPerMillisecond > velocityCurrent)
-                {
-                    velocityCurrent = velocityCurrent +
-                        Math.Min(velocityFromInputPerMillisecond - velocityCurrent / 4, maxAccelPerSec);
-                }
-                else
-                {
-                    velocityCurrent = velocityCurrent +
-                        Math.Max(velocityFromInputPerMillisecond - velocityCurrent / 4, -maxAccelPerSec);
-                }
+                velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
 
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));

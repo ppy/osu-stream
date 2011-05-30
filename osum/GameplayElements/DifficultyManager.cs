@@ -52,7 +52,7 @@ namespace osum.GameplayElements
         internal static int HitWindow300 { get { return 33; } }
         internal static int FadeIn { get { return 400; } }
         internal static int FadeOut { get { return 300; } }
-        internal static int SpinnerRotationRatio { get { return 5; } }
+        internal static int SpinnerRotationRatio { get { return 2; } }
         internal static int DistanceBetweenTicks { get { return 30; } }
 
         /// <summary>
