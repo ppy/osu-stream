@@ -36,8 +36,7 @@ namespace osum.GameplayElements
                             OriginTypes.Centre, ClockTypes.Audio, Position,
                             SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
             Sprites.Add(SpriteHitCircle2);
-            SpriteCollectionDim.Add(SpriteHitCircle2);
-            SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap, 
+            SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
                                                     FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                                     ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
                                                     false, white);
@@ -52,7 +51,6 @@ namespace osum.GameplayElements
             if (ShowCircleText)
             {
                 Sprites.Add(SpriteHitCircleText);
-                SpriteCollectionDim.Add(SpriteHitCircleText);
             }
 
             SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F,
