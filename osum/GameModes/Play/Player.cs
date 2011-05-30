@@ -125,6 +125,7 @@ namespace osum.GameModes
             currentScore = new Score();
 
             s_Playfield = new PlayfieldBackground();
+            s_Playfield.ChangeColour(Difficulty);
             spriteManager.Add(s_Playfield);
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
@@ -217,9 +218,6 @@ namespace osum.GameModes
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
-            if (currentScore.totalHits == 0)
-                s_Playfield.ChangeColour(Difficulty);
-
             double healthChange = 0;
             bool increaseCombo = false;
 
