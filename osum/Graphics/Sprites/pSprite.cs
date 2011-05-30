@@ -202,11 +202,13 @@ namespace osum.Graphics.Sprites
 
         #endregion
 
-        internal void AdditiveFlash(int duration, float brightness)
+        internal pSprite AdditiveFlash(int duration, float brightness)
         {
             pSprite clone = this.Clone();
             
             clone.UnbindAllEvents();
+
+            clone.Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             GameBase.MainSpriteManager.Add(clone);
 
@@ -215,6 +217,8 @@ namespace osum.Graphics.Sprites
             clone.Additive = true;
             clone.FadeOut(duration);
             clone.AlwaysDraw = false;
+
+            return clone;
         }
 
         internal virtual void UpdateTextureSize()

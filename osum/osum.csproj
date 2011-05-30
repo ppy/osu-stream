@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1161</BundleVersion>
+    <BundleVersion>1162</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -334,6 +334,7 @@
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="Support\iPhone\HardwareDetection.cs" />
+    <Compile Include="GameModes\Play\Components\Countdown.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

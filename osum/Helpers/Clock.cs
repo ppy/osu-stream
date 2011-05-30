@@ -81,27 +81,56 @@ namespace osum.Helpers
             }
         }
 
+        static bool LeadingIn;
+
+        public static void BeginLeadIn(int leadInStartTime)
+        {
+            currentFrameAudioTime = leadInStartTime / 1000d;
+            LeadingIn = true;
+        }
+
+        public static void AbortLeadIn()
+        {
+            LeadingIn = false;
+            currentFrameAudioTime = AudioTimeSource.CurrentTime;
+        }
+
         public static void Update(double elapsed)
         {
             time += elapsed;
 
-            if (AudioTimeSource.IsElapsing)
+            if (LeadingIn && elapsed < 0.1)
+            {
                 currentFrameAudioTime += elapsed;
 
-            double sourceTime = AudioTimeSource.CurrentTime;
-
-            if (sourceTime == 0)
-                currentFrameAudioTimeOffset = 0;
-            else
-            {
-                double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
-                if (inaccuracy > 0.03)
-                    currentFrameAudioTime = sourceTime;
-
-                currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
+                if (currentFrameAudioTime + UNIVERSAL_OFFSET / 1000f >= AudioTimeSource.CurrentTime)
+                {
+                    AudioEngine.Music.Play();
+                    LeadingIn = false;
+                }
             }
+
+            if (AudioTimeSource.IsElapsing)
+            {
+                currentFrameAudioTime += elapsed;
+                double sourceTime = AudioTimeSource.CurrentTime;
+
+                if (sourceTime == 0)
+                {
+                    currentFrameAudioTimeOffset = 0;
+                    return;
+                }
+                else
+                {
+                    double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
+                    if (inaccuracy > 0.03)
+                        currentFrameAudioTime = sourceTime;
+                }
+            }
+
+            currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
         }
 
-        public static ITimeSource AudioTimeSource { private get; set; }
+        public static ITimeSource AudioTimeSource { get; set; }
     }
 }

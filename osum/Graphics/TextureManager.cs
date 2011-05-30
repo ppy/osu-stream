@@ -156,7 +156,7 @@ namespace osum.Graphics.Skins
 
             //play mode misc
             textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
-            textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 2, 536, 307));
+            textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 0, 609, 418));
 
             //play mode menu
             textureLocations.Add(OsuTexture.play_menu_pull, new SpriteSheetTexture("hit", 379, 1461, 699, 77));
@@ -198,6 +198,13 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1286, 635, 246, 248));
             textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 8, 820, 1178, 141));
             textureLocations.Add(OsuTexture.menu_headphones, new SpriteSheetTexture("menu", 9, 962, 382, 469));
+
+            textureLocations.Add(OsuTexture.countdown_background, new SpriteSheetTexture("hit", 1025, 419, 653, 362));
+            textureLocations.Add(OsuTexture.countdown_ready, new SpriteSheetTexture("hit", 1082, 1462, 422, 89));
+            textureLocations.Add(OsuTexture.countdown_3, new SpriteSheetTexture("hit", 1664, 837, 158, 138));
+            textureLocations.Add(OsuTexture.countdown_2, new SpriteSheetTexture("hit", 1664, 975, 158, 142));
+            textureLocations.Add(OsuTexture.countdown_1, new SpriteSheetTexture("hit", 1664, 1117, 85, 135));
+            textureLocations.Add(OsuTexture.countdown_go, new SpriteSheetTexture("hit", 1664, 1252, 314, 145));
 
             GameBase.OnScreenLayoutChanged += delegate
             {
@@ -569,6 +576,12 @@ namespace osum.Graphics.Skins
         play_menu_background,
         play_menu_restart,
         play_menu_quit,
-        play_menu_continue
+        play_menu_continue,
+        countdown_background,
+        countdown_3,
+        countdown_2,
+        countdown_1,
+        countdown_go,
+        countdown_ready
     }
 }

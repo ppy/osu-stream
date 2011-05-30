@@ -637,7 +637,7 @@ namespace osum.Graphics.Sprites
         /// <param name="target">The target.</param>
         /// <param name="duration">The duration.</param>
         /// <param name="easing">The easing.</param>
-        internal void ScaleTo(float target, int duration, EasingTypes easing)
+        internal void ScaleTo(float target, int duration, EasingTypes easing = EasingTypes.None)
         {
             Transformations.RemoveAll(t => (t.Type & TransformationType.Scale) > 0);
 
