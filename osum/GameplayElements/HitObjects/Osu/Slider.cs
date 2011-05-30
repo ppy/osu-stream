@@ -907,8 +907,11 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
                 GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
 
-                if (FirstSegmentIndex == 0)
-                    GL.Clear(Constants.COLOR_BUFFER_BIT);
+                if (waitingForPathTextureClear)
+                {
+                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+                    waitingForPathTextureClear = false;
+                }
 
                 m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                             DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
