@@ -22,7 +22,7 @@ namespace osum.Helpers
 #if iOS
         private const int UNIVERSAL_OFFSET = 45;
 #else
-        private const int UNIVERSAL_OFFSET = 20;
+        private const int UNIVERSAL_OFFSET = 45;
 #endif
 
         /// <summary>
