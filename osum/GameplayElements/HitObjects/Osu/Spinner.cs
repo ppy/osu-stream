@@ -8,6 +8,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics.Drawables;
+using osum.GameModes;
 
 namespace osum.GameplayElements
 {
@@ -226,38 +227,41 @@ namespace osum.GameplayElements
             if (change != ScoreChange.Ignore)
                 return change;
 
-            if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
+            if (!Player.Autoplay)
             {
-                cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
-                return ScoreChange.Ignore;
+                if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
+                {
+                    cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
+                    return ScoreChange.Ignore;
+                }
+
+                if (cursorTrackingPoint == null || !InputManager.IsPressed)
+                    return ScoreChange.Ignore;
+
+                if (InputManager.PrimaryTrackingPoint == null)
+                    return ScoreChange.Ignore;
+
+                Vector2 centre = spriteCircle.FieldPosition / GameBase.BaseToNativeRatio;
+
+                Vector2 oldPos = cursorTrackingPosition - centre;
+
+                //Update to the new mouse position.
+                cursorTrackingPosition = cursorTrackingPoint.BasePosition;
+
+                Vector2 newPos = cursorTrackingPosition - centre;
+
+                double oldAngle = Math.Atan2(oldPos.Y, oldPos.X);
+                double newAngle = Math.Atan2(newPos.Y, newPos.X);
+
+                double angleDiff = newAngle - oldAngle;
+
+                if (angleDiff < -Math.PI)
+                    angleDiff = (2 * Math.PI) + angleDiff;
+                else if (oldAngle - newAngle < -Math.PI)
+                    angleDiff = (-2 * Math.PI) - angleDiff;
+
+                velocityFromInputPerMillisecond = angleDiff / GameBase.ElapsedMilliseconds;
             }
-
-            if (cursorTrackingPoint == null || !InputManager.IsPressed)
-                return ScoreChange.Ignore;
-
-            if (InputManager.PrimaryTrackingPoint == null)
-                return ScoreChange.Ignore;
-
-            Vector2 centre = spriteCircle.FieldPosition / GameBase.BaseToNativeRatio;
-
-            Vector2 oldPos = cursorTrackingPosition - centre;
-
-            //Update to the new mouse position.
-            cursorTrackingPosition = cursorTrackingPoint.BasePosition;
-
-            Vector2 newPos = cursorTrackingPosition - centre;
-
-            double oldAngle = Math.Atan2(oldPos.Y, oldPos.X);
-            double newAngle = Math.Atan2(newPos.Y, newPos.X);
-
-            double angleDiff = newAngle - oldAngle;
-
-            if (angleDiff < -Math.PI)
-                angleDiff = (2 * Math.PI) + angleDiff;
-            else if (oldAngle - newAngle < -Math.PI)
-                angleDiff = (-2 * Math.PI) - angleDiff;
-
-            velocityFromInputPerMillisecond = angleDiff / GameBase.ElapsedMilliseconds;
 
             ScoreChange score = ScoreChange.Ignore;
 
@@ -309,7 +313,12 @@ namespace osum.GameplayElements
             {
                 double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
 
-                velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
+                if (Player.Autoplay)
+                    velocityCurrent = 0.05f;
+                else
+                    velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
+
+
 
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
