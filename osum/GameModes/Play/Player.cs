@@ -366,7 +366,7 @@ namespace osum.GameModes
                     healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
                     //we are on the lowest available stream difficulty and in failing territory.
-                    if (healthBar.CurrentHp == 0)
+                    if (healthBar.CurrentHp == 0 && !Autoplay)
                     {
                         s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
 
