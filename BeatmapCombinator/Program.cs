@@ -70,7 +70,7 @@ namespace BeatmapCombinator
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Easy].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Normal].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Insane].osu")));
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
 
             if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
 
