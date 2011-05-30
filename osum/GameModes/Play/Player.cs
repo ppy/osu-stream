@@ -102,6 +102,14 @@ namespace osum.GameModes
                     break;
             }
 
+            if (hitObjectManager.ActiveStreamObjects == null)
+            {
+                GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
+                Director.ChangeMode(OsuMode.SongSelect);
+                //error while loading.
+                return;
+            }
+
             healthBar = new HealthBar();
 
             scoreDisplay = new ScoreDisplay();
@@ -170,12 +178,12 @@ namespace osum.GameModes
 
             hitObjectManager.Dispose();
 
-            healthBar.Dispose();
-            scoreDisplay.Dispose();
-            countdown.Dispose();
-            menu.Dispose();
+            if (healthBar != null) healthBar.Dispose();
+            if (scoreDisplay != null) scoreDisplay.Dispose();
+            if (countdown != null) countdown.Dispose();
+            if (menu != null) menu.Dispose();
 
-            topMostSpriteManager.Dispose();
+            if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
 
             base.Dispose();
 
