@@ -93,6 +93,13 @@ namespace osum
                 Exit();
             if (Keyboard[Key.Right])
                 AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
+            if (Keyboard[Key.H])
+            {
+                if (ClientSize.Width == 960)
+                    ClientSize = new Size(480, 320);
+                else
+                    ClientSize = new Size(960, 640);
+            }
 
             //todo: make update happen from here.
             GameBase.Instance.Update(e);
