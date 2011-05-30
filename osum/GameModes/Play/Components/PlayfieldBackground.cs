@@ -58,6 +58,7 @@ namespace osum.GameModes.Play.Components
         internal static Color4 COLOUR_EASY = new Color4(149, 207, 49, 255);
         internal static Color4 COLOUR_STANDARD = new Color4(18, 78, 143, 255);
         internal static Color4 COLOUR_HARD = new Color4(215, 122, 12, 255);
+        internal static Color4 COLOUR_EXPERT = new Color4(77, 0, 105, 255);
         internal static Color4 COLOUR_WARNING = new Color4(237, 29, 29, 255);
         private Color4 currentColour;
 
@@ -224,6 +225,9 @@ namespace osum.GameModes.Play.Components
                     return;
                 case Difficulty.Hard:
                     ChangeColour(COLOUR_HARD);
+                    return;
+                case Difficulty.Expert:
+                    ChangeColour(COLOUR_EXPERT);
                     return;
             }
         }
