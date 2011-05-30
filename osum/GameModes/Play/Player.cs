@@ -54,6 +54,8 @@ namespace osum.GameModes
 
         private PlayfieldBackground s_Playfield;
 
+        private CountdownDisplay countdown;
+
         private bool stateCompleted; //todo: make this an enum state
 
         /// <summary>
@@ -71,15 +73,13 @@ namespace osum.GameModes
 
         public Player()
             : base()
-        {
-        }
+        { }
 
         internal override void Initialize()
         {
             TextureManager.PopulateSurfaces();
 
             InputManager.OnDown += InputManager_OnDown;
-            InputManager.OnMove += InputManager_OnMove;
 
             TextureManager.RequireSurfaces = true;
 
@@ -108,12 +108,17 @@ namespace osum.GameModes
 
             comboCounter = new ComboCounter();
 
+            //countdown and lead-in time
+            int firstObjectTime = hitObjectManager.ActiveStreamObjects[0].StartTime;
+            AudioEngine.Music.Stop();
+            countdown = new CountdownDisplay();
+            CountdownResume(firstObjectTime, 8);
+
             currentScore = new Score();
 
             s_Playfield = new PlayfieldBackground();
             spriteManager.Add(s_Playfield);
 
-            AudioEngine.Music.Stop();
             Director.OnTransitionEnded += Director_OnTransitionEnded;
 
             //if (fpsTotalCount != null)
@@ -132,10 +137,26 @@ namespace osum.GameModes
 
             menu = new PauseMenu();
 
-            //todo: don't make this so dodgy.
-            GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 1600);
 
             topMostSpriteManager = new SpriteManager();
+        }
+
+        internal void CountdownAbort()
+        {
+            countdown.Hide();
+        }
+
+        internal void CountdownResume(int startTime, int beats)
+        {
+            double beatLength = Beatmap.beatLengthAt(startTime);
+            int countdownStartTime = startTime - (int)(beatLength * beats);
+
+            countdown.SetStartTime(startTime, beatLength);
+
+            if (countdownStartTime < Clock.AudioTime)
+                Clock.BeginLeadIn(countdownStartTime);
+            else
+                AudioEngine.Music.Play();
         }
 
         //static pSprite fpsTotalCount;
@@ -151,6 +172,7 @@ namespace osum.GameModes
 
             healthBar.Dispose();
             scoreDisplay.Dispose();
+            countdown.Dispose();
             menu.Dispose();
 
             topMostSpriteManager.Dispose();
@@ -171,10 +193,6 @@ namespace osum.GameModes
             //pass on the event to hitObjectManager for handling.
             if (hitObjectManager.HandlePressAt(point))
                 return;
-        }
-
-        void InputManager_OnMove(InputSource source, TrackingPoint point)
-        {
         }
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
@@ -280,6 +298,9 @@ namespace osum.GameModes
             comboCounter.Draw();
 
             menu.Draw();
+
+            countdown.Draw();
+
             topMostSpriteManager.Draw();
 
             frameCount++;
@@ -310,6 +331,8 @@ namespace osum.GameModes
 
             scoreDisplay.Update();
             comboCounter.Update();
+
+            countdown.Update();
 
             Spinner s = hitObjectManager.ActiveObject as Spinner;
             if (s != null)
@@ -344,6 +367,7 @@ namespace osum.GameModes
                         if (!stateCompleted)
                         {
                             stateCompleted = true;
+                            Failed = true;
 
                             pSprite fail = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.99f, true, Color4.White);
 
@@ -363,6 +387,9 @@ namespace osum.GameModes
                             topMostSpriteManager.Add(failGlow);
 
                             AudioEngine.Music.Pause();
+
+                            menu.Failed = true; //set this now so the menu will be in fail state if interacted with early.
+
                             GameBase.Scheduler.Add(delegate
                             {
                                 Ranking.RankableScore = currentScore;
@@ -397,6 +424,7 @@ namespace osum.GameModes
         }
 
         bool isIncreasingStream;
+        private bool Failed;
         private bool switchStream(bool increase)
         {
             isIncreasingStream = increase;

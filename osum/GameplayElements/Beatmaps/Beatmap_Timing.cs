@@ -66,6 +66,7 @@ namespace osum.GameplayElements.Beatmaps
             int samplePoint = 0;
 
             for (int i = 0; i < ControlPoints.Count; i++)
+            {
                 if (ControlPoints[i].offset <= time)
                 {
                     if (ControlPoints[i].TimingChange)
@@ -73,6 +74,9 @@ namespace osum.GameplayElements.Beatmaps
                     else
                         samplePoint = i;
                 }
+                else
+                    break;
+            }
 
             double mult = 1;
 

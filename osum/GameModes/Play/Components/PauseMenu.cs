@@ -37,7 +37,7 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    AudioEngine.Music.Pause();
+                    pause();
                 }
                 else
                 {
@@ -50,10 +50,9 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    GameBase.Scheduler.Add(delegate
-                    {
-                        AudioEngine.Music.Play();
-                    },500);
+                    Player p = Director.CurrentMode as Player;
+                    if (p != null)
+                        p.CountdownResume(Clock.AudioTime, 8);
                 }
             }
         }
@@ -210,20 +209,26 @@ namespace osum.GameModes.Play.Components
                     });
 
                     if (pulledAmount > valid_pull)
-                    {
-                        if (AudioEngine.Music.IsElapsing)
-                            AudioEngine.Music.Pause();
-                    }
+                        pause();
                 }
                 else
                 {
                     MenuDisplayed = pulledAmount >= valid_pull;
                     validPoint = null;
                 }
-
             }
 
             base.Update();
+        }
+
+        private void pause()
+        {
+            AudioEngine.Music.Pause();
+            Clock.AbortLeadIn();
+
+            Player p = Director.CurrentMode as Player;
+            if (p != null)
+                p.CountdownAbort();
         }
     }
 }
