@@ -271,7 +271,7 @@ namespace osum.GameModes
             if (increaseCombo)
             {
                 comboCounter.IncreaseCombo();
-                currentScore.maxCombo = comboCounter.currentCombo;
+                currentScore.maxCombo = Math.Max(comboCounter.currentCombo, currentScore.maxCombo);
             }
 
             //then handle the hp addition
