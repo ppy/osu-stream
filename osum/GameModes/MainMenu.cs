@@ -209,7 +209,7 @@ namespace osum.GameModes
         private pSprite stream;
 
         int lastBgmBeat = 0;
-        float between_beats = 375 / 2;
+        float between_beats = 375 / 2f;
         int offset = initial_display;
         const int bar = 8;
 
