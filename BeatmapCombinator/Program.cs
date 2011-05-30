@@ -40,9 +40,20 @@ namespace BeatmapCombinator
         /// <param name="args">Directory containing many .osu files</param>
         static void Main(string[] args)
         {
-            foreach (string dir in Directory.GetDirectories("Beatmaps"))
-                ProcessBeatmap(dir);
-
+            if (args.Length > 0)
+            {
+                ProcessBeatmap(args[0]);
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Please drag a beatmap folder onto this app's icon!");
+                Console.WriteLine("Note that it must contain at least one of the following difficulties:");
+                Console.WriteLine();
+                Console.WriteLine("Easy | Normal | Hard | Expert");
+                Console.WriteLine("All other difficulty names will be ignored!");
+                Console.ReadLine();
+            }
         }
 
         private static void ProcessBeatmap(string dir)
@@ -246,7 +257,7 @@ namespace BeatmapCombinator
                 }
             }
 
-            using (MapPackage package = new MapPackage(baseName.Remove(baseName.IndexOf("\\") + 1) + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2", true))
+            using (MapPackage package = new MapPackage(baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2", true))
             {
                 package.AddMetadata(MapMetaType.BeatmapSetID, "0");
                 package.AddMetadata(MapMetaType.Artist, Artist);
