@@ -29,7 +29,7 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
             spriteManager.Add(s_ButtonBack);
 
-            StringNetRequest netRequest = new StringNetRequest("http://osu.ppy.sh/osum/getpacks.php");
+            StringNetRequest netRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
             netRequest.onFinish += netRequest_onFinish;
             NetManager.AddRequest(netRequest);
 
@@ -154,6 +154,9 @@ namespace osum.GameModes.Store
             return base.Draw();
         }
 
+        bool playingPreview;
+
+
         public static void ResetAllPreviews(bool isPausing)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
@@ -162,8 +165,23 @@ namespace osum.GameModes.Store
             foreach (PackPanel p in instance.packs)
                 p.ResetPreviews();
 
+            instance.playingPreview = false;
+
             if (isPausing)
+            {
                 SongSelectMode.InitializeBgm();
+                instance.playingPreview = false;
+            }
+        }
+
+        public static void PlayPreview(byte[] data)
+        {
+            StoreMode instance = Director.CurrentMode as StoreMode;
+            if (instance == null) return;
+
+            AudioEngine.Music.Load(data,false);
+            AudioEngine.Music.Play();
+            instance.playingPreview = true;
         }
 
         internal static void PurchaseInitiated(PackPanel packPanel)
@@ -227,6 +245,11 @@ namespace osum.GameModes.Store
 
         public override void Update()
         {
+            if (playingPreview && !AudioEngine.Music.IsElapsing)
+            {
+                ResetAllPreviews(true);
+            }
+
             if (!InputManager.IsPressed)
             {
                 float bound = offsetBound;

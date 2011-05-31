@@ -99,6 +99,9 @@ namespace osum.GameModes.Store
 
         void OnPurchase(object sender, EventArgs e)
         {
+            if (isPreviewing)
+                StoreMode.ResetAllPreviews(true);
+
             isDownloading = true;
 
             startNextDownload();
@@ -125,7 +128,7 @@ namespace osum.GameModes.Store
 
             string filename = filenames[currentDownload];
             string path = SongSelectMode.BeatmapPath + "/" + filename;
-            string downloadPath = "http://osu.ppy.sh/osum/" + s_Text.Text + "/" + filename;
+            string downloadPath = "http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename;
 
             Console.WriteLine("Downloading " + downloadPath);
 
@@ -156,8 +159,16 @@ namespace osum.GameModes.Store
 
         bool isPreviewing;
 
+        DataNetRequest previewRequest;
+
         internal void ResetPreviews()
         {
+            if (previewRequest != null)
+            {
+                previewRequest.Abort();
+                previewRequest = null;
+            }
+
             if (isDownloading) return;
 
             isPreviewing = false;
@@ -181,8 +192,8 @@ namespace osum.GameModes.Store
 
         internal void Add(string filename)
         {
-            pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
-            preview.Offset = new Vector2(68, Height + 3);
+            pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
+            preview.Offset = new Vector2(68, Height + 20);
             Sprites.Add(preview);
             songPreviewButtons.Add(preview);
 
@@ -200,13 +211,31 @@ namespace osum.GameModes.Store
 
                 if (isPausing) return;
 
-                AudioEngine.Music.Stop();
+                AudioEngine.Music.Stop(true);
+
+                previewRequest = new DataNetRequest("http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename + ".mp3");
+                previewRequest.onFinish += delegate(Byte[] data, Exception ex) {
+                    GameBase.Scheduler.Add(delegate {
+                        if (ex != null)
+                        {
+                            StoreMode.ResetAllPreviews(true);
+                            GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
+                        }
+
+                        StoreMode.PlayPreview(data);
+                        preview.Transformations.Clear();
+                        preview.Rotation = 0;
+                        preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_pause);
+                    });
+                };
+                NetManager.AddRequest(previewRequest);
 
                 back.FadeColour(colourHover,0);
                 back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X,0), back.Scale,Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
                 back.TagNumeric = 1;
-                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_pause);
 
+                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_load);
+                preview.Transform(new Transformation(TransformationType.Rotation, 0, 500, Clock.ModeTime, Clock.ModeTime + 100000));
                 isPreviewing = true;
 
                 StoreMode.EnsureVisible(s_BackingPlate);
