@@ -93,6 +93,21 @@ namespace osum.GameplayElements
             }
         }
 
+        internal static float HpAdjustment
+        {
+            get
+            {
+                switch (Player.Difficulty)
+                {
+                    case Difficulty.Expert:
+                        return 1.5f;
+                    default:
+                        return 1;
+                }
+            }
+        }
+
+
         internal static int FadeIn { get { return 400; } }
         internal static int FadeOut { get { return 300; } }
         internal static int SpinnerRotationRatio { get { return 2; } }

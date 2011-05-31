@@ -282,7 +282,7 @@ namespace osum.GameModes
 
             //then handle the hp addition
             if (healthChange < 0)
-                healthBar.ReduceCurrentHp(-healthChange);
+                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
             else
                 healthBar.IncreaseCurrentHp(healthChange);
 
