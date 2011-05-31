@@ -63,7 +63,6 @@ namespace osum.Online
                 {
                     //todo: handle this
                     Console.WriteLine("submission error");
-                    GameBase.Notify("Score submission failed.\nPlease make sure you are playing\nPhantom Ensemble v2",null);
                     return;
                 }
 
