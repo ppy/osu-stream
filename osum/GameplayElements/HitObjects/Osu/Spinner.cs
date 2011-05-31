@@ -9,6 +9,7 @@ using OpenTK.Graphics;
 using osum.GameplayElements.HitObjects;
 using osum.Graphics.Drawables;
 using osum.GameModes;
+using osum.Audio;
 
 namespace osum.GameplayElements
 {
@@ -45,7 +46,6 @@ namespace osum.GameplayElements
         /// </summary>
         internal int currentRotationCount;
 
-
         /// <summary>
         /// Number of scored rotations (last scoring update).
         /// </summary>
@@ -81,6 +81,11 @@ namespace osum.GameplayElements
         /// Velocity the cursor is "spinning" at.
         /// </summary>
         protected double velocityFromInputPerMillisecond;
+
+        /// <summary>
+        /// Usually scoring is done at every 180 degrees. This will make it happen n times more often.
+        /// </summary>
+        const int sensitivity_modifier = 8;
 
         Vector2 spinnerCentre = new Vector2(0, 210);
 
@@ -185,7 +190,7 @@ namespace osum.GameplayElements
                 StartTime - DifficultyManager.FadeIn, StartTime, EasingTypes.In));
 
             currentRotationCount = 0;
-            rotationRequirement = (int)((float)(EndTime - StartTime) / 1000 * DifficultyManager.SpinnerRotationRatio);
+            rotationRequirement = (int)((float)(EndTime - StartTime) / 1000 * DifficultyManager.SpinnerRotationRatio) * sensitivity_modifier;
             AccelerationCap = 0.00008 + Math.Max(0, (5000 - (double)(EndTime - StartTime)) / 1000 / 2000);
         }
 
@@ -271,11 +276,12 @@ namespace osum.GameplayElements
                 scoringRotationCount++;
 
                 if (scoringRotationCount > rotationRequirement + 3 &&
-                    (scoringRotationCount - (rotationRequirement + 3)) % 2 == 0)
+                    (scoringRotationCount - (rotationRequirement + 3)) % (sensitivity_modifier) == 0)
                 {
                     score = ScoreChange.SpinnerBonus;
-                    //AudioEngine.PlaySample(AudioEngine.s_SpinnerBonus, AudioEngine.VolumeSample);
-                    spriteBonus.Text = (1000 * (scoringRotationCount - (rotationRequirement + 3)) / 2).ToString();
+                    AudioEngine.PlaySample(OsuSamples.SpinnerBonus);
+
+                    spriteBonus.Text = (100 * (scoringRotationCount - (rotationRequirement + 3)) / (2 * sensitivity_modifier)).ToString();
                     spriteBonus.Transformations.Clear();
                     spriteBonus.Transform(
                         new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
@@ -285,7 +291,7 @@ namespace osum.GameplayElements
                     spriteBonus.Transform(
                         new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
                 }
-                else if (scoringRotationCount > 1 && scoringRotationCount % 2 == 0)
+                else if (scoringRotationCount > 1 && scoringRotationCount % (2 * sensitivity_modifier) == 0)
                     score = ScoreChange.SpinnerSpinPoints;
                 else if (scoringRotationCount > 1)
                     score = ScoreChange.SpinnerSpin;
@@ -331,7 +337,7 @@ namespace osum.GameplayElements
                 else
                     StopSound();
 
-                currentRotationCount = (int)(spriteCircle.Rotation / (Math.PI * 2));
+                currentRotationCount = (int)(spriteCircle.Rotation / (Math.PI * 2) * sensitivity_modifier);
             }
 
             if (scoringRotationCount >= rotationRequirement && !Cleared)
