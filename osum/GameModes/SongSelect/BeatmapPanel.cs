@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using osum.Graphics.Drawables;
 using osum.Graphics.Renderers;
 using osum.Graphics.Skins;
+using osum.Audio;
 namespace osum.GameModes.SongSelect
 {
     internal class BeatmapPanel : pSpriteCollection
@@ -40,7 +41,7 @@ namespace osum.GameModes.SongSelect
 
             s_BackingPlate.HandleClickOnUp = true;
 
-            s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(colourHover, 80); };
+            s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(colourHover, 80); AudioEngine.PlaySample(OsuSamples.MenuClick); };
             s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(colourNormal, 80); };
 
             s_Text = new pText(string.Empty, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);

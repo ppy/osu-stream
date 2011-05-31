@@ -289,6 +289,8 @@ namespace osum.GameModes
             if (State == SelectState.Starting)
                 return;
 
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
+
             State = SelectState.Starting;
 
             if (Player.Difficulty != Difficulty.Easy) s_ModeButtonEasy.FadeOut(200);

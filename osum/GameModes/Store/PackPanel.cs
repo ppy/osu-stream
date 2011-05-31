@@ -222,6 +222,8 @@ namespace osum.GameModes.Store
 
                 AudioEngine.Music.Stop(true);
 
+                AudioEngine.PlaySample(OsuSamples.MenuClick);
+
                 previewRequest = new DataNetRequest("http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename + ".mp3");
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
