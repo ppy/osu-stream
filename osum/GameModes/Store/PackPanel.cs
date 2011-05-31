@@ -42,7 +42,8 @@ namespace osum.GameModes.Store
             Sprites.Add(s_BackingPlate);
 
 
-            s_BackingPlate.OnClick += delegate {
+            s_BackingPlate.OnClick += delegate
+            {
                 if (isDownloading) return;
 
                 s_BackingPlate.FadeColour(colourHover2, 80);
@@ -59,11 +60,13 @@ namespace osum.GameModes.Store
 
             s_BackingPlate.HandleClickOnUp = true;
 
-            s_BackingPlate.OnHover += delegate {
+            s_BackingPlate.OnHover += delegate
+            {
                 if (isDownloading) return;
                 s_BackingPlate.FadeColour(colourHover2, 80);
             };
-            s_BackingPlate.OnHoverLost += delegate {
+            s_BackingPlate.OnHoverLost += delegate
+            {
                 if (isDownloading) return;
                 s_BackingPlate.FadeColour(colourNormal, 80);
             };
@@ -146,8 +149,9 @@ namespace osum.GameModes.Store
 
             };
 
-            fnr.onUpdate += delegate(object sender, long current, long total) {
-                songPreviewBacks[currentDownload].Scale.X = GameBase.BaseSize.Width * ((float)current/total);
+            fnr.onUpdate += delegate(object sender, long current, long total)
+            {
+                songPreviewBacks[currentDownload].Scale.X = GameBase.BaseSize.Width * ((float)current / total);
             };
 
             NetManager.AddRequest(fnr);
@@ -190,7 +194,7 @@ namespace osum.GameModes.Store
             s_BackingPlate.HandleInput = true;
 
             s_PriceBackground.FadeOut(100);
-            s_Price.FadeColour(new Color4(255, 255, 255, 128),100);
+            s_Price.FadeColour(new Color4(255, 255, 255, 128), 100);
             s_PriceBackground.HandleInput = false;
         }
 
@@ -204,10 +208,11 @@ namespace osum.GameModes.Store
             pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 40), true, base_depth, Color4.Black);
             back.HandleClickOnUp = true;
 
-            back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40,40,40,255),200); };
-            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(Color4.Black,200); };
+            back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
+            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(Color4.Black, 200); };
 
-            back.OnClick += delegate(object sender, EventArgs e) {
+            back.OnClick += delegate(object sender, EventArgs e)
+            {
 
                 bool isPausing = back.TagNumeric == 1;
 
@@ -218,8 +223,10 @@ namespace osum.GameModes.Store
                 AudioEngine.Music.Stop(true);
 
                 previewRequest = new DataNetRequest("http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename + ".mp3");
-                previewRequest.onFinish += delegate(Byte[] data, Exception ex) {
-                    GameBase.Scheduler.Add(delegate {
+                previewRequest.onFinish += delegate(Byte[] data, Exception ex)
+                {
+                    GameBase.Scheduler.Add(delegate
+                    {
                         if (ex != null)
                         {
                             StoreMode.ResetAllPreviews(true);
@@ -235,8 +242,8 @@ namespace osum.GameModes.Store
                 };
                 NetManager.AddRequest(previewRequest);
 
-                back.FadeColour(colourHover,0);
-                back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X,0), back.Scale,Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
+                back.FadeColour(colourHover, 0);
+                back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_load);

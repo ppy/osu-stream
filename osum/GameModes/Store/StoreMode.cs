@@ -179,7 +179,7 @@ namespace osum.GameModes.Store
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            AudioEngine.Music.Load(data,false);
+            AudioEngine.Music.Load(data, false);
             AudioEngine.Music.Play();
             instance.playingPreview = true;
         }
@@ -212,7 +212,7 @@ namespace osum.GameModes.Store
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            instance.scrollOffset = Math.Min(0,Math.Max(instance.offset_min, instance.scrollOffset - sprite.Position.Y + 40));
+            instance.scrollOffset = Math.Min(0, Math.Max(instance.offset_min, instance.scrollOffset - sprite.Position.Y + 40));
         }
 
         private float offset_min
