@@ -180,7 +180,11 @@ namespace osum.GameModes.Store
             }
 
             foreach (pSprite p in songPreviewButtons)
+            {
                 p.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
+                p.Transformations.Clear();
+                p.Rotation = 0;
+            }
 
             s_BackingPlate.FadeColour(colourNormal, 200);
             s_BackingPlate.HandleInput = true;
@@ -222,9 +226,10 @@ namespace osum.GameModes.Store
                             GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
                         }
 
-                        StoreMode.PlayPreview(data);
                         preview.Transformations.Clear();
                         preview.Rotation = 0;
+
+                        StoreMode.PlayPreview(data);
                         preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_pause);
                     });
                 };
