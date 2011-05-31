@@ -13,15 +13,17 @@ namespace osum.Audio
         HitClap,
         HitFinish,
         MenuHit,
+        MenuClick,
         SliderTick,
         SliderSlide,
-        MenuBack
+        MenuBack,
+        SpinnerBonus
     }
 
     internal static class AudioEngine
     {
         static Dictionary<OsuSamples, int> loadedSamples = new Dictionary<OsuSamples, int>();
-        
+
         internal static ISoundEffectPlayer Effect;
         internal static IBackgroundAudioPlayer Music;
 
@@ -35,22 +37,22 @@ namespace osum.Audio
         {
             Effect = effect;
             Music = music;
-			
-			foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
-				LoadSample(s);
+
+            foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
+                LoadSample(s);
         }
 
         internal static int PlaySample(OsuSamples sample)
         {
             int buffer = LoadSample(sample);
-			if (buffer < 0) return buffer;
-			
+            if (buffer < 0) return buffer;
+
             return AudioEngine.Effect.PlayBuffer(buffer);
         }
-		
-		internal static int LoadSample(OsuSamples sample)
-		{
-			int buffer;
+
+        internal static int LoadSample(OsuSamples sample)
+        {
+            int buffer;
 
             string filename = null;
 
@@ -76,11 +78,17 @@ namespace osum.Audio
                 case OsuSamples.SliderSlide:
                     filename = setName + "-sliderslider";
                     break;
+                case OsuSamples.SpinnerBonus:
+                    filename = "spinnerbonus";
+                    break;
                 case OsuSamples.MenuHit:
                     filename = "menuhit";
                     break;
                 case OsuSamples.MenuBack:
                     filename = "menuback";
+                    break;
+                case OsuSamples.MenuClick:
+                    filename = "menuclick";
                     break;
             }
 
@@ -90,10 +98,9 @@ namespace osum.Audio
             {
                 buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
                 loadedSamples.Add(sample, buffer);
-			}
-			
-			return buffer;
-		}
+            }
+
+            return buffer;
+        }
     }
 }
-    
