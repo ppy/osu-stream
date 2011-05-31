@@ -57,7 +57,7 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PushContext(context);
 
-                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.TailTruncation,  UITextAlignment.Left);
+                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap,  UITextAlignment.Left);
 
                 UIGraphics.PopContext();
 
