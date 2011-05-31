@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1162</BundleVersion>
+    <BundleVersion>1164</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -379,16 +379,16 @@
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="iTunesArtwork" />
-    <Content Include="Skins\Default\hit_480.png" />
-    <Content Include="Skins\Default\hit_960.png" />
-    <Content Include="Skins\Default\menu_480.png" />
-    <Content Include="Skins\Default\menu_960.png" />
     <Content Include="Skins\Default\menuback.wav" />
-    <Content Include="Skins\Default\notification_480.png" />
-    <Content Include="Skins\Default\notification_960.png" />
-    <Content Include="Skins\Default\songselect_480.png" />
-    <Content Include="Skins\Default\songselect_960.png" />
     <Content Include="Skins\Default\mainmenu.m4a" />
     <Content Include="Skins\Default\songselect.m4a" />
+    <Content Include="Skins\Default\songselect_960" />
+    <Content Include="Skins\Default\songselect_480" />
+    <Content Include="Skins\Default\menu_480" />
+    <Content Include="Skins\Default\menu_960" />
+    <Content Include="Skins\Default\hit_480" />
+    <Content Include="Skins\Default\hit_960" />
+    <Content Include="Skins\Default\notification_480" />
+    <Content Include="Skins\Default\notification_960" />
   </ItemGroup>
 </Project>

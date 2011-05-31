@@ -325,7 +325,7 @@ namespace osum.Graphics.Skins
                 return texture;
 
 
-            string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution) + ".png";
+            string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution);
 
             if (NativeAssetManager.Instance.FileExists(path))
             {
