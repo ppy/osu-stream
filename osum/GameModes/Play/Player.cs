@@ -121,6 +121,7 @@ namespace osum.GameModes
             AudioEngine.Music.Stop();
             countdown = new CountdownDisplay();
             CountdownResume(firstObjectTime, 8);
+            firstCountdown = true;
 
             currentScore = new Score();
 
@@ -150,13 +151,39 @@ namespace osum.GameModes
             topMostSpriteManager = new SpriteManager();
         }
 
+        /// <summary>
+        /// Set to true after the initial countdown is set to ensure it is not overridden by a pause menu countdown.
+        /// </summary>
+        bool firstCountdown;
+
+        /// <summary>
+        /// Abort (and hide) the active countdown display. Is ignored for the initial countdown.
+        /// </summary>
         internal void CountdownAbort()
         {
+            if (firstCountdown) return;
+
             countdown.Hide();
         }
 
+        /// <summary>
+        /// Setup a new countdown process.
+        /// </summary>
+        /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
+        /// <param name="beats">How many beats we should count in.</param>
         internal void CountdownResume(int startTime, int beats)
         {
+            if (firstCountdown)
+            {
+                if (Clock.AudioTime > countdown.StartTime)
+                    firstCountdown = false;
+                else
+                {
+                    AudioEngine.Music.Play();
+                    return;
+                }
+            }
+
             double beatLength = Beatmap.beatLengthAt(startTime);
             int countdownStartTime = startTime - (int)(beatLength * beats);
 

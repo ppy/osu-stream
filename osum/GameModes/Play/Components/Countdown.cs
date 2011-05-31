@@ -31,7 +31,7 @@ namespace osum.GameModes.Play.Components
             base.Initialize();
         }
 
-        int StartTime = -1;
+        internal int StartTime = -1;
         double BeatLength;
 
         internal void SetStartTime(int start, double beatLength)
