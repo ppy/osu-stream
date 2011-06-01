@@ -70,6 +70,10 @@ namespace osum.GameModes
 
         private SpriteManager topMostSpriteManager;
 
+        private StreamSwitchDisplay streamSwitchDisplay;
+
+        bool isIncreasingStream;
+        private bool Failed;
 
         public Player()
             : base()
@@ -116,6 +120,8 @@ namespace osum.GameModes
 
             comboCounter = new ComboCounter();
 
+            streamSwitchDisplay = new StreamSwitchDisplay();
+
             //countdown and lead-in time
             int firstObjectTime = hitObjectManager.ActiveStreamObjects[0].StartTime;
             AudioEngine.Music.Stop();
@@ -139,7 +145,7 @@ namespace osum.GameModes
 
             //gcAtStart = GC.CollectionCount(0);
 
-            s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Height), 1, true, Color.White);
+            s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing_down), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Height), 1, true, Color.White);
             s_streamSwitchWarningArrow.Additive = true;
             s_streamSwitchWarningArrow.Alpha = 0;
 
@@ -210,6 +216,7 @@ namespace osum.GameModes
             if (scoreDisplay != null) scoreDisplay.Dispose();
             if (countdown != null) countdown.Dispose();
             if (menu != null) menu.Dispose();
+            if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
 
@@ -235,6 +242,8 @@ namespace osum.GameModes
         {
             s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
             healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+
+            streamSwitchDisplay.EndSwitch();
 
             queuedStreamSwitchTime = 0;
         }
@@ -324,6 +333,8 @@ namespace osum.GameModes
         {
             base.Draw();
 
+            streamSwitchDisplay.Draw();
+            
             hitObjectManager.Draw();
 
             scoreDisplay.Draw();
@@ -374,6 +385,8 @@ namespace osum.GameModes
                 s_Playfield.Alpha = 1;
 
             topMostSpriteManager.Update();
+
+            streamSwitchDisplay.Update();
 
             menu.Update();
 
@@ -456,8 +469,6 @@ namespace osum.GameModes
             menu.ShowMenu();
         }
 
-        bool isIncreasingStream;
-        private bool Failed;
         private bool switchStream(bool increase)
         {
             isIncreasingStream = increase;
@@ -471,27 +482,7 @@ namespace osum.GameModes
             if (switchTime < 0)
                 return false;
 
-            const int animation_time = 250;
-
-            //rotate the warning arrow to the correct direction.
-            if (increase)
-            {
-                s_streamSwitchWarningArrow.Transform(
-                    new Transformation(TransformationType.Rotation, s_streamSwitchWarningArrow.Rotation, 0, Clock.AudioTime, Clock.AudioTime + animation_time * 2, EasingTypes.In));
-                s_streamSwitchWarningArrow.MoveTo(s_streamSwitchWarningArrow.Position + new Vector2(0, 20), animation_time * 4, EasingTypes.In);
-            }
-            else
-            {
-                s_streamSwitchWarningArrow.Transform(
-                    new Transformation(TransformationType.Rotation, s_streamSwitchWarningArrow.Rotation, (float)Math.PI, Clock.AudioTime, Clock.AudioTime + animation_time * 2, EasingTypes.In));
-                s_streamSwitchWarningArrow.MoveTo(s_streamSwitchWarningArrow.Position + new Vector2(0, -20), animation_time * 4, EasingTypes.In);
-            }
-
-            s_streamSwitchWarningArrow.ScaleScalar = 1;
-            s_streamSwitchWarningArrow.FadeIn(animation_time);
-
-            s_streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Fade, 1, 0, switchTime, switchTime + animation_time));
-            s_streamSwitchWarningArrow.Transform(new Transformation(TransformationType.Scale, 1, 2f, switchTime, switchTime + animation_time, EasingTypes.In));
+            streamSwitchDisplay.BeginSwitch(increase);
 
             queuedStreamSwitchTime = switchTime;
             return true;

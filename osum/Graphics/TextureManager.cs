@@ -154,8 +154,12 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
 
+            //play mode strea changing display
+            textureLocations.Add(OsuTexture.stream_changing_up, new SpriteSheetTexture("hit", 1780, 3, 266, 185));
+            textureLocations.Add(OsuTexture.stream_changing_down, new SpriteSheetTexture("hit", 1780, 189, 266, 168));
+            textureLocations.Add(OsuTexture.stream_changing_arrow, new SpriteSheetTexture("hit", 1847, 357, 199, 275));
+
             //play mode misc
-            textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
             textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 0, 609, 418));
             textureLocations.Add(OsuTexture.mouse_burst, new SpriteSheetTexture("hit", 591, 509, 38, 38));
 
@@ -169,7 +173,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
             textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
             textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 14));
-            textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 759, 742, 59));
+            textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 760, 742, 58));
 
             textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
             textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 443, 1024, 121));
@@ -542,7 +546,9 @@ namespace osum.Graphics.Skins
         score_x,
         playfield,
         songselect_header,
-        stream_changing,
+        stream_changing_down,
+        stream_changing_up,
+        stream_changing_arrow,
         songselect_footer,
         songselect_thumbnail,
         songselect_back_hexagon,
@@ -585,7 +591,7 @@ namespace osum.Graphics.Skins
         countdown_2,
         countdown_1,
         countdown_go,
-        countdown_ready
+        countdown_ready,
         mouse_burst
     }
 }
