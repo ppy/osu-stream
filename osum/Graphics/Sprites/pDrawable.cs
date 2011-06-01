@@ -191,6 +191,9 @@ namespace osum.Graphics.Sprites
                         pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
                                                     pos.Y);
                         break;
+                    case FieldTypes.StandardSnapCentreRight:
+                        pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                        break;
                     case FieldTypes.StandardSnapRight:
                         pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
                         break;
@@ -288,10 +291,13 @@ namespace osum.Graphics.Sprites
             Transformations.AddInPlace(transform);
         }
 
+        /// <summary>
+        /// Assumes correct clocking and order.
+        /// </summary>
+        /// <param name="transforms"></param>
         internal void Transform(params Transformation[] transforms)
         {
-            foreach (Transformation t in transforms)
-                Transform(t);
+            Transformations.AddRange(transforms);
         }
 
         internal void Transform(IEnumerable<Transformation> transforms)
@@ -315,6 +321,8 @@ namespace osum.Graphics.Sprites
             for (int i = 0; i < Transformations.Count; i++)
             {
                 Transformation t = Transformations[i];
+
+                t.Update();
 
                 // remove old transformations
                 if (t.Terminated)

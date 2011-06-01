@@ -39,20 +39,22 @@ namespace osum.Graphics.Sprites
     internal class Transformation : IComparable<Transformation>
     {
         internal int Tag;
+        public bool Looping;
+        public int LoopDelay;
 
         internal EasingTypes Easing { get; set; }
 
-        internal Vector2 StartVector { get; private set; }
-        internal Color4 StartColour { get; private set; }
-        internal float StartFloat { get; private set; }
+        internal Vector2 StartVector;
+        internal Color4 StartColour;
+        internal float StartFloat;
 
-        internal Vector2 EndVector { get; private set; }
-        internal Color4 EndColour { get; private set; }
-        internal float EndFloat { get; private set; }
+        internal Vector2 EndVector;
+        internal Color4 EndColour;
+        internal float EndFloat;
 
-        internal int StartTime { get; private set; }
-        internal int EndTime { get; private set; }
-        internal TransformationType Type { get; private set; }
+        internal int StartTime;
+        internal int EndTime;
+        internal TransformationType Type;
 
         internal ClockTypes Clocking { get; set; }
 
@@ -68,7 +70,7 @@ namespace osum.Graphics.Sprites
 
         internal bool Terminated
         {
-            get { return Clock.GetTime(Clocking) >= EndTime; }
+            get { return Clock.GetTime(Clocking) >= EndTime && !Looping; }
         }
 
         internal bool Is(TransformationType type)
@@ -214,7 +216,7 @@ namespace osum.Graphics.Sprites
             Clocking = ClockTypes.Game;
         }
 
-        private Transformation()
+        public Transformation()
         {
         }
 
@@ -285,6 +287,19 @@ namespace osum.Graphics.Sprites
         {
             return string.Format("{4} {0}-{1} {2} to {3}",
                 StartTime, EndTime, StartFloat, EndFloat, Type);
+        }
+
+        internal void Update()
+        {
+            int now = Clock.GetTime(Clocking);
+
+            if (Looping && EndTime < now)
+            {
+                int endTimeBefore = EndTime;
+                Offset(((now - EndTime) / (Duration + LoopDelay) + 1) * (Duration + LoopDelay));
+
+                Console.WriteLine("Looping from " + endTimeBefore + " to " + StartTime + "-" + EndTime);
+            }
         }
     }
 
