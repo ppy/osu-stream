@@ -157,6 +157,7 @@ namespace osum.Graphics.Skins
             //play mode misc
             textureLocations.Add(OsuTexture.stream_changing, new SpriteSheetTexture("hit", 942, 0, 82, 109));
             textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 0, 609, 418));
+            textureLocations.Add(OsuTexture.mouse_burst, new SpriteSheetTexture("hit", 591, 509, 38, 38));
 
             //play mode menu
             textureLocations.Add(OsuTexture.play_menu_pull, new SpriteSheetTexture("hit", 379, 1461, 699, 77));
@@ -585,5 +586,6 @@ namespace osum.Graphics.Skins
         countdown_1,
         countdown_go,
         countdown_ready
+        mouse_burst
     }
 }

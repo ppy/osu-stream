@@ -83,7 +83,7 @@ namespace osum
         private static void ReceiveDown(InputSource source, TrackingPoint point)
         {
             //if (PrimaryTrackingPoint == null)
-                PrimaryTrackingPoint = point;
+            PrimaryTrackingPoint = point;
 
             UpdatePointerPosition(point);
             TriggerOnDown(source, point);
@@ -104,9 +104,9 @@ namespace osum
                     }
                 }
             }
-			
+
             TriggerOnUp(source, point);
-			UpdatePointerPosition(point);
+            UpdatePointerPosition(point);
         }
 
         private static void ReceiveClick(InputSource source, TrackingPoint point)
@@ -117,8 +117,8 @@ namespace osum
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
-			TriggerOnMove(source, point);
-			UpdatePointerPosition(point);
+            TriggerOnMove(source, point);
+            UpdatePointerPosition(point);
         }
 
         #endregion

@@ -44,6 +44,7 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
+using osum.Graphics;
 #endif
 
 
@@ -262,6 +263,8 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
+            touchBurster = new TouchBurster();
+
             //Load the main menu initially.
             //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- v2 (James).osz2");
             //Player.Beatmap.BeatmapFilename = Player.Beatmap.Package.MapFiles[0];
@@ -349,6 +352,8 @@ namespace osum
 
             InputManager.Update();
 
+            touchBurster.Update();
+
             Components.ForEach(c => c.Update());
 
             return true;
@@ -372,6 +377,8 @@ namespace osum
             Director.Draw();
 
             MainSpriteManager.Draw();
+
+            touchBurster.Draw();
         }
 
         public static void TriggerLayoutChanged()
@@ -382,6 +389,7 @@ namespace osum
 
         internal static pSprite ActiveNotification;
         internal static int SpriteSheetResolution;
+        private TouchBurster touchBurster;
 
 
         internal static void Notify(string text, VoidDelegate action = null)
