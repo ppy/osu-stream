@@ -146,11 +146,6 @@ namespace osum.Graphics.Sprites
         internal Queue<pDrawable> SpriteQueue;
         internal void OptimizeTimeline(ClockTypes clock)
         {
-            //SpriteQueue = new Queue<pDrawable>(Sprites);
-            //Sprites.Clear();
-
-            //return;
-
             List<pDrawable> optimizableSprites = Sprites.FindAll(s => s.Transformations.Count > 0 && !s.AlwaysDraw && s.Clocking == clock);
 
             //sort all sprites in order of first transformation.
@@ -188,9 +183,12 @@ namespace osum.Graphics.Sprites
             {
                 int loadTime = Clock.Time - creationTime;
 
-                foreach (pDrawable p in Sprites)
-                    if (p.Clocking == ClockTypes.Game)
-                        p.Transformations.ForEach(t => t.Offset(loadTime));
+                if (loadTime != 0)
+                {
+                    foreach (pDrawable p in Sprites)
+                        if (p.Clocking == ClockTypes.Game)
+                            p.Transformations.ForEach(t => t.Offset(loadTime));
+                }
 
                 firstRender = false;
             }
@@ -238,7 +236,6 @@ namespace osum.Graphics.Sprites
 
             for (i = removableSprites.Count - 1; i >= 0; i--)
                 Sprites.RemoveAt(removableSprites[i]);
-
             removableSprites.Clear();
         }
 
@@ -258,10 +255,12 @@ namespace osum.Graphics.Sprites
 
         void addToBatch(pDrawable p)
         {
+            //todo: implement batching.
         }
 
         void flushBatch()
         {
+            //todo: implement batching.
         }
 
         /// <summary>
