@@ -36,7 +36,7 @@ namespace osum.Helpers
         private static int lastModeLoadTime;
         public static int ModeTime { get { return Time - lastModeLoadTime; } }
 
-        public static void ModeLoadComplete()
+        public static void ModeTimeReset()
         {
             lastModeLoadTime = Time;
         }

@@ -100,6 +100,9 @@ namespace osum
             TextureManager.DisposeAll(false);
 
             CurrentMode = mode;
+            
+            Clock.ModeTimeReset();
+            
             CurrentMode.Initialize();
 
             if (PendingMode != OsuMode.Unknown) //can be unknown on first startup
@@ -131,7 +134,7 @@ namespace osum
             {
                 //There was a mode change last frame.
                 //See below for where this is set.
-                Clock.ModeLoadComplete();
+                Clock.ModeTimeReset();
                 ActiveTransition.FadeIn();
                 CurrentMode.OnFirstUpdate();
 
