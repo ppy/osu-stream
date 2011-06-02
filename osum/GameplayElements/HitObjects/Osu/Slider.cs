@@ -306,18 +306,20 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     int lastIndex = 0;
 
-                    for (int i = 0; i < controlPoints.Count; i++)
-                    {
-                        bool multipartSegment = i < controlPoints.Count - 2 && controlPoints[i] == controlPoints[i + 1];
+                    int count = controlPoints.Count;
 
-                        if (multipartSegment || i == controlPoints.Count - 1)
+                    for (int i = 0; i < count; i++)
+                    {
+                        bool multipartSegment = i + 1 < count && controlPoints[i] == controlPoints[i + 1];
+
+                        if (multipartSegment || i == count - 1)
                         {
                             List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
 
-                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1, (thisLength.Count / controlPoints.Count * PathLength) / 10)));
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1, ((float)thisLength.Count / count * PathLength) / 10)));
 
                             if (multipartSegment) i++;
-                            //Need to skip one point since we consuned an extra.
+                            //Need to skip one point since we consumed an extra.
 
                             lastIndex = i;
                         }

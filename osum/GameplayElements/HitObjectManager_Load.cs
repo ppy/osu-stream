@@ -255,8 +255,8 @@ namespace osum.GameplayElements
                                         }
 
                                         string[] temp = pointsplit[i].Split(':');
-                                        Vector2 v = new Vector2((int)Convert.ToDouble(temp[0], GameBase.nfi),
-                                                                (int)Convert.ToDouble(temp[1], GameBase.nfi));
+                                        Vector2 v = new Vector2((float)Convert.ToDouble(temp[0], GameBase.nfi),
+                                                                (float)Convert.ToDouble(temp[1], GameBase.nfi));
                                         points.Add(v);
                                     }
 
