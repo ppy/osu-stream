@@ -139,8 +139,8 @@ namespace osum.GameModes.Play
             touchToContinueText.Transformations.Clear(); 
             if (touchToContinue)
             {
-                touchToContinueText.Transform(new TransformationBounce(Clock.Time, Clock.Time + 300, 1, -0.2f, 1));
-                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 500) { LoopDelay = 1000, Looping = true });
+                touchToContinueText.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 300, 1, -0.2f, 1));
+                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 500) { LoopDelay = 1000, Looping = true });
             }
             else
                 touchToContinueText.FadeOut(100);
