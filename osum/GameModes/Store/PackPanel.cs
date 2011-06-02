@@ -44,7 +44,7 @@ namespace osum.GameModes.Store
 
             s_BackingPlate.OnClick += delegate
             {
-                if (isDownloading) return;
+                if (Downloading) return;
 
                 s_BackingPlate.FadeColour(colourHover2, 80);
                 s_BackingPlate.HandleInput = false;
@@ -62,12 +62,12 @@ namespace osum.GameModes.Store
 
             s_BackingPlate.OnHover += delegate
             {
-                if (isDownloading) return;
+                if (Downloading) return;
                 s_BackingPlate.FadeColour(colourHover2, 80);
             };
             s_BackingPlate.OnHoverLost += delegate
             {
-                if (isDownloading) return;
+                if (Downloading) return;
                 s_BackingPlate.FadeColour(colourNormal, 80);
             };
 
@@ -98,14 +98,13 @@ namespace osum.GameModes.Store
         internal int BeatmapCount { get { return filenames.Count; } }
 
         int currentDownload = 0;
-        bool isDownloading;
 
         void OnPurchase(object sender, EventArgs e)
         {
+            Downloading = true;
+
             if (isPreviewing)
                 StoreMode.ResetAllPreviews(true);
-
-            isDownloading = true;
 
             startNextDownload();
 
@@ -118,8 +117,8 @@ namespace osum.GameModes.Store
             songPreviewBacks.ForEach(b =>
             {
                 b.HandleInput = false;
-                b.Scale.X = 0;
-                b.Colour = Color4.DarkBlue;
+                b.Alpha = 0;
+                b.Colour = Color4.OrangeRed;
             });
 
             StoreMode.PurchaseInitiated(this);
@@ -149,9 +148,22 @@ namespace osum.GameModes.Store
 
             };
 
+            pDrawable back = songPreviewBacks[currentDownload];
+
+            back.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
+
             fnr.onUpdate += delegate(object sender, long current, long total)
             {
-                songPreviewBacks[currentDownload].Scale.X = GameBase.BaseSize.Width * ((float)current / total);
+                if (back.Alpha != 1)
+                {
+                    Console.WriteLine("clearing shit");
+                    GameBase.Scheduler.Add(delegate {
+                        back.Transformations.Clear();
+                        back.Alpha = 1;
+                    },true);
+                }
+
+                back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
             };
 
             NetManager.AddRequest(fnr);
@@ -173,21 +185,21 @@ namespace osum.GameModes.Store
                 previewRequest = null;
             }
 
-            if (isDownloading) return;
-
             isPreviewing = false;
-
-            foreach (pDrawable p in songPreviewBacks)
-            {
-                p.FadeColour(Color4.Black, 200);
-                p.TagNumeric = 0;
-            }
 
             foreach (pSprite p in songPreviewButtons)
             {
                 p.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
                 p.Transformations.Clear();
                 p.Rotation = 0;
+            }
+
+            if (Downloading) return;
+
+            foreach (pDrawable p in songPreviewBacks)
+            {
+                p.FadeColour(Color4.Black, 200);
+                p.TagNumeric = 0;
             }
 
             s_BackingPlate.FadeColour(colourNormal, 200);
@@ -249,7 +261,7 @@ namespace osum.GameModes.Store
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_load);
-                preview.Transform(new Transformation(TransformationType.Rotation, 0, 500, Clock.ModeTime, Clock.ModeTime + 100000));
+                preview.Transform(new Transformation(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
                 StoreMode.EnsureVisible(s_BackingPlate);
