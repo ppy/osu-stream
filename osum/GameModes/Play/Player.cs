@@ -17,6 +17,7 @@ using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
 using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
+using osum.Graphics;
 
 namespace osum.GameModes
 {
@@ -72,6 +73,8 @@ namespace osum.GameModes
 
         private StreamSwitchDisplay streamSwitchDisplay;
 
+        private TouchBurster touchBurster;
+
         bool isIncreasingStream;
         private bool Failed;
 
@@ -119,6 +122,8 @@ namespace osum.GameModes
             scoreDisplay = new ScoreDisplay();
 
             comboCounter = new ComboCounter();
+
+            touchBurster = new TouchBurster();
 
             streamSwitchDisplay = new StreamSwitchDisplay();
 
@@ -216,6 +221,7 @@ namespace osum.GameModes
             if (scoreDisplay != null) scoreDisplay.Dispose();
             if (countdown != null) countdown.Dispose();
             if (menu != null) menu.Dispose();
+            if (touchBurster != null) touchBurster.Dispose();
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
@@ -334,7 +340,7 @@ namespace osum.GameModes
             base.Draw();
 
             streamSwitchDisplay.Draw();
-            
+
             hitObjectManager.Draw();
 
             scoreDisplay.Draw();
@@ -344,6 +350,8 @@ namespace osum.GameModes
             menu.Draw();
 
             countdown.Draw();
+
+            touchBurster.Draw();
 
             topMostSpriteManager.Draw();
 
@@ -375,6 +383,8 @@ namespace osum.GameModes
 
             scoreDisplay.Update();
             comboCounter.Update();
+
+            touchBurster.Update();
 
             countdown.Update();
 
