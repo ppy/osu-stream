@@ -6,6 +6,7 @@ using osum.Support;
 using osum.Helpers;
 using osum.Audio;
 using osum.GameModes.Store;
+using osum.GameModes.Play;
 
 namespace osum
 {
@@ -87,6 +88,9 @@ namespace osum
                     break;
                 case OsuMode.Store:
                     mode = new StoreMode();
+                    break;
+                case OsuMode.Tutorial:
+                    mode = new Tutorial();
                     break;
             }
 

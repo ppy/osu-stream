@@ -90,49 +90,41 @@ namespace osum.GameModes
 
             TextureManager.RequireSurfaces = true;
 
-            hitObjectManager = new HitObjectManager(Beatmap);
-            hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
-            hitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
-
-            hitObjectManager.LoadFile();
-
-            switch (Difficulty)
-            {
-                default:
-                    hitObjectManager.SetActiveStream();
-                    break;
-                case Difficulty.Expert:
-                    hitObjectManager.SetActiveStream(Difficulty.Expert);
-                    break;
-                case Difficulty.Easy:
-                    hitObjectManager.SetActiveStream(Difficulty.Easy);
-                    break;
-            }
-
-            if (hitObjectManager.ActiveStreamObjects == null)
-            {
-                GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
-                Director.ChangeMode(OsuMode.SongSelect);
-                //error while loading.
-                return;
-            }
-
-            healthBar = new HealthBar();
-
-            scoreDisplay = new ScoreDisplay();
-
-            comboCounter = new ComboCounter();
+            loadBeatmap();
 
             touchBurster = new TouchBurster();
 
-            streamSwitchDisplay = new StreamSwitchDisplay();
+            initializeUIElements();
 
-            //countdown and lead-in time
-            int firstObjectTime = hitObjectManager.ActiveStreamObjects[0].StartTime;
-            AudioEngine.Music.Stop();
-            countdown = new CountdownDisplay();
-            CountdownResume(firstObjectTime, 8);
-            firstCountdown = true;
+            if (hitObjectManager != null)
+            {
+                switch (Difficulty)
+                {
+                    default:
+                        hitObjectManager.SetActiveStream();
+                        break;
+                    case Difficulty.Expert:
+                        hitObjectManager.SetActiveStream(Difficulty.Expert);
+                        break;
+                    case Difficulty.Easy:
+                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        break;
+                }
+
+                if (hitObjectManager.ActiveStreamObjects == null)
+                {
+                    GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
+                    Director.ChangeMode(OsuMode.SongSelect);
+                    //error while loading.
+                    return;
+                }
+
+                //countdown and lead-in time
+                int firstObjectTime = hitObjectManager.ActiveStreamObjects[0].StartTime;
+                AudioEngine.Music.Stop();
+                CountdownResume(firstObjectTime, 8);
+                firstCountdown = true;
+            }
 
             currentScore = new Score();
 
@@ -156,10 +148,33 @@ namespace osum.GameModes
 
             spriteManager.Add(s_streamSwitchWarningArrow);
 
-            menu = new PauseMenu();
-
-
             topMostSpriteManager = new SpriteManager();
+        }
+
+        protected virtual void initializeUIElements()
+        {
+            healthBar = new HealthBar();
+            scoreDisplay = new ScoreDisplay();
+            comboCounter = new ComboCounter();
+            streamSwitchDisplay = new StreamSwitchDisplay();
+            countdown = new CountdownDisplay();
+            menu = new PauseMenu();
+        }
+
+        private void loadBeatmap()
+        {
+            if (Beatmap == null)
+                return;
+
+            if (hitObjectManager != null)
+                hitObjectManager.Dispose();
+
+            hitObjectManager = new HitObjectManager(Beatmap);
+
+            hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
+            hitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
+
+            hitObjectManager.LoadFile();
         }
 
         /// <summary>
@@ -215,7 +230,7 @@ namespace osum.GameModes
 
             TextureManager.RequireSurfaces = false;
 
-            hitObjectManager.Dispose();
+            if (hitObjectManager != null) hitObjectManager.Dispose();
 
             if (healthBar != null) healthBar.Dispose();
             if (scoreDisplay != null) scoreDisplay.Dispose();
@@ -236,11 +251,11 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (menu.MenuDisplayed || !AudioEngine.Music.IsElapsing)
+            if ((menu != null && menu.MenuDisplayed) || !AudioEngine.Music.IsElapsing)
                 return;
 
             //pass on the event to hitObjectManager for handling.
-            if (hitObjectManager.HandlePressAt(point))
+            if (hitObjectManager != null && hitObjectManager.HandlePressAt(point))
                 return;
         }
 
@@ -339,17 +354,18 @@ namespace osum.GameModes
         {
             base.Draw();
 
-            streamSwitchDisplay.Draw();
+            if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
-            hitObjectManager.Draw();
+            if (hitObjectManager != null)
+                hitObjectManager.Draw();
 
-            scoreDisplay.Draw();
-            healthBar.Draw();
-            comboCounter.Draw();
+            if (scoreDisplay != null) scoreDisplay.Draw();
+            if (healthBar != null) healthBar.Draw();
+            if (comboCounter != null) comboCounter.Draw();
 
-            menu.Draw();
+            if (menu != null) menu.Draw();
 
-            countdown.Draw();
+            if (countdown != null) countdown.Draw();
 
             touchBurster.Draw();
 
@@ -364,41 +380,44 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            //check whether the map is finished
-            if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
+            if (hitObjectManager != null)
             {
-                stateCompleted = true;
-                GameBase.Scheduler.Add(delegate
+                //check whether the map is finished
+                if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
                 {
-                    Ranking.RankableScore = currentScore;
-                    Director.ChangeMode(OsuMode.Ranking);
-                }, 2000);
+                    stateCompleted = true;
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        Ranking.RankableScore = currentScore;
+                        Director.ChangeMode(OsuMode.Ranking);
+                    }, 2000);
+                }
+
+                //this needs to be run even when paused to draw sliders on resuming from resign.
+                hitObjectManager.Update();
+
+                Spinner s = hitObjectManager.ActiveObject as Spinner;
+                if (s != null)
+                    s_Playfield.Alpha = 1 - s.SpriteBackground.Alpha;
+                else
+                    s_Playfield.Alpha = 1;
             }
 
-            //this needs to be run even when paused to draw sliders on resuming from resign.
-            hitObjectManager.Update();
-
-            healthBar.Update();
+            if (healthBar != null) healthBar.Update();
             UpdateStream();
 
-            scoreDisplay.Update();
-            comboCounter.Update();
+            if (scoreDisplay != null) scoreDisplay.Update();
+            if (comboCounter != null) comboCounter.Update();
 
             touchBurster.Update();
 
-            countdown.Update();
-
-            Spinner s = hitObjectManager.ActiveObject as Spinner;
-            if (s != null)
-                s_Playfield.Alpha = 1 - s.SpriteBackground.Alpha;
-            else
-                s_Playfield.Alpha = 1;
+            if (countdown != null) countdown.Update();
 
             topMostSpriteManager.Update();
 
-            streamSwitchDisplay.Update();
+            if (streamSwitchDisplay != null) streamSwitchDisplay.Update();
 
-            menu.Update();
+            if (menu != null) menu.Update();
 
             base.Update();
         }
