@@ -337,6 +337,7 @@
     <Compile Include="GameModes\Play\Components\Countdown.cs" />
     <Compile Include="Graphics\TouchBurster.cs" />
     <Compile Include="GameModes\Play\Components\StreamSwitchDisplay.cs" />
+    <Compile Include="GameModes\Play\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
