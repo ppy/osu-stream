@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1164</BundleVersion>
+    <BundleVersion>1165</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -335,6 +335,8 @@
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="Support\iPhone\HardwareDetection.cs" />
     <Compile Include="GameModes\Play\Components\Countdown.cs" />
+    <Compile Include="Graphics\TouchBurster.cs" />
+    <Compile Include="GameModes\Play\Components\StreamSwitchDisplay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -390,5 +392,7 @@
     <Content Include="Skins\Default\hit_960" />
     <Content Include="Skins\Default\notification_480" />
     <Content Include="Skins\Default\notification_960" />
+    <Content Include="Skins\Default\spinnerbonus.wav" />
+    <Content Include="Skins\Default\menuclick.wav" />
   </ItemGroup>
 </Project>

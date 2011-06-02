@@ -297,8 +297,6 @@ namespace osum.Graphics.Sprites
             {
                 int endTimeBefore = EndTime;
                 Offset(((now - EndTime) / (Duration + LoopDelay) + 1) * (Duration + LoopDelay));
-
-                Console.WriteLine("Looping from " + endTimeBefore + " to " + StartTime + "-" + EndTime);
             }
         }
     }
