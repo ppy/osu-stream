@@ -25,11 +25,11 @@ namespace osum.GameModes
     {
         HitObjectManager hitObjectManager;
 
-        HealthBar healthBar;
+        internal HealthBar healthBar;
 
-        ScoreDisplay scoreDisplay;
+        internal ScoreDisplay scoreDisplay;
 
-        ComboCounter comboCounter;
+        internal ComboCounter comboCounter;
 
         /// <summary>
         /// Score which is being played (or watched?)
@@ -51,11 +51,11 @@ namespace osum.GameModes
         /// </summary>
         public static bool Autoplay;
 
-        private PauseMenu menu;
+        internal PauseMenu menu;
 
-        private PlayfieldBackground s_Playfield;
+        internal PlayfieldBackground playfieldBackground;
 
-        private CountdownDisplay countdown;
+        internal CountdownDisplay countdown;
 
         private bool stateCompleted; //todo: make this an enum state
 
@@ -71,7 +71,7 @@ namespace osum.GameModes
 
         private SpriteManager topMostSpriteManager;
 
-        private StreamSwitchDisplay streamSwitchDisplay;
+        internal StreamSwitchDisplay streamSwitchDisplay;
 
         private TouchBurster touchBurster;
 
@@ -128,9 +128,9 @@ namespace osum.GameModes
 
             currentScore = new Score();
 
-            s_Playfield = new PlayfieldBackground();
-            s_Playfield.ChangeColour(Difficulty);
-            spriteManager.Add(s_Playfield);
+            playfieldBackground = new PlayfieldBackground();
+            playfieldBackground.ChangeColour(Difficulty);
+            spriteManager.Add(playfieldBackground);
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
 
@@ -249,7 +249,7 @@ namespace osum.GameModes
             //GameBase.MainSpriteManager.Add(fpsTotalCount);
         }
 
-        void InputManager_OnDown(InputSource source, TrackingPoint point)
+        protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             if ((menu != null && menu.MenuDisplayed) || !AudioEngine.Music.IsElapsing)
                 return;
@@ -261,7 +261,7 @@ namespace osum.GameModes
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
-            s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
+            playfieldBackground.ChangeColour(hitObjectManager.ActiveStream);
             healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
 
             streamSwitchDisplay.EndSwitch();
@@ -398,9 +398,9 @@ namespace osum.GameModes
 
                 Spinner s = hitObjectManager.ActiveObject as Spinner;
                 if (s != null)
-                    s_Playfield.Alpha = 1 - s.SpriteBackground.Alpha;
+                    playfieldBackground.Alpha = 1 - s.SpriteBackground.Alpha;
                 else
-                    s_Playfield.Alpha = 1;
+                    playfieldBackground.Alpha = 1;
             }
 
             if (healthBar != null) healthBar.Update();
@@ -424,11 +424,11 @@ namespace osum.GameModes
 
         private void UpdateStream()
         {
-            if (Difficulty == Difficulty.Easy)
+            if (Difficulty == Difficulty.Easy || hitObjectManager == null)
                 //easy can't fail, nor switch streams.
                 return;
 
-            if (!hitObjectManager.StreamChanging)
+            if (hitObjectManager != null && !hitObjectManager.StreamChanging)
             {
                 if (hitObjectManager.IsLowestStream &&
                     currentScore.totalHits > 0 &&
@@ -437,7 +437,7 @@ namespace osum.GameModes
                     //we are on the lowest available stream difficulty and in failing territory.
                     if (healthBar.CurrentHp == 0 && !Autoplay)
                     {
-                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
 
                         if (!stateCompleted)
                         {
@@ -473,9 +473,9 @@ namespace osum.GameModes
                         }
                     }
                     else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                        s_Playfield.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
                     else
-                        s_Playfield.ChangeColour(hitObjectManager.ActiveStream);
+                        playfieldBackground.ChangeColour(hitObjectManager.ActiveStream);
                 }
                 else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
                 {
@@ -488,7 +488,7 @@ namespace osum.GameModes
             }
             else
             {
-                s_Playfield.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
+                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
         }

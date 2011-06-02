@@ -100,6 +100,8 @@ namespace osum
                 else
                     ClientSize = new Size(960, 640);
             }
+            if (Keyboard[Key.T])
+                Director.ChangeMode(OsuMode.Tutorial);
 
             //todo: make update happen from here.
             GameBase.Instance.Update(e);

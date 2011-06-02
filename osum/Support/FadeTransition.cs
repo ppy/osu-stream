@@ -8,11 +8,14 @@ namespace osum.Support
 {
     class FadeTransition : Transition
     {
+        public const int DEFAULT_FADE_OUT = 400;
+        public const int DEFAULT_FADE_IN = 400;
+
         private int FadeOutTime;
         private int FadeInTime;
 
         public FadeTransition()
-            : this(400, 400)
+            : this(DEFAULT_FADE_OUT, DEFAULT_FADE_IN)
         { }
 
         public FadeTransition(int fadeOut, int fadeIn)
@@ -23,13 +26,13 @@ namespace osum.Support
         }
 
         FadeState fadeState = FadeState.FadeOut;
-		
-		float currentValue; //todo: yucky.
-		public override float CurrentValue {
-			get {
-				return currentValue;
-			}
-		}
+        
+        float currentValue; //todo: yucky.
+        public override float CurrentValue {
+            get {
+                return currentValue;
+            }
+        }
 
         public override void Update()
         {
@@ -37,19 +40,19 @@ namespace osum.Support
             {
                 case FadeState.FadeIn:
                     if (FadeInTime == 0)
-						SpriteManager.UniversalDim = 0;
-                	else
-						SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - GameBase.ElapsedMilliseconds / FadeInTime);
-					break;
+                        SpriteManager.UniversalDim = 0;
+                    else
+                        SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - GameBase.ElapsedMilliseconds / FadeInTime);
+                    break;
                 case FadeState.FadeOut:
-					if (FadeOutTime == 0)
-                    	SpriteManager.UniversalDim = 1;
-					else
-						SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
+                    if (FadeOutTime == 0)
+                        SpriteManager.UniversalDim = 1;
+                    else
+                        SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
                     break;
             }
-			
-			currentValue = 1 - SpriteManager.UniversalDim; //todo: yucky.
+            
+            currentValue = 1 - SpriteManager.UniversalDim; //todo: yucky.
 
             base.Update();
         }
