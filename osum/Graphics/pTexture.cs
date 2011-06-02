@@ -111,8 +111,8 @@ namespace osum.Graphics
                 if (fboId >= 0)
                 {
 #if iOS
-	                GL.Oes.DeleteFramebuffers(1,ref fboId);
-	                fboId = -1;
+                    GL.Oes.DeleteFramebuffers(1,ref fboId);
+                    fboId = -1;
 #else
                     GL.DeleteFramebuffers(1, ref fboId);
                     fboId = -1;
@@ -144,7 +144,7 @@ namespace osum.Graphics
             {
                 if (assetName != null)
                 {
-                    
+
                     pTexture reloadedTexture = OsuTextureInfo != OsuTexture.None ? TextureManager.Load(OsuTextureInfo) : FromFile(assetName);
                     if (TextureGl == null)
                         TextureGl = reloadedTexture.TextureGl;
@@ -200,7 +200,7 @@ namespace osum.Graphics
             try
             {
 #if iOS
-				using (UIImage image = UIImage.FromFile(filename))
+                using (UIImage image = UIImage.FromFile(filename))
                     tex = FromUIImage(image,filename);
 #else
                 using (Stream stream = NativeAssetManager.Instance.GetFileStream(filename))
@@ -236,19 +236,19 @@ namespace osum.Graphics
                     height /= 2;
 
 #if iOS
-					using (UIImage textureImage = UIImage.FromFile(mmfilename))
-					{
-						IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
-				
-						using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
-			                        width, height, 8, width * 4,
-			                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-			            	textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-						
-			            tex.TextureGl.SetData(pTextureData,mipmapLevel,0);
-						
-						Marshal.FreeHGlobal(pTextureData);
-					}
+                    using (UIImage textureImage = UIImage.FromFile(mmfilename))
+                    {
+                        IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
+                
+                        using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+                                    width, height, 8, width * 4,
+                                    textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+                            textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
+                        
+                        tex.TextureGl.SetData(pTextureData,mipmapLevel,0);
+                        
+                        Marshal.FreeHGlobal(pTextureData);
+                    }
 #endif
 
 
@@ -268,36 +268,36 @@ namespace osum.Graphics
         }
 
 #if iOS
-		public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
-		{
+        public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
+        {
             if (textureImage == null)
                 return null;
 
             int width = (int)textureImage.Size.Width;
             int height = (int)textureImage.Size.Height;
 
-			IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
-			
-			
+            IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
+            
+            
 #if SIMULATOR
-			//on the simulator we get texture corruption without this.
-			byte[] bytes = new byte[width * height * 4];
-			Marshal.Copy(bytes, 0, pTextureData,bytes.Length);
+            //on the simulator we get texture corruption without this.
+            byte[] bytes = new byte[width * height * 4];
+            Marshal.Copy(bytes, 0, pTextureData,bytes.Length);
 #endif
-			
-			
-			using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+            
+            
+            using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
                         width, height, 8, width * 4,
                         textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-            	textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-			
+                textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
+            
             pTexture tex = FromRawBytes(pTextureData, width, height);
-			
-			Marshal.FreeHGlobal(pTextureData);
-			
-			tex.assetName = assetname;
-			return tex;
-		}
+            
+            Marshal.FreeHGlobal(pTextureData);
+            
+            tex.assetName = assetname;
+            return tex;
+        }
 #endif
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace osum.Graphics
 
                 pTexture pt;
 #if iOS
-				pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
+                pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
 #else
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
@@ -390,17 +390,17 @@ namespace osum.Graphics
 
         /*public static pTexture FromText(string text, SizeF dim, UITextAlignment alignment, string fontName, float fontSize) {
             UIFont font = UIFont.FromName(fontName, fontSize);
-			
+            
             int width = (int)dim.Width;
             if (width != 1 && (width & (width - 1)) != 0) {
                 int i = 1;
                 while (i < width) {
                     i *= 2;
                 }
-				
+                
                 width = i;
             }
-			
+            
             int height = (int)dim.Height;
             if (height != 1 && (height & (height - 1)) != 0) {
                 int i = 1;
@@ -409,11 +409,11 @@ namespace osum.Graphics
                 }
                 height = i;
             }
-			
+            
             CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB(); //CGColorSpace.CreateDeviceGray();
-			
+            
             byte[] data = new byte[width * height];
-			
+            
             unsafe {
                 fixed (byte* dataPb = data) {
                     using (CGContext context = new CGBitmapContext((IntPtr)dataPb, width, height, 8, width, colorSpace, CGImageAlphaInfo.None)) {
@@ -427,7 +427,7 @@ namespace osum.Graphics
                 }
             }
             colorSpace.Dispose();
-			
+            
             return null;
             //FromRawBytes(
             //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
@@ -443,9 +443,9 @@ namespace osum.Graphics
 
 #if iOS
             int oldFBO = 0;
-			GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-			
-			// create framebuffer
+            GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+            
+            // create framebuffer
             GL.Oes.GenFramebuffers(1, ref fboId);
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
 

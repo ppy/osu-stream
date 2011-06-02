@@ -972,8 +972,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (sliderBodyTexture == null)
                 return;
 
-            sliderBodyTexture.BindFramebuffer();
-
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
 

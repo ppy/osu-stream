@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using osum.Support;
+using osum.Graphics.Sprites;
+using OpenTK;
+
 #if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -36,7 +39,6 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
-using osum.Input;
 #endif
 
 
@@ -443,7 +445,7 @@ namespace osum.Graphics.Skins
             {
                 availableSurfaces = new Queue<pTexture>();
 
-                int size = GameBase.NativeSize.Width;
+                int size = GameBase.NativeSize.Height;
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -451,6 +453,12 @@ namespace osum.Graphics.Skins
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
                     pTexture t = new pTexture(gl, size, size);
                     t.BindFramebuffer();
+
+#if iOS
+                    //we need to draw once to screen on iOS in order to avoid lag the first frame they are drawn (some kind of internal optimisation?)
+                    using (pSprite p = new pSprite(t, Vector2.Zero))
+                        p.Draw();
+#endif
 
                     RegisterDisposable(t);
                     availableSurfaces.Enqueue(t);
@@ -465,6 +473,8 @@ namespace osum.Graphics.Skins
 
             if (availableSurfaces.Count == 0)
                 return null;
+
+            //todo: optimise FBO width/height. should only need two at max dimensions (or maybe even one)
 
             pTexture tex = availableSurfaces.Dequeue();
             tex.Width = width;
