@@ -89,25 +89,6 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal override bool IsOnScreen
-        {
-            get
-            {
-
-                Box2 rect = DisplayRectangle;
-
-
-
-                if (rect.Left > GameBase.BaseSizeFixedWidth.Width || rect.Right < 0 ||
-                    rect.Top > GameBase.BaseSizeFixedWidth.Height || rect.Bottom < 0)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
         internal int TextureWidth
         {
             get { return texture != null ? texture.Width : 0; }
@@ -202,25 +183,6 @@ namespace osum.Graphics.Sprites
 
         #endregion
 
-        internal pSprite AdditiveFlash(int duration, float brightness)
-        {
-            pSprite clone = this.Clone();
-            
-            clone.UnbindAllEvents();
-
-            clone.Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
-
-            GameBase.MainSpriteManager.Add(clone);
-
-            clone.Alpha *= brightness;
-            clone.Clocking = ClockTypes.Game;
-            clone.Additive = true;
-            clone.FadeOut(duration);
-            clone.AlwaysDraw = false;
-
-            return clone;
-        }
-
         internal virtual void UpdateTextureSize()
         {
             DrawWidth = TextureWidth;
@@ -261,27 +223,6 @@ namespace osum.Graphics.Sprites
                         return Offset;
                 }
             }
-        }
-
-        public virtual pSprite Clone()
-        {
-
-            pSprite clone = (pSprite)this.MemberwiseClone();
-            clone.Transformations = new pList<Transformation>();
-
-            foreach (Transformation t in Transformations)
-                clone.Transform(t.Clone());
-
-            /*
-            if (Loops != null)
-            {
-                clone.Loops = new List<TransformationLoop>(Loops.Count);
-                foreach (TransformationLoop tl in Loops)
-                    clone.Loops.Add(tl.Clone());
-            }
-            */
-
-            return clone;
         }
 
         public override string ToString()

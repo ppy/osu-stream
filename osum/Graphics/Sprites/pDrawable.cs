@@ -108,12 +108,24 @@ namespace osum.Graphics.Sprites
             {
                 Box2 rect = DisplayRectangle;
 
-                if (rect.Left > GameBase.BaseSizeFixedWidth.Width || rect.Right < 0 ||
-                    rect.Top > GameBase.BaseSizeFixedWidth.Height || rect.Bottom < 0)
+                if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right < 0 ||
+                    rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 || rect.Bottom < 0)
                     return false;
 
                 return true;
             }
+        }
+
+        public virtual pSprite Clone()
+        {
+
+            pSprite clone = (pSprite)this.MemberwiseClone();
+            clone.Transformations = new pList<Transformation>();
+
+            foreach (Transformation t in Transformations)
+                clone.Transform(t.Clone());
+
+            return clone;
         }
 
         internal float DrawDepth;
@@ -509,8 +521,8 @@ namespace osum.Graphics.Sprites
         {
             int count = Transformations.Count;
 
-            if (count == 0 && Alpha == 1)
-                return;
+            //if (count == 0 && Alpha == 1)
+            //    return;
 
             if (count == 1)
             {
@@ -546,8 +558,8 @@ namespace osum.Graphics.Sprites
 
             int count = Transformations.Count;
 
-            if (count == 0 && !AlwaysDraw)
-                return;
+            //if (count == 0 && !AlwaysDraw)
+            //    return;
 
             if (count == 1)
             {
@@ -571,6 +583,25 @@ namespace osum.Graphics.Sprites
 
             int now = Clock.GetTime(Clocking);
             Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
+        }
+
+        internal pSprite AdditiveFlash(int duration, float brightness)
+        {
+            pSprite clone = this.Clone();
+
+            clone.UnbindAllEvents();
+
+            clone.Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
+
+            GameBase.MainSpriteManager.Add(clone);
+
+            clone.Alpha *= brightness;
+            clone.Clocking = ClockTypes.Game;
+            clone.Additive = true;
+            clone.FadeOut(duration);
+            clone.AlwaysDraw = false;
+
+            return clone;
         }
 
         internal void FadeColour(Color4 colour, int duration)
