@@ -54,6 +54,7 @@ namespace osum.GameModes.Play.Components
 
         internal void BeginSwitch(bool increase)
         {
+            if (isSwitching) return;
             isSwitching = true;
 
             arrowSmall.ScaleScalar = 0.5f;

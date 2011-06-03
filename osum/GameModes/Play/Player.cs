@@ -69,7 +69,7 @@ namespace osum.GameModes
         /// </summary>
         private pSprite s_streamSwitchWarningArrow;
 
-        private SpriteManager topMostSpriteManager;
+        internal SpriteManager topMostSpriteManager;
 
         internal StreamSwitchDisplay streamSwitchDisplay;
 
@@ -349,6 +349,7 @@ namespace osum.GameModes
 
         int frameCount = 0;
         double msCount = 0;
+        private pSprite failSprite;
 
         public override bool Draw()
         {
@@ -444,22 +445,7 @@ namespace osum.GameModes
                             stateCompleted = true;
                             Failed = true;
 
-                            pSprite fail = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.99f, true, Color4.White);
-
-                            pSprite failGlow = fail.Clone();
-
-                            fail.FadeInFromZero(500);
-                            fail.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
-                            fail.Transform(new Transformation(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
-
-                            failGlow.DrawDepth = 1;
-                            failGlow.ScaleScalar = 1.04f;
-                            failGlow.Additive = true;
-                            failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
-                            failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
-
-                            topMostSpriteManager.Add(fail);
-                            topMostSpriteManager.Add(failGlow);
+                            showFailSprite();
 
                             AudioEngine.Music.Pause();
 
@@ -491,6 +477,33 @@ namespace osum.GameModes
                 playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
+        }
+
+        protected void hideFailSprite()
+        {
+            if (failSprite != null)
+                failSprite.FadeOut(100);
+        }
+
+        protected void showFailSprite()
+        {
+            failSprite = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.5f, true, Color4.White);
+
+            pSprite failGlow = failSprite.Clone();
+
+            failSprite.FadeInFromZero(500);
+            failSprite.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+            failSprite.Transform(new Transformation(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+
+            failGlow.DrawDepth = 0.51f;
+            failGlow.AlwaysDraw = false;
+            failGlow.ScaleScalar = 1.04f;
+            failGlow.Additive = true;
+            failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
+            failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
+
+            topMostSpriteManager.Add(failSprite);
+            topMostSpriteManager.Add(failGlow);
         }
 
         internal void Pause()

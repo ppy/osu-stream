@@ -13,6 +13,7 @@ using osum.Graphics.Renderers;
 using osum.Support;
 using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
+using osum.Audio;
 
 namespace osum.GameModes.Play
 {
@@ -41,9 +42,9 @@ namespace osum.GameModes.Play
             backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); });
             spriteManager.Add(backButton);
 
-            loadNextSegment();
-
             base.Initialize();
+
+            loadNextSegment();
         }
 
         enum TutorialSegments
@@ -51,6 +52,7 @@ namespace osum.GameModes.Play
             None,
             Introduction_1,
             Introduction_2,
+            Introduction_3,
             Healthbar_1,
             Healthbar_2,
             Healthbar_3,
@@ -58,6 +60,7 @@ namespace osum.GameModes.Play
             Healthbar_5,
             Healthbar_6,
             End,
+
         }
 
         TutorialSegments currentSegment;
@@ -78,6 +81,7 @@ namespace osum.GameModes.Play
 
             currentSegmentSprites.Clear();
             currentSegmentDelegate = null;
+            touchToContinue = true;
 
             switch (currentSegment)
             {
@@ -87,6 +91,9 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Introduction_2:
                     showText("osu!stream is a rhythm game which requires both rhythmical and positional accuracy.");
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                    break;
+                case TutorialSegments.Introduction_3:
+                    showText("in order to play you need to suck mah balllls");
                     break;
                 case TutorialSegments.Healthbar_1:
                     showText("The health bar is located at the top-left of your display.");
@@ -98,35 +105,108 @@ namespace osum.GameModes.Play
                     showText("It will go up or down depending on your performance.");
                     break;
                 case TutorialSegments.Healthbar_3:
-                    showText("In stream mode gameplay, if the health bar hits zero, you will drop down a stream.", -120);
-                    currentSegmentDelegate = delegate { playfieldBackground.Move(-4); };
-                    streamSwitchDisplay.BeginSwitch(false);
-                    healthBar.SetCurrentHp(0);
-                    break;
+                    {
+                        showText("In stream mode gameplay, you can jump to the next stream by filling your health bar.", -120);
+                        touchToContinue = false;
+
+                        healthBar.SetCurrentHp(100);
+
+                        float increaseRate = 0;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (touchToContinue) return;
+
+                            if (healthBar.CurrentHp == 200)
+                            {
+                                if (increaseRate > 20)
+                                {
+                                    streamSwitchDisplay.EndSwitch();
+                                    healthBar.SetCurrentHp(100);
+                                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_HARD);
+                                    showTouchToContinue();
+                                }
+                                else
+                                {
+                                    increaseRate += 0.3f;
+                                    streamSwitchDisplay.BeginSwitch(true);
+                                    playfieldBackground.Move(increaseRate);
+                                }
+                            }
+                            else
+                            {
+                                healthBar.SetCurrentHp(healthBar.CurrentHp + 1);
+                            }
+                        };
+                        break;
+                    }
                 case TutorialSegments.Healthbar_4:
-                    showText("In a similar matter, if it fills up, you will rise up a stream.", -120);
-                    currentSegmentDelegate = delegate { playfieldBackground.Move(4); };
-                    streamSwitchDisplay.BeginSwitch(true);
-                    healthBar.SetCurrentHp(200);
-                    break;
+                    {
+                        showText("In a similar matter, if it reaches zero, you will drop down a stream.", -120);
+                        touchToContinue = false;
+
+                        float increaseRate = 0;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (touchToContinue) return;
+
+                            if (healthBar.CurrentHp == 0)
+                            {
+                                if (increaseRate > 20)
+                                {
+                                    streamSwitchDisplay.EndSwitch();
+                                    healthBar.SetCurrentHp(100);
+                                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                                    showTouchToContinue();
+                                }
+                                else
+                                {
+                                    increaseRate += 0.3f;
+                                    streamSwitchDisplay.BeginSwitch(false);
+                                    playfieldBackground.Move(-increaseRate);
+                                }
+                            }
+                            else
+                            {
+                                healthBar.SetCurrentHp(healthBar.CurrentHp - 1);
+                            }
+                        };
+
+
+                        break;
+                    }
                 case TutorialSegments.Healthbar_5:
-                    showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", 0);
-                    streamSwitchDisplay.EndSwitch();
+                    showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", -120);
+                    touchToContinue = false;
+
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_EASY,false);
 
                     currentSegmentDelegate = delegate
                     {
-                        healthBar.SetCurrentHp(healthBar.CurrentHp - 1);
+                        healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
                         if (healthBar.CurrentHp == 0)
-                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+                        {
+
+                            if (!touchToContinue)
+                            {
+                                showTouchToContinue();
+                                playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+                                showFailSprite();
+                                AudioEngine.Music.Pause();
+                            }
+                        }
                         else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
                     };
-                    
+
                     break;
                 case TutorialSegments.Healthbar_6:
                     healthBar.SetCurrentHp(100);
+                    hideFailSprite();
+                    AudioEngine.Music.Play();
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
                     healthBar.InitialIncrease = true;
+                    touchToContinue = false;
+                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp == 100) loadNextSegment(); };
                     break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
@@ -135,17 +215,23 @@ namespace osum.GameModes.Play
                     break;
             }
 
-
-            touchToContinueText.Transformations.Clear(); 
             if (touchToContinue)
-            {
-                touchToContinueText.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 300, 1, -0.2f, 1));
-                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 500) { LoopDelay = 1000, Looping = true });
-            }
+                showTouchToContinue();
             else
+            {
+                touchToContinueText.Transformations.Clear();
                 touchToContinueText.FadeOut(100);
+            }
 
-            spriteManager.Add(currentSegmentSprites);
+            topMostSpriteManager.Add(currentSegmentSprites);
+        }
+
+        private void showTouchToContinue()
+        {
+            touchToContinue = true;
+            touchToContinueText.Transformations.Clear();
+            touchToContinueText.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 300, 1, -0.2f, 1));
+            touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 500) { LoopDelay = 1000, Looping = true });
         }
 
         protected override void InputManager_OnDown(InputSource source, TrackingPoint point)
@@ -161,7 +247,7 @@ namespace osum.GameModes.Play
 
         private void showText(string text, float verticalOffset = 0)
         {
-            pText pt = new pText(text, 35, new Vector2(0,verticalOffset), 1, true, Color4.White)
+            pText pt = new pText(text, 35, new Vector2(0, verticalOffset), 1, true, Color4.White)
             {
                 TextBounds = new Vector2(GameBase.BaseSize.Width * 0.95f, 0),
                 Field = FieldTypes.StandardSnapCentre,
@@ -179,7 +265,7 @@ namespace osum.GameModes.Play
         public override void Update()
         {
             if (currentSegmentDelegate != null) currentSegmentDelegate();
-            
+
             base.Update();
         }
 
