@@ -13,6 +13,10 @@ namespace osu_common.Helpers
         public pList()
         { }
 
+        public pList(int size)
+            : base(size)
+        { }
+
         public pList(IComparer<T> comparer, bool forceSortOnAdd)
         {
             this.comparer = comparer;

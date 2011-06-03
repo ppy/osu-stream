@@ -85,9 +85,31 @@ namespace osum.GameplayElements
         Expert = 3
     }
 
+    internal class HitObjectDummy : HitObject
+    {
+        public HitObjectDummy(int time)
+        {
+            StartTime = time;
+        }
+
+        protected override ScoreChange HitActionInitial()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool IsVisible
+        {
+            get { throw new NotImplementedException(); }
+        }
+    }
+
     internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         protected HitObjectManager m_HitObjectManager;
+
+        protected HitObject()
+        {
+        }
 
         public HitObject(HitObjectManager hitObjectManager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo, int comboOffset)
         {

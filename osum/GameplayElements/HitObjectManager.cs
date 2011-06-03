@@ -128,14 +128,14 @@ namespace osum.GameplayElements
 
             if (oldStreamObjects != null)
             {
-                int objectIndex = 0;
+                int removeBeforeObjectIndex = 0;
 
                 //find a good point to stream swithc. this will be mapper set later.
                 for (int i = processFrom; i < oldStreamObjects.Count; i++)
                 {
                     if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > Clock.AudioTime + 2000)
                     {
-                        objectIndex = i;
+                        removeBeforeObjectIndex = i;
                         switchTime = oldStreamObjects[i - 1].EndTime;
                         break;
                     }
@@ -143,27 +143,29 @@ namespace osum.GameplayElements
                     newSpriteManager.Add(oldStreamObjects[i]);
                 }
 
-                if (objectIndex - processFrom > 0)
+                if (removeBeforeObjectIndex == 0)
+                    //failed to find a suitable stream switch point.
+                    return -1;
+
+                if (removeBeforeObjectIndex - processFrom > 0)
                 {
-                    List<HitObject> graftFrom = oldStreamObjects.GetRange(processFrom, objectIndex - processFrom);
-
-                    int removeBefore = graftFrom[graftFrom.Count - 1].EndTime;
-
                     int removeBeforeIndex = 0;
                     for (int i = 0; i < newStreamObjects.Count; i++)
                     {
-                        if (newStreamObjects[i].StartTime > removeBefore)
+                        HitObject h = newStreamObjects[i];
+
+                        if (h.StartTime > switchTime)
                         {
                             removeBeforeIndex = i;
                             break;
                         }
 
-                        newStreamObjects[i].Sprites.ForEach(s => s.Transformations.Clear());
-                        newStreamObjects[i].Dispose();
+                        h.Sprites.ForEach(s => s.Bypass = true);
+                        h.Dispose();
                     }
 
                     newStreamObjects.RemoveRange(0, removeBeforeIndex);
-                    newStreamObjects.InsertRange(0, graftFrom);
+                    newStreamObjects.InsertRange(0, oldStreamObjects.GetRange(processFrom, removeBeforeObjectIndex - processFrom));
                 }
             }
 
@@ -171,16 +173,7 @@ namespace osum.GameplayElements
             Console.WriteLine("Changed stream to " + ActiveStream);
 #endif
 
-            //only reassess processing range if we are already some way into the beatmap.
-            if (processFrom > 0)
-            {
-                processFrom = 0;
-                foreach (HitObject h in ActiveStreamObjects)
-                {
-                    if (h.EndTime > Clock.AudioTime) break;
-                    processFrom++;
-                }
-            }
+            processFrom = 0;
 
             if (oldActiveStream == Difficulty.None)
                 return 0; //loading a stream from nothing, not switching.
@@ -234,15 +227,16 @@ namespace osum.GameplayElements
 
             int colourIndex = lastDiffObject != null ? lastDiffObject.ColourIndex : 0;
 
+            bool sameTimeAsLastAdded = lastDiffObject != null && Math.Abs(h.StartTime - lastDiffObject.StartTime) < 5;
+
             if (h.NewCombo)
             {
                 currentComboNumber = 1;
-                colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
+                if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
+                    colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
             }
             else
                 currentComboNumber = lastDiffObject == null ? 1 : lastDiffObject.ComboNumber + (lastDiffObject.IncrementCombo ? 1 : 0);
-
-            bool sameTimeAsLastAdded = lastDiffObject != null && h.StartTime == lastDiffObject.StartTime;
 
             if (sameTimeAsLastAdded)
             {

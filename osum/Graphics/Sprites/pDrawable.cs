@@ -282,6 +282,7 @@ namespace osum.Graphics.Sprites
         /// If true, this sprite is not affected by universal dimming.
         /// </summary>
         internal bool DimImmune;
+        public bool Bypass;
 
         internal Color4 AlphaAppliedColour
         {
@@ -695,6 +696,8 @@ namespace osum.Graphics.Sprites
 
         public virtual bool Draw()
         {
+            if (Bypass) return false;
+
             if (Alpha != 0 &&
                 (Transformations.Count != 0 || AlwaysDraw) &&
                 IsOnScreen)
@@ -711,6 +714,8 @@ namespace osum.Graphics.Sprites
 
         public virtual void Update()
         {
+            if (Bypass) return;
+
             UpdateTransformations();
         }
 

@@ -439,7 +439,7 @@ namespace osum.GameplayElements
                     if (currHitObject.StackCount != 0)
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
-                    //Draw connection lines
+                    //Draw follow lines
                     if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {
                         Vector2 pos1 = last.EndPosition;
