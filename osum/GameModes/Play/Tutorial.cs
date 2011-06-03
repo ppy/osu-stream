@@ -58,9 +58,10 @@ namespace osum.GameModes.Play
             Healthbar_3,
             Healthbar_4,
             Healthbar_5,
-            Healthbar_6,
+            Healthbar_End,
+            Score_1,
+            Score_2,
             End,
-
         }
 
         TutorialSegments currentSegment;
@@ -86,24 +87,41 @@ namespace osum.GameModes.Play
             switch (currentSegment)
             {
                 case TutorialSegments.Introduction_1:
-                    showText("Welcome to the world of osu!.\nThis tutorial will teach you everything you need to know in order to become a rhythm master.");
-                    break;
+                    {
+                        showText("Welcome to the world of osu!.\nThis tutorial will teach you everything you need to know in order to become a rhythm master.");
+                        break;
+                    }
                 case TutorialSegments.Introduction_2:
-                    showText("osu!stream is a rhythm game which requires both rhythmical and positional accuracy.");
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                    break;
+                    {
+                        showText("osu!stream is a rhythm game which requires both rhythmical and positional accuracy.");
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                        break;
+                    }
                 case TutorialSegments.Introduction_3:
-                    showText("in order to play you need to suck mah balllls");
-                    break;
+                    {
+                        showText("in order to play you need to suck mah balllls");
+                        break;
+                    }
                 case TutorialSegments.Healthbar_1:
-                    showText("The health bar is located at the top-left of your display.");
-                    healthBar = new HealthBar();
-                    healthBar.spriteManager.Sprites.ForEach(s => s.AdditiveFlash(1000, 1));
-                    streamSwitchDisplay = new StreamSwitchDisplay();
-                    break;
+                    {
+                        showText("The health bar is located at the top-left of your display.");
+                        healthBar = new HealthBar();
+
+                        pDrawable lastFlash = null;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (lastFlash == null || lastFlash.Alpha == 0)
+                                lastFlash = healthBar.s_barBg.AdditiveFlash(1000, 1).ScaleTo(healthBar.s_barBg.ScaleScalar * 1.04f, 1000);
+                        };
+
+                        streamSwitchDisplay = new StreamSwitchDisplay();
+                        break;
+                    }
                 case TutorialSegments.Healthbar_2:
-                    showText("It will go up or down depending on your performance.");
-                    break;
+                    {
+                        showText("It will go up or down depending on your performance.");
+                        break;
+                    }
                 case TutorialSegments.Healthbar_3:
                     {
                         showText("In stream mode gameplay, you can jump to the next stream by filling your health bar.", -120);
@@ -122,7 +140,7 @@ namespace osum.GameModes.Play
                                 {
                                     streamSwitchDisplay.EndSwitch();
                                     healthBar.SetCurrentHp(100);
-                                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_HARD);
+                                    playfieldBackground.ChangeColour(Difficulty.Hard);
                                     showTouchToContinue();
                                 }
                                 else
@@ -155,7 +173,7 @@ namespace osum.GameModes.Play
                                 {
                                     streamSwitchDisplay.EndSwitch();
                                     healthBar.SetCurrentHp(100);
-                                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                                    playfieldBackground.ChangeColour(Difficulty.Normal);
                                     showTouchToContinue();
                                 }
                                 else
@@ -175,44 +193,69 @@ namespace osum.GameModes.Play
                         break;
                     }
                 case TutorialSegments.Healthbar_5:
-                    showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", -120);
-                    touchToContinue = false;
-
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_EASY,false);
-
-                    currentSegmentDelegate = delegate
                     {
-                        healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
-                        if (healthBar.CurrentHp == 0)
+                        showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", -120);
+                        touchToContinue = false;
+
+                        playfieldBackground.ChangeColour(Difficulty.Easy, false);
+
+                        currentSegmentDelegate = delegate
                         {
-
-                            if (!touchToContinue)
+                            if (playfieldBackground.Velocity == 0)
+                                healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
+                            if (healthBar.CurrentHp == 0)
                             {
-                                showTouchToContinue();
-                                playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
-                                showFailSprite();
-                                AudioEngine.Music.Pause();
-                            }
-                        }
-                        else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
-                    };
 
+                                if (!touchToContinue)
+                                {
+                                    showTouchToContinue();
+                                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+                                    showFailSprite();
+                                    AudioEngine.Music.Pause();
+                                }
+                            }
+                            else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
+                                playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+                        };
+                    }
                     break;
-                case TutorialSegments.Healthbar_6:
-                    healthBar.SetCurrentHp(100);
-                    hideFailSprite();
-                    AudioEngine.Music.Play();
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                    healthBar.InitialIncrease = true;
-                    touchToContinue = false;
-                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp == 100) loadNextSegment(); };
+                case TutorialSegments.Healthbar_End:
+                    {
+                        healthBar.SetCurrentHp(100);
+                        hideFailSprite();
+                        AudioEngine.Music.Play();
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
+                        healthBar.InitialIncrease = true;
+                        touchToContinue = false;
+                        currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
+                        break;
+                    }
+                case TutorialSegments.Score_1:
+                    {
+                        scoreDisplay = new ScoreDisplay();
+
+                        pDrawable lastFlash = null;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (lastFlash == null || lastFlash.Alpha == 0)
+                                scoreDisplay.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
+                        };
+
+                        showText("Scoring is based on a your accuracy and combo.");
+                    }
                     break;
+                case TutorialSegments.Score_2:
+                    {
+                        showText("You can also get score bonuses from reaching higher streams, and for spinning spinners fast!");
+                        break;
+                    }
                 case TutorialSegments.End:
-                    backButton.HandleInput = false;
-                    Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
-                    touchToContinue = false;
-                    break;
+                    {
+                        backButton.HandleInput = false;
+                        Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                        touchToContinue = false;
+                        break;
+                    }
             }
 
             if (touchToContinue)

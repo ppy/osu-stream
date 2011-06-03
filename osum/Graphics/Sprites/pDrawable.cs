@@ -677,12 +677,12 @@ namespace osum.Graphics.Sprites
         /// <param name="target">The target.</param>
         /// <param name="duration">The duration.</param>
         /// <param name="easing">The easing.</param>
-        internal void ScaleTo(float target, int duration, EasingTypes easing = EasingTypes.None)
+        internal pDrawable ScaleTo(float target, int duration, EasingTypes easing = EasingTypes.None)
         {
             Transformations.RemoveAll(t => (t.Type & TransformationType.Scale) > 0);
 
             if (target == ScaleScalar)
-                return;
+                return this;
 
             if (duration == 0)
                 ScaleScalar = target;
@@ -690,6 +690,8 @@ namespace osum.Graphics.Sprites
             int now = Clock.GetTime(Clocking);
 
             Transform(new Transformation(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
+
+            return this;
         }
 
         #region IDrawable Members

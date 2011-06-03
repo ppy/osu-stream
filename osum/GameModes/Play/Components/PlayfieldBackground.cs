@@ -143,7 +143,7 @@ namespace osum.GameModes.Play.Components
 
         internal void Move(float amount)
         {
-            curentXOffset += amount;
+            curentXOffset += amount * 0.7f;
 
             float nativeX = curentXOffset * GameBase.BaseToNativeRatio;
 
@@ -156,7 +156,7 @@ namespace osum.GameModes.Play.Components
             calculateDiagonals();
         }
 
-        private float velocity;
+        internal float Velocity;
 
         public override void Update()
         {
@@ -165,10 +165,11 @@ namespace osum.GameModes.Play.Components
             Color4 colourTop = Colour;
             Color4 colourBottom = ColourHelper.Darken(Colour, 0.85f);
 
-            if (velocity != 0)
+            if (Velocity != 0)
             {
-                Move(velocity);
-                velocity *= 0.9f;
+                Move(Velocity);
+                Velocity *= 0.9f;
+                if (Math.Abs(Velocity) < 0.01f) Velocity = 0;
             }
 
             Color4 col = Colour;
@@ -208,14 +209,14 @@ namespace osum.GameModes.Play.Components
         }
 
         Difficulty lastDifficulty;
-        internal void ChangeColour(Difficulty difficulty)
+        internal void ChangeColour(Difficulty difficulty, bool flash = true)
         {
             if (difficulty != lastDifficulty)
             {
                 if (difficulty > lastDifficulty)
-                    velocity = 50;
+                    Velocity = 50;
                 else
-                    velocity = -50;
+                    Velocity = -50;
             }
 
             lastDifficulty = difficulty;
@@ -223,16 +224,16 @@ namespace osum.GameModes.Play.Components
             switch (difficulty)
             {
                 case Difficulty.Easy:
-                    ChangeColour(COLOUR_EASY);
+                    ChangeColour(COLOUR_EASY, flash);
                     return;
                 case Difficulty.Normal:
-                    ChangeColour(COLOUR_STANDARD);
+                    ChangeColour(COLOUR_STANDARD, flash);
                     return;
                 case Difficulty.Hard:
-                    ChangeColour(COLOUR_HARD);
+                    ChangeColour(COLOUR_HARD, flash);
                     return;
                 case Difficulty.Expert:
-                    ChangeColour(COLOUR_EXPERT);
+                    ChangeColour(COLOUR_EXPERT, flash);
                     return;
             }
         }
