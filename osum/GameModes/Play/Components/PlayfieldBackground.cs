@@ -51,8 +51,10 @@ namespace osum.GameModes.Play.Components
     /// </summary>
     class PlayfieldBackground : pDrawable
     {
-        float[] vertices = new float[24 * 2];
-        float[] colours = new float[24 * 4];
+        const int line_count = 5;
+
+        float[] vertices = new float[(line_count + 1) * 4 * 2];
+        float[] colours = new float[(line_count + 1) * 4 * 4];
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_EASY = new Color4(149, 207, 49, 255);
@@ -72,14 +74,18 @@ namespace osum.GameModes.Play.Components
             Alpha = 1;
             currentColour = Colour = COLOUR_INTRO;
 
+            curentXOffset = -lineWidth;
+
             GameBase.OnScreenLayoutChanged += initialize;
         }
 
         float curentXOffset;
-        float lineWidth = GameBase.NativeSize.Width * 0.2f;
+        float lineWidth;
 
         private void initialize()
         {
+            lineWidth = GameBase.NativeSize.Width * 0.2f;
+
             float left = 0;
             float right = GameBase.NativeSize.Width;
             float top = 0;
@@ -98,7 +104,7 @@ namespace osum.GameModes.Play.Components
             vertices[j++] = bottom;
 
             //diagonal lines
-            curentXOffset = 0;
+            
             calculateDiagonals();
         }
 
@@ -106,10 +112,10 @@ namespace osum.GameModes.Play.Components
         {
             int j = 8;
 
-            float diagonalY = curentXOffset - lineWidth;
-            float diagonalX = curentXOffset - lineWidth;
+            float diagonalY = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
+            float diagonalX = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
 
-            for (int k = 0; k < 5; k++)
+            for (int k = 0; k < line_count; k++)
             {
                 vertices[j++] = diagonalX;
                 vertices[j++] = 0;
@@ -139,10 +145,13 @@ namespace osum.GameModes.Play.Components
         {
             curentXOffset += amount;
 
-            if (amount > 0 && curentXOffset - lineWidth > 0)
-                curentXOffset -= lineWidth * 2;
-            else if (amount < 0 && lineWidth - curentXOffset > 0)
-                curentXOffset += lineWidth * 2;
+            float nativeX = curentXOffset * GameBase.BaseToNativeRatio;
+
+
+            if (nativeX - 2 * lineWidth > 0)
+                curentXOffset -= lineWidth / GameBase.BaseToNativeRatio * 2;
+            else if (0.5f * lineWidth - nativeX > 0)
+                curentXOffset += lineWidth / GameBase.BaseToNativeRatio * 2;
 
             calculateDiagonals();
         }
@@ -161,10 +170,9 @@ namespace osum.GameModes.Play.Components
                 Move(velocity);
                 velocity *= 0.9f;
             }
-            
 
             Color4 col = Colour;
-            for (int i = 0; i < 24; i++)
+            for (int i = 0; i < (line_count + 1) * 4; i++)
             {
                 //change to the darker colour for bottom vertices and diagonals
                 if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
@@ -191,11 +199,8 @@ namespace osum.GameModes.Play.Components
             SpriteManager.BlendingMode = BlendingFactorDest.One;
 
             //todo: this can definitely be further optimised into a single call.
-            GL.DrawArrays(BeginMode.TriangleFan, 4, 4);
-            GL.DrawArrays(BeginMode.TriangleFan, 8, 4);
-            GL.DrawArrays(BeginMode.TriangleFan, 12, 4);
-            GL.DrawArrays(BeginMode.TriangleFan, 16, 4);
-            GL.DrawArrays(BeginMode.TriangleFan, 20, 4);
+            for (int i = 0; i < line_count; i++)
+                GL.DrawArrays(BeginMode.TriangleFan, (i + 1) * 4, 4);
 
             GL.DisableClientState(ArrayCap.ColorArray);
 
@@ -212,7 +217,7 @@ namespace osum.GameModes.Play.Components
                 else
                     velocity = -50;
             }
-            
+
             lastDifficulty = difficulty;
 
             switch (difficulty)
@@ -232,17 +237,24 @@ namespace osum.GameModes.Play.Components
             }
         }
 
-        internal void ChangeColour(Color4 colour)
+        internal void ChangeColour(Color4 colour, bool flash = true)
         {
             if (colour == currentColour)
                 return;
 
-            Colour = colour;
+            if (flash)
+            {
+                Colour = colour;
 
-            if (currentColour == COLOUR_INTRO)
-                FlashColour(Color4.LightGray, 400);
+                if (currentColour == COLOUR_INTRO)
+                    FlashColour(Color4.LightGray, 400);
+                else
+                    FlashColour(Color4.White, 400);
+            }
             else
-                FlashColour(Color4.White, 400);
+            {
+                FadeColour(colour, 400);
+            }
 
             currentColour = colour;
         }
