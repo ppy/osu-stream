@@ -93,13 +93,13 @@ namespace osum.GameModes.Play
                     }
                 case TutorialSegments.Introduction_2:
                     {
-                        showText("osu!stream is a rhythm game which requires both rhythmical and positional accuracy.");
+                        showText("osu!stream is a game which requires both rhythmical and positional accuracy.");
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
                         break;
                     }
                 case TutorialSegments.Introduction_3:
                     {
-                        showText("in order to play you need to suck mah balllls");
+                        showText("You will need to feel the beat of the music, so make sure you are using headphones or playing in quiet surroundings!");
                         break;
                     }
                 case TutorialSegments.Healthbar_1:
@@ -145,7 +145,7 @@ namespace osum.GameModes.Play
                                 }
                                 else
                                 {
-                                    increaseRate += 0.3f;
+                                    increaseRate += 0.2f;
                                     streamSwitchDisplay.BeginSwitch(true);
                                     playfieldBackground.Move(increaseRate);
                                 }
@@ -178,7 +178,7 @@ namespace osum.GameModes.Play
                                 }
                                 else
                                 {
-                                    increaseRate += 0.3f;
+                                    increaseRate += 0.2f;
                                     streamSwitchDisplay.BeginSwitch(false);
                                     playfieldBackground.Move(-increaseRate);
                                 }
