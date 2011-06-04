@@ -19,7 +19,7 @@ namespace osum.Graphics
 
         internal override void Initialize()
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
             {
                 pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
                 burst.Additive = true;
