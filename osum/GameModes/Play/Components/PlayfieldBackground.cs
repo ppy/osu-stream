@@ -211,7 +211,7 @@ namespace osum.GameModes.Play.Components
         Difficulty lastDifficulty;
         internal void ChangeColour(Difficulty difficulty, bool flash = true)
         {
-            if (difficulty != lastDifficulty)
+            if (difficulty != lastDifficulty && flash)
             {
                 if (difficulty > lastDifficulty)
                     Velocity = 50;
