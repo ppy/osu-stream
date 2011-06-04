@@ -148,6 +148,18 @@ namespace osum.GameplayElements
                                 }
                                 break;
                             case FileSection.Editor:
+                                switch (key)
+                                {
+                                    case "Bookmarks":
+                                        if (val.Length > 0)
+                                        {
+                                            beatmap.StreamSwitchPoints = new List<int>();
+                                            string[] points = val.Split(',');
+                                            foreach (string point in points)
+                                                beatmap.StreamSwitchPoints.Add(Int32.Parse(point.Trim()));
+                                        }
+                                        break;
+                                }
                                 //not relevant
                                 continue;
                             case FileSection.Colours:

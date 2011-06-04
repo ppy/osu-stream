@@ -32,6 +32,7 @@ namespace osum.GameplayElements.Beatmaps
 
         }
         public string AudioFilename = "audio.mp3";
+        public List<int> StreamSwitchPoints;
 
         public Beatmap()
         {
