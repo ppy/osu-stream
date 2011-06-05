@@ -99,6 +99,8 @@ namespace osum
 
             TextureManager.DisposeAll(false);
 
+            AudioEngine.Reset();
+
             CurrentMode = mode;
             
             Clock.ModeTimeReset();

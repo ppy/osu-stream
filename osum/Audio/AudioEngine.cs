@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.Support;
+using osum.Helpers;
 
 namespace osum.Audio
 {
@@ -42,12 +43,26 @@ namespace osum.Audio
                 LoadSample(s);
         }
 
+        static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
+
         internal static int PlaySample(OsuSamples sample)
         {
             int buffer = LoadSample(sample);
             if (buffer < 0) return buffer;
 
+            int lastPlayed = -1;
+            if (lastPlayedTimes.TryGetValue(sample,out lastPlayed))
+                if (Clock.AudioTime - lastPlayed < 80)
+                    return -1;
+            lastPlayedTimes[sample] = Clock.AudioTime;
+
+
             return AudioEngine.Effect.PlayBuffer(buffer);
+        }
+
+        internal static void Reset()
+        {
+            lastPlayedTimes.Clear();
         }
 
         internal static int LoadSample(OsuSamples sample)
