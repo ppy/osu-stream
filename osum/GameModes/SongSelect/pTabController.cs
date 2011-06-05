@@ -96,7 +96,8 @@ namespace osum.GameModes.SongSelect
         {
             if (activeSpriteManager != null) activeSpriteManager.Draw();
 
-            return base.Draw();
+            //return base.Draw();
+            return true;
         }
 
         internal void Hide()
