@@ -52,7 +52,7 @@ namespace osum.Audio
 
             int lastPlayed = -1;
             if (lastPlayedTimes.TryGetValue(sample,out lastPlayed))
-                if (Clock.AudioTime - lastPlayed < 80)
+                if (Clock.AudioTime - lastPlayed < 45)
                     return -1;
             lastPlayedTimes[sample] = Clock.AudioTime;
 
