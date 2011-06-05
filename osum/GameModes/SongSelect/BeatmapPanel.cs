@@ -62,7 +62,7 @@ namespace osum.GameModes.SongSelect
                 s_BackingPlate.FadeIn(100);
             };
 
-            s_Text = new pText(string.Empty, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
+            s_Text = new pText(string.Empty, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false);
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(74, 14);
             Sprites.Add(s_Text);
