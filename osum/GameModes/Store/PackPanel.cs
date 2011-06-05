@@ -251,7 +251,7 @@ namespace osum.GameModes.Store
                         preview.Rotation = 0;
 
                         StoreMode.PlayPreview(data);
-                        preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_pause);
+                        preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_pause);
                     });
                 };
                 NetManager.AddRequest(previewRequest);
@@ -260,7 +260,7 @@ namespace osum.GameModes.Store
                 back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
                 back.TagNumeric = 1;
 
-                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview_load);
+                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
                 preview.Transform(new Transformation(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 

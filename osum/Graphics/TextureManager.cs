@@ -44,7 +44,7 @@ using System.Drawing;
 
 namespace osum.Graphics.Skins
 {
-    internal class SpriteSheetTexture
+    internal partial class SpriteSheetTexture
     {
         private string sheetName;
         internal string SheetName
@@ -86,132 +86,7 @@ namespace osum.Graphics.Skins
 
         public static void Initialize()
         {
-            //scoring sprites
-            textureLocations.Add(OsuTexture.hit0, new SpriteSheetTexture("hit", 694, 279, 140, 134));
-            textureLocations.Add(OsuTexture.hit50, new SpriteSheetTexture("hit", 369, 0, 133, 132));
-            textureLocations.Add(OsuTexture.hit100, new SpriteSheetTexture("hit", 189, 0, 180, 180));
-            textureLocations.Add(OsuTexture.hit100k, new SpriteSheetTexture("hit", 190, 180, 180, 180));
-            textureLocations.Add(OsuTexture.hit300, new SpriteSheetTexture("hit", 0, 0, 189, 190));
-            textureLocations.Add(OsuTexture.hit300k, new SpriteSheetTexture("hit", 0, 190, 190, 190));
-            textureLocations.Add(OsuTexture.hit300g, new SpriteSheetTexture("hit", 626, 0, 208, 207));
-
-            //sliders
-            textureLocations.Add(OsuTexture.sliderfollowcircle, new SpriteSheetTexture("hit", 370, 132, 256, 257));
-            textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 190, 366, 20, 18));
-            textureLocations.Add(OsuTexture.sliderarrow, new SpriteSheetTexture("hit", 626, 206, 77, 58));
-            textureLocations.Add(OsuTexture.sliderb_0, new SpriteSheetTexture("hit", 0, 508, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_1, new SpriteSheetTexture("hit", 118, 508, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_2, new SpriteSheetTexture("hit", 236, 508, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_3, new SpriteSheetTexture("hit", 354, 508, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_4, new SpriteSheetTexture("hit", 472, 508, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_5, new SpriteSheetTexture("hit", 0, 626, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_6, new SpriteSheetTexture("hit", 118, 626, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_7, new SpriteSheetTexture("hit", 236, 626, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_8, new SpriteSheetTexture("hit", 354, 626, 118, 118));
-            textureLocations.Add(OsuTexture.sliderb_9, new SpriteSheetTexture("hit", 472, 626, 118, 118));
-
-
-            //hitcircles
-            textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 834, 0, 108, 108));
-            textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
-            textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
-
-            //spinner
-            textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 819, 1024, 640));
-            textureLocations.Add(OsuTexture.spinner_circle, new SpriteSheetTexture("hit", 1046, 831, 614, 615));
-            textureLocations.Add(OsuTexture.spinner_clear, new SpriteSheetTexture("hit", 21, 1533, 333, 136));
-            textureLocations.Add(OsuTexture.spinner_spin, new SpriteSheetTexture("hit", 21, 1685, 333, 147));
-            textureLocations.Add(OsuTexture.spinner_spm, new SpriteSheetTexture("hit", 354, 1779, 285, 61));
-
-            //hitobject misc.
-            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 195, 387, 11, 11));
-            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 998, 176, 2, 13));
-
-            //default font (hitobjects)
-            textureLocations.Add(OsuTexture.default_0, new SpriteSheetTexture("hit", 131, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 201, 456, 13, 47));
-            textureLocations.Add(OsuTexture.default_2, new SpriteSheetTexture("hit", 219, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_3, new SpriteSheetTexture("hit", 289, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_4, new SpriteSheetTexture("hit", 359, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_5, new SpriteSheetTexture("hit", 429, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_6, new SpriteSheetTexture("hit", 499, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_7, new SpriteSheetTexture("hit", 569, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_8, new SpriteSheetTexture("hit", 639, 456, 65, 47));
-            textureLocations.Add(OsuTexture.default_9, new SpriteSheetTexture("hit", 709, 456, 65, 47));
-
-            //score font
-            textureLocations.Add(OsuTexture.score_0, new SpriteSheetTexture("hit", 126, 400, 42, 54));
-            textureLocations.Add(OsuTexture.score_1, new SpriteSheetTexture("hit", 180, 400, 20, 54));
-            textureLocations.Add(OsuTexture.score_2, new SpriteSheetTexture("hit", 215, 400, 41, 54));
-            textureLocations.Add(OsuTexture.score_3, new SpriteSheetTexture("hit", 258, 400, 43, 54));
-            textureLocations.Add(OsuTexture.score_4, new SpriteSheetTexture("hit", 302, 400, 43, 54));
-            textureLocations.Add(OsuTexture.score_5, new SpriteSheetTexture("hit", 348, 400, 40, 54));
-            textureLocations.Add(OsuTexture.score_6, new SpriteSheetTexture("hit", 392, 400, 40, 54));
-            textureLocations.Add(OsuTexture.score_7, new SpriteSheetTexture("hit", 438, 400, 37, 54));
-            textureLocations.Add(OsuTexture.score_8, new SpriteSheetTexture("hit", 480, 400, 42, 54));
-            textureLocations.Add(OsuTexture.score_9, new SpriteSheetTexture("hit", 524, 400, 42, 54));
-            textureLocations.Add(OsuTexture.score_comma, new SpriteSheetTexture("hit", 572, 400, 15, 56));
-            textureLocations.Add(OsuTexture.score_dot, new SpriteSheetTexture("hit", 596, 400, 17, 54));
-            textureLocations.Add(OsuTexture.score_percent, new SpriteSheetTexture("hit", 619, 400, 56, 56));
-            textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 834, 400, 36, 54));
-
-            //play mode strea changing display
-            textureLocations.Add(OsuTexture.stream_changing_up, new SpriteSheetTexture("hit", 1780, 3, 266, 185));
-            textureLocations.Add(OsuTexture.stream_changing_down, new SpriteSheetTexture("hit", 1780, 189, 266, 168));
-            textureLocations.Add(OsuTexture.stream_changing_arrow, new SpriteSheetTexture("hit", 1847, 357, 199, 275));
-
-            //play mode misc
-            textureLocations.Add(OsuTexture.failed, new SpriteSheetTexture("hit", 1025, 0, 609, 418));
-            textureLocations.Add(OsuTexture.mouse_burst, new SpriteSheetTexture("hit", 591, 509, 38, 38));
-
-            //play mode menu
-            textureLocations.Add(OsuTexture.play_menu_pull, new SpriteSheetTexture("hit", 379, 1461, 699, 77));
-            textureLocations.Add(OsuTexture.play_menu_background, new SpriteSheetTexture("hit", 358, 1552, 1024, 210));
-            textureLocations.Add(OsuTexture.play_menu_continue, new SpriteSheetTexture("hit", 643,1783, 316, 152));
-            textureLocations.Add(OsuTexture.play_menu_restart, new SpriteSheetTexture("hit", 959, 1783, 317, 152));
-            textureLocations.Add(OsuTexture.play_menu_quit, new SpriteSheetTexture("hit", 1276, 1783, 316, 152));
-
-            textureLocations.Add(OsuTexture.scorebar_marker_hit, new SpriteSheetTexture("hit", 730, 206, 71, 73));
-            textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 648, 357, 23, 39));
-            textureLocations.Add(OsuTexture.scorebar_colour, new SpriteSheetTexture("hit", 0, 745, 646, 14));
-            textureLocations.Add(OsuTexture.scorebar_background, new SpriteSheetTexture("hit", 0, 760, 742, 58));
-
-            textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 0, 1024, 85));
-            textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 443, 1024, 121));
-            textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 0, 190, 103, 85));
-            textureLocations.Add(OsuTexture.songselect_back_hexagon, new SpriteSheetTexture("songselect", 227, 192, 250, 251));
-            textureLocations.Add(OsuTexture.songselect_back_arrow, new SpriteSheetTexture("songselect", 104, 192, 122, 125));
-
-            textureLocations.Add(OsuTexture.songselect_tab_bar_background, new SpriteSheetTexture("songselect", 0, 626, 2, 80));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_play, new SpriteSheetTexture("songselect", 67, 629, 249, 76));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_rank, new SpriteSheetTexture("songselect", 356, 629, 249, 76));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_other, new SpriteSheetTexture("songselect", 660, 629, 249, 76));
-
-            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 0, 279, 37, 43));
-            textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("songselect", 104, 317, 54, 53));
-            textureLocations.Add(OsuTexture.songselect_audio_preview_pause, new SpriteSheetTexture("songselect", 104, 377, 54, 53));
-            textureLocations.Add(OsuTexture.songselect_audio_preview_load, new SpriteSheetTexture("songselect", 160, 377, 54, 53));
-
-            textureLocations.Add(OsuTexture.songselect_store_buy_background, new SpriteSheetTexture("songselect", 479, 330, 230, 87));
-
-            textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 478, 193, 333, 136));
-            textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 19, 721, 333, 136));
-            textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 369, 721, 333, 136));
-
-            //main menu
-            textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 800));
-            textureLocations.Add(OsuTexture.menu_osu, new SpriteSheetTexture("menu", 1292, 17, 617, 617));
-            textureLocations.Add(OsuTexture.menu_osugloss, new SpriteSheetTexture("menu", 1535, 640, 508, 308));
-            textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1286, 635, 246, 248));
-            textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 8, 820, 1178, 141));
-            textureLocations.Add(OsuTexture.menu_headphones, new SpriteSheetTexture("menu", 9, 962, 382, 469));
-
-            textureLocations.Add(OsuTexture.countdown_background, new SpriteSheetTexture("hit", 1025, 419, 653, 362));
-            textureLocations.Add(OsuTexture.countdown_ready, new SpriteSheetTexture("hit", 1082, 1462, 422, 89));
-            textureLocations.Add(OsuTexture.countdown_3, new SpriteSheetTexture("hit", 1664, 837, 158, 138));
-            textureLocations.Add(OsuTexture.countdown_2, new SpriteSheetTexture("hit", 1664, 975, 158, 142));
-            textureLocations.Add(OsuTexture.countdown_1, new SpriteSheetTexture("hit", 1664, 1117, 85, 135));
-            textureLocations.Add(OsuTexture.countdown_go, new SpriteSheetTexture("hit", 1664, 1252, 314, 145));
+            LoadSprites();
 
             GameBase.OnScreenLayoutChanged += delegate
             {
@@ -564,8 +439,8 @@ namespace osum.Graphics.Skins
         songselect_tab_bar_background,
         songselect_mode_arrow,
         songselect_audio_preview,
-        songselect_audio_preview_pause,
-        songselect_audio_preview_load,
+        songselect_audio_pause,
+        songselect_audio_play,
         songselect_mode_stream,
         songselect_mode_easy,
         songselect_mode_expert,
@@ -586,7 +461,7 @@ namespace osum.Graphics.Skins
         menu_osu,
         menu_circle,
         menu_stream,
-        menu_osugloss,
+        menu_gloss,
         menu_headphones,
         failed,
         play_menu_pull,
