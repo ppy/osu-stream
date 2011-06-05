@@ -9,6 +9,7 @@ using Rectangle=System.Drawing.Rectangle;
 using osum.Graphics;
 using OpenTK;
 using OpenTK.Graphics;
+using System.IO;
 
 namespace osum.Graphics.Renderers
 {
@@ -43,11 +44,11 @@ namespace osum.Graphics.Renderers
 
                     SizeF measuredSize;
 
-                    FontStyle fs = FontStyle.Regular;
-                    if (bold)
-                        fs |= FontStyle.Bold;
-                    if (underline)
-                        fs |= FontStyle.Underline;
+                    FontStyle fs = FontStyle.Bold;
+                    //if (bold)
+                    //    fs |= FontStyle.Bold;
+                    //if (underline)
+                    //    fs |= FontStyle.Underline;
 
                     switch (alignment)
                     {
@@ -63,7 +64,11 @@ namespace osum.Graphics.Renderers
                             break;
                     }
 
-                    using (Font f = new Font(fontFace, size, fs))
+                    PrivateFontCollection fontCollection = new PrivateFontCollection();
+                    fontCollection.AddFontFile(Path.GetFullPath(@"Skins/Default/font.ttf"));
+                    FontFamily tFont = fontCollection.Families[0];
+
+                    using (Font f = new Font(tFont, size, fs))
                     {
                         {
                             try
