@@ -189,7 +189,7 @@ namespace osum.GameModes.Store
 
             foreach (pSprite p in songPreviewButtons)
             {
-                p.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
+                p.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
                 p.Transformations.Clear();
                 p.Rotation = 0;
             }
@@ -212,7 +212,7 @@ namespace osum.GameModes.Store
 
         internal void Add(string filename)
         {
-            pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
+            pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
             preview.Offset = new Vector2(68, Height + 20);
             Sprites.Add(preview);
             songPreviewButtons.Add(preview);
@@ -260,7 +260,7 @@ namespace osum.GameModes.Store
                 back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
                 back.TagNumeric = 1;
 
-                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
+                preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
                 preview.Transform(new Transformation(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
