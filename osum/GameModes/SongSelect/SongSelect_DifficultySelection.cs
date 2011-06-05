@@ -300,14 +300,33 @@ namespace osum.GameModes
 
             State = SelectState.Starting;
 
-            if (Player.Difficulty != Difficulty.Easy) s_ModeButtonEasy.FadeOut(200);
-            if (Player.Difficulty != Difficulty.Normal) s_ModeButtonStream.FadeOut(200);
-            if (Player.Difficulty != Difficulty.Expert) s_ModeButtonExpert.FadeOut(200);
+            pDrawable activatedSprite = null;
+
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    s_ModeButtonStream.FadeOut(200);
+                    s_ModeButtonExpert.FadeOut(200);
+                    activatedSprite = s_ModeButtonEasy;
+                    break;
+                case Difficulty.Normal:
+                    s_ModeButtonEasy.FadeOut(200);
+                    s_ModeButtonExpert.FadeOut(200);
+                    activatedSprite = s_ModeButtonStream;
+                    break;
+                case Difficulty.Expert:
+                    s_ModeButtonStream.FadeOut(200);
+                    s_ModeButtonEasy.FadeOut(200);
+                    activatedSprite = s_ModeButtonExpert;
+                    break;
+            }
+
+            activatedSprite.AdditiveFlash(800, 0.8f).Transform(new Transformation(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
 
             s_ModeArrowLeft.FadeOut(200);
             s_ModeArrowRight.FadeOut(200);
 
-            s_Footer.AdditiveFlash(500,0.5f);
+            s_Footer.AdditiveFlash(500, 0.5f);
 
             GameBase.Scheduler.Add(delegate
             {
