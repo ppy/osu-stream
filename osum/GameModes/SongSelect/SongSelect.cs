@@ -67,9 +67,15 @@ namespace osum.GameModes
 
             InitializeBeatmaps();
 
+            background =
+                new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                            ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
+            spriteManager.Add(background);
+
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             s_Header.Transform(new Transformation(new Vector2(-80, -10), Vector2.Zero, 0, 800, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
+            s_Header.OnClick += delegate {};
             spriteManager.Add(s_Header);
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, new Color4(200, 200, 200, 255));
@@ -230,7 +236,9 @@ namespace osum.GameModes
                 }
             }
 
-            panel.s_BackingPlate.FlashColour(Color4.White, 500);
+            panel.s_BackingPlate2.Alpha = 1;
+            panel.s_BackingPlate2.AdditiveFlash(400, 1);
+            panel.s_BackingPlate2.Colour = Color4.White;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -287,13 +295,16 @@ namespace osum.GameModes
 
         public override bool Draw()
         {
+            base.Draw();
+
             if (tabController != null) tabController.Draw();
 
-            return base.Draw();
+            return true;
         }
 
         bool pendingModeChange;
         private BeatmapPanel panelDownloadMore;
+        private pSprite background;
         public override void Update()
         {
             base.Update();
@@ -329,8 +340,11 @@ namespace osum.GameModes
                         {
                             Vector2 pos = new Vector2(difficultySelectOffset, 0);
                             s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
                             s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonStream.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonStream.Offset.X + s_ModeButtonStream.Position.X));
                             s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonExpert.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonExpert.Offset.X + s_ModeButtonExpert.Position.X));
                         }
                     }
 

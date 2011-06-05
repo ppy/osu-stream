@@ -84,23 +84,26 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.menu_gloss, new SpriteSheetTexture("menu", 1282, 619, 508, 308));
             textureLocations.Add(OsuTexture.menu_headphones, new SpriteSheetTexture("menu", 0, 945, 382, 469));
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 384, 945, 246, 248));
-            textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 0, 1024, 121));
-            textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 123, 1024, 88));
-            textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 0, 213, 550, 416));
-            textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 552, 213, 550, 363));
-            textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 552, 578, 550, 354));
-            textureLocations.Add(OsuTexture.songselect_back_hexagon, new SpriteSheetTexture("songselect", 0, 631, 250, 251));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_other, new SpriteSheetTexture("songselect", 252, 631, 249, 76));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_play, new SpriteSheetTexture("songselect", 0, 884, 249, 76));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_rank, new SpriteSheetTexture("songselect", 252, 709, 249, 76));
-            textureLocations.Add(OsuTexture.songselect_store_buy_background, new SpriteSheetTexture("songselect", 1026, 0, 230, 87));
-            textureLocations.Add(OsuTexture.songselect_back_arrow, new SpriteSheetTexture("songselect", 252, 787, 122, 125));
-            textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 1026, 89, 103, 85));
-            textureLocations.Add(OsuTexture.songselect_audio_pause, new SpriteSheetTexture("songselect", 376, 787, 54, 53));
-            textureLocations.Add(OsuTexture.songselect_audio_play, new SpriteSheetTexture("songselect", 251, 914, 54, 53));
-            textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("songselect", 376, 842, 54, 53));
-            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 503, 631, 37, 43));
-            textureLocations.Add(OsuTexture.songselect_tab_bar_background, new SpriteSheetTexture("songselect", 542, 631, 2, 81));
+            textureLocations.Add(OsuTexture.songselect_background, new SpriteSheetTexture("songselect", 0, 0, 1024, 640));
+            textureLocations.Add(OsuTexture.songselect_footer, new SpriteSheetTexture("songselect", 0, 642, 1024, 121));
+            textureLocations.Add(OsuTexture.songselect_panel, new SpriteSheetTexture("songselect", 0, 765, 1024, 96));
+            textureLocations.Add(OsuTexture.songselect_panel_selected, new SpriteSheetTexture("songselect", 0, 863, 1024, 96));
+            textureLocations.Add(OsuTexture.songselect_header, new SpriteSheetTexture("songselect", 0, 961, 1024, 88));
+            textureLocations.Add(OsuTexture.songselect_mode_stream, new SpriteSheetTexture("songselect", 1026, 0, 450, 297));
+            textureLocations.Add(OsuTexture.songselect_mode_easy, new SpriteSheetTexture("songselect", 0, 1051, 400, 303));
+            textureLocations.Add(OsuTexture.songselect_mode_expert, new SpriteSheetTexture("songselect", 1026, 299, 400, 257));
+            textureLocations.Add(OsuTexture.songselect_back_hexagon, new SpriteSheetTexture("songselect", 0, 1356, 250, 251));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_other, new SpriteSheetTexture("songselect", 402, 1051, 249, 76));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_play, new SpriteSheetTexture("songselect", 1478, 0, 249, 76));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_rank, new SpriteSheetTexture("songselect", 402, 1129, 249, 76));
+            textureLocations.Add(OsuTexture.songselect_store_buy_background, new SpriteSheetTexture("songselect", 1478, 78, 230, 87));
+            textureLocations.Add(OsuTexture.songselect_back_arrow, new SpriteSheetTexture("songselect", 1026, 558, 122, 125));
+            textureLocations.Add(OsuTexture.songselect_thumbnail, new SpriteSheetTexture("songselect", 252, 1356, 103, 85));
+            textureLocations.Add(OsuTexture.songselect_audio_pause, new SpriteSheetTexture("songselect", 402, 1207, 54, 53));
+            textureLocations.Add(OsuTexture.songselect_audio_play, new SpriteSheetTexture("songselect", 0, 1609, 54, 53));
+            textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("songselect", 1478, 167, 54, 53));
+            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("songselect", 0, 1664, 37, 43));
+            textureLocations.Add(OsuTexture.songselect_tab_bar_background, new SpriteSheetTexture("songselect", 402, 1262, 2, 81));
         }
     }
 }

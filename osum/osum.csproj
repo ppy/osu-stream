@@ -338,6 +338,7 @@
     <Compile Include="Graphics\TouchBurster.cs" />
     <Compile Include="GameModes\Play\Components\StreamSwitchDisplay.cs" />
     <Compile Include="GameModes\Play\Tutorial.cs" />
+    <Compile Include="Graphics\TextureManager_Load.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

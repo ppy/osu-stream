@@ -475,6 +475,9 @@ namespace osum.Graphics.Skins
         countdown_1,
         countdown_go,
         countdown_ready,
-        mouse_burst
+        mouse_burst,
+        songselect_background,
+        songselect_panel,
+        songselect_panel_selected
     }
 }

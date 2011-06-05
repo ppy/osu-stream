@@ -119,14 +119,16 @@ namespace osum.GameModes
             s_ModeButtonExpert.OnClick += onModeButtonClick;
             sprites.Add(s_ModeButtonExpert);
 
-            s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-150, yOffset), 0.45f, true, Color4.White);
+            const float arrow_spread = 180;
+
+            s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-arrow_spread, yOffset), 0.45f, true, Color4.White);
             s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnClick += onSelectPreviousMode;
 
             sprites.Add(s_ModeArrowLeft);
 
-            s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(150, yOffset), 0.45f, true, Color4.DarkGray);
+            s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(arrow_spread, yOffset), 0.45f, true, Color4.DarkGray);
             s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnClick += onSelectNextMode;
@@ -134,7 +136,7 @@ namespace osum.GameModes
             s_ModeArrowRight.Rotation = 1;
             sprites.Add(s_ModeArrowRight);
 
-            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 55), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
@@ -224,18 +226,18 @@ namespace osum.GameModes
                 case Difficulty.Easy:
                     hasNext = true;
                     difficultySelectOffset = mode_button_width;
-                    text = "Toned-down difficulty. You can't fail.";
+                    text = "You can't fail.";
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
                     difficultySelectOffset = 0;
-                    text = "Standard triple-stream gameplay. Difficulty changes based on your performance.";
+                    text = "Dynamic stream switching!";
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
                     difficultySelectOffset = -mode_button_width;
-                    text = "Unlockable challenge.";
+                    text = "Not for the faint-hearted!";
                     break;
             }
 
@@ -263,6 +265,11 @@ namespace osum.GameModes
             State = SelectState.SongSelect;
 
             InitializeBgm();
+
+            if (SelectedPanel != null)
+            {
+                SelectedPanel.s_BackingPlate2.FadeColour(Color4.Transparent, 150);
+            }
 
             GameBase.Scheduler.Add(delegate
             {
