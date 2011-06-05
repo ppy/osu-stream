@@ -142,7 +142,7 @@ namespace osum.GameModes.Play
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
                     break;
                 case TutorialSegments.Introduction_3:
-                    showText("You will need to feel the beat of the music, so make sure you are using headphones or playing in quiet surroundings!");
+                    showText("You will need to feel the beat, so make sure you are using headphones or playing in quiet surroundings!");
                     break;
                 case TutorialSegments.Healthbar_1:
                     showText("The health bar is located at the top-left of your display.");
@@ -196,7 +196,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Healthbar_4:
-                    showText("In a similar matter, if it reaches zero, you will drop down a stream.", -120);
+                    showText("In a similar manner, if it reaches zero, you will drop down a stream.", -120);
                     touchToContinue = false;
                     {
                         float increaseRate = 0;
