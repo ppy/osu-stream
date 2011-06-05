@@ -306,6 +306,9 @@
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Skins\Default\font.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Skins\Default\hit_480">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
