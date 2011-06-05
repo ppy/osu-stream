@@ -148,7 +148,7 @@ namespace osum.GameplayElements
                         return -1;
                 }
 
-                //find a good point to stream swithc. this will be mapper set later.
+                //find a good point to stream switch. this will be mapper set later.
                 for (int i = processFrom; i < oldStreamObjects.Count; i++)
                 {
                     if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
@@ -172,7 +172,7 @@ namespace osum.GameplayElements
                     {
                         HitObject h = newStreamObjects[i];
 
-                        if (h.StartTime > switchTime)
+                        if (h.StartTime > switchTime && h.NewCombo)
                         {
                             removeBeforeIndex = i;
                             break;
