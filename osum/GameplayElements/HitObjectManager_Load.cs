@@ -222,11 +222,11 @@ namespace osum.GameplayElements
                                 HitObjectType type = (HitObjectType)(Int32.Parse(split[offset], GameBase.nfi) & 15);
                                 int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
-                                
-                                Vector2 pos = new Vector2(x, y);
-                                
 
-                                
+                                Vector2 pos = new Vector2(x, y);
+
+
+
                                 bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner;
 
                                 HitObject h = null;
@@ -311,7 +311,7 @@ namespace osum.GameplayElements
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
                                     Add(h, difficulty);
-							
+
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.

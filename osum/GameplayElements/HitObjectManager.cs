@@ -148,20 +148,17 @@ namespace osum.GameplayElements
                         return -1;
                 }
 
-                else
+                //find a good point to stream swithc. this will be mapper set later.
+                for (int i = processFrom; i < oldStreamObjects.Count; i++)
                 {
-                    //find a good point to stream swithc. this will be mapper set later.
-                    for (int i = processFrom; i < oldStreamObjects.Count; i++)
+                    if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
                     {
-                        if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
-                        {
-                            removeBeforeObjectIndex = i;
-                            switchTime = oldStreamObjects[i - 1].EndTime;
-                            break;
-                        }
-
-                        newSpriteManager.Add(oldStreamObjects[i]);
+                        removeBeforeObjectIndex = i;
+                        switchTime = oldStreamObjects[i - 1].EndTime;
+                        break;
                     }
+
+                    newSpriteManager.Add(oldStreamObjects[i]);
                 }
 
                 if (removeBeforeObjectIndex == 0)
