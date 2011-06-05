@@ -294,7 +294,7 @@ namespace osum.GameplayElements
                                     else
                                         offset++;
 
-                                    if ((repeatCount > 1 && length < 50) || repeatCount > 4)
+                                    if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
                                     {
                                         h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0);
                                     }
