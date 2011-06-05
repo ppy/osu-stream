@@ -114,7 +114,6 @@ namespace osum.Graphics.Skins
             //hitcircles
             textureLocations.Add(OsuTexture.hitcircle, new SpriteSheetTexture("hit", 834, 0, 108, 108));
             textureLocations.Add(OsuTexture.hitcircleoverlay, new SpriteSheetTexture("hit", 834, 109, 128, 128));
-            textureLocations.Add(OsuTexture.approachcircle, new SpriteSheetTexture("hit", 0, 380, 126, 128));
             textureLocations.Add(OsuTexture.holdcircle, new SpriteSheetTexture("hit", 834, 238, 157, 158));
 
             //spinner
@@ -511,7 +510,6 @@ namespace osum.Graphics.Skins
         sliderscorepoint,
         hitcircle,
         hitcircleoverlay,
-        approachcircle,
         sliderarrow,
         holdcircle,
         followpoint,
