@@ -45,21 +45,21 @@ namespace osum.Helpers
             return new Vector2(point.X, point.Y);
         }
 
-        internal static List<Vector2> CreateBezier(List<Vector2> input, int points)
+        internal static List<Vector2> CreateBezier(List<Vector2> input, int segments)
         {
             int count = input.Count;
 
             Vector2[] working = new Vector2[count];
             List<Vector2> output = new List<Vector2>();
 
-            for (int i = 0; i < points; i++)
+            for (int i = 0; i <= segments; i++)
             {
                 for (int j = 0; j < count; j++)
                     working[j] = input[j];
 
                 for (int level = 0; level < count; level++)
                     for (int j = 0; j < count - level - 1; j++)
-                        Vector2.Lerp(ref working[j], ref working[j + 1], (float)i / points, out working[j]);
+                        Vector2.Lerp(ref working[j], ref working[j + 1], (float)i / segments, out working[j]);
                 output.Add(working[0]);
             }
 
