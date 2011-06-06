@@ -115,8 +115,10 @@ namespace osum.GameModes
             additiveStream.Additive = true;
             additiveStream.DrawDepth = 0.96f;
             additiveStream.Alpha = 0;
-            additiveStream.AlwaysDraw = false;
             additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 1300, initial_display + 2000));
+            additiveStream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 5000, initial_display + 5200) { Looping = true, LoopDelay = 5000 });
+            additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 5200, initial_display + 6000) { Looping = true, LoopDelay = 4400 });
+
             spriteManager.Add(additiveStream);
 
 
