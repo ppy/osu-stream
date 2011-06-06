@@ -238,7 +238,7 @@ namespace osum.GameModes
 
             panel.s_BackingPlate2.Alpha = 1;
             panel.s_BackingPlate2.AdditiveFlash(400, 1);
-            panel.s_BackingPlate2.Colour = Color4.White;
+            panel.s_BackingPlate2.FadeColour(Color4.White,0);
 
             GameBase.Scheduler.Add(delegate
             {
