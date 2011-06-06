@@ -154,7 +154,7 @@ namespace osum.GameplayElements
                     if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
                     {
                         removeBeforeObjectIndex = i;
-                        switchTime = oldStreamObjects[i - 1].EndTime;
+                        switchTime = i > 0 ? oldStreamObjects[i - 1].EndTime : oldStreamObjects[i].StartTime;
                         break;
                     }
 
