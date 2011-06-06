@@ -13,6 +13,7 @@ using osum.Graphics.Renderers;
 using osum.Graphics.Drawables;
 using osum.Audio;
 using osum.Helpers;
+using osum.Graphics.Skins;
 
 namespace osum.GameModes.Store
 {
@@ -26,6 +27,11 @@ namespace osum.GameModes.Store
 
         internal override void Initialize()
         {
+            background =
+                new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
+                            ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
+            spriteManager.Add(background);
+
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
             spriteManager.Add(s_ButtonBack);
 
@@ -232,6 +238,7 @@ namespace osum.GameModes.Store
         private float offset_max = 0;
         float scrollOffset = 0;
         private float velocity;
+        private pSprite background;
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
