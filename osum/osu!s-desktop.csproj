@@ -306,7 +306,10 @@
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Skins\Default\font.ttf">
+    <None Include="Skins\Default\Futura-CondensedExtraBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Skins\Default\Futura-Medium.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Skins\Default\hit_480">

@@ -23,7 +23,7 @@ namespace osum.Graphics.Renderers
                                             Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
 
-            size *= 0.6f;
+            size *= 0.72f;
             //todo: this is a temporary hack to make sizes the same on desktop and iphone.
             //need to switch this around so desktop is the base size and iphone matches instead.
             
@@ -65,7 +65,7 @@ namespace osum.Graphics.Renderers
                     }
 
                     PrivateFontCollection fontCollection = new PrivateFontCollection();
-                    fontCollection.AddFontFile(Path.GetFullPath(@"Skins/Default/font.ttf"));
+                    fontCollection.AddFontFile(Path.GetFullPath(bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
                     FontFamily tFont = fontCollection.Families[0];
 
                     using (Font f = new Font(tFont, size, fs))
