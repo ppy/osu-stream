@@ -52,13 +52,13 @@ namespace osum.GameModes.SongSelect
             s_BackingPlate.OnHover += delegate
             {
                 s_BackingPlate.Transform(new Transformation(TransformationType.Fade, s_BackingPlate.Alpha, 0.01f, Clock.ModeTime, Clock.ModeTime + 100));
-                s_BackingPlate2.FadeColour(BeatmapPanel.BACKGROUND_COLOUR, 150);
+                s_BackingPlate2.FadeColour(BeatmapPanel.BACKGROUND_COLOUR, 100);
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
             };
             s_BackingPlate.OnHoverLost += delegate
             {
-                s_BackingPlate2.FadeColour(Color4.Transparent, 150);
+                s_BackingPlate2.FadeColour(Color4.Transparent, 100);
                 s_BackingPlate.FadeIn(100);
             };
 

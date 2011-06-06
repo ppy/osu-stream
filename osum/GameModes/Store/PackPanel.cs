@@ -26,7 +26,7 @@ namespace osum.GameModes.Store
 
         float base_depth = 0.6f;
 
-        static Color4 colourNormal = new Color4(50, 50, 50, 255);
+        static Color4 colourNormal = new Color4(50, 50, 50, 200);
         static Color4 colourHover = new Color4(28, 139, 242, 255);
         static Color4 colourHover2 = new Color4(0, 77, 164, 255);
 
@@ -198,7 +198,7 @@ namespace osum.GameModes.Store
 
             foreach (pDrawable p in songPreviewBacks)
             {
-                p.FadeColour(Color4.Black, 200);
+                p.FadeColour(new Color4(40, 40, 40, 0), 200);
                 p.TagNumeric = 0;
             }
 
@@ -217,11 +217,11 @@ namespace osum.GameModes.Store
             Sprites.Add(preview);
             songPreviewButtons.Add(preview);
 
-            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 40), true, base_depth, Color4.Black);
+            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 40), true, base_depth, new Color4(40, 40, 40, 0));
             back.HandleClickOnUp = true;
 
             back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
-            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(Color4.Black, 200); };
+            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40,40,40,0), 200); };
 
             back.OnClick += delegate(object sender, EventArgs e)
             {
