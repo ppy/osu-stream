@@ -279,7 +279,7 @@ namespace osum.GameplayElements
                     (scoringRotationCount - (rotationRequirement + 3)) % (sensitivity_modifier) == 0)
                 {
                     score = ScoreChange.SpinnerBonus;
-                    AudioEngine.PlaySample(OsuSamples.SpinnerBonus);
+                    AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet);
 
                     spriteBonus.Text = (100 * (scoringRotationCount - (rotationRequirement + 3)) / (2 * sensitivity_modifier)).ToString();
                     spriteBonus.Transformations.Clear();

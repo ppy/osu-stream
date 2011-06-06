@@ -33,7 +33,7 @@ namespace osum.GameplayElements.Beatmaps
         public SampleSet sampleSet;
         public TimeSignatures timeSignature;
         public int volume;
-        
+
         private bool timingChange = true;
         public bool TimingChange
         {
@@ -99,9 +99,9 @@ namespace osum.GameplayElements.Beatmaps
 
         public override string ToString()
         {
-            return String.Format("{5}{0:00}:{1:00}:{2:00} {3}/4 {4}bpm {6}{7}{8}", ((int) offset/60000), (int) offset%60000/1000,
-                (int) offset%1000/10, (int) timeSignature, beatLength < 0 ? Math.Round(-100f/beatLength,1) + "x " : (60000/beatLength).ToString("N"),
-                                 !TimingChange ? "^ ":"",
+            return String.Format("{5}{0:00}:{1:00}:{2:00} {3}/4 {4}bpm {6}{7}{8}", ((int)offset / 60000), (int)offset % 60000 / 1000,
+                (int)offset % 1000 / 10, (int)timeSignature, beatLength < 0 ? Math.Round(-100f / beatLength, 1) + "x " : (60000 / beatLength).ToString("N"),
+                                 !TimingChange ? "^ " : "",
                                  sampleSet == SampleSet.Soft ? "S" : "N",
                                  customSamples == CustomSampleSet.Custom1 ? ":C1" : (customSamples == CustomSampleSet.Custom2 ? ":C2" : ""),
                                  kiaiMode ? " Ki" : "");

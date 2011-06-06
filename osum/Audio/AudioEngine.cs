@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using osum.Support;
 using osum.Helpers;
+using osum.GameplayElements.Beatmaps;
 
 namespace osum.Audio
 {
@@ -39,19 +40,24 @@ namespace osum.Audio
             Effect = effect;
             Music = music;
 
-            foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
-                LoadSample(s);
+            foreach (SampleSet set in Enum.GetValues(typeof(SampleSet)))
+            {
+                if (set != SampleSet.None)
+                    continue;
+                foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
+                    LoadSample(s, set);
+            }
         }
 
         static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
 
-        internal static int PlaySample(OsuSamples sample)
+        internal static int PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft)
         {
-            int buffer = LoadSample(sample);
+            int buffer = LoadSample(sample, set);
             if (buffer < 0) return buffer;
 
             int lastPlayed = -1;
-            if (lastPlayedTimes.TryGetValue(sample,out lastPlayed))
+            if (lastPlayedTimes.TryGetValue(sample, out lastPlayed))
                 if (Math.Abs(Clock.AudioTime - lastPlayed) < 45)
                     return -1;
             lastPlayedTimes[sample] = Clock.AudioTime;
@@ -65,13 +71,13 @@ namespace osum.Audio
             lastPlayedTimes.Clear();
         }
 
-        internal static int LoadSample(OsuSamples sample)
+        internal static int LoadSample(OsuSamples sample, SampleSet set = SampleSet.Soft)
         {
             int buffer;
 
             string filename = null;
 
-            string setName = "soft";
+            string setName = set.ToString().ToLower();
 
             switch (sample)
             {

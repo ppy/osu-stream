@@ -188,8 +188,6 @@ namespace BeatmapCombinator
 
                                     //velocity and scoring distance.
                                     stringRep += "," + bd.VelocityAt(time) + "," + bd.ScoringDistanceAt(time);
-
-
                                 }
 
                                 bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });

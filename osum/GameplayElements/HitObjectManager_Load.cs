@@ -310,7 +310,10 @@ namespace osum.GameplayElements
 
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
+                                {
+                                    h.SampleSet = sampleSet;
                                     Add(h, difficulty);
+                                }
 
                                 break;
                             case FileSection.Unknown:

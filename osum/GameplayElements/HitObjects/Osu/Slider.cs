@@ -630,7 +630,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     if (isTracking)
                     {
-                        AudioEngine.PlaySample(OsuSamples.SliderTick);
+                        AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet);
 
                         pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
 
