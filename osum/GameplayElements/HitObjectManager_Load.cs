@@ -214,7 +214,14 @@ namespace osum.GameplayElements
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
-                                SampleSet sampleSet = (SampleSet)Int32.Parse(split[offset++]);
+                                string sample = split[offset++];
+
+                                //most optimal way. need to rewrite if there are ever more samplesets :p.
+                                SampleSet sampleSet = sample[0] == 1 ? SampleSet.Soft : SampleSet.Normal;
+                                float volume = 0;
+
+                                if (sample.Length > 1)
+                                    volume = Int32.Parse(sample.Substring(2)) / 100f;
 
                                 int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));

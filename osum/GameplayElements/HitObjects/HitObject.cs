@@ -447,17 +447,17 @@ namespace osum.GameplayElements
             //HitObjectManager.OnHitSound(SoundType);
 
             if ((type & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet);
+                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet, Volume);
             //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet, Volume);
 
             if ((type & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet);
+                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet, Volume);
 
             //if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)
-            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, Volume);
 
         }
 
@@ -518,6 +518,7 @@ namespace osum.GameplayElements
         const int TAG_SHAKE_TRANSFORMATION = 54327;
         public Difficulty Difficulty;
         internal SampleSet SampleSet;
+        protected float Volume;
 
         internal virtual void Shake()
         {

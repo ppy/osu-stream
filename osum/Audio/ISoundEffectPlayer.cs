@@ -5,7 +5,7 @@ namespace osum.Audio
     public interface ISoundEffectPlayer : IUpdateable
     {
         int Load(string filename);
-        int PlayBuffer(int buffer);
+        int PlayBuffer(int buffer, float volume);
         void UnloadAll();
     }
 }

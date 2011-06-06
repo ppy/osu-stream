@@ -176,36 +176,42 @@ namespace BeatmapCombinator
                                 }
                                 break;
                             case "HitObjects":
-                                HitObjectType type = (HitObjectType)(Int32.Parse(split[3]) & 15);
-                                int time = (int)Decimal.Parse(split[2]);
-
-                                string stringRep = (int)bd.controlPointAt(time).sampleSet + "," + line;
-
-                                //add addition difficulty-specific information
-                                if ((type & HitObjectType.Slider) > 0)
                                 {
-                                    if (split.Length < 9) stringRep += ",";
+                                    HitObjectType type = (HitObjectType)(Int32.Parse(split[3]) & 15);
+                                    int time = (int)Decimal.Parse(split[2]);
 
-                                    //velocity and scoring distance.
-                                    stringRep += "," + bd.VelocityAt(time) + "," + bd.ScoringDistanceAt(time);
+                                    ControlPoint cp = bd.controlPointAt(time);
+
+                                    string stringRep = (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume : "") + "," + line;
+
+                                    //add addition difficulty-specific information
+                                    if ((type & HitObjectType.Slider) > 0)
+                                    {
+                                        if (split.Length < 9) stringRep += ",";
+
+                                        //velocity and scoring distance.
+                                        stringRep += "," + bd.VelocityAt(time) + "," + bd.ScoringDistanceAt(time);
+                                    }
+
+                                    bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });
+                                    continue; //skip direct output
                                 }
-
-                                bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });
-                                continue; //skip direct output
                             case "TimingPoints":
-                                ControlPoint cp = new ControlPoint(Double.Parse(split[0]),
-                                                             Double.Parse(split[1]),
-                                                             split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
-                                                             (TimeSignatures)Int32.Parse(split[2]),
-                                                             (SampleSet)Int32.Parse(split[3]),
-                                                             split.Length > 4
-                                                                 ? (CustomSampleSet)Int32.Parse(split[4])
-                                                                 : CustomSampleSet.Default,
-                                                             Int32.Parse(split[5]),
-                                                             split.Length > 6 ? split[6][0] == '1' : true,
-                                                             split.Length > 7 ? split[7][0] == '1' : false);
-                                bd.ControlPoints.Add(cp);
-                                break;
+                                {
+                                    ControlPoint cp = new ControlPoint(Double.Parse(split[0]),
+                                                                 Double.Parse(split[1]),
+                                                                 split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
+                                                                 (TimeSignatures)Int32.Parse(split[2]),
+                                                                 (SampleSet)Int32.Parse(split[3]),
+                                                                 split.Length > 4
+                                                                     ? (CustomSampleSet)Int32.Parse(split[4])
+                                                                     : CustomSampleSet.Default,
+                                                                 Int32.Parse(split[5]),
+                                                                 split.Length > 6 ? split[6][0] == '1' : true,
+                                                                 split.Length > 7 ? split[7][0] == '1' : false);
+                                    bd.ControlPoints.Add(cp);
+                                    break;
+                                }
                         }
                     }
 

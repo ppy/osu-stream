@@ -85,7 +85,7 @@ namespace osum
         /// </summary>
         /// <param name="buffer">The bufferId.</param>
         /// <returns></returns>
-        public int PlayBuffer(int buffer)
+        public int PlayBuffer(int buffer, float volume)
         {
             int i = 0;
             while (AL.GetSourceState(sources[i]) == ALSourceState.Playing)
@@ -94,10 +94,13 @@ namespace osum
                     return -1; //ran out of sources
             }
 
-            AL.Source(sources[i], ALSourcei.Buffer, buffer);
-            AL.SourcePlay(sources[i]);
+            int source = sources[i];
 
-            return sources[i];
+            AL.Source(source, ALSourcei.Buffer, buffer);
+            AL.Source(source, ALSourcef.Gain, volume);
+            AL.SourcePlay(source);
+
+            return source;
         }
 
         /// <summary>

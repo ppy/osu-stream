@@ -51,7 +51,7 @@ namespace osum.Audio
 
         static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
 
-        internal static int PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft)
+        internal static int PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
         {
             int buffer = LoadSample(sample, set);
             if (buffer < 0) return buffer;
@@ -63,7 +63,7 @@ namespace osum.Audio
             lastPlayedTimes[sample] = Clock.AudioTime;
 
 
-            return AudioEngine.Effect.PlayBuffer(buffer);
+            return AudioEngine.Effect.PlayBuffer(buffer, volume);
         }
 
         internal static void Reset()
