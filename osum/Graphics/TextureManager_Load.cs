@@ -72,11 +72,11 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_x, new SpriteSheetTexture("hit", 988, 903, 36, 54));
             textureLocations.Add(OsuTexture.scorebar_marker, new SpriteSheetTexture("hit", 1999, 112, 23, 39));
             textureLocations.Add(OsuTexture.score_1, new SpriteSheetTexture("hit", 2024, 112, 20, 54));
-            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 701, 977, 20, 18));
+            textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 701, 977, 20, 18));
             textureLocations.Add(OsuTexture.score_dot, new SpriteSheetTexture("hit", 286, 1970, 17, 54));
             textureLocations.Add(OsuTexture.score_comma, new SpriteSheetTexture("hit", 929, 1147, 15, 56));
             textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 1016, 1240, 13, 47));
-            textureLocations.Add(OsuTexture.sliderscorepoint, new SpriteSheetTexture("hit", 648, 993, 11, 11));
+            textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 648, 993, 11, 11));
             textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 661, 993, 2, 13));
             textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 800));
             textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 0, 802, 1178, 141));
