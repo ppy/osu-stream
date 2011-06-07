@@ -56,10 +56,10 @@ namespace osum.Graphics.Sprites
             {
                 handleInput = value;
 
-                if (inputIsHovering && handleInput)
+                if (IsHovering && handleInput)
                 //might have a pending unhover state animation to apply.
                 {
-                    inputIsHovering = false;
+                    IsHovering = false;
                     if (onHoverLost != null)
                         onHoverLost(this, null);
                 }
@@ -94,7 +94,7 @@ namespace osum.Graphics.Sprites
             onHoverLost = null;
         }
 
-        bool inputIsHovering;
+        internal bool IsHovering;
 
         bool inputCheckHover(Vector2 position)
         {
@@ -127,11 +127,11 @@ namespace osum.Graphics.Sprites
             else if (trackingPoint.HoveringObject == this)
                 trackingPoint.HoveringObject = null;
 
-            if (isNowHovering != inputIsHovering)
+            if (isNowHovering != IsHovering)
             {
-                inputIsHovering = isNowHovering;
+                IsHovering = isNowHovering;
 
-                if (inputIsHovering)
+                if (IsHovering)
                 {
                     if (onHover != null)
                         onHover(this, null);
@@ -164,7 +164,7 @@ namespace osum.Graphics.Sprites
 
             inputUpdateHoverState(trackingPoint);
 
-            if (inputIsHovering)
+            if (IsHovering)
             {
                 if (!HandleClickOnUp)
                     Click();
@@ -175,7 +175,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!HandleInput || !inputIsHovering) return;
+            if (!HandleInput || !IsHovering) return;
 
             if (acceptableUpClick > 0)
                 Click();
@@ -183,7 +183,7 @@ namespace osum.Graphics.Sprites
             if (HandleInput)
             //check HandleInput again here so we can cancel the unhover for the time being.
             {
-                inputIsHovering = false;
+                IsHovering = false;
                 if (onHoverLost != null)
                     onHoverLost(this, null);
             }
@@ -191,10 +191,10 @@ namespace osum.Graphics.Sprites
 
         internal void Click(bool forceHover = true)
         {
-            if (!inputIsHovering && forceHover)
+            if (!IsHovering && forceHover)
             {
                 //force hovering. this is necessary if a click is manually triggered, to get animations etc.
-                inputIsHovering = true;
+                IsHovering = true;
                 onHover(this, null);
             }
 

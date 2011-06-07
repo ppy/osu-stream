@@ -53,6 +53,8 @@ namespace osum.GameModes.Play
         bool touchToContinue = true;
         private void showTouchToContinue()
         {
+            backButton.Alpha = 1;
+
             touchToContinue = true;
             touchToContinueText.Transformations.Clear();
             touchToContinueText.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 300, 1, -0.2f, 1));
@@ -61,7 +63,7 @@ namespace osum.GameModes.Play
 
         protected override void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (touchToContinue)
+            if (touchToContinue && !backButton.IsHovering)
             {
                 loadNextSegment();
                 return;
@@ -72,7 +74,7 @@ namespace osum.GameModes.Play
 
         private void showText(string text, float verticalOffset = 0)
         {
-            pText pt = new pText(text, 35, new Vector2(0, verticalOffset), 1, true, Color4.White)
+            pText pt = new pText(text, 30, new Vector2(0, verticalOffset), 1, true, Color4.White)
             {
                 TextBounds = new Vector2(GameBase.BaseSize.Width * 0.95f, 0),
                 Field = FieldTypes.StandardSnapCentre,
@@ -289,6 +291,7 @@ namespace osum.GameModes.Play
             {
                 touchToContinueText.Transformations.Clear();
                 touchToContinueText.FadeOut(100);
+                backButton.Alpha = 0.2f;
             }
 
             topMostSpriteManager.Add(currentSegmentSprites);
