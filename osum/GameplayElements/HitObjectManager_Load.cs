@@ -217,7 +217,7 @@ namespace osum.GameplayElements
                                 string sample = split[offset++];
 
                                 //most optimal way. need to rewrite if there are ever more samplesets :p.
-                                SampleSet sampleSet = sample[0] == 2 ? SampleSet.Soft : SampleSet.Normal;
+                                SampleSet sampleSet = sample[0] == '2' ? SampleSet.Soft : SampleSet.Normal;
                                 float volume = 1;
 
                                 if (sample.Length > 1)
