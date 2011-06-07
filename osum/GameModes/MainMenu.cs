@@ -171,6 +171,8 @@ namespace osum.GameModes
                 Director.ChangeMode(OsuMode.Tutorial);
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
             }
+
+            menuOptions.AdditiveFlash(300, 1).ScaleTo(1.1f,300);
         }
 
         void menuBackground_OnClick(object sender, EventArgs e)

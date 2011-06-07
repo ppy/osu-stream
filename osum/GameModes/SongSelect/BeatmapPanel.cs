@@ -79,7 +79,6 @@ namespace osum.GameModes.SongSelect
             s_TextCreator.TextAlignment = TextAlignment.Left;
             s_TextCreator.Origin = OriginTypes.TopCentre;
             s_TextCreator.Field = FieldTypes.StandardSnapTopCentre;
-            //s_TextCreator.Offset = new Vector2(0, PANEL_HEIGHT);
             Sprites.Add(s_TextCreator);
 
             if (beatmap != null)
