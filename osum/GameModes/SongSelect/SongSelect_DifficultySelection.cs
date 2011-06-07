@@ -15,6 +15,7 @@ using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
 using osum.Graphics.Renderers;
+using osu_common.Libraries.Osz2;
 
 namespace osum.GameModes
 {
@@ -160,9 +161,25 @@ namespace osum.GameModes
                 onStartButtonPressed(sender, e);
             else
             {
-                Player.Difficulty = newDifficulty;
-                updateModeSelectionArrows();
+                SetDifficulty(newDifficulty);
             }
+        }
+
+        private void SetDifficulty(Difficulty newDifficulty)
+        {
+            string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
+            if (versions != null && !versions.Contains(newDifficulty.ToString()))
+                GameBase.Notify("this difficulty has not yet been mapped!");
+            else if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
+            {
+                GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
+
+
+                //todo: show an alert that this needs an unlock.
+            }
+            else
+                Player.Difficulty = newDifficulty;
+            updateModeSelectionArrows();
         }
 
         void onSelectPreviousMode(object sender, EventArgs e)
@@ -170,14 +187,12 @@ namespace osum.GameModes
             switch (Player.Difficulty)
             {
                 case Difficulty.Normal:
-                    Player.Difficulty = Difficulty.Easy;
+                    SetDifficulty(Difficulty.Easy);
                     break;
                 case Difficulty.Expert:
-                    Player.Difficulty = Difficulty.Normal;
+                    SetDifficulty(Difficulty.Normal);
                     break;
             }
-
-            updateModeSelectionArrows();
         }
 
         void onSelectNextMode(object sender, EventArgs e)
@@ -185,14 +200,12 @@ namespace osum.GameModes
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
-                    Player.Difficulty = Difficulty.Normal;
+                    SetDifficulty(Difficulty.Normal);
                     break;
                 case Difficulty.Normal:
-                    Player.Difficulty = Difficulty.Expert;
+                    SetDifficulty(Difficulty.Expert);
                     break;
             }
-
-            updateModeSelectionArrows();
         }
 
         const float mode_button_width = 300;
@@ -208,16 +221,6 @@ namespace osum.GameModes
         {
             bool hasPrevious = false;
             bool hasNext = false;
-
-            if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
-            {
-                Player.Difficulty = Difficulty.Normal;
-
-                GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
-
-
-                //todo: show an alert that this needs an unlock.
-            }
 
             string text = null;
 
