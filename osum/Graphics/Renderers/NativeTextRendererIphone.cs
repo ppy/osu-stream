@@ -22,7 +22,8 @@ namespace osum.Graphics.Renderers
         internal override pTexture CreateText(string text, float size, OpenTK.Vector2 restrictBounds, OpenTK.Graphics.Color4 Color4, bool shadow, bool bold, bool underline, TextAlignment alignment, bool forceAa, out OpenTK.Vector2 measured, OpenTK.Graphics.Color4 background, OpenTK.Graphics.Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
             //UIFont font = bold ? UIFont.FromName("GillSans-Bold", size) : UIFont.FromName("GillSans",size);
-            UIFont font = bold ? UIFont.BoldSystemFontOfSize(size) : UIFont.SystemFontOfSize(size);
+            //UIFont font = bold ? UIFont.BoldSystemFontOfSize(size) : UIFont.SystemFontOfSize(size);
+            UIFont font = UIFont.FromName(bold ? "Futura-CondensedExtraBold" : "Futura-Medium",size);
 
             NSString nsstr = new NSString(text);
             SizeF actualSize = SizeF.Empty;
