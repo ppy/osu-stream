@@ -227,9 +227,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
 
+            Sprites.Add(spriteSliderBody);
             Sprites.Add(spriteFollowBall);
             Sprites.Add(spriteFollowCircle);
-            Sprites.Add(spriteSliderBody);
 
             SpriteCollectionDim.Add(spriteSliderBody);
 

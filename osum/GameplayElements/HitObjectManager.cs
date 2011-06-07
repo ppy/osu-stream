@@ -278,14 +278,14 @@ namespace osum.GameplayElements
         /// </summary>
         void Connect(HitObject h1, HitObject h2)
         {
-            Vector2 p1 = h1.Sprites[0].Position;
-            Vector2 p2 = h2.Sprites[0].Position;
+            Vector2 p1 = h1.Position;
+            Vector2 p2 = h2.Position;
 
             Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.StartTime - 3), false, Color4.White);
+                ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.EndTime + 15), false, Color4.White);
             
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
