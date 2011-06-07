@@ -83,7 +83,7 @@ namespace osum.GameModes.SongSelect
 
             if (beatmap != null)
             {
-                string filename = Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename);
+                string filename = Path.GetFileNameWithoutExtension(beatmap.ContainerFilename);
 
                 Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
                 Match m = r.Match(filename);

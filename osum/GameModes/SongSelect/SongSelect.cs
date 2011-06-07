@@ -116,30 +116,29 @@ namespace osum.GameModes
             {
                 Beatmap map = new Beatmap(s);
 
-                string[] files;
+                //string[] files;
 
-                try
-                {
-                    if (map.Package == null)
-                        files = new string[] { s };
-                    else
-                        files = map.Package.MapFiles;
-                }
-                catch
-                {
-                    //possibly corrupt file. just delete for now.
-                    try
-                    {
-                        File.Delete(s);
-                    }
-                    catch { }
-                    continue;
-                }
+                //try
+                //{
+                //    if (map.Package == null)
+                //        files = new string[] { s };
+                //    else
+                //        files = map.Package.MapFiles;
+                //}
+                //catch
+                //{
+                //    //possibly corrupt file. just delete for now.
+                //    try
+                //    {
+                //        File.Delete(s);
+                //    }
+                //    catch { }
+                //    continue;
+                //}
 
-                foreach (string file in files)
+                //foreach (string file in files)
                 {
                     Beatmap b = new Beatmap(s);
-                    b.BeatmapFilename = Path.GetFileName(file);
 
                     BeatmapPanel panel = new BeatmapPanel(b, this, index++);
                     spriteManager.Add(panel);
@@ -330,15 +329,13 @@ namespace osum.GameModes
 
 
                             if (difficultySelectOffset > mode_button_width / 2)
-                                Player.Difficulty = Difficulty.Easy;
+                                SetDifficulty(Difficulty.Easy);
                             else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)
-                                Player.Difficulty = Difficulty.Expert;
+                                SetDifficulty(Difficulty.Expert);
                             else
-                                Player.Difficulty = Difficulty.Normal;
+                                SetDifficulty(Difficulty.Normal);
 
                             pendingModeChange = false;
-
-                            updateModeSelectionArrows();
                         }
 
                         if (Director.PendingMode == OsuMode.Unknown)
