@@ -924,24 +924,27 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
-
-                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
-                GL.MatrixMode(MatrixMode.Projection);
-
-                GL.LoadIdentity();
-                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
-
-                if (waitingForPathTextureClear)
+                if (sliderBodyTexture.fboId >= 0)
                 {
-                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-                    waitingForPathTextureClear = false;
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
+
+                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                    GL.MatrixMode(MatrixMode.Projection);
+
+                    GL.LoadIdentity();
+                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+
+                    if (waitingForPathTextureClear)
+                    {
+                        GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+                        waitingForPathTextureClear = false;
+                    }
+
+                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                                DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }
-
-                m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
-
-                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
 
                 GameBase.Instance.SetViewport();
