@@ -256,6 +256,9 @@ namespace osum.GameModes
         {
             base.Dispose();
 
+            if (State == SelectState.Exiting)
+                Player.Beatmap = null;
+
             if (tabController != null) tabController.Dispose();
 
             InputManager.OnMove -= InputManager_OnMove;
