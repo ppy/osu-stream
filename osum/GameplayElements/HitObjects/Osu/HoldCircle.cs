@@ -16,8 +16,8 @@ namespace osum.GameplayElements.HitObjects.Osu
     class HoldCircle : Slider
     {
         private pSprite holdCircleOverlay;
-        internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes)
-            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, 0, 0)
+        internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity)
+            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, 0)
         {
         }
 
@@ -31,7 +31,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void CalculateSplines()
         {
-            EndTime = StartTime + (int)(1000 * PathLength / m_HitObjectManager.VelocityAt(StartTime) * RepeatCount);
+            EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
             TrackingPosition = position;
         }
 
