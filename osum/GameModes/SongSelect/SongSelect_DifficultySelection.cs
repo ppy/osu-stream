@@ -167,18 +167,21 @@ namespace osum.GameModes
 
         private void SetDifficulty(Difficulty newDifficulty)
         {
-            string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
-            if (versions != null && !versions.Contains(newDifficulty.ToString()))
-                GameBase.Notify("this difficulty has not yet been mapped!");
-            else if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
+            if (Player.Difficulty != newDifficulty)
             {
-                GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
+                string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
+                if (versions != null && !versions.Contains(newDifficulty.ToString()))
+                    GameBase.Notify("This difficulty has not yet been mapped!");
+                else if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
+                {
+                    GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
 
 
-                //todo: show an alert that this needs an unlock.
+                    //todo: show an alert that this needs an unlock.
+                }
+                else
+                    Player.Difficulty = newDifficulty;
             }
-            else
-                Player.Difficulty = newDifficulty;
             updateModeSelectionArrows();
         }
 
