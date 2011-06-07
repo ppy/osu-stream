@@ -32,7 +32,7 @@ namespace osum.GameModes.Store
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
             spriteManager.Add(background);
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.SongSelect); });
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); });
             spriteManager.Add(s_ButtonBack);
 
             StringNetRequest netRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
@@ -145,7 +145,7 @@ namespace osum.GameModes.Store
 
                 if (y == 0)
                 {
-                    GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                    GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(Director.LastOsuMode); });
                 }
             });
         }
@@ -207,7 +207,7 @@ namespace osum.GameModes.Store
             instance.packs.Remove(pp);
 
             if (instance.packs.Count == 0)
-                GameBase.Notify("You have all available packs.\nCheck back later!", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                GameBase.Notify("You have all available packs.\nCheck back later!", delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
                 instance.s_ButtonBack.FadeIn(100);

@@ -20,6 +20,7 @@ namespace osum
         /// </summary>
         internal static GameMode CurrentMode { get; private set; }
         internal static OsuMode CurrentOsuMode { get; private set; }
+        internal static OsuMode LastOsuMode { get; private set; }
 
         /// <summary>
         /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
@@ -50,6 +51,8 @@ namespace osum
         internal static bool ChangeMode(OsuMode mode, Transition transition)
         {
             if (mode == OsuMode.Unknown) return false;
+
+            LastOsuMode = CurrentOsuMode;
 
             if (transition == null)
             {
