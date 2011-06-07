@@ -20,6 +20,7 @@ namespace osum.GameModes.SongSelect
         internal pSprite s_BackingPlate2;
         internal pText s_Text;
         internal pText s_TextArtist;
+        internal pText s_TextCreator;
         internal pSprite s_Thumbnail;
 
         float base_depth = 0.6f;
@@ -74,6 +75,13 @@ namespace osum.GameModes.SongSelect
             s_TextArtist.Offset = new Vector2(0, 7);
             Sprites.Add(s_TextArtist);
 
+            s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, BACKGROUND_COLOUR, false);
+            s_TextCreator.TextAlignment = TextAlignment.Left;
+            s_TextCreator.Origin = OriginTypes.TopCentre;
+            s_TextCreator.Field = FieldTypes.StandardSnapTopCentre;
+            //s_TextCreator.Offset = new Vector2(0, PANEL_HEIGHT);
+            Sprites.Add(s_TextCreator);
+
             if (beatmap != null)
             {
                 string filename = Path.GetFileNameWithoutExtension(beatmap.BeatmapFilename);
@@ -82,6 +90,7 @@ namespace osum.GameModes.SongSelect
                 Match m = r.Match(filename);
                 s_Text.Text = m.Groups[2].Value;
                 s_TextArtist.Text = m.Groups[1].Value;
+                s_TextCreator.Text = m.Groups[3].Value;
             }
 
             s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
