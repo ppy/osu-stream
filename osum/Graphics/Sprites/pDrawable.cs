@@ -555,9 +555,9 @@ namespace osum.Graphics.Sprites
 
         internal void FadeOut(int duration)
         {
-            if (Alpha == 0) return;
-
             int count = Transformations.Count;
+
+            if (Alpha == 0 && count == 0) return;
 
             //if (count == 0 && !AlwaysDraw)
             //    return;

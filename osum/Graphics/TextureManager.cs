@@ -478,6 +478,7 @@ namespace osum.Graphics.Skins
         mouse_burst,
         songselect_background,
         songselect_panel,
-        songselect_panel_selected
+        songselect_panel_selected,
+        menu_options
     }
 }
