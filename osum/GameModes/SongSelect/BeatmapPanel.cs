@@ -67,7 +67,7 @@ namespace osum.GameModes.SongSelect
             s_Text.Offset = new Vector2(74, 14);
             Sprites.Add(s_Text);
 
-            s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, BACKGROUND_COLOUR, false);
+            s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, BACKGROUND_COLOUR, false);
             s_TextArtist.TextAlignment = TextAlignment.Right;
             s_TextArtist.Origin = OriginTypes.TopRight;
             s_TextArtist.Field = FieldTypes.StandardSnapRight;
