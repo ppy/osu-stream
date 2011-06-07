@@ -104,7 +104,7 @@ namespace osum.GameModes.Store
             Downloading = true;
 
             if (isPreviewing)
-                StoreMode.ResetAllPreviews(true);
+                StoreMode.ResetAllPreviews(true, true);
 
             startNextDownload();
 
@@ -177,7 +177,7 @@ namespace osum.GameModes.Store
 
         DataNetRequest previewRequest;
 
-        internal void ResetPreviews()
+        internal void ResetPreviews(bool deselectPack)
         {
             if (previewRequest != null)
             {
@@ -202,12 +202,15 @@ namespace osum.GameModes.Store
                 p.TagNumeric = 0;
             }
 
-            s_BackingPlate.FadeColour(colourNormal, 200);
-            s_BackingPlate.HandleInput = true;
+            if (deselectPack)
+            {
+                s_BackingPlate.FadeColour(colourNormal, 200);
+                s_BackingPlate.HandleInput = true;
 
-            s_PriceBackground.FadeOut(100);
-            s_Price.FadeColour(new Color4(255, 255, 255, 128), 100);
-            s_PriceBackground.HandleInput = false;
+                s_PriceBackground.FadeOut(100);
+                s_Price.FadeColour(new Color4(255, 255, 255, 128), 100);
+                s_PriceBackground.HandleInput = false;
+            }
         }
 
         internal void Add(string filename)
@@ -228,7 +231,7 @@ namespace osum.GameModes.Store
 
                 bool isPausing = back.TagNumeric == 1;
 
-                StoreMode.ResetAllPreviews(isPausing);
+                StoreMode.ResetAllPreviews(isPausing, true);
 
                 if (isPausing) return;
 
@@ -243,7 +246,7 @@ namespace osum.GameModes.Store
                     {
                         if (ex != null)
                         {
-                            StoreMode.ResetAllPreviews(true);
+                            StoreMode.ResetAllPreviews(true, false);
                             GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
                         }
 

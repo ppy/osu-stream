@@ -163,13 +163,13 @@ namespace osum.GameModes.Store
         bool playingPreview;
 
 
-        public static void ResetAllPreviews(bool isPausing)
+        public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
             foreach (PackPanel p in instance.packs)
-                p.ResetPreviews();
+                p.ResetPreviews(isUserDeselect || !isPausing);
 
             instance.playingPreview = false;
 
@@ -254,7 +254,7 @@ namespace osum.GameModes.Store
         {
             if (playingPreview && !AudioEngine.Music.IsElapsing)
             {
-                ResetAllPreviews(true);
+                ResetAllPreviews(true, false);
             }
 
             if (!InputManager.IsPressed)
