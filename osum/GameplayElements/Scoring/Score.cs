@@ -26,6 +26,7 @@ namespace osum.GameplayElements.Scoring
         internal List<bool> scoringSectionResults = new List<bool>();
         internal bool submitting;
         internal int totalScore;
+        internal int spinnerBonus;
 
         internal virtual float accuracy
         {

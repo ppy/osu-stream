@@ -286,16 +286,21 @@ namespace osum.GameModes
                     healthChange = 2;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
-                    currentScore.totalScore += 500;
+                    currentScore.totalScore++;
+                    currentScore.spinnerBonus++;
                     healthChange = 1;
                     break;
                 case ScoreChange.SpinnerSpin:
                     break;
                 case ScoreChange.SliderRepeat:
+                    currentScore.totalScore += 30;
+                    increaseCombo = true;
+                    healthChange = 2;
+                    break;
                 case ScoreChange.SliderEnd:
                     currentScore.totalScore += 30;
                     increaseCombo = true;
-                    healthChange = 4;
+                    healthChange = 3;
                     break;
                 case ScoreChange.SliderTick:
                     currentScore.totalScore += 10;
@@ -339,9 +344,9 @@ namespace osum.GameModes
 
             //then handle the hp addition
             if (healthChange < 0)
-                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * hitObject.HpMultiplier);
             else
-                healthBar.IncreaseCurrentHp(healthChange);
+                healthBar.IncreaseCurrentHp(healthChange * hitObject.HpMultiplier);
 
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);

@@ -557,5 +557,7 @@ namespace osum.GameplayElements
         {
             return this.Type + ": " + this.StartTime + "-" + this.EndTime + " stack:" + this.StackCount;
         }
+
+        public virtual float HpMultiplier { get { return 1; } }
     }
 }

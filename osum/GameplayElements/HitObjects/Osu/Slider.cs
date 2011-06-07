@@ -851,7 +851,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         private int lastJudgedScoringPoint = -1;
 
         private bool IsEndHit;
-        private double TickDistance;
+        protected double TickDistance;
 
         /// <summary>
         /// Used by both sliders and hold circles

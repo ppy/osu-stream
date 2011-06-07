@@ -31,9 +31,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             return new Spinner(hitObjectManager, startTime, endTime, soundType);
         }
 
-        internal override HoldCircle CreateHoldCircle(Vector2 pos, int time, bool newCombo, HitObjectSoundType soundType, int repeatCount, double length, List<HitObjectSoundType> sounds, int comboOffset, double velocity)
+        internal override HoldCircle CreateHoldCircle(Vector2 pos, int time, bool newCombo, HitObjectSoundType soundType, int repeatCount, double length, List<HitObjectSoundType> sounds, int comboOffset, double velocity, double tickDistance)
         {
-            return new HoldCircle(hitObjectManager, pos, time, newCombo, comboOffset, soundType, length, repeatCount, sounds, velocity);
+            return new HoldCircle(hitObjectManager, pos, time, newCombo, comboOffset, soundType, length, repeatCount, sounds, velocity, tickDistance);
         }
     }
 }

@@ -303,7 +303,7 @@ namespace osum.GameplayElements
 
                                     if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
                                     {
-                                        h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi));
+                                        h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi));
                                     }
                                     else
                                     {
