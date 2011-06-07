@@ -223,19 +223,7 @@ namespace BeatmapCombinator
             {
                 //write headers first (use first difficulty as arbitrary source)
                 foreach (string l in difficulties[0].HeaderLines)
-                {
-                    if (l.StartsWith("osu file"))
-                    {
-                        string versionLine = "bmc";
-                        if (difficulties[0] != null) versionLine += "|e";
-                        if (difficulties[1] != null) versionLine += "|n";
-                        if (difficulties[2] != null) versionLine += "|h";
-                        if (difficulties[3] != null) versionLine += "|x";
-                        continue;
-                    }
-
                     output.WriteLine(l);
-                }
 
                 //keep track of how many hitObject lines are remaining for each difficulty
                 int[] linesRemaining = new int[difficulties.Count];
@@ -280,9 +268,17 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Creator, Creator);
                 package.AddMetadata(MapMetaType.Source, Source);
                 package.AddMetadata(MapMetaType.Title, Title);
+
                 //package.AddMetadata(MapMetaType.TitleUnicode, TitleUnicode);
                 //package.AddMetadata(MapMetaType.ArtistUnicode, ArtistUnicode);
                 //package.AddMetadata(MapMetaType.Tags, Tags);
+
+                string versionsAvailable = "";
+                if (orderedDifficulties[0] != null) versionsAvailable += "|Easy";
+                if (orderedDifficulties[1] != null) versionsAvailable += "|Normal";
+                if (orderedDifficulties[2] != null) versionsAvailable += "|Hard";
+                if (orderedDifficulties[3] != null) versionsAvailable += "|Expert";
+                package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
                 foreach (string file in Directory.GetFiles(dir, "*.osc"))
                     package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
