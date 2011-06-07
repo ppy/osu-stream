@@ -286,12 +286,18 @@ namespace osum.GameplayElements
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
                 ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.StartTime - 3), false, Color4.White);
+            
+            //a small hack to allow for texel boundaries to be the correct colour.
+            connectingLine.DrawLeft++;
+            connectingLine.DrawWidth -= 2;
+
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             connectingLine.Transform(h1.Sprites[0].Transformations);
 
+            Box2 rect = connectingLine.DisplayRectangle;
+
             h2.Sprites.Add(connectingLine);
-            h2.SpriteCollectionDim.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;

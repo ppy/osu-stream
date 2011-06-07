@@ -133,7 +133,7 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio * ScaleScalar;
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - Vector2.Multiply(OriginVector,Scale) * GameBase.SpriteToBaseRatio;
                 //Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X, pos.Y,
@@ -204,21 +204,21 @@ namespace osum.Graphics.Sprites
                     case OriginTypes.TopLeft:
                         return Vector2.Zero;
                     case OriginTypes.TopCentre:
-                        return new Vector2(TextureWidth / 2, 0);
+                        return new Vector2(DrawWidth / 2, 0);
                     case OriginTypes.TopRight:
-                        return new Vector2(TextureWidth, 0);
+                        return new Vector2(DrawWidth, 0);
                     case OriginTypes.CentreLeft:
-                        return new Vector2(0, TextureHeight / 2);
+                        return new Vector2(0, DrawHeight / 2);
                     case OriginTypes.Centre:
-                        return new Vector2(TextureWidth / 2, TextureHeight / 2);
+                        return new Vector2(DrawWidth / 2, DrawHeight / 2);
                     case OriginTypes.CentreRight:
-                        return new Vector2(TextureWidth, TextureHeight / 2);
+                        return new Vector2(DrawWidth, DrawHeight / 2);
                     case OriginTypes.BottomLeft:
-                        return new Vector2(0, TextureHeight);
+                        return new Vector2(0, DrawHeight);
                     case OriginTypes.BottomCentre:
-                        return new Vector2(TextureWidth / 2, TextureHeight);
+                        return new Vector2(DrawWidth / 2, DrawHeight);
                     case OriginTypes.BottomRight:
-                        return new Vector2(TextureWidth, TextureHeight);
+                        return new Vector2(DrawWidth, DrawHeight);
                     case OriginTypes.Custom:
                         return Offset;
                 }

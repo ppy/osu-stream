@@ -77,7 +77,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.score_comma, new SpriteSheetTexture("hit", 929, 1147, 15, 56));
             textureLocations.Add(OsuTexture.default_1, new SpriteSheetTexture("hit", 1016, 1240, 13, 47));
             textureLocations.Add(OsuTexture.followpoint, new SpriteSheetTexture("hit", 648, 993, 11, 11));
-            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 661, 993, 2, 13));
+            textureLocations.Add(OsuTexture.connectionline, new SpriteSheetTexture("hit", 661, 993, 4, 13));
             textureLocations.Add(OsuTexture.menu_background, new SpriteSheetTexture("menu", 0, 0, 1280, 800));
             textureLocations.Add(OsuTexture.menu_stream, new SpriteSheetTexture("menu", 0, 802, 1178, 141));
             textureLocations.Add(OsuTexture.menu_osu, new SpriteSheetTexture("menu", 1282, 0, 617, 617));
