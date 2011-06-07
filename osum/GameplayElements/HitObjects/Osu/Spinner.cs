@@ -85,7 +85,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Usually scoring is done at every 180 degrees. This will make it happen n times more often.
         /// </summary>
-        const int sensitivity_modifier = 8;
+        const int sensitivity_modifier = 16;
 
         Vector2 spinnerCentre = new Vector2(0, 210);
 
@@ -273,20 +273,24 @@ namespace osum.GameplayElements
             //Update the rotation count
             if (currentRotationCount != lastRotationCount)
             {
-                scoringRotationCount++;
+                scoringRotationCount += (currentRotationCount - lastRotationCount);
 
-                if (scoringRotationCount > rotationRequirement + 3 &&
-                    (scoringRotationCount - (rotationRequirement + 3)) % (sensitivity_modifier) == 0)
+                if (scoringRotationCount > rotationRequirement + 3 * sensitivity_modifier)
                 {
                     score = ScoreChange.SpinnerBonus;
-                    AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet, Volume);
+
+                    if (scoringRotationCount - lastSamplePlayedRotationCount > sensitivity_modifier)
+                    {
+                        AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet, Volume);
+                        lastSamplePlayedRotationCount = scoringRotationCount;
+                    }
 
                     spriteBonus.Text = (100 * (scoringRotationCount - (rotationRequirement + 3)) / (2 * sensitivity_modifier)).ToString();
                     spriteBonus.Transformations.Clear();
                     spriteBonus.Transform(
                         new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
                     spriteBonus.Transform(
-                        new Transformation(TransformationType.Scale, 1.28F, 2f, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
+                        new Transformation(TransformationType.Scale, 2F, 1.28f, Clock.AudioTime, Clock.AudioTime + 30, EasingTypes.In));
                     //Ensure we don't recycle this too early.
                     spriteBonus.Transform(
                         new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
@@ -301,6 +305,8 @@ namespace osum.GameplayElements
 
             return score;
         }
+
+        float lastSamplePlayedRotationCount;
 
         public override void Update()
         {
