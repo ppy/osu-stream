@@ -467,6 +467,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override ScoreChange HitActionInitial()
         {
+            //todo: this is me being HORRIBLY lazy.
+            hitCircleStart.SampleSet = SampleSet;
+            hitCircleStart.Volume = Volume;
+
             ScoreChange startCircleChange = hitCircleStart.Hit();
 
             if (startCircleChange == ScoreChange.Ignore)

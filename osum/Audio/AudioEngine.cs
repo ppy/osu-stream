@@ -24,7 +24,7 @@ namespace osum.Audio
 
     internal static class AudioEngine
     {
-        static Dictionary<OsuSamples, int> loadedSamples = new Dictionary<OsuSamples, int>();
+        static Dictionary<string, int> loadedSamples = new Dictionary<string, int>();
 
         internal static ISoundEffectPlayer Effect;
         internal static IBackgroundAudioPlayer Music;
@@ -42,7 +42,7 @@ namespace osum.Audio
 
             foreach (SampleSet set in Enum.GetValues(typeof(SampleSet)))
             {
-                if (set != SampleSet.None)
+                if (set == SampleSet.None)
                     continue;
                 foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
                     LoadSample(s, set);
@@ -115,10 +115,10 @@ namespace osum.Audio
 
             if (filename == null) return -1;
 
-            if (!loadedSamples.TryGetValue(sample, out buffer))
+            if (!loadedSamples.TryGetValue(filename, out buffer))
             {
                 buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
-                loadedSamples.Add(sample, buffer);
+                loadedSamples.Add(filename, buffer);
             }
 
             return buffer;

@@ -518,7 +518,7 @@ namespace osum.GameplayElements
         const int TAG_SHAKE_TRANSFORMATION = 54327;
         public Difficulty Difficulty;
         internal SampleSet SampleSet;
-        protected float Volume;
+        internal float Volume;
 
         internal virtual void Shake()
         {
