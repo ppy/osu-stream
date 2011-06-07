@@ -159,14 +159,17 @@ namespace osum.GameModes
             else if (relativePos > 0.5f)
             {
                 Director.ChangeMode(OsuMode.Store);
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
             }
             else if (relativePos > 0.25f)
             {
                 Director.ChangeMode(OsuMode.SongSelect);
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
             }
             else
             {
                 Director.ChangeMode(OsuMode.Tutorial);
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
             }
         }
 

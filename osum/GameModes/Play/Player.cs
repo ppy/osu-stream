@@ -357,12 +357,15 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
+            
+            if (comboCounter != null) comboCounter.Draw();
+
             if (hitObjectManager != null)
                 hitObjectManager.Draw();
 
             if (scoreDisplay != null) scoreDisplay.Draw();
             if (healthBar != null) healthBar.Draw();
-            if (comboCounter != null) comboCounter.Draw();
+            
 
             if (menu != null) menu.Draw();
 

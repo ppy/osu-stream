@@ -209,6 +209,8 @@ namespace osum.GameModes
         /// <param name="args"></param>
         internal void onSongSelected(object sender, EventArgs args)
         {
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
+            
             BeatmapPanel panel = sender as BeatmapPanel;
             if (panel == null || State != SelectState.SongSelect) return;
 
