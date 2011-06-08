@@ -285,7 +285,7 @@ namespace osum.GameplayElements
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
                 ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.EndTime + 15), false, Color4.White);
-            
+
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
             connectingLine.DrawWidth -= 2;
@@ -309,7 +309,8 @@ namespace osum.GameplayElements
 
         public bool Draw()
         {
-            streamSpriteManagers[(int)ActiveStream].Draw();
+            if (ActiveStream != Difficulty.None)
+                streamSpriteManagers[(int)ActiveStream].Draw();
 
             spriteManager.Draw();
 
@@ -406,6 +407,9 @@ namespace osum.GameplayElements
         internal HitObject FindObjectAt(TrackingPoint tracking)
         {
             List<HitObject> objects = ActiveStreamObjects;
+
+            if (objects == null) return null;
+
             for (int i = processFrom; i < processedTo + 1; i++)
             {
                 HitObject h = objects[i];

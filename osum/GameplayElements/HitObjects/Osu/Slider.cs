@@ -730,7 +730,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             foreach (pSprite p in lastJudgedEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
             {
                 //Burst the endpoint we just reached.
-                pSprite clone = p.Clone();
+                pDrawable clone = p.Clone();
 
                 clone.Transformations.Clear();
 

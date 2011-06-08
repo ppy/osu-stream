@@ -176,14 +176,14 @@ namespace osum.Graphics.Sprites
             */
         }
 
-        public override pSprite Clone()
+        public override pDrawable Clone()
         {
             pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
             clone.FrameDelay = FrameDelay;
 
             foreach (Transformation t in Transformations)
                 clone.Transform(t.Clone());
-            return clone;
+            return (pDrawable)clone;
         }
 
         public bool hasCustomSequence { get { return CustomSequence != null; } }

@@ -116,10 +116,10 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public virtual pSprite Clone()
+        public virtual pDrawable Clone()
         {
 
-            pSprite clone = (pSprite)this.MemberwiseClone();
+            pDrawable clone = (pDrawable)this.MemberwiseClone();
             clone.Transformations = new pList<Transformation>();
 
             foreach (Transformation t in Transformations)
@@ -586,9 +586,9 @@ namespace osum.Graphics.Sprites
             Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
-        internal pSprite AdditiveFlash(int duration, float brightness)
+        internal pDrawable AdditiveFlash(int duration, float brightness)
         {
-            pSprite clone = this.Clone();
+            pDrawable clone = this.Clone();
 
             clone.UnbindAllEvents();
 

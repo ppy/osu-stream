@@ -163,10 +163,14 @@ namespace osum.GameModes
 
         protected void resetScore()
         {
-            comboCounter.SetCombo(0);
-            healthBar.SetCurrentHp(100);
-            scoreDisplay.SetAccuracy(0);
-            scoreDisplay.SetScore(0);
+            if (comboCounter != null) comboCounter.SetCombo(0);
+            if (healthBar != null) healthBar.SetCurrentHp(100);
+            if (scoreDisplay != null)
+            {
+                scoreDisplay.SetAccuracy(0);
+                scoreDisplay.SetScore(0);
+            }
+
             currentScore = new Score();
         }
 
@@ -376,7 +380,7 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
-            
+
             if (comboCounter != null) comboCounter.Draw();
 
             if (hitObjectManager != null)
@@ -384,7 +388,7 @@ namespace osum.GameModes
 
             if (scoreDisplay != null) scoreDisplay.Draw();
             if (healthBar != null) healthBar.Draw();
-            
+
 
             if (menu != null) menu.Draw();
 
@@ -450,7 +454,7 @@ namespace osum.GameModes
             }
         }
 
-        private void UpdateStream()
+        protected virtual void UpdateStream()
         {
             if (Difficulty == Difficulty.Easy || hitObjectManager == null)
                 //easy can't fail, nor switch streams.
@@ -516,7 +520,7 @@ namespace osum.GameModes
         {
             failSprite = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.5f, true, Color4.White);
 
-            pSprite failGlow = failSprite.Clone();
+            pDrawable failGlow = failSprite.Clone();
 
             failSprite.FadeInFromZero(500);
             failSprite.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));

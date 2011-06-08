@@ -259,7 +259,7 @@ namespace osum.GameModes
 
             if (s_ModeDescriptionText.Text != text)
             {
-                pSprite clone = s_ModeDescriptionText.Clone();
+                pDrawable clone = s_ModeDescriptionText.Clone();
                 clone.FadeOut(200);
                 clone.AlwaysDraw = false;
                 spriteManager.Add(clone);

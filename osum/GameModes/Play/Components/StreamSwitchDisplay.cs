@@ -12,9 +12,9 @@ namespace osum.GameModes.Play.Components
 {
     class StreamSwitchDisplay : GameComponent
     {
-        pSprite arrowLarge;
-        pSprite arrowSmall;
-        pSprite text;
+        pDrawable arrowLarge;
+        pDrawable arrowSmall;
+        pDrawable text;
 
         internal override void Initialize()
         {
@@ -61,7 +61,7 @@ namespace osum.GameModes.Play.Components
             arrowLarge.ScaleScalar = 1;
 
             text.ScaleScalar = 1;
-            text.Texture = TextureManager.Load(increase ? OsuTexture.stream_changing_up : OsuTexture.stream_changing_down);
+            ((pSprite)text).Texture = TextureManager.Load(increase ? OsuTexture.stream_changing_up : OsuTexture.stream_changing_down);
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 300);
             text.Transform(fadeIn);

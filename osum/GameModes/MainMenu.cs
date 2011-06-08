@@ -181,6 +181,10 @@ namespace osum.GameModes
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
+//#if MONO
+//            Director.ChangeMode(OsuMode.SongSelect);
+//#endif
+
             osuLogo.Transformations.Clear();
             osuLogo.Transform(new Transformation(TransformationType.Scale, 1, 4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
             osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 1.4f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
@@ -238,7 +242,7 @@ namespace osum.GameModes
         float between_beats = 375 / 2f;
         int offset = initial_display;
         const int bar = 8;
-        private pSprite additiveStream;
+        private pDrawable additiveStream;
 
         public override void Update()
         {

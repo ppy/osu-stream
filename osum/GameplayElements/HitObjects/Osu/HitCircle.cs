@@ -117,17 +117,19 @@ namespace osum.GameplayElements
             if (connectedObject != null)
                 connectionSprite.FadeOut(100);
 
+            int now = Clock.GetTime(SpriteHitCircle1.Clocking);
+
             if (action > 0)
             {
                 //Fade out the actual hit circle
                 Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
-                    Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut, EasingTypes.InHalf);
+                    now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
                 Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F * TEXT_SIZE, 1.4F * TEXT_SIZE,
-                    Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut, EasingTypes.InHalf);
+                    now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
                 Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                    Clock.AudioTime, Clock.AudioTime + DifficultyManager.FadeOut);
+                    now, now + DifficultyManager.FadeOut);
 
                 SpriteHitCircle1.Transformations.Clear();
                 SpriteHitCircle1.Transform(circleScaleOut);
