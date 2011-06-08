@@ -159,6 +159,8 @@ namespace osum.Graphics.Skins
 
         public static void RegisterDisposable(pTexture t)
         {
+            if (t == null)
+                throw new NullReferenceException("tried to add a null texture to DisposableTextures");
             DisposableTextures.Add(t);
         }
 

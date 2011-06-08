@@ -171,7 +171,8 @@ namespace osum.Graphics.Sprites
             Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
                                       TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
 
-            TextureManager.RegisterDisposable(texture);
+            if (texture != null)
+                TextureManager.RegisterDisposable(texture);
 
             return texture;
         }
