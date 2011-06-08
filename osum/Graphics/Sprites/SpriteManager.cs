@@ -57,6 +57,8 @@ namespace osum.Graphics.Sprites
         {
             if (lastUpdate != Clock.Time) return;
 
+            if (Sprites == null) return;
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnUp(source, trackingPoint);
         }
@@ -65,6 +67,9 @@ namespace osum.Graphics.Sprites
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 
+            //todo: find out why these are needed (see tutorial hitcircles part when failing)
+            if (Sprites == null) return;
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnDown(source, trackingPoint);
         }
@@ -72,6 +77,8 @@ namespace osum.Graphics.Sprites
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
+            
+            if (Sprites == null) return;
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
@@ -79,7 +86,7 @@ namespace osum.Graphics.Sprites
 
         internal SpriteManager(IEnumerable<pDrawable> sprites)
         {
-            this.Sprites = new List<pDrawable>(sprites);
+            Sprites = new List<pDrawable>(sprites);
 
             InputManager.OnMove += HandleInputManagerOnMove;
             InputManager.OnDown += HandleInputManagerOnDown;
@@ -366,14 +373,17 @@ namespace osum.Graphics.Sprites
 
         public void Dispose()
         {
-            foreach (pDrawable p in Sprites)
-                p.Dispose();
-
-            Sprites = null;
+            if (Sprites != null)
+            {
+                foreach (pDrawable p in Sprites)
+                    p.Dispose();
+            }
 
             InputManager.OnMove -= HandleInputManagerOnMove;
             InputManager.OnDown -= HandleInputManagerOnDown;
             InputManager.OnUp -= HandleInputManagerOnUp;
+
+            Sprites = null;
         }
     }
 }

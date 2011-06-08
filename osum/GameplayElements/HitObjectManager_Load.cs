@@ -334,7 +334,7 @@ namespace osum.GameplayElements
             PostProcessing();
         }
 
-        protected virtual void PostProcessing()
+        internal virtual void PostProcessing()
         {
             int difficultyIndex = 0;
             foreach (List<HitObject> objects in StreamHitObjects)

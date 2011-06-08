@@ -25,6 +25,7 @@ namespace osum.GameModes.Play
         internal override void Initialize()
         {
             Difficulty = Difficulty.None;
+            Beatmap = null;
 
             MainMenu.InitializeBgm();
 
@@ -48,7 +49,10 @@ namespace osum.GameModes.Play
         }
 
         TutorialSegments currentSegment;
+        TutorialSegments nextSegment = TutorialSegments.Introduction_1;
+
         VoidDelegate currentSegmentDelegate;
+
 
         bool touchToContinue = true;
         private void showTouchToContinue()
@@ -115,13 +119,26 @@ namespace osum.GameModes.Play
             Healthbar_End,
             Score_1,
             Score_2,
+            Score_3,
+            Score_4,
+            HitCircle_1,
+            HitCircle_2,
+            HitCircle_3,
             End,
         }
 
         List<pDrawable> currentSegmentSprites = new List<pDrawable>();
+
         private void loadNextSegment()
         {
-            currentSegment = (TutorialSegments)(currentSegment + 1);
+            loadSegment(nextSegment);
+        }
+
+        private void loadSegment(TutorialSegments segment)
+        {
+            currentSegment = segment;
+
+            nextSegment = (TutorialSegments)(currentSegment + 1);
 
             foreach (pDrawable p in currentSegmentSprites)
             {
@@ -278,11 +295,111 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Score_2:
                     showText("You can also get score bonuses from reaching higher streams, and for spinning spinners fast!");
                     break;
+                case TutorialSegments.Score_3:
+                    showText("Your current combo can be seen in the bottom-left corner of the screen.");
+                    touchToContinue = false;
+
+                    comboCounter = new ComboCounter();
+                    comboCounter.SetCombo(35);
+                    {
+                        pDrawable lastFlash = null;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (comboCounter.displayCombo == 35)
+                            {
+                                if (!touchToContinue)
+                                    showTouchToContinue();
+
+                                if (lastFlash == null || lastFlash.Alpha == 0)
+                                    comboCounter.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
+                            }
+
+                            backButton.Alpha = 0;
+                        };
+
+
+                    }
+                    break;
+                case TutorialSegments.Score_4:
+                    touchToContinue = false;
+                    comboCounter.SetCombo(0);
+                    showText("Your combo will only show up when you are on a streak!");
+                    GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
+                    break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
                     Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                     touchToContinue = false;
                     break;
+                case TutorialSegments.HitCircle_1:
+                    resetScore();
+
+                    showText("\"Hit Circles\" are the most basic hit type in osu!.");
+                    touchToContinue = true;
+                    break;
+                case TutorialSegments.HitCircle_2:
+                    touchToContinue = false;
+
+                    Difficulty = Difficulty.Easy;
+
+                    Beatmap = new Beatmap();
+                    Beatmap.ControlPoints.Add(new ControlPoint(2950, 375, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
+
+                    if (countdown == null) countdown = new CountdownDisplay();
+
+                    firstCountdown = true;
+                    AudioEngine.Music.SeekTo(58000);
+                    CountdownResume(2950 + 160 * 375, 8);
+
+                    loadBeatmap();
+
+                    const int x1 = 100;
+                    const int x2 = 512 - 100;
+                    const int y1 = 80;
+                    const int y2 = 384 - 80;
+
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), 2950 + 160 * 375, true, 0, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), 2950 + 164 * 375, true, 0, HitObjectSoundType.Finish), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), 2950 + 168 * 375, true, 0, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), 2950 + 172 * 375, true, 0, HitObjectSoundType.Finish), Difficulty);
+
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), 2950 + 176 * 375, true, 0, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), 2950 + 180 * 375, true, 0, HitObjectSoundType.Finish), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), 2950 + 184 * 375, true, 0, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), 2950 + 188 * 375, true, 0, HitObjectSoundType.Finish), Difficulty);
+
+                    hitObjectManager.PostProcessing();
+
+                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            loadNextSegment();
+                    };
+                    break;
+                case TutorialSegments.HitCircle_3:
+                    if (currentScore.countMiss > 0)
+                    {
+                        showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
+                        nextSegment = TutorialSegments.HitCircle_1;
+                    }
+                    else if (currentScore.count50 > 0)
+                    {
+                        showText("Getting there!\nWatch the approaching circle carefully and listen to the beat. Let's try once more!");
+                        nextSegment = TutorialSegments.HitCircle_2;
+                    }
+                    else if (currentScore.count100 > 0)
+                    {
+                        showText("That's right!\nFocus on the beat of the song and try to time your taps to get higher accuracy.");
+                    }
+                    else
+                    {
+                        showText("Flawless! Great job!");
+                    }
+
+                    break;
+
             }
 
             if (touchToContinue)
@@ -296,5 +413,10 @@ namespace osum.GameModes.Play
 
             topMostSpriteManager.Add(currentSegmentSprites);
         }
+
+        protected override void CheckForCompletion()
+        {
+        }
+
     }
 }

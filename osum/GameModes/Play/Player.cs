@@ -23,7 +23,7 @@ namespace osum.GameModes
 {
     public class Player : GameMode
     {
-        HitObjectManager hitObjectManager;
+        internal HitObjectManager hitObjectManager;
 
         internal HealthBar healthBar;
 
@@ -34,7 +34,7 @@ namespace osum.GameModes
         /// <summary>
         /// Score which is being played (or watched?)
         /// </summary>
-        Score currentScore;
+        internal Score currentScore;
 
         /// <summary>
         /// The beatmap currently being played.
@@ -161,7 +161,16 @@ namespace osum.GameModes
             menu = new PauseMenu();
         }
 
-        private void loadBeatmap()
+        protected void resetScore()
+        {
+            comboCounter.SetCombo(0);
+            healthBar.SetCurrentHp(100);
+            scoreDisplay.SetAccuracy(0);
+            scoreDisplay.SetScore(0);
+            currentScore = new Score();
+        }
+
+        protected void loadBeatmap()
         {
             if (Beatmap == null)
                 return;
@@ -174,13 +183,14 @@ namespace osum.GameModes
             hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
             hitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
 
-            hitObjectManager.LoadFile();
+            if (Beatmap.ContainerFilename != null)
+                hitObjectManager.LoadFile();
         }
 
         /// <summary>
         /// Set to true after the initial countdown is set to ensure it is not overridden by a pause menu countdown.
         /// </summary>
-        bool firstCountdown;
+        protected bool firstCountdown;
 
         /// <summary>
         /// Abort (and hide) the active countdown display. Is ignored for the initial countdown.
@@ -226,8 +236,11 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
-            if (Clock.AudioTime > 5000)
-                BeatmapDatabase.GetBeatmapInfo(Beatmap, Difficulty).Playcount++;
+            if (Beatmap != null)
+            {
+                if (Clock.AudioTime > 5000)
+                    BeatmapDatabase.GetBeatmapInfo(Beatmap, Difficulty).Playcount++;
+            }
 
             InputManager.OnDown -= InputManager_OnDown;
 
@@ -392,16 +405,8 @@ namespace osum.GameModes
         {
             if (hitObjectManager != null)
             {
+                CheckForCompletion();
                 //check whether the map is finished
-                if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
-                {
-                    stateCompleted = true;
-                    GameBase.Scheduler.Add(delegate
-                    {
-                        Ranking.RankableScore = currentScore;
-                        Director.ChangeMode(OsuMode.Ranking);
-                    }, 2000);
-                }
 
                 //this needs to be run even when paused to draw sliders on resuming from resign.
                 hitObjectManager.Update();
@@ -430,6 +435,19 @@ namespace osum.GameModes
             if (menu != null) menu.Update();
 
             base.Update();
+        }
+
+        protected virtual void CheckForCompletion()
+        {
+            if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
+            {
+                stateCompleted = true;
+                GameBase.Scheduler.Add(delegate
+                {
+                    Ranking.RankableScore = currentScore;
+                    Director.ChangeMode(OsuMode.Ranking);
+                }, 2000);
+            }
         }
 
         private void UpdateStream()

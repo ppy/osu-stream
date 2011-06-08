@@ -71,8 +71,7 @@ namespace osum.GameplayElements
             spriteManager.Dispose();
 
             foreach (SpriteManager sm in streamSpriteManagers)
-                if (sm != null)
-                    sm.Dispose();
+                if (sm != null) sm.Dispose();
 
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
 
@@ -228,7 +227,7 @@ namespace osum.GameplayElements
         /// Adds a new hitObject to be managed by this manager.
         /// </summary>
         /// <param name="h">The hitObject to manage.</param>
-        void Add(HitObject h, Difficulty difficulty)
+        internal void Add(HitObject h, Difficulty difficulty)
         {
             pList<HitObject> diffObjects = StreamHitObjects[(int)difficulty];
 

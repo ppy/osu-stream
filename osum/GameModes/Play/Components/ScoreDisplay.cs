@@ -77,9 +77,14 @@ namespace osum.GameModes.Play.Components
 
             if (s_Score != null)
             {
-                if (displayScore < currentScore)
+                if (displayScore != currentScore)
                 {
-                    displayScore += Math.Max(1, (currentScore - displayScore) / 6);
+                    int change = (int)((currentScore - displayScore) / 6f);
+
+                    //in case it gets rounded too close to zero.
+                    if (change == 0) change = currentScore - displayScore;
+
+                    displayScore += change;
                     s_Score.ShowInt(displayScore, 7);
                 }
             }

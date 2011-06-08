@@ -592,7 +592,7 @@ namespace osum.Graphics.Sprites
 
             clone.UnbindAllEvents();
 
-            clone.Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
+            clone.Transformations.Clear();
 
             GameBase.MainSpriteManager.Add(clone);
 
