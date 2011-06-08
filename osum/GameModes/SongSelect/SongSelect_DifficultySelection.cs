@@ -105,7 +105,7 @@ namespace osum.GameModes
 
         private void initializeTabPlay()
         {
-            const float yOffset = -40;
+            const float yOffset = 0;
             List<pDrawable> sprites = new List<pDrawable>();
 
             s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
@@ -139,6 +139,9 @@ namespace osum.GameModes
 
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
+
+            s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
+            sprites.Add(s_ScoreInfo);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
         }
@@ -216,6 +219,7 @@ namespace osum.GameModes
         private pDrawable s_TabBarPlay;
         private pDrawable s_TabBarRank;
         private pDrawable s_TabBarOther;
+        private pText s_ScoreInfo;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
@@ -261,6 +265,9 @@ namespace osum.GameModes
                 s_ModeDescriptionText.Alpha = 0;
                 s_ModeDescriptionText.FadeInFromZero(200);
             }
+
+            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+            s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3,'0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7,'0');
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)

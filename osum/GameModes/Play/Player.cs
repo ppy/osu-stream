@@ -226,6 +226,9 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            if (Clock.AudioTime > 5000)
+                BeatmapDatabase.GetBeatmapInfo(Beatmap, Difficulty).Playcount++;
+
             InputManager.OnDown -= InputManager_OnDown;
 
             TextureManager.RequireSurfaces = false;

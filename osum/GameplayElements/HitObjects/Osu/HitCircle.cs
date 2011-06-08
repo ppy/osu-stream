@@ -34,11 +34,11 @@ namespace osum.GameplayElements
             SpriteHitCircle2 =
                 new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites,
                             OriginTypes.Centre, ClockTypes.Audio, Position,
-                            SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 2 : 1)), false, Color4.White);
+                            SpriteManager.drawOrderBwd(StartTime - 2), false, Color4.White);
             Sprites.Add(SpriteHitCircle2);
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
                                                     FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                                                    ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - (BeatmapManager.ShowOverlayAboveNumber ? 1 : 2)),
+                                                    ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - 1),
                                                     false, white);
             SpriteHitCircleText.TextConstantSpacing = false;
 

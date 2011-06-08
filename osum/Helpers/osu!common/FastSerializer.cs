@@ -320,11 +320,11 @@ namespace osu_common.Helpers
         }
 
         /// <summary> Reads a generic list from the buffer. </summary>
-        public IList<T> ReadBList<T>() where T : bSerializable, new()
+        public List<T> ReadBList<T>() where T : bSerializable, new()
         {
             int count = ReadInt32();
             if (count < 0) return null;
-            IList<T> d = new List<T>(count);
+            List<T> d = new List<T>(count);
 
             SerializationReader sr = new SerializationReader(BaseStream);
 
@@ -339,11 +339,11 @@ namespace osu_common.Helpers
         }
 
         /// <summary> Reads a generic list from the buffer. </summary>
-        public IList<T> ReadList<T>()
+        public List<T> ReadList<T>()
         {
             int count = ReadInt32();
             if (count < 0) return null;
-            IList<T> d = new List<T>(count);
+            List<T> d = new List<T>(count);
             for (int i = 0; i < count; i++) d.Add((T)ReadObject());
             return d;
         }

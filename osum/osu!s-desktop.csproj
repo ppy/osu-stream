@@ -196,7 +196,7 @@
     <Compile Include="Libraries\NetLib\UrlParser.cs" />
     <Compile Include="Libraries\NetLib\Utils.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="GameplayElements\BeatmapManager.cs" />
+    <Compile Include="GameplayElements\BeatmapDatabase.cs" />
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Helpers\Clock.cs" />
     <Compile Include="Helpers\Delegates.cs" />

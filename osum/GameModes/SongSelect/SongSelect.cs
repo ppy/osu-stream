@@ -59,6 +59,9 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
+            //todo: write less
+            BeatmapDatabase.Write();
+
             Player.Difficulty = Difficulty.Normal;
 
             InputManager.OnMove += InputManager_OnMove;
@@ -75,7 +78,7 @@ namespace osum.GameModes
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             s_Header.Transform(new Transformation(new Vector2(-80, -10), Vector2.Zero, 0, 800, EasingTypes.In));
             s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
-            s_Header.OnClick += delegate {};
+            s_Header.OnClick += delegate { };
             spriteManager.Add(s_Header);
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, new Color4(200, 200, 200, 255));
@@ -209,7 +212,7 @@ namespace osum.GameModes
         internal void onSongSelected(object sender, EventArgs args)
         {
             AudioEngine.PlaySample(OsuSamples.MenuHit);
-            
+
             BeatmapPanel panel = sender as BeatmapPanel;
             if (panel == null || State != SelectState.SongSelect) return;
 
@@ -239,7 +242,7 @@ namespace osum.GameModes
 
             panel.s_BackingPlate2.Alpha = 1;
             panel.s_BackingPlate2.AdditiveFlash(400, 1);
-            panel.s_BackingPlate2.FadeColour(Color4.White,0);
+            panel.s_BackingPlate2.FadeColour(Color4.White, 0);
 
             GameBase.Scheduler.Add(delegate
             {

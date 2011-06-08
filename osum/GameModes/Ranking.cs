@@ -12,6 +12,7 @@ using osum.GameModes.SongSelect;
 using osum.Graphics;
 using osum.Online;
 using osu_common.Helpers;
+using osum.GameplayElements;
 namespace osum.GameModes
 {
     public class Ranking : GameMode
@@ -158,6 +159,10 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+            if (RankableScore.totalScore > bmi.HighScore)
+                bmi.HighScore = RankableScore.totalScore;
+            
             AudioEngine.Music.Unload();
             base.Dispose();
         }
