@@ -884,6 +884,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                     return;
             }
 
+            if (sliderBodyTexture.fboId < 0)
+            {
+                lastDrawnSegmentIndex = 0;
+                FirstSegmentIndex = 0;
+            }
+
             // Length of the curve we're drawing up to.
             lengthDrawn = PathLength * drawProgress;
 
@@ -948,6 +954,25 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                                 DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
 
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                }
+                else
+                {
+                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                    GL.MatrixMode(MatrixMode.Projection);
+
+                    GL.LoadIdentity();
+                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+
+                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+
+                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                                DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potWidth, 0);
+                    GL.BindTexture(TextureGl.SURFACE_TYPE, TextureGl.lastDrawTexture);
+
+                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                 }
 #endif
 

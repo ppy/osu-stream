@@ -175,7 +175,7 @@ namespace osum.Graphics
 #endif
 
 
-        static int lastDrawTexture;
+        internal static int lastDrawTexture;
 
         public void Bind()
         {
