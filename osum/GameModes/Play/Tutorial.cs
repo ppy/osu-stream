@@ -49,7 +49,7 @@ namespace osum.GameModes.Play
         }
 
         TutorialSegments currentSegment;
-        TutorialSegments nextSegment = TutorialSegments.HitCircle_1;
+        TutorialSegments nextSegment = TutorialSegments.Introduction_1;
 
         VoidDelegate currentSegmentDelegate;
 
