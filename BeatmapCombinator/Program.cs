@@ -94,7 +94,11 @@ namespace BeatmapCombinator
 
             foreach (string f in orderedDifficulties)
             {
-                if (f == null) continue;
+                if (f == null)
+                {
+                    difficulties.Add(null);
+                    continue;
+                }
 
                 BeatmapDifficulty bd = new BeatmapDifficulty();
                 difficulties.Add(bd);
@@ -222,7 +226,7 @@ namespace BeatmapCombinator
             using (StreamWriter output = new StreamWriter(newFilename))
             {
                 //write headers first (use first difficulty as arbitrary source)
-                foreach (string l in difficulties[0].HeaderLines)
+                foreach (string l in difficulties.Find(d => d != null).HeaderLines)
                     output.WriteLine(l);
 
                 //keep track of how many hitObject lines are remaining for each difficulty

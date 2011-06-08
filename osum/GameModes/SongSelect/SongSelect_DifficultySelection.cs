@@ -174,17 +174,20 @@ namespace osum.GameModes
             {
                 string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
+                {
+                    velocity = 0;
                     GameBase.Notify("This difficulty has not yet been mapped!");
+                }
                 else if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
                 {
+                    velocity = 0;
                     GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
-
-
                     //todo: show an alert that this needs an unlock.
                 }
                 else
                     Player.Difficulty = newDifficulty;
             }
+
             updateModeSelectionArrows();
         }
 
