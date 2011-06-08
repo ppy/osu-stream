@@ -552,7 +552,7 @@ namespace osum.GameModes.Play
                 case ScoreChange.Hit300:
                 case ScoreChange.Hit300g:
                 case ScoreChange.Hit300m:
-                    showText("Perfect!", 80).FadeOut(1000);
+                    showText("Perfect!", 0).FadeOut(1000);
                     break;
                 case ScoreChange.Hit100:
                 case ScoreChange.Hit100m:
