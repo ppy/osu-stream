@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using osum.Graphics;
 using osum.Graphics.Skins;
@@ -23,8 +23,6 @@ namespace osum.GameplayElements
         private readonly ApproachCircle ApproachCircle;
         internal readonly pSprite SpriteBackground;
         private readonly pSprite SpriteClear;
-        private readonly pSprite spriteRpmBackground;
-        private readonly pSpriteText spriteRpmText;
         private readonly pRectangle spriteScoreMetreBackground;
         private readonly pRectangle spriteScoreMetreForeground;
         private readonly pSprite SpriteSpin;
@@ -44,18 +42,12 @@ namespace osum.GameplayElements
         /// <summary>
         /// Number of rotations currently spun.
         /// </summary>
-        internal int currentRotationCount;
+        internal float currentRotationCount;
 
         /// <summary>
         /// Number of scored rotations (last scoring update).
         /// </summary>
-        private int lastRotationCount;
-
-        /// <summary>
-        /// Number of scored rotations.
-        /// </summary>
-        private int scoringRotationCount;
-
+        private float lastRotationCount;
 
         /// <summary>
         /// Number of rotations are required for a "clear".
@@ -132,18 +124,6 @@ namespace osum.GameplayElements
 
             Sprites.Add(spriteScoreMetreForeground);
 
-            spriteRpmBackground =
-                new pSprite(TextureManager.Load(OsuTexture.spinner_spm),
-                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
-                            Vector2.Zero, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
-            Sprites.Add(spriteRpmBackground);
-
-            spriteRpmText = new pSpriteText("100", "score", 3,
-                                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
-                                            new Vector2(10, 0), SpriteManager.drawOrderFwdLowPrio(StartTime + 4), false, white);
-            spriteRpmText.ScaleScalar = 0.9f;
-            Sprites.Add(spriteRpmText);
-
             ApproachCircle = new ApproachCircle(spinnerCentre, 1, false, SpriteManager.drawOrderFwdLowPrio(StartTime + 2), new Color4(77 / 255f, 139 / 255f, 217 / 255f, 1));
             ApproachCircle.Width = 8;
             ApproachCircle.Clocking = ClockTypes.Audio;
@@ -181,13 +161,6 @@ namespace osum.GameplayElements
             SpriteClear.AlignToSprites = true;
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
-
-            spriteRpmText.Transform(new Transformation(
-                spriteRpmText.Position + new Vector2(0, 50), spriteRpmText.Position,
-                StartTime - DifficultyManager.FadeIn, StartTime, EasingTypes.In));
-            spriteRpmBackground.Transform(new Transformation(
-                spriteRpmBackground.Position + new Vector2(0, 50), spriteRpmBackground.Position,
-                StartTime - DifficultyManager.FadeIn, StartTime, EasingTypes.In));
 
             currentRotationCount = 0;
             rotationRequirement = (int)((float)(EndTime - StartTime) / 1000 * DifficultyManager.SpinnerRotationRatio) * sensitivity_modifier;
@@ -230,7 +203,10 @@ namespace osum.GameplayElements
 
             ScoreChange change = base.CheckScoring();
             if (change != ScoreChange.Ignore)
+            {
+                hpMultiplier = 1;
                 return change;
+            }
 
             if (!Player.Autoplay)
             {
@@ -273,32 +249,36 @@ namespace osum.GameplayElements
             //Update the rotation count
             if (currentRotationCount != lastRotationCount)
             {
-                scoringRotationCount += (currentRotationCount - lastRotationCount);
+                hpMultiplier = (int)(currentRotationCount - lastRotationCount);
 
-                if (scoringRotationCount > rotationRequirement + 3 * sensitivity_modifier)
+                if (currentRotationCount > rotationRequirement + 3 * sensitivity_modifier)
                 {
                     score = ScoreChange.SpinnerBonus;
 
-                    if (scoringRotationCount - lastSamplePlayedRotationCount > sensitivity_modifier)
+                    spriteBonus.Transformations.Clear();
+
+                    if (currentRotationCount - lastSamplePlayedRotationCount > sensitivity_modifier)
                     {
+                        hpMultiplier = 50;
                         AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet, Volume);
-                        lastSamplePlayedRotationCount = scoringRotationCount;
+                        spriteBonus.Transform(new Transformation(TransformationType.Scale, 2F, 1.28f, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
+                        lastSamplePlayedRotationCount = currentRotationCount;
                     }
 
-                    spriteBonus.Text = (100 * (scoringRotationCount - (rotationRequirement + 3)) / (2 * sensitivity_modifier)).ToString();
-                    spriteBonus.Transformations.Clear();
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Scale, 2F, 1.28f, Clock.AudioTime, Clock.AudioTime + 30, EasingTypes.In));
+                    bonusScore += hpMultiplier;
+
+                    spriteBonus.ShowInt((int)bonusScore);
+
+                    spriteBonus.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 800, EasingTypes.In));
+
                     //Ensure we don't recycle this too early.
-                    spriteBonus.Transform(
-                        new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
+                    spriteBonus.Transform(new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
                 }
-                else if (scoringRotationCount > 1 && scoringRotationCount % (2 * sensitivity_modifier) == 0)
+                else if (currentRotationCount - lastScoredRotationCount > sensitivity_modifier / 4)
+                {
                     score = ScoreChange.SpinnerSpinPoints;
-                else if (scoringRotationCount > 1)
-                    score = ScoreChange.SpinnerSpin;
+                    lastScoredRotationCount = currentRotationCount;
+                }
             }
 
             lastRotationCount = currentRotationCount;
@@ -306,7 +286,16 @@ namespace osum.GameplayElements
             return score;
         }
 
+        float bonusScore;
+        float hpMultiplier = 1;
+        public override float HpMultiplier {
+            get {
+                return hpMultiplier;
+            }
+        }
+
         float lastSamplePlayedRotationCount;
+        float lastScoredRotationCount;
 
         public override void Update()
         {
@@ -317,9 +306,7 @@ namespace osum.GameplayElements
 
             Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
 
-            spriteRpmText.Text = string.Format("{0:#,0}", Rpm);
-
-            SetScoreMeter((int)((float)scoringRotationCount / rotationRequirement * 100));
+            SetScoreMeter((int)(currentRotationCount / rotationRequirement * 100));
 
             if (IsActive)
             {
@@ -330,12 +317,12 @@ namespace osum.GameplayElements
                 else
                     velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
 
-
-
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
-                spriteCircle.Rotation = spriteCircle.Rotation + (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
+                float delta = (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
+
+                spriteCircle.Rotation += delta;
 
 
                 if (velocityCurrent != 0)
@@ -343,10 +330,10 @@ namespace osum.GameplayElements
                 else
                     StopSound();
 
-                currentRotationCount = (int)(spriteCircle.Rotation / (Math.PI * 2) * sensitivity_modifier);
+                currentRotationCount += (float)(Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2));
             }
 
-            if (scoringRotationCount >= rotationRequirement && !Cleared)
+            if (currentRotationCount >= rotationRequirement && !Cleared)
             {
                 Cleared = true;
                 if (SpriteSpin != null)
@@ -362,7 +349,7 @@ namespace osum.GameplayElements
             }
 
             //Hide the "SPIN!" sprite once we have started spinning.
-            if (scoringRotationCount > 0 && !StartedSpinning)
+            if (currentRotationCount > 0 && !StartedSpinning)
             {
                 if (SpriteSpin != null)
                 {
@@ -419,11 +406,11 @@ namespace osum.GameplayElements
             StopSound();
 
             ScoreChange val = ScoreChange.Miss;
-            if (scoringRotationCount > rotationRequirement + 1)
+            if (currentRotationCount > rotationRequirement + 1)
                 val = ScoreChange.Hit300;
-            else if (scoringRotationCount > rotationRequirement)
+            else if (currentRotationCount > rotationRequirement)
                 val = ScoreChange.Hit100;
-            else if (scoringRotationCount > rotationRequirement - 1)
+            else if (currentRotationCount > rotationRequirement - 1)
                 val = ScoreChange.Hit50;
             if (val > 0)
                 PlaySound();

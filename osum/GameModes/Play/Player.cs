@@ -282,30 +282,28 @@ namespace osum.GameModes
             switch (change & ~ScoreChange.ComboAddition)
             {
                 case ScoreChange.SpinnerBonus:
-                    currentScore.totalScore += 1000;
-                    healthChange = 2;
+                    currentScore.totalScore += (int)hitObject.HpMultiplier;
+                    currentScore.spinnerBonus += (int)hitObject.HpMultiplier;
+                    healthChange = hitObject.HpMultiplier * 0.04f;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
-                    currentScore.totalScore++;
-                    currentScore.spinnerBonus++;
-                    healthChange = 1;
-                    break;
-                case ScoreChange.SpinnerSpin:
+                    currentScore.totalScore += 100;
+                    healthChange = 0.4f * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderRepeat:
                     currentScore.totalScore += 30;
                     increaseCombo = true;
-                    healthChange = 2;
+                    healthChange = 2 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderEnd:
                     currentScore.totalScore += 30;
                     increaseCombo = true;
-                    healthChange = 3;
+                    healthChange = 3 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderTick:
                     currentScore.totalScore += 10;
                     increaseCombo = true;
-                    healthChange = 1;
+                    healthChange = 1 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Hit50:
                     currentScore.totalScore += 50;
@@ -327,7 +325,7 @@ namespace osum.GameModes
                     break;
                 case ScoreChange.MissMinor:
                     comboCounter.SetCombo(0);
-                    healthChange = -10;
+                    healthChange = -20 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
@@ -344,9 +342,9 @@ namespace osum.GameModes
 
             //then handle the hp addition
             if (healthChange < 0)
-                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * hitObject.HpMultiplier);
+                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
             else
-                healthBar.IncreaseCurrentHp(healthChange * hitObject.HpMultiplier);
+                healthBar.IncreaseCurrentHp(healthChange);
 
             scoreDisplay.SetScore(currentScore.totalScore);
             scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
