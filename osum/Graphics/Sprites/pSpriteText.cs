@@ -380,7 +380,7 @@ namespace osum.Graphics.Sprites
 
             double decimalPart = number - (int)number;
 
-            for (int i = accuracy - 1; i >= 0; i--)
+            for (int i = 0; i < accuracy; i++)
                 UpdateCharacterAt(cChar++, (char)(zero_offset + (int)(decimalPart * Math.Pow(10, i + 1)) % 10));
 
             if (suffix > 0)
