@@ -498,16 +498,6 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        internal double VelocityAt(int time)
-        {
-            return (100000.0f * beatmap.DifficultySliderMultiplier / beatmap.beatLengthAt(time, true));
-        }
-
-        internal double ScoringDistanceAt(int time)
-        {
-            return ((100 * beatmap.DifficultySliderMultiplier / beatmap.bpmMultiplierAt(time)) / beatmap.DifficultySliderTickRate);
-        }
-
         public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
         public bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
     }
