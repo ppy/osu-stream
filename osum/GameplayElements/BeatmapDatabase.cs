@@ -13,8 +13,8 @@ namespace osum.GameplayElements
     internal static class BeatmapDatabase
     {
         const int DATABASE_VERSION = 1;
-        const string filename = "osu!.db";
-        
+        const string FILENAME = "osu!.db";
+
         private static bool initialized;
         private static int Version = -1;
 
@@ -26,7 +26,7 @@ namespace osum.GameplayElements
             if (!File.Exists("osu!.db"))
                 return;
 
-            using (FileStream fs = File.OpenRead(filename))
+            using (FileStream fs = File.OpenRead(FILENAME))
             using (SerializationReader reader = new SerializationReader(fs))
             {
                 Version = reader.ReadInt32();
@@ -41,7 +41,7 @@ namespace osum.GameplayElements
         {
             Initialize();
 
-            using (FileStream fs = File.OpenWrite(filename))
+            using (FileStream fs = File.OpenWrite(FILENAME))
             using (SerializationWriter writer = new SerializationWriter(fs))
             {
                 writer.Write(Version);
@@ -51,6 +51,8 @@ namespace osum.GameplayElements
 
         internal static BeatmapInfo GetBeatmapInfo(Beatmap b, Difficulty d)
         {
+            if (b == null) return null;
+
             BeatmapInfo i = BeatmapInfo.Find(bmi => { return bmi.filename == b.ContainerFilename && bmi.difficulty == d; });
             if (i == null)
             {
