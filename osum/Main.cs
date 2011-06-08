@@ -19,10 +19,12 @@ namespace osum
 #endif
         }
 
+#if MONO
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             File.WriteAllText("error.txt", e.ExceptionObject.ToString() + "\n\n" + OpenTK.Graphics.OpenGL.GL.GetString(OpenTK.Graphics.OpenGL.StringName.Version));
         }
+#endif
     }
 }
 
