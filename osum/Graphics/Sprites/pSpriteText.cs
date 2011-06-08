@@ -362,7 +362,7 @@ namespace osum.Graphics.Sprites
             if (numberLengthLeft < padding)
                 numberLengthLeft = padding;
 
-            int totalLength = numberLengthLeft + (suffix > 0 ? 1 : 0) + 1 + accuracy;
+            int totalLength = numberLengthLeft + (suffix > 0 ? 1 : 0) + (accuracy > 0 ? 1 + accuracy : 0);
 
             if (textArray.Length != totalLength)
                 //todo: can optimise this to avoid reacllocation when shrinking.
@@ -375,8 +375,8 @@ namespace osum.Graphics.Sprites
             for (int i = numberLengthLeft - 1; i >= 0; i--)
                 UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
 
-
-            UpdateCharacterAt(cChar++, '.');
+            if (accuracy > 0)
+                UpdateCharacterAt(cChar++, '.');
 
             double decimalPart = number - (int)number;
 
