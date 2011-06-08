@@ -517,12 +517,12 @@ namespace osum.GameplayElements
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
         public Difficulty Difficulty;
-        internal SampleSet SampleSet;
-        internal float Volume;
+        internal SampleSet SampleSet = SampleSet.Soft;
+        internal float Volume = 1;
 
         internal virtual void Shake()
         {
-            foreach (pDrawable p in SpriteCollectionDim)
+            foreach (pDrawable p in Sprites)
             {
                 Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
 
