@@ -43,6 +43,7 @@ namespace osum.GameModes.Play
             base.Initialize();
 
             backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); });
+            backButton.Alpha = 0;
             topMostSpriteManager.Add(backButton);
 
             loadNextSegment();
@@ -59,16 +60,16 @@ namespace osum.GameModes.Play
             if (touchToContinue)
                 return;
 
-            if (showBackButton)
-                backButton.FadeIn(200);
-
             touchToContinue = true;
 
             GameBase.Scheduler.Add(delegate
             {
+                if (showBackButton)
+                    backButton.FadeIn(1000, 0.3f);
+
                 touchToContinueText.Transformations.Clear();
                 touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 600, Clock.ModeTime + 1400, EasingTypes.In) { LoopDelay = 600, Looping = true });
-            }, 300);
+            }, 400);
         }
 
         protected override void InputManager_OnDown(InputSource source, TrackingPoint point)
@@ -149,6 +150,12 @@ namespace osum.GameModes.Play
             HitCircle_6,
             HitCircle_Interact,
             HitCircle_Judge,
+            Spinner_1,
+            Spinner_2,
+            Spinner_3,
+            Spinner_4,
+            Spinner_Interact,
+            Spinner_Judge,
             End,
         }
 
@@ -199,6 +206,14 @@ namespace osum.GameModes.Play
                     showText("You will need to feel the beat, so make sure you are using headphones or playing in quiet surroundings!");
                     showTouchToContinue();
                     break;
+
+
+
+
+
+
+
+
                 case TutorialSegments.Healthbar_1:
                     showText("The health bar is located at the top-left of your display.");
                     healthBar = new HealthBar();
@@ -306,6 +321,22 @@ namespace osum.GameModes.Play
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
                     };
                     break;
+                case TutorialSegments.Healthbar_End:
+                    healthBar.SetCurrentHp(100);
+                    hideFailSprite();
+                    AudioEngine.Music.Play();
+                    healthBar.InitialIncrease = true;
+                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
+                    break;
+
+
+
+
+
+
+
+
+
                 case TutorialSegments.Score_1:
                     scoreDisplay = new ScoreDisplay();
                     {
@@ -351,10 +382,13 @@ namespace osum.GameModes.Play
                     showText("Your combo will only show up when you are on a streak!");
                     GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
                     break;
-                case TutorialSegments.End:
-                    backButton.HandleInput = false;
-                    Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
-                    break;
+
+
+
+
+
+
+
                 case TutorialSegments.HitCircle_1:
                     resetScore();
 
@@ -375,8 +409,8 @@ namespace osum.GameModes.Play
                         {
                             s.AlwaysDraw = true;
                             s.Transformations.Clear();
-                            s.FadeInFromZero(200);
                             s.Clocking = ClockTypes.Mode;
+                            s.FadeInFromZero(200);
                         });
 
                         HitCircle c = sampleHitObject as HitCircle;
@@ -416,6 +450,7 @@ namespace osum.GameModes.Play
                             {
                                 if (!touchToContinue)
                                 {
+                                    AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
                                     showText("...you should tap!", 80).Colour = Color4.Yellow;
                                     showTouchToContinue();
                                 }
@@ -467,9 +502,8 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_Interact:
-
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
                     base.initializeUIElements();
-
                     sampleHitObject.Sprites.ForEach(s => s.AlwaysDraw = false);
 
                     Difficulty = Difficulty.Easy;
@@ -512,6 +546,8 @@ namespace osum.GameModes.Play
                     };
                     break;
                 case TutorialSegments.HitCircle_Judge:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+
                     if (currentScore.countMiss > 0)
                     {
                         showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
@@ -533,15 +569,155 @@ namespace osum.GameModes.Play
 
                     showTouchToContinue();
                     break;
-                case TutorialSegments.Healthbar_End:
-                    healthBar.SetCurrentHp(100);
-                    hideFailSprite();
-                    AudioEngine.Music.Play();
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD);
-                    healthBar.InitialIncrease = true;
-                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
+
+
+
+
+
+                case TutorialSegments.Spinner_1:
+                    resetScore();
+
+                    showText("\"Spinners\" are the only beats which are not rhythmical.");
+                    showTouchToContinue();
                     break;
 
+                case TutorialSegments.Spinner_2:
+                    showText("When a spinner appears...", -140);
+                    {
+                        Spinner sp = null;
+
+                        GameBase.Scheduler.Add(delegate
+                        {
+
+                            hitObjectManager = new HitObjectManager(null);
+
+                            sampleHitObject = new Spinner(hitObjectManager, 0, 9999999, HitObjectSoundType.Normal);
+
+                            sampleHitObject.Sprites.ForEach(s =>
+                            {
+                                s.AlwaysDraw = true;
+                                s.Transformations.Clear();
+                                s.Clocking = ClockTypes.Mode;
+                                s.FadeInFromZero(500);
+                            });
+
+                            sp = sampleHitObject as Spinner;
+                            sp.rotationRequirement = 5 * Spinner.sensitivity_modifier;
+                            sp.SpriteClear.Transformations.Clear();
+                            sp.SpriteSpin.Transformations.Clear();
+                            sp.ApproachCircle.Transformations.Clear();
+
+                            spriteManager.Add(sampleHitObject.Sprites);
+                        }, 400);
+
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            showText("..you should spin it with your finger until the bars fill!", 80);
+
+                            currentSegmentDelegate = delegate
+                            {
+                                if (!sp.Cleared)
+                                {
+                                    sp.velocityFromInputPerMillisecond = 0.01f;
+                                    sp.Update();
+                                    sp.CheckScoring();
+                                }
+                                else
+                                {
+                                    showTouchToContinue();
+                                }
+
+
+                            };
+
+                        }, 800);
+                    }
+                    break;
+                case TutorialSegments.Spinner_3:
+                    showText("Spin faster for a bonus!", -140);
+                    {
+                        Spinner sp = sampleHitObject as Spinner;
+
+                        currentSegmentDelegate = delegate
+                        {
+                            if (sp.BonusScore < 500)
+                            {
+                                sp.velocityFromInputPerMillisecond = 0.01f;
+                                sp.Update();
+                                sp.CheckScoring();
+                            }
+                            else
+                            {
+                                if (!touchToContinue)
+                                {
+                                    showText("But make sure you are ready for the beats after the spinner!", 80);
+                                    showTouchToContinue();
+                                }
+                            }
+                        };
+                    }
+                    break;
+                case TutorialSegments.Spinner_4:
+                    sampleHitObject.Sprites.ForEach(s => s.AlwaysDraw = false);
+                    showText("Let's try some spinners!");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Spinner_Interact:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
+                    base.initializeUIElements();
+                    
+                    Difficulty = Difficulty.Easy;
+
+                    Beatmap = new Beatmap();
+                    Beatmap.ControlPoints.Add(new ControlPoint(2950, 375, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
+
+                    if (countdown == null) countdown = new CountdownDisplay();
+
+                    firstCountdown = true;
+                    AudioEngine.Music.SeekTo(58000);
+                    CountdownResume(2950 + 160 * 375, 8);
+
+                    loadBeatmap();
+
+                    hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 160 * 375, 2950 + 164 * 375, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 168 * 375, 2950 + 172 * 375, HitObjectSoundType.Normal), Difficulty);
+                    hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 176 * 375, 2950 + 188 * 375, HitObjectSoundType.Normal), Difficulty);
+                    
+                    hitObjectManager.PostProcessing();
+
+                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            loadNextSegment();
+                    };
+
+                    break;
+                case TutorialSegments.Spinner_Judge:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+
+                    if (currentScore.countMiss > 0)
+                    {
+                        showText("Are you actually trying? All you need to do is make circles with your finger! Let's try again...");
+                        nextSegment = TutorialSegments.Spinner_Interact;
+                    }
+                    else if (currentScore.count50 > 0 || currentScore.count100 > 0)
+                    {
+                        showText("You're spinning, but a bit slow. Let's try once more!");
+                        nextSegment = TutorialSegments.Spinner_Interact;
+                    }
+                    else
+                    {
+                        showText("You spin like a TORNADO!");
+                    }
+
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.End:
+                    backButton.HandleInput = false;
+                    Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    break;
             }
         }
 
