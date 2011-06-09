@@ -6,6 +6,7 @@ using System.IO;
 using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements;
 using osu_common.Libraries.Osz2;
+using System.Globalization;
 
 namespace BeatmapCombinator
 {
@@ -34,6 +35,8 @@ namespace BeatmapCombinator
 
     class BeatmapCombinator
     {
+        internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+
         /// <summary>
         /// Combines many .osu files into one .osc
         /// </summary>
@@ -171,11 +174,11 @@ namespace BeatmapCombinator
                                         break;
                                     case "SliderMultiplier":
                                         bd.DifficultySliderMultiplier =
-                                            Math.Max(0.4, Math.Min(3.6, Double.Parse(val)));
+                                            Math.Max(0.4, Math.Min(3.6, Double.Parse(val, nfi)));
                                         break;
                                     case "SliderTickRate":
                                         bd.DifficultySliderTickRate =
-                                            Math.Max(0.5, Math.Min(8, Double.Parse(val)));
+                                            Math.Max(0.5, Math.Min(8, Double.Parse(val, nfi)));
                                         break;
                                 }
                                 break;
@@ -202,8 +205,8 @@ namespace BeatmapCombinator
                                 }
                             case "TimingPoints":
                                 {
-                                    ControlPoint cp = new ControlPoint(Double.Parse(split[0]),
-                                                                 Double.Parse(split[1]),
+                                    ControlPoint cp = new ControlPoint(Double.Parse(split[0], nfi),
+                                                                 Double.Parse(split[1], nfi),
                                                                  split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
                                                                  (TimeSignatures)Int32.Parse(split[2]),
                                                                  (SampleSet)Int32.Parse(split[3]),
