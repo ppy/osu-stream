@@ -518,29 +518,24 @@ namespace osum.Graphics.Sprites
             get { return Clock.GetTime(Clocking); }
         }
 
-        internal void FadeIn(int duration)
+        internal void FadeIn(int duration, float finalAlpha = 1)
         {
             int count = Transformations.Count;
-
-            //if (count == 0 && Alpha == 1)
-            //    return;
 
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == 1 && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
-            if (1 - Alpha < float.Epsilon)
+            if (finalAlpha - Alpha < float.Epsilon)
                 return;
 
             int now = Clock.GetTime(Clocking);
-            Transform(new Transformation(TransformationType.Fade,
-                                         Alpha, (Colour.A != 0 ? Colour.A : 1),
-                                         now, now + duration));
+            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeInFromZero(int duration)
@@ -553,29 +548,24 @@ namespace osum.Graphics.Sprites
                                          now, now + duration));
         }
 
-        internal void FadeOut(int duration)
+        internal void FadeOut(int duration, float finalAlpha = 0)
         {
             int count = Transformations.Count;
-
-            if (Alpha == 0 && count == 0) return;
-
-            //if (count == 0 && !AlwaysDraw)
-            //    return;
 
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == 0 && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
-            if (Alpha < float.Epsilon)
+            if (Alpha - finalAlpha < float.Epsilon)
                 return;
 
             int now = Clock.GetTime(Clocking);
-            Transform(new Transformation(TransformationType.Fade, Alpha, 0, now, now + duration));
+            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeOutFromOne(int duration)
