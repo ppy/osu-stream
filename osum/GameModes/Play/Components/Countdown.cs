@@ -39,10 +39,12 @@ namespace osum.GameModes.Play.Components
             StartTime = start;
             BeatLength = beatLength;
             spriteManager.Sprites.ForEach(s => s.ScaleScalar = 1);
+            HasFinished = false;
         }
 
         internal void Hide()
         {
+            HasFinished = true;
             StartTime = -1;
             spriteManager.Sprites.ForEach(s => s.Alpha = 0);
         }
@@ -56,6 +58,7 @@ namespace osum.GameModes.Play.Components
                 case 0:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_go);
                     spriteManager.Sprites.ForEach(s => { s.FadeOut(150); s.ScaleTo(1.3f, 200); });
+                    HasFinished = true;
                     break;
                 case 1:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_1);
@@ -94,8 +97,11 @@ namespace osum.GameModes.Play.Components
         }
 
         int lastCountdownUpdate = -1;
+        private bool HasFinished;
         public override void Update()
         {
+            if (HasFinished) return;
+
             int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
 
             if (countdown != lastCountdownUpdate)
