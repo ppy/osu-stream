@@ -161,6 +161,7 @@ namespace osum.GameModes.Play
             Slider_1,
             Slider_2,
             Slider_3,
+            Slider_4,
             Slider_Interact,
             Spinner_1,
             Spinner_2,
@@ -530,23 +531,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_Interact:
                     {
-                        resetScore();
-                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-
-                        sampleHitObject.Sprites.ForEach(s => s.AlwaysDraw = false);
-
-                        Difficulty = Difficulty.Easy;
-
-                        Beatmap = new Beatmap();
-                        Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
-
-                        if (countdown == null) countdown = new CountdownDisplay();
-
-                        firstCountdown = true;
-                        AudioEngine.Music.SeekTo(58000);
-                        CountdownResume(music_offset + 160 * music_beatlength, 8);
-
-                        loadBeatmap();
+                        prepareInteract();
                         hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
 
                         const int x1 = 100;
@@ -639,7 +624,6 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Hold_2:
                     {
                         HoldCircle c = sampleHitObject as HoldCircle;
-
                         Player.Autoplay = true;
 
                         c.HitCircleStart.SpriteApproachCircle.Alpha = 1;
@@ -682,21 +666,8 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Hold_Interact:
                     {
-                        resetScore();
-                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-
-                        Difficulty = Difficulty.Easy;
-
-                        Beatmap = new Beatmap();
-                        Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
-
-                        if (countdown == null) countdown = new CountdownDisplay();
-
-                        firstCountdown = true;
-                        AudioEngine.Music.SeekTo(58000);
-                        CountdownResume(music_offset + 160 * music_beatlength, 8);
-
-                        loadBeatmap();
+                        prepareInteract();
+                        
 
                         const int x1 = 100;
                         const int x2 = 512 - 100;
@@ -850,7 +821,13 @@ namespace osum.GameModes.Play
                     }, 1000);
 
                     break;
+                case TutorialSegments.Slider_4:
+                    showText("Let's try some sliders!");
+                    showTouchToContinue();
+                    break;
                 case TutorialSegments.Slider_Interact:
+                    prepareInteract();
+
                     showText("Oh, you wanted to try sliding?", -80);
                     GameBase.Scheduler.Add(delegate
                     {
@@ -951,21 +928,7 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Spinner_Interact:
-                    resetScore();
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-
-                    Difficulty = Difficulty.Easy;
-
-                    Beatmap = new Beatmap();
-                    Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
-
-                    if (countdown == null) countdown = new CountdownDisplay();
-
-                    firstCountdown = true;
-                    AudioEngine.Music.SeekTo(58000);
-                    CountdownResume(music_offset + 160 * music_beatlength, 8);
-
-                    loadBeatmap();
+                    prepareInteract();
 
                     hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 160 * music_beatlength, music_offset + 164 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
                     hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 168 * music_beatlength, music_offset + 172 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
@@ -1012,6 +975,25 @@ namespace osum.GameModes.Play
                     Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                     break;
             }
+        }
+
+        private void prepareInteract()
+        {
+            resetScore();
+            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
+
+            Difficulty = Difficulty.Easy;
+
+            Beatmap = new Beatmap();
+            Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
+
+            if (countdown == null) countdown = new CountdownDisplay();
+
+            firstCountdown = true;
+            AudioEngine.Music.SeekTo(58000);
+            CountdownResume(music_offset + 160 * music_beatlength, 8);
+
+            loadBeatmap();
         }
 
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
