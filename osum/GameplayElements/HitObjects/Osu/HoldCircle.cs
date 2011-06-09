@@ -10,12 +10,13 @@ using OpenTK;
 using osum.Graphics.Primitives;
 using System.Drawing;
 using osum.Graphics.Drawables;
+using osum.Audio;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
     class HoldCircle : Slider
     {
-        private pSprite holdCircleOverlay;
+        internal pSprite holdCircleOverlay;
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance)
         {
@@ -52,15 +53,16 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         }
 
-        protected override void burstEndpoint()
+        internal override void burstEndpoint()
         {
             int duration = (EndTime - StartTime) / RepeatCount;
+
+            int now = spriteCollectionStart[0].ClockingNow;
 
             Transformation bounce = new Transformation(TransformationType.Scale,
                 1.1f + 0.4f * progressCurrent / RepeatCount,
                 1 + 0.3f * progressCurrent / RepeatCount,
-                Clock.AudioTime,
-                Clock.AudioTime + duration,
+                now, now + duration,
                 EasingTypes.In
             );
 
@@ -71,7 +73,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        CircularProgress circularProgress;
+        internal CircularProgress circularProgress;
 
         protected override void initializeSprites()
         {
@@ -106,9 +108,25 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             base.initializeStartCircle();
 
-            hitCircleStart.SpriteHitCircle1.Texture = null;
-            hitCircleStart.SpriteHitCircle2.Texture = null;
-            hitCircleStart.SpriteHitCircleText.Colour = Color4.Transparent;
+            HitCircleStart.SpriteHitCircle1.Texture = null;
+            HitCircleStart.SpriteHitCircle2.Texture = null;
+            HitCircleStart.SpriteHitCircleText.Colour = Color4.Transparent;
+        }
+
+        internal override void PlaySound(HitObjectSoundType type)
+        {
+            float volume = Volume * (0.5f + 0.5f * circularProgress.Progress);
+
+            if ((type & HitObjectSoundType.Finish) > 0)
+                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet, volume);
+
+            if ((type & HitObjectSoundType.Whistle) > 0)
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet, volume);
+
+            if ((type & HitObjectSoundType.Clap) > 0)
+                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet, volume);
+
+            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, volume);
         }
 
         internal override Color4 Colour
@@ -122,6 +140,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 base.Colour = new Color4(0.648f, 0, 244 / 256f, 1);
                 spriteCollectionStart[0].Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
                 spriteCollectionStart[0].Transform(new Transformation(Colour, Color4.White, StartTime, EndTime));
+                circularProgress.Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
                 circularProgress.Transform(new Transformation(
                     new Color4(Colour.R, Colour.G, Colour.B, 0.8f),
                     ColourHelper.Lighten(new Color4(Colour.R, Colour.G, Colour.B, 0.8f), 0.5f),
@@ -148,7 +167,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         public override void Update()
         {
-            progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
+            progressCurrent = pMathHelper.ClampToOne((float)(circularProgress.ClockingNow - StartTime) / (EndTime - StartTime)) * RepeatCount;
             circularProgress.Progress = progressCurrent / RepeatCount;
         }
 
@@ -165,7 +184,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.FadeOut(80);
             circularProgress.AlwaysDraw = false;
 
-            Transformation returnto = new Transformation(TransformationType.Scale, spriteCollectionStart[0].ScaleScalar, 1, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In);
+            Transformation returnto = new Transformation(TransformationType.Scale, spriteCollectionStart[0].ScaleScalar, 1, ClockingNow, ClockingNow + 150, EasingTypes.In);
 
             foreach (pDrawable p in spriteCollectionStart)
             {
@@ -186,11 +205,13 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             circularProgress.Transformations.Clear();
 
+            int now = ClockingNow;
+
             circularProgress.Alpha = 0.8f;
             circularProgress.FadeOut(500);
             circularProgress.EvenShading = true;
-            circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, Clock.AudioTime, Clock.AudioTime + 500, EasingTypes.In));
-            circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.In));
+            circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, now, now + 500, EasingTypes.In));
+            circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, now, now + 100, EasingTypes.In));
             circularProgress.AlwaysDraw = false;
         }
 

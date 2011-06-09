@@ -89,7 +89,7 @@ namespace osum.GameplayElements
 
         protected override ScoreChange HitActionInitial()
         {
-            int hitTime = Clock.AudioTime;
+            int hitTime = ClockingNow;
             int accuracy = Math.Abs(hitTime - StartTime);
 
             if (accuracy < DifficultyManager.HitWindow300)
@@ -117,7 +117,7 @@ namespace osum.GameplayElements
             if (connectedObject != null)
                 connectionSprite.FadeOut(100);
 
-            int now = Clock.GetTime(SpriteHitCircle1.Clocking);
+            int now = SpriteHitCircle1.ClockingNow;
 
             if (action > 0)
             {

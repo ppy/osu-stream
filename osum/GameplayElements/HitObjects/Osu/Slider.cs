@@ -153,7 +153,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
         /// </summary>
-        protected HitCircle hitCircleStart;
+        internal HitCircle HitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
@@ -189,9 +189,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void initializeStartCircle()
         {
-            hitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
-            Sprites.AddRange(hitCircleStart.Sprites);
-            SpriteCollectionDim.AddRange(hitCircleStart.Sprites);
+            HitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
+            Sprites.AddRange(HitCircleStart.Sprites);
+            SpriteCollectionDim.AddRange(HitCircleStart.Sprites);
         }
 
         protected virtual void initializeSprites()
@@ -412,7 +412,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             set
             {
                 base.Colour = value;
-                hitCircleStart.Colour = value;
+                HitCircleStart.Colour = value;
                 if (spriteCollectionStart.Count > 0) spriteCollectionStart[0].Colour = value;
                 if (spriteCollectionEnd.Count > 0) spriteCollectionEnd[0].Colour = value;
             }
@@ -422,11 +422,11 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             get
             {
-                return hitCircleStart.ComboNumber;
+                return HitCircleStart.ComboNumber;
             }
             set
             {
-                hitCircleStart.ComboNumber = value;
+                HitCircleStart.ComboNumber = value;
             }
         }
 
@@ -444,7 +444,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 drawableSegments.ForEach(d => { d.Move(d.p1 + change, d.p2 + change); });
 
-                hitCircleStart.Position = value;
+                HitCircleStart.Position = value;
             }
         }
 
@@ -462,16 +462,16 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override bool HitTestInitial(TrackingPoint tracking)
         {
-            return Player.Autoplay || hitCircleStart.HitTestInitial(tracking);
+            return Player.Autoplay || HitCircleStart.HitTestInitial(tracking);
         }
 
         protected override ScoreChange HitActionInitial()
         {
             //todo: this is me being HORRIBLY lazy.
-            hitCircleStart.SampleSet = SampleSet;
-            hitCircleStart.Volume = Volume;
+            HitCircleStart.SampleSet = SampleSet;
+            HitCircleStart.Volume = Volume;
 
-            ScoreChange startCircleChange = hitCircleStart.Hit();
+            ScoreChange startCircleChange = HitCircleStart.Hit();
 
             if (startCircleChange == ScoreChange.Ignore)
                 return startCircleChange;
@@ -479,7 +479,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             //triggered on the first hit
             if (startCircleChange > 0)
             {
-                hitCircleStart.HitAnimation(startCircleChange);
+                HitCircleStart.HitAnimation(startCircleChange);
 
                 scoringEndpointsHit++;
                 return ScoreChange.SliderEnd;
@@ -531,10 +531,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <returns></returns>
         internal override ScoreChange CheckScoring()
         {
-            if (!hitCircleStart.IsHit)
+            if (!HitCircleStart.IsHit)
                 base.CheckScoring();
 
-            if (IsEndHit || Clock.AudioTime < StartTime)
+            if (IsEndHit || ClockingNow < StartTime)
                 return ScoreChange.Ignore;
 
             if (trackingPoint == null)
@@ -634,7 +634,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     if (isTracking)
                     {
-                        AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet, Volume);
+                        playTick();
 
                         pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
 
@@ -670,6 +670,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             return ScoreChange.Ignore;
         }
 
+        protected virtual void playTick()
+        {
+            AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet, Volume);
+        }
+
         protected virtual void lastEndpoint()
         {
             spriteFollowBall.RunAnimation = false;
@@ -678,8 +683,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (spriteFollowCircle.Alpha > 0 && isTracking)
             {
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.In));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.AudioTime, Clock.AudioTime + 240, EasingTypes.None));
+                int now = ClockingNow;
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, now, now + 240, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
             }
         }
 
@@ -700,9 +706,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             //Begin tracking.
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 200), EasingTypes.InHalf));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime + 200, Math.Min(EndTime, Clock.AudioTime + 250), EasingTypes.OutHalf));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.AudioTime, Math.Min(EndTime, Clock.AudioTime + 140), EasingTypes.None));
+            int now = ClockingNow;
+
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, now, Math.Min(EndTime, now + 200), EasingTypes.InHalf));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, now + 200, Math.Min(EndTime, now + 250), EasingTypes.OutHalf));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 140), EasingTypes.None));
         }
 
         protected virtual void endTracking()
@@ -710,13 +718,15 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (IsEndHit)
                 return;
 
+            int now = ClockingNow;
+
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.In));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, spriteFollowCircle.Alpha, 0, Clock.AudioTime, Clock.AudioTime + 150, EasingTypes.None));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, now, now + 150, EasingTypes.In));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, spriteFollowCircle.Alpha, 0, now, now + 150, EasingTypes.None));
         }
 
-        protected virtual void burstEndpoint()
+        internal virtual void burstEndpoint()
         {
             Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
                         Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
@@ -756,7 +766,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Floating point progress through the slider (0..1 for first length, 1..x for futher repeats)
         /// </summary>
-        protected float progressCurrent;
+        internal float progressCurrent;
 
         private double normalizeProgress(double progress)
         {

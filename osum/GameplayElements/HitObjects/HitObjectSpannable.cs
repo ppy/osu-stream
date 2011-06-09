@@ -30,7 +30,8 @@ namespace osum.GameplayElements.HitObjects
         {
             get
             {
-                return StartTime < Clock.AudioTime && (EndTime > Clock.AudioTime || !IsHit);
+                int now = Sprites[0].ClockingNow;
+                return StartTime < now && (EndTime > now || !IsHit);
             }
         }
 

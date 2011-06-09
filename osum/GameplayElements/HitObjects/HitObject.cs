@@ -207,6 +207,11 @@ namespace osum.GameplayElements
 
         internal virtual bool IsHit { get; set; }
 
+        internal int ClockingNow
+        {
+            get { return Sprites[0].ClockingNow; }
+        }
+
         /// <summary>
         /// This will cause the hitObject to get hit and scored.
         /// </summary>
@@ -215,7 +220,7 @@ namespace osum.GameplayElements
         /// </returns>
         internal ScoreChange Hit()
         {
-            if (Clock.AudioTime < StartTime - 200)
+            if (ClockingNow < StartTime - 200)
             {
                 Shake();
                 return ScoreChange.Ignore;
@@ -242,7 +247,7 @@ namespace osum.GameplayElements
                 return ScoreChange.Ignore;
 
             //check for miss
-            if (Clock.AudioTime > (Player.Autoplay ? StartTime : HittableEndTime))
+            if (ClockingNow > (Player.Autoplay ? StartTime : HittableEndTime))
                 return Hit(); //force a "hit" if we haven't yet.
 
             return ScoreChange.Ignore;
@@ -443,12 +448,8 @@ namespace osum.GameplayElements
 
         internal virtual void PlaySound(HitObjectSoundType type)
         {
-
-            //HitObjectManager.OnHitSound(SoundType);
-
             if ((type & HitObjectSoundType.Finish) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet, Volume);
-            //AudioEngine.PlaySample(AudioEngine.s_HitFinish, AudioEngine.VolumeSample, 0, PositionalSound);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet, Volume);
@@ -456,9 +457,7 @@ namespace osum.GameplayElements
             if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet, Volume);
 
-            //if (SkinManager.Current.LayeredHitSounds || SoundType == HitObjectSoundType.Normal)
             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, Volume);
-
         }
 
         protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }
@@ -522,6 +521,8 @@ namespace osum.GameplayElements
 
         internal virtual void Shake()
         {
+            if (Player.Autoplay) return;
+            
             foreach (pDrawable p in Sprites)
             {
                 Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
