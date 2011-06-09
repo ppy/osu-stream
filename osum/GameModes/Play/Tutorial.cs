@@ -54,12 +54,13 @@ namespace osum.GameModes.Play
         VoidDelegate currentSegmentDelegate;
 
         bool touchToContinue = true;
-        private void showTouchToContinue()
+        private void showTouchToContinue(bool showBackButton = true)
         {
             if (touchToContinue)
                 return;
 
-            backButton.FadeIn(200);
+            if (showBackButton)
+                backButton.FadeIn(200);
 
             touchToContinue = true;
 
@@ -324,26 +325,25 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Score_3:
                     showText("Your current combo can be seen in the bottom-left corner of the screen.");
-
-                    comboCounter = new ComboCounter();
-                    comboCounter.SetCombo(35);
                     {
-                        pDrawable lastFlash = null;
-                        currentSegmentDelegate = delegate
+                        GameBase.Scheduler.Add(delegate
                         {
-                            if (comboCounter.displayCombo == 35)
+                            comboCounter = new ComboCounter();
+                            comboCounter.SetCombo(35);
+
+                            pDrawable lastFlash = null;
+                            currentSegmentDelegate = delegate
                             {
-                                if (!touchToContinue)
-                                    showTouchToContinue();
+                                if (comboCounter.displayCombo == 35)
+                                {
+                                    if (!touchToContinue)
+                                        showTouchToContinue(false);
 
-                                if (lastFlash == null || lastFlash.Alpha == 0)
-                                    comboCounter.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
-                            }
-
-                            backButton.Alpha = 0;
-                        };
-
-
+                                    if (lastFlash == null || lastFlash.Alpha == 0)
+                                        comboCounter.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
+                                }
+                            };
+                        }, 500);
                     }
                     break;
                 case TutorialSegments.Score_4:
