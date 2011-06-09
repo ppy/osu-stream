@@ -344,30 +344,36 @@ namespace osum.GameModes
                     healthChange = 5;
                     break;
                 case ScoreChange.MissMinor:
-                    comboCounter.SetCombo(0);
+                    if (comboCounter != null) comboCounter.SetCombo(0);
                     healthChange = -20 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Miss:
                     currentScore.countMiss++;
-                    comboCounter.SetCombo(0);
+                    if (comboCounter != null) comboCounter.SetCombo(0);
                     healthChange = -40;
                     break;
             }
 
-            if (increaseCombo)
+            if (increaseCombo && comboCounter != null)
             {
                 comboCounter.IncreaseCombo();
                 currentScore.maxCombo = Math.Max(comboCounter.currentCombo, currentScore.maxCombo);
             }
 
-            //then handle the hp addition
-            if (healthChange < 0)
-                healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
-            else
-                healthBar.IncreaseCurrentHp(healthChange);
+            if (healthBar != null)
+            {
+                //then handle the hp addition
+                if (healthChange < 0)
+                    healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                else
+                    healthBar.IncreaseCurrentHp(healthChange);
+            }
 
-            scoreDisplay.SetScore(currentScore.totalScore);
-            scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
+            if (scoreDisplay != null)
+            {
+                scoreDisplay.SetScore(currentScore.totalScore);
+                scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
+            }
         }
 
         int frameCount = 0;

@@ -132,16 +132,7 @@ namespace osum.GameModes.Play
             Introduction_1,
             Introduction_2,
             Introduction_3,
-            Healthbar_1,
-            Healthbar_2,
-            Healthbar_3,
-            Healthbar_4,
-            Healthbar_5,
-            Healthbar_End,
-            Score_1,
-            Score_2,
-            Score_3,
-            Score_4,
+            Introduction_4,
             HitCircle_1,
             HitCircle_2,
             HitCircle_3,
@@ -156,6 +147,17 @@ namespace osum.GameModes.Play
             Spinner_4,
             Spinner_Interact,
             Spinner_Judge,
+            Healthbar_1,
+            Healthbar_2,
+            Healthbar_3,
+            Healthbar_4,
+            Healthbar_5,
+            Healthbar_End,
+            Score_1,
+            Score_2,
+            Score_3,
+            Score_4,
+            
             End,
         }
 
@@ -186,7 +188,8 @@ namespace osum.GameModes.Play
             currentSegmentDelegate = null;
 
             touchToContinueText.Transformations.Clear();
-            touchToContinueText.FadeOut(100);
+            touchToContinueText.Alpha = 0;
+
             touchToContinue = false;
 
             backButton.FadeOut(200);
@@ -199,21 +202,16 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Introduction_2:
                     showText("osu!stream is a game which requires both rhythmical and positional accuracy.");
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_3:
                     showText("You will need to feel the beat, so make sure you are using headphones or playing in quiet surroundings!");
                     showTouchToContinue();
                     break;
-
-
-
-
-
-
-
-
+                case TutorialSegments.Introduction_4:
+                    showText("Let's start by looking at the different kinds of beats.");
+                    showTouchToContinue();
+                    break;
                 case TutorialSegments.Healthbar_1:
                     showText("The health bar is located at the top-left of your display.");
                     healthBar = new HealthBar();
@@ -235,6 +233,8 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Healthbar_3:
                     showText("In stream mode gameplay, you can jump to the next stream by filling your health bar.", -120);
+
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
 
                     healthBar.SetCurrentHp(100);
                     {
@@ -391,6 +391,7 @@ namespace osum.GameModes.Play
 
                 case TutorialSegments.HitCircle_1:
                     resetScore();
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
                     showText("\"Hit Circles\" are the most basic beat in osu!.");
                     showTouchToContinue();
@@ -475,18 +476,23 @@ namespace osum.GameModes.Play
 
                         GameBase.Scheduler.Add(delegate
                         {
+                            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
                             showText("good...", 80).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit50);
                         }, 2000);
 
                         GameBase.Scheduler.Add(delegate
                         {
+                            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
+                            AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet.Normal);
                             showText("great!", 90).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit100);
                         }, 3000);
 
                         GameBase.Scheduler.Add(delegate
                         {
+                            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
+                            AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet.Normal);
                             showText("Perfect!", 100).FadeOut(2000);
                             c.HitAnimation(ScoreChange.Hit300);
                         }, 4000);
@@ -502,8 +508,9 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_Interact:
+                    resetScore();
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-                    base.initializeUIElements();
+
                     sampleHitObject.Sprites.ForEach(s => s.AlwaysDraw = false);
 
                     Difficulty = Difficulty.Easy;
@@ -550,6 +557,7 @@ namespace osum.GameModes.Play
 
                     if (currentScore.countMiss > 0)
                     {
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                         showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
                         nextSegment = TutorialSegments.HitCircle_1;
                     }
@@ -640,9 +648,9 @@ namespace osum.GameModes.Play
 
                         currentSegmentDelegate = delegate
                         {
-                            if (sp.BonusScore < 500)
+                            if (sp.BonusScore < 1000)
                             {
-                                sp.velocityFromInputPerMillisecond = 0.01f;
+                                sp.velocityFromInputPerMillisecond = 0.04f;
                                 sp.Update();
                                 sp.CheckScoring();
                             }
@@ -658,14 +666,14 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Spinner_4:
-                    sampleHitObject.Sprites.ForEach(s => s.AlwaysDraw = false);
+                    sampleHitObject.Sprites.ForEach(s => { s.Transformations.Clear(); s.AlwaysDraw = false; });
                     showText("Let's try some spinners!");
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Spinner_Interact:
+                    resetScore();
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-                    base.initializeUIElements();
-                    
+
                     Difficulty = Difficulty.Easy;
 
                     Beatmap = new Beatmap();
@@ -682,7 +690,7 @@ namespace osum.GameModes.Play
                     hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 160 * 375, 2950 + 164 * 375, HitObjectSoundType.Normal), Difficulty);
                     hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 168 * 375, 2950 + 172 * 375, HitObjectSoundType.Normal), Difficulty);
                     hitObjectManager.Add(new Spinner(hitObjectManager, 2950 + 176 * 375, 2950 + 188 * 375, HitObjectSoundType.Normal), Difficulty);
-                    
+
                     hitObjectManager.PostProcessing();
 
                     hitObjectManager.SetActiveStream(Difficulty.Easy);
@@ -697,22 +705,27 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Spinner_Judge:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
-                    if (currentScore.countMiss > 0)
+                    GameBase.Scheduler.Add(delegate
                     {
-                        showText("Are you actually trying? All you need to do is make circles with your finger! Let's try again...");
-                        nextSegment = TutorialSegments.Spinner_Interact;
-                    }
-                    else if (currentScore.count50 > 0 || currentScore.count100 > 0)
-                    {
-                        showText("You're spinning, but a bit slow. Let's try once more!");
-                        nextSegment = TutorialSegments.Spinner_Interact;
-                    }
-                    else
-                    {
-                        showText("You spin like a TORNADO!");
-                    }
 
-                    showTouchToContinue();
+                        if (currentScore.countMiss > 0)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Are you actually trying? All you need to do is make circles with your finger! Let's try again...");
+                            nextSegment = TutorialSegments.Spinner_Interact;
+                        }
+                        else if (currentScore.count50 > 0 || currentScore.count100 > 0)
+                        {
+                            showText("You're spinning, but a bit slow. Let's try once more!");
+                            nextSegment = TutorialSegments.Spinner_Interact;
+                        }
+                        else
+                        {
+                            showText("You spin like a TORNADO!");
+                        }
+
+                        showTouchToContinue();
+                    }, 500);
                     break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
