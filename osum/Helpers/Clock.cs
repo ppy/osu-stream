@@ -11,7 +11,8 @@ namespace osum.Helpers
     {
         Game,
         Mode,
-        Audio
+        Audio,
+        Manual
     }
 
     public static class Clock
@@ -40,6 +41,8 @@ namespace osum.Helpers
         {
             lastModeLoadTime = Time;
         }
+
+        public static int ManualTime;
 
 
         /// <summary>
@@ -72,12 +75,14 @@ namespace osum.Helpers
             switch (clock)
             {
                 case ClockTypes.Audio:
-                    return Clock.AudioTime;
+                    return AudioTime;
                 default:
                 case ClockTypes.Game:
-                    return Clock.Time;
+                    return Time;
                 case ClockTypes.Mode:
-                    return Clock.ModeTime;
+                    return ModeTime;
+                case ClockTypes.Manual:
+                    return ManualTime;
             }
         }
 
@@ -132,5 +137,15 @@ namespace osum.Helpers
         }
 
         public static ITimeSource AudioTimeSource { get; set; }
+
+        internal static void IncrementManual(float rate = 1)
+        {
+            ManualTime += (int)(GameBase.ElapsedMilliseconds * rate);
+        }
+
+        internal static void ResetManual()
+        {
+            ManualTime = 0;
+        }
     }
 }
