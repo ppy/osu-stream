@@ -15,6 +15,7 @@ using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
 using osum.Audio;
 using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics.Skins;
 
 namespace osum.GameModes.Play
 {
@@ -157,6 +158,10 @@ namespace osum.GameModes.Play
             Hold_3,
             Hold_Interact,
             Hold_Judge,
+            Slider_1,
+            Slider_2,
+            Slider_3,
+            Slider_Interact,
             Spinner_1,
             Spinner_2,
             Spinner_3,
@@ -650,7 +655,7 @@ namespace osum.GameModes.Play
                                 c.HitCircleStart.SpriteApproachCircle.Transformations.Count == 1)
                             {
                                 c.HitCircleStart.SpriteApproachCircle.AlwaysDraw = false;
-                                showText("Hold until it explodes!", 80);
+                                showText("You need to hold on until it explodes!", 80);
                             }
 
                             if (c.progressCurrent == c.RepeatCount && !c.IsHit)
@@ -712,7 +717,7 @@ namespace osum.GameModes.Play
                         hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 212 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
                         hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
                         hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 220 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        
+
                         hitObjectManager.PostProcessing();
 
                         hitObjectManager.SetActiveStream(Difficulty.Easy);
@@ -748,6 +753,114 @@ namespace osum.GameModes.Play
                         showTouchToContinue();
                     }, 500);
                     break;
+
+
+                case TutorialSegments.Slider_1:
+                    {
+                        Clock.ResetManual();
+                        Player.Autoplay = true;
+
+                        showText("\"Sliders\" are like hit circles,", -80);
+
+                        if (hitObjectManager != null) hitObjectManager.Dispose();
+                        hitObjectManager = new HitObjectManager(null);
+
+                        sampleHitObject = new Slider(hitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
+
+
+                        sampleHitObject.Colour = TextureManager.DefaultColours[0];
+                        sampleHitObject.ComboNumber = 1;
+
+                        sampleHitObject.SetClocking(ClockTypes.Manual);
+
+                        currentSegmentDelegate = delegate
+                        {
+                            if (Clock.ManualTime < 1500)
+                                Clock.IncrementManual(0.5f);
+                            else
+                                showTouchToContinue();
+                            sampleHitObject.CheckScoring();
+                            sampleHitObject.Update();
+                        };
+
+                        hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+
+
+
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            showText("but extend into tracks.", 80);
+                        }, 1000);
+
+                    }
+                    break;
+                case TutorialSegments.Slider_2:
+                    {
+                        showText("Touch it like a circle...", -100);
+
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            showText("then follow the ball with your finger to the end!", 120);
+                        }, 1000);
+
+                        currentSegmentDelegate = delegate
+                        {
+                            if (Clock.ManualTime < sampleHitObject.EndTime + 500)
+                                Clock.IncrementManual(0.5f);
+                            else
+                                showTouchToContinue();
+
+                            sampleHitObject.HitAnimation(sampleHitObject.CheckScoring());
+                            sampleHitObject.Update();
+                        };
+
+                    }
+                    break;
+                case TutorialSegments.Slider_3:
+                    showText("Some sliders need to be repeated.", -80);
+
+                    Clock.ResetManual();
+
+                    if (hitObjectManager != null) hitObjectManager.Dispose();
+                    hitObjectManager = new HitObjectManager(null);
+
+                    sampleHitObject = new Slider(hitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
+
+
+                    sampleHitObject.Colour = TextureManager.DefaultColours[0];
+                    sampleHitObject.ComboNumber = 1;
+
+                    sampleHitObject.SetClocking(ClockTypes.Manual);
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (Clock.ManualTime < 5500)
+                            Clock.IncrementManual(0.5f);
+                        else
+                            showTouchToContinue();
+                        sampleHitObject.CheckScoring();
+                        sampleHitObject.Update();
+                    };
+
+                    hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        showText("This will be indicated by an arrow at the end.", 120);
+                    }, 1000);
+
+                    break;
+                case TutorialSegments.Slider_Interact:
+                    showText("Oh, you wanted to try sliding?", -80);
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        showText("TOO BAD! (not done yet)", 80);
+                        showTouchToContinue();
+                    }, 1000);
+                    break;
+
+
+
                 case TutorialSegments.Spinner_1:
                     resetScore();
 

@@ -397,9 +397,10 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             get
             {
+                int now = ClockingNow;
                 return
-                    Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
-                    Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
+                    now >= StartTime - DifficultyManager.PreEmpt &&
+                    now <= EndTime + DifficultyManager.FadeOut;
             }
         }
 
@@ -499,7 +500,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <value>
         ///     <c>true</c> if this instance is tracking; otherwise, <c>false</c>.
         /// </value>
-        bool isTracking { get { return (Player.Autoplay && Clock.AudioTime >= StartTime) || trackingPoint != null; } }
+        bool isTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
 
         bool wasTracking;
 
@@ -536,6 +537,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (IsEndHit || ClockingNow < StartTime)
                 return ScoreChange.Ignore;
+
+            int now = ClockingNow;
 
             if (trackingPoint == null)
             {
@@ -642,7 +645,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
                         if (spriteFollowCircle.Transformations.Find(t => t.Type == TransformationType.Scale) == null)
-                            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, Clock.AudioTime, Clock.AudioTime + 100, EasingTypes.OutHalf));
+                            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, now, now + 100, EasingTypes.OutHalf));
 
                         if (RepeatCount > progressCurrent + 1)
                         {
@@ -813,14 +816,16 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         public override void Update()
         {
-            progressCurrent = pMathHelper.ClampToOne((float)(Clock.AudioTime - StartTime) / (EndTime - StartTime)) * RepeatCount;
+            int now = ClockingNow;
+
+            progressCurrent = pMathHelper.ClampToOne((float)(now - StartTime) / (EndTime - StartTime)) * RepeatCount;
 
             spriteFollowBall.Reverse = isReversing;
 
             //cut back the line to required exact length
             TrackingPosition = positionAtProgress(progressCurrent);
 
-            if (IsVisible && Clock.AudioTime > StartTime - DifficultyManager.PreEmptSnakeStart)
+            if (IsVisible && ClockingNow > StartTime - DifficultyManager.PreEmptSnakeStart)
                 UpdatePathTexture();
 
             spriteFollowBall.Position = TrackingPosition;
@@ -830,9 +835,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
-                spriteCollectionEnd[2].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 2);
+                spriteCollectionEnd[2].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
-                spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((Clock.AudioTime % 300) / 300f - 0.5) * 2);
+                spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
 
             base.Update();
         }
@@ -880,7 +885,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
 
-            double drawProgress = Math.Max(0, (double)(Clock.AudioTime - StartTime + DifficultyManager.PreEmptSnakeStart) /
+            double drawProgress = Math.Max(0, (double)(ClockingNow - StartTime + DifficultyManager.PreEmptSnakeStart) /
                           (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd));
 
             if (drawProgress <= 0) return; //haven't started drawing yet.

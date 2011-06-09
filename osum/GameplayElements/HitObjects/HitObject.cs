@@ -173,6 +173,15 @@ namespace osum.GameplayElements
 
         internal virtual bool NewCombo { get; set; }
 
+        internal void SetClocking(ClockTypes newClocking)
+        {
+            foreach (pDrawable d in Sprites)
+            {
+                d.Clocking = newClocking;
+                d.Transformations.ForEach(t => t.Clocking = newClocking);
+            }
+        }
+
         private Color4 colour;
         internal virtual Color4 Colour
         {
