@@ -480,6 +480,19 @@ namespace osum.GameplayElements.HitObjects.Osu
             //triggered on the first hit
             if (startCircleChange > 0)
             {
+                switch (startCircleChange)
+                {
+                    case ScoreChange.Hit300:
+                        scoringEndpointsHit += 3;
+                        break;
+                    case ScoreChange.Hit100:
+                        scoringEndpointsHit += 2;
+                        break;
+                    case ScoreChange.Hit50:
+                        scoringEndpointsHit += 1;
+                        break;
+
+                }
                 HitCircleStart.HitAnimation(startCircleChange);
 
                 scoringEndpointsHit++;
@@ -601,7 +614,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     IsEndHit = true;
 
-                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 1);
+                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 3);
                     ScoreChange amount;
 
                     if (amountHit == 1)
