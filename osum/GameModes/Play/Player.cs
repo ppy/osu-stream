@@ -76,7 +76,7 @@ namespace osum.GameModes
         private TouchBurster touchBurster;
 
         bool isIncreasingStream;
-        private bool Failed;
+        protected bool Failed;
 
         public Player()
             : base()
@@ -203,7 +203,8 @@ namespace osum.GameModes
         {
             if (firstCountdown) return;
 
-            countdown.Hide();
+            if (countdown != null)
+                countdown.Hide();
         }
 
         /// <summary>
@@ -545,7 +546,8 @@ namespace osum.GameModes
 
         internal void Pause()
         {
-            menu.ShowMenu();
+            if (menu != null)
+                menu.ShowMenu();
         }
 
         private bool switchStream(bool increase)
