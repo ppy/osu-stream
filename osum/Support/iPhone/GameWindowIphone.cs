@@ -96,10 +96,11 @@ namespace osum
         protected override void OnUnload(EventArgs e)
         {
             Player p = Director.CurrentMode as Player;
-                if (p != null)
+
+            if (p != null)
             {
-                    p.Pause();
-                    AudioEngine.Music.Stop(false);
+                p.Pause();
+                AudioEngine.Music.Stop(false);
             }
 
             base.OnUnload(e);
