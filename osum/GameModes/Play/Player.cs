@@ -308,7 +308,7 @@ namespace osum.GameModes
                     healthChange = hitObject.HpMultiplier * 0.04f;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
-                    currentScore.totalScore += 100;
+                    currentScore.totalScore += 10;
                     healthChange = 0.4f * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderRepeat:
