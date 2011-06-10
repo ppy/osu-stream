@@ -34,7 +34,10 @@ namespace osum.GameModes
         /// </summary>
         bool mapRequiresUnlock
         {
-            get { return false; }
+            get
+            {
+                return BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal).HighScore == 0;
+            }
         }
 
         private void showDifficultySelection()
@@ -44,6 +47,7 @@ namespace osum.GameModes
             AudioEngine.Music.Play();
             AudioEngine.Music.Volume = 0;
             AudioEngine.Music.SeekTo(30000);
+
 
             //do a second callback so we account for lost gametime due to the above audio load.
             GameBase.Scheduler.Add(delegate {
@@ -56,11 +60,13 @@ namespace osum.GameModes
                     tabController = new pTabController();
     
                     initializeTabPlay();
-                    initializeTabRank();
-                    initializeTabOptions();
+                    //initializeTabRank();
+                    //initializeTabOptions();
                 }
     
                 tabController.Show();
+
+                s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
     
     
                 //preview has finished loading.
@@ -78,7 +84,7 @@ namespace osum.GameModes
                 s_Footer.Transform(new Transformation(new Vector2(-60, -105), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
     
-                updateModeSelectionArrows();
+                SetDifficulty(Difficulty.Normal, true);
             },true);
         }
 
@@ -116,7 +122,7 @@ namespace osum.GameModes
             s_ModeButtonEasy.OnClick += onModeButtonClick;
             sprites.Add(s_ModeButtonEasy);
 
-            s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, mapRequiresUnlock ? Color4.Gray : Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
+            s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
             s_ModeButtonExpert.OnClick += onModeButtonClick;
             sprites.Add(s_ModeButtonExpert);
 
@@ -140,7 +146,7 @@ namespace osum.GameModes
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
-            s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo = new pText(null, 24, new Vector2(0,64), Vector2.Zero, 1, true, Color4.White, true);
             sprites.Add(s_ScoreInfo);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
@@ -168,27 +174,37 @@ namespace osum.GameModes
             }
         }
 
-        private void SetDifficulty(Difficulty newDifficulty)
+        private void SetDifficulty(Difficulty newDifficulty, bool force = false)
         {
-            if (Player.Difficulty != newDifficulty)
+            bool isNewDifficulty = Player.Difficulty != newDifficulty || force;
+            velocity = 0;
+
+            if (isNewDifficulty)
             {
                 string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
-                    velocity = 0;
-                    GameBase.Notify("This difficulty has not yet been mapped!");
+                    GameBase.Notify("This difficulty has not yet been mapped!", delegate { pendingModeChange = false; });
+                    isNewDifficulty = false;
                 }
-                else if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock)
+                else if (newDifficulty == Difficulty.Expert && mapRequiresUnlock)
                 {
-                    velocity = 0;
-                    GameBase.Notify("Unlock Expert by passing this song on Stream mode first!");
-                    //todo: show an alert that this needs an unlock.
+                    if (Player.Difficulty == Difficulty.Easy)
+                        //came from easy -> expert; drop back on normal!
+                        Player.Difficulty = Difficulty.Normal;
+                    else
+                    {
+                        isNewDifficulty = false;
+                        GameBase.Notify("Unlock Expert by passing this song on Stream mode!", delegate { pendingModeChange = false; });
+                    }
+
+
                 }
                 else
                     Player.Difficulty = newDifficulty;
             }
 
-            updateModeSelectionArrows();
+            updateModeSelectionArrows(isNewDifficulty);
         }
 
         void onSelectPreviousMode(object sender, EventArgs e)
@@ -227,7 +243,7 @@ namespace osum.GameModes
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
         /// </summary>
-        private void updateModeSelectionArrows()
+        private void updateModeSelectionArrows(bool isNewDifficulty = true)
         {
             bool hasPrevious = false;
             bool hasNext = false;
@@ -257,20 +273,25 @@ namespace osum.GameModes
             s_ModeArrowLeft.Colour = hasPrevious ? Color4.White : Color4.DarkGray;
             s_ModeArrowRight.Colour = hasNext ? Color4.White : Color4.DarkGray;
 
-            if (s_ModeDescriptionText.Text != text)
+            if (isNewDifficulty)
             {
-                pDrawable clone = s_ModeDescriptionText.Clone();
-                clone.FadeOut(200);
-                clone.AlwaysDraw = false;
-                spriteManager.Add(clone);
 
-                s_ModeDescriptionText.Text = text;
-                s_ModeDescriptionText.Alpha = 0;
-                s_ModeDescriptionText.FadeInFromZero(200);
+                if (s_ModeDescriptionText.Text != text)
+                {
+                    pDrawable clone = s_ModeDescriptionText.Clone();
+                    clone.FadeOut(200);
+                    clone.AlwaysDraw = false;
+                    spriteManager.Add(clone);
+    
+                    s_ModeDescriptionText.Text = text;
+                    s_ModeDescriptionText.Alpha = 0;
+                    s_ModeDescriptionText.FadeInFromZero(200);
+                }
+
+
+                BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3,'0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7,'0');
             }
-
-            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3,'0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7,'0');
         }
 
         private void leaveDifficultySelection(object sender, EventArgs args)

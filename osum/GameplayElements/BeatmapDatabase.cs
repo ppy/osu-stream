@@ -15,6 +15,12 @@ namespace osum.GameplayElements
         const int DATABASE_VERSION = 1;
         const string FILENAME = "osu!.db";
 
+#if iOS
+        private static string fullPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/" + FILENAME; } }
+#else
+        private static string fullPath { get { return FILENAME; } }
+#endif
+
         private static bool initialized;
         private static int Version = -1;
 
@@ -22,17 +28,23 @@ namespace osum.GameplayElements
 
         internal static void Initialize()
         {
-            initialized = true;
-            if (!File.Exists("osu!.db"))
+            if (initialized)
                 return;
 
-            using (FileStream fs = File.OpenRead(FILENAME))
-            using (SerializationReader reader = new SerializationReader(fs))
-            {
-                Version = reader.ReadInt32();
-                BeatmapInfo = reader.ReadBList<BeatmapInfo>();
-            }
+            initialized = true;
 
+            if (!File.Exists(fullPath))
+                return;
+
+            try {
+                using (FileStream fs = File.OpenRead(fullPath))
+                using (SerializationReader reader = new SerializationReader(fs))
+                {
+                    Version = reader.ReadInt32();
+                    BeatmapInfo = reader.ReadBList<BeatmapInfo>();
+                }
+            }
+            catch {}
 
             Version = DATABASE_VERSION;
         }
@@ -41,7 +53,7 @@ namespace osum.GameplayElements
         {
             Initialize();
 
-            using (FileStream fs = File.OpenWrite(FILENAME))
+            using (FileStream fs = File.Create(fullPath))
             using (SerializationWriter writer = new SerializationWriter(fs))
             {
                 writer.Write(Version);
@@ -53,10 +65,13 @@ namespace osum.GameplayElements
         {
             if (b == null) return null;
 
-            BeatmapInfo i = BeatmapInfo.Find(bmi => { return bmi.filename == b.ContainerFilename && bmi.difficulty == d; });
+            string filename = Path.GetFileName(b.ContainerFilename);
+
+            BeatmapInfo i = BeatmapInfo.Find(bmi => { return bmi.filename == filename && bmi.difficulty == d; });
+
             if (i == null)
             {
-                i = new BeatmapInfo() { filename = b.ContainerFilename, difficulty = d };
+                i = new BeatmapInfo() { filename = filename, difficulty = d };
                 BeatmapInfo.Add(i);
             }
 
@@ -75,12 +90,16 @@ namespace osum.GameplayElements
 
         public void ReadFromStream(SerializationReader sr)
         {
+            filename = sr.ReadString();
+            difficulty = (Difficulty)sr.ReadByte();
             HighScore = sr.ReadInt32();
             Playcount = sr.ReadInt32();
         }
 
         public void WriteToStream(SerializationWriter sw)
         {
+            sw.Write(filename);
+            sw.Write((byte)difficulty);
             sw.Write(HighScore);
             sw.Write(Playcount);
         }

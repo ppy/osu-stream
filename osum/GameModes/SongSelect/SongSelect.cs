@@ -330,10 +330,9 @@ namespace osum.GameModes
                         {
                             difficultySelectOffset += velocity;
 
-
                             if (difficultySelectOffset > mode_button_width / 2)
                                 SetDifficulty(Difficulty.Easy);
-                            else if (!mapRequiresUnlock && difficultySelectOffset < -mode_button_width / 2)
+                            else if (difficultySelectOffset < -mode_button_width / 2)
                                 SetDifficulty(Difficulty.Expert);
                             else
                                 SetDifficulty(Difficulty.Normal);
