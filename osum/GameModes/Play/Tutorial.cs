@@ -57,7 +57,7 @@ namespace osum.GameModes.Play
         }
 
         TutorialSegments currentSegment;
-        TutorialSegments nextSegment = TutorialSegments.Introduction_1;
+        TutorialSegments nextSegment = TutorialSegments.Slider_4;
 
         VoidDelegate currentSegmentDelegate;
 
@@ -155,7 +155,6 @@ namespace osum.GameModes.Play
             HitCircle_Judge,
             Hold_1,
             Hold_2,
-            Hold_3,
             Hold_Interact,
             Hold_Judge,
             Slider_1,
@@ -163,6 +162,7 @@ namespace osum.GameModes.Play
             Slider_3,
             Slider_4,
             Slider_Interact,
+            Slider_Judge,
             Spinner_1,
             Spinner_2,
             Spinner_3,
@@ -585,82 +585,54 @@ namespace osum.GameModes.Play
 
                     showTouchToContinue();
                     break;
-
-
-
                 case TutorialSegments.Hold_1:
                     {
                         resetScore();
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                        Player.Autoplay = true;
 
-                        showText("\"Holds\" are like hit circles, but you need to tap and hold them.", -80);
-                        showTouchToContinue();
+                        Clock.ResetManual();
+                        Clock.ManualTime = 0;
 
+                        showText("\"Holds\" are like hit circles, but you need to tap...", -110);
 
                         if (hitObjectManager != null) hitObjectManager.Dispose();
                         hitObjectManager = new HitObjectManager(null);
 
-                        sampleHitObject = new HoldCircle(hitObjectManager, new Vector2(256, 197), 0, true, 0, HitObjectSoundType.Normal, 1000, 40, null, 800, 10);
+                        sampleHitObject = new HoldCircle(hitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
                         //arbitrary
-                        sampleHitObject.Colour = Color4.White;
 
+                        sampleHitObject.SetClocking(ClockTypes.Manual);
+                        
+                        sampleHitObject.Colour = Color4.White;
                         sampleHitObject.ComboNumber = 1;
 
-                        sampleHitObject.Sprites.ForEach(s =>
-                        {
-                            s.AlwaysDraw = true;
-                            s.Transformations.Clear();
-                            s.Clocking = ClockTypes.Mode;
-                            s.FadeInFromZero(200);
-                        });
-
-                        HoldCircle h = sampleHitObject as HoldCircle;
-                        h.HitCircleStart.SpriteApproachCircle.ScaleScalar = 4;
-
                         hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
-                    }
-                    break;
 
-                case TutorialSegments.Hold_2:
-                    {
-                        HoldCircle c = sampleHitObject as HoldCircle;
-                        Player.Autoplay = true;
-
-                        c.HitCircleStart.SpriteApproachCircle.Alpha = 1;
-                        c.HitCircleStart.SpriteApproachCircle.ScaleTo(1, 2000);
-
-                        c.HitCircleStart.StartTime = c.StartTime = Clock.ModeTime + 2000;
-                        c.EndTime = c.StartTime + 5000;
-                        c.Colour = Color4.White;
+                        bool hasShownText = false;
 
                         currentSegmentDelegate = delegate
                         {
-                            if (c.HitCircleStart.SpriteApproachCircle.AlwaysDraw &&
-                                c.HitCircleStart.SpriteApproachCircle.Transformations.Count == 1)
+                            Clock.IncrementManual(0.5f);
+
+                            if (sampleHitObject.IsActive && !hasShownText)
                             {
-                                c.HitCircleStart.SpriteApproachCircle.AlwaysDraw = false;
-                                showText("You need to hold on until it explodes!", 80);
+                                showText("...and hold until the circle explodes!", 100);
+                                hasShownText = true;
                             }
 
-                            if (c.progressCurrent == c.RepeatCount && !c.IsHit)
+                            if (Clock.ManualTime > 3000)
                             {
-                                //this is bad but fixing it will be even worse.
-                                c.Sprites.ForEach(s => s.FadeOut(100));
-
-                                GameBase.Scheduler.Add(delegate
-                                {
-                                    loadNextSegment();
-                                }, 1000);
+                                loadNextSegment();
                             }
 
-                            c.HitAnimation(c.CheckScoring());
-
-                            c.Update();
+                            sampleHitObject.HitAnimation(sampleHitObject.CheckScoring());
+                            sampleHitObject.Update();
                         };
+
                     }
                     break;
-                case TutorialSegments.Hold_3:
-                    Player.Autoplay = false;
+                case TutorialSegments.Hold_2:
                     showText("Let's try a few holds!");
                     showTouchToContinue();
                     break;
@@ -828,12 +800,39 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Slider_Interact:
                     prepareInteract();
 
-                    showText("Oh, you wanted to try sliding?", -80);
+                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(50, 92), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 92),new Vector2(200, 70), new Vector2(350, 92) }, null, 200, 300f/8), Difficulty.Easy);
+                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(512 - 50, 384 - 92), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(512 - 50, 384 - 92), new Vector2(512 - 200, 384 - 70), new Vector2(512 - 350, 384 - 92) }, null, 200, 300f / 8), Difficulty.Easy);
+                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(50, 50), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 50), new Vector2(50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
+                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(512 - 50, 50), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(512 - 50, 50), new Vector2(512 - 50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
+
+                    hitObjectManager.PostProcessing();
+                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+
+                    
+                    break;
+                case TutorialSegments.Slider_Judge:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+
                     GameBase.Scheduler.Add(delegate
                     {
-                        showText("TOO BAD! (not done yet)", 80);
+
+                        if (currentScore.countMiss + currentScore.count50 > 3)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Make sure you follow the ball with your finger! Let's go over the basics again.");
+                            nextSegment = TutorialSegments.Slider_1;
+                        }
+                        else if (currentScore.count100 > 0)
+                        {
+                            showText("Yeah, just like that. Make sure to watch and follow the ball!");
+                        }
+                        else
+                        {
+                            showText("Perfect.");
+                        }
+
                         showTouchToContinue();
-                    }, 1000);
+                    }, 500);
                     break;
 
 
@@ -981,6 +980,8 @@ namespace osum.GameModes.Play
         {
             resetScore();
             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
+
+            Player.Autoplay = false;
 
             Difficulty = Difficulty.Easy;
 
