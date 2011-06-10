@@ -614,7 +614,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     IsEndHit = true;
 
-                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 3);
+                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 4);
                     ScoreChange amount;
 
                     if (amountHit == 1)
