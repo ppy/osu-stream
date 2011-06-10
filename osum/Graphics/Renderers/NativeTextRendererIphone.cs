@@ -30,12 +30,12 @@ namespace osum.Graphics.Renderers
 
 			if (restrictBounds == Vector2.Zero)
             {
-                actualSize = nsstr.StringSize(font);
+                actualSize = nsstr.StringSize(font, GameBase.NativeSize, UILineBreakMode.WordWrap);
                 restrictBounds = new Vector2(actualSize.Width, actualSize.Height);
             }
             else if (restrictBounds.Y == 0)
             {
-                actualSize = nsstr.StringSize(font, restrictBounds.X, UILineBreakMode.WordWrap);
+                actualSize = nsstr.StringSize(font, new SizeF(restrictBounds.X, GameBase.NativeSize.Height), UILineBreakMode.WordWrap);
                 restrictBounds = new Vector2(actualSize.Width, actualSize.Height);
             }
 
@@ -58,7 +58,18 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PushContext(context);
 
-                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap,  UITextAlignment.Left);
+                UITextAlignment align = UITextAlignment.Left;
+                switch (alignment)
+                {
+                    case TextAlignment.Centre:
+                        align = UITextAlignment.Center;
+                        break;
+                    case TextAlignment.Right:
+                        align = UITextAlignment.Right;
+                        break;
+                }
+
+                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap,  align);
 
                 UIGraphics.PopContext();
 
