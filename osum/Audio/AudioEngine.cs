@@ -17,7 +17,7 @@ namespace osum.Audio
         MenuHit,
         MenuClick,
         SliderTick,
-        SliderSlide,
+        //SliderSlide,
         MenuBack,
         SpinnerBonus
     }
@@ -96,9 +96,9 @@ namespace osum.Audio
                 case OsuSamples.SliderTick:
                     filename = setName + "-slidertick";
                     break;
-                case OsuSamples.SliderSlide:
-                    filename = setName + "-sliderslider";
-                    break;
+                //case OsuSamples.SliderSlide:
+                //    filename = setName + "-sliderslider";
+                //    break;
                 case OsuSamples.SpinnerBonus:
                     filename = "spinnerbonus";
                     break;
