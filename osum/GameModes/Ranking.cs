@@ -187,7 +187,7 @@ namespace osum.GameModes
                 resultSprites.ForEach(s => s.Alpha = 1);
 
                 //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-                OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename), RankableScore.totalScore);
+                OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename + "-" + Player.Difficulty.ToString()), RankableScore.totalScore);
 
                 s_ButtonBack.FadeIn(150);
             }
