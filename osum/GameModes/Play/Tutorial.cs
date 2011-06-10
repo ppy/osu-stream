@@ -24,7 +24,7 @@ namespace osum.GameModes.Play
         BackButton backButton;
         pText touchToContinueText;
 
-        const int music_offset = 2950;
+        const int music_offset = 3050;
         const int music_beatlength = 375;
 
         internal override void Initialize()
@@ -93,12 +93,10 @@ namespace osum.GameModes.Play
 
         private pText showText(string text, float verticalOffset = 0)
         {
-            pText pt = new pText(text, 30, new Vector2(0, verticalOffset), 1, true, Color4.White)
+            pText pt = new pText(text, 30, new Vector2(0, verticalOffset), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, true)
             {
-                TextBounds = new Vector2(GameBase.BaseSize.Width * 0.95f, 0),
                 Field = FieldTypes.StandardSnapCentre,
                 TextAlignment = TextAlignment.Centre,
-                TextShadow = true,
                 Origin = OriginTypes.Centre
             };
 
@@ -123,6 +121,9 @@ namespace osum.GameModes.Play
         int currentBeat;
         public override void Update()
         {
+            if (!AudioEngine.Music.IsElapsing && !Failed)
+                AudioEngine.Music.Play();
+
             lastFrameBeat = currentBeat;
             currentBeat = (Clock.AudioTime - music_offset) / music_beatlength;
 
@@ -335,6 +336,7 @@ namespace osum.GameModes.Play
                                 showTouchToContinue();
                                 playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
                                 showFailSprite();
+                                Failed = true;
                                 AudioEngine.Music.Pause();
                             }
                         }
@@ -345,6 +347,7 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Healthbar_End:
                     healthBar.SetCurrentHp(100);
                     hideFailSprite();
+                    Failed = false;
                     AudioEngine.Music.Play();
                     healthBar.InitialIncrease = true;
                     currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
@@ -563,13 +566,13 @@ namespace osum.GameModes.Play
                 case TutorialSegments.HitCircle_Judge:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
-                    if (currentScore.countMiss > 0)
+                    if (currentScore.countMiss > 1)
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                         showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
                         nextSegment = TutorialSegments.HitCircle_1;
                     }
-                    else if (currentScore.count50 > 0)
+                    else if (currentScore.count50 > 0 || currentScore.countMiss > 0)
                     {
                         showText("Getting there!\nWatch the approaching circle carefully and listen to the beat. Let's try once more!");
                         nextSegment = TutorialSegments.HitCircle_Interact;
@@ -777,10 +780,10 @@ namespace osum.GameModes.Play
 
                     currentSegmentDelegate = delegate
                     {
-                        if (Clock.ManualTime < 5500)
+                        if (Clock.ManualTime < 5800)
                             Clock.IncrementManual(0.5f);
                         else
-                            showTouchToContinue();
+                            loadNextSegment();
                         sampleHitObject.CheckScoring();
                         sampleHitObject.Update();
                     };
@@ -808,7 +811,12 @@ namespace osum.GameModes.Play
                     hitObjectManager.PostProcessing();
                     hitObjectManager.SetActiveStream(Difficulty.Easy);
 
-                    
+                    currentSegmentDelegate = delegate
+                    {
+                        if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            loadNextSegment();
+                    };
+
                     break;
                 case TutorialSegments.Slider_Judge:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
@@ -816,7 +824,7 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss + currentScore.count50 > 3)
+                        if (currentScore.countMiss + currentScore.count50 > 1)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you follow the ball with your finger! Let's go over the basics again.");
@@ -950,13 +958,13 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss > 0)
+                        if (currentScore.countMiss > 1)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Are you actually trying? All you need to do is make circles with your finger! Let's try again...");
                             nextSegment = TutorialSegments.Spinner_Interact;
                         }
-                        else if (currentScore.count50 > 0 || currentScore.count100 > 0)
+                        else if (currentScore.count50 > 0 || currentScore.count100 > 0 || currentScore.countMiss > 0)
                         {
                             showText("You're spinning, but a bit slow. Let's try once more!");
                             nextSegment = TutorialSegments.Spinner_Interact;
