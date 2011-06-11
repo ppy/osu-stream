@@ -255,7 +255,7 @@ namespace BeatmapCombinator
 
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
-                        if (line.Time > currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
+                        if (line.Time >= currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
                         {
                             bestMatchDifficulty = i;
                             bestMatchLine = line;
