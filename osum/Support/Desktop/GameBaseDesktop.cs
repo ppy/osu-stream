@@ -22,7 +22,7 @@ namespace osum
             gameWindow.Run();
         }
 
-        protected override IBackgroundAudioPlayer InitializeBackgroundAudio()
+        protected override BackgroundAudioPlayer InitializeBackgroundAudio()
         {
             return new BackgroundAudioPlayerDesktop();
         }

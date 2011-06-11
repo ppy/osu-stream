@@ -246,7 +246,7 @@ namespace osum
             if (InputManager.RegisteredSources.Count == 0)
                 throw new Exception("No input sources registered");
 
-            IBackgroundAudioPlayer music = InitializeBackgroundAudio();
+            BackgroundAudioPlayer music = InitializeBackgroundAudio();
             if (music == null)
                 throw new Exception("No background audio manager registered");
             Clock.AudioTimeSource = music;
@@ -285,7 +285,7 @@ namespace osum
         /// <summary>
         /// Initializes the background audio playback engine.
         /// </summary>
-        protected abstract IBackgroundAudioPlayer InitializeBackgroundAudio();
+        protected abstract BackgroundAudioPlayer InitializeBackgroundAudio();
 
         /// <summary>
         /// Initializes the input management subsystem.

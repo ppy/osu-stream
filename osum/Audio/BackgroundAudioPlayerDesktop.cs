@@ -9,7 +9,7 @@ using osum.Helpers;
 
 namespace osum.Audio
 {
-    class BackgroundAudioPlayerDesktop : IBackgroundAudioPlayer
+    class BackgroundAudioPlayerDesktop : BackgroundAudioPlayer
     {
         private GCHandle audioHandle;
         private static int audioStream;
@@ -30,7 +30,7 @@ namespace osum.Audio
         /// Plays the loaded audio.
         /// </summary>
         /// <returns></returns>
-        public bool Play()
+        public override bool Play()
         {
             Bass.BASS_ChannelPlay(audioStream, false);
             return true;
@@ -40,7 +40,7 @@ namespace osum.Audio
         /// Stops the playing audio.
         /// </summary>
         /// <returns></returns>
-        public bool Stop(bool reset = true)
+        public override bool Stop(bool reset = true)
         {
             Bass.BASS_ChannelStop(audioStream);
             if (reset) SeekTo(0);
@@ -50,7 +50,7 @@ namespace osum.Audio
         /// <summary>
         /// Updates this instance. Called every frame when loaded as a component.
         /// </summary>
-        public void Update()
+        public override void Update()
         {
 
         }
@@ -68,8 +68,11 @@ namespace osum.Audio
             }
         }
 
-        public bool Load(byte[] audio, bool looping)
+        public override bool Load(byte[] audio, bool looping, string identifier = null)
         {
+            if (!base.Load(audio, looping, identifier))
+                return false;
+
             FreeMusic();
 
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
@@ -79,13 +82,13 @@ namespace osum.Audio
             return true;
         }
 
-        public bool Unload()
+        public override bool Unload()
         {
             FreeMusic();
             return true;
         }
 
-        public double CurrentTime
+        public override double CurrentTime
         {
             get
             {
@@ -96,13 +99,13 @@ namespace osum.Audio
             }
         }
 
-        public bool Pause()
+        public override bool Pause()
         {
             Bass.BASS_ChannelPause(audioStream);
             return true;
         }
 
-        public bool SeekTo(int milliseconds)
+        public override bool SeekTo(int milliseconds)
         {
             if (audioStream == 0) return false;
 
@@ -113,7 +116,7 @@ namespace osum.Audio
 
         #region IBackgroundAudioPlayer Members
 
-        public float Volume
+        public override float Volume
         {
             get
             {
@@ -131,7 +134,7 @@ namespace osum.Audio
             }
         }
 
-        public float CurrentPower
+        public override float CurrentPower
         {
             get
             {
@@ -149,7 +152,7 @@ namespace osum.Audio
         #region ITimeSource Members
 
 
-        public bool IsElapsing
+        public override bool IsElapsing
         {
             get { return Bass.BASS_ChannelIsActive(audioStream) == BASSActive.BASS_ACTIVE_PLAYING; }
         }

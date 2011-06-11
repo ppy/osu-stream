@@ -7,7 +7,7 @@ using System.IO;
 
 namespace osum
 {
-	public class BackgroundAudioPlayerIphone : IBackgroundAudioPlayer
+	public class BackgroundAudioPlayerIphone : BackgroundAudioPlayer
 	{
 		AVAudioPlayer player;
 		
@@ -20,7 +20,7 @@ namespace osum
 #endif
 		}
 		
-		public float Volume {
+		public override float Volume {
 			get {
 				if (player == null) return 0;
 				
@@ -33,7 +33,7 @@ namespace osum
 			}
 		}
 		
-		public float CurrentPower {
+		public override float CurrentPower {
 			get {
                 if (player == null) return 0;
 
@@ -43,7 +43,7 @@ namespace osum
 		}
 		
 
-		public bool Play()
+		public override bool Play()
 		{
 			if (player == null)
 				return false;
@@ -53,7 +53,7 @@ namespace osum
 			return true;
 		}
 		
-		public bool Pause()
+		public override bool Pause()
 		{
 			if (player == null)
 				return false;
@@ -62,13 +62,15 @@ namespace osum
 			return true;
 		}
 		
-		public void Update()
+		public override void Update()
 		{
 			
 		}
 
-        public unsafe bool Load(byte[] audio, bool looping)
+        public override unsafe bool Load(byte[] audio, bool looping, string identifier = null)
         {
+            if (!base.Load(audio, looping, identifier))
+                return false;
             Unload();
 
             NSError error = null;
@@ -100,14 +102,14 @@ namespace osum
             return error == null;
         }
 
-        public bool Unload()
+        public override bool Unload()
         {
             if (player != null)
                 player.Dispose();
 			return true;
         }
 
-        public bool Stop(bool reset = true)
+        public override bool Stop(bool reset = true)
         {
         	if (player != null)
 			{
@@ -119,7 +121,7 @@ namespace osum
 			return false;
         }
         
-		public double CurrentTime
+		public override double CurrentTime
         {
             get
             {
@@ -127,12 +129,12 @@ namespace osum
             }
         }
 
-        public bool IsElapsing
+        public override bool IsElapsing
         {
             get { return player != null && player.Playing; }
         }
 
-		public bool SeekTo(int milliseconds)
+		public override bool SeekTo(int milliseconds)
 		{
 			if (player == null)
 				return false;

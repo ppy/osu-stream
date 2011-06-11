@@ -27,7 +27,7 @@ namespace osum.Audio
         static Dictionary<string, int> loadedSamples = new Dictionary<string, int>();
 
         internal static ISoundEffectPlayer Effect;
-        internal static IBackgroundAudioPlayer Music;
+        internal static BackgroundAudioPlayer Music;
 
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace osum.Audio
         /// </summary>
         /// <param name="effect">The effect player.</param>
         /// <param name="music">The music player.</param>
-        internal static void Initialize(ISoundEffectPlayer effect, IBackgroundAudioPlayer music)
+        internal static void Initialize(ISoundEffectPlayer effect, BackgroundAudioPlayer music)
         {
             Effect = effect;
             Music = music;

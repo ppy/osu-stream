@@ -74,10 +74,10 @@ namespace osum
             GL.Translate(-height / 2, -width / 2, 0);
         }
 
-        protected override IBackgroundAudioPlayer InitializeBackgroundAudio()
+        protected override BackgroundAudioPlayer InitializeBackgroundAudio()
         {
             //only initialise the first time (we may be here from a resume operation)
-            return new BackgroundAudioPlayerIphone ();
+            return new BackgroundAudioPlayerIphone();
         }
 
         protected override void InitializeInput()

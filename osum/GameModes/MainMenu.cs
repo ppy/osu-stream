@@ -215,12 +215,12 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.m4a"), true);
+            AudioEngine.Music.Load("Skins/Default/mainmenu.m4a", true);
 #else
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/mainmenu.mp3"), true);
+            AudioEngine.Music.Load("Skins/Default/mainmenu.mp3", true);
 #endif
 
-            if (!firstDisplay)
+            if (!firstDisplay && Clock.AudioTime < initial_display)
                 AudioEngine.Music.SeekTo(initial_display);
 
             AudioEngine.Music.Play();

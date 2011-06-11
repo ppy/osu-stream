@@ -1,27 +1,28 @@
 using System;
 using osum.Support;
+using System.IO;
 namespace osum
 {
     /// <summary>
     /// Interface for a class which plays music. Provides access to specific information during playback such as time, levels etc.
     /// </summary>
-    public interface IBackgroundAudioPlayer : IUpdateable, ITimeSource
+    public abstract class BackgroundAudioPlayer : IUpdateable, ITimeSource
     {
         /// <summary>
         /// Gets the current volume.
         /// </summary>
         /// <value>The current volume.</value>
-        float Volume
+        public virtual float Volume
         {
             get;
-			set;
+            set;
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Gets the current power of the music.
         /// </summary>
         /// <value>The current power.</value>
-        float CurrentPower
+        public abstract float CurrentPower
         {
             get;
         }
@@ -29,33 +30,68 @@ namespace osum
         /// <summary>
         /// Loads an audio track.
         /// </summary>
-        bool Load(byte[] bytes, bool looping);
+        public virtual bool Load(byte[] audio, bool looping, string identifier = null)
+        {
+            if (lastLoaded == identifier) return false;
+
+            lastLoaded = identifier;
+            return true;
+        }
+
+        protected string lastLoaded;
+
+        /// <summary>
+        /// Loads an audio track directly from a file.
+        /// </summary>
+        public bool Load(string filename, bool looping)
+        {
+            return Load(File.ReadAllBytes(filename), looping, filename);
+        }
 
         /// <summary>
         /// Unloads the current audio track.
         /// </summary>
-        bool Unload();
-		
+        public abstract bool Unload();
+
         /// <summary>
         /// Plays the loaded audio.
         /// </summary>
         /// <returns></returns>
-        bool Play();
+        public abstract bool Play();
 
         /// <summary>
         /// Stops the playing audio.
         /// </summary>
-        bool Stop(bool reset = true);
+        public abstract bool Stop(bool reset = true);
 
         /// <summary>
         /// Pause the playing audio.
         /// </summary>
-        bool Pause();
+        public abstract bool Pause();
 
         /// <summary>
         /// Seek to specified location.
         /// </summary>
-        bool SeekTo(int milliseconds);
-	}
+        public abstract bool SeekTo(int milliseconds);
+
+        #region IUpdateable Members
+
+        public abstract void Update();
+        #endregion
+
+        #region ITimeSource Members
+
+        public abstract double CurrentTime
+        {
+            get;
+        }
+
+        public abstract bool IsElapsing
+        {
+            get;
+        }
+
+        #endregion
+    }
 }
 

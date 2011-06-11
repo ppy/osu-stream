@@ -197,9 +197,9 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/songselect.m4a"), true);
+            AudioEngine.Music.Load("Skins/Default/songselect.m4a", true);
 #else
-            AudioEngine.Music.Load(File.ReadAllBytes("Skins/Default/songselect.mp3"), true);
+            AudioEngine.Music.Load("Skins/Default/songselect.mp3", true);
 #endif
             AudioEngine.Music.Play();
         }
@@ -248,7 +248,7 @@ namespace osum.GameModes
             {
                 if (State != SelectState.LoadingPreview) return;
 
-                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false);
+                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.AudioFilename);
 
                 GameBase.Scheduler.Add(showDifficultySelection, true);
             }, 400);
