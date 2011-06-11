@@ -414,7 +414,7 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            if (hitObjectManager != null)
+            if (hitObjectManager != null && AudioEngine.Music.IsElapsing)
             {
                 CheckForCompletion();
                 //check whether the map is finished
