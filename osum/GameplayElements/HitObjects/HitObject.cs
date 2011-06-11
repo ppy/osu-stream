@@ -381,8 +381,10 @@ namespace osum.GameplayElements
             get { return position; }
             set
             {
+                Vector2 change = value - position;
+                
+                Sprites.ForEach(s => { s.Position += change; });
                 position = value;
-                Sprites.ForEach(s => { s.StartPosition = value; s.Position = value; });
             }
         }
 
