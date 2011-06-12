@@ -27,6 +27,8 @@ namespace osum.GameplayElements.Scoring
         internal bool submitting;
         internal int totalScore;
         internal int spinnerBonus;
+        public int hitOffsetMilliseconds;
+        public int hitOffsetCount;
 
         internal virtual float accuracy
         {

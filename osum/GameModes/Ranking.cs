@@ -29,7 +29,7 @@ namespace osum.GameModes
         const int time_between_fills = 600;
 
         const float fill_height = 80;
-        const float count_height = 80;
+        float count_height = 80;
 
         internal override void Initialize()
         {
@@ -49,6 +49,8 @@ namespace osum.GameModes
             pSpriteText count = new pSpriteText(RankableScore.count300.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
             countSprites.Add(count);
 
+            count_height -= 20;
+
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.count100 / RankableScore.totalHits;
@@ -58,6 +60,8 @@ namespace osum.GameModes
             count = new pSpriteText(RankableScore.count100.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
             countSprites.Add(count);
 
+            count_height -= 20;
+
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Scale.X *= (float)RankableScore.count50 / RankableScore.totalHits;
@@ -66,6 +70,8 @@ namespace osum.GameModes
 
             count = new pSpriteText(RankableScore.count50.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, count_height), 1, true, Color4.White);
             countSprites.Add(count);
+
+            count_height -= 20;
 
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
@@ -110,41 +116,58 @@ namespace osum.GameModes
             spriteManager.Add(fillSprites);
             spriteManager.Add(countSprites);
 
-            performance = new pText("Total Score", 60, new Vector2(20, 100), 0.5f, true, Color4.SkyBlue);
-            performance.Alpha = 0.2f;
+            const float font_size = 40;
+
+            const float header_offset = 0;
+            const float number_offset = 0;
+
+            performance = new pText("Total Score", font_size, new Vector2(header_offset, 100), 0.5f, true, Color4.SkyBlue);
+            performance.Origin = OriginTypes.TopRight;
+            performance.Field = FieldTypes.StandardSnapRight;
             performance.Additive = true;
-            performance.Bold = true;
             resultSprites.Add(performance);
 
-            count = new pSpriteText(RankableScore.totalScore.ToString("#,0"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 140), 1, true, Color4.White);
+            count = new pSpriteText(RankableScore.totalScore.ToString("#,0"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 140), 1, true, Color4.White);
+            count.Origin = OriginTypes.TopRight;
+            count.Field = FieldTypes.StandardSnapRight;
             resultSprites.Add(count);
 
-            performance = new pText("Accuracy", 60, new Vector2(20, 200), 0.5f, true, Color4.SkyBlue);
-            performance.Alpha = 0.2f;
+            performance = new pText("Avg. Timing (" + (RankableScore.hitOffsetMilliseconds > 0 ? "Late" : "Early") + ")", font_size, new Vector2(header_offset, 100), 0.5f, true, Color4.SkyBlue);
             performance.Additive = true;
-            performance.Bold = true;
             resultSprites.Add(performance);
 
-            count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00") + "%", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 240), 1, true, Color4.White);
+            float avg = (float)RankableScore.hitOffsetMilliseconds / RankableScore.hitOffsetCount;
+
+            count = new pSpriteText(avg.ToString("#.00"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 140), 1, true, Color4.White);
             resultSprites.Add(count);
 
-            performance = new pText("Max Combo", 60, new Vector2(20, 300), 0.5f, true, Color4.SkyBlue);
-            performance.Alpha = 0.2f;
+            performance = new pText("Accuracy", font_size, new Vector2(header_offset, 200), 0.5f, true, Color4.SkyBlue);
+            performance.Origin = OriginTypes.TopRight;
+            performance.Field = FieldTypes.StandardSnapRight;
             performance.Additive = true;
-            performance.Bold = true;
             resultSprites.Add(performance);
 
-            count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(0, 340), 1, true, Color4.White);
+            count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00") + "%", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 240), 1, true, Color4.White);
+            count.Origin = OriginTypes.TopRight;
+            count.Field = FieldTypes.StandardSnapRight;
+            resultSprites.Add(count);
+
+            performance = new pText("Max Combo", font_size, new Vector2(header_offset, 300), 0.5f, true, Color4.SkyBlue);
+            performance.Origin = OriginTypes.TopRight;
+            performance.Field = FieldTypes.StandardSnapRight;
+            performance.Additive = true;
+            resultSprites.Add(performance);
+
+            count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 340), 1, true, Color4.White);
+            count.Origin = OriginTypes.TopRight;
+            count.Field = FieldTypes.StandardSnapRight;
             resultSprites.Add(count);
 
             foreach (pDrawable p in resultSprites)
             {
-                p.Field = FieldTypes.StandardSnapRight;
-                p.Origin = OriginTypes.TopRight;
                 p.Alpha = 0;
                 spriteManager.Add(p);
             }
-
 
             //add a temporary button to allow returning to song select
             s_ButtonBack = new BackButton(returnToSelect);

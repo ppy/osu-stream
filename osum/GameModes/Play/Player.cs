@@ -299,6 +299,12 @@ namespace osum.GameModes
             double healthChange = 0;
             bool increaseCombo = false;
 
+            if (hitObject is HitCircle && change > 0)
+            {
+                currentScore.hitOffsetMilliseconds += (Clock.AudioTime - hitObject.StartTime);
+                currentScore.hitOffsetCount++;
+            }
+
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
             {
