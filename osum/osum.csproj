@@ -207,7 +207,6 @@
     <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
-    <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
     <Compile Include="Support\FadeTransition.cs" />
     <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
@@ -396,5 +395,6 @@
     <Content Include="Skins\Default\notification_960" />
     <Content Include="Skins\Default\spinnerbonus.wav" />
     <Content Include="Skins\Default\menuclick.wav" />
+    <Content Include="Skins\Default\spinnerspin.wav" />
   </ItemGroup>
 </Project>

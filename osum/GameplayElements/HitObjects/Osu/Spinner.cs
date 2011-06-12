@@ -250,7 +250,7 @@ namespace osum.GameplayElements
             //Update the rotation count
             if (currentRotationCount != lastRotationCount)
             {
-                hpMultiplier = Math.Max(1,(int)(currentRotationCount - lastRotationCount));
+                hpMultiplier = Math.Max(1, (int)(currentRotationCount - lastRotationCount));
 
                 if (currentRotationCount > rotationRequirement + 3 * sensitivity_modifier)
                 {
@@ -291,8 +291,10 @@ namespace osum.GameplayElements
 
         internal float BonusScore;
         float hpMultiplier = 1;
-        public override float HpMultiplier {
-            get {
+        public override float HpMultiplier
+        {
+            get
+            {
                 return hpMultiplier;
             }
         }
@@ -304,7 +306,7 @@ namespace osum.GameplayElements
         {
             base.Update();
 
-            if (IsHit || Clock.AudioTime < StartTime) // || (!InputManager.ScorableFrame))
+            if (IsHit || Clock.AudioTime < StartTime)
                 return;
 
             Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
@@ -320,6 +322,11 @@ namespace osum.GameplayElements
                 else
                     velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
 
+                if (velocityCurrent > 0.0001f)
+                    StartSound();
+                else
+                    StopSound();
+
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
@@ -327,14 +334,11 @@ namespace osum.GameplayElements
 
                 spriteCircle.Rotation += delta;
 
-
-                if (velocityCurrent != 0)
-                    StartSound();
-                else
-                    StopSound();
-
                 currentRotationCount += (float)(Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2));
             }
+
+            if (sourceSpinning != null)
+                sourceSpinning.Pitch = 0.5f + 0.5f * currentRotationCount / rotationRequirement;
 
             if (currentRotationCount >= rotationRequirement && !Cleared)
             {
@@ -367,21 +371,20 @@ namespace osum.GameplayElements
             }
         }
 
+        Source sourceSpinning;
+
         private void StartSound()
         {
-            //if (SkinManager.Current.SpinnerFrequencyModulate)
-            //    Bass.BASS_ChannelSetAttribute(AudioEngine.ch_spinnerSpin, BASSAttribute.BASS_ATTRIB_FREQ,
-            //                                  Math.Min(100000,
-            //                                           20000 +
-            //                                           (int)(40000 * ((float)scoringRotationCount / rotationRequirement))));
-            //if (!AudioEngine.IsPlaying(AudioEngine.ch_spinnerSpin))
-            //    Bass.BASS_ChannelPlay(AudioEngine.ch_spinnerSpin, false);
-            //Bass.BASS_ChannelSetAttribute(AudioEngine.ch_spinnerSpin, BASSAttribute.BASS_ATTRIB_VOL, (float)AudioEngine.VolumeSample / 100);
+            if (sourceSpinning == null)
+                sourceSpinning = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
+            else
+                sourceSpinning.Play();
         }
 
         internal override void StopSound()
         {
-            //Bass.BASS_ChannelPause(AudioEngine.ch_spinnerSpin);
+            if (sourceSpinning != null)
+                sourceSpinning.Stop();
         }
 
         private void SetScoreMeter(int percent)
@@ -409,6 +412,8 @@ namespace osum.GameplayElements
                 return ScoreChange.Ignore;
 
             StopSound();
+            if (sourceSpinning != null)
+                sourceSpinning.Reserved = false;
 
             ScoreChange val = ScoreChange.Miss;
             if (currentRotationCount > rotationRequirement + 1)

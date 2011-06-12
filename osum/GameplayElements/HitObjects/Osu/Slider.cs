@@ -693,6 +693,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void lastEndpoint()
         {
+            if (sourceSliding != null)
+            {
+                sourceSliding.Stop();
+                sourceSliding.Reserved = false;
+            }
+
             spriteFollowBall.RunAnimation = false;
 
             spriteFollowCircle.Transformations.Clear();
@@ -704,6 +710,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
             }
         }
+
+        Source sourceSliding;
 
         protected virtual void newEndpoint()
         {
@@ -719,6 +727,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void beginTracking()
         {
+            if (sourceSliding == null)
+                sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), 1, true, true);
+            else
+                sourceSliding.Play();
+
             //Begin tracking.
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 
@@ -733,6 +746,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (IsEndHit)
                 return;
+
+            if (sourceSliding != null)
+                sourceSliding.Stop();
 
             int now = ClockingNow;
 

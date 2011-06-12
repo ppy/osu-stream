@@ -252,7 +252,7 @@ namespace osum
             Clock.AudioTimeSource = music;
             Components.Add(music);
 
-            ISoundEffectPlayer effect = InitializeSoundEffects();
+            SoundEffectPlayer effect = InitializeSoundEffects();
             if (effect == null)
                 throw new Exception("No sound effect player registered");
             Components.Add(effect);
@@ -269,14 +269,13 @@ namespace osum
             //AudioEngine.Music.Load(Player.Beatmap.GetFileBytes(Player.Beatmap.AudioFilename), false);
             Director.ChangeMode(OsuMode.MainMenu, null);
 
-
             OnlineHelper.Initialize();
         }
 
         /// <summary>
         /// Initializes the sound effects engine.
         /// </summary>
-        protected virtual ISoundEffectPlayer InitializeSoundEffects()
+        protected virtual SoundEffectPlayer InitializeSoundEffects()
         {
             //currently openAL implementation is used across the board.
             return new SoundEffectPlayer();

@@ -15,7 +15,7 @@ namespace osum.Support
     static class DebugOverlay
     {
 #if FULL_DEBUG
-		internal static pText fpsDisplay;
+        internal static pText fpsDisplay;
         const int vertical_offset = 40;
 #else
         internal static pSpriteText fpsDisplay;
@@ -94,7 +94,7 @@ namespace osum.Support
                 fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
-				                                accurateAudio, Clock.AudioTime - accurateAudio);
+                                                accurateAudio, Clock.AudioTime - accurateAudio);
 #else
                 fpsDisplay.ShowInt((int)Math.Round(Math.Min(60, fps), 0));
                 fpsDisplay.Alpha = fps < 59.9f ? 1 : 0.3f;

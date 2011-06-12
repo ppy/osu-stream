@@ -17,16 +17,17 @@ namespace osum.Audio
         MenuHit,
         MenuClick,
         SliderTick,
-        //SliderSlide,
+        SliderSlide,
         MenuBack,
-        SpinnerBonus
+        SpinnerBonus,
+        SpinnerSpin
     }
 
     internal static class AudioEngine
     {
         static Dictionary<string, int> loadedSamples = new Dictionary<string, int>();
 
-        internal static ISoundEffectPlayer Effect;
+        internal static SoundEffectPlayer Effect;
         internal static BackgroundAudioPlayer Music;
 
 
@@ -35,7 +36,7 @@ namespace osum.Audio
         /// </summary>
         /// <param name="effect">The effect player.</param>
         /// <param name="music">The music player.</param>
-        internal static void Initialize(ISoundEffectPlayer effect, BackgroundAudioPlayer music)
+        internal static void Initialize(SoundEffectPlayer effect, BackgroundAudioPlayer music)
         {
             Effect = effect;
             Music = music;
@@ -51,15 +52,15 @@ namespace osum.Audio
 
         static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
 
-        internal static int PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
+        internal static Source PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
         {
             int buffer = LoadSample(sample, set);
-            if (buffer < 0) return buffer;
+            if (buffer < 0) return null;
 
             int lastPlayed = -1;
             if (lastPlayedTimes.TryGetValue(sample, out lastPlayed))
                 if (Math.Abs(Clock.AudioTime - lastPlayed) < 45)
-                    return -1;
+                    return null;
             lastPlayedTimes[sample] = Clock.AudioTime;
 
 
@@ -78,38 +79,20 @@ namespace osum.Audio
             string filename = null;
 
             string setName = set.ToString().ToLower();
+            string sampleName = sample.ToString().ToLower();
 
             switch (sample)
             {
                 case OsuSamples.HitClap:
-                    filename = setName + "-hitclap";
-                    break;
                 case OsuSamples.HitFinish:
-                    filename = setName + "-hitfinish";
-                    break;
                 case OsuSamples.HitNormal:
-                    filename = setName + "-hitnormal";
-                    break;
                 case OsuSamples.HitWhistle:
-                    filename = setName + "-hitwhistle";
-                    break;
                 case OsuSamples.SliderTick:
-                    filename = setName + "-slidertick";
+                case OsuSamples.SliderSlide:
+                    filename = setName + "-" + sampleName;
                     break;
-                //case OsuSamples.SliderSlide:
-                //    filename = setName + "-sliderslider";
-                //    break;
-                case OsuSamples.SpinnerBonus:
-                    filename = "spinnerbonus";
-                    break;
-                case OsuSamples.MenuHit:
-                    filename = "menuhit";
-                    break;
-                case OsuSamples.MenuBack:
-                    filename = "menuback";
-                    break;
-                case OsuSamples.MenuClick:
-                    filename = "menuclick";
+                default:
+                    filename = sampleName;
                     break;
             }
 
