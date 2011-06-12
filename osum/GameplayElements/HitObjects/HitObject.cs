@@ -355,7 +355,7 @@ namespace osum.GameplayElements
 
         internal virtual void Dispose()
         {
-
+            StopSound(true);
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace osum.GameplayElements
         public virtual bool IncrementCombo { get { return true; } }
 
 
-        internal virtual void StopSound()
+        internal virtual void StopSound(bool done = true)
         {
         }
 

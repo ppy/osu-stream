@@ -554,6 +554,13 @@ namespace osum.GameModes
         {
             if (menu != null)
                 menu.ShowMenu();
+
+            if (hitObjectManager != null)
+            {
+                HitObject activeObject = hitObjectManager.ActiveObject;
+                if (activeObject != null)
+                    activeObject.StopSound(false);
+            }
         }
 
         private bool switchStream(bool increase)

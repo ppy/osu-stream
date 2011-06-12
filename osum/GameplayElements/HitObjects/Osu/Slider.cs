@@ -691,13 +691,24 @@ namespace osum.GameplayElements.HitObjects.Osu
             AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet, Volume);
         }
 
-        protected virtual void lastEndpoint()
+        internal override void StopSound(bool done = true)
         {
-            if (sourceSliding != null)
+            if (sourceSliding != null && sourceSliding.Reserved)
             {
                 sourceSliding.Stop();
-                sourceSliding.Reserved = false;
+                if (done)
+                {
+                    sourceSliding.Reserved = false;
+                    sourceSliding = null;
+                }
             }
+
+            base.StopSound();
+        }
+
+        protected virtual void lastEndpoint()
+        {
+            StopSound();
 
             spriteFollowBall.RunAnimation = false;
 
@@ -747,8 +758,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (IsEndHit)
                 return;
 
-            if (sourceSliding != null)
-                sourceSliding.Stop();
+            StopSound(false);
 
             int now = ClockingNow;
 
@@ -873,6 +883,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override void Dispose()
         {
+            StopSound();
             DisposePathTexture();
             base.Dispose();
         }

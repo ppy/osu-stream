@@ -257,7 +257,7 @@ namespace osum.GameplayElements
                 if (velocityCurrent > 0.0001f)
                     StartSound();
                 else
-                    StopSound();
+                    StopSound(false);
 
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
@@ -381,10 +381,17 @@ namespace osum.GameplayElements
                 sourceSpinning.Play();
         }
 
-        internal override void StopSound()
+        internal override void StopSound(bool done = true)
         {
-            if (sourceSpinning != null)
+            if (sourceSpinning != null && sourceSpinning.Reserved)
+            {
                 sourceSpinning.Stop();
+                if (done)
+                {
+                    sourceSpinning.Reserved = false;
+                    sourceSpinning = null;
+                }
+            }
         }
 
         private void SetScoreMeter(int percent)
@@ -412,8 +419,6 @@ namespace osum.GameplayElements
                 return ScoreChange.Ignore;
 
             StopSound();
-            if (sourceSpinning != null)
-                sourceSpinning.Reserved = false;
 
             ScoreChange val = ScoreChange.Miss;
             if (currentRotationCount > rotationRequirement + 1)

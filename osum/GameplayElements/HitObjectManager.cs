@@ -73,6 +73,11 @@ namespace osum.GameplayElements
             foreach (SpriteManager sm in streamSpriteManagers)
                 if (sm != null) sm.Dispose();
 
+            List<HitObject> objects = ActiveStreamObjects;
+            if (objects != null)
+                foreach (HitObject h in objects)
+                    h.Dispose();
+
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
 
             OnScoreChanged = null;
