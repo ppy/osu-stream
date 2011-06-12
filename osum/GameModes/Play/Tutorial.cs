@@ -579,13 +579,13 @@ namespace osum.GameModes.Play
                 case TutorialSegments.HitCircle_Judge:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
-                    if (currentScore.countMiss > 1)
+                    if (currentScore.countMiss > 2)
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                         showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
                         nextSegment = TutorialSegments.HitCircle_1;
                     }
-                    else if (currentScore.count50 > 0 || currentScore.countMiss > 0)
+                    else if (currentScore.count50 > 1 || currentScore.countMiss > 1)
                     {
                         showText("Getting there!\nWatch the approaching circle carefully and listen to the beat. Let's try once more!");
                         nextSegment = TutorialSegments.HitCircle_Interact;
@@ -694,7 +694,7 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss + currentScore.count50 > 3)
+                        if (currentScore.countMiss > 3 || currentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you hold the notes until they explode! Let's go over the basics again.");
@@ -743,8 +743,6 @@ namespace osum.GameModes.Play
                         };
 
                         hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
-
-
 
                         GameBase.Scheduler.Add(delegate
                         {
@@ -837,7 +835,7 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss + currentScore.count50 > 1)
+                        if (currentScore.countMiss > 1 ||  currentScore.count50 > 2)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you follow the ball with your finger! Let's go over the basics again.");
@@ -995,7 +993,9 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Multitouch_1:
                     {
+                        Clock.ResetManual();
                         Player.Autoplay = true;
+
                         showText("Some beats need to be hit at the same time.", -100);
 
                         if (hitObjectManager != null) hitObjectManager.Dispose();
@@ -1100,13 +1100,13 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss + currentScore.count50 > 3)
+                        if (currentScore.countMiss + currentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure to touch both circles at the sae time. Watch closely!");
                             nextSegment = TutorialSegments.Multitouch_Interact;
                         }
-                        else if (currentScore.count100 > 0)
+                        else if (currentScore.count100 > 2)
                         {
                             showText("Pretty good.");
                         }
