@@ -132,7 +132,7 @@ namespace osum
             info.BufferId = buffer;
             info.Volume = volume;
             info.Looping = loop;
-            info.Pitch = 0.98f + (float)(0.04 * GameBase.Random.NextDouble());
+            info.Pitch = 1;
 
             info.Play();
 
