@@ -11,6 +11,7 @@ using osum.Support;
 using osum.Audio;
 using osum.Helpers;
 using osum.Graphics.Skins;
+using osum.GameplayElements;
 
 namespace osum
 {
@@ -52,6 +53,14 @@ namespace osum
                     break;
                 case 'x':
                     TextureManager.ReloadAll(true);
+                    break;
+                case 'e':
+                    BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
+                    if (bmi.HighScore == 0)
+                    {
+                        GameBase.Notify("Unlocked expert");
+                        bmi.HighScore = 1;
+                    }
                     break;
             }
         }
