@@ -245,6 +245,47 @@ namespace osum.GameplayElements
                 }
             }
 
+            if (IsActive)
+            {
+                double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
+
+                if (Player.Autoplay)
+                    velocityCurrent = 0.05f;
+                else
+                    velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
+
+                if (velocityCurrent > 0.0001f)
+                    StartSound();
+                else
+                    StopSound();
+
+                //hard rate limit
+                velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
+
+                float delta = (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
+
+                spriteCircle.Rotation += delta;
+
+                currentRotationCount += (float)(Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2));
+            }
+
+            if (currentRotationCount >= rotationRequirement && !Cleared)
+            {
+                Cleared = true;
+                if (SpriteSpin != null)
+                {
+                    SpriteSpin.FadeOut(100);
+
+                    int now = Clock.GetTime(SpriteClear.Clocking);
+
+                    SpriteClear.Transformations.Clear();
+                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
+                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 2, 0.8f, now, Math.Min(EndTime, now + 240), EasingTypes.In));
+                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400), EasingTypes.None));
+                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - 50, EndTime));
+                }
+            }
+
             ScoreChange score = ScoreChange.Ignore;
 
             //Update the rotation count
@@ -309,54 +350,13 @@ namespace osum.GameplayElements
             if (IsHit || Clock.AudioTime < StartTime)
                 return;
 
-            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
-
-            SetScoreMeter((int)(currentRotationCount / rotationRequirement * 100));
-
-            if (IsActive)
-            {
-                double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
-
-                if (Player.Autoplay)
-                    velocityCurrent = 0.05f;
-                else
-                    velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
-
-                if (velocityCurrent > 0.0001f)
-                    StartSound();
-                else
-                    StopSound();
-
-                //hard rate limit
-                velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
-
-                float delta = (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
-
-                spriteCircle.Rotation += delta;
-
-                currentRotationCount += (float)(Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2));
-            }
-
             if (sourceSpinning != null)
                 sourceSpinning.Pitch = 0.5f + 0.5f * currentRotationCount / rotationRequirement;
 
-            if (currentRotationCount >= rotationRequirement && !Cleared)
-            {
-                Cleared = true;
-                if (SpriteSpin != null)
-                {
-                    SpriteSpin.FadeOut(100);
+            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
 
-                    int now = Clock.GetTime(SpriteClear.Clocking);
-
-                    SpriteClear.Transformations.Clear();
-                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
-                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 2, 0.8f, now, Math.Min(EndTime, now + 240), EasingTypes.In));
-                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400), EasingTypes.None));
-                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - 50, EndTime));
-                }
-            }
-
+            SetScoreMeter((int)(currentRotationCount / rotationRequirement * 100));
+            
             //Hide the "SPIN!" sprite once we have started spinning.
             if (currentRotationCount > 0 && !StartedSpinning)
             {
