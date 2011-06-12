@@ -77,7 +77,7 @@ namespace osum.Graphics.Sprites
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
-            
+
             if (Sprites == null) return;
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
