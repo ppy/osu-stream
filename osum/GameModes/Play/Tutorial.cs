@@ -866,6 +866,7 @@ namespace osum.GameModes.Play
                     break;
 
                 case TutorialSegments.Spinner_2:
+                    Player.Autoplay = true;
                     showText("When a spinner appears...", -140);
                     {
                         Spinner sp = null;
@@ -909,6 +910,7 @@ namespace osum.GameModes.Play
                                 }
                                 else
                                 {
+                                    sp.StopSound();
                                     showTouchToContinue();
                                 }
 
@@ -936,6 +938,7 @@ namespace osum.GameModes.Play
                                 if (!touchToContinue)
                                 {
                                     showText("But make sure you are ready for the beats after the spinner!", 80);
+                                    sp.StopSound();
                                     showTouchToContinue();
                                 }
                             }
