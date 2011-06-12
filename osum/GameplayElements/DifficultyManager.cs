@@ -100,7 +100,7 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Expert:
-                        return 1.5f;
+                        return 1.4f;
                     default:
                         return 1;
                 }
