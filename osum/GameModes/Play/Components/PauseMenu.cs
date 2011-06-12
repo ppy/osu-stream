@@ -84,6 +84,7 @@ namespace osum.GameModes.Play.Components
         private pSprite background;
 
         const float offscreen_y = -160;
+        private Color4 colourInactive = new Color4(200, 200, 200, 255);
 
         internal override void Initialize()
         {
@@ -106,21 +107,21 @@ namespace osum.GameModes.Play.Components
                 s.Transform(fade);
             });
 
-            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(-210, 0) };
+            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(-210, 0) };
             buttonContinue.OnClick += ButtonContinue_OnClick;
             buttonContinue.OnHover += HandleButtonHover;
             buttonContinue.OnHoverLost += HandleButtonHoverLost;
             buttonContinue.HandleClickOnUp = true;
             spriteManager.Add(buttonContinue);
 
-            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(0, 0) };
+            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(0, 0) };
             buttonRestart.OnClick += ButtonRestart_OnClick;
             buttonRestart.OnHover += HandleButtonHover;
             buttonRestart.OnHoverLost += HandleButtonHoverLost;
             buttonRestart.HandleClickOnUp = true;
             spriteManager.Add(buttonRestart);
 
-            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, new Color4(255,255,255,200)) { Alpha = 0, Offset = new Vector2(210, 0) };
+            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(210, 0) };
             buttonQuit.OnClick += ButtonQuit_OnClick;
             buttonQuit.OnHover += HandleButtonHover;
             buttonQuit.OnHoverLost += HandleButtonHoverLost;
@@ -139,7 +140,7 @@ namespace osum.GameModes.Play.Components
         void HandleButtonHoverLost(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
-            s.FadeColour(new Color4(255,255,255,200),100);
+            s.FadeColour(colourInactive, 100);
         }
 
         void ButtonQuit_OnClick(object sender, EventArgs e)
