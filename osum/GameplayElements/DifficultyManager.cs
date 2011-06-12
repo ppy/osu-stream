@@ -107,10 +107,22 @@ namespace osum.GameplayElements
             }
         }
 
-
         internal static int FadeIn { get { return 400; } }
         internal static int FadeOut { get { return 300; } }
-        internal static int SpinnerRotationRatio { get { return 2; } }
+        internal static int SpinnerRotationRatio
+        {
+            get
+            {
+                switch (Player.Difficulty)
+                {
+                    case Difficulty.Expert:
+                        return 3;
+                    default:
+                        return 2;
+                }
+            }
+        }
+
         internal static int DistanceBetweenTicks { get { return 30; } }
 
         /// <summary>
