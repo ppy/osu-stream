@@ -51,11 +51,14 @@ namespace osum.GameModes.Play.Components
         }
 
         bool isSwitching;
+        bool increase;
 
         internal void BeginSwitch(bool increase)
         {
             if (isSwitching) return;
             isSwitching = true;
+
+            this.increase = increase;
 
             arrowSmall.ScaleScalar = 0.5f;
             arrowLarge.ScaleScalar = 1;
@@ -101,9 +104,15 @@ namespace osum.GameModes.Play.Components
             spriteManager.Sprites.ForEach(s =>
                 {
                     s.Transformations.Clear();
-                    s.Transform(new Transformation(TransformationType.Fade, s.Alpha, 0, Clock.ModeTime, Clock.ModeTime + (s == text ? 200 : 400)));
-                    s.Transform(new Transformation(TransformationType.Scale, s.ScaleScalar, s.ScaleScalar * (s == text ? 2 : 1.4f), Clock.ModeTime, Clock.ModeTime + (s == text ? 200 : 400),EasingTypes.In));
+                    s.Transform(new Transformation(TransformationType.Fade, s.Alpha, 0, Clock.ModeTime, Clock.ModeTime + 400));
+                    s.ScaleTo(3, 600, EasingTypes.In);
                 });
+
+            if (!increase)
+            {
+                arrowLarge.RotateTo(arrowLarge.Rotation + 2, 600, EasingTypes.In);
+                arrowSmall.RotateTo(arrowSmall.Rotation + 2, 600, EasingTypes.In);
+            }
         }
     }
 }

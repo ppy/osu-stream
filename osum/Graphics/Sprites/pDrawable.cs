@@ -684,6 +684,29 @@ namespace osum.Graphics.Sprites
             return this;
         }
 
+        /// <summary>
+        /// Rotates the sprite to a specified desintation, using the current location as the source.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="duration">The duration.</param>
+        /// <param name="easing">The easing.</param>
+        internal pDrawable RotateTo(float target, int duration, EasingTypes easing = EasingTypes.None)
+        {
+            Transformations.RemoveAll(t => (t.Type & TransformationType.Rotation) > 0);
+
+            if (target == Rotation)
+                return this;
+
+            if (duration == 0)
+                Rotation = target;
+
+            int now = Clock.GetTime(Clocking);
+
+            Transform(new Transformation(TransformationType.Rotation, Rotation, target, now, now + duration, easing));
+
+            return this;
+        }
+
         #region IDrawable Members
 
         public virtual bool Draw()
