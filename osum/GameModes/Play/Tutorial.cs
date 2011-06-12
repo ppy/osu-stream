@@ -58,6 +58,12 @@ namespace osum.GameModes.Play
             loadNextSegment();
         }
 
+        public override void Dispose()
+        {
+            Player.Autoplay = false;
+            base.Dispose();
+        }
+
         TutorialSegments currentSegment;
         TutorialSegments nextSegment = TutorialSegments.Introduction_1;
 
