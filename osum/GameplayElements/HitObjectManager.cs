@@ -284,7 +284,7 @@ namespace osum.GameplayElements
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                ClockTypes.Audio, p3, SpriteManager.drawOrderBwd(h1.EndTime + 15), false, Color4.White);
+                h1.Sprites[0].Clocking, p3, SpriteManager.drawOrderBwd(h1.EndTime + 15), false, Color4.White);
 
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
@@ -348,17 +348,19 @@ namespace osum.GameplayElements
             {
                 HitObject h = activeObjects[i];
 
+                int hitObjectNow = h.ClockingNow;
+
                 if (h.IsVisible || !h.IsHit)
                 {
                     h.Update();
 
-                    if (h.StartTime <= Clock.AudioTime && h.EndTime > Clock.AudioTime)
+                    if (h.StartTime <= hitObjectNow && h.EndTime > hitObjectNow)
                         ActiveObject = h;
 
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
-                    if (Player.Autoplay && !h.IsHit && Clock.AudioTime >= h.StartTime)
+                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);
 
                     if (AudioEngine.Music.IsElapsing)
@@ -370,11 +372,11 @@ namespace osum.GameplayElements
                 else
                 {
                     Slider s = h as Slider;
-                    if (s != null && s.EndTime < Clock.AudioTime)
+                    if (s != null && s.EndTime < hitObjectNow)
                         s.DisposePathTexture();
                 }
 
-                if (h.StartTime > Clock.AudioTime + 4000 && !h.IsVisible)
+                if (h.StartTime > hitObjectNow + 4000 && !h.IsVisible)
                 {
                     processedTo = i;
                     break; //stop processing after a decent amount of leeway...
