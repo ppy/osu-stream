@@ -88,7 +88,7 @@ namespace osum.GameplayElements
                     default:
                         return 33;
                     case Difficulty.Expert:
-                        return 17;
+                        return 20;
                 }
             }
         }
