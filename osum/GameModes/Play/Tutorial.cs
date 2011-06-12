@@ -59,7 +59,7 @@ namespace osum.GameModes.Play
         }
 
         TutorialSegments currentSegment;
-        TutorialSegments nextSegment = TutorialSegments.Multitouch_1;
+        TutorialSegments nextSegment = TutorialSegments.Introduction_1;
 
         VoidDelegate currentSegmentDelegate;
 
