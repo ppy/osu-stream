@@ -153,7 +153,7 @@ namespace osum.GameModes
 
         protected virtual void initializeUIElements()
         {
-            healthBar = new HealthBar();
+            if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
             scoreDisplay = new ScoreDisplay();
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
