@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.GameModes;
+using osum.GameplayElements.Scoring;
 
 namespace osum.GameplayElements
 {
@@ -134,5 +135,7 @@ namespace osum.GameplayElements
         /// Number of milliseconds to preempt the follow line.  Higher will make the line appear earlier.
         /// </summary>
         internal static int FollowLinePreEmpt = 800;
+
+        public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
     }
 }

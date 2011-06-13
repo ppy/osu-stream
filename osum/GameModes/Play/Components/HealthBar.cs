@@ -86,6 +86,7 @@ namespace osum.GameplayElements.Scoring
 
         internal HealthBar()
         {
+
         }
 
         internal virtual void SlideOut()
@@ -163,9 +164,9 @@ namespace osum.GameplayElements.Scoring
             s_kiExplode.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 180, EasingTypes.None));
         }
 
-        internal virtual void SetCurrentHp(double amount)
+        internal virtual void SetCurrentHp(double amount, bool initial = false)
         {
-            if (InitialIncrease) InitialIncrease = false;
+            if (InitialIncrease && !initial) InitialIncrease = false;
 
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, amount));
             CurrentHpUncapped = amount;
@@ -216,6 +217,7 @@ namespace osum.GameplayElements.Scoring
 
             CurrentHp = HP_BAR_MAXIMUM / 2;
             CurrentHpUncapped = HP_BAR_MAXIMUM / 2;
+
             DisplayHp = 0;
         }
     }

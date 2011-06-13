@@ -126,7 +126,7 @@ namespace osum.GameModes
                 firstCountdown = true;
             }
 
-            currentScore = new Score();
+            resetScore();
 
             playfieldBackground = new PlayfieldBackground();
             playfieldBackground.ChangeColour(Difficulty);
@@ -163,8 +163,12 @@ namespace osum.GameModes
 
         protected void resetScore()
         {
-            if (comboCounter != null) comboCounter.SetCombo(0);
-            if (healthBar != null) healthBar.SetCurrentHp(100);
+            if (comboCounter != null)
+                comboCounter.SetCombo(0);
+
+            if (healthBar != null)
+                healthBar.SetCurrentHp(DifficultyManager.InitialHp, true);
+
             if (scoreDisplay != null)
             {
                 scoreDisplay.SetAccuracy(0);
@@ -283,7 +287,7 @@ namespace osum.GameModes
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             playfieldBackground.ChangeColour(hitObjectManager.ActiveStream);
-            healthBar.SetCurrentHp(HealthBar.HP_BAR_MAXIMUM / 2);
+            healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
 
