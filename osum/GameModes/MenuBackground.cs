@@ -27,7 +27,7 @@ namespace osum.GameModes
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
             rectangleLineRight = new Line(new Vector2(-100, -855) - centre, new Vector2(1200, 250) - centre);
 
-            pQuad rectBorder = new pQuad(
+            rectBorder = new pQuad(
                 rectangleLineLeft.p1 + new Vector2(-2, -2),
                 new Vector2(444 + 2, 172 - 2) - centre,
                 rectangleLineLeft.p2 + new Vector2(-2, 2),
@@ -37,7 +37,7 @@ namespace osum.GameModes
             rectBorder.Origin = OriginTypes.Centre;
             Add(rectBorder);
 
-            pQuad rect = new pQuad(
+            rect = new pQuad(
                 rectangleLineLeft.p1,
                 new Vector2(444, 172) - centre,
                 rectangleLineLeft.p2,
@@ -215,7 +215,11 @@ namespace osum.GameModes
                 ScaleTo(scale_offset, duration, EasingTypes.InDouble);
                 MoveTo(new Vector2(75, -44), duration, EasingTypes.InDouble);
                 RotateTo(rotation_offset, duration, EasingTypes.InDouble);
+
+                rect.FadeOut(duration);
+                rectBorder.FadeOut(duration);
             }, 1000);
+
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 4, 1, 0.6f, 6);
                 //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
@@ -226,6 +230,8 @@ namespace osum.GameModes
         }
 
         bool first = true;
+        private pQuad rectBorder;
+        private pQuad rect;
         public override void Update()
         {
             if (awesomeTransformation != null || first)

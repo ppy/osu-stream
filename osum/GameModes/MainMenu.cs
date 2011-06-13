@@ -57,6 +57,8 @@ namespace osum.GameModes
 
         List<pSprite> explosions = new List<pSprite>();
 
+        internal SpriteManager spriteManagerBehind = new SpriteManager();
+
         MenuState State = MenuState.Logo;
 
         const int initial_display = 2950;
@@ -65,10 +67,9 @@ namespace osum.GameModes
         {
             menuBackground =
                 new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(255,255,255,1));
-            menuBackground.ScaleScalar = 1.07f;
-            menuBackground.OnClick += new EventHandler(osuLogo_OnClick);
-            //spriteManager.Add(menuBackground);
+                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(255,255,255,255));
+            menuBackground.ScaleScalar = 1.1f;
+            spriteManagerBehind.Add(menuBackground);
 
             menuBackgroundNew = new MenuBackground();
 
@@ -128,6 +129,9 @@ namespace osum.GameModes
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
             spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
+
+            menuBackgroundNew.Transform(fadeIn);
+            menuBackground.Transform(fadeIn);
 
             if (firstDisplay)
             {
@@ -200,6 +204,7 @@ namespace osum.GameModes
         public override void Dispose()
         {
             menuBackgroundNew.Dispose();
+            spriteManagerBehind.Dispose();
             base.Dispose();
         }
 
@@ -219,20 +224,35 @@ namespace osum.GameModes
         {
             base.Update();
 
+            spriteManagerBehind.Update();
             menuBackgroundNew.Update();
 
-            if (menuBackgroundNew.IsBeingAwesome)
-                elapsedRotation = 4000;
+            
 
             if (Clock.AudioTime > initial_display)
             {
                 elapsedRotation += GameBase.ElapsedMilliseconds;
                 osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
 
-                menuBackgroundNew.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
-                menuBackgroundNew.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                Transformation tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Rotation);
 
+                float rCh = -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                if (tr != null)
+                    tr.EndFloat += rCh;
+                else
+                    menuBackgroundNew.Rotation += rCh;
+
+                tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Scale);
+
+                float sCh = -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                if (tr != null)
+                    tr.EndFloat += sCh;
+                else
+                    menuBackgroundNew.ScaleScalar += sCh;
             }
+
+            menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00003 * GameBase.ElapsedMilliseconds);
+            menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00001 * GameBase.ElapsedMilliseconds);
 
             int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
 
@@ -281,6 +301,7 @@ namespace osum.GameModes
 
         public override bool Draw()
         {
+            spriteManagerBehind.Draw();
             menuBackgroundNew.Draw();
 
             base.Draw();
