@@ -67,11 +67,12 @@ namespace osum.GameModes
         {
             menuBackground =
                 new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(255,255,255,255));
+                            ClockTypes.Audio, Vector2.Zero, 0, true, new Color4(255,255,255,255));
             menuBackground.ScaleScalar = 1.1f;
             spriteManagerBehind.Add(menuBackground);
 
             menuBackgroundNew = new MenuBackground();
+            menuBackgroundNew.Clocking = ClockTypes.Audio;
 
             const int logo_stuff_v_offset = -20;
 

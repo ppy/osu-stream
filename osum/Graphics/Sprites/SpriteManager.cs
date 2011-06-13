@@ -49,11 +49,22 @@ namespace osum.Graphics.Sprites
 
         int creationTime = Clock.Time;
 
+        internal SpriteManager(IEnumerable<pDrawable> sprites)
+        {
+            Sprites = new List<pDrawable>(sprites);
+
+            InputManager.OnMove += HandleInputManagerOnMove;
+            InputManager.OnDown += HandleInputManagerOnDown;
+            InputManager.OnUp += HandleInputManagerOnUp;
+
+            AlwaysDraw = true;
+            Alpha = 1;
+        }
+
         internal SpriteManager()
             : this(new List<pDrawable>())
         {
-            AlwaysDraw = true;
-            Alpha = 1;
+            
         }
 
         void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
@@ -134,15 +145,6 @@ namespace osum.Graphics.Sprites
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
-        }
-
-        internal SpriteManager(IEnumerable<pDrawable> sprites)
-        {
-            Sprites = new List<pDrawable>(sprites);
-
-            InputManager.OnMove += HandleInputManagerOnMove;
-            InputManager.OnDown += HandleInputManagerOnDown;
-            InputManager.OnUp += HandleInputManagerOnUp;
         }
 
         pDrawableDepthComparer depth = new pDrawableDepthComparer();

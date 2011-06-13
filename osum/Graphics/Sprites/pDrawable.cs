@@ -714,7 +714,7 @@ namespace osum.Graphics.Sprites
             if (Bypass) return false;
 
             if (Alpha != 0 && Colour.A != 0 &&
-                (Transformations.Count != 0 || AlwaysDraw) &&
+                (AlwaysDraw || Transformations.Count != 0) &&
                 IsOnScreen)
             {
                 return true;
