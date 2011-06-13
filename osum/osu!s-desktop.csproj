@@ -83,6 +83,7 @@
     <Compile Include="GameplayElements\Scoring\Score.cs" />
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
+    <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="Graphics\TextureManager_Load.cs" />
     <Compile Include="Graphics\TouchBurster.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
