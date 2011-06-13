@@ -96,7 +96,7 @@ namespace osum.Graphics.Sprites
 
         internal bool IsHovering;
 
-        bool inputCheckHover(Vector2 position)
+        protected virtual bool checkHover(Vector2 position)
         {
             if (Alpha == 0)
                 return false;
@@ -120,7 +120,7 @@ namespace osum.Graphics.Sprites
 
             bool isNowHovering =
                 (trackingPoint.HoveringObject == null || trackingPoint.HoveringObject == this) &&
-                inputCheckHover(trackingPoint.BasePosition);
+                checkHover(trackingPoint.BasePosition);
 
             if (isNowHovering)
                 trackingPoint.HoveringObject = this;
