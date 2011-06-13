@@ -38,11 +38,12 @@ using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using osum.Input;
+using OpenTK;
 #endif
 
 namespace osum.Graphics.Sprites
 {
-    internal class SpriteManager : IDisposable
+    internal class SpriteManager : pDrawable, IDisposable
     {
         internal List<pDrawable> Sprites;
 
@@ -59,13 +60,52 @@ namespace osum.Graphics.Sprites
 
             if (Sprites == null) return;
 
+            mapToCoordinates(ref trackingPoint);
+
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnUp(source, trackingPoint);
+        }
+
+        TrackingPoint mapToCoordinates(ref TrackingPoint t)
+        {
+            if (!matrixOperations)
+                return t;
+
+            t = (TrackingPoint)t.Clone();
+            Vector2 pos = t.BasePosition;
+
+            pos.X -= GameBase.BaseSizeFixedWidth.Width / 2;
+            pos.Y -= GameBase.BaseSizeFixedWidth.Height / 2;
+
+            float cos = (float)Math.Cos(-Rotation);
+            float sin = (float)Math.Sin(-Rotation);
+
+            float newX = cos * pos.X - sin * pos.Y;
+            float newY = sin * pos.X + cos * pos.Y;
+
+            pos.X = newX;
+            pos.Y = newY;
+
+            pos.X /= Scale.X;
+            pos.Y /= Scale.Y;
+
+            pos.X += GameBase.BaseSizeFixedWidth.Width / 2;
+            pos.Y += GameBase.BaseSizeFixedWidth.Height / 2;
+
+            pos -= Position;
+
+            pos *= GameBase.BaseToNativeRatio;
+
+            t.Location = new PointF(pos.X, pos.Y);
+
+            return t;
         }
 
         void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
+
+            mapToCoordinates(ref trackingPoint);
 
             //todo: find out why these are needed (see tutorial hitcircles part when failing)
             if (Sprites == null) return;
@@ -79,6 +119,8 @@ namespace osum.Graphics.Sprites
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 
             if (Sprites == null) return;
+
+            mapToCoordinates(ref trackingPoint);
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
@@ -178,11 +220,14 @@ namespace osum.Graphics.Sprites
 
 
         int lastUpdate;
+
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
         /// </summary>
-        internal void Update()
+        public override void Update()
         {
+            base.Update();
+
             texturesEnabled = false; //reset on new frame.
             lastUpdate = Clock.Time;
 
@@ -270,13 +315,30 @@ namespace osum.Graphics.Sprites
             //todo: implement batching.
         }
 
+        int switcha = 0;
+
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
-        internal bool Draw()
+        public override bool Draw()
         {
             pTexture currentBatchTexture = null;
             TexturesEnabled = false;
+
+            matrixOperations = Rotation != 0 || ScaleScalar != 1 || FieldPosition != Vector2.Zero;
+
+            if (matrixOperations)
+            {
+                GL.Translate(GameBase.NativeSize.Width / 2f, GameBase.NativeSize.Height / 2f, 0);
+                if (Rotation != 0)
+                    GL.Rotate(Rotation / Math.PI * 180, 0, 0, 1);
+                if (ScaleScalar != 1)
+                    GL.Scale(Scale.X, Scale.Y, 0);
+                GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);
+
+                if (FieldPosition != Vector2.Zero)
+                    GL.Translate(FieldPosition.X, FieldPosition.Y, 0);
+            }
 
             foreach (pDrawable p in Sprites)
             {
@@ -303,12 +365,16 @@ namespace osum.Graphics.Sprites
                 }
             }
 
+            if (matrixOperations)
+                GL.LoadIdentity();
+
             flushBatch();
 
             return true;
         }
 
         static bool texturesEnabled = false;
+        private bool matrixOperations;
         internal static bool TexturesEnabled
         {
             get { return texturesEnabled; }
@@ -371,8 +437,11 @@ namespace osum.Graphics.Sprites
             return 0.8f - (number % 6000000) / 10000000;
         }
 
-        public void Dispose()
+
+        public override void Dispose()
         {
+            base.Dispose();
+
             if (Sprites != null)
             {
                 foreach (pDrawable p in Sprites)
