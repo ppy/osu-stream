@@ -485,6 +485,10 @@ namespace osum.Graphics.Skins
         songselect_background,
         songselect_panel,
         songselect_panel_selected,
-        menu_options
+        menu_options,
+        menu_item_background,
+        menu_tutorial,
+        menu_store,
+        menu_play
     }
 }
