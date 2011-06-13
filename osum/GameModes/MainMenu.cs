@@ -189,7 +189,7 @@ namespace osum.GameModes
             bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.mp3", true);
 #endif
 
-            //if (!firstDisplay && (didLoad || Clock.AudioTime < initial_display))
+            if (!firstDisplay && (didLoad || Clock.AudioTime < initial_display))
                 AudioEngine.Music.SeekTo(initial_display);
 
             AudioEngine.Music.Play();
