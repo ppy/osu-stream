@@ -122,5 +122,10 @@ namespace osum.Graphics.Primitives
             return rotate * translate;
         }
 
+
+        internal Vector2 PositionAt(float p)
+        {
+            return p1 + (p2 - p1) * p;
+        }
     } ;
 }
