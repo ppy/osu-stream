@@ -23,17 +23,17 @@ namespace osum.Graphics.Sprites
     internal enum TransformationType
     {
         None = 0,
-        Movement = 1,
-        Fade = 2,
-        Scale = 4,
-        Rotation = 8,
-        Colour = 16,
-        ParameterFlipHorizontal = 32,
-        ParameterFlipVertical = 64,
-        MovementX = 128,
-        MovementY = 256,
-        VectorScale = 512,
-        ParameterAdditive = 1024
+        Movement,
+        Fade,
+        Scale,
+        Rotation,
+        Colour,
+        ParameterFlipHorizontal,
+        ParameterFlipVertical,
+        MovementX,
+        MovementY,
+        VectorScale,
+        ParameterAdditive
     }
 
     internal class Transformation : IComparable<Transformation>
@@ -329,7 +329,10 @@ namespace osum.Graphics.Sprites
 
                 float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress, 2));
 
-                return Math.Max(0, StartFloat + diminishingMagnitude * rawSine);
+                if (Type == TransformationType.Scale)
+                    return Math.Max(0, StartFloat + diminishingMagnitude * rawSine);
+                else
+                    return StartFloat + diminishingMagnitude * rawSine;
             }
         }
     }

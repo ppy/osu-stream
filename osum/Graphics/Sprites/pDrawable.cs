@@ -645,7 +645,7 @@ namespace osum.Graphics.Sprites
         /// <param name="easing">The easing.</param>
         internal void MoveTo(Vector2 destination, int duration, EasingTypes easing = EasingTypes.None)
         {
-            Transformations.RemoveAll(t => (t.Type & TransformationType.Movement) > 0);
+            Transformations.RemoveAll(t => t.Type == TransformationType.Movement);
 
             if (destination == Position)
                 return;
@@ -669,7 +669,7 @@ namespace osum.Graphics.Sprites
         /// <param name="easing">The easing.</param>
         internal pDrawable ScaleTo(float target, int duration, EasingTypes easing = EasingTypes.None)
         {
-            Transformations.RemoveAll(t => (t.Type & TransformationType.Scale) > 0);
+            Transformations.RemoveAll(t => t.Type == TransformationType.Scale);
 
             if (target == ScaleScalar)
                 return this;
@@ -692,7 +692,7 @@ namespace osum.Graphics.Sprites
         /// <param name="easing">The easing.</param>
         internal pDrawable RotateTo(float target, int duration, EasingTypes easing = EasingTypes.None)
         {
-            Transformations.RemoveAll(t => (t.Type & TransformationType.Rotation) > 0);
+            Transformations.RemoveAll(t => t.Type == TransformationType.Rotation);
 
             if (target == Rotation)
                 return this;
