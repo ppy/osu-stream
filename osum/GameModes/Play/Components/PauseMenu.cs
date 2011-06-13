@@ -149,6 +149,7 @@ namespace osum.GameModes.Play.Components
             s.AdditiveFlash(500,1);
 
             Director.ChangeMode(OsuMode.SongSelect);
+            AudioEngine.PlaySample(OsuSamples.MenuBack);
         }
 
         void ButtonRestart_OnClick(object sender, EventArgs e)
@@ -157,11 +158,13 @@ namespace osum.GameModes.Play.Components
             s.AdditiveFlash(500,1);
 
             Director.ChangeMode(OsuMode.Play);
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
         }
 
         void ButtonContinue_OnClick(object sender, EventArgs e)
         {
             MenuDisplayed = false;
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
         }
 
         void Background_OnClick(object sender, EventArgs e)
