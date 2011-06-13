@@ -122,11 +122,19 @@ namespace osum.Graphics.Drawables
                 Vector2 origin = OriginVector * GameBase.BaseToNativeRatio;
 
                 if (colours == null)
-                    GL.Color4(c.R, c.G, c.B, c.A);
+                    GL.Color4(c.R, c.G, c.B, c.A * Alpha);
                 else
                 {
+                    for (int i = 0; i < colours.Length; i++)
+                    {
+                        Color4 col = colours[i];
+                        colours[i] = new Color4(col.R, col.G, col.B, Alpha);
+                        //todo: doesn't consider alpha of colours.
+                    }
+                    
                     GL.EnableClientState(ArrayCap.ColorArray);
                     GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+                    
                 }
 
                 //first move everything so it is centered on (0,0)
