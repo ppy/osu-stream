@@ -249,9 +249,9 @@ namespace osum.GameModes
 
             InputManager.OnDown -= InputManager_OnDown;
 
-            TextureManager.RequireSurfaces = false;
-
             if (hitObjectManager != null) hitObjectManager.Dispose();
+
+            TextureManager.RequireSurfaces = false;
 
             if (healthBar != null) healthBar.Dispose();
             if (scoreDisplay != null) scoreDisplay.Dispose();

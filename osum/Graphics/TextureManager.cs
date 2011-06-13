@@ -361,6 +361,10 @@ namespace osum.Graphics.Skins
 
         internal static void ReturnTexture(pTexture texture)
         {
+            //todo: check if we should not nullify this and accept returned surfaces instead.
+            if (availableSurfaces == null)
+                return;
+
             if (!texture.IsDisposed && texture.TextureGl.Loaded)
                 availableSurfaces.Enqueue(texture);
         }
