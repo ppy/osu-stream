@@ -52,6 +52,8 @@ namespace osum.Graphics.Sprites
         internal SpriteManager()
             : this(new List<pDrawable>())
         {
+            AlwaysDraw = true;
+            Alpha = 1;
         }
 
         void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
@@ -99,6 +101,14 @@ namespace osum.Graphics.Sprites
             t.Location = new PointF(pos.X, pos.Y);
 
             return t;
+        }
+
+        internal override bool IsOnScreen
+        {
+            get
+            {
+                return true;
+            }
         }
 
         void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
@@ -315,13 +325,13 @@ namespace osum.Graphics.Sprites
             //todo: implement batching.
         }
 
-        int switcha = 0;
-
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
         public override bool Draw()
         {
+            if (!base.Draw()) return false;
+            
             pTexture currentBatchTexture = null;
             TexturesEnabled = false;
 
@@ -340,11 +350,19 @@ namespace osum.Graphics.Sprites
                     GL.Translate(FieldPosition.X, FieldPosition.Y, 0);
             }
 
+            float tempAlpha = 0;
+
             foreach (pDrawable p in Sprites)
             {
                 if (p.Alpha > 0)
                 {
                     BlendingMode = p.BlendingMode;
+
+                    if (Alpha < 1)
+                    {
+                        tempAlpha = p.Alpha;
+                        p.Alpha *= Alpha;
+                    }
 
                     TexturesEnabled = p.UsesTextures;
                     if (p.Draw())
@@ -362,6 +380,9 @@ namespace osum.Graphics.Sprites
                             addToBatch(ps);
                         }
                     }
+                    
+                    if (Alpha < 1)
+                        p.Alpha = tempAlpha;
                 }
             }
 

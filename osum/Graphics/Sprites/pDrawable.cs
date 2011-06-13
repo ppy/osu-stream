@@ -48,7 +48,7 @@ namespace osum.Graphics.Sprites
         internal bool AlwaysDraw;
         internal ClockTypes Clocking;
 
-        internal Color4 Colour;
+        internal Color4 Colour = Color4.White;
         /*protected Color4 colour;
         internal Color4 Colour
         {
