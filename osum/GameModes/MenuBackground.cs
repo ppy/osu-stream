@@ -31,8 +31,8 @@ namespace osum.GameModes
                 rectangleLineLeft.p1 + new Vector2(-2, -2),
                 new Vector2(444 + 2, 172 - 2) - centre,
                 rectangleLineLeft.p2 + new Vector2(-2, 2),
-                new Vector2(528 + 2, 297 + 2) - centre,
-                true, 0.4f, new Color4(13, 14, 17, 255));
+                new Vector2(528 + 3, 297 + 2) - centre,
+                true, 0.4f, new Color4(13, 13, 13, 255));
             rectBorder.Field = FieldTypes.StandardSnapCentre;
             rectBorder.Origin = OriginTypes.Centre;
             Add(rectBorder);
@@ -42,7 +42,7 @@ namespace osum.GameModes
                 new Vector2(444, 172) - centre,
                 rectangleLineLeft.p2,
                 new Vector2(528, 297) - centre,
-                true, 0.41f, new Color4(33, 35, 42, 255));
+                true, 0.42f, new Color4(33, 35, 42, 255));
             rect.Field = FieldTypes.StandardSnapCentre;
             rect.Origin = OriginTypes.Centre;
             rect.colours = new Color4[] {

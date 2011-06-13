@@ -129,13 +129,12 @@ namespace osum.Graphics.Drawables
                     {
                         Color4 col = colours[i];
                         
-                        colours[i] = new Color4(col.R, col.G, col.B, col.A * c.A * (1 - SpriteManager.UniversalDim));
+                        colours[i] = new Color4(col.R, col.G, col.B, c.A * (1 - SpriteManager.UniversalDim));
                         //todo: optimise
                     }
                     
                     GL.EnableClientState(ArrayCap.ColorArray);
                     GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
-                    
                 }
 
                 //first move everything so it is centered on (0,0)
@@ -195,7 +194,6 @@ namespace osum.Graphics.Drawables
                     SpriteManager.TexturesEnabled = false;
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
                 if (colours != null)
