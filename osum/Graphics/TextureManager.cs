@@ -321,7 +321,7 @@ namespace osum.Graphics.Skins
             {
                 availableSurfaces = new Queue<pTexture>();
 
-                int size = GameBase.NativeSize.Height;
+                int size = GameBase.NativeSize.Width;
 
                 for (int i = 0; i < 4; i++)
                 {
