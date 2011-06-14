@@ -32,7 +32,7 @@ namespace osum
         /// </summary>
         public virtual bool Load(byte[] audio, bool looping, string identifier = null)
         {
-            if (lastLoaded == identifier) return false;
+            if (identifier != null && lastLoaded == identifier) return false;
 
             lastLoaded = identifier;
             return true;
