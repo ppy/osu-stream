@@ -12,8 +12,6 @@ namespace osum
 
         public GameBaseDesktop()
         {
-            if (DateTime.Now > new DateTime(2011, 07, 07))
-                Environment.Exit(-1);
         }
         
         override public void MainLoop()

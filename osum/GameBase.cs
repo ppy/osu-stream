@@ -108,6 +108,9 @@ namespace osum
 
         public GameBase()
         {
+            if (DateTime.Now > new DateTime(2011, 07, 01))
+                Environment.Exit(-1);
+
             Instance = this;
             MainLoop();
         }
