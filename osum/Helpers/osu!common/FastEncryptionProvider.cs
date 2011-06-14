@@ -4,10 +4,14 @@ namespace osu_common.Helpers
 {
     public enum EncryptionMethod
     {
-        XTEA,
-        XXTEA,
-        Homebrew,
-        None
+        One,
+        Two,
+        Three,
+        Four
+        //One,
+        //Two,
+        //Homebrew,
+        //None
     }
 
 
@@ -15,26 +19,26 @@ namespace osu_common.Helpers
     public class FastEncryptionProvider
     {
 
-        private uint[] key;
-        private byte[] keyB;
-        private const UInt32 DELTA = 0x9e3779b9;
-        private const UInt32 ROUNDS = 32;
-        public EncryptionMethod CurrentMethod = EncryptionMethod.None;
+        private uint[] k;
+        private byte[] kB;
+        private const UInt32 d = 0x9e3779b9;
+        private const UInt32 r = 32;
+        public EncryptionMethod m = EncryptionMethod.Four;
 
 
         /**
          * Key has to be 4 words long
          * Encryption method can't be none
          **/
-        public void SetKey (uint[] pkey, EncryptionMethod EM)
+        public void Init(uint[] pkey, EncryptionMethod EM)
         {
-            if (EM == EncryptionMethod.None)
-                throw new ArgumentException("Encryption method can't be none");
+            if (EM == EncryptionMethod.Four)
+                throw new ArgumentException("1"); //Encryption method can't be none
             if (pkey.Length !=4)
-                throw new ArgumentException("Encryption key has to be 4 words long");
+                throw new ArgumentException("2"); //Encryption key has to be 4 words long
 
-            key = pkey;
-            CurrentMethod = EM;
+            k = pkey;
+            m = EM;
 #if SAFE_ENCRYPTION
             keyB = GeneralHelper.ConvertArray<uint, byte>(pkey);
 #endif
@@ -43,13 +47,13 @@ namespace osu_common.Helpers
 
         private void checkKey()
         {
-            if (CurrentMethod == EncryptionMethod.None)
+            if (m == EncryptionMethod.Four)
                 new ArgumentException("Encryption method has to be set first");
         }
 
 
 
-        private void EncryptDecryptXXTEASafe(byte[] buffer, bool encrypt, int count, int offset)
+        private void EncryptDecryptTwoSafe(byte[] buffer, bool encrypt, int count, int offset)
         {
             uint fullWordCount = unchecked((uint)count / nMAXBytes);
             uint leftover = unchecked((uint)count) % nMAXBytes;
@@ -65,12 +69,12 @@ namespace osu_common.Helpers
             if (encrypt)
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                    EncryptWordsXXTEASafe(bufferCutWords, (int) (wordCount * nMAX));
+                    EncryptWordsTwoSafe(bufferCutWords, (int) (wordCount * nMAX));
                 }
             else //copy pasta because we dont want to waste time on a cmp each iteration
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                    DecryptWordsXXTEASafe(bufferCutWords, (int) (wordCount * nMAX));
+                    DecryptWordsTwoSafe(bufferCutWords, (int) (wordCount * nMAX));
                 }
 
             byte[] bufferProcessed = GeneralHelper.ConvertArray<uint, byte>(bufferCutWords);
@@ -84,9 +88,9 @@ namespace osu_common.Helpers
             if (n > 1)
             {
                 if (encrypt)
-                    EncryptWordsXXTEASafe(leftoverBufferWords, 0);
+                    EncryptWordsTwoSafe(leftoverBufferWords, 0);
                 else
-                    DecryptWordsXXTEASafe(leftoverBufferWords, 0);
+                    DecryptWordsTwoSafe(leftoverBufferWords, 0);
 
                 leftover -= n * 4;
                 if (leftover == 0)
@@ -106,7 +110,7 @@ namespace osu_common.Helpers
 
 
 
-        private unsafe void EncryptDecryptXXTEA(byte* bufferPtr, int bufferLength, bool encrypt)
+        private unsafe void EncryptDecryptTwo(byte* bufferPtr, int bufferLength, bool encrypt)
         {
             uint fullWordCount = unchecked((uint)bufferLength / nMAXBytes);
             uint leftover = unchecked((uint)bufferLength) % nMAXBytes;
@@ -120,16 +124,16 @@ namespace osu_common.Helpers
             if (encrypt)
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                    EncryptWordsXXTEA(intWordPtr);
+                    EncryptWordsTwo(intWordPtr);
                     intWordPtr+=nMAX;
                 }
             else //copy pasta because we dont want to waste time on a cmp each iteration
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                   // DecryptWordsXXTEA(intWordPtr);
+                   // DecryptWordsTwo(intWordPtr);
                     UInt32 y, z, sum;
                     UInt32 p, e;
-                    sum = rounds * DELTA;
+                    sum = rounds * d;
                     
                     y = intWordPtr[0];
                     do
@@ -138,12 +142,12 @@ namespace osu_common.Helpers
                         for (p = na - 1; p > 0; p--)
                         {
                             z = intWordPtr[p - 1];
-                            y = intWordPtr[p] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                            y = intWordPtr[p] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                         }
                         z = intWordPtr[na - 1];
-                        y = intWordPtr[0] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                        y = intWordPtr[0] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                     }
-                    while ((sum -= DELTA) != 0);
+                    while ((sum -= d) != 0);
                     intWordPtr+=nMAX;
                 }
 
@@ -154,9 +158,9 @@ namespace osu_common.Helpers
             if (n > 1)
             {
                 if (encrypt)
-                    EncryptWordsXXTEA(intWordPtr);
+                    EncryptWordsTwo(intWordPtr);
                 else
-                    DecryptWordsXXTEA(intWordPtr);
+                    DecryptWordsTwo(intWordPtr);
 
                 leftover -= n*4;
                 if (leftover == 0)
@@ -180,14 +184,14 @@ namespace osu_common.Helpers
                     for (uint i = 0; i < byteLeftover; i++)
                     {
                         smallWord = (uint*) *(bufferBytePtr + i);
-                        EncryptWordsXXTEA(smallWord);
+                        EncryptWordsTwo(smallWord);
                         (*(bufferBytePtr + i)) = smallWord;
                     }
                 else //copy pasta because we dont want to waste speed on a cmp each iteration
                     for (uint i = 0; i < byteLeftover; i++)
                     {
                         smallWord = (uint*)*(bufferBytePtr + i);
-                        DecryptWordsXXTEA(smallWord);
+                        DecryptWordsTwo(smallWord);
                         (*(bufferBytePtr + i)) = smallWord;
                     }
 
@@ -196,7 +200,7 @@ namespace osu_common.Helpers
         }
 
 
-        private unsafe void EncryptDecryptXTEA(byte* bufferPtr, byte* resultPtr,int bufferLength, bool encrypt)
+        private unsafe void EncryptDecryptOne(byte* bufferPtr, byte* resultPtr,int bufferLength, bool encrypt)
         {
             uint fullWordCount = unchecked((uint)bufferLength / 8);
             uint leftover = (uint)(bufferLength % 8);
@@ -208,10 +212,10 @@ namespace osu_common.Helpers
             intWordPtrO -= 2;
             if (encrypt)
                 for (int wordCount = 0; wordCount < fullWordCount; wordCount++)
-                    EncryptWordXTEA(intWordPtrB+=2, intWordPtrO+=2);
+                    EncryptWordOne(intWordPtrB+=2, intWordPtrO+=2);
             else 
                 for (int wordCount = 0; wordCount < fullWordCount; wordCount++)
-                    DecryptWordXTEA(intWordPtrB += 2, intWordPtrO+=2);
+                    DecryptWordOne(intWordPtrB += 2, intWordPtrO+=2);
             
             if (leftover == 0)
                 return;
@@ -255,18 +259,18 @@ namespace osu_common.Helpers
             //if (buffer.Length % 64 != 0)
             //    throw new ArgumentException("buffer size has to be a multiple of 8");
 
-            switch (CurrentMethod)
+            switch (m)
             {
-                case EncryptionMethod.XTEA:
+                case EncryptionMethod.One:
                     EncryptDecrypt(bufferPtr, bufferPtr,bufferLength, encrypt);
                     break;
-                case EncryptionMethod.XXTEA:
-                    EncryptDecryptXXTEA(bufferPtr,bufferLength, encrypt);
+                case EncryptionMethod.Two:
+                    EncryptDecryptTwo(bufferPtr,bufferLength, encrypt);
                     break;
-                case EncryptionMethod.Homebrew:
+                case EncryptionMethod.Three:
                     EncryptDecryptHomebrew(bufferPtr, bufferLength, encrypt);
                     break;
-                case EncryptionMethod.None:
+                case EncryptionMethod.Four:
                     checkKey();
                     break;
             }
@@ -279,18 +283,18 @@ namespace osu_common.Helpers
             //throw new ArgumentException("buffer size has to be a multiple of 8");
 
 
-            switch (CurrentMethod)
+            switch (m)
             {
-                case EncryptionMethod.XTEA:
-                    EncryptDecryptXTEA(bufferPtr, outputPtr, bufferLength, encrypt);
+                case EncryptionMethod.One:
+                    EncryptDecryptOne(bufferPtr, outputPtr, bufferLength, encrypt);
                     break;
-                case EncryptionMethod.Homebrew:
-                case EncryptionMethod.XXTEA:
+                case EncryptionMethod.Three:
+                case EncryptionMethod.Two:
                     //Marshal.Copy(new IntPtr(bufferPtr), new IntPtr(outputPtr),)
                     //EncryptDecrypt(encrypted, encrypt);
                     throw new NotSupportedException();
                     break;
-                case EncryptionMethod.None:
+                case EncryptionMethod.Four:
                     checkKey();
                     break;
             }
@@ -310,10 +314,10 @@ namespace osu_common.Helpers
                     EncryptDecrypt(bufferPtr + bufStart, outputPtr+outputStart, count, encrypt);
             }
 #else
-            //only xxtea is ported to managed code, so the encryption method is ignored
+            //only Two is ported to managed code, so the encryption method is ignored
             if (output != null)
                 throw new NotSupportedException("Custom output is not supported when SAFE_ENCRYPTION is enabled.");
-            EncryptDecryptXXTEASafe(buffer, encrypt, count, bufStart);
+            EncryptDecryptTwoSafe(buffer, encrypt, count, bufStart);
 #endif
 
         }
@@ -369,39 +373,39 @@ namespace osu_common.Helpers
             EncryptDecrypt(buffer, output, bufStart, outStart, count, true);
         }
 
-        #region Encrypt Decrypt XTEA
-        unsafe void EncryptWordXTEA( UInt32* v/*[2]*/, UInt32* o/*[2]*/ ) 
+        #region Encrypt Decrypt One
+        unsafe void EncryptWordOne( UInt32* v/*[2]*/, UInt32* o/*[2]*/ ) 
         {
             UInt32 i;
             UInt32 v0=v[0];  UInt32 v1=v[1]; 
             UInt32 sum=0;
-            for (i=0; i < ROUNDS; i++) 
+            for (i=0; i < r; i++) 
             {
                 //todo: cache sum + k for better speed
-                v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + key[sum & 3]);
-                sum += DELTA;
-                v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + key[(sum>>11) & 3]);
+                v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + k[sum & 3]);
+                sum += d;
+                v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum>>11) & 3]);
             }
             o[0]=v0; o[1]=v1;
         }
          
-        unsafe void DecryptWordXTEA(UInt32* v/*[2]*/, UInt32* o/*[2]*/) 
+        unsafe void DecryptWordOne(UInt32* v/*[2]*/, UInt32* o/*[2]*/) 
         {
             UInt32 i;
             UInt32 v0=v[0]; UInt32 v1=v[1];  
-            UInt32 sum=unchecked(DELTA*ROUNDS);
-            for (i=0; i < ROUNDS; i++) 
+            UInt32 sum=unchecked(d*r);
+            for (i=0; i < r; i++) 
             {
                 //todo: cache sum + k for better speed
-                v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + key[(sum>>11) & 3]);
-                sum -= DELTA;
-                v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + key[sum & 3]);
+                v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum>>11) & 3]);
+                sum -= d;
+                v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + k[sum & 3]);
             }
             o[0]=v0; o[1]=v1;
         }
 
         #endregion
-        #region Encrypt Decrypt Word XXTEA
+        #region Encrypt Decrypt Word Two
         //represents the number of words to be encrypted/decrypted
         //automaticly set to be 16 unless the buffer is smaller than 16
         //or if buffer%16!=0 n will be changed on the last buffer iteration
@@ -410,7 +414,7 @@ namespace osu_common.Helpers
         public const uint nMAXBytes = nMAX * 4;
 
 
-        private void EncryptWordsXXTEASafe(uint[] v, int offset)
+        private void EncryptWordsTwoSafe(uint[] v, int offset)
         {
             UInt32 y, z, sum;
             UInt32 p, e;
@@ -419,25 +423,25 @@ namespace osu_common.Helpers
             z = v[n - 1 + offset];
             do
             {
-                sum += DELTA;
+                sum += d;
                 e = (sum >> 2) & 3;
                 for (p = 0; p < n - 1; p++)
                 {
                     y = v[p + 1 + offset];
-                    z = v[p + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                    z = v[p + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
                 y = v[offset];
-                z = v[n - 1 + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                z = v[n - 1 + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
             }
             while (--rounds > 0);
         }
 
-        unsafe private void DecryptWordsXXTEASafe(uint[] v, int offset)
+        unsafe private void DecryptWordsTwoSafe(uint[] v, int offset)
         {
             UInt32 y, z, sum;
             UInt32 p, e;
             UInt32 rounds = 6 + 52 / n;
-            sum = rounds * DELTA;
+            sum = rounds * d;
             y = v[offset];
             do
             {
@@ -445,18 +449,18 @@ namespace osu_common.Helpers
                 for (p = n - 1; p > 0; p--)
                 {
                     z = v[p - 1 + offset];
-                    y = v[p+ offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                    y = v[p+ offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
                 z = v[n - 1 + offset];
-                y = v[offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (key[(p & 3) ^ e] ^ z));
+                y = v[offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
             }
-            while ((sum -= DELTA) != 0);
+            while ((sum -= d) != 0);
 
         }
 
 
-        //uses a modified version of XXTEA
-        unsafe private void EncryptWordsXXTEA(uint* v/*[n]*/) 
+        //uses a modified version of Two
+        unsafe private void EncryptWordsTwo(uint* v/*[n]*/) 
         {
             UInt32 y, z, sum;
             UInt32 p, e;
@@ -465,25 +469,25 @@ namespace osu_common.Helpers
             z = v[n-1];
             do 
             {
-                sum += DELTA;
+                sum += d;
                 e = (sum >> 2) & 3;
                 for (p = 0; p < n - 1; p++)
                 {
                     y = v[p + 1]; 
-                    z = v[p] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (key[(p&3)^e] ^ z));
+                    z = v[p] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
                 }
                 y = v[0];
-                z = v[n-1] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (key[(p&3)^e] ^ z));
+                z = v[n-1] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
             }   
             while (--rounds>0);
         }
 
-        unsafe private void DecryptWordsXXTEA(uint* v/*[n]*/) 
+        unsafe private void DecryptWordsTwo(uint* v/*[n]*/) 
         {
             UInt32 y, z, sum;
             UInt32 p, e;
             UInt32 rounds = 6 + 52/n;
-            sum = rounds*DELTA;
+            sum = rounds*d;
             y = v[0];
             do 
             {
@@ -491,12 +495,12 @@ namespace osu_common.Helpers
                 for (p=n-1; p>0; p--)
                 {
                     z = v[p-1];
-                    y = v[p] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (key[(p&3)^e] ^ z));
+                    y = v[p] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
                 }
                 z = v[n-1];
-                y = v[0] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (key[(p&3)^e] ^ z));
+                y = v[0] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
             } 
-            while ((sum -= DELTA) != 0);
+            while ((sum -= d) != 0);
 
         }
         #endregion 
@@ -508,7 +512,7 @@ namespace osu_common.Helpers
 
         private unsafe void simpleEncryptBytes(byte* buf, int length)
         {
-            fixed (uint* keyI = key )
+            fixed (uint* keyI = k )
             {
                 byte* keyB = (byte*) keyI;
                 byte prevE = 0; // previous encrypted
@@ -526,7 +530,7 @@ namespace osu_common.Helpers
         private unsafe void simpleDecryptBytes(byte* buf, int length)
         {
 
-            fixed (uint* keyI = key)
+            fixed (uint* keyI = k)
             {
                 byte* keyB = (byte*) keyI;
                 byte prevE = 0; // previous encrypted
@@ -548,8 +552,8 @@ namespace osu_common.Helpers
             byte prevE = 0; // previous encrypted
             for (int i = offset; i < count; i++)
             {
-                buf[i] = unchecked((byte)((int)(buf[i] + (keyB[i % 16] >> 2)) % 256));
-                buf[i] ^= rotateLeft(keyB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
+                buf[i] = unchecked((byte)((int)(buf[i] + (kB[i % 16] >> 2)) % 256));
+                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
                 buf[i] = rotateRight(buf[i], (byte)((~(uint)(prevE)) % 7));
 
                 prevE = buf[i];
@@ -565,8 +569,8 @@ namespace osu_common.Helpers
             {
                 byte tmpE = buf[i];
                 buf[i] = rotateLeft(buf[i], (byte)((~(uint)(prevE)) % 7));
-                buf[i] ^= rotateLeft(keyB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
-                buf[i] = unchecked((byte)((int)(buf[i] - (keyB[i % 16] >> 2) + 256) % 256));
+                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
+                buf[i] = unchecked((byte)((int)(buf[i] - (kB[i % 16] >> 2) + 256) % 256));
 
                 prevE = tmpE;
             }

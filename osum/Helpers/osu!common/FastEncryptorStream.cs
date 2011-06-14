@@ -22,7 +22,7 @@ namespace osu_common.Helpers
         public FastEncryptorStream (Stream InternalStream, EncryptionMethod EM, uint[] Key)
         {
             internalStream = InternalStream;
-            FastEncryptionProvider.SetKey(Key,EM);
+            FastEncryptionProvider.Init(Key,EM);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace osu_common.Helpers
                 }
             }
             internalStream = InternalStream;
-            FastEncryptionProvider.SetKey(uKey, EM);
+            FastEncryptionProvider.Init(uKey, EM);
         }
 
         ~FastEncryptorStream ()

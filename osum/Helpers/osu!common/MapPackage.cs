@@ -252,7 +252,7 @@ namespace osu_common.Libraries.Osz2
 
 #if !NO_ENCRYPTION
             //check whether we have the correct key by comparing to a known plain.
-            using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XTEA, KEY))
+            using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.One, KEY))
             {
                 byte[] decryptedPlain = new byte[64];
                 decryptor.Read(decryptedPlain, 0, 64);
@@ -308,7 +308,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
                 using (Stream cstream = memstream)
 #else
-                using (Stream cstream = new FastEncryptorStream(memstream, EncryptionMethod.XXTEA, KEY))
+                using (Stream cstream = new FastEncryptorStream(memstream, EncryptionMethod.Two, KEY))
 #endif
                 using (BinaryReader reader = new BinaryReader(cstream))
                 {
@@ -423,7 +423,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
                 using (Stream cstream = memstream)
 #else
-                using (Stream cstream = new FastEncryptorStream(memstream,EncryptionMethod.XXTEA,KEY))
+                using (Stream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,KEY))
 #endif
                 using (BinaryWriter writer = new BinaryWriter(cstream))
                 {
@@ -474,7 +474,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
             using (Stream cstream = memstream)
 #else
-            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream,EncryptionMethod.XXTEA,KEY))
+            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,KEY))
 #endif
             using (BinaryWriter writer = new BinaryWriter(cstream))
             {
@@ -491,7 +491,7 @@ namespace osu_common.Libraries.Osz2
 #if NO_ENCRYPTION
                     using (Stream decryptor = new MemoryStream(pair.Value, false))
 #else
-                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.XXTEA,KEY))
+                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.Two,KEY))
 #endif
                     {
                         byte[] decrypted = new byte[pair.Value.Length];
@@ -1295,7 +1295,7 @@ namespace osu_common.Libraries.Osz2
                     }
 #if !NO_ENCRYPTION
                     using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream, 
-                        EncryptionMethod.XTEA, KEY))
+                        EncryptionMethod.One, KEY))
                     {
                         encryptor.Write(knownPlain, 0, 64);
                     }

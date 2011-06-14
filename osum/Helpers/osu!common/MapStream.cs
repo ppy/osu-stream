@@ -76,7 +76,7 @@ namespace osu_common.Libraries.Osz2
                 }
             }
             
-            encryptor.SetKey(uKey, EncryptionMethod.XXTEA);
+            encryptor.Init(uKey, EncryptionMethod.Two);
 
             byte[] lengthB = new byte[] { data[0], data[1], data[2], data[3] };
             encryptor.Decrypt(lengthB, 0, 4);
