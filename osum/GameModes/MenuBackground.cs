@@ -64,7 +64,7 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(254, 242, 0, 255));
             yellow.Tag = yellow.Colour;
-            yellow.HandleClickOnUp = true;
+            //yellow.HandleClickOnUp = true;
             yellow.Texture = specialTexture;
             yellow.Field = FieldTypes.StandardSnapCentre;
             yellow.Origin = OriginTypes.Centre;
@@ -80,7 +80,7 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(255, 102, 0, 255));
             orange.Tag = orange.Colour;
-            orange.HandleClickOnUp = true;
+            //orange.HandleClickOnUp = true;
             orange.Texture = specialTexture;
             orange.Field = FieldTypes.StandardSnapCentre;
             orange.Origin = OriginTypes.Centre;
@@ -97,11 +97,10 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(0, 192, 245, 255));
             blue.Tag = blue.Colour;
-            blue.HandleClickOnUp = true;
+            //blue.HandleClickOnUp = true;
             blue.Texture = specialTexture;
             blue.Field = FieldTypes.StandardSnapCentre;
             blue.Origin = OriginTypes.Centre;
-            blue.OnClick += Option_OnClick;
             blue.OnClick += Option_OnClick;
             blue.OnHover += Option_OnHover;
             blue.OnHoverLost += Option_OnHoverLost;
@@ -115,7 +114,7 @@ namespace osum.GameModes
                 true, 0.5f, new Color4(237, 0, 140, 255));
             pink.Texture = specialTexture;
             pink.Tag = pink.Colour;
-            pink.HandleClickOnUp = true;
+            //pink.HandleClickOnUp = true;
             pink.Field = FieldTypes.StandardSnapCentre;
             pink.Origin = OriginTypes.Centre;
             pink.OnClick += Option_OnClick;
@@ -203,7 +202,7 @@ namespace osum.GameModes
         private Line rectangleLineLeft;
         private Transformation awesomeTransformation;
         private Line rectangleLineRight;
-        const int duration = 4000;
+        const int duration = 3000;
 
         const float rotation_offset = 0.35f;
         const float scale_offset = 4.2f;
@@ -268,6 +267,6 @@ namespace osum.GameModes
         }
 
         public bool IsBeingAwesome { get { return awesomeTransformation != null; } }
-        public bool IsAwesome { get { return awesomeStartTime >= 0 && Clock.ModeTime - awesomeStartTime > 100; } }
+        public bool IsAwesome { get { return awesomeStartTime >= 0 && Clock.ModeTime - awesomeStartTime > 50; } }
     }
 }
