@@ -980,6 +980,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (waitingForPathTextureClear)
                 {
+                    GL.DepthMask(true);
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                     waitingForPathTextureClear = false;
                 }
@@ -1001,6 +1002,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     if (waitingForPathTextureClear)
                     {
+                        GL.DepthMask(true);
                         GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                         waitingForPathTextureClear = false;
                     }
