@@ -156,7 +156,6 @@ namespace osum.GameModes.Store
             {
                 if (back.Alpha != 1)
                 {
-                    Console.WriteLine("clearing shit");
                     GameBase.Scheduler.Add(delegate {
                         back.Transformations.Clear();
                         back.Alpha = 1;
