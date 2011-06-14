@@ -18,11 +18,18 @@ namespace osum
                 if (location != Point.Empty)
                     Delta = new PointF(value.X - location.X, value.Y - location.Y);
                 location = value;
+
+                updatePositions();
             }
         }
-        
-        public PointF Delta;
 
+        public virtual void updatePositions()
+        {
+            BasePosition = new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
+            WindowDelta = new Vector2(GameBase.ScaleFactor * Delta.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Delta.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
+        }
+        
+        protected PointF Delta;
 
         /// <summary>
         /// Increased for every press that is associated with the tracking point.
@@ -45,21 +52,8 @@ namespace osum
             Tag = tag;
         }
 
-        public virtual Vector2 BasePosition
-        {
-            get
-            {
-                return new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);	
-            }
-        }
-        
-        public virtual Vector2 WindowDelta
-        {
-            get
-            {
-                return new Vector2(GameBase.ScaleFactor * Delta.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Delta.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);	
-            }
-        }
+        public Vector2 BasePosition;
+        public Vector2 WindowDelta;
 
         public virtual Vector2 GamefieldPosition
         {

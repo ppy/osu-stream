@@ -79,13 +79,13 @@ namespace osum.Graphics.Sprites
                 Sprites[i].HandleOnUp(source, trackingPoint);
         }
 
-        TrackingPoint mapToCoordinates(ref TrackingPoint t)
+        void mapToCoordinates(ref TrackingPoint t)
         {
             if (!matrixOperations)
-                return t;
+                return;
 
-            t = (TrackingPoint)t.Clone();
             Vector2 pos = t.BasePosition;
+            Vector2 origPos = pos;
 
             pos.X -= GameBase.BaseSizeFixedWidth.Width / 2;
             pos.Y -= GameBase.BaseSizeFixedWidth.Height / 2;
@@ -107,11 +107,10 @@ namespace osum.Graphics.Sprites
 
             pos -= Position;
 
-            pos *= GameBase.BaseToNativeRatio;
+            t.BasePosition = pos;
+            t.WindowDelta = pos - origPos;
 
-            t.Location = new PointF(pos.X, pos.Y);
-
-            return t;
+            return;
         }
 
         internal override bool IsOnScreen
