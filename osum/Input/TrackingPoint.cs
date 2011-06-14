@@ -19,11 +19,11 @@ namespace osum
                     Delta = new PointF(value.X - location.X, value.Y - location.Y);
                 location = value;
 
-                updatePositions();
+                UpdatePositions();
             }
         }
 
-        public virtual void updatePositions()
+        public virtual void UpdatePositions()
         {
             BasePosition = new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
             WindowDelta = new Vector2(GameBase.ScaleFactor * Delta.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Delta.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);

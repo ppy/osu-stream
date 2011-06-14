@@ -85,6 +85,8 @@ namespace osum.Graphics.Sprites
             if (!matrixOperations)
                 return;
 
+            t.UpdatePositions();
+
             Vector2 pos = t.BasePosition;
             Vector2 origPos = pos;
 

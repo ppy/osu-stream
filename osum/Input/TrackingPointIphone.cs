@@ -9,7 +9,7 @@ namespace osum
 		{			
 		}
 
-        public override void updatePositions()
+        public override void UpdatePositions()
         {
             WindowDelta = new Vector2((GameBase.ScaleFactor * Delta.Y / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.Width,
                                     -((GameBase.ScaleFactor * Delta.X / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Height));
