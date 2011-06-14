@@ -385,16 +385,16 @@
     <Content Include="Skins\Default\menuback.wav" />
     <Content Include="Skins\Default\mainmenu.m4a" />
     <Content Include="Skins\Default\songselect.m4a" />
-    <Content Include="Skins\Default\songselect_960" />
-    <Content Include="Skins\Default\songselect_480" />
-    <Content Include="Skins\Default\menu_480" />
-    <Content Include="Skins\Default\menu_960" />
-    <Content Include="Skins\Default\hit_480" />
-    <Content Include="Skins\Default\hit_960" />
-    <Content Include="Skins\Default\notification_480" />
-    <Content Include="Skins\Default\notification_960" />
     <Content Include="Skins\Default\spinnerbonus.wav" />
     <Content Include="Skins\Default\menuclick.wav" />
     <Content Include="Skins\Default\spinnerspin.wav" />
+    <Content Include="Skins\Default\hit_480.png" />
+    <Content Include="Skins\Default\hit_960.png" />
+    <Content Include="Skins\Default\menu_480.png" />
+    <Content Include="Skins\Default\menu_960.png" />
+    <Content Include="Skins\Default\notification_480.png" />
+    <Content Include="Skins\Default\notification_960.png" />
+    <Content Include="Skins\Default\songselect_480.png" />
+    <Content Include="Skins\Default\songselect_960.png" />
   </ItemGroup>
 </Project>
