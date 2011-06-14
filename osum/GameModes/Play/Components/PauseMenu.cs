@@ -127,8 +127,6 @@ namespace osum.GameModes.Play.Components
             buttonQuit.OnHoverLost += HandleButtonHoverLost;
             buttonQuit.HandleClickOnUp = true;
             spriteManager.Add(buttonQuit);
-
-            InputManager.OnDown += InputManager_OnDown;
         }
 
         void HandleButtonHover(object sender, EventArgs e)
@@ -179,12 +177,10 @@ namespace osum.GameModes.Play.Components
 
         public override void Dispose()
         {
-            InputManager.OnDown -= InputManager_OnDown;
-
             base.Dispose();
         }
 
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        internal void handleInput(InputSource source, TrackingPoint trackingPoint)
         {
             if (validPoint != null || MenuDisplayed) return;
 

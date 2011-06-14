@@ -282,6 +282,9 @@ namespace osum.GameModes
             //pass on the event to hitObjectManager for handling.
             if (hitObjectManager != null && hitObjectManager.HandlePressAt(point))
                 return;
+
+            if (menu != null)
+                menu.handleInput(source, point);
         }
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
