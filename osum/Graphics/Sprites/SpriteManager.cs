@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using osum.Helpers;
 using osum.Support;
+using OpenTK;
+using System.Drawing;
+
 #if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -36,9 +39,7 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
 using osum.Input;
-using OpenTK;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -302,18 +303,18 @@ namespace osum.Graphics.Sprites
             removableSprites.Clear();
         }
 
-        static BlendingFactorDest lastBlend = BlendingFactorDest.OneMinusDstAlpha;
-        internal static BlendingFactorDest BlendingMode
+        static BlendingFactorDest lastBlendDest = BlendingFactorDest.One;
+        static BlendingFactorSrc lastBlendSrc = BlendingFactorSrc.OneMinusSrcAlpha;
+
+        internal static void SetBlending(BlendingFactorSrc src, BlendingFactorDest dst)
         {
-            get { return lastBlend; }
-            set
-            {
-                if (lastBlend != value)
-                {
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, value);
-                    lastBlend = value;
-                }
-            }
+            if (lastBlendDest == dst && lastBlendSrc == src)
+                return;
+
+            lastBlendSrc = src;
+            lastBlendDest = dst;
+
+            GL.BlendFunc(lastBlendSrc,lastBlendDest);
         }
 
         void addToBatch(pDrawable p)
@@ -342,7 +343,7 @@ namespace osum.Graphics.Sprites
             {
                 GL.Translate(GameBase.NativeSize.Width / 2f, GameBase.NativeSize.Height / 2f, 0);
                 if (Rotation != 0)
-                    GL.Rotate(Rotation / Math.PI * 180, 0, 0, 1);
+                    GL.Rotate(Rotation / (float)Math.PI * 180, 0, 0, 1);
                 if (ScaleScalar != 1)
                     GL.Scale(Scale.X, Scale.Y, 0);
                 GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);
@@ -357,7 +358,7 @@ namespace osum.Graphics.Sprites
             {
                 if (p.Alpha > 0)
                 {
-                    BlendingMode = p.BlendingMode;
+                    SetBlending(p.Premultiplied ? BlendingFactorSrc.One : BlendingFactorSrc.SrcAlpha, p.BlendingMode);
 
                     if (Alpha < 1)
                     {
@@ -388,7 +389,7 @@ namespace osum.Graphics.Sprites
             }
 
             if (matrixOperations)
-                GL.LoadIdentity();
+                GameBase.Instance.SetViewport();
 
             flushBatch();
 
@@ -425,7 +426,7 @@ namespace osum.Graphics.Sprites
         {
             texturesEnabled = true;
             TexturesEnabled = false; //force a reset
-            lastBlend = BlendingFactorDest.OneMinusDstAlpha;
+            SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
             TextureGl.Reset();
         }
 

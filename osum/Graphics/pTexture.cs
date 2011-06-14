@@ -54,6 +54,7 @@ namespace osum.Graphics
         internal int X;
         internal int Y;
         internal bool Permanent;
+        internal bool Premultiplied;
 #if DEBUG
         internal int id;
         internal static int staticid = 1;
@@ -292,6 +293,7 @@ namespace osum.Graphics
                 textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
             
             pTexture tex = FromRawBytes(pTextureData, width, height);
+            tex.Premultiplied = true;
             
             Marshal.FreeHGlobal(pTextureData);
             

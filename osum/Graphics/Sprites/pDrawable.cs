@@ -102,6 +102,8 @@ namespace osum.Graphics.Sprites
         internal Vector2 Position;
         internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
 
+        internal bool Premultiplied;
+
         internal virtual bool IsOnScreen
         {
             get
@@ -288,13 +290,21 @@ namespace osum.Graphics.Sprites
         {
             get
             {
+                float alpha = Alpha * Colour.A;
+
                 if (SpriteManager.UniversalDim > 0 && !DimImmune)
                 {
-                    float dim = 1 - SpriteManager.UniversalDim;
-                    return new Color4(Colour.R * dim, Colour.G * dim, Colour.B * dim, Alpha * Colour.A);
+                    float dim = (1 - SpriteManager.UniversalDim);
+                    if (Premultiplied)
+                        dim *= alpha;
+
+                    return new Color4(Colour.R * dim, Colour.G * dim, Colour.B * dim, alpha);
                 }
 
-                return Alpha < 1 ? new Color4(Colour.R, Colour.G, Colour.B, Alpha * Colour.A) : Colour;
+                if (Premultiplied)
+                    return new Color4(Colour.R * alpha, Colour.G * alpha, Colour.B * alpha, alpha);
+                else
+                    return new Color4(Colour.R, Colour.G, Colour.B, alpha);
             }
         }
 

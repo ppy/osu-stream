@@ -120,7 +120,10 @@ namespace osum.Graphics.Sprites
                 texture = value;
 
                 if (texture != null)
+                {
+                    Premultiplied = texture.Premultiplied;
                     UpdateTextureSize();
+                }
             }
         }
 

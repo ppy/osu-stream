@@ -197,7 +197,7 @@ namespace osum.GameModes.Play.Components
             GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
-            SpriteManager.BlendingMode = BlendingFactorDest.One;
+            SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
 
             //todo: this can definitely be further optimised into a single call.
             for (int i = 0; i < line_count; i++)
