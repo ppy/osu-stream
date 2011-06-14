@@ -70,7 +70,7 @@ namespace osum.Graphics.Renderers
         protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m
 
         // how much to trim off the inside of the texture
-        protected const float TEXTURE_SHRINKAGE_FACTOR = 1.0f;
+        protected const float TEXTURE_SHRINKAGE_FACTOR = 2.0f;
 
         // how far towards the inside do we slide the texture
 #if iOS
