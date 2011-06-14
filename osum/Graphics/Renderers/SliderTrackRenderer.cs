@@ -389,22 +389,26 @@ namespace osum.Graphics.Renderers
             GL.EnableClientState(ArrayCap.ColorArray);
 
             float[] colours = {0,0,0,0,
-                            shadow.R, shadow.G, shadow.B, shadow.A,
-                            border.R, border.G, border.B, border.A,
-                            border.R, border.G, border.B, border.A,
-                            OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
-                            InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A };
+                               0,0,0,0,
+                               shadow.R, shadow.G, shadow.B, shadow.A,
+                               border.R, border.G, border.B, border.A,
+                               border.R, border.G, border.B, border.A,
+                               OuterColour.R, OuterColour.G, OuterColour.B, OuterColour.A,
+                               InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A,
+                               InnerColour.R, InnerColour.G, InnerColour.B, InnerColour.A};
 
-            float[] vertices = { 0, 0,
+            float[] vertices = { -1.0f, 0,
+                                   0, 0,
                 0.078125f - aa_width, 0.0f,
                 0.078125f + aa_width, 0.0f,
                 0.1875f - aa_width, 0.0f,
                 0.1875f + aa_width, 0.0f,
-                1.0f, 0.0f };
+                1.0f, 0.0f,
+                2.0f, 0};
 
             GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
             GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
-            GL.DrawArrays(BeginMode.LineStrip, 0, 6);
+            GL.DrawArrays(BeginMode.LineStrip, 0, 8);
 
             GL.DisableClientState(ArrayCap.ColorArray);
 
@@ -446,6 +450,7 @@ namespace osum.Graphics.Renderers
                 GL.Disable(EnableCap.Blend);
                 GL.DepthMask(true);
                 GL.DepthFunc(DepthFunction.Lequal);
+                GL.Enable(EnableCap.DepthTest);
             }
 
             SpriteManager.TexturesEnabled = true;
@@ -467,6 +472,7 @@ namespace osum.Graphics.Renderers
             if (renderingToTexture)
             {
                 GL.Enable(EnableCap.Blend);
+                GL.Disable(EnableCap.DepthTest);
                 GL.DepthMask(false);
             }
         }
