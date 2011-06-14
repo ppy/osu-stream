@@ -770,30 +770,52 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal virtual void burstEndpoint()
         {
-            Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.0F, 1.9F,
-                        Clock.Time, (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), EasingTypes.In);
+            int now = Clock.Time;
 
-            Transformation circleScaleOut2 = new Transformation(TransformationType.Scale, 1.9F, 2F,
-                (int)(Clock.Time + (DifficultyManager.FadeOut * 0.7)), (Clock.Time + DifficultyManager.FadeOut));
+            Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
+                    now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
             Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                Clock.Time, Clock.Time + DifficultyManager.FadeOut);
+                now, now + DifficultyManager.FadeOut);
 
-            foreach (pSprite p in lastJudgedEndpoint % 2 == 0 ? spriteCollectionStart : spriteCollectionEnd)
+            bool finished = RepeatCount - lastJudgedEndpoint == 0;
+
+            if (lastJudgedEndpoint % 2 == 0 || finished)
             {
-                //Burst the endpoint we just reached.
-                pDrawable clone = p.Clone();
+                foreach (pSprite p in spriteCollectionStart)
+                {
+                    //Burst the endpoint we just reached.
+                    pDrawable clone = p.Clone();
 
-                clone.Transformations.Clear();
+                    clone.Transformations.Clear();
 
-                clone.Clocking = ClockTypes.Game;
+                    clone.Clocking = ClockTypes.Game;
 
-                clone.Transform(circleScaleOut);
-                clone.Transform(circleScaleOut2);
-                clone.Transform(circleFadeOut);
+                    clone.Transform(circleScaleOut);
+                    clone.Transform(circleFadeOut);
 
-                m_HitObjectManager.spriteManager.Add(clone);
+                    m_HitObjectManager.spriteManager.Add(clone);
+                }
             }
+
+            if (lastJudgedEndpoint % 2 == 1 || finished)
+            {
+                foreach (pSprite p in spriteCollectionEnd)
+                {
+                    //Burst the endpoint we just reached.
+                    pDrawable clone = p.Clone();
+
+                    clone.Transformations.Clear();
+
+                    clone.Clocking = ClockTypes.Game;
+
+                    clone.Transform(circleScaleOut);
+                    clone.Transform(circleFadeOut);
+
+                    m_HitObjectManager.spriteManager.Add(clone);
+                }
+            }
+
         }
 
         internal Vector2 TrackingPosition;
