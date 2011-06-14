@@ -138,7 +138,7 @@ namespace osum.GameModes
 
             float avg = (float)RankableScore.hitOffsetMilliseconds / RankableScore.hitOffsetCount;
 
-            count = new pSpriteText(avg.ToString("#.00"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 140), 1, true, Color4.White);
+            count = new pSpriteText(avg.ToString("00.00"), "score", 0, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(number_offset, 140), 1, true, Color4.White);
             resultSprites.Add(count);
 
             performance = new pText("Accuracy", font_size, new Vector2(header_offset, 200), 0.5f, true, Color4.SkyBlue);
