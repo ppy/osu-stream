@@ -62,8 +62,11 @@ namespace osum.GameplayElements
 
         void GameBase_OnScreenLayoutChanged()
         {
-            foreach (HitObject h in ActiveStreamObjects.FindAll(h => h is Slider))
-                ((Slider)h).DisposePathTexture();
+            if (ActiveStreamObjects != null)
+            {
+                foreach (HitObject h in ActiveStreamObjects.FindAll(h => h is Slider))
+                    ((Slider)h).DisposePathTexture();
+            }
         }
 
         public void Dispose()
