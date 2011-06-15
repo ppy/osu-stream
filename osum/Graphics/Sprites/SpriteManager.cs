@@ -295,7 +295,7 @@ namespace osum.Graphics.Sprites
                 i++;
             }
 
-#if DEBUG
+#if FULL_DEBUG
             if (Sprites.Count > 5)
                 DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites (" + Sprites.FindAll(s => s.IsOnScreen).Count + " on-screen)");
 #endif
