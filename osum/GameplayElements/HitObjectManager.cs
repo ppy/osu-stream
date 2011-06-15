@@ -370,8 +370,7 @@ namespace osum.GameplayElements
 
                     if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);
-
-                    if (AudioEngine.Music.IsElapsing)
+                    else if (AudioEngine.Music.IsElapsing)
                         TriggerScoreChange(h.CheckScoring(), h);
 
                     if (lowestActiveObject < 0)
