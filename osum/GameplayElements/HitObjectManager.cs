@@ -368,10 +368,11 @@ namespace osum.GameplayElements
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
-                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
-                        TriggerScoreChange(h.Hit(), h);
-                    else if (AudioEngine.Music.IsElapsing)
+                    if (AudioEngine.Music.IsElapsing)
                         TriggerScoreChange(h.CheckScoring(), h);
+                    else if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
+                        TriggerScoreChange(h.Hit(), h);
+                    
 
                     if (lowestActiveObject < 0)
                         lowestActiveObject = i;
@@ -472,7 +473,11 @@ namespace osum.GameplayElements
 
             ScoreChange hitAmount = change & ScoreChange.HitValuesOnly;
 
-            if (hitAmount != ScoreChange.Ignore)
+            if (change == ScoreChange.Miss)
+                //this is a bit ugly. the above HitValuesOnly bitwise and will not work with negative values, so for now let's manually handle misses.
+                hitAmount = ScoreChange.Miss;
+
+            if (change != ScoreChange.Ignore)
             {
                 //handle combo additions here
                 ComboScoreCounts[hitAmount] += 1;
