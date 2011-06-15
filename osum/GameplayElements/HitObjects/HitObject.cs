@@ -532,8 +532,6 @@ namespace osum.GameplayElements
 
         internal virtual void Shake()
         {
-            if (Player.Autoplay) return;
-            
             foreach (pDrawable p in Sprites)
             {
                 Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
