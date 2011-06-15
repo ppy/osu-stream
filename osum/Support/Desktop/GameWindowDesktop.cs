@@ -31,6 +31,8 @@ namespace osum
         {
             base.OnLoad(e);
 
+            MakeCurrent();
+
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
 
             GL.Disable(EnableCap.Lighting);
@@ -123,9 +125,6 @@ namespace osum
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            //ensure the gl context is in the current thread.
-            MakeCurrent();
 
             GameBase.Instance.Draw(e);
 
