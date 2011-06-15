@@ -254,7 +254,7 @@ namespace osum.GameplayElements
                 else
                     velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
 
-                if (velocityCurrent > 0.0001f)
+                if (Math.Abs(velocityCurrent) > 0.0001f)
                     StartSound();
                 else
                     StopSound(false);
