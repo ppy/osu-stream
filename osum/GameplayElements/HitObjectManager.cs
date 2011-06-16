@@ -477,7 +477,7 @@ namespace osum.GameplayElements
                 //this is a bit ugly. the above HitValuesOnly bitwise and will not work with negative values, so for now let's manually handle misses.
                 hitAmount = ScoreChange.Miss;
 
-            if (change != ScoreChange.Ignore)
+            if (hitAmount != ScoreChange.Ignore)
             {
                 //handle combo additions here
                 ComboScoreCounts[hitAmount] += 1;
