@@ -139,11 +139,11 @@ namespace sspack
 
             if (File.Exists(dir))
                 File.Delete(dir);
-            imageExporter.Save(dir + "_960", outputImage);
+            imageExporter.Save(dir + "_960.png", outputImage);
 
-            using (Image i = Image.FromFile(dir + "_960"))
+            using (Image i = Image.FromFile(dir + "_960.png"))
             using (Bitmap b = new Bitmap(i, new Size(i.Width / 2, i.Height / 2)))
-                b.Save(dir + "_480", ImageFormat.Png);
+                b.Save(dir + "_480.png", ImageFormat.Png);
 
         }
     }
