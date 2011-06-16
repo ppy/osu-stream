@@ -16,7 +16,8 @@ namespace osum.Graphics.Sprites
         InHalf,
         OutHalf,
         InDouble,
-        OutDouble
+        OutDouble,
+        InOut
     }
 
     [Flags]
@@ -128,7 +129,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        private float CalculateCurrent(float start, float end)
+        protected virtual float CalculateCurrent(float start, float end)
         {
             int now = Clock.GetTime(Clocking);
 
@@ -147,6 +148,9 @@ namespace osum.Graphics.Sprites
                     return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 1.5));
                 case EasingTypes.OutDouble:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 4));
+                case EasingTypes.InOut:
+                    float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
+                    return start + (float)(-2 * Math.Pow(progress,3) + 3 * Math.Pow(progress, 2)) * (end - start);
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
