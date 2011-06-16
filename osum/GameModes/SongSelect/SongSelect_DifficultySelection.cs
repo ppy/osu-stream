@@ -50,7 +50,8 @@ namespace osum.GameModes
 
 
             //do a second callback so we account for lost gametime due to the above audio load.
-            GameBase.Scheduler.Add(delegate {
+            GameBase.Scheduler.Add(delegate
+            {
 
                 if (State != SelectState.LoadingPreview) return;
 
@@ -58,34 +59,34 @@ namespace osum.GameModes
                 {
 
                     tabController = new pTabController();
-    
+
                     initializeTabPlay();
                     //initializeTabRank();
                     //initializeTabOptions();
                 }
-    
+
                 tabController.Show();
 
                 s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
-    
-    
+
+
                 //preview has finished loading.
                 State = SelectState.DifficultySelect;
-    
+
                 foreach (pDrawable s in SelectedPanel.Sprites)
                     s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
-    
+
                 tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
                 tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
-    
+
                 s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-    
+
                 s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-    
+
                 SetDifficulty(Difficulty.Normal, true);
-            },true);
+            }, true);
         }
 
         private void initializeTabOptions()
@@ -146,7 +147,7 @@ namespace osum.GameModes
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
-            s_ScoreInfo = new pText(null, 24, new Vector2(0,64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
             sprites.Add(s_ScoreInfo);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
@@ -282,7 +283,7 @@ namespace osum.GameModes
                     clone.FadeOut(200);
                     clone.AlwaysDraw = false;
                     spriteManager.Add(clone);
-    
+
                     s_ModeDescriptionText.Text = text;
                     s_ModeDescriptionText.Alpha = 0;
                     s_ModeDescriptionText.FadeInFromZero(200);
@@ -290,7 +291,7 @@ namespace osum.GameModes
 
 
                 BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-                s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3,'0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7,'0');
+                s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3, '0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7, '0');
             }
         }
 
