@@ -739,7 +739,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void beginTracking()
         {
             if (sourceSliding == null)
-                sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), 1, true, true);
+                sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), Volume * 0.8f, true, true);
             else
                 sourceSliding.Play();
 
