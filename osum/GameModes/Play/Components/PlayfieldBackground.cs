@@ -57,7 +57,7 @@ namespace osum.GameModes.Play.Components
         float[] colours = new float[(line_count + 1) * 4 * 4];
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
-        internal static Color4 COLOUR_EASY = new Color4(149, 207, 49, 255);
+        internal static Color4 COLOUR_EASY = new Color4(122, 172, 37, 255);
         internal static Color4 COLOUR_STANDARD = new Color4(18, 78, 143, 255);
         internal static Color4 COLOUR_HARD = new Color4(215, 122, 12, 255);
         internal static Color4 COLOUR_EXPERT = new Color4(77, 0, 105, 255);
