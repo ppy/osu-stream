@@ -45,52 +45,53 @@ using osum.Audio;
 
 namespace osum
 {
-	[MonoTouch.Foundation.Register("GameWindowIphone")]
-	public partial class GameWindowIphone : iPhoneOSGameView
-	{
-		public static GameWindowIphone Instance;
-		
-		[Export("layerClass")]
-		static Class LayerClass ()
-		{
-			return iPhoneOSGameView.GetLayerClass();
-		}
+    [MonoTouch.Foundation.Register("GameWindowIphone")]
+    public partial class GameWindowIphone : iPhoneOSGameView
+    {
+        public static GameWindowIphone Instance;
 
-		[Export("initWithCoder:")]
-		public GameWindowIphone (NSCoder coder) : base(coder)
-		{
-			LayerRetainsBacking = false;
-			LayerColorFormat = EAGLColorFormat.RGBA8;
-			ContextRenderingApi = EAGLRenderingAPI.OpenGLES1;
-			UserInteractionEnabled = true;
-			ExclusiveTouch = true;
-			
-			Instance = this;
-		}
+        [Export("layerClass")]
+        static Class LayerClass()
+        {
+            return iPhoneOSGameView.GetLayerClass();
+        }
 
-		protected override void ConfigureLayer (CAEAGLLayer eaglLayer)
-		{
-			eaglLayer.Opaque = true;
-		}
-		
-		static bool firstLoad = true;
-		protected override void OnLoad (EventArgs e)
-		{
-			if (firstLoad)
-			{
-				GameBase.Instance.Initialize();
-				firstLoad = false;
-			}
-			else
-			{
-				GameBase.Instance.SetupScreen();
-				TextureManager.ReloadAll();
+        [Export("initWithCoder:")]
+        public GameWindowIphone(NSCoder coder)
+            : base(coder)
+        {
+            LayerRetainsBacking = false;
+            LayerColorFormat = EAGLColorFormat.RGBA8;
+            ContextRenderingApi = EAGLRenderingAPI.OpenGLES1;
+            UserInteractionEnabled = true;
+            ExclusiveTouch = true;
+
+            Instance = this;
+        }
+
+        protected override void ConfigureLayer(CAEAGLLayer eaglLayer)
+        {
+            eaglLayer.Opaque = true;
+        }
+
+        static bool firstLoad = true;
+        protected override void OnLoad(EventArgs e)
+        {
+            if (firstLoad)
+            {
+                GameBase.Instance.Initialize();
+                firstLoad = false;
+            }
+            else
+            {
+                GameBase.Instance.SetupScreen();
+                TextureManager.ReloadAll();
 
                 pausedMusic = false;
-			}
-			
-			base.OnLoad(e);
-		}
+            }
+
+            base.OnLoad(e);
+        }
 
         bool pausedMusic;
         protected override void OnUnload(EventArgs e)
@@ -105,75 +106,74 @@ namespace osum
 
             base.OnUnload(e);
         }
-		
-		protected override void OnResize (EventArgs e)
-		{
-			base.OnResize(e);
-		}
-		
-		protected override void OnUpdateFrame(FrameEventArgs e)
-		{
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+        }
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
             if (AppDelegate.UsingViewController)
                 return;
 
             base.OnUpdateFrame(e);
-			GameBase.Instance.Update(e);
-		}
-		
-		protected override void OnRenderFrame (FrameEventArgs e)
-		{
+            GameBase.Instance.Update(e);
+        }
+
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
             if (AppDelegate.UsingViewController)
                 return;
 
             base.OnRenderFrame(e);
-			GameBase.Instance.Draw(e);
-			SwapBuffers();
-		}
-		
-		InputSourceIphone inputHandler;
-		
-		public void SetInputHandler(InputSource source)
-		{
-			InputSourceIphone addableSource = source as InputSourceIphone;
-			
-			if (addableSource == null)
-				return;
-			
-			inputHandler = addableSource;
-		}
-		
-		public override void TouchesBegan (NSSet touches, UIEvent evt)
-		{
-			base.TouchesBegan(touches, evt);
-			
-			if (inputHandler != null)
-				inputHandler.HandleTouchesBegan(touches,evt);
-			
-		}
-		
-		public override void TouchesMoved (NSSet touches, UIEvent evt)
-		{
-			base.TouchesMoved (touches, evt);
-			
-			if (inputHandler != null)
-				inputHandler.HandleTouchesMoved(touches,evt);
-		}
-		
-		public override void TouchesEnded (NSSet touches, UIEvent evt)
-		{
-			base.TouchesEnded (touches, evt);
-			
-			if (inputHandler != null)
-				inputHandler.HandleTouchesEnded(touches,evt);
-		}
-		
-		public override void TouchesCancelled (NSSet touches, UIEvent evt)
-		{
-			base.TouchesCancelled (touches, evt);
-			
-			if (inputHandler != null)
-				inputHandler.HandleTouchesCancelled(touches,evt);
-		}
-	}
+            GameBase.Instance.Draw(e);
+            SwapBuffers();
+        }
+
+        InputSourceIphone inputHandler;
+
+        public void SetInputHandler(InputSource source)
+        {
+            InputSourceIphone addableSource = source as InputSourceIphone;
+
+            if (addableSource == null)
+                return;
+
+            inputHandler = addableSource;
+        }
+
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            if (inputHandler != null)
+                inputHandler.HandleTouchesBegan(touches, evt);
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved(touches, evt);
+
+            if (inputHandler != null)
+                inputHandler.HandleTouchesMoved(touches, evt);
+        }
+
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+
+            if (inputHandler != null)
+                inputHandler.HandleTouchesEnded(touches, evt);
+        }
+
+        public override void TouchesCancelled(NSSet touches, UIEvent evt)
+        {
+            base.TouchesCancelled(touches, evt);
+
+            if (inputHandler != null)
+                inputHandler.HandleTouchesCancelled(touches, evt);
+        }
+    }
 }
 
