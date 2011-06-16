@@ -223,7 +223,7 @@ namespace osum.GameModes
             spriteManagerBehind.Update();
             menuBackgroundNew.Update();
 
-            
+            osuLogoGloss.Rotation = -menuBackgroundNew.Rotation;
 
             if (Clock.AudioTime > initial_display)
             {
