@@ -29,6 +29,23 @@ namespace osum.GameplayElements.Scoring
         internal int spinnerBonus;
         public int hitOffsetMilliseconds;
         public int hitOffsetCount;
+        public Rank Ranking
+        {
+            get
+            {
+                if (accuracy == 1)
+                    return Rank.X;
+                if (totalScore > 950000)
+                    return Rank.S;
+                if (totalScore > 900000)
+                    return Rank.A;
+                if (totalScore > 800000)
+                    return Rank.B;
+                if (totalScore > 500000)
+                    return Rank.C;
+                return Rank.D;
+            }
+        }
 
         internal virtual float accuracy
         {
@@ -44,5 +61,16 @@ namespace osum.GameplayElements.Scoring
         {
             get { return count50 + count100 + count300; }
         }
+    }
+
+    internal enum Rank
+    {
+        N,
+        D,
+        C,
+        B,
+        A,
+        S,
+        X
     }
 }

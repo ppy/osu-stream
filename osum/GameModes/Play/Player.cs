@@ -469,8 +469,8 @@ namespace osum.GameModes
                 GameBase.Scheduler.Add(delegate
                 {
                     Ranking.RankableScore = currentScore;
-                    Director.ChangeMode(OsuMode.Ranking);
-                }, 2000);
+                    Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
+                }, 500);
             }
         }
 

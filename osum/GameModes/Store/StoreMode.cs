@@ -271,7 +271,7 @@ namespace osum.GameModes.Store
 
             base.Update();
 
-            if (Director.PendingMode == OsuMode.Unknown)
+            if (Director.PendingOsuMode == OsuMode.Unknown)
             {
                 Vector2 pos = new Vector2(0, scrollOffset);
                 foreach (PackPanel p in packs)

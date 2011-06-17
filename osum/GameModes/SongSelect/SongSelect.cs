@@ -340,7 +340,7 @@ namespace osum.GameModes
                             pendingModeChange = false;
                         }
 
-                        if (Director.PendingMode == OsuMode.Unknown)
+                        if (Director.PendingOsuMode == OsuMode.Unknown)
                         {
                             Vector2 pos = new Vector2(difficultySelectOffset, 0);
                             s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
@@ -366,7 +366,7 @@ namespace osum.GameModes
                             velocity *= 0.94f;
                     }
 
-                    if (Director.PendingMode == OsuMode.Unknown)
+                    if (Director.PendingOsuMode == OsuMode.Unknown)
                     {
                         Vector2 pos = new Vector2(0, 60 + songSelectOffset);
                         foreach (BeatmapPanel p in panels)

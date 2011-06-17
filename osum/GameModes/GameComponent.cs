@@ -8,7 +8,7 @@ namespace osum.GameModes
     /// <summary>
     /// An automatically initializing game mode.
     /// </summary>
-    class GameComponent : GameMode
+    public class GameComponent : GameMode
     {
         public GameComponent()
             : base()
