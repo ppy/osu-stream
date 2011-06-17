@@ -80,6 +80,10 @@ namespace osum.GameplayElements.Beatmaps
         }
 
         #endregion
+
+        public string Artist { get { return Package.GetMetadata(MapMetaType.Artist); } }
+
+        public string Title { get { return Package.GetMetadata(MapMetaType.Title); } }
     }
 }
 
