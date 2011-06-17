@@ -165,8 +165,10 @@ namespace osum.Graphics.Sprites
                         return new Vector2(lastMeasure.X * 0.5F, 0);
                     case OriginTypes.TopRight:
                         return new Vector2(lastMeasure.X, 0);
+                    case OriginTypes.CentreRight:
+                        return new Vector2(lastMeasure.X, lastMeasure.Y * 0.5f);
                     case OriginTypes.BottomCentre:
-                        return new Vector2(lastMeasure.X / 2,lastMeasure.Y);
+                        return new Vector2(lastMeasure.X / 2, lastMeasure.Y);
                     case OriginTypes.BottomRight:
                         return lastMeasure;
                     case OriginTypes.BottomLeft:

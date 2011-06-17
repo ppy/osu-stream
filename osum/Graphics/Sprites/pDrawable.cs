@@ -208,6 +208,9 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.StandardSnapCentreRight:
                         pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
                         break;
+                    case FieldTypes.StandardSnapCentreLeft:
+                        pos = new Vector2(pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                        break;
                     case FieldTypes.StandardSnapRight:
                         pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
                         break;

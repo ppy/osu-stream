@@ -324,8 +324,9 @@ namespace osum.Graphics.Sprites
         ///   Native screen resolution aligned from the right-hand side of the screen, where an X position of 0 is translated to Standard(WindowWidth).
         /// </summary>
         NativeSnapRight,
-        
+
         StandardSnapTopCentre,
+        StandardSnapCentreLeft,
     }
 
     internal enum OriginTypes
