@@ -88,7 +88,14 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.menu_store, new SpriteSheetTexture("menu", 384, 1116, 291, 115));
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 0, 1541, 246, 248));
             textureLocations.Add(OsuTexture.menu_play, new SpriteSheetTexture("menu", 384, 1233, 246, 133));
-            textureLocations.Add(OsuTexture.menu_item_background, new SpriteSheetTexture("menu", 792, 945, 4, 800));
+            textureLocations.Add(OsuTexture.menu_item_background, new SpriteSheetTexture("menu", 792, 945, 4, 400));
+            textureLocations.Add(OsuTexture.ranking_background, new SpriteSheetTexture("ranking", 0, 0, 814, 527));
+            textureLocations.Add(OsuTexture.rank_x, new SpriteSheetTexture("ranking", 0, 529, 388, 482));
+            textureLocations.Add(OsuTexture.rank_a, new SpriteSheetTexture("ranking", 390, 529, 370, 425));
+            textureLocations.Add(OsuTexture.rank_d, new SpriteSheetTexture("ranking", 816, 0, 370, 335));
+            textureLocations.Add(OsuTexture.rank_b, new SpriteSheetTexture("ranking", 816, 337, 355, 425));
+            textureLocations.Add(OsuTexture.rank_s, new SpriteSheetTexture("ranking", 1188, 0, 331, 482));
+            textureLocations.Add(OsuTexture.rank_c, new SpriteSheetTexture("ranking", 1521, 0, 329, 425));
             textureLocations.Add(OsuTexture.songselect_background, new SpriteSheetTexture("songselect", 0, 0, 1024, 768));
             textureLocations.Add(OsuTexture.songselect_panel, new SpriteSheetTexture("songselect", 0, 770, 1024, 96));
             textureLocations.Add(OsuTexture.songselect_panel_selected, new SpriteSheetTexture("songselect", 0, 868, 1024, 96));

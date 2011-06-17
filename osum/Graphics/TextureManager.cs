@@ -489,6 +489,13 @@ namespace osum.Graphics.Skins
         menu_item_background,
         menu_tutorial,
         menu_store,
-        menu_play
+        menu_play,
+        ranking_background,
+        rank_x,
+        rank_a,
+        rank_d,
+        rank_b,
+        rank_s,
+        rank_c
     }
 }

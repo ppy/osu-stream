@@ -398,5 +398,7 @@
     <Content Include="Skins\Default\notification_960.png" />
     <Content Include="Skins\Default\songselect_480.png" />
     <Content Include="Skins\Default\songselect_960.png" />
+    <Content Include="Skins\Default\ranking_480.png" />
+    <Content Include="Skins\Default\ranking_960.png" />
   </ItemGroup>
 </Project>
