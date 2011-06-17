@@ -276,7 +276,7 @@ namespace osum.GameModes
 
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if ((menu != null && menu.MenuDisplayed) || !AudioEngine.Music.IsElapsing)
+            if (menu != null && menu.MenuDisplayed || (Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
                 return;
 
             //pass on the event to hitObjectManager for handling.
