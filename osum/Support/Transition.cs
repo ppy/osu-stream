@@ -1,19 +1,19 @@
 using System;
 using osum.Support;
+using osum.GameModes;
 namespace osum
 {
-    public class Transition : IUpdateable
+    public class Transition : GameComponent
     {
         public Transition()
         {
         }
-		
-		public virtual float CurrentValue
-		{
-			get { return 0; }
-		}
-			
-
+        
+        public virtual float CurrentValue
+        {
+            get { return 0; }
+        }
+        
         public virtual bool FadeOutDone
         {
             get { return true; }
@@ -24,12 +24,11 @@ namespace osum
             get { return true; }
         }
 
-        public virtual void Update()
+        internal virtual void FadeIn()
         {
-
         }
 
-        internal virtual void FadeIn()
+        internal override void Initialize()
         {
         }
     }

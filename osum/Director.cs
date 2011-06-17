@@ -25,7 +25,7 @@ namespace osum
         /// <summary>
         /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
         /// </summary>
-        internal static OsuMode PendingMode { get; private set; }
+        internal static OsuMode PendingOsuMode { get; private set; }
 
         /// <summary>
         /// The transition being used to introduce a pending mode.
@@ -60,7 +60,7 @@ namespace osum
                 return true;
             }
 
-            PendingMode = mode;
+            PendingOsuMode = mode;
             ActiveTransition = transition;
 
             return true;
@@ -71,6 +71,42 @@ namespace osum
         /// </summary>
         /// <param name="newMode">The new mode specification.</param>
         private static void changeMode(OsuMode newMode)
+        {
+            if (PendingMode == null)
+                loadNewMode(newMode);
+            
+            if (CurrentMode != null)
+                CurrentMode.Dispose();
+
+            TextureManager.DisposeAll(false);
+
+            AudioEngine.Reset();
+
+            CurrentMode = PendingMode;
+            PendingMode = null;
+            
+            Clock.ModeTimeReset();
+            
+            CurrentMode.Initialize();
+
+            if (PendingOsuMode != OsuMode.Unknown) //can be unknown on first startup
+            {
+                if (PendingOsuMode != newMode)
+                {
+                    //we got a new request to load a *different* mode during initialisation...
+                    return;
+                }
+
+                modeChangePending = true;
+            }
+
+            PendingOsuMode = OsuMode.Unknown;
+            CurrentOsuMode = newMode;
+
+            GC.Collect(); //force a full collect before we start displaying the new mode.
+        }
+
+        private static void loadNewMode(OsuMode newMode)
         {
             //Create the actual mode
             GameMode mode = null;
@@ -97,37 +133,11 @@ namespace osum
                     break;
             }
 
-            if (CurrentMode != null)
-                CurrentMode.Dispose();
-
-            TextureManager.DisposeAll(false);
-
-            AudioEngine.Reset();
-
-            CurrentMode = mode;
-            
-            Clock.ModeTimeReset();
-            
-            CurrentMode.Initialize();
-
-            if (PendingMode != OsuMode.Unknown) //can be unknown on first startup
-            {
-                if (PendingMode != newMode)
-                {
-                    //we got a new request to load a *different* mode during initialisation...
-                    return;
-                }
-
-                modeChangePending = true;
-            }
-
-            PendingMode = OsuMode.Unknown;
-            CurrentOsuMode = newMode;
-
-            GC.Collect(); //force a full collect before we start displaying the new mode.
+            PendingMode = mode;
         }
 
         static bool modeChangePending;
+        private static GameMode PendingMode;
 
 
         /// <summary>
@@ -140,7 +150,8 @@ namespace osum
                 //There was a mode change last frame.
                 //See below for where this is set.
                 Clock.ModeTimeReset();
-                ActiveTransition.FadeIn();
+                if (ActiveTransition != null)
+                    ActiveTransition.FadeIn();
                 CurrentMode.OnFirstUpdate();
 
                 modeChangePending = false;
@@ -154,19 +165,20 @@ namespace osum
 
                 if (ActiveTransition.FadeOutDone)
                 {
-                    while (PendingMode != OsuMode.Unknown)
-                        changeMode(PendingMode);
-                }
+                    while (PendingOsuMode != OsuMode.Unknown)
+                        changeMode(PendingOsuMode);
 
-                if (ActiveTransition.FadeInDone)
-                {
-                    if (OnTransitionEnded != null)
+                    if (ActiveTransition.FadeInDone)
                     {
-                        OnTransitionEnded();
-                        OnTransitionEnded = null;
-                    }
+                        if (OnTransitionEnded != null)
+                        {
+                            OnTransitionEnded();
+                            OnTransitionEnded = null;
+                        }
 
-                    ActiveTransition = null;
+                        ActiveTransition.Dispose();
+                        ActiveTransition = null;
+                    }
                 }
             }
             else if (GameBase.ActiveNotification != null && GameBase.ActiveNotification.Alpha > 0)
@@ -192,6 +204,9 @@ namespace osum
                 return false;
 
             CurrentMode.Draw();
+
+            if (ActiveTransition != null)
+                ActiveTransition.Draw();
             return true;
         }
 

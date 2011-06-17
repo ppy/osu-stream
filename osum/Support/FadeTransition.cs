@@ -75,7 +75,7 @@ namespace osum.Support
         {
             get
             {
-                return SpriteManager.UniversalDim == 1 && fadeState == FadeState.FadeOut;
+                return (SpriteManager.UniversalDim == 1 && fadeState == FadeState.FadeOut) || fadeState == FadeState.FadeIn;
             }
         }
     }
