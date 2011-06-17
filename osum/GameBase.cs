@@ -364,11 +364,11 @@ namespace osum
         {
             SpriteManager.Reset();
 
-            GL.Clear(Constants.COLOR_BUFFER_BIT);
-            //todo: Does clearing DEPTH as well here add a performance overhead?
-
             if (ignoreNextFrameTime)
                 return;
+
+            GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+            //todo: Does clearing DEPTH as well here add a performance overhead?
 
             SpriteManager.Reset();
 
