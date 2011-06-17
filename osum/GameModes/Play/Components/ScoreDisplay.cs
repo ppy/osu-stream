@@ -60,6 +60,9 @@ namespace osum.GameModes.Play.Components
                 s_Accuracy.Position = new Vector2(position.X, vpos);
             }
 
+            s_Score.TextConstantSpacing = true;
+            s_Accuracy.TextConstantSpacing = true;
+
             spriteManager.Add(s_Score);
             spriteManager.Add(s_Accuracy);
         }

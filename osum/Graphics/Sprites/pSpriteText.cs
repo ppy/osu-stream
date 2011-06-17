@@ -46,7 +46,7 @@ namespace osum.Graphics.Sprites
         internal List<Vector2> renderCoordinates = new List<Vector2>();
         internal List<pTexture> renderTextures = new List<pTexture>();
 
-        internal bool TextConstantSpacing = true;
+        internal bool TextConstantSpacing = false;
         internal string TextFont = "default";
 
         internal int SpacingOverlap;
