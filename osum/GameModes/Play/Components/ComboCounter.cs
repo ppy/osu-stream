@@ -86,7 +86,7 @@ namespace osum.GameModes.Play.Components
 
                 s_hitCombo_Incoming.TagNumeric = displayCombo;
 
-                s_hitCombo_Incoming.ShowInt(displayCombo, 0, true, 'x');
+                s_hitCombo_Incoming.ShowInt(displayCombo, 0, false, 'x');
             }
 
             if (s_hitCombo_Incoming.Transformations.Count > 0)

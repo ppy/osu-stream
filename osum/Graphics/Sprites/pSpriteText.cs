@@ -345,7 +345,7 @@ namespace osum.Graphics.Sprites
             for (int i = numberLength - 1; i >= 0; i--)
             {
                 UpdateCharacterAt(cChar++, (char)(zero_offset + (number / (int)Math.Pow(10, i)) % 10));
-                if (separators && i > 0 && numberLength - 1 == 3)
+                if (separators && i > 0 && (i % 3 == 0))
                     UpdateCharacterAt(cChar++, ',');
             }
 
