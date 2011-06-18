@@ -227,7 +227,7 @@ namespace osum.GameModes
                 GameBase.Scheduler.Add(delegate
                 {
                     GameBase.Notify("New personal best!");
-                },500);
+                },1500);
             }
         }
 
@@ -298,31 +298,33 @@ namespace osum.GameModes
         {
             base.Update();
 
-            float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.Width;
-
-            pTexture tex = null;
-            if (pos < fillSprites[1].Position.X)
-                tex = TextureManager.Load(OsuTexture.hit300);
-            else if (pos < fillSprites[2].Position.X)
-                tex = TextureManager.Load(OsuTexture.hit100);
-            else if (pos < fillSprites[3].Position.X)
-                tex = TextureManager.Load(OsuTexture.hit50);
-
-            fallingSprites.RemoveAll(p => p.Alpha == 0);
-            foreach (pSprite p in fallingSprites)
+            if (!Director.IsTransitioning)
             {
-                p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
-            }
+                float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.Width;
 
+                pTexture tex = null;
+                if (pos < fillSprites[1].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit300);
+                else if (pos < fillSprites[2].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit100);
+                else if (pos < fillSprites[3].Position.X)
+                    tex = TextureManager.Load(OsuTexture.hit50);
 
-            if (tex != null)
-            {
-                pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fill_height - 30), 0.3f, false, Color4.White);
-                f.ScaleScalar = 0.2f;
-                f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
-                f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
-                fallingSprites.Add(f);
-                spriteManager.Add(f);
+                fallingSprites.RemoveAll(p => p.Alpha == 0);
+                foreach (pSprite p in fallingSprites)
+                {
+                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
+                }
+
+                if (tex != null)
+                {
+                    pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fill_height - 30), 0.3f, false, Color4.White);
+                    f.ScaleScalar = 0.2f;
+                    f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
+                    f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
+                    fallingSprites.Add(f);
+                    spriteManager.Add(f);
+                }
             }
         }
     }
@@ -484,7 +486,7 @@ namespace osum.GameModes
                 pDrawable fill = fillSprites[i];
                 pDrawable count = countSprites[i];
 
-                fill.Scale.Y = GameBase.BaseSizeFixedWidth.Height;
+                fill.Scale.Y = GameBase.BaseSize.Height;
 
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X;
@@ -492,7 +494,7 @@ namespace osum.GameModes
                 count.Position.X = lastPos - 3;
             }
 
-            background.DrawWidth = (int)(lastPos * GameBase.BaseToNativeRatio);
+            background.DrawWidth = (int)(lastPos * GameBase.BaseToNativeRatioAligned);
         }
     }
 }
