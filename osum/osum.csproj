@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1190</BundleVersion>
+    <BundleVersion>1195</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -134,7 +134,7 @@
         <Command type="AfterBuild" command="curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" />
       </CustomCommands>
     </CustomCommands>
-    <CodesignProvision>730DC2B2-BCE4-4042-AD79-298669E5A75D</CodesignProvision>
+    <CodesignProvision>8FC5183F-39F6-44C7-96E8-E47D115508DC</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
