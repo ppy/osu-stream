@@ -165,10 +165,9 @@ namespace osum
 
                 if (ActiveTransition.FadeOutDone)
                 {
-                    while (PendingOsuMode != OsuMode.Unknown)
+                    if (PendingOsuMode != OsuMode.Unknown)
                         changeMode(PendingOsuMode);
-
-                    if (ActiveTransition.FadeInDone)
+                    else if (ActiveTransition.FadeInDone)
                     {
                         if (OnTransitionEnded != null)
                         {

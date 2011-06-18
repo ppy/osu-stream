@@ -28,10 +28,18 @@ namespace osum.Support
         FadeState fadeState = FadeState.FadeOut;
         
         float currentValue; //todo: yucky.
+        private float drawDim;
         public override float CurrentValue {
             get {
                 return currentValue;
             }
+        }
+
+        public override bool Draw()
+        {
+            drawDim = SpriteManager.UniversalDim;
+
+            return base.Draw();
         }
 
         public override void Update()
@@ -67,7 +75,7 @@ namespace osum.Support
         {
             get
             {
-                return SpriteManager.UniversalDim == 0 && fadeState == FadeState.FadeIn;
+                return drawDim == 0 && fadeState == FadeState.FadeIn;
             }
         }
 
@@ -75,7 +83,7 @@ namespace osum.Support
         {
             get
             {
-                return (SpriteManager.UniversalDim == 1 && fadeState == FadeState.FadeOut) || fadeState == FadeState.FadeIn;
+                return (drawDim == 1 && fadeState == FadeState.FadeOut) || fadeState == FadeState.FadeIn;
             }
         }
     }
