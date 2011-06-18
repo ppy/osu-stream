@@ -267,20 +267,22 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
+            //Load the main menu initially.
+            Director.ChangeMode(OsuMode.MainMenu, null);
             
             {
-                Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+                //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
                 //Player.Difficulty = GameplayElements.Difficulty.Normal;
 
 
                 //Ranking.RankableScore = new GameplayElements.Scoring.Score()
                 //{
                 //    count100 = 10,
-                //    count50 = 5,
-                //    count300 = 150,
+                //    count50 = 40,
+                //    count300 = 50,
                 //    countGeki = 10,
                 //    countKatu = 2,
-                //    countMiss = 2,
+                //    countMiss = 0,
                 //    date = DateTime.Now,
                 //    spinnerBonus = 1500,
                 //    maxCombo = 198,
@@ -290,8 +292,7 @@ namespace osum
                 //Director.ChangeMode(OsuMode.Play, null);
             }
 
-            //Load the main menu initially.
-            Director.ChangeMode(OsuMode.MainMenu, null);
+            
 
             OnlineHelper.Initialize();
         }
