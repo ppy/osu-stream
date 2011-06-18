@@ -45,6 +45,7 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
+using osum.GameplayElements.Scoring;
 #endif
 
 
@@ -266,10 +267,30 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
+            
+            {
+                Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+                //Player.Difficulty = GameplayElements.Difficulty.Normal;
+
+
+                //Ranking.RankableScore = new GameplayElements.Scoring.Score()
+                //{
+                //    count100 = 10,
+                //    count50 = 5,
+                //    count300 = 150,
+                //    countGeki = 10,
+                //    countKatu = 2,
+                //    countMiss = 2,
+                //    date = DateTime.Now,
+                //    spinnerBonus = 1500,
+                //    maxCombo = 198,
+                //    totalScore = 987900
+                //};
+
+                //Director.ChangeMode(OsuMode.Play, null);
+            }
+
             //Load the main menu initially.
-            //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- v2 (James).osz2");
-            //Player.Beatmap.BeatmapFilename = Player.Beatmap.Package.MapFiles[0];
-            //AudioEngine.Music.Load(Player.Beatmap.GetFileBytes(Player.Beatmap.AudioFilename), false);
             Director.ChangeMode(OsuMode.MainMenu, null);
 
             OnlineHelper.Initialize();
