@@ -280,7 +280,7 @@ namespace osum.GameModes
                 return;
 
             //pass on the event to hitObjectManager for handling.
-            if (hitObjectManager != null && hitObjectManager.HandlePressAt(point))
+            if (hitObjectManager != null && !Player.Autoplay && hitObjectManager.HandlePressAt(point))
                 return;
 
             if (menu != null)
