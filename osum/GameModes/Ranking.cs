@@ -365,9 +365,10 @@ namespace osum.GameModes
         {
             startTime = Clock.Time;
 
-            background = new pSprite(TextureManager.Load(OsuTexture.cleared), FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreLeft,
+            background = new pSprite(TextureManager.Load(OsuTexture.cleared), FieldTypes.StandardSnapCentre, OriginTypes.CentreLeft,
                             ClockTypes.Mode, Vector2.Zero, 1, true, Color4.White);
-            background.DrawLeft += (int)((background.DrawWidth - GameBase.NativeSize.Width) / 2);
+            background.Position.X -= background.DrawWidth * GameBase.SpriteToBaseRatio / 2;
+
             background.Additive = true;
             spriteManager.Add(background);
 
@@ -494,7 +495,8 @@ namespace osum.GameModes
                 count.Position.X = lastPos - 3;
             }
 
-            background.DrawWidth = (int)(lastPos * GameBase.BaseToNativeRatioAligned);
+            float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
+            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSize.Width));
         }
     }
 }
