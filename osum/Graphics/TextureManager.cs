@@ -496,6 +496,7 @@ namespace osum.Graphics.Skins
         rank_d,
         rank_b,
         rank_s,
-        rank_c
+        rank_c,
+        cleared
     }
 }

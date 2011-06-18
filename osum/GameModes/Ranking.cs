@@ -39,6 +39,8 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
+            System.Threading.Thread.Sleep(1500);
+
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
@@ -184,7 +186,7 @@ namespace osum.GameModes
 
             {
                 //Max Combo
-                pText heading = new pText("Max Combo", 28, new Vector2(230 + 10, 70), 0.5f, true, Color4.White)
+                pText heading = new pText("Combo", 28, new Vector2(230 + 10, 70), 0.5f, true, Color4.White)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -193,7 +195,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                pSpriteText count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(230 + 165, 73), 0.9f, true, new Color4(0, 180, 227, 255));
+                pSpriteText count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(230 + 115, 73), 0.9f, true, new Color4(0, 180, 227, 255));
                 count.ScaleScalar = 0.7f;
                 resultSprites.Add(count);
             }
@@ -325,7 +327,7 @@ namespace osum.GameModes
         const float fill_height = 5;
         const int end_bouncing = 600;
         const int colour_change_length = 500;
-        const int time_between_fills = 600;
+        const int time_between_fills = 300;
 
         List<pDrawable> fillSprites = new List<pDrawable>();
         List<pDrawable> countSprites = new List<pDrawable>();
@@ -334,7 +336,7 @@ namespace osum.GameModes
         {
             get
             {
-                return Clock.Time - startTime > 600 * 4;
+                return Clock.Time - startTime > 3000;
             }
         }
 
@@ -342,16 +344,24 @@ namespace osum.GameModes
         {
             get
             {
-                return flash != null && flash.Transformations.Count == 0;
+                return spriteManager.Transformations.Count == 0;
             }
         }
 
         int startTime;
         private pDrawable flash;
 
+        pSprite background;
+
         internal override void Initialize()
         {
             startTime = Clock.Time;
+
+            background = new pSprite(TextureManager.Load(OsuTexture.cleared), FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreLeft,
+                            ClockTypes.Mode, Vector2.Zero, 1, true, Color4.White);
+            background.DrawLeft += (int)((background.DrawWidth - GameBase.NativeSize.Width) / 2);
+            background.Additive = true;
+            spriteManager.Add(background);
 
             pDrawable fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
@@ -408,7 +418,7 @@ namespace osum.GameModes
                 p.Additive = true;
 
                 int offset = Clock.Time + i++ * time_between_fills;
-                p.Transform(new Transformation(TransformationType.Fade, 0, 1, offset - 50, offset + 200));
+                //p.Transform(new Transformation(TransformationType.Fade, 0, 0.5f, offset - 50, offset + 200));
                 //p.Transform(new Transformation(TransformationType.Fade, 1, 0, offset + 100, offset + 800));
             }
 
@@ -424,11 +434,11 @@ namespace osum.GameModes
 
                 int offset = Clock.Time + i++ * time_between_fills;
 
-                p.Transform(new Transformation(Color4.Gray, Color4.Gray, Clock.Time, end_bouncing + offset));
-                p.Transform(new Transformation(Color4.White, p.Colour, end_bouncing + offset, end_bouncing + colour_change_length + offset));
+                p.Transform(new Transformation(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
+                p.Transform(new Transformation(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
                 //force the initial colour to be an ambiguous gray.
 
-                p.Transform(new TransformationBounce(offset, offset + end_bouncing, p.Scale.X, p.Scale.X, 5));
+                p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));
             }
 
             spriteManager.Add(fillSprites);
@@ -439,12 +449,20 @@ namespace osum.GameModes
 
         internal override void FadeIn()
         {
-            spriteManager.Sprites.ForEach(s => { s.AlwaysDraw = false; s.Transformations.Clear(); });
-            
-            flash = pSprite.FullscreenWhitePixel;
+            //spriteManager.Sprites.ForEach(s =>
+            //{
+            //    s.AlwaysDraw = false;
+            //});
+
+            //background.FadeOut(100);
+            //fillSprites.ForEach(s => s.FadeOut(800));
+
+            spriteManager.MoveTo(new Vector2(0, -GameBase.BaseSize.Height), 1000, EasingTypes.InOut);
+
+            /*flash = pSprite.FullscreenWhitePixel;
             flash.Clocking = ClockTypes.Game;
             flash.FadeOutFromOne(800);
-            spriteManager.Add(flash);
+            spriteManager.Add(flash);*/
             base.FadeIn();
         }
 
@@ -467,6 +485,8 @@ namespace osum.GameModes
 
                 count.Position.X = lastPos - 3;
             }
+
+            background.DrawWidth = (int)(lastPos * GameBase.BaseToNativeRatio);
         }
     }
 }
