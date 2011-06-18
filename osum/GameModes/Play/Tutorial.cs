@@ -38,7 +38,7 @@ namespace osum.GameModes.Play
 
             touchToContinueText = new pText("Tap to continue!", 30, new Vector2(0, 20), 1, true, Color4.YellowGreen)
             {
-                TextBounds = new Vector2(GameBase.BaseSize.Width * 0.8f, 0),
+                TextBounds = new Vector2(GameBase.BaseSizeFixedWidth.Width * 0.8f, 0),
                 Field = FieldTypes.StandardSnapBottomCentre,
                 TextAlignment = TextAlignment.Centre,
                 TextShadow = true,

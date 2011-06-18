@@ -39,8 +39,6 @@ namespace osum.GameModes
 
         internal override void Initialize()
         {
-            System.Threading.Thread.Sleep(1500);
-
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
@@ -114,7 +112,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                pSpriteText count = new pSpriteText(RankableScore.totalScore.ToString("#,0"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(80, -155), 0.9f, true, new Color4(255, 166, 0, 255));
+                pSpriteText count = new pSpriteText(RankableScore.totalScore.ToString("#,0",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(80, -155), 0.9f, true, new Color4(255, 166, 0, 255));
                 resultSprites.Add(count);
 
                 heading = new pText("Spin", 28, new Vector2(280, -160), 0.5f, true, Color4.White)
@@ -126,7 +124,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText(RankableScore.spinnerBonus.ToString("#,0"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(350, -155), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText(RankableScore.spinnerBonus.ToString("#,0",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(350, -155), 0.9f, true, new Color4(255, 166, 0, 255));
                 resultSprites.Add(count);
             }
 
@@ -137,7 +135,7 @@ namespace osum.GameModes
                 pSprite hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit300), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                pSpriteText count = new pSpriteText(RankableScore.count300.ToString("#,0x"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                pSpriteText count = new pSpriteText(RankableScore.count300.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
                 resultSprites.Add(count);
 
                 pos.Y += 64;
@@ -145,7 +143,7 @@ namespace osum.GameModes
                 hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit100), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                count = new pSpriteText(RankableScore.count100.ToString("#,0x"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                count = new pSpriteText(RankableScore.count100.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
                 resultSprites.Add(count);
 
                 pos.Y += 64;
@@ -153,7 +151,7 @@ namespace osum.GameModes
                 hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit50), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                count = new pSpriteText(RankableScore.count50.ToString("#,0x"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                count = new pSpriteText(RankableScore.count50.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
                 resultSprites.Add(count);
             }
 
@@ -164,7 +162,7 @@ namespace osum.GameModes
                 pSprite hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit0), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                pSpriteText count = new pSpriteText(RankableScore.countMiss.ToString("#,0x"), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                pSpriteText count = new pSpriteText(RankableScore.countMiss.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
                 resultSprites.Add(count);
             }
 
@@ -179,7 +177,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                pSpriteText count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00") + "%", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(120, 73), 0.9f, true, new Color4(0, 180, 227, 255));
+                pSpriteText count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00",GameBase.nfi) + "%", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(120, 73), 0.9f, true, new Color4(0, 180, 227, 255));
                 count.ScaleScalar = 0.7f;
                 resultSprites.Add(count);
             }
@@ -195,7 +193,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                pSpriteText count = new pSpriteText(RankableScore.maxCombo.ToString("#,0") + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(230 + 115, 73), 0.9f, true, new Color4(0, 180, 227, 255));
+                pSpriteText count = new pSpriteText(RankableScore.maxCombo.ToString("#,0",GameBase.nfi) + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(230 + 115, 73), 0.9f, true, new Color4(0, 180, 227, 255));
                 count.ScaleScalar = 0.7f;
                 resultSprites.Add(count);
             }
@@ -219,6 +217,18 @@ namespace osum.GameModes
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
             OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename + "-" + Player.Difficulty.ToString()), RankableScore.totalScore);
+
+            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+            if (RankableScore.totalScore > bmi.HighScore)
+            {
+                bmi.HighScore = RankableScore.totalScore;
+                bmi.Ranking = RankableScore.Ranking;
+
+                GameBase.Scheduler.Add(delegate
+                {
+                    GameBase.Notify("New personal best!");
+                },500);
+            }
         }
 
         private void initializeTransition()
@@ -276,10 +286,6 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
-            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            if (RankableScore.totalScore > bmi.HighScore)
-                bmi.HighScore = RankableScore.totalScore;
-
             AudioEngine.Music.Unload();
             base.Dispose();
         }

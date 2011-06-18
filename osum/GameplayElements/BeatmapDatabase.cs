@@ -7,12 +7,14 @@ using osu_common.Helpers;
 using System.IO;
 using osu_common.Bancho;
 using osum.GameplayElements.Beatmaps;
+using osum.GameModes;
+using osum.GameplayElements.Scoring;
 
 namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 1;
+        const int DATABASE_VERSION = 2;
         const string FILENAME = "osu!.db";
 
 #if iOS
@@ -22,7 +24,7 @@ namespace osum.GameplayElements
 #endif
 
         private static bool initialized;
-        private static int Version = -1;
+        internal static int Version = -1;
 
         public static List<BeatmapInfo> BeatmapInfo = new List<BeatmapInfo>();
 
@@ -36,7 +38,8 @@ namespace osum.GameplayElements
             if (!File.Exists(fullPath))
                 return;
 
-            try {
+            try
+            {
                 using (FileStream fs = File.OpenRead(fullPath))
                 using (SerializationReader reader = new SerializationReader(fs))
                 {
@@ -44,7 +47,7 @@ namespace osum.GameplayElements
                     BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                 }
             }
-            catch {}
+            catch { }
 
             Version = DATABASE_VERSION;
         }
@@ -84,6 +87,7 @@ namespace osum.GameplayElements
         public string filename;
         public Difficulty difficulty;
         public int HighScore;
+        public Rank Ranking;
         public int Playcount;
 
         #region bSerializable Members
@@ -94,6 +98,8 @@ namespace osum.GameplayElements
             difficulty = (Difficulty)sr.ReadByte();
             HighScore = sr.ReadInt32();
             Playcount = sr.ReadInt32();
+            if (BeatmapDatabase.Version > 1)
+                Ranking = (Rank)sr.ReadByte();
         }
 
         public void WriteToStream(SerializationWriter sw)
@@ -102,6 +108,7 @@ namespace osum.GameplayElements
             sw.Write((byte)difficulty);
             sw.Write(HighScore);
             sw.Write(Playcount);
+            sw.Write((byte)Ranking);
         }
 
         #endregion
