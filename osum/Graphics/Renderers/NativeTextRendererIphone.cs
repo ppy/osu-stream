@@ -36,7 +36,8 @@ namespace osum.Graphics.Renderers
             else if (restrictBounds.Y == 0)
             {
                 actualSize = nsstr.StringSize(font, new SizeF(restrictBounds.X, GameBase.NativeSize.Height), UILineBreakMode.WordWrap);
-                restrictBounds = new Vector2(actualSize.Width, actualSize.Height);
+                restrictBounds = new Vector2(actualSize.Width + 5, actualSize.Height);
+                //note: 5px allowance is givn because when wordwarpping it seems to get cut off otherwise.
             }
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
@@ -69,7 +70,7 @@ namespace osum.Graphics.Renderers
                         break;
                 }
 
-                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap,  align);
+                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap, align);
 
                 UIGraphics.PopContext();
 
