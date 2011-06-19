@@ -53,6 +53,11 @@ namespace osum
                 case 'r':
                     Director.ChangeMode(Director.CurrentOsuMode);
                     break;
+                case 'p':
+                    Player p = Director.CurrentMode as Player;
+                    if (p != null)
+                        p.Pause();
+                    break;
                 case 'x':
                     TextureManager.ReloadAll(true);
                     break;
@@ -63,6 +68,9 @@ namespace osum
                         GameBase.Notify("Unlocked expert");
                         bmi.HighScore = 1;
                     }
+                    break;
+                case 'j':
+                    Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
                     break;
             }
         }
