@@ -473,10 +473,6 @@ namespace osum.GameplayElements
 
             ScoreChange hitAmount = change & ScoreChange.HitValuesOnly;
 
-            if (change == ScoreChange.Miss)
-                //this is a bit ugly. the above HitValuesOnly bitwise and will not work with negative values, so for now let's manually handle misses.
-                hitAmount = ScoreChange.Miss;
-
             if (hitAmount != ScoreChange.Ignore)
             {
                 //handle combo additions here

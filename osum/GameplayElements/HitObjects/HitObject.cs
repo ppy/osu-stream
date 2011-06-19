@@ -40,41 +40,28 @@ namespace osum.GameplayElements
     [Flags]
     internal enum ScoreChange
     {
-        MissHpOnlyNoCombo = -524288,
-        MissMinor = -262144,
-        Miss = -131072,
         Ignore = 0,
-        MuAddition = 1,
-        KatuAddition = 2,
-        GekiAddition = 4,
-        SliderTick = 8,
-        FruitTickTiny = 16,
-        FruitTickTinyMiss = 32,
-        SliderRepeat = 64,
-        SliderEnd = 128,
-        Hit50 = 256,
-        Hit100 = 512,
-        Hit300 = 1024,
+        MissMinor = 1 << 0,
+        Miss = 1 << 1,
+        MuAddition = 1 << 3,
+        KatuAddition = 1 << 4,
+        GekiAddition = 1 << 5,
+        SliderTick = 1 << 6,
+        SliderRepeat = 1 << 7,
+        SliderEnd = 1 << 8,
+        Hit50 = 1 << 9,
+        Hit100 = 1 << 10,
+        Hit300 = 1 << 11,
+        SpinnerSpinPoints = 1 << 12,
+        SpinnerBonus = 1 << 13,
         Hit50m = Hit50 | MuAddition,
         Hit100m = Hit100 | MuAddition,
         Hit300m = Hit300 | MuAddition,
         Hit100k = Hit100 | KatuAddition,
         Hit300k = Hit300 | KatuAddition,
         Hit300g = Hit300 | GekiAddition,
-        FruitTick = 2048,
-        SpinnerSpin = 4096,
-        SpinnerSpinPoints = 8192,
-        SpinnerBonus = 16384,
-        TaikoDrumRoll = 32768,
-        TaikoLargeHitBoth = 65536,
-        TaikoDenDenHit = 1048576,
-        TaikoDenDenComplete = 2097152,
-        TaikoLargeHitFirst = 4194304,
-        TaikoLargeHitSecond = 8388608,
-        Shake = 16777216,
-        HitValuesOnly = Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
+        HitValuesOnly = Miss | Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
         ComboAddition = MuAddition | KatuAddition | GekiAddition,
-        NonScoreModifiers = TaikoLargeHitBoth | TaikoLargeHitFirst | TaikoLargeHitSecond
     }
 
     public enum Difficulty
@@ -299,9 +286,8 @@ namespace osum.GameplayElements
                 case ScoreChange.Hit50:
                     texture = OsuTexture.hit50;
                     break;
-                default:
-                    if (action == ScoreChange.Miss)
-                        texture = OsuTexture.hit0;
+                case ScoreChange.Miss:
+                    texture = OsuTexture.hit0;
                     break;
             }
 
@@ -382,7 +368,7 @@ namespace osum.GameplayElements
             set
             {
                 Vector2 change = value - position;
-                
+
                 Sprites.ForEach(s => { s.Position += change; });
                 position = value;
             }

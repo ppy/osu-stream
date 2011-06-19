@@ -119,7 +119,7 @@ namespace osum.GameplayElements
 
             int now = SpriteHitCircle1.ClockingNow;
 
-            if (action > 0)
+            if (action > ScoreChange.Miss)
             {
                 //Fade out the actual hit circle
                 Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
