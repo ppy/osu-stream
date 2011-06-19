@@ -272,7 +272,7 @@ namespace osum
 
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
-            
+
             {
                 //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
                 //Player.Difficulty = GameplayElements.Difficulty.Normal;
@@ -280,22 +280,23 @@ namespace osum
 
                 //Ranking.RankableScore = new GameplayElements.Scoring.Score()
                 //{
-                //    count100 = 10,
-                //    count50 = 40,
-                //    count300 = 50,
-                //    countGeki = 10,
-                //    countKatu = 2,
+                //    count100 = 55,
+                //    count50 = 128,
+                //    count300 = 387,
+                //    countGeki = 55,
+                //    countKatu = 0,
                 //    countMiss = 0,
                 //    date = DateTime.Now,
-                //    spinnerBonus = 1500,
+                //    spinnerBonusScore = 1500,
+                //    comboBonusScore = 578420,
+                //    accuracyBonusScore = 200000,
+                //    hitScore = 800000-578420,
                 //    maxCombo = 198,
-                //    totalScore = 987900
+                //    totalScore = 1001500
                 //};
 
-                //Director.ChangeMode(OsuMode.Play, null);
+                //Director.ChangeMode(OsuMode.Ranking, null);
             }
-
-            
 
             OnlineHelper.Initialize();
         }
@@ -358,7 +359,7 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
-#if DEBUG
+#if FULLER_DEBUG
             DebugOverlay.AddLine("GC: 0:" + GC.CollectionCount(0) + " 1:" + GC.CollectionCount(1) + " 2:" + GC.CollectionCount(2));
             DebugOverlay.AddLine("Window Size: " + NativeSize.Width + "x" + NativeSize.Height + " Sprite Resolution: " + SpriteResolution);
 #endif

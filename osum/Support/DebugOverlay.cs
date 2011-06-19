@@ -36,13 +36,13 @@ namespace osum.Support
             if (fpsDisplay == null)
             {
 #if FULL_DEBUG
-                fpsDisplay = new pText("", 10, new Vector2(horizontal_offset, 40), new Vector2(512,256), 0, true, Color4.White, false);
+                fpsDisplay = new pText("", 10, new Vector2(horizontal_offset, 40), new Vector2(512,256), 0, true, Color4.White, true);
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
 #if iOS
                 fpsDisplay.ScaleScalar = 0.6f;
-#else
+#elif !FULL_DEBUG
                 fpsDisplay.ScaleScalar = 0.3f;
 #endif
                 GameBase.MainSpriteManager.Add(fpsDisplay);
@@ -51,6 +51,7 @@ namespace osum.Support
 
             weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + GameBase.ElapsedMilliseconds * 0.02;
 
+#if iOS
             if (GameBase.ElapsedMilliseconds > 25)
             {
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 5);
@@ -59,19 +60,21 @@ namespace osum.Support
 
             int newGcCount = GC.CollectionCount(0) + GC.CollectionCount(1);
 
+
             if (gcCount < newGcCount)
             {
                 gcCount = newGcCount;
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 40, fpsDisplay.Position.Y);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
             }
+#endif
 
             double fps = (1000 / weightedAverageFrameTime);
 
             lastUpdateTime += GameBase.ElapsedMilliseconds;
 
 #if FULL_DEBUG
-            if (lastUpdateTime > 500)
+            if (lastUpdateTime > 50)
 #else
             if (lastUpdateTime > 16)
 #endif
@@ -91,10 +94,11 @@ namespace osum.Support
                 fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
 #if FULL_DEBUG
                 int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
-                fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} AuFast:{2:#,0}ms AuDrv:{5:#,0}ms ({6}) {3}",
+                fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} Audio:{2:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
-                                                Clock.Time, Clock.AudioTime, Player.Autoplay ? "AP" : "", Clock.ModeTime,
+                                                Clock.Time, Clock.AudioTime, Player.Autoplay ? "-AUTOPLAY-" : "", Clock.ModeTime,
                                                 accurateAudio, Clock.AudioTime - accurateAudio);
+                fpsDisplay.Position.Y = Director.CurrentOsuMode == OsuMode.Play ? 40 : 0;
 #else
                 fpsDisplay.ShowInt((int)Math.Round(Math.Min(60, fps), 0));
                 fpsDisplay.Alpha = fps < 59.9f ? 1 : 0.3f;

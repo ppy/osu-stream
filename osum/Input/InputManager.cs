@@ -65,7 +65,7 @@ namespace osum
 
         internal static void Update()
         {
-#if DEBUG
+#if FULLER_DEBUG
             DebugOverlay.AddLine("Cursor Position: " + MainPointerPosition + " in window: " + GameBase.BaseSizeFixedWidth);
 #endif
         }
