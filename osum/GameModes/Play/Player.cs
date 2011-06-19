@@ -18,6 +18,7 @@ using osum.GameModes.Play.Components;
 using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using osum.Graphics;
+using osum.Support;
 
 namespace osum.GameModes
 {
@@ -312,47 +313,56 @@ namespace osum.GameModes
                 currentScore.hitOffsetCount++;
             }
 
+            bool comboMultiplier = true;
+
+            int scoreChange = 0;
+
             //handle the score addition
             switch (change & ~ScoreChange.ComboAddition)
             {
                 case ScoreChange.SpinnerBonus:
-                    currentScore.totalScore += (int)hitObject.HpMultiplier;
-                    currentScore.spinnerBonus += (int)hitObject.HpMultiplier;
+                    scoreChange = (int)hitObject.HpMultiplier;
+                    comboMultiplier = false;
+                    currentScore.spinnerBonusScore += (int)hitObject.HpMultiplier;
                     healthChange = hitObject.HpMultiplier * 0.04f;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
-                    currentScore.totalScore += 10;
+                    scoreChange = 10;
+                    comboMultiplier = false;
                     healthChange = 0.4f * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderRepeat:
-                    currentScore.totalScore += 30;
+                    scoreChange = 30;
+                    comboMultiplier = false;
                     increaseCombo = true;
                     healthChange = 2 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderEnd:
-                    currentScore.totalScore += 30;
+                    scoreChange = 30;
+                    comboMultiplier = false;
                     increaseCombo = true;
                     healthChange = 3 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderTick:
-                    currentScore.totalScore += 10;
+                    scoreChange = 10;
+                    comboMultiplier = false;
                     increaseCombo = true;
                     healthChange = 1 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Hit50:
-                    currentScore.totalScore += 50;
+                    scoreChange = 50;
                     currentScore.count50++;
                     increaseCombo = true;
                     healthChange = -8;
                     break;
                 case ScoreChange.Hit100:
-                    currentScore.totalScore += 100;
+                    scoreChange = 100;
                     currentScore.count100++;
                     increaseCombo = true;
                     healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
-                    currentScore.totalScore += 300;
+                    scoreChange = 300;
                     currentScore.count300++;
                     increaseCombo = true;
                     healthChange = 5;
@@ -368,10 +378,23 @@ namespace osum.GameModes
                     break;
             }
 
+            if (scoreChange > 0)
+            {
+                currentScore.totalScore += scoreChange;
+                currentScore.hitScore += scoreChange;
+            }
+
             if (increaseCombo && comboCounter != null)
             {
                 comboCounter.IncreaseCombo();
                 currentScore.maxCombo = Math.Max(comboCounter.currentCombo, currentScore.maxCombo);
+
+                if (comboMultiplier)
+                {
+                    int comboAmount = (int)(scoreChange / 10 * Math.Min(comboCounter.currentCombo, 500));
+                    currentScore.totalScore += comboAmount;
+                    currentScore.comboBonusScore += comboAmount;
+                }
             }
 
             if (healthBar != null)

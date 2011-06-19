@@ -26,9 +26,12 @@ namespace osum.GameplayElements.Scoring
         internal List<bool> scoringSectionResults = new List<bool>();
         internal bool submitting;
         internal int totalScore;
-        internal int spinnerBonus;
+        internal int spinnerBonusScore;
         public int hitOffsetMilliseconds;
         public int hitOffsetCount;
+        public int comboBonusScore;
+        public int accuracyBonusScore;
+        public int hitScore;
         public Rank Ranking
         {
             get
@@ -62,7 +65,7 @@ namespace osum.GameplayElements.Scoring
 
         internal virtual float accuracy
         {
-            get { return totalHits > 0 ? (float)(count50 * 50 + count100 * 100 + count300 * 300) / (totalHits * 300) : 0; }
+            get { return totalHits > 0 ? (float)(count50 * 1 + count100 * 2 + count300 * 4) / (totalHits * 4) : 0; }
         }
 
         internal virtual int totalHits
