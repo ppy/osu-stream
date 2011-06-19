@@ -130,9 +130,10 @@ namespace osum.GameplayElements
             ApproachCircle.Field = FieldTypes.StandardSnapBottomCentre;
             Sprites.Add(ApproachCircle);
 
-            spriteBonus = new pSpriteText("", "score", 3, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
+            spriteBonus = new pSpriteText("", "score", -5, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
                                           spinnerCentre - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
+            spriteBonus.Additive = true;
             Sprites.Add(spriteBonus);
 
             foreach (pDrawable p in Sprites)
@@ -299,24 +300,23 @@ namespace osum.GameplayElements
 
                     int now = spriteBonus.ClockingNow;
 
-                    spriteBonus.Transformations.Clear();
+                    spriteBonus.ShowInt((int)BonusScore);
 
                     if (currentRotationCount - lastSamplePlayedRotationCount > sensitivity_modifier)
                     {
                         hpMultiplier = 50;
                         AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet, Volume);
-                        spriteBonus.Transform(new Transformation(TransformationType.Scale, 2F, 1.28f, now, now + 800, EasingTypes.In));
+
+                        spriteBonus.Transformations.Clear();
+                        spriteBonus.Transform(new Transformation(TransformationType.Scale, 2F, 1.28f, now, now + 600, EasingTypes.In));
+                        spriteBonus.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 600, EasingTypes.Out));
+                        //Ensure we don't recycle this too early.
+                        spriteBonus.Transform(new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
+
                         lastSamplePlayedRotationCount = currentRotationCount;
                     }
 
                     BonusScore += hpMultiplier;
-
-                    spriteBonus.ShowInt((int)BonusScore);
-
-                    spriteBonus.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 800, EasingTypes.In));
-
-                    //Ensure we don't recycle this too early.
-                    spriteBonus.Transform(new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
                 }
                 else if (currentRotationCount - lastScoredRotationCount > sensitivity_modifier / 4)
                 {
@@ -356,7 +356,7 @@ namespace osum.GameplayElements
             Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
 
             SetScoreMeter((int)(currentRotationCount / rotationRequirement * 100));
-            
+
             //Hide the "SPIN!" sprite once we have started spinning.
             if (currentRotationCount > 0 && !StartedSpinning)
             {
