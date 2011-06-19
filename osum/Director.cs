@@ -42,6 +42,15 @@ namespace osum
         /// </summary>
         public static event VoidDelegate OnTransitionEnded;
 
+        private static void TriggerOnTransitionEnded()
+        {
+            if (OnTransitionEnded != null)
+            {
+                OnTransitionEnded();
+                OnTransitionEnded = null;
+            }
+        }
+
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
         /// </summary>
@@ -57,6 +66,10 @@ namespace osum
             if (transition == null)
             {
                 changeMode(mode);
+
+                //force a transition-end in this case.
+                TriggerOnTransitionEnded();
+
                 return true;
             }
 
@@ -74,7 +87,7 @@ namespace osum
         {
             if (PendingMode == null)
                 loadNewMode(newMode);
-            
+
             if (CurrentMode != null)
                 CurrentMode.Dispose();
 
@@ -84,9 +97,9 @@ namespace osum
 
             CurrentMode = PendingMode;
             PendingMode = null;
-            
+
             Clock.ModeTimeReset();
-            
+
             CurrentMode.Initialize();
 
             if (PendingOsuMode != OsuMode.Unknown) //can be unknown on first startup
@@ -169,11 +182,7 @@ namespace osum
                         changeMode(PendingOsuMode);
                     else if (ActiveTransition.FadeInDone)
                     {
-                        if (OnTransitionEnded != null)
-                        {
-                            OnTransitionEnded();
-                            OnTransitionEnded = null;
-                        }
+                        TriggerOnTransitionEnded();
 
                         ActiveTransition.Dispose();
                         ActiveTransition = null;
