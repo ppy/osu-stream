@@ -36,6 +36,11 @@ namespace osum.GameModes
 
         const float fill_height = 5;
         float count_height = 80;
+        private pSpriteText countTotalScore;
+        private pSpriteText countScoreHit;
+        private pSpriteText countScoreCombo;
+        private pSpriteText countScoreAccuracy;
+        private pSpriteText countScoreSpin;
 
         internal override void Initialize()
         {
@@ -96,106 +101,174 @@ namespace osum.GameModes
                     break;
             }
 
-            rankGraphic = new pSprite(rankLetter, FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(3, 120), 0.3f, true, Color4.White) { ScaleScalar = 0.8f };
+            rankGraphic = new pSprite(rankLetter, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(15, 15), 0.3f, true, Color4.White) { Alpha = 0 };
+
             spriteManager.Add(rankGraphic);
 
             initializeTransition();
 
-            //Total Score
+            //Scoring
             {
-                pText heading = new pText("Score", 28, new Vector2(10, -160), 0.5f, true, Color4.White)
+                float v_offset = -165;
+
+                pText heading = new pText("Score", 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
-                    Additive = true,
-                    Bold = true
+                    Bold = true,
                 };
                 resultSprites.Add(heading);
 
-                pSpriteText count = new pSpriteText(RankableScore.totalScore.ToString("#,0",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(80, -155), 0.9f, true, new Color4(255, 166, 0, 255));
+                v_offset += 30;
+
+                pSpriteText count = new pSpriteText("000,000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count.TextConstantSpacing = true;
+                countTotalScore = count;
+
                 resultSprites.Add(count);
 
-                heading = new pText("Spin", 28, new Vector2(280, -160), 0.5f, true, Color4.White)
+                v_offset += 40;
+
+                //Spin Bonus
+                heading = new pText("Hit", 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
-                    Additive = true,
                     Bold = true
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText(RankableScore.spinnerBonus.ToString("#,0",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(350, -155), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count.TextConstantSpacing = true;
+                count.ZeroAlpha = 0.5f;
+                count.ScaleScalar = 0.7f;
+                resultSprites.Add(count);
+
+                countScoreHit = count;
+
+                v_offset += 25;
+
+
+                heading = new pText("Combo", 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                {
+                    Origin = OriginTypes.TopLeft,
+                    Field = FieldTypes.StandardSnapCentreLeft,
+                    Bold = true
+                };
+                resultSprites.Add(heading);
+
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count.TextConstantSpacing = true;
+                count.ZeroAlpha = 0.5f;
+                count.ScaleScalar = 0.7f;
+                resultSprites.Add(count);
+
+                countScoreCombo = count;
+
+                v_offset += 25;
+
+                heading = new pText("Accuracy", 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                {
+                    Origin = OriginTypes.TopLeft,
+                    Field = FieldTypes.StandardSnapCentreLeft,
+                    Bold = true
+                };
+                resultSprites.Add(heading);
+
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count.TextConstantSpacing = true;
+                count.ZeroAlpha = 0.5f;
+                count.ScaleScalar = 0.7f;
+                resultSprites.Add(count);
+
+                countScoreAccuracy = count;
+
+                v_offset += 25;
+
+                heading = new pText("Spin", 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                {
+                    Origin = OriginTypes.TopLeft,
+                    Field = FieldTypes.StandardSnapCentreLeft,
+                    Bold = true
+                };
+                resultSprites.Add(heading);
+
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count.TextConstantSpacing = true;
+                count.ZeroAlpha = 0.5f;
+                count.ScaleScalar = 0.7f;
+                resultSprites.Add(count);
+
+                countScoreSpin = count;
+
+                v_offset += 30;
+
+                heading = new pText("Accuracy", 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
+                {
+                    Origin = OriginTypes.TopLeft,
+                    Field = FieldTypes.StandardSnapCentreLeft,
+                    Bold = true
+                };
+                resultSprites.Add(heading);
+
+                v_offset += 34;
+
+                count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00", GameBase.nfi) + "%", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(0, 180, 227, 255));
+                count.ScaleScalar = 0.7f;
+                resultSprites.Add(count);
+
+                v_offset += 20;
+
+                heading = new pText("Max Combo", 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
+                {
+                    Origin = OriginTypes.TopLeft,
+                    Field = FieldTypes.StandardSnapCentreLeft,
+                    Bold = true
+                };
+                resultSprites.Add(heading);
+
+                v_offset += 34;
+
+                count = new pSpriteText(RankableScore.maxCombo.ToString("#,0", GameBase.nfi) + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(0, 180, 227, 255));
+                count.ScaleScalar = 0.7f;
                 resultSprites.Add(count);
             }
 
             {
-                Vector2 pos = new Vector2(60, -80);
+                Vector2 pos = new Vector2(60, -130);
                 Vector2 textOffset = new Vector2(150, 0);
+
+                float spacing = 65;
 
                 pSprite hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit300), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                pSpriteText count = new pSpriteText(RankableScore.count300.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
-                resultSprites.Add(count);
+                count300 = new pSpriteText("0x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                resultSprites.Add(count300);
 
-                pos.Y += 64;
+                pos.Y += spacing;
 
                 hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit100), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                count = new pSpriteText(RankableScore.count100.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
-                resultSprites.Add(count);
+                count100 = new pSpriteText("0x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                resultSprites.Add(count100);
 
-                pos.Y += 64;
+                pos.Y += spacing;
 
                 hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit50), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                count = new pSpriteText(RankableScore.count50.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
-                resultSprites.Add(count);
-            }
+                count50 = new pSpriteText("0x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                resultSprites.Add(count50);
 
-            {
-                Vector2 pos = new Vector2(280, -80);
-                Vector2 textOffset = new Vector2(150, 0);
+                pos.Y += spacing;
 
-                pSprite hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit0), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
+                hitExplosion = new pSprite(TextureManager.Load(OsuTexture.hit0), pos) { Field = FieldTypes.StandardSnapCentreLeft, Origin = OriginTypes.Centre, ScaleScalar = 0.5f, DrawDepth = 0.9f };
                 resultSprites.Add(hitExplosion);
 
-                pSpriteText count = new pSpriteText(RankableScore.countMiss.ToString("#,0x",GameBase.nfi), "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
-                resultSprites.Add(count);
-            }
-
-            {
-                //Accuracy
-                pText heading = new pText("Accuracy", 28, new Vector2(10, 70), 0.5f, true, Color4.White)
-                {
-                    Origin = OriginTypes.TopLeft,
-                    Field = FieldTypes.StandardSnapCentreLeft,
-                    Additive = true,
-                    Bold = true
-                };
-                resultSprites.Add(heading);
-
-                pSpriteText count = new pSpriteText((RankableScore.accuracy * 100).ToString("00.00",GameBase.nfi) + "%", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(120, 73), 0.9f, true, new Color4(0, 180, 227, 255));
-                count.ScaleScalar = 0.7f;
-                resultSprites.Add(count);
-            }
-
-            {
-                //Max Combo
-                pText heading = new pText("Combo", 28, new Vector2(230 + 10, 70), 0.5f, true, Color4.White)
-                {
-                    Origin = OriginTypes.TopLeft,
-                    Field = FieldTypes.StandardSnapCentreLeft,
-                    Additive = true,
-                    Bold = true
-                };
-                resultSprites.Add(heading);
-
-                pSpriteText count = new pSpriteText(RankableScore.maxCombo.ToString("#,0",GameBase.nfi) + "x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(230 + 115, 73), 0.9f, true, new Color4(0, 180, 227, 255));
-                count.ScaleScalar = 0.7f;
-                resultSprites.Add(count);
+                count0 = new pSpriteText("0x", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.CentreRight, ClockTypes.Mode, pos + textOffset, 0.9f, true, Color4.White) { SpacingOverlap = 3, TextConstantSpacing = true };
+                resultSprites.Add(count0);
             }
 
             //Average Timing
@@ -221,15 +294,100 @@ namespace osum.GameModes
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
             if (RankableScore.totalScore > bmi.HighScore)
             {
+                isPersonalBest = true;
                 bmi.HighScore = RankableScore.totalScore;
                 bmi.Ranking = RankableScore.Ranking;
+            }
 
+            Director.OnTransitionEnded += Director_OnTransitionEnded;
+        }
+
+        void Director_OnTransitionEnded()
+        {
+            //hit -> combo -> accuracy -> spin
+
+            int time = 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                countScoreHit.ShowInt(RankableScore.hitScore, 6, false);
+                pDrawable flash = countScoreHit.AdditiveFlash(500, 1);
+
+                addedScore += RankableScore.hitScore;
+                countTotalScore.ShowInt(addedScore, 6, true);
+                countTotalScore.FlashColour(Color4.White, 1000);
+            }, time);
+
+            time += 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6, false);
+                pDrawable flash = countScoreCombo.AdditiveFlash(500, 1);
+
+                addedScore += RankableScore.comboBonusScore;
+                countTotalScore.ShowInt(addedScore, 6, true);
+                countTotalScore.FlashColour(Color4.White, 1000);
+            }, time);
+
+            time += 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                countScoreAccuracy.ShowInt(RankableScore.accuracyBonusScore, 6, false);
+                pDrawable flash = countScoreAccuracy.AdditiveFlash(500, 1);
+
+                addedScore += RankableScore.accuracyBonusScore;
+                countTotalScore.ShowInt(addedScore, 6, true);
+                countTotalScore.FlashColour(Color4.White, 1000);
+            }, time);
+
+            time += 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                countScoreSpin.ShowInt(RankableScore.spinnerBonusScore, 6, false);
+                pDrawable flash = countScoreSpin.AdditiveFlash(500, 1);
+
+                addedScore += RankableScore.spinnerBonusScore;
+                countTotalScore.ShowInt(addedScore, 6, true);
+                countTotalScore.FlashColour(Color4.White, 1000);
+            }, time);
+
+            time += 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                rankGraphic.Alpha = 1;
+                rankGraphic.AdditiveFlash(1500, 1);
+            }, time);
+
+            time += 1000;
+
+            if (isPersonalBest)
+            {
                 GameBase.Scheduler.Add(delegate
                 {
-                    GameBase.Notify("New personal best!");
-                },1500);
+                    pSprite personalBest = new pSprite(TextureManager.Load(OsuTexture.personalbest), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(80, 250),
+                        1, true, Color4.White);
+                    personalBest.FadeInFromZero(500);
+                    personalBest.ScaleScalar = 1.6f;
+                    personalBest.RotateTo(0.2f, 500);
+                    personalBest.ScaleTo(1, 500, EasingTypes.Out);
+
+                    GameBase.Scheduler.Add(delegate { personalBest.AdditiveFlash(1000, 1).ScaleTo(1.05f, 1000); }, 500);
+
+                    spriteManager.Add(personalBest);
+                }, time);
             }
         }
+
+        int addedScore;
+        private pSpriteText count300;
+        private pSpriteText count100;
+        private pSpriteText count50;
+        private pSpriteText count0;
+        private bool isPersonalBest;
 
         private void initializeTransition()
         {
@@ -326,6 +484,16 @@ namespace osum.GameModes
                     spriteManager.Add(f);
                 }
             }
+
+            int increaseAmount = (int)(GameBase.ElapsedMilliseconds / 8);
+            if (count300.LastInt < RankableScore.count300)
+                count300.ShowInt(Math.Min(RankableScore.count300, count300.LastInt + increaseAmount), 0, false, 'x');
+            if (count100.LastInt < RankableScore.count100)
+                count100.ShowInt(Math.Min(RankableScore.count100, count100.LastInt + increaseAmount), 0, false, 'x');
+            if (count50.LastInt < RankableScore.count50)
+                count50.ShowInt(Math.Min(RankableScore.count50, count50.LastInt + increaseAmount), 0, false, 'x');
+            if (count0.LastInt < RankableScore.countMiss)
+                count0.ShowInt(Math.Min(RankableScore.countMiss, count0.LastInt + increaseAmount), 0, false, 'x');
         }
     }
 

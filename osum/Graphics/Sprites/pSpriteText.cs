@@ -129,6 +129,8 @@ namespace osum.Graphics.Sprites
                 osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
 
                 TextureManager.Load(osuTextureFont);
+
+                ExactCoordinates = true;
                 //preload
             }
             catch
@@ -177,9 +179,20 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        public override pDrawable Clone()
+        {
+            pDrawable cl = base.Clone();
+            pSpriteText st = cl as pSpriteText;
+            Console.Write("cloning with: ");
+            foreach (char c in textArray)
+                Console.Write(c);
+            Console.WriteLine();
+            return cl;
+        }
 
 
         Dictionary<char, pTexture> textureCache = new Dictionary<char, pTexture>();
+        public float ZeroAlpha = 1;
 
         pTexture textureFor(char c)
         {
@@ -267,7 +280,7 @@ namespace osum.Graphics.Sprites
             if (TextConstantSpacing)
             {
                 //float last = 0;
-                int charWidth = textureFor('5').Width;
+                int charWidth = textureFor('6').Width;
 
                 currentX = 0;
 
@@ -308,12 +321,28 @@ namespace osum.Graphics.Sprites
                     if (textChanged) MeasureText();
 
                     int i = 0;
+
+                    Vector2 pos = FieldPosition;
+                    Vector2 scale = FieldScale;
+                    Color4 col = AlphaAppliedColour;
+                    Color4 colZero = new Color4(col.R * ZeroAlpha, col.G * ZeroAlpha, col.B * ZeroAlpha, col.A * ZeroAlpha);
+
+                    bool isPaddedZero = true;
+
                     foreach (pTexture tex in renderTextures)
                     {
                         // note: no srcRect calculation
                         if (tex.TextureGl != null)
-                            tex.TextureGl.Draw(FieldPosition + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, AlphaAppliedColour, FieldScale, Rotation,
-                                new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        {
+                            if (textArray[i] != '0')
+                                isPaddedZero = false;
+
+                            if (isPaddedZero)
+                                tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, colZero, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                            else
+                                tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        }
+
                         i++;
                     }
 
@@ -325,8 +354,11 @@ namespace osum.Graphics.Sprites
             return false;
         }
 
+        internal int LastInt;
         internal void ShowInt(int number, int padding = 0, bool separators = false, char suffix = (char)0)
         {
+            LastInt = number;
+
             int numberLength = 1;
             while (number / (int)Math.Pow(10, numberLength) > 0)
                 numberLength++;
