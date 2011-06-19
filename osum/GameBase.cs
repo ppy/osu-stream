@@ -107,6 +107,9 @@ namespace osum
         /// </summary>
         private bool ignoreNextFrameTime;
 
+        //todo: override this for ipad.
+        internal static virtual bool PlayersUseThumbs { get { return true; } }
+
         public GameBase()
         {
             if (DateTime.Now > new DateTime(2011, 07, 01))
