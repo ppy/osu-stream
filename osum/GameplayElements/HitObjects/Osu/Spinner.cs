@@ -199,8 +199,6 @@ namespace osum.GameplayElements
         internal override ScoreChange CheckScoring()
         {
             //Update the angles
-            velocityFromInputPerMillisecond = 0;
-
             ScoreChange change = base.CheckScoring();
             if (change != ScoreChange.Ignore)
             {
@@ -210,6 +208,8 @@ namespace osum.GameplayElements
 
             if (!Player.Autoplay)
             {
+                velocityFromInputPerMillisecond = 0;
+
                 if (InputManager.PrimaryTrackingPoint != cursorTrackingPoint)
                 {
                     cursorTrackingPoint = InputManager.PrimaryTrackingPoint;
@@ -249,7 +249,7 @@ namespace osum.GameplayElements
             {
                 double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
 
-                if (Player.Autoplay)
+                if (Player.Autoplay && Director.CurrentOsuMode != OsuMode.Tutorial)
                     velocityCurrent = 0.05f;
                 else
                     velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;

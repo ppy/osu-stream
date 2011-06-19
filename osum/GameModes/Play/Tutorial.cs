@@ -637,10 +637,8 @@ namespace osum.GameModes.Play
                                 hasShownText = true;
                             }
 
-                            if (Clock.ManualTime > 3000)
-                            {
-                                loadNextSegment();
-                            }
+                            if (Clock.ManualTime > 3000 && !touchToContinue)
+                                showTouchToContinue();
 
                             sampleHitObject.HitAnimation(sampleHitObject.CheckScoring());
                             sampleHitObject.Update();
@@ -681,10 +679,19 @@ namespace osum.GameModes.Play
 
                         hitObjectManager.SetActiveStream(Difficulty.Easy);
 
+                        bool warned = false;
+
                         currentSegmentDelegate = delegate
                         {
                             if (!touchToContinue && hitObjectManager.AllNotesHit)
                                 loadNextSegment();
+
+                            if (Clock.AudioTime > music_offset + 188 * music_beatlength && !warned)
+                            {
+                                warned = true;
+                                pText t = showText("Now with two fingers!");
+                                t.Transform(new Transformation(TransformationType.Fade, 1, 0, t.ClockingNow + music_beatlength * 4, t.ClockingNow + music_beatlength * 5));
+                            }
                         };
                     }
                     break;
@@ -789,12 +796,19 @@ namespace osum.GameModes.Play
 
                     sampleHitObject.SetClocking(ClockTypes.Manual);
 
+                    pText arrowAtEnd = null;
+
                     currentSegmentDelegate = delegate
                     {
                         if (Clock.ManualTime < 5800)
                             Clock.IncrementManual(0.5f);
-                        else
-                            loadNextSegment();
+                        else if (!touchToContinue)
+                        {
+                            showTouchToContinue();
+                            arrowAtEnd.FadeOut(50);
+                            showText("Sometimes you will need to repeat more than once.", 120).Colour = Color4.SkyBlue;
+                        }
+
                         sampleHitObject.CheckScoring();
                         sampleHitObject.Update();
                     };
@@ -803,7 +817,7 @@ namespace osum.GameModes.Play
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        showText("This will be indicated by an arrow at the end.", 120);
+                        arrowAtEnd = showText("This will be indicated by an arrow at the end.", 120);
                     }, 1000);
 
                     break;
@@ -835,11 +849,17 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss > 1 ||  currentScore.count50 > 2)
+                        if (currentScore.countMiss > 1 || currentScore.count50 > 3)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you follow the ball with your finger! Let's go over the basics again.");
                             nextSegment = TutorialSegments.Slider_1;
+                        }
+                        else if (currentScore.count50 > 2)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Make sure you follow the ball with your finger! Let's try once more.");
+                            nextSegment = TutorialSegments.Slider_Interact;
                         }
                         else if (currentScore.count100 > 0)
                         {
@@ -898,23 +918,28 @@ namespace osum.GameModes.Play
                         {
                             showText("..you should spin it with your finger until the bars fill!", 80);
 
-                            currentSegmentDelegate = delegate
+                            GameBase.Scheduler.Add(delegate
                             {
-                                if (!sp.Cleared)
+
+                                currentSegmentDelegate = delegate
                                 {
-                                    sp.velocityFromInputPerMillisecond = 0.01f;
                                     sp.Update();
-                                    sp.CheckScoring();
-                                }
-                                else
-                                {
-                                    sp.StopSound();
-                                    showTouchToContinue();
-                                }
+
+                                    if (!sp.Cleared)
+                                    {
+                                        sp.velocityFromInputPerMillisecond = 0.02f;
+                                        sp.CheckScoring();
+                                    }
+                                    else
+                                    {
+                                        sp.StopSound();
+                                        showTouchToContinue();
+                                    }
 
 
-                            };
 
+                                };
+                            }, 700);
                         }, 800);
                     }
                     break;
@@ -956,7 +981,6 @@ namespace osum.GameModes.Play
                     hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 176 * music_beatlength, music_offset + 188 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
 
                     hitObjectManager.PostProcessing();
-
                     hitObjectManager.SetActiveStream(Difficulty.Easy);
 
                     currentSegmentDelegate = delegate
@@ -1039,7 +1063,7 @@ namespace osum.GameModes.Play
                             }
                             else if (!touchToContinue)
                             {
-                                showText("Levels are made to be playable with two thumbs, but you will need to decide which fingers to use for each beat!", 0);
+                                showText("Levels are made to be playable with two " + (GameBase.PlayersUseThumbs ? "thumbs" : "fingers") + ", but you will need to decide which fingers to use for each beat!", 0);
                                 showTouchToContinue();
                             }
                         };
@@ -1082,7 +1106,7 @@ namespace osum.GameModes.Play
                         hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x25, y2), music_offset + 208 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
                         hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 212 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(256,192), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(256, 192), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
 
                         hitObjectManager.PostProcessing();
                         hitObjectManager.SetActiveStream(Difficulty.Easy);
@@ -1103,7 +1127,7 @@ namespace osum.GameModes.Play
                         if (currentScore.countMiss + currentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText("Make sure to touch both circles at the sae time. Watch closely!");
+                            showText("Make sure to touch both circles at the same time. Watch closely!");
                             nextSegment = TutorialSegments.Multitouch_Interact;
                         }
                         else if (currentScore.count100 > 2)
