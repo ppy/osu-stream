@@ -85,10 +85,10 @@ namespace osum.GameModes
                 case Rank.A:
                     rankLetter = TextureManager.Load(OsuTexture.rank_a);
                     break;
-                case Rank.C:
+                case Rank.B:
                     rankLetter = TextureManager.Load(OsuTexture.rank_b);
                     break;
-                case Rank.B:
+                case Rank.C:
                     rankLetter = TextureManager.Load(OsuTexture.rank_c);
                     break;
                 default:
