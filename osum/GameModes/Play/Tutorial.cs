@@ -1063,7 +1063,7 @@ namespace osum.GameModes.Play
                             }
                             else if (!touchToContinue)
                             {
-                                showText("Levels are made to be playable with two " + (GameBase.PlayersUseThumbs ? "thumbs" : "fingers") + ", but you will need to decide which fingers to use for each beat!", 0);
+                                showText("Levels are made to be playable with two " + (GameBase.Instance.PlayersUseThumbs ? "thumbs" : "fingers") + ", but you will need to decide which fingers to use for each beat!", 0);
                                 showTouchToContinue();
                             }
                         };
