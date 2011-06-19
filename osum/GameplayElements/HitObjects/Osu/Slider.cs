@@ -728,11 +728,16 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (RepeatCount - lastJudgedEndpoint < 3 && RepeatCount - lastJudgedEndpoint > 0)
             {
-                //we can turn off some repeat arrows...
+                //we can turn off one repeat arrow...
+                pDrawable arrow;
+
                 if (lastJudgedEndpoint % 2 == 0)
-                    spriteCollectionStart[2].Transformations.Clear();
+                    arrow = spriteCollectionStart[2];
                 else
-                    spriteCollectionEnd[2].Transformations.Clear();
+                    arrow = spriteCollectionEnd[2];
+
+                arrow.Alpha = 0;
+                arrow.Transformations.Clear();
             }
         }
 
@@ -784,6 +789,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 foreach (pSprite p in spriteCollectionStart)
                 {
+                    if (p.Alpha == 0) continue;
+
                     //Burst the endpoint we just reached.
                     pDrawable clone = p.Clone();
 
@@ -802,6 +809,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 foreach (pSprite p in spriteCollectionEnd)
                 {
+                    if (p.Alpha == 0) continue;
+
                     //Burst the endpoint we just reached.
                     pDrawable clone = p.Clone();
 
