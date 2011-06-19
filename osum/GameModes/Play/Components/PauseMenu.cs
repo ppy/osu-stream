@@ -111,21 +111,18 @@ namespace osum.GameModes.Play.Components
             buttonContinue.OnClick += ButtonContinue_OnClick;
             buttonContinue.OnHover += HandleButtonHover;
             buttonContinue.OnHoverLost += HandleButtonHoverLost;
-            buttonContinue.HandleClickOnUp = true;
             spriteManager.Add(buttonContinue);
 
             buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(0, 0) };
             buttonRestart.OnClick += ButtonRestart_OnClick;
             buttonRestart.OnHover += HandleButtonHover;
             buttonRestart.OnHoverLost += HandleButtonHoverLost;
-            buttonRestart.HandleClickOnUp = true;
             spriteManager.Add(buttonRestart);
 
             buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(210, 0) };
             buttonQuit.OnClick += ButtonQuit_OnClick;
             buttonQuit.OnHover += HandleButtonHover;
             buttonQuit.OnHoverLost += HandleButtonHoverLost;
-            buttonQuit.HandleClickOnUp = true;
             spriteManager.Add(buttonQuit);
         }
 
