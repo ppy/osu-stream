@@ -16,7 +16,25 @@ namespace osum.GameplayElements
 
         internal static float HitObjectRadiusGamefield { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
         internal static float HitObjectRadiusSolidGamefield { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
-        internal static float HitObjectRadiusSolidGamefieldHittable { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio * 1.3f; } }
+        internal static float HitObjectRadiusSolidGamefieldHittable
+        {
+            get
+            {
+                float lieniency = 1.4f;
+
+                switch (Player.Difficulty)
+                {
+                    case Difficulty.Easy:
+                        lieniency = 1.6f;
+                        break;
+                    case Difficulty.Expert:
+                        lieniency = 1.3f;
+                        break;
+                }
+
+                return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio * 1.3f;
+            }
+        }
 
         public static float HitObjectSizeModifier = 1f;
 
@@ -58,10 +76,12 @@ namespace osum.GameplayElements
             {
                 switch (Player.Difficulty)
                 {
+                    case Difficulty.Easy:
+                        return 240;
                     default:
-                        return 150;
+                        return 152;
                     case Difficulty.Expert:
-                        return 80;
+                        return 88;
                 }
             }
         }
@@ -72,10 +92,12 @@ namespace osum.GameplayElements
             {
                 switch (Player.Difficulty)
                 {
+                    case Difficulty.Easy:
+                        return 120;
                     default:
-                        return 100;
+                        return 76;
                     case Difficulty.Expert:
-                        return 50;
+                        return 44;
                 }
             }
         }
@@ -86,10 +108,12 @@ namespace osum.GameplayElements
             {
                 switch (Player.Difficulty)
                 {
+                    case Difficulty.Easy:
+                        return 60;
                     default:
-                        return 33;
+                        return 38;
                     case Difficulty.Expert:
-                        return 20;
+                        return 22;
                 }
             }
         }
