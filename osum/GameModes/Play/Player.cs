@@ -391,7 +391,8 @@ namespace osum.GameModes
 
                 if (comboMultiplier)
                 {
-                    int comboAmount = (int)(scoreChange / 10 * Math.Min(comboCounter.currentCombo, 500));
+                    
+                    int comboAmount = (int)Math.Max(0,(scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 100) * comboMultiplierAmount));
                     currentScore.totalScore += comboAmount;
                     currentScore.comboBonusScore += comboAmount;
                 }
@@ -416,6 +417,7 @@ namespace osum.GameModes
         int frameCount = 0;
         double msCount = 0;
         private pSprite failSprite;
+        private double comboMultiplierAmount = 1;
 
         public override bool Draw()
         {
@@ -491,7 +493,9 @@ namespace osum.GameModes
                 stateCompleted = true;
                 GameBase.Scheduler.Add(delegate
                 {
+                    
                     Ranking.RankableScore = currentScore;
+                    Ranking.RankableScore.accuracyBonusScore = (int)(currentScore.accuracy * 200000);
                     Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
                 }, 500);
             }

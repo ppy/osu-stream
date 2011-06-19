@@ -129,8 +129,6 @@ namespace osum.Graphics.Sprites
                 osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
 
                 TextureManager.Load(osuTextureFont);
-
-                ExactCoordinates = true;
                 //preload
             }
             catch
@@ -138,6 +136,7 @@ namespace osum.Graphics.Sprites
             }
 
             SpacingOverlap = spacingOverlap;
+            ExactCoordinates = true;
 
             //this will trigger a render call here
             Text = text;
