@@ -101,7 +101,7 @@ namespace osum.GameplayElements
             else
                 hitValue = ScoreChange.Miss;
 
-            if (hitValue > 0)
+            if (hitValue != ScoreChange.Miss)
                 PlaySound();
 
             return hitValue;
