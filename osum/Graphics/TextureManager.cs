@@ -497,6 +497,7 @@ namespace osum.Graphics.Skins
         rank_b,
         rank_s,
         rank_c,
-        cleared
+        cleared,
+        personalbest
     }
 }

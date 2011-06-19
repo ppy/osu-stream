@@ -34,6 +34,7 @@ namespace osum.GameModes.Play.Components
             this.scale = scale;
 
             float vpos = position.Y;
+            float hOffset = 5;
 
             textMeasure = Vector2.Zero;
 
@@ -42,9 +43,10 @@ namespace osum.GameModes.Play.Components
                 s_Score =
                     new pSpriteText("0000000", "score", 2,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
-                        new Vector2(0, 0), 0.95F, true, Color4.White);
+                        new Vector2(hOffset, 0), 0.95F, true, Color4.White);
                 textMeasure = s_Score.MeasureText() * 0.625f * scale;
-                s_Score.Position = new Vector2(position.X, vpos);
+                s_Score.TextConstantSpacing = true;
+                s_Score.Position = new Vector2(hOffset, vpos);
                 s_Score.ScaleScalar = scale;
 
                 vpos += textMeasure.Y + 2;
@@ -55,13 +57,14 @@ namespace osum.GameModes.Play.Components
                 s_Accuracy =
                         new pSpriteText("00.00%", "score", 2,
                             alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
-                            new Vector2(0, 0), 0.95F, true, Color4.White);
+                            new Vector2(hOffset, 0), 0.95F, true, Color4.White);
+                s_Accuracy.TextConstantSpacing = true;
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.6f : 1);
-                s_Accuracy.Position = new Vector2(position.X, vpos);
+                s_Accuracy.Position = new Vector2(hOffset, vpos);
             }
 
-            s_Score.TextConstantSpacing = true;
-            s_Accuracy.TextConstantSpacing = true;
+            
+            
 
             spriteManager.Add(s_Score);
             spriteManager.Add(s_Accuracy);
