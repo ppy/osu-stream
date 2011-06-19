@@ -525,6 +525,7 @@ namespace osum.GameModes
             }
             else
             {
+                DebugOverlay.AddLine("Stream changing at " + hitObjectManager.nextStreamChange + " to " + hitObjectManager.ActiveStream);
                 playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
