@@ -553,26 +553,29 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             int now = ClockingNow;
 
-            if (trackingPoint == null)
+            if (!Player.Autoplay)
             {
-                if (InputManager.IsPressed)
+                if (trackingPoint == null)
                 {
-                    //todo: isPressed should *probably* be an attribute of a trackingPoint.
-                    //this is only required at the moment with  mouse, an will always WORK correctly even with multiple touches, but logically doesn't make much sense.
-
-                    //check each tracking point to find if any are usable
-                    foreach (TrackingPoint p in InputManager.TrackingPoints)
+                    if (InputManager.IsPressed)
                     {
-                        if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadiusSolidGamefieldHittable * DifficultyManager.HitObjectRadiusSolidGamefieldHittable)
+                        //todo: isPressed should *probably* be an attribute of a trackingPoint.
+                        //this is only required at the moment with  mouse, an will always WORK correctly even with multiple touches, but logically doesn't make much sense.
+
+                        //check each tracking point to find if any are usable
+                        foreach (TrackingPoint p in InputManager.TrackingPoints)
                         {
-                            trackingPoint = p;
-                            break;
+                            if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadiusSolidGamefieldHittable * DifficultyManager.HitObjectRadiusSolidGamefieldHittable)
+                            {
+                                trackingPoint = p;
+                                break;
+                            }
                         }
                     }
                 }
+                else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadiusSolidGamefieldHittable * 2, 2))
+                    trackingPoint = null;
             }
-            else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadiusSolidGamefieldHittable * 2, 2))
-                trackingPoint = null;
 
             //Check is the state of tracking changed.
             if (isTracking != wasTracking)
@@ -743,10 +746,13 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void beginTracking()
         {
-            if (sourceSliding == null)
-                sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), Volume * 0.8f, true, true);
-            else
-                sourceSliding.Play();
+            if (AudioEngine.Effect != null)
+            {
+                if (sourceSliding == null)
+                    sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), Volume * 0.8f, true, true);
+                else
+                    sourceSliding.Play();
+            }
 
             //Begin tracking.
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
