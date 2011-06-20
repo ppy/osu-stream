@@ -7,6 +7,10 @@ using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements;
 using osu_common.Libraries.Osz2;
 using System.Globalization;
+using osum.GameModes;
+using osum.Helpers;
+using osum.GameplayElements.Scoring;
+using osum;
 
 namespace BeatmapCombinator
 {
@@ -36,6 +40,7 @@ namespace BeatmapCombinator
     class BeatmapCombinator
     {
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+        private static List<string> headerContent;
 
         /// <summary>
         /// Combines many .osu files into one .osc
@@ -77,7 +82,7 @@ namespace BeatmapCombinator
 
             string baseName = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1);
 
-            string newFilename = baseName + ".osc";
+            string oscFilename = baseName + ".osc";
 
             List<string> orderedDifficulties = new List<string>();
 
@@ -226,10 +231,59 @@ namespace BeatmapCombinator
                 }
             }
 
-            using (StreamWriter output = new StreamWriter(newFilename))
+            headerContent = difficulties.Find(d => d != null).HeaderLines;
+
+            string osz2Filename = baseName.Remove(baseName.LastIndexOf("\\")) + ".osz2";
+
+            string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
+
+
+            //write the package initially so we can use it for score testing purposes.
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+
+            //scoring
+
+            Player.Beatmap = new Beatmap(osz2Filename);
+            Player.Autoplay = true;
+
+            //Working on the scoring algorithm for osu!s
+            //Basically I need to calculate the total possible score from hitobjects before any multipliers kick in...
+            //but I need to know this before the beatmap is loaded.
+
+            //So this means running through the beatmap as if it was being played at the time of package creation
+            //(inside BeatmapCombinator).  After I find the score that can be achieved, I can figure out what multiplier
+            //i need in order to pad it out to a fixed 1,000,000 max score.
+
+            //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
+
+            FakeAudioTimeSource source = new FakeAudioTimeSource();
+            Clock.AudioTimeSource = source;
+
+            headerContent.Remove("[HitObjects]");
+
+            headerContent.Add(string.Empty);
+            headerContent.Add("[ScoringMultipliers]");
+
+            headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17",nfi));
+            headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
+            headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+
+            headerContent.Add(string.Empty);
+            headerContent.Add("[HitObjects]");
+
+            Player.Beatmap.Dispose();
+
+            //write the package a second time with new multiplier header data.
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+        }
+
+        private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered,
+            string Artist, string Creator, string Source, string Title)
+        {
+            using (StreamWriter output = new StreamWriter(oscFilename))
             {
                 //write headers first (use first difficulty as arbitrary source)
-                foreach (string l in difficulties.Find(d => d != null).HeaderLines)
+                foreach (string l in headerContent)
                     output.WriteLine(l);
 
                 //keep track of how many hitObject lines are remaining for each difficulty
@@ -268,7 +322,7 @@ namespace BeatmapCombinator
                 }
             }
 
-            using (MapPackage package = new MapPackage(baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2", true))
+            using (MapPackage package = new MapPackage(osz2Filename, true))
             {
                 package.AddMetadata(MapMetaType.BeatmapSetID, "0");
                 package.AddMetadata(MapMetaType.Artist, Artist);
@@ -276,23 +330,114 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Source, Source);
                 package.AddMetadata(MapMetaType.Title, Title);
 
-                //package.AddMetadata(MapMetaType.TitleUnicode, TitleUnicode);
-                //package.AddMetadata(MapMetaType.ArtistUnicode, ArtistUnicode);
-                //package.AddMetadata(MapMetaType.Tags, Tags);
-
                 string versionsAvailable = "";
-                if (orderedDifficulties[0] != null) versionsAvailable += "|Easy";
-                if (orderedDifficulties[1] != null) versionsAvailable += "|Normal";
-                if (orderedDifficulties[2] != null) versionsAvailable += "|Hard";
-                if (orderedDifficulties[3] != null) versionsAvailable += "|Expert";
+                if (ordered[0] != null) versionsAvailable += "|Easy";
+                if (ordered[1] != null) versionsAvailable += "|Normal";
+                if (ordered[2] != null) versionsAvailable += "|Hard";
+                if (ordered[3] != null) versionsAvailable += "|Expert";
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
-                foreach (string file in Directory.GetFiles(dir, "*.osc"))
-                    package.AddFile(Path.GetFileName(file), file, DateTime.MinValue, DateTime.MinValue);
-                foreach (string file in Directory.GetFiles(dir, "*.mp3"))
-                    package.AddFile("audio.mp3", file, DateTime.MinValue, DateTime.MinValue);
+                package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
+                package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
                 package.Save();
             }
+        }
+
+        private static double calculateMultiplier(Difficulty difficulty)
+        {
+            //strange results == not resetting static variables:P
+            double comboMultiplier = 1;
+
+            Player.Difficulty = difficulty;
+
+            using (Player p = new Player())
+            {
+                p.Initialize();
+
+                FakeAudioTimeSource source = new FakeAudioTimeSource();
+                Clock.AudioTimeSource = source;
+
+                while (true)
+                {
+                    Clock.Update(0.01);
+                    source.InternalTime += 0.01;
+                    GameBase.ElapsedMilliseconds = 10;
+
+                    p.Update();
+
+                    if (p.Completed)
+                    {
+                        Score s = p.CurrentScore;
+
+                        int excess = s.totalScore - s.spinnerBonusScore - 1000000;
+
+                        double testMultiplier = (double)(s.comboBonusScore - excess) / s.comboBonusScore;
+
+                        comboMultiplier = testMultiplier;
+                        break;
+                    }
+                }
+            }
+
+            int finalScore = 0;
+            double adjustment = 0;
+
+            while (finalScore < 1000000)
+            {
+                Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
+
+                //let's do some test runs
+                using (Player p = new Player())
+                {
+                    p.Initialize();
+
+                    FakeAudioTimeSource source = new FakeAudioTimeSource();
+                    Clock.AudioTimeSource = source;
+
+                    while (true)
+                    {
+                        Clock.Update(0.01);
+                        source.InternalTime += 0.01;
+
+                        p.Update();
+
+                        if (p.Completed)
+                        {
+                            Score s = p.CurrentScore;
+
+                            finalScore = (s.totalScore - s.spinnerBonusScore);
+
+                            if (finalScore < 1000000)
+                            {
+                                int fellShortBy = 1000000 - finalScore;
+                                adjustment = (double)fellShortBy / s.comboBonusScore;
+                                comboMultiplier += adjustment;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Processed difficulty: " + difficulty);
+                                Console.WriteLine();
+                                Console.WriteLine("Using multiplier: " + comboMultiplier);
+                                Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
+                                Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
+                                Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
+                                Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
+                                Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
+                                Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
+                                Console.WriteLine();
+                                Console.WriteLine();
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //i guess the best thing to do might be to aim slightly above 1m and ignore the excess...
+            //okay now we have numbers roughly around 1mil (always higher or equal to).
+            //need to do something about this static, then load them up in osu!s.
+            return comboMultiplier;
         }
     }
 }

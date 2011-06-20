@@ -67,6 +67,7 @@
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Store\StoreMode.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
+    <Compile Include="GameplayElements\Beatmaps\BeatmapDifficultyInfo.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
     <Compile Include="GameplayElements\Beatmaps\ControlPoint.cs" />
     <Compile Include="GameplayElements\Events\Event.cs" />

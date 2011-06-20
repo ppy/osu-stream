@@ -20,6 +20,8 @@ namespace osum.GameplayElements.Beatmaps
         public string BeatmapFilename { get { return Package.MapFiles[0]; } }
         public string StoryboardFilename { get { return ""; } }
 
+        public Dictionary<Difficulty, BeatmapDifficultyInfo> DifficultyInfo = new Dictionary<Difficulty, BeatmapDifficultyInfo>();
+
         private MapPackage package;
         public MapPackage Package
         {
@@ -76,7 +78,10 @@ namespace osum.GameplayElements.Beatmaps
         public void Dispose()
         {
             if (package != null)
+            {
                 package.Dispose();
+                package = null;
+            }
         }
 
         #endregion

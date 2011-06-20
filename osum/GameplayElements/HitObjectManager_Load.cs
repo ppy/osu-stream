@@ -122,6 +122,10 @@ namespace osum.GameplayElements
 
                         switch (currentSection)
                         {
+                            case FileSection.ScoringMultipliers:
+                                Difficulty diff = (Difficulty)Int32.Parse(key);
+                                beatmap.DifficultyInfo[diff] = new BeatmapDifficultyInfo(diff) { ComboMultiplier = double.Parse(val, GameBase.nfi) };
+                                break;
                             case FileSection.TimingPoints:
                                 if (split.Length > 2)
                                     beatmap.ControlPoints.Add(
