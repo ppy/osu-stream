@@ -8,6 +8,7 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Graphics.Drawables;
+using osum.GameModes;
 
 namespace osum.GameplayElements
 {
@@ -92,7 +93,7 @@ namespace osum.GameplayElements
             int hitTime = ClockingNow;
             int accuracy = Math.Abs(hitTime - StartTime);
 
-            if (accuracy < DifficultyManager.HitWindow300)
+            if (accuracy < DifficultyManager.HitWindow300 || Player.Autoplay)
                 hitValue = ScoreChange.Hit300;
             else if (accuracy < DifficultyManager.HitWindow100)
                 hitValue = ScoreChange.Hit100;
