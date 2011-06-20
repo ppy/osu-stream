@@ -83,6 +83,8 @@ namespace osum.GameplayElements.Beatmaps
 
         public string Artist { get { return Package.GetMetadata(MapMetaType.Artist); } }
 
+        public string Creator { get { return Package.GetMetadata(MapMetaType.Creator); } }
+
         public string Title { get { return Package.GetMetadata(MapMetaType.Title); } }
     }
 }
