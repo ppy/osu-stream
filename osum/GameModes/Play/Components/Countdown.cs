@@ -18,7 +18,7 @@ namespace osum.GameModes.Play.Components
 
         const float distance_from_bottom = 0;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             background = new pSprite(TextureManager.Load(OsuTexture.countdown_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(0, distance_from_bottom), 0.99f, true, Color4.White);
             spriteManager.Add(background);

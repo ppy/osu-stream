@@ -5,28 +5,28 @@ using System.Text;
 
 namespace osum.GameplayElements.Scoring
 {
-    internal class Score
+    public class Score
     {
-        internal ushort count100;
-        internal ushort count300;
-        internal ushort count50;
-        internal ushort countGeki;
-        internal ushort countKatu;
-        internal ushort countMiss;
-        internal DateTime date;
-        internal bool isOnline;
-        internal int maxCombo;
-        internal bool pass;
-        internal bool exit;
-        internal int failTime;
-        internal bool perfect;
-        internal string playerName;
-        internal string rawGraph;
-        internal byte[] rawReplayCompressed;
-        internal List<bool> scoringSectionResults = new List<bool>();
-        internal bool submitting;
-        internal int totalScore;
-        internal int spinnerBonusScore;
+        public ushort count100;
+        public ushort count300;
+        public ushort count50;
+        public ushort countGeki;
+        public ushort countKatu;
+        public ushort countMiss;
+        public DateTime date;
+        public bool isOnline;
+        public int maxCombo;
+        public bool pass;
+        public bool exit;
+        public int failTime;
+        public string playerName;
+        public string rawGraph;
+        public int totalScore
+        {
+            get { return spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore; }
+        }
+
+        public int spinnerBonusScore;
         public int hitOffsetMilliseconds;
         public int hitOffsetCount;
         public int comboBonusScore;
@@ -79,7 +79,7 @@ namespace osum.GameplayElements.Scoring
         }
     }
 
-    internal enum Rank
+    public enum Rank
     {
         N,
         D,

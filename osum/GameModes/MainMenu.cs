@@ -63,7 +63,7 @@ namespace osum.GameModes
 
         const int initial_display = 2950;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             menuBackground =
                 new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,

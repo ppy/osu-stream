@@ -24,7 +24,7 @@ namespace osum.GameplayElements
     /// <summary>
     /// Class that handles loading of content from a Beatmap, and general handling of anything that involves hitObjects as a group.
     /// </summary>
-    internal partial class HitObjectManager : IDrawable, IDisposable
+    public partial class HitObjectManager : IDrawable, IDisposable
     {
         /// <summary>
         /// The loaded beatmap.
@@ -46,14 +46,18 @@ namespace osum.GameplayElements
         /// </summary>
         internal SpriteManager spriteManager = new SpriteManager();
 
-        internal SliderTrackRenderer sliderTrackRenderer = new SliderTrackRenderer();
+        internal SliderTrackRenderer sliderTrackRenderer;
 
         public HitObjectManager(Beatmap beatmap)
         {
             this.beatmap = beatmap;
             hitFactory = new HitFactoryOsu(this);
 
-            sliderTrackRenderer.Initialize();
+            if (GameBase.Instance != null)
+            {
+                sliderTrackRenderer = new SliderTrackRenderer();
+                sliderTrackRenderer.Initialize();
+            }
 
             ResetComboCounts();
 
@@ -72,6 +76,8 @@ namespace osum.GameplayElements
         public void Dispose()
         {
             spriteManager.Dispose();
+
+            if (sliderTrackRenderer != null) sliderTrackRenderer.Dispose();
 
             foreach (SpriteManager sm in streamSpriteManagers)
                 if (sm != null) sm.Dispose();
@@ -194,10 +200,6 @@ namespace osum.GameplayElements
                 }
             }
 
-#if DEBUG
-            Console.WriteLine("Changed stream to " + ActiveStream);
-#endif
-
             processFrom = 0;
 
             if (oldActiveStream == Difficulty.None)
@@ -220,7 +222,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal pList<HitObject> ActiveStreamObjects
+        public pList<HitObject> ActiveStreamObjects
         {
             get
             {
@@ -368,10 +370,10 @@ namespace osum.GameplayElements
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
-                    if (AudioEngine.Music.IsElapsing)
+                    if (Clock.AudioTimeSource.IsElapsing || (Clock.AudioTime < 0 && Clock.AudioLeadingIn))
                         TriggerScoreChange(h.CheckScoring(), h);
-                    else if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
-                        TriggerScoreChange(h.Hit(), h);
+                    //else if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
+                    //    TriggerScoreChange(h.Hit(), h);
                     
 
                     if (lowestActiveObject < 0)
@@ -526,6 +528,7 @@ namespace osum.GameplayElements
         Events,
         HitObjects,
         Difficulty,
-        Variables
+        Variables,
+        ScoringMultipliers
     } ;
 }

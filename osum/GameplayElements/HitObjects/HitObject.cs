@@ -38,7 +38,7 @@ namespace osum.GameplayElements
     }
 
     [Flags]
-    internal enum ScoreChange
+    public enum ScoreChange
     {
         Ignore = 0,
         MissMinor = 1 << 0,
@@ -91,7 +91,7 @@ namespace osum.GameplayElements
         }
     }
 
-    internal abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
+    public abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         protected HitObjectManager m_HitObjectManager;
 
@@ -359,7 +359,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Sprites which should be dimmed when not the active object.
         /// </summary>
-        protected internal List<pDrawable> SpriteCollectionDim = new List<pDrawable>();
+        internal List<pDrawable> SpriteCollectionDim = new List<pDrawable>();
 
         protected Vector2 position;
         internal virtual Vector2 Position

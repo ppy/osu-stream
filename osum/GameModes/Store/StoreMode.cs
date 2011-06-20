@@ -25,7 +25,7 @@ namespace osum.GameModes.Store
 
         List<PackPanel> packs = new List<PackPanel>();
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,

@@ -347,7 +347,7 @@ namespace osum.Graphics.Skins
         {
             PopulateSurfaces();
 
-            if (availableSurfaces.Count == 0)
+            if (availableSurfaces == null || availableSurfaces.Count == 0)
                 return null;
 
             //todo: optimise FBO width/height. should only need two at max dimensions (or maybe even one)

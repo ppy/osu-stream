@@ -27,7 +27,7 @@ namespace osum.GameModes.Play
         const int music_offset = 3050;
         const int music_beatlength = 375;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             Difficulty = Difficulty.None;
             Beatmap = null;
@@ -437,10 +437,10 @@ namespace osum.GameModes.Play
                     {
                         showText("They are made up of the main circle...", -50);
 
-                        if (hitObjectManager != null) hitObjectManager.Dispose();
-                        hitObjectManager = new HitObjectManager(null);
+                        if (HitObjectManager != null) HitObjectManager.Dispose();
+                        HitObjectManager = new HitObjectManager(null);
 
-                        sampleHitObject = new HitCircle(hitObjectManager, new Vector2(256, 197), 0, true, 0, HitObjectSoundType.Normal);
+                        sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 0, true, 0, HitObjectSoundType.Normal);
                         sampleHitObject.Colour = Color4.OrangeRed;
                         sampleHitObject.ComboNumber = 1;
 
@@ -456,7 +456,7 @@ namespace osum.GameModes.Play
                         c.SpriteApproachCircle.Alpha = 0;
                         c.SpriteApproachCircle.Transformations.Clear();
 
-                        hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+                        HitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
 
                         showTouchToContinue();
                     }
@@ -548,30 +548,30 @@ namespace osum.GameModes.Play
                 case TutorialSegments.HitCircle_Interact:
                     {
                         prepareInteract();
-                        hitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
+                        HitObjectManager.OnScoreChanged += new ScoreChangeDelegate(hitObjectManager_OnScoreChanged);
 
                         const int x1 = 100;
                         const int x2 = 512 - 100;
                         const int y1 = 80;
                         const int y2 = 384 - 80;
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 164 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 172 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 164 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 172 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 180 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 188 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 180 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 188 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
 
-                        hitObjectManager.PostProcessing();
+                        HitObjectManager.PostProcessing();
 
-                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                         currentSegmentDelegate = delegate
                         {
-                            if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            if (!touchToContinue && HitObjectManager.AllNotesHit)
                                 loadNextSegment();
                         };
                     }
@@ -579,18 +579,18 @@ namespace osum.GameModes.Play
                 case TutorialSegments.HitCircle_Judge:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
-                    if (currentScore.countMiss > 2)
+                    if (CurrentScore.countMiss > 2)
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                         showText("Hmm, looks like we need to practise a bit more. Let's go over this again!");
                         nextSegment = TutorialSegments.HitCircle_1;
                     }
-                    else if (currentScore.count50 > 1 || currentScore.countMiss > 1)
+                    else if (CurrentScore.count50 > 1 || CurrentScore.countMiss > 1)
                     {
                         showText("Getting there!\nWatch the approaching circle carefully and listen to the beat. Let's try once more!");
                         nextSegment = TutorialSegments.HitCircle_Interact;
                     }
-                    else if (currentScore.count100 > 0)
+                    else if (CurrentScore.count100 > 0)
                     {
                         showText("That's right!\nFocus on the beat of the song and try to time your taps to get higher accuracy.");
                     }
@@ -612,10 +612,10 @@ namespace osum.GameModes.Play
 
                         showText("\"Holds\" are like hit circles, but you need to tap...", -110);
 
-                        if (hitObjectManager != null) hitObjectManager.Dispose();
-                        hitObjectManager = new HitObjectManager(null);
+                        if (HitObjectManager != null) HitObjectManager.Dispose();
+                        HitObjectManager = new HitObjectManager(null);
 
-                        sampleHitObject = new HoldCircle(hitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
+                        sampleHitObject = new HoldCircle(HitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
                         //arbitrary
 
                         sampleHitObject.SetClocking(ClockTypes.Manual);
@@ -623,7 +623,7 @@ namespace osum.GameModes.Play
                         sampleHitObject.Colour = Color4.White;
                         sampleHitObject.ComboNumber = 1;
 
-                        hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+                        HitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
 
                         bool hasShownText = false;
 
@@ -660,30 +660,30 @@ namespace osum.GameModes.Play
                         const int y1 = 80;
                         const int y2 = 384 - 80;
 
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
 
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 200 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 204 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 200 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 204 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
 
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 208 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 212 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 220 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 208 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 212 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 220 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
 
-                        hitObjectManager.PostProcessing();
+                        HitObjectManager.PostProcessing();
 
-                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                         bool warned = false;
 
                         currentSegmentDelegate = delegate
                         {
-                            if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            if (!touchToContinue && HitObjectManager.AllNotesHit)
                                 loadNextSegment();
 
                             if (Clock.AudioTime > music_offset + 188 * music_beatlength && !warned)
@@ -701,13 +701,13 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss > 3 || currentScore.count50 > 5)
+                        if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you hold the notes until they explode! Let's go over the basics again.");
                             nextSegment = TutorialSegments.Hold_1;
                         }
-                        else if (currentScore.count100 > 0)
+                        else if (CurrentScore.count100 > 0)
                         {
                             showText("Yeah, just like that. Make sure to hold them until they explode!");
                         }
@@ -728,10 +728,10 @@ namespace osum.GameModes.Play
 
                         showText("\"Sliders\" are like hit circles,", -80);
 
-                        if (hitObjectManager != null) hitObjectManager.Dispose();
-                        hitObjectManager = new HitObjectManager(null);
+                        if (HitObjectManager != null) HitObjectManager.Dispose();
+                        HitObjectManager = new HitObjectManager(null);
 
-                        sampleHitObject = new Slider(hitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
+                        sampleHitObject = new Slider(HitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
 
 
                         sampleHitObject.Colour = TextureManager.DefaultColours[0];
@@ -749,7 +749,7 @@ namespace osum.GameModes.Play
                             sampleHitObject.Update();
                         };
 
-                        hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+                        HitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
 
                         GameBase.Scheduler.Add(delegate
                         {
@@ -785,10 +785,10 @@ namespace osum.GameModes.Play
 
                     Clock.ResetManual();
 
-                    if (hitObjectManager != null) hitObjectManager.Dispose();
-                    hitObjectManager = new HitObjectManager(null);
+                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager = new HitObjectManager(null);
 
-                    sampleHitObject = new Slider(hitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
+                    sampleHitObject = new Slider(HitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
 
 
                     sampleHitObject.Colour = TextureManager.DefaultColours[0];
@@ -813,7 +813,7 @@ namespace osum.GameModes.Play
                         sampleHitObject.Update();
                     };
 
-                    hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+                    HitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -828,17 +828,17 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Slider_Interact:
                     prepareInteract();
 
-                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(50, 92), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 92), new Vector2(200, 70), new Vector2(350, 92) }, null, 200, 300f / 8), Difficulty.Easy);
-                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(512 - 50, 384 - 92), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(512 - 50, 384 - 92), new Vector2(512 - 200, 384 - 70), new Vector2(512 - 350, 384 - 92) }, null, 200, 300f / 8), Difficulty.Easy);
-                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(50, 50), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 50), new Vector2(50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
-                    hitObjectManager.Add(new Slider(hitObjectManager, new Vector2(512 - 50, 50), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(512 - 50, 50), new Vector2(512 - 50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(50, 92), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 92), new Vector2(200, 70), new Vector2(350, 92) }, null, 200, 300f / 8), Difficulty.Easy);
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(512 - 50, 384 - 92), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(512 - 50, 384 - 92), new Vector2(512 - 200, 384 - 70), new Vector2(512 - 350, 384 - 92) }, null, 200, 300f / 8), Difficulty.Easy);
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(50, 50), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2>() { new Vector2(50, 50), new Vector2(50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(512 - 50, 50), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2>() { new Vector2(512 - 50, 50), new Vector2(512 - 50, 350) }, null, 200, 300f / 8), Difficulty.Easy);
 
-                    hitObjectManager.PostProcessing();
-                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+                    HitObjectManager.PostProcessing();
+                    HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                     currentSegmentDelegate = delegate
                     {
-                        if (!touchToContinue && hitObjectManager.AllNotesHit)
+                        if (!touchToContinue && HitObjectManager.AllNotesHit)
                             loadNextSegment();
                     };
 
@@ -849,19 +849,19 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss > 1 || currentScore.count50 > 3)
+                        if (CurrentScore.countMiss > 1 || CurrentScore.count50 > 3)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you follow the ball with your finger! Let's go over the basics again.");
                             nextSegment = TutorialSegments.Slider_1;
                         }
-                        else if (currentScore.count50 > 2)
+                        else if (CurrentScore.count50 > 2)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure you follow the ball with your finger! Let's try once more.");
                             nextSegment = TutorialSegments.Slider_Interact;
                         }
-                        else if (currentScore.count100 > 0)
+                        else if (CurrentScore.count100 > 0)
                         {
                             showText("Yeah, just like that. Make sure to watch and follow the ball!");
                         }
@@ -892,10 +892,10 @@ namespace osum.GameModes.Play
                         GameBase.Scheduler.Add(delegate
                         {
 
-                            if (hitObjectManager != null) hitObjectManager.Dispose();
-                            hitObjectManager = new HitObjectManager(null);
+                            if (HitObjectManager != null) HitObjectManager.Dispose();
+                            HitObjectManager = new HitObjectManager(null);
 
-                            sampleHitObject = new Spinner(hitObjectManager, 0, 9999999, HitObjectSoundType.Normal);
+                            sampleHitObject = new Spinner(HitObjectManager, 0, 9999999, HitObjectSoundType.Normal);
 
                             sampleHitObject.Sprites.ForEach(s =>
                             {
@@ -911,7 +911,7 @@ namespace osum.GameModes.Play
                             sp.SpriteSpin.Transformations.Clear();
                             sp.ApproachCircle.Transformations.Clear();
 
-                            hitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
+                            HitObjectManager.spriteManager.Add(sampleHitObject.Sprites);
                         }, 400);
 
                         GameBase.Scheduler.Add(delegate
@@ -976,16 +976,16 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Spinner_Interact:
                     prepareInteract();
 
-                    hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 160 * music_beatlength, music_offset + 164 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
-                    hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 168 * music_beatlength, music_offset + 172 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
-                    hitObjectManager.Add(new Spinner(hitObjectManager, music_offset + 176 * music_beatlength, music_offset + 188 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
+                    HitObjectManager.Add(new Spinner(HitObjectManager, music_offset + 160 * music_beatlength, music_offset + 164 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
+                    HitObjectManager.Add(new Spinner(HitObjectManager, music_offset + 168 * music_beatlength, music_offset + 172 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
+                    HitObjectManager.Add(new Spinner(HitObjectManager, music_offset + 176 * music_beatlength, music_offset + 188 * music_beatlength, HitObjectSoundType.Normal), Difficulty);
 
-                    hitObjectManager.PostProcessing();
-                    hitObjectManager.SetActiveStream(Difficulty.Easy);
+                    HitObjectManager.PostProcessing();
+                    HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                     currentSegmentDelegate = delegate
                     {
-                        if (!touchToContinue && hitObjectManager.AllNotesHit)
+                        if (!touchToContinue && HitObjectManager.AllNotesHit)
                             loadNextSegment();
                     };
 
@@ -996,13 +996,13 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss > 1)
+                        if (CurrentScore.countMiss > 1)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Are you actually trying? All you need to do is make circles with your finger! Let's try again...");
                             nextSegment = TutorialSegments.Spinner_Interact;
                         }
-                        else if (currentScore.count50 > 0 || currentScore.count100 > 0 || currentScore.countMiss > 0)
+                        else if (CurrentScore.count50 > 0 || CurrentScore.count100 > 0 || CurrentScore.countMiss > 0)
                         {
                             showText("You're spinning, but a bit slow. Let's try once more!");
                             nextSegment = TutorialSegments.Spinner_Interact;
@@ -1022,23 +1022,23 @@ namespace osum.GameModes.Play
 
                         showText("Some beats need to be hit at the same time.", -100);
 
-                        if (hitObjectManager != null) hitObjectManager.Dispose();
-                        hitObjectManager = new HitObjectManager(Beatmap);
+                        if (HitObjectManager != null) HitObjectManager.Dispose();
+                        HitObjectManager = new HitObjectManager(Beatmap);
 
-                        sampleHitObject = new HitCircle(hitObjectManager, new Vector2(128, 180), 1500, true, 0, HitObjectSoundType.Normal);
+                        sampleHitObject = new HitCircle(HitObjectManager, new Vector2(128, 180), 1500, true, 0, HitObjectSoundType.Normal);
                         sampleHitObject.ComboNumber = 1;
                         sampleHitObject.SetClocking(ClockTypes.Manual);
 
-                        hitObjectManager.Add(sampleHitObject, Difficulty.Easy);
+                        HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
-                        sampleHitObject = new HitCircle(hitObjectManager, new Vector2(384, 180), 1500, true, 0, HitObjectSoundType.Normal);
+                        sampleHitObject = new HitCircle(HitObjectManager, new Vector2(384, 180), 1500, true, 0, HitObjectSoundType.Normal);
                         sampleHitObject.ComboNumber = 1;
                         sampleHitObject.SetClocking(ClockTypes.Manual);
 
-                        hitObjectManager.Add(sampleHitObject, Difficulty.Easy);
+                        HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
-                        hitObjectManager.PostProcessing();
-                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        HitObjectManager.PostProcessing();
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                         currentSegmentDelegate = delegate
                         {
@@ -1084,36 +1084,36 @@ namespace osum.GameModes.Play
                         const int y1 = 80;
                         const int y2 = 384 - 80;
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 160 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 160 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 176 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 176 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x15, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x15, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y1), music_offset + 200 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x25, y1), music_offset + 200 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y2), music_offset + 204 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 200 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x25, y1), music_offset + 200 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 204 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x2, y2), music_offset + 208 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x25, y2), music_offset + 208 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
-                        hitObjectManager.Add(new HitCircle(hitObjectManager, new Vector2(x1, y1), music_offset + 212 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 208 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x25, y2), music_offset + 208 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 212 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                        hitObjectManager.Add(new HoldCircle(hitObjectManager, new Vector2(256, 192), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(256, 192), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
 
-                        hitObjectManager.PostProcessing();
-                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        HitObjectManager.PostProcessing();
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
 
                         currentSegmentDelegate = delegate
                         {
-                            if (!touchToContinue && hitObjectManager.AllNotesHit)
+                            if (!touchToContinue && HitObjectManager.AllNotesHit)
                                 loadNextSegment();
                         };
                     }
@@ -1124,13 +1124,13 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
 
-                        if (currentScore.countMiss + currentScore.count50 > 5)
+                        if (CurrentScore.countMiss + CurrentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                             showText("Make sure to touch both circles at the same time. Watch closely!");
                             nextSegment = TutorialSegments.Multitouch_Interact;
                         }
-                        else if (currentScore.count100 > 2)
+                        else if (CurrentScore.count100 > 2)
                         {
                             showText("Pretty good.");
                         }
@@ -1211,8 +1211,9 @@ namespace osum.GameModes.Play
         {
         }
 
-        protected override void CheckForCompletion()
+        protected override bool CheckForCompletion()
         {
+            return false;
         }
 
     }

@@ -19,12 +19,13 @@ using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using osum.Graphics;
 using osum.Support;
+using System.IO;
 
 namespace osum.GameModes
 {
     public class Player : GameMode
     {
-        internal HitObjectManager hitObjectManager;
+        public HitObjectManager HitObjectManager;
 
         internal HealthBar healthBar;
 
@@ -35,17 +36,17 @@ namespace osum.GameModes
         /// <summary>
         /// Score which is being played (or watched?)
         /// </summary>
-        internal Score currentScore;
+        public Score CurrentScore;
 
         /// <summary>
         /// The beatmap currently being played.
         /// </summary>
-        internal static Beatmap Beatmap;
+        public static Beatmap Beatmap;
 
         /// <summary>
         /// The difficulty which will be used for play mode (Easy/Standard/Expert).
         /// </summary>
-        internal static Difficulty Difficulty;
+        public static Difficulty Difficulty;
 
         /// <summary>
         /// Is autoplay activated?
@@ -58,7 +59,7 @@ namespace osum.GameModes
 
         internal CountdownDisplay countdown;
 
-        private bool stateCompleted; //todo: make this an enum state
+        public bool Completed; //todo: make this an enum state
 
         /// <summary>
         /// If we are currently in the process of switching to another stream, this is when it should happen.
@@ -83,13 +84,12 @@ namespace osum.GameModes
             : base()
         { }
 
-        internal override void Initialize()
+        public override void Initialize()
         {
-            TextureManager.PopulateSurfaces();
-
             InputManager.OnDown += InputManager_OnDown;
 
-            TextureManager.RequireSurfaces = true;
+            if (GameBase.Instance != null)
+                TextureManager.RequireSurfaces = true;
 
             loadBeatmap();
 
@@ -97,22 +97,27 @@ namespace osum.GameModes
 
             initializeUIElements();
 
-            if (hitObjectManager != null)
+            if (HitObjectManager != null)
             {
                 switch (Difficulty)
                 {
                     default:
-                        hitObjectManager.SetActiveStream();
+                        HitObjectManager.SetActiveStream();
                         break;
                     case Difficulty.Expert:
-                        hitObjectManager.SetActiveStream(Difficulty.Expert);
+                        HitObjectManager.SetActiveStream(Difficulty.Expert);
                         break;
                     case Difficulty.Easy:
-                        hitObjectManager.SetActiveStream(Difficulty.Easy);
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
                         break;
                 }
 
-                if (hitObjectManager.ActiveStreamObjects == null)
+                BeatmapDifficultyInfo diff = null;
+                if (Beatmap.DifficultyInfo.TryGetValue(Difficulty, out diff))
+                    DifficultyComboMultiplier = diff.ComboMultiplier;
+                //isn't being read. either i'm playing with the wrong osz2 file or the loading code isn't working
+
+                if (HitObjectManager.ActiveStreamObjects == null)
                 {
                     GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
                     Director.ChangeMode(OsuMode.SongSelect);
@@ -121,8 +126,10 @@ namespace osum.GameModes
                 }
 
                 //countdown and lead-in time
-                int firstObjectTime = hitObjectManager.ActiveStreamObjects[0].StartTime;
-                AudioEngine.Music.Stop();
+                int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
+
+                if (AudioEngine.Music != null) AudioEngine.Music.Stop();
+
                 CountdownResume(firstObjectTime, 8);
                 firstCountdown = true;
             }
@@ -176,7 +183,7 @@ namespace osum.GameModes
                 scoreDisplay.SetScore(0);
             }
 
-            currentScore = new Score();
+            CurrentScore = new Score();
         }
 
         protected void loadBeatmap()
@@ -184,16 +191,16 @@ namespace osum.GameModes
             if (Beatmap == null)
                 return;
 
-            if (hitObjectManager != null)
-                hitObjectManager.Dispose();
+            if (HitObjectManager != null)
+                HitObjectManager.Dispose();
 
-            hitObjectManager = new HitObjectManager(Beatmap);
+            HitObjectManager = new HitObjectManager(Beatmap);
 
-            hitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
-            hitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
+            HitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
+            HitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
 
             if (Beatmap.ContainerFilename != null)
-                hitObjectManager.LoadFile();
+                HitObjectManager.LoadFile();
         }
 
         /// <summary>
@@ -254,7 +261,7 @@ namespace osum.GameModes
 
             InputManager.OnDown -= InputManager_OnDown;
 
-            if (hitObjectManager != null) hitObjectManager.Dispose();
+            if (HitObjectManager != null) HitObjectManager.Dispose();
 
             TextureManager.RequireSurfaces = false;
 
@@ -281,7 +288,7 @@ namespace osum.GameModes
                 return;
 
             //pass on the event to hitObjectManager for handling.
-            if (hitObjectManager != null && !Player.Autoplay && hitObjectManager.HandlePressAt(point))
+            if (HitObjectManager != null && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
                 return;
 
             if (menu != null)
@@ -290,7 +297,7 @@ namespace osum.GameModes
 
         void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
-            playfieldBackground.ChangeColour(hitObjectManager.ActiveStream);
+            playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
             healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
@@ -309,11 +316,12 @@ namespace osum.GameModes
 
             if (hitObject is HitCircle && change > 0)
             {
-                currentScore.hitOffsetMilliseconds += (Clock.AudioTime - hitObject.StartTime);
-                currentScore.hitOffsetCount++;
+                CurrentScore.hitOffsetMilliseconds += (Clock.AudioTime - hitObject.StartTime);
+                CurrentScore.hitOffsetCount++;
             }
 
             bool comboMultiplier = true;
+            bool addHitScore = true;
 
             int scoreChange = 0;
 
@@ -323,7 +331,8 @@ namespace osum.GameModes
                 case ScoreChange.SpinnerBonus:
                     scoreChange = (int)hitObject.HpMultiplier;
                     comboMultiplier = false;
-                    currentScore.spinnerBonusScore += (int)hitObject.HpMultiplier;
+                    addHitScore = false;
+                    CurrentScore.spinnerBonusScore += (int)hitObject.HpMultiplier;
                     healthChange = hitObject.HpMultiplier * 0.04f;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
@@ -351,19 +360,19 @@ namespace osum.GameModes
                     break;
                 case ScoreChange.Hit50:
                     scoreChange = 50;
-                    currentScore.count50++;
+                    CurrentScore.count50++;
                     increaseCombo = true;
                     healthChange = -8;
                     break;
                 case ScoreChange.Hit100:
                     scoreChange = 100;
-                    currentScore.count100++;
+                    CurrentScore.count100++;
                     increaseCombo = true;
                     healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
                     scoreChange = 300;
-                    currentScore.count300++;
+                    CurrentScore.count300++;
                     increaseCombo = true;
                     healthChange = 5;
                     break;
@@ -372,29 +381,31 @@ namespace osum.GameModes
                     healthChange = -20 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Miss:
-                    currentScore.countMiss++;
+                    CurrentScore.countMiss++;
                     if (comboCounter != null) comboCounter.SetCombo(0);
                     healthChange = -40;
                     break;
             }
 
-            if (scoreChange > 0)
-            {
-                currentScore.totalScore += scoreChange;
-                currentScore.hitScore += scoreChange;
-            }
+            if (scoreChange > 0 && addHitScore)
+                CurrentScore.hitScore += scoreChange;
 
             if (increaseCombo && comboCounter != null)
             {
                 comboCounter.IncreaseCombo();
-                currentScore.maxCombo = Math.Max(comboCounter.currentCombo, currentScore.maxCombo);
+                CurrentScore.maxCombo = Math.Max(comboCounter.currentCombo, CurrentScore.maxCombo);
 
                 if (comboMultiplier)
                 {
-                    
-                    int comboAmount = (int)Math.Max(0,(scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 100) * comboMultiplierAmount));
-                    currentScore.totalScore += comboAmount;
-                    currentScore.comboBonusScore += comboAmount;
+
+                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 100) * DifficultyComboMultiplier));
+
+                    //check we don't exceed 0.8mil total (before accuracy bonus).
+                    //null check makes sure we aren't doing score calculations via combinator.
+                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 800000)
+                        comboAmount = Math.Max(0,800000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
+
+                    CurrentScore.comboBonusScore += comboAmount;
                 }
             }
 
@@ -409,15 +420,15 @@ namespace osum.GameModes
 
             if (scoreDisplay != null)
             {
-                scoreDisplay.SetScore(currentScore.totalScore);
-                scoreDisplay.SetAccuracy(currentScore.accuracy * 100);
+                scoreDisplay.SetScore(CurrentScore.totalScore);
+                scoreDisplay.SetAccuracy(CurrentScore.accuracy * 100);
             }
         }
 
         int frameCount = 0;
         double msCount = 0;
         private pSprite failSprite;
-        private double comboMultiplierAmount = 1;
+        private double DifficultyComboMultiplier = 1;
 
         public override bool Draw()
         {
@@ -428,12 +439,12 @@ namespace osum.GameModes
 
             if (comboCounter != null) comboCounter.Draw();
 
-            if (hitObjectManager != null)
-                hitObjectManager.Draw();
+            if (HitObjectManager != null)
+                HitObjectManager.Draw();
 
             if (scoreDisplay != null) scoreDisplay.Draw();
-            if (healthBar != null) healthBar.Draw();
 
+            if (healthBar != null) healthBar.Draw();
 
             if (menu != null) menu.Draw();
 
@@ -452,15 +463,15 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            if (hitObjectManager != null)
+            if (HitObjectManager != null)
             {
                 CheckForCompletion();
                 //check whether the map is finished
 
                 //this needs to be run even when paused to draw sliders on resuming from resign.
-                hitObjectManager.Update();
+                HitObjectManager.Update();
 
-                Spinner s = hitObjectManager.ActiveObject as Spinner;
+                Spinner s = HitObjectManager.ActiveObject as Spinner;
                 if (s != null)
                     playfieldBackground.Alpha = 1 - s.SpriteBackground.Alpha;
                 else
@@ -486,31 +497,33 @@ namespace osum.GameModes
             base.Update();
         }
 
-        protected virtual void CheckForCompletion()
+        protected virtual bool CheckForCompletion()
         {
-            if (hitObjectManager.AllNotesHit && !Director.IsTransitioning && !stateCompleted)
+            if (HitObjectManager.AllNotesHit && !Director.IsTransitioning && !Completed)
             {
-                stateCompleted = true;
+                Completed = true;
+                Ranking.RankableScore = CurrentScore;
+                Ranking.RankableScore.accuracyBonusScore = (int)(CurrentScore.accuracy * 200000);
+
                 GameBase.Scheduler.Add(delegate
                 {
-                    
-                    Ranking.RankableScore = currentScore;
-                    Ranking.RankableScore.accuracyBonusScore = (int)(currentScore.accuracy * 200000);
                     Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
                 }, 500);
             }
+
+            return Completed;
         }
 
         protected virtual void UpdateStream()
         {
-            if (Difficulty == Difficulty.Easy || hitObjectManager == null)
+            if (Difficulty == Difficulty.Easy || HitObjectManager == null)
                 //easy can't fail, nor switch streams.
                 return;
 
-            if (hitObjectManager != null && !hitObjectManager.StreamChanging)
+            if (HitObjectManager != null && !HitObjectManager.StreamChanging)
             {
-                if (hitObjectManager.IsLowestStream &&
-                    currentScore.totalHits > 0 &&
+                if (HitObjectManager.IsLowestStream &&
+                    CurrentScore.totalHits > 0 &&
                     healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
                     //we are on the lowest available stream difficulty and in failing territory.
@@ -518,9 +531,9 @@ namespace osum.GameModes
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
 
-                        if (!stateCompleted)
+                        if (!Completed)
                         {
-                            stateCompleted = true;
+                            Completed = true;
                             Failed = true;
 
                             showFailSprite();
@@ -531,7 +544,7 @@ namespace osum.GameModes
 
                             GameBase.Scheduler.Add(delegate
                             {
-                                Ranking.RankableScore = currentScore;
+                                Ranking.RankableScore = CurrentScore;
                                 menu.ShowFailMenu();
                             }, 1500);
                         }
@@ -539,7 +552,7 @@ namespace osum.GameModes
                     else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
                     else
-                        playfieldBackground.ChangeColour(hitObjectManager.ActiveStream);
+                        playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
                 }
                 else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
                 {
@@ -552,7 +565,7 @@ namespace osum.GameModes
             }
             else
             {
-                DebugOverlay.AddLine("Stream changing at " + hitObjectManager.nextStreamChange + " to " + hitObjectManager.ActiveStream);
+                DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
                 playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
@@ -590,9 +603,9 @@ namespace osum.GameModes
             if (menu != null)
                 menu.ShowMenu();
 
-            if (hitObjectManager != null)
+            if (HitObjectManager != null)
             {
-                HitObject activeObject = hitObjectManager.ActiveObject;
+                HitObject activeObject = HitObjectManager.ActiveObject;
                 if (activeObject != null)
                     activeObject.StopSound(false);
             }
@@ -601,12 +614,12 @@ namespace osum.GameModes
         private bool switchStream(bool increase)
         {
             isIncreasingStream = increase;
-            if (increase && hitObjectManager.IsHighestStream)
+            if (increase && HitObjectManager.IsHighestStream)
                 return false;
-            if (!increase && hitObjectManager.IsLowestStream)
+            if (!increase && HitObjectManager.IsLowestStream)
                 return false;
 
-            int switchTime = hitObjectManager.SetActiveStream((Difficulty)(hitObjectManager.ActiveStream + (increase ? 1 : -1)));
+            int switchTime = HitObjectManager.SetActiveStream((Difficulty)(HitObjectManager.ActiveStream + (increase ? 1 : -1)));
 
             if (switchTime < 0)
                 return false;

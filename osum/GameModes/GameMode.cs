@@ -25,7 +25,7 @@ namespace osum.GameModes
         /// <summary>
         /// Do all initialization here.
         /// </summary>
-        internal abstract void Initialize();
+        public abstract void Initialize();
 
         /// <summary>
         /// A spriteManager provided free of charge.

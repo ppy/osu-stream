@@ -86,7 +86,7 @@ namespace osum.GameModes.Play.Components
         const float offscreen_y = -160;
         private Color4 colourInactive = new Color4(200, 200, 200, 255);
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 

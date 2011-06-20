@@ -42,7 +42,7 @@ namespace osum.GameModes
         private pSpriteText countScoreAccuracy;
         private pSpriteText countScoreSpin;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
@@ -529,7 +529,7 @@ namespace osum.GameModes
 
         pSprite background;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             startTime = Clock.Time;
 

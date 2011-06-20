@@ -197,7 +197,7 @@ namespace osum.Graphics.Sprites
         {
             pTexture tex = null;
 
-            if (textureCache.TryGetValue(c, out tex) && tex.TextureGl != null && tex.TextureGl.Id >= 0)
+            if (textureCache.TryGetValue(c, out tex) && tex != null && tex.TextureGl != null && tex.TextureGl.Id >= 0)
             //the extra two conditions are only required for the fps counter between modes.
             {
 
@@ -261,6 +261,7 @@ namespace osum.Graphics.Sprites
 
                 pTexture tex = textureFor(c);
 
+                if (tex == null) continue;
 
                 if (!TextConstantSpacing || c < '0' || c > '9')
                     currentX += tex.Width;
@@ -279,7 +280,8 @@ namespace osum.Graphics.Sprites
             if (TextConstantSpacing)
             {
                 //float last = 0;
-                int charWidth = textureFor('6').Width;
+                pTexture spacingTexture = textureFor('6');
+                int charWidth = spacingTexture != null ? spacingTexture.Width : 0;
 
                 currentX = 0;
 

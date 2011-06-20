@@ -57,12 +57,14 @@ namespace osum.Audio
             int buffer = LoadSample(sample, set);
             if (buffer < 0) return null;
 
+            if (AudioEngine.Effect == null)
+                return null;
+
             int lastPlayed = -1;
             if (lastPlayedTimes.TryGetValue(sample, out lastPlayed))
                 if (Math.Abs(Clock.AudioTime - lastPlayed) < 45)
                     return null;
             lastPlayedTimes[sample] = Clock.AudioTime;
-
 
             return AudioEngine.Effect.PlayBuffer(buffer, volume);
         }
@@ -100,7 +102,8 @@ namespace osum.Audio
 
             if (!loadedSamples.TryGetValue(filename, out buffer))
             {
-                buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
+                if (AudioEngine.Effect != null)
+                    buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
                 loadedSamples.Add(filename, buffer);
             }
 

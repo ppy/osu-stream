@@ -6,7 +6,7 @@ using OpenTK;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pSpriteCollection
+    public class pSpriteCollection
     {
         internal List<pDrawable> Sprites;
 

@@ -16,7 +16,7 @@ namespace osum.GameModes.Play.Components
         pDrawable arrowSmall;
         pDrawable text;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             arrowLarge = new pSprite(TextureManager.Load(OsuTexture.stream_changing_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.95f, true, Color4.White);
             arrowLarge.Additive = true;

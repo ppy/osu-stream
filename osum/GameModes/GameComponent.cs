@@ -16,7 +16,7 @@ namespace osum.GameModes
             Initialize();
         }
 
-        internal override void Initialize()
+        public override void Initialize()
         {
 
         }

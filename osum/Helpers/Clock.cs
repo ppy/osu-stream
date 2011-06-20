@@ -86,17 +86,17 @@ namespace osum.Helpers
             }
         }
 
-        static bool LeadingIn;
+        public static bool AudioLeadingIn;
 
         public static void BeginLeadIn(int leadInStartTime)
         {
             currentFrameAudioTime = leadInStartTime / 1000d;
-            LeadingIn = true;
+            AudioLeadingIn = true;
         }
 
         public static void AbortLeadIn()
         {
-            LeadingIn = false;
+            AudioLeadingIn = false;
             currentFrameAudioTime = AudioTimeSource.CurrentTime;
         }
 
@@ -104,14 +104,15 @@ namespace osum.Helpers
         {
             time += elapsed;
 
-            if (LeadingIn && elapsed < 0.1)
+            if (AudioLeadingIn && elapsed < 0.1)
             {
                 currentFrameAudioTime += elapsed;
 
                 if (currentFrameAudioTime + UNIVERSAL_OFFSET / 1000f >= AudioTimeSource.CurrentTime)
                 {
-                    AudioEngine.Music.Play();
-                    LeadingIn = false;
+                    if (AudioEngine.Music != null)
+                        AudioEngine.Music.Play();
+                    AudioLeadingIn = false;
                 }
             }
 

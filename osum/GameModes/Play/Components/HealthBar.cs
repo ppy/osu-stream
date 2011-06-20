@@ -191,7 +191,7 @@ namespace osum.GameplayElements.Scoring
             CurrentHp = Math.Max(0, Math.Min(HP_BAR_MAXIMUM, CurrentHp + amount));
         }
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             s_barFill = new pSprite(TextureManager.Load(OsuTexture.scorebar_colour), FieldTypes.Standard, OriginTypes.TopLeft,
                    ClockTypes.Game, new Vector2(4, 10f), 0.965F, true, Color4.White);

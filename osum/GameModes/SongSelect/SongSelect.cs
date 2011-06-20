@@ -57,7 +57,7 @@ namespace osum.GameModes
 
         private pDrawable s_ButtonBack;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             //todo: write less
             BeatmapDatabase.Write();

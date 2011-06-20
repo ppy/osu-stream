@@ -19,7 +19,7 @@ namespace osum.GameplayElements
     /// <summary>
     /// Class that handles loading of content from a Beatmap, and general handling of anything that involves hitObjects as a group.
     /// </summary>
-    internal partial class HitObjectManager : IDrawable, IDisposable
+    public partial class HitObjectManager : IDrawable, IDisposable
     {
         public void LoadFile()
         {

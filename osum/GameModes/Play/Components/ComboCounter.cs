@@ -21,7 +21,7 @@ namespace osum.GameModes.Play.Components
         {
         }
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             base.Initialize();
 

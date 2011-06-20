@@ -17,7 +17,7 @@ namespace osum.Graphics
 
         int nextBurstSprite;
 
-        internal override void Initialize()
+        public override void Initialize()
         {
             for (int i = 0; i < 32; i++)
             {
