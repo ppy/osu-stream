@@ -42,12 +42,12 @@ namespace osum.GameplayElements
         /// <summary>
         /// Number of rotations currently spun.
         /// </summary>
-        internal float currentRotationCount;
+        internal double currentRotationCount;
 
         /// <summary>
         /// Number of scored rotations (last scoring update).
         /// </summary>
-        private float lastRotationCount;
+        private double lastRotationCount;
 
         /// <summary>
         /// Number of rotations are required for a "clear".
@@ -248,12 +248,10 @@ namespace osum.GameplayElements
 
             if (IsActive)
             {
-                double maxAccelPerSec = AccelerationCap * GameBase.ElapsedMilliseconds;
-
                 if (Player.Autoplay && Director.CurrentOsuMode != OsuMode.Tutorial)
-                    velocityCurrent = 0.05f;
+                    velocityCurrent = 0.05;
                 else
-                    velocityCurrent = velocityFromInputPerMillisecond * 0.5f + velocityCurrent * 0.5f;
+                    velocityCurrent = velocityFromInputPerMillisecond * 0.5 + velocityCurrent * 0.5;
 
                 if (Math.Abs(velocityCurrent) > 0.0001f)
                     StartSound();
@@ -263,11 +261,11 @@ namespace osum.GameplayElements
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
-                float delta = (float)(velocityCurrent * GameBase.ElapsedMilliseconds);
+                double delta = velocityCurrent * GameBase.ElapsedMilliseconds;
 
-                spriteCircle.Rotation += delta;
+                spriteCircle.Rotation += (float)delta;
 
-                currentRotationCount += (float)(Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2));
+                currentRotationCount += Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2);
             }
 
             if (currentRotationCount >= rotationRequirement && !Cleared)
@@ -313,7 +311,7 @@ namespace osum.GameplayElements
                         //Ensure we don't recycle this too early.
                         spriteBonus.Transform(new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
 
-                        lastSamplePlayedRotationCount = currentRotationCount;
+                        lastSamplePlayedRotationCount += sensitivity_modifier;
                     }
 
                     BonusScore += hpMultiplier;
@@ -321,7 +319,7 @@ namespace osum.GameplayElements
                 else if (currentRotationCount - lastScoredRotationCount > sensitivity_modifier / 4)
                 {
                     score = ScoreChange.SpinnerSpinPoints;
-                    lastScoredRotationCount = currentRotationCount;
+                    lastScoredRotationCount += sensitivity_modifier / 4;
                 }
             }
 
@@ -340,8 +338,8 @@ namespace osum.GameplayElements
             }
         }
 
-        float lastSamplePlayedRotationCount;
-        float lastScoredRotationCount;
+        double lastSamplePlayedRotationCount;
+        double lastScoredRotationCount;
 
         public override void Update()
         {
@@ -351,7 +349,7 @@ namespace osum.GameplayElements
                 return;
 
             if (sourceSpinning != null)
-                sourceSpinning.Pitch = 0.5f + 0.5f * currentRotationCount / rotationRequirement;
+                sourceSpinning.Pitch = 0.5f + 0.5f * (float)(currentRotationCount / rotationRequirement);
 
             Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
 
@@ -375,10 +373,13 @@ namespace osum.GameplayElements
 
         private void StartSound()
         {
-            if (sourceSpinning == null)
-                sourceSpinning = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
-            else
-                sourceSpinning.Play();
+            if (AudioEngine.Effect != null)
+            {
+                if (sourceSpinning == null)
+                    sourceSpinning = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
+                else
+                    sourceSpinning.Play();
+            }
         }
 
         internal override void StopSound(bool done = true)
