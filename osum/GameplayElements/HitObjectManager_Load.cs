@@ -13,6 +13,7 @@ using osum.Graphics.Skins;
 using osum.GameplayElements.HitObjects;
 using OpenTK.Graphics;
 using osum.GameplayElements.Events;
+using osum.GameModes;
 
 namespace osum.GameplayElements
 {
@@ -23,7 +24,6 @@ namespace osum.GameplayElements
     {
         public void LoadFile()
         {
-
             spriteManager.ForwardPlayOptimisedAdd = true;
 
             beatmap.ControlPoints.Clear();
@@ -212,11 +212,25 @@ namespace osum.GameplayElements
                                     hitObjectPreInit = true;
                                 }
 
-                                // Mask out the first 4 bits for HitObjectType. This is redundant because they're masked out in the checks below, but still wise.
-
                                 int offset = 0;
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
+
+                                switch (Player.Difficulty)
+                                {
+                                    case Difficulty.Easy:
+                                        if (difficulty != Difficulty.Easy)
+                                            continue;
+                                        break;
+                                    case Difficulty.Normal:
+                                        if (difficulty == Difficulty.Expert)
+                                            continue;
+                                        break;
+                                    case Difficulty.Expert:
+                                        if (difficulty != Difficulty.Expert)
+                                            continue;
+                                        break;
+                                }
 
                                 string sample = split[offset++];
 
