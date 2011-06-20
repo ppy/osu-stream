@@ -340,6 +340,7 @@
     <Compile Include="GameplayElements\BeatmapDatabase.cs" />
     <Compile Include="GameModes\MenuBackground.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
+    <Compile Include="GameplayElements\Beatmaps\BeatmapDifficultyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
