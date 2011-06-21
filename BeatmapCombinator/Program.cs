@@ -233,7 +233,11 @@ namespace BeatmapCombinator
 
             headerContent = difficulties.Find(d => d != null).HeaderLines;
 
-            string osz2Filename = baseName.Remove(baseName.LastIndexOf("\\")) + ".osz2";
+            string[] splitdir = dir.Split('\\');
+            string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
+
+
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
 
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 
