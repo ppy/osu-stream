@@ -215,7 +215,7 @@ namespace osum.GameModes
                 MoveTo(new Vector2(75, -44), duration/2, EasingTypes.InOut);
                 RotateTo(rotation_offset, duration/2, EasingTypes.InOut);
 
-                rect.FadeOut(duration);
+                //rect.FadeOut(duration);
                 rectBorder.FadeOut(duration);
             }, 200);
 
