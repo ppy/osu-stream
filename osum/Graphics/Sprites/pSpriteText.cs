@@ -182,9 +182,6 @@ namespace osum.Graphics.Sprites
         {
             pDrawable cl = base.Clone();
             pSpriteText st = cl as pSpriteText;
-            Console.Write("cloning with: ");
-            foreach (char c in textArray)
-                Console.Write(c);
             Console.WriteLine();
             return cl;
         }

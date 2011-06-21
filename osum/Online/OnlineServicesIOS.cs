@@ -62,7 +62,8 @@ namespace osum.Online
                 if (error != null)
                 {
                     //todo: handle this
-                    Console.WriteLine("submission error");
+                    Console.WriteLine("submission error: " + error.ToString());
+                    Console.WriteLine("using id " + id + " score " + score);
                     return;
                 }
 
