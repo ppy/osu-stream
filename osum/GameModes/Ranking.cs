@@ -13,6 +13,7 @@ using osum.Graphics;
 using osum.Online;
 using osu_common.Helpers;
 using osum.GameplayElements;
+using System.IO;
 namespace osum.GameModes
 {
     public class Ranking : GameMode
@@ -288,9 +289,6 @@ namespace osum.GameModes
             s_ButtonBack = new BackButton(returnToSelect);
             spriteManager.Add(s_ButtonBack);
 
-            //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-            OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Player.Beatmap.BeatmapFilename + "-" + Player.Difficulty.ToString()), RankableScore.totalScore);
-
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
             if (RankableScore.totalScore > bmi.HighScore)
             {
@@ -360,26 +358,38 @@ namespace osum.GameModes
             {
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
+
+                if (Player.Beatmap.DifficultyInfo.Count == 0)
+                {
+                    GameBase.Notify("Please update your maps from the store!",null);
+                }
+                else
+                {
+                    //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
+                    OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Path.GetFileName(Player.Beatmap.ContainerFilename) + "-" + Player.Difficulty.ToString()), RankableScore.totalScore);
+                }
             }, time);
 
             time += 1000;
 
-            if (isPersonalBest)
+
+            GameBase.Scheduler.Add(delegate
             {
-                GameBase.Scheduler.Add(delegate
+                if (isPersonalBest)
                 {
                     pSprite personalBest = new pSprite(TextureManager.Load(OsuTexture.personalbest), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(80, 250),
-                        1, true, Color4.White);
+                            1, true, Color4.White);
                     personalBest.FadeInFromZero(500);
                     personalBest.ScaleScalar = 1.6f;
                     personalBest.RotateTo(0.2f, 500);
                     personalBest.ScaleTo(1, 500, EasingTypes.Out);
-
+    
                     GameBase.Scheduler.Add(delegate { personalBest.AdditiveFlash(1000, 1).ScaleTo(1.05f, 1000); }, 500);
-
+    
                     spriteManager.Add(personalBest);
-                }, time);
-            }
+                }
+            }, time);
+
         }
 
         int addedScore;
