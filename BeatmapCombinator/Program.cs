@@ -268,9 +268,12 @@ namespace BeatmapCombinator
             headerContent.Add(string.Empty);
             headerContent.Add("[ScoringMultipliers]");
 
-            headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17",nfi));
-            headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
-            headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+            if (orderedDifficulties[(int)Difficulty.Easy] != null)
+                headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
+            if (orderedDifficulties[(int)Difficulty.Normal] != null)
+                headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
+            if (orderedDifficulties[(int)Difficulty.Expert] != null)
+                headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
 
             headerContent.Add(string.Empty);
             headerContent.Add("[HitObjects]");
