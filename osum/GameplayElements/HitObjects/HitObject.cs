@@ -520,9 +520,9 @@ namespace osum.GameplayElements
         {
             foreach (pDrawable p in Sprites)
             {
-                Transformation previousShake = p.Transformations.FindLast(t => t.Tag == TAG_SHAKE_TRANSFORMATION);
+                p.Transformations.RemoveAll(t => t.Type == TransformationType.OffsetX);
 
-                float pos = previousShake != null ? previousShake.EndFloat : p.Position.X;
+                float pos = 0;
 
                 const int shake_count = 6;
                 const int shake_velocity = 8;
@@ -535,7 +535,7 @@ namespace osum.GameplayElements
 
                     int e = i == shake_count - 1 ? 0 : -s;
 
-                    p.Transform(new Transformation(TransformationType.MovementX, pos + s, pos + e,
+                    p.Transform(new Transformation(TransformationType.OffsetX, s, e,
                         Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period) { Tag = TAG_SHAKE_TRANSFORMATION });
                 }
             }

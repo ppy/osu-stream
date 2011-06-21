@@ -34,7 +34,8 @@ namespace osum.Graphics.Sprites
         MovementX,
         MovementY,
         VectorScale,
-        ParameterAdditive
+        ParameterAdditive,
+        OffsetX
     }
 
     internal class Transformation : IComparable<Transformation>

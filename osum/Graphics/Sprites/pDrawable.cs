@@ -189,7 +189,18 @@ namespace osum.Graphics.Sprites
                 if (Origin != OriginTypes.Custom && Offset != Vector2.Zero)
                     pos += Offset;
 
-                pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
+                switch (Field)
+                {
+                    default:
+                        pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
+                        break;
+                    case FieldTypes.GamefieldStandardScale:
+                    case FieldTypes.GamefieldSprites:
+                    case FieldTypes.GamefieldExact:
+                        break;
+                    case FieldTypes.NativeScaled:
+                        return pos;
+                }
 
                 switch (Field)
                 {
@@ -224,12 +235,9 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.GamefieldSprites:
                     case FieldTypes.GamefieldExact:
-                        pos = Position;
                         GameBase.GamefieldToStandard(ref pos);
                         Vector2.Multiply(ref pos, AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio, out pos);
                         break;
-                    case FieldTypes.NativeScaled:
-                        return Position;
                     case FieldTypes.Native:
                     default:
                         break;
@@ -383,6 +391,10 @@ namespace osum.Graphics.Sprites
                             Position.Y = t.EndFloat;
                             break;
 
+                        case TransformationType.OffsetX:
+                            Offset.X = t.EndFloat;
+                            break;
+
                         case TransformationType.ParameterAdditive:
                             BlendingMode = BlendingFactorDest.One;
                             break;
@@ -440,6 +452,10 @@ namespace osum.Graphics.Sprites
                             Position.Y = t.CurrentFloat;
                             break;
 
+                        case TransformationType.OffsetX:
+                            Offset.X = t.CurrentFloat;
+                            break;
+
                         case TransformationType.ParameterAdditive:
                             BlendingMode = BlendingFactorDest.One;
                             break;
@@ -494,6 +510,10 @@ namespace osum.Graphics.Sprites
                     case TransformationType.MovementY:
                         Position.Y = t.CurrentFloat;
                         break;
+
+                    //case TransformationType.OffsetX:
+                    //    Offset.X = t.CurrentFloat;
+                    //    break;
 
                     case TransformationType.ParameterAdditive:
                         BlendingMode = BlendingFactorDest.One;
