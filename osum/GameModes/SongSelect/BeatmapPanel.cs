@@ -83,9 +83,24 @@ namespace osum.GameModes.SongSelect
 
             if (beatmap != null)
             {
-                s_Text.Text =  beatmap.Title;
-                s_TextArtist.Text = beatmap.Artist;
-                s_TextCreator.Text = beatmap.Creator;
+                //string filename = Path.GetFileNameWithoutExtension(beatmap.ContainerFilename);
+
+                //Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
+                //Match m = r.Match(filename);
+                //s_Text.Text = m.Groups[2].Value;
+                //s_TextArtist.Text = m.Groups[1].Value;
+                //s_TextCreator.Text = m.Groups[3].Value;
+
+                try
+                {
+                    s_Text.Text = beatmap.Title;
+                    s_TextArtist.Text = beatmap.Artist;
+                    s_TextCreator.Text = beatmap.Creator;
+                }
+                catch
+                {
+                    //could fail due to corrupt package.
+                }
             }
 
             s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
