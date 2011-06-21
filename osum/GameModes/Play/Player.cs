@@ -539,6 +539,9 @@ namespace osum.GameModes
                             showFailSprite();
 
                             AudioEngine.Music.Pause();
+                            HitObject activeObject = HitObjectManager.ActiveObject;
+                            if (activeObject != null)
+                                activeObject.StopSound(false);
 
                             menu.Failed = true; //set this now so the menu will be in fail state if interacted with early.
 
