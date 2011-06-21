@@ -258,6 +258,9 @@ namespace osum.GameModes
         {
             base.Dispose();
 
+            foreach (Beatmap b in availableMaps)
+                b.Dispose();
+
             if (State == SelectState.Exiting)
                 Player.Beatmap = null;
 
