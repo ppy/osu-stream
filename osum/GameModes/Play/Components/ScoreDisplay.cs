@@ -44,10 +44,10 @@ namespace osum.GameModes.Play.Components
                     new pSpriteText("0000000", "score", 2,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                         new Vector2(hOffset, 0), 0.95F, true, Color4.White);
-                textMeasure = s_Score.MeasureText() * 0.625f * scale;
                 s_Score.TextConstantSpacing = true;
                 s_Score.Position = new Vector2(hOffset, vpos);
                 s_Score.ScaleScalar = scale;
+                textMeasure = s_Score.MeasureText() * 0.625f * scale;
 
                 vpos += textMeasure.Y + 2;
             }
