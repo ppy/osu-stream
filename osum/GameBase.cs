@@ -420,7 +420,7 @@ namespace osum
                 pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
                 ActiveNotification = back;
 
-                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width * 0.9f, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
+                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width * 0.8f, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
 
                 Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
                 Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
