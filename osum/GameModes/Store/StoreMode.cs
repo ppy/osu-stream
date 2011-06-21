@@ -69,6 +69,9 @@ namespace osum.GameModes.Store
 
         void netRequest_onFinish(string _result, Exception e)
         {
+            if (Director.CurrentOsuMode != OsuMode.Store)
+                return;
+
             if (e != null || string.IsNullOrEmpty(_result))
             {
                 GameBase.Notify("Error while downloading song listing.", delegate { Director.ChangeMode(OsuMode.SongSelect); });
@@ -138,6 +141,9 @@ namespace osum.GameModes.Store
 
             GameBase.Scheduler.Add(delegate
             {
+                if (Director.CurrentOsuMode != OsuMode.Store)
+                    return;
+
                 if (pp != null && pp.BeatmapCount > 0)
                     spriteManager.Add(pp); packs.Add(pp);
 
