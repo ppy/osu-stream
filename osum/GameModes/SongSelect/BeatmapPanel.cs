@@ -99,9 +99,6 @@ namespace osum.GameModes.SongSelect
                     s_Text.Text = beatmap.Title;
                     s_TextArtist.Text = beatmap.Artist;
                     s_TextCreator.Text = beatmap.Creator;
-
-                    byte[] bytes = beatmap.GetFileBytes("thumb-128.jpg");
-                    if (bytes != null) thumb = pTexture.FromBytes(bytes);
                 }
                 catch
                 {
@@ -113,7 +110,10 @@ namespace osum.GameModes.SongSelect
                 thumb = TextureManager.Load(OsuTexture.songselect_thumb_dl);
             }
 
-            s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
+            if (thumb != null)
+                s_Thumbnail = new pSprite(thumb,Vector2.Zero) { DrawDepth = base_depth + 0.02f };
+            else
+                s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = base_depth + 0.02f };
             s_Thumbnail.Offset = new Vector2(8, 2.7f);
             Sprites.Add(s_Thumbnail);
 
@@ -124,6 +124,15 @@ namespace osum.GameModes.SongSelect
             };
 
             Sprites.Add(s_BackingPlate2);
+        }
+
+        private pTexture GetThumbnail()
+        {
+            pTexture thumb = null;
+            byte[] bytes = Beatmap.GetFileBytes("thumb-128.jpg");
+            if (bytes != null)
+                thumb = pTexture.FromBytes(bytes);
+            return thumb;
         }
     }
 }

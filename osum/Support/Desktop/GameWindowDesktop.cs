@@ -53,6 +53,10 @@ namespace osum
                 case 'r':
                     Director.ChangeMode(Director.CurrentOsuMode);
                     break;
+                case 's':
+                    TextureManager.UnloadAll(true);
+                    TextureManager.ReloadAll();
+                    break;
                 case 'p':
                     Player p = Director.CurrentMode as Player;
                     if (p != null)

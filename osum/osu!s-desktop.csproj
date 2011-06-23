@@ -58,8 +58,8 @@
     <Compile Include="GameModes\Play\Player.cs" />
     <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
     <Compile Include="GameModes\Play\Tutorial.cs" />
-    <Compile Include="GameModes\Ranking\Ranking.cs" />
-    <Compile Include="GameModes\Ranking\RankingTransition.cs" />
+    <Compile Include="GameModes\Results\Results.cs" />
+    <Compile Include="GameModes\Results\ResultTransition.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect.cs" />
     <Compile Include="GameModes\SongSelect\BackButton.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="Graphics\TextureManager_Load.cs" />
     <Compile Include="Graphics\TouchBurster.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
