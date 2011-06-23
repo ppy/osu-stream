@@ -309,7 +309,8 @@ namespace osum.GameModes
 
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            offset += trackingPoint.WindowDelta.Y;
+            if (InputManager.IsPressed)
+                offset += trackingPoint.WindowDelta.Y;
         }
 
         void Director_OnTransitionEnded()
@@ -371,6 +372,8 @@ namespace osum.GameModes
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
 
+                finishedDisplaying = true;
+
                 if (Player.Beatmap.DifficultyInfo.Count == 0)
                 {
                     GameBase.Notify("Please update your maps from the store!",null);
@@ -401,8 +404,9 @@ namespace osum.GameModes
                     layer1.Add(personalBest);
                 }
             }, time);
-
         }
+
+        bool finishedDisplaying;
 
         int addedScore;
         private pSpriteText count300;
@@ -494,19 +498,21 @@ namespace osum.GameModes
 
             if (!Director.IsTransitioning)
             {
-                if (!InputManager.IsPressed)
-                    offset *= 0.94f;
+                if (finishedDisplaying)
+                {
+                    if (!InputManager.IsPressed)
+                        offset *= 0.94f;
 
-                float thisOffset = 0;
-                if (offset != 0)
-                    thisOffset = (offset > 0 ? 1 : -1) * (float)Math.Pow(Math.Abs(offset),0.8);
+                    float thisOffset = 0;
+                    if (offset != 0)
+                        thisOffset = (offset > 0 ? 1 : -1) * (float)Math.Pow(Math.Abs(offset), 0.8);
 
 
-                foreach (pDrawable p in fillSprites)
-                    p.Scale.Y = fill_height + thisOffset * 0.5f;
-                layer1.Position.Y = thisOffset * 0.6f;
-                layer2.Position.Y = thisOffset;
-
+                    foreach (pDrawable p in fillSprites)
+                        p.Scale.Y = fill_height + thisOffset * 0.5f;
+                    layer1.Position.Y = thisOffset * 0.6f;
+                    layer2.Position.Y = thisOffset;
+                }
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
                 foreach (pSprite p in fallingSprites)
