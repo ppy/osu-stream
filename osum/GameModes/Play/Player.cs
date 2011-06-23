@@ -525,12 +525,12 @@ namespace osum.GameModes
             if (HitObjectManager.AllNotesHit && !Director.IsTransitioning && !Completed)
             {
                 Completed = true;
-                Ranking.RankableScore = CurrentScore;
-                Ranking.RankableScore.accuracyBonusScore = (int)(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
+                Results.RankableScore = CurrentScore;
+                Results.RankableScore.accuracyBonusScore = (int)(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
 
                 GameBase.Scheduler.Add(delegate
                 {
-                    Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
+                    Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
                 }, 500);
             }
 
@@ -570,7 +570,7 @@ namespace osum.GameModes
 
                             GameBase.Scheduler.Add(delegate
                             {
-                                Ranking.RankableScore = CurrentScore;
+                                Results.RankableScore = CurrentScore;
                                 menu.ShowFailMenu();
                             }, 1500);
                         }

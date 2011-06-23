@@ -16,7 +16,7 @@ using osum.GameplayElements;
 using System.IO;
 namespace osum.GameModes
 {
-    public class RankingTransition : Transition
+    public class ResultTransition : Transition
     {
         float count_height = 80;
         const float fill_height = 5;
@@ -62,11 +62,11 @@ namespace osum.GameModes
             pDrawable fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Ranking.RankableScore.count300 / Ranking.RankableScore.totalHits;
+            fill.Scale.X *= (float)Results.RankableScore.count300 / Results.RankableScore.totalHits;
             fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
             fillSprites.Add(fill);
 
-            pSpriteText count = new pSpriteText(Ranking.RankableScore.count300.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
+            pSpriteText count = new pSpriteText(Results.RankableScore.count300.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
             countSprites.Add(count);
 
             count_height += 80;
@@ -74,11 +74,11 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Ranking.RankableScore.count100 / Ranking.RankableScore.totalHits;
+            fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits;
             fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
             fillSprites.Add(fill);
 
-            count = new pSpriteText(Ranking.RankableScore.count100.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
+            count = new pSpriteText(Results.RankableScore.count100.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
             countSprites.Add(count);
 
             count_height += 80;
@@ -86,11 +86,11 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Ranking.RankableScore.count50 / Ranking.RankableScore.totalHits;
+            fill.Scale.X *= (float)Results.RankableScore.count50 / Results.RankableScore.totalHits;
             fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
             fillSprites.Add(fill);
 
-            count = new pSpriteText(Ranking.RankableScore.count50.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
+            count = new pSpriteText(Results.RankableScore.count50.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
             countSprites.Add(count);
 
             count_height += 80;
@@ -98,11 +98,11 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Ranking.RankableScore.countMiss / Ranking.RankableScore.totalHits;
+            fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits;
             fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
             fillSprites.Add(fill);
 
-            count = new pSpriteText(Ranking.RankableScore.countMiss.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
+            count = new pSpriteText(Results.RankableScore.countMiss.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
             countSprites.Add(count);
 
             int i = 0;

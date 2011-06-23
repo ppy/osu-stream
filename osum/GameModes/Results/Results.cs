@@ -16,7 +16,7 @@ using osum.GameplayElements;
 using System.IO;
 namespace osum.GameModes
 {
-    public class Ranking : GameMode
+    public class Results : GameMode
     {
         internal static Score RankableScore;
 
@@ -472,7 +472,7 @@ namespace osum.GameModes
             base.Dispose();
         }
 
-        public Ranking()
+        public Results()
         {
         }
 

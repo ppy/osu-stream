@@ -133,7 +133,7 @@ namespace osum
                     mode = new SongSelectMode();
                     break;
                 case OsuMode.Ranking:
-                    mode = new Ranking();
+                    mode = new Results();
                     break;
                 case OsuMode.Play:
                     mode = new Player();

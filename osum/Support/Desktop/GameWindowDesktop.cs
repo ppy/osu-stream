@@ -70,7 +70,7 @@ namespace osum
                     }
                     break;
                 case 'j':
-                    Director.ChangeMode(OsuMode.Ranking, new RankingTransition());
+                    Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
                     break;
             }
         }
