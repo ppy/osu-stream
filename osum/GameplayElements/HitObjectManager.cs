@@ -306,7 +306,10 @@ namespace osum.GameplayElements
 
             Box2 rect = connectingLine.DisplayRectangle;
 
-            h2.Sprites.Add(connectingLine);
+            if (h1 is HitCircle || h1.EndTime < h2.EndTime)
+                h1.Sprites.Add(connectingLine);
+            else
+                h2.Sprites.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
