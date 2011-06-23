@@ -498,6 +498,9 @@ namespace osum.Graphics.Skins
         rank_s,
         rank_c,
         cleared,
-        personalbest
+        personalbest,
+        songselect_thumbnail_large,
+        songselect_thumb_dl,
+        songselect_star
     }
 }
