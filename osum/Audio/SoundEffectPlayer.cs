@@ -96,6 +96,8 @@ namespace osum
             AL.DeleteSources(sources);
         }
 
+        internal float Volume = 0.9f;
+
         /// <summary>
         /// Plays the sample in provided buffer on a new source.
         /// </summary>
@@ -130,7 +132,7 @@ namespace osum
 
             info.Reserved = reserve;
             info.BufferId = buffer;
-            info.Volume = volume;
+            info.Volume = volume * Volume;
             info.Looping = loop;
             info.Pitch = 1;
 
