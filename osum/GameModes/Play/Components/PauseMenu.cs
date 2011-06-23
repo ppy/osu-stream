@@ -13,7 +13,6 @@ namespace osum.GameModes.Play.Components
 {
     class PauseMenu : GameComponent
     {
-
         private bool menuDisplayed;
         internal bool MenuDisplayed
         {
@@ -94,18 +93,25 @@ namespace osum.GameModes.Play.Components
             background.OnClick += Background_OnClick;
             spriteManager.Add(background);
 
-            pSprite pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
-            pullnotice.Offset = new Vector2(0, 30);
-            spriteManager.Add(pullnotice);
-
-            Transformation move = new Transformation(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
-            Transformation fade = new Transformation(TransformationType.Fade, 1, 0.4f, 1000, 1500);
-
-            spriteManager.Sprites.ForEach(s =>
+            if (Director.LastOsuMode != OsuMode.Play)
             {
-                s.Transform(move);
-                s.Transform(fade);
-            });
+                pSprite pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
+                pullnotice.Offset = new Vector2(0, 30);
+                spriteManager.Add(pullnotice);
+
+                Transformation move = new Transformation(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
+                Transformation fade = new Transformation(TransformationType.Fade, 1, 0.4f, 1000, 1500);
+
+                spriteManager.Sprites.ForEach(s =>
+                {
+                    s.Transform(move);
+                    s.Transform(fade);
+                });
+            }
+            else
+            {
+                background.Position.Y = offscreen_y;
+            }
 
             buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(-210, 0) };
             buttonContinue.OnClick += ButtonContinue_OnClick;
