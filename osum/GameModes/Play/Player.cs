@@ -309,6 +309,18 @@ namespace osum.GameModes
         {
         }
 
+
+        private void comboPain(bool harsh)
+        {
+            playfieldBackground.FlashColour(Color4.Red, 300);
+
+            if (harsh)
+            {
+                HitObjectManager.ActiveStreamSpriteManager.ScaleScalar = 0.9f;
+                HitObjectManager.ActiveStreamSpriteManager.ScaleTo(1, 400, EasingTypes.In);
+            }
+        }
+
         void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             double healthChange = 0;
@@ -377,12 +389,21 @@ namespace osum.GameModes
                     healthChange = 5;
                     break;
                 case ScoreChange.MissMinor:
-                    if (comboCounter != null) comboCounter.SetCombo(0);
+                    if (comboCounter != null)
+                    {
+                        comboPain(comboCounter.currentCombo >= 30);
+                        comboCounter.SetCombo(0);
+                    }
                     healthChange = -20 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Miss:
                     CurrentScore.countMiss++;
-                    if (comboCounter != null) comboCounter.SetCombo(0);
+                    if (comboCounter != null)
+                    {
+                        //if (comboCounter.currentCombo >= 30)
+                        comboPain(comboCounter.currentCombo >= 30);
+                        comboCounter.SetCombo(0);
+                    }
                     healthChange = -40;
                     break;
             }
@@ -553,9 +574,9 @@ namespace osum.GameModes
                         }
                     }
                     else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
                     else
-                        playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
+                        playfieldBackground.ChangeColour(HitObjectManager.ActiveStream, false);
                 }
                 else if (healthBar.CurrentHp == HealthBar.HP_BAR_MAXIMUM)
                 {

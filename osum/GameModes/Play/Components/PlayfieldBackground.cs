@@ -245,6 +245,8 @@ namespace osum.GameModes.Play.Components
 
             if (flash)
             {
+                Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
+
                 Colour = colour;
 
                 if (currentColour == COLOUR_INTRO)
