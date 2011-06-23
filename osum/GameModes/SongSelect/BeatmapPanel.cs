@@ -31,6 +31,7 @@ namespace osum.GameModes.SongSelect
 
         internal const int PANEL_HEIGHT = 60;
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 160);
+        private pSprite s_Star;
 
         internal BeatmapPanel(Beatmap beatmap, SongSelectMode select, int index)
         {
@@ -111,7 +112,7 @@ namespace osum.GameModes.SongSelect
             }
 
             if (thumb != null)
-                s_Thumbnail = new pSprite(thumb,Vector2.Zero) { DrawDepth = base_depth + 0.02f };
+                s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
                 s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = base_depth + 0.02f };
             s_Thumbnail.Offset = new Vector2(8, 2.7f);
@@ -124,6 +125,27 @@ namespace osum.GameModes.SongSelect
             };
 
             Sprites.Add(s_BackingPlate2);
+
+            int starCount = (int)Math.Max(1,Math.Ceiling(GameBase.Random.NextDouble() * 5));
+
+            Color4 col = Color4.YellowGreen;
+            if (starCount > 4)
+                col = Color4.Red;
+            else if (starCount > 2)
+                col = Color4.BlueViolet;
+
+            for (int i = 0; i < starCount; i++)
+            {
+                s_Star = new pSprite(TextureManager.Load(OsuTexture.songselect_star), Vector2.Zero)
+                {
+                    Origin = OriginTypes.BottomCentre,
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    DrawDepth = base_depth + 0.06f,
+                    Colour = col,
+                    Offset = new Vector2(-(15 * starCount/2f) + i * 15, PANEL_HEIGHT)
+                };
+                Sprites.Add(s_Star);
+            }
         }
 
         private pTexture GetThumbnail()
