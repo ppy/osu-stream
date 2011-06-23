@@ -85,6 +85,8 @@ namespace osum.Graphics.Sprites
             if (!matrixOperations)
                 return;
 
+            t = (TrackingPoint)t.Clone();
+
             t.UpdatePositions();
 
             Vector2 pos = t.BasePosition;
