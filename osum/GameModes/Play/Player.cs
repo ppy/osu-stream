@@ -232,7 +232,8 @@ namespace osum.GameModes
                     firstCountdown = false;
                 else
                 {
-                    AudioEngine.Music.Play();
+                    if (AudioEngine.Music != null)
+                        AudioEngine.Music.Play();
                     return;
                 }
             }
@@ -245,7 +246,8 @@ namespace osum.GameModes
             if (countdownStartTime < Clock.AudioTime)
                 Clock.BeginLeadIn(countdownStartTime);
             else
-                AudioEngine.Music.Play();
+                if (AudioEngine.Music != null)
+                    AudioEngine.Music.Play();
         }
 
         //static pSprite fpsTotalCount;
@@ -424,7 +426,7 @@ namespace osum.GameModes
                     //check we don't exceed 0.8mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
                     if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 800000)
-                        comboAmount = Math.Max(0,800000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
+                        comboAmount = Math.Max(0, 800000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
 
                     CurrentScore.comboBonusScore += comboAmount;
                 }
@@ -524,7 +526,7 @@ namespace osum.GameModes
             {
                 Completed = true;
                 Ranking.RankableScore = CurrentScore;
-                Ranking.RankableScore.accuracyBonusScore = (int)(CurrentScore.accuracy * 200000);
+                Ranking.RankableScore.accuracyBonusScore = (int)(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
 
                 GameBase.Scheduler.Add(delegate
                 {
@@ -589,7 +591,9 @@ namespace osum.GameModes
             }
             else
             {
+#if DEBUG
                 DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
+#endif
                 playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
             }
 
@@ -597,12 +601,28 @@ namespace osum.GameModes
 
         protected void hideFailSprite()
         {
+            if (HitObjectManager != null)
+            {
+                HitObjectManager.spriteManager.Transformations.Clear();
+                HitObjectManager.spriteManager.Position = Vector2.Zero;
+            }
+
             if (failSprite != null)
                 failSprite.FadeOut(100);
         }
 
         protected void showFailSprite()
         {
+            if (HitObjectManager != null)
+            {
+                HitObjectManager.spriteManager.MoveTo(new Vector2(0,100),5000, EasingTypes.OutDouble);
+                HitObjectManager.spriteManager.RotateTo(0.1f, 5000);
+                HitObjectManager.spriteManager.FadeOut(1000);
+                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0,300),5000, EasingTypes.OutDouble);
+                HitObjectManager.ActiveStreamSpriteManager.FadeOut(5000);
+                HitObjectManager.ActiveStreamSpriteManager.RotateTo(0.1f, 5000);
+            }
+
             failSprite = new pSprite(TextureManager.Load(OsuTexture.failed), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, 0.5f, true, Color4.White);
 
             pDrawable failGlow = failSprite.Clone();
