@@ -25,6 +25,8 @@ namespace osum.GameModes.Store
 
         List<PackPanel> packs = new List<PackPanel>();
 
+        //InAppPurchaseManager iap = new InAppPurchaseManager();
+
         public override void Initialize()
         {
             background =
@@ -51,6 +53,8 @@ namespace osum.GameModes.Store
             spriteManager.Add(loading);
 
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
+
+            //iap.requestProUpgradeProductData();
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)

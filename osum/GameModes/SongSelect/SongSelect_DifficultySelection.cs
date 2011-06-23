@@ -44,10 +44,9 @@ namespace osum.GameModes
         {
             if (State != SelectState.LoadingPreview) return;
 
-            AudioEngine.Music.Play();
             AudioEngine.Music.Volume = 0;
             AudioEngine.Music.SeekTo(30000);
-
+            AudioEngine.Music.Play();
 
             //do a second callback so we account for lost gametime due to the above audio load.
             GameBase.Scheduler.Add(delegate
@@ -336,6 +335,9 @@ namespace osum.GameModes
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
+            spriteManager.ScaleTo(1.4f,1400, EasingTypes.In);
+            spriteManager.RotateTo(0.02f, 1400, EasingTypes.In);
+
             State = SelectState.Starting;
 
             pDrawable activatedSprite = null;
@@ -358,6 +360,8 @@ namespace osum.GameModes
                     activatedSprite = s_ModeButtonExpert;
                     break;
             }
+
+            activatedSprite.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 500, 1, 0.4f, 1));
 
             activatedSprite.AdditiveFlash(800, 0.8f).Transform(new Transformation(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
 

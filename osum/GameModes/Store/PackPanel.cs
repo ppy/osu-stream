@@ -73,7 +73,7 @@ namespace osum.GameModes.Store
 
             s_Text = new pText(packTitle, 32, Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, PANEL_HEIGHT), base_depth + 0.01f, true, Color4.White, false);
             s_Text.Bold = true;
-            s_Text.Offset = new Vector2(74, 14);
+            s_Text.Offset = new Vector2(100, 14);
             if (s_Text.Texture != null)
                 Sprites.Add(s_Text);
 
