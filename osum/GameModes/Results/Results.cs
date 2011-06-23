@@ -309,7 +309,7 @@ namespace osum.GameModes
 
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (InputManager.IsPressed)
+            if (InputManager.IsPressed && finishedDisplaying)
                 offset += trackingPoint.WindowDelta.Y;
         }
 
