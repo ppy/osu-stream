@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1200</BundleVersion>
+    <BundleVersion>1208</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -118,7 +118,7 @@
     <MtouchDebug>False</MtouchDebug>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <ConsolePause>false</ConsolePause>
     <MtouchUseSGen>false</MtouchUseSGen>
@@ -134,7 +134,6 @@
         <Command type="AfterBuild" command="curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" />
       </CustomCommands>
     </CustomCommands>
-    <CodesignProvision>1F3A18AC-C1E1-4718-853F-047406EECD97</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -341,6 +340,7 @@
     <Compile Include="GameModes\MenuBackground.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="GameplayElements\Beatmaps\BeatmapDifficultyInfo.cs" />
+    <Compile Include="GameModes\Store\InAppPurchaseManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
