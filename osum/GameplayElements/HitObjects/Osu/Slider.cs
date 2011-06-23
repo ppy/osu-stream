@@ -555,8 +555,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (!Player.Autoplay)
             {
+                float radius = DifficultyManager.HitObjectRadiusSolidGamefieldHittable * 1.1f;
+
                 if (trackingPoint == null)
                 {
+
                     if (InputManager.IsPressed)
                     {
                         //todo: isPressed should *probably* be an attribute of a trackingPoint.
@@ -565,7 +568,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         //check each tracking point to find if any are usable
                         foreach (TrackingPoint p in InputManager.TrackingPoints)
                         {
-                            if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < DifficultyManager.HitObjectRadiusSolidGamefieldHittable * DifficultyManager.HitObjectRadiusSolidGamefieldHittable)
+                            if (pMathHelper.DistanceSquared(p.GamefieldPosition, TrackingPosition) < radius * radius)
                             {
                                 trackingPoint = p;
                                 break;
@@ -573,7 +576,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         }
                     }
                 }
-                else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > Math.Pow(DifficultyManager.HitObjectRadiusSolidGamefieldHittable * 2, 2))
+                else if (!trackingPoint.Valid || pMathHelper.DistanceSquared(trackingPoint.GamefieldPosition, TrackingPosition) > radius * radius * 4)
                     trackingPoint = null;
             }
 
