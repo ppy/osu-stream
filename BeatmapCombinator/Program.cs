@@ -231,6 +231,9 @@ namespace BeatmapCombinator
                 }
             }
 
+            foreach (BeatmapDifficulty d in difficulties)
+                if (d != null) d.HitObjectLines.Sort(delegate(HitObjectLine h1, HitObjectLine h2) { return h1.Time.CompareTo(h2.Time); });
+
             headerContent = difficulties.Find(d => d != null).HeaderLines;
 
             string[] splitdir = dir.Split('\\');
