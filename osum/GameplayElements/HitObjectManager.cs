@@ -370,11 +370,10 @@ namespace osum.GameplayElements
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
+                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
+                        TriggerScoreChange(h.Hit(), h);
                     if (Clock.AudioTimeSource.IsElapsing || (Clock.AudioTime < 0 && Clock.AudioLeadingIn))
                         TriggerScoreChange(h.CheckScoring(), h);
-                    //else if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
-                    //    TriggerScoreChange(h.Hit(), h);
-                    
 
                     if (lowestActiveObject < 0)
                         lowestActiveObject = i;
