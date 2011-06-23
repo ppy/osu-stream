@@ -346,6 +346,14 @@ namespace BeatmapCombinator
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
+
+                string thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-128.jpg";
+                if (File.Exists(thumb))
+                    package.AddFile("thumb-128.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
+                thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-256.jpg";
+                if (File.Exists(thumb))
+                    package.AddFile("thumb-256.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
+
                 package.Save();
             }
         }
