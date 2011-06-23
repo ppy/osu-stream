@@ -138,7 +138,18 @@ namespace osum
 		{
 			if (player == null)
 				return false;
-			player.CurrentTime = milliseconds/1000d;
+
+            if (IsElapsing)
+            {
+                player.Stop();
+                player.CurrentTime = milliseconds/1000d;
+                player.Play();
+            }
+            else
+            {
+                player.CurrentTime = milliseconds/1000d;
+            }
+
 			return true;
 		}
 	}
