@@ -133,6 +133,8 @@ namespace osum.GameModes
             menuBackgroundNew.Transform(fadeIn);
             menuBackground.Transform(fadeIn);
 
+            osuLogo.Transform(fadeIn);
+
             if (firstDisplay)
             {
                 pDrawable whiteLayer = pSprite.FullscreenWhitePixel;
@@ -159,7 +161,7 @@ namespace osum.GameModes
             menuBackgroundNew.BeAwesome();
 
             
-             osuLogo.Transformations.Clear();
+            osuLogo.Transformations.Clear();
             osuLogo.Transform(new Transformation(TransformationType.Scale, osuLogo.ScaleScalar, osuLogo.ScaleScalar * 2.4f, Clock.AudioTime, Clock.AudioTime + 1300, EasingTypes.InDouble));
             osuLogo.Transform(new Transformation(TransformationType.Rotation, osuLogo.Rotation, 0.35f, Clock.AudioTime, Clock.AudioTime + 1000, EasingTypes.In));
 
@@ -191,7 +193,6 @@ namespace osum.GameModes
 
             if (!firstDisplay && (didLoad || Clock.AudioTime < initial_display))
                 AudioEngine.Music.SeekTo(initial_display);
-
             AudioEngine.Music.Play();
 
             firstDisplay = false;
