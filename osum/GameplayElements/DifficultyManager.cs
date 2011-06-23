@@ -20,19 +20,19 @@ namespace osum.GameplayElements
         {
             get
             {
-                float lieniency = 1.4f;
+                float leniency = 1.4f;
 
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        lieniency = 1.6f;
+                        leniency = 1.6f;
                         break;
                     case Difficulty.Expert:
-                        lieniency = 1.3f;
+                        leniency = 1.3f;
                         break;
                 }
 
-                return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio * 1.3f;
+                return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio * leniency;
             }
         }
 
