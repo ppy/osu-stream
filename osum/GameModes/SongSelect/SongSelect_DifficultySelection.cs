@@ -335,9 +335,6 @@ namespace osum.GameModes
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
-            spriteManager.ScaleTo(1.4f,1400, EasingTypes.In);
-            spriteManager.RotateTo(0.02f, 1400, EasingTypes.In);
-
             State = SelectState.Starting;
 
             pDrawable activatedSprite = null;
@@ -361,7 +358,7 @@ namespace osum.GameModes
                     break;
             }
 
-            activatedSprite.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 500, 1, 0.4f, 1));
+            activatedSprite.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 500, 1.2f, 0.4f, 1));
 
             activatedSprite.AdditiveFlash(800, 0.8f).Transform(new Transformation(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
 
