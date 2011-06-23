@@ -628,12 +628,7 @@ namespace osum.Graphics.Sprites
             return clone;
         }
 
-        internal void FadeColour(Color4 colour, int duration)
-        {
-            FadeColour(colour, duration, false);
-        }
-
-        internal void FadeColour(Color4 colour, int duration, bool force)
+        internal void FadeColour(Color4 colour, int duration, bool force = false)
         {
             if (!force && Colour == colour && Transformations.Count == 0)
                 return;
@@ -658,6 +653,7 @@ namespace osum.Graphics.Sprites
             Color4 end = Colour;
 
             Transformation last = Transformations.FindLast(t => t.Type == TransformationType.Colour);
+
             if (last != null)
             {
                 end = last.EndColour;
