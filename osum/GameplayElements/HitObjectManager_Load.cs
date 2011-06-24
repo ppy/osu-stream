@@ -78,6 +78,7 @@ namespace osum.GameplayElements
                     string line = null;
 
                     bool readNew = true;
+                    int objnumber = 0;
 
                     while (true)
                     {
@@ -250,9 +251,7 @@ namespace osum.GameplayElements
 
                                 Vector2 pos = new Vector2(x, y);
 
-
-
-                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner;
+                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner || objnumber == 0;
 
                                 HitObject h = null;
 
@@ -340,6 +339,7 @@ namespace osum.GameplayElements
                                     h.Volume = volume;
                                     Add(h, difficulty);
                                 }
+                                objnumber++;
 
                                 break;
                             case FileSection.Unknown:
@@ -374,8 +374,6 @@ namespace osum.GameplayElements
                 Vector2 stackVector = new Vector2(StackOffset, StackOffset);
 
                 const int STACK_LENIENCE = 3;
-
-                objects[0].NewCombo = true;
 
                 //Reverse pass for stack calculation.
                 for (int i = objects.Count - 1; i > 0; i--)
