@@ -478,6 +478,9 @@ namespace osum.GameplayElements
                     if (currHitObject.StackCount != 0)
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
+                    if (last != null && last.StartTime == currHitObject.StartTime)
+                        diffSpriteManager.Add(Connect(last, currHitObject));
+
                     //Draw follow lines
                     if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {

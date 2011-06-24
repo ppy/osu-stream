@@ -271,11 +271,7 @@ namespace osum.GameplayElements
                 currentComboNumber = lastDiffObject == null ? 1 : lastDiffObject.ComboNumber + (lastDiffObject.IncrementCombo ? 1 : 0);
 
             if (sameTimeAsLastAdded)
-            {
                 currentComboNumber = Math.Max(1, --currentComboNumber);
-                HitObject hLast = diffObjects[diffObjects.Count - 1];
-                Connect(hLast, h);
-            }
 
             h.ComboNumber = currentComboNumber;
             h.ColourIndex = colourIndex;
@@ -290,16 +286,18 @@ namespace osum.GameplayElements
         /// <summary>
         /// Connect two objects that occur at the same time with a line.
         /// </summary>
-        void Connect(HitObject h1, HitObject h2)
+        pSprite Connect(HitObject h1, HitObject h2)
         {
             Vector2 p1 = h1.Position;
             Vector2 p2 = h2.Position;
+
+            HitObject firstObject = h1 is HitCircle || h1.EndTime < h2.EndTime ? h1 : h2;
 
             Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                h1.Sprites[0].Clocking, p3, SpriteManager.drawOrderBwd(h1.EndTime + 15), false, Color4.White);
+                firstObject.Sprites[0].Clocking, p3, SpriteManager.drawOrderBwd(firstObject.EndTime - 15), false, Color4.White);
 
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
@@ -307,20 +305,17 @@ namespace osum.GameplayElements
 
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-            connectingLine.Transform(h1.Sprites[0].Transformations);
+            connectingLine.Transform(firstObject.Sprites[0].Transformations);
 
-            Box2 rect = connectingLine.DisplayRectangle;
-
-            if (h1 is HitCircle || h1.EndTime < h2.EndTime)
-                h1.Sprites.Add(connectingLine);
-            else
-                h2.Sprites.Add(connectingLine);
+            h2.Sprites.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
 
             h1.connectionSprite = connectingLine;
             h2.connectionSprite = connectingLine;
+
+            return connectingLine;
         }
 
         #region IDrawable Members
