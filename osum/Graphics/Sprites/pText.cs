@@ -70,18 +70,6 @@ namespace osum.Graphics.Sprites
             TextBounds = bounds;
         }
 
-        internal override Vector2 FieldScale
-        {
-            get
-            {
-                switch (Field)
-                {
-                    default:
-                        return Scale;
-                }
-            }
-        }
-
         public override void Dispose()
         {
             base.Dispose();

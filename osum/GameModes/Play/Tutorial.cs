@@ -183,6 +183,11 @@ namespace osum.GameModes.Play
             Multitouch_3,
             Multitouch_Interact,
             Multitouch_Judge,
+            Stacked_1,
+            Stacked_2,
+            Stacked_3,
+            Stacked_Interact,
+            Stacked_Judge,
             Healthbar_1,
             Healthbar_2,
             Healthbar_3,
@@ -515,7 +520,7 @@ namespace osum.GameModes.Play
                         GameBase.Scheduler.Add(delegate
                         {
                             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
-                            showText("good...", 80).FadeOut(1000);
+                            showText("Good...", 80).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit50);
                         }, 2000);
 
@@ -523,7 +528,7 @@ namespace osum.GameModes.Play
                         {
                             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
                             AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet.Normal);
-                            showText("great!", 90).FadeOut(1000);
+                            showText("Great!", 90).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit100);
                         }, 3000);
 
@@ -1142,6 +1147,125 @@ namespace osum.GameModes.Play
                         showTouchToContinue();
                     }, 800);
                     break;
+
+                case TutorialSegments.Stacked_1:
+                    showText("Beats can also appear in a stack on top of each other.", -100);
+
+                    Clock.ResetManual();
+                    Player.Autoplay = true;
+
+                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager = new HitObjectManager(Beatmap);
+
+                    sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 1500, true, 0, HitObjectSoundType.Normal);
+                    sampleHitObject.ComboNumber = 1;
+                    sampleHitObject.SetClocking(ClockTypes.Manual);
+
+                    HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
+
+                    sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 2000, false, 0, HitObjectSoundType.Normal);
+                    sampleHitObject.ComboNumber = 2;
+                    sampleHitObject.SetClocking(ClockTypes.Manual);
+
+                    HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
+
+                    HitObjectManager.PostProcessing();
+                    HitObjectManager.SetActiveStream(Difficulty.Easy);
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (Clock.ManualTime < 1300)
+                            Clock.IncrementManual(0.5f);
+                        else if (!touchToContinue)
+                        {
+                            showText("Watch for multiple approach circles and tap in time with them.", 120);
+                            showTouchToContinue();
+                        }
+                    };
+                    break;
+                case TutorialSegments.Stacked_2:
+                    currentSegmentDelegate = delegate
+                    {
+                        if (Clock.ManualTime < 2500)
+                            Clock.IncrementManual(0.5f);
+                        else if (!touchToContinue)
+                        {
+                            showText("Hit circles can also be stacked at the beginning of sliders, so watch out for those!");
+                            showTouchToContinue();
+                        }
+                    };
+                    break;
+                case TutorialSegments.Stacked_3:
+                    int i = 0;
+                    showText("Let's try a few stacked beats!");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Stacked_Interact:
+                    {
+                        prepareInteract();
+
+                        const int x1 = 100;
+                        const int x15 = 230;
+                        const int x2 = 512 - 100;
+                        const int x25 = 512 - 230;
+                        const int y1 = 80;
+                        const int y2 = 384 - 80;
+
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 162 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 168 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 170 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 178 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 180 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 182 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
+                        HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
+                            2, 300, new List<Vector2>() { new Vector2(x1 + (x2 - x1)/2, y2 - 20), new Vector2(x2, y2) }, null, 200, 300f / 8), Difficulty.Easy);
+
+                        Beatmap.StackLeniency = 2;
+
+                        HitObjectManager.PostProcessing();
+                        HitObjectManager.SetActiveStream(Difficulty.Easy);
+
+                        currentSegmentDelegate = delegate
+                        {
+                            if (!touchToContinue && HitObjectManager.AllNotesHit)
+                                loadNextSegment();
+                        };
+                    }
+                    break;
+                case TutorialSegments.Stacked_Judge:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+
+                    GameBase.Scheduler.Add(delegate
+                    {
+
+                        if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 4)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Hmm, not quite.. Let's go over stacks again!");
+                            nextSegment = TutorialSegments.Stacked_1;
+                        }
+                        else if (CurrentScore.count50 > 6)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Watch the approach circles closely and make sure you hit every note in the stacks!");
+                            nextSegment = TutorialSegments.Slider_Interact;
+                        }
+                        else if (CurrentScore.count100 > 0)
+                        {
+                            showText("Good job!");
+                        }
+                        else
+                        {
+                            showText("Excellent!");
+                        }
+
+                        showTouchToContinue();
+                    }, 500);
+                    break;
+
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
                     Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
