@@ -191,7 +191,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             HitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
             Sprites.AddRange(HitCircleStart.Sprites);
-            SpriteCollectionDim.AddRange(HitCircleStart.Sprites);
+            SpriteCollectionDim.AddRange(HitCircleStart.SpriteCollectionDim);
         }
 
         protected virtual void initializeSprites()
