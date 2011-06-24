@@ -129,13 +129,17 @@ namespace osum.GameplayElements
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
+            if (oldActiveStream == Difficulty.None)
+            {
+                //loading a new stream.
+                ActiveStream = newDifficulty;
+                return 0;
+            }
+            
             if (StreamHitObjects[(int)newDifficulty] == null)
+            {
                 return -1;
-
-            ActiveStream = newDifficulty;
-
-            pList<HitObject> newStreamObjects = ActiveStreamObjects;
-            SpriteManager newSpriteManager = ActiveStreamSpriteManager;
+            }
 
             int switchTime = Clock.AudioTime;
 
@@ -163,7 +167,6 @@ namespace osum.GameplayElements
 
                 //find a good point to stream switch. this will be mapper set later.
                 for (int i = processFrom; i < oldStreamObjects.Count; i++)
-                {
                     if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
                     {
                         removeBeforeObjectIndex = i;
@@ -171,12 +174,17 @@ namespace osum.GameplayElements
                         break;
                     }
 
-                    newSpriteManager.Add(oldStreamObjects[i]);
-                }
-
                 if (removeBeforeObjectIndex == 0)
                     //failed to find a suitable stream switch point.
                     return -1;
+
+                ActiveStream = newDifficulty;
+
+                pList<HitObject> newStreamObjects = ActiveStreamObjects;
+                SpriteManager newSpriteManager = ActiveStreamSpriteManager;
+
+                for (int i = processFrom; i < removeBeforeObjectIndex; i++)
+                    newSpriteManager.Add(oldStreamObjects[i]);
 
                 if (removeBeforeObjectIndex - processFrom > 0)
                 {
@@ -201,9 +209,6 @@ namespace osum.GameplayElements
             }
 
             processFrom = 0;
-
-            if (oldActiveStream == Difficulty.None)
-                return 0; //loading a stream from nothing, not switching.
 
             nextStreamChange = switchTime;
             return switchTime;
