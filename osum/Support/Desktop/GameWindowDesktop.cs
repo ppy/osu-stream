@@ -67,6 +67,7 @@ namespace osum
                     break;
                 case 'e':
                     BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
+                    if (bmi == null) break;
                     if (bmi.HighScore == 0)
                     {
                         GameBase.Notify("Unlocked expert");
