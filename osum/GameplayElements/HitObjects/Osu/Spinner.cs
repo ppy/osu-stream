@@ -104,6 +104,7 @@ namespace osum.GameplayElements
                             spinnerCentre, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
             Sprites.Add(spriteCircle);
 
+            //todo: possible optimisation by changing the draw method for filling of spinner metres.
             spriteScoreMetreBackground =
                 new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime), new Color4(20, 20, 20, 255))
                 {
@@ -140,7 +141,7 @@ namespace osum.GameplayElements
             {
                 p.Transformations.Clear();
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
-                p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut));
+                p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 2 : DifficultyManager.FadeOut)));
                 p.AlignToSprites = true;
             }
 
