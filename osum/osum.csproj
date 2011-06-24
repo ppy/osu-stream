@@ -171,7 +171,6 @@
     </Compile>
     <Compile Include="Support\iPhone\GameBaseIphone.cs" />
     <Compile Include="Support\iPhone\GameWindowIphone.cs" />
-    <Compile Include="GameModes\MainMenu.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerIphone.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
@@ -226,7 +225,6 @@
     <Compile Include="Graphics\Renderers\NativeTextRendererIphone.cs" />
     <Compile Include="GameModes\Play\Components\ComboCounter.cs" />
     <Compile Include="GameplayElements\Scoring\Score.cs" />
-    <Compile Include="GameModes\Ranking.cs" />
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
     <Compile Include="Support\DebugOverlay.cs" />
@@ -337,10 +335,14 @@
     <Compile Include="GameModes\Play\Tutorial.cs" />
     <Compile Include="Graphics\TextureManager_Load.cs" />
     <Compile Include="GameplayElements\BeatmapDatabase.cs" />
-    <Compile Include="GameModes\MenuBackground.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="GameplayElements\Beatmaps\BeatmapDifficultyInfo.cs" />
     <Compile Include="GameModes\Store\InAppPurchaseManager.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu.cs" />
+    <Compile Include="GameModes\MainMenu\MenuBackground.cs" />
+    <Compile Include="GameModes\Results\ResultTransition.cs" />
+    <Compile Include="GameModes\Results\Results.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

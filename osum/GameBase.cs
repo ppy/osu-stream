@@ -401,7 +401,6 @@ namespace osum
             Director.Draw();
 
             MainSpriteManager.Draw();
-
         }
 
         public static void TriggerLayoutChanged()
