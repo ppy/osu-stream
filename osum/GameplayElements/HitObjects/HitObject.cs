@@ -300,7 +300,7 @@ namespace osum.GameplayElements
                             FieldTypes.GamefieldSprites,
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
-            m_HitObjectManager.spriteManager.Add(p);
+            m_HitObjectManager.ActiveStreamSpriteManager.Add(p);
 
             const int HitFadeIn = 120;
             const int HitFadeOut = 600;
