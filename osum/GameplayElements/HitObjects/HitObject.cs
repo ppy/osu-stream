@@ -295,7 +295,12 @@ namespace osum.GameplayElements
                             FieldTypes.GamefieldSprites,
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
-            m_HitObjectManager.ActiveStreamSpriteManager.Add(p);
+
+            SpriteManager sm = m_HitObjectManager.ActiveStreamSpriteManager;
+            if (sm == null)
+                m_HitObjectManager.spriteManager.Add(p);
+            else
+                sm.Add(p);
 
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 300;
@@ -323,7 +328,6 @@ namespace osum.GameplayElements
                                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
                                        Clock.Time + HitFadeIn));
             }
-
         }
 
         /// <summary>
