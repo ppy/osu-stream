@@ -92,7 +92,7 @@ namespace osum.GameplayElements.Beatmaps
 
         public string Title { get { return Package.GetMetadata(MapMetaType.Title); } }
 
-        public double DifficultyStars { get { return double.Parse(Package.GetMetadata(MapMetaType.DifficultyRating), GameBase.nfi); } }
+        public double DifficultyStars { get { return double.Parse(Package.GetMetadata(MapMetaType.DifficultyRating) ?? "0", GameBase.nfi); } }
     }
 }
 
