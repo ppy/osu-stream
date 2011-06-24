@@ -188,6 +188,11 @@ namespace osum.GameModes.Play
             Stacked_3,
             Stacked_Interact,
             Stacked_Judge,
+            Stream_1,
+            Stream_2,
+            Stream_3,
+            Stream_4,
+            Stream_5,
             Healthbar_1,
             Healthbar_2,
             Healthbar_3,
@@ -252,190 +257,11 @@ namespace osum.GameModes.Play
                     showText("Let's start by looking at the different kinds of beats.");
                     showTouchToContinue();
                     break;
-                case TutorialSegments.Healthbar_1:
-                    showText("The health bar is located at the top-left of your display.");
-                    healthBar = new HealthBar();
-                    {
-                        pDrawable lastFlash = null;
-                        currentSegmentDelegate = delegate
-                        {
-                            if (lastFlash == null || lastFlash.Alpha == 0)
-                                lastFlash = healthBar.s_barBg.AdditiveFlash(1000, 1).ScaleTo(healthBar.s_barBg.ScaleScalar * 1.04f, 1000);
-                        };
-                    }
-
-                    streamSwitchDisplay = new StreamSwitchDisplay();
-                    showTouchToContinue();
-                    break;
-                case TutorialSegments.Healthbar_2:
-                    showText("It will go up or down depending on your performance.");
-                    showTouchToContinue();
-                    break;
-                case TutorialSegments.Healthbar_3:
-                    showText("In stream mode gameplay, you can jump to the next stream by filling your health bar.", -120);
-
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
-
-                    healthBar.SetCurrentHp(100);
-                    {
-                        float increaseRate = 0;
-                        currentSegmentDelegate = delegate
-                        {
-                            if (touchToContinue) return;
-
-                            if (healthBar.CurrentHp == 200)
-                            {
-                                if (increaseRate > 20)
-                                {
-                                    streamSwitchDisplay.EndSwitch();
-                                    healthBar.SetCurrentHp(100);
-                                    playfieldBackground.ChangeColour(Difficulty.Hard);
-                                    showTouchToContinue();
-                                }
-                                else
-                                {
-                                    increaseRate += 0.2f;
-                                    streamSwitchDisplay.BeginSwitch(true);
-                                    playfieldBackground.Move(increaseRate);
-                                }
-                            }
-                            else
-                            {
-                                healthBar.SetCurrentHp(healthBar.CurrentHp + 1);
-                            }
-                        };
-                    }
-                    break;
-                case TutorialSegments.Healthbar_4:
-                    showText("In a similar manner, if it reaches zero, you will drop down a stream.", -120);
-                    {
-                        float increaseRate = 0;
-                        currentSegmentDelegate = delegate
-                        {
-                            if (touchToContinue) return;
-
-                            if (healthBar.CurrentHp == 0)
-                            {
-                                if (increaseRate > 20)
-                                {
-                                    streamSwitchDisplay.EndSwitch();
-                                    healthBar.SetCurrentHp(100);
-                                    playfieldBackground.ChangeColour(Difficulty.Normal);
-                                    showTouchToContinue();
-                                }
-                                else
-                                {
-                                    increaseRate += 0.2f;
-                                    streamSwitchDisplay.BeginSwitch(false);
-                                    playfieldBackground.Move(-increaseRate);
-                                }
-                            }
-                            else
-                            {
-                                healthBar.SetCurrentHp(healthBar.CurrentHp - 1);
-                            }
-                        };
-                    }
-                    break;
-                case TutorialSegments.Healthbar_5:
-                    showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", -120);
-
-                    playfieldBackground.ChangeColour(Difficulty.Easy, false);
-
-                    currentSegmentDelegate = delegate
-                    {
-                        if (playfieldBackground.Velocity == 0)
-                            healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
-                        if (healthBar.CurrentHp == 0)
-                        {
-
-                            if (!touchToContinue)
-                            {
-                                showTouchToContinue();
-                                playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
-                                showFailSprite();
-                                Failed = true;
-                                AudioEngine.Music.Pause();
-                            }
-                        }
-                        else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING);
-                    };
-                    break;
-                case TutorialSegments.Healthbar_End:
-                    healthBar.SetCurrentHp(100);
-                    hideFailSprite();
-                    Failed = false;
-                    AudioEngine.Music.Play();
-                    healthBar.InitialIncrease = true;
-                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
-                    break;
-
-
-
-
-
-
-
-
-
-                case TutorialSegments.Score_1:
-                    scoreDisplay = new ScoreDisplay();
-                    {
-                        pDrawable lastFlash = null;
-                        currentSegmentDelegate = delegate
-                        {
-                            if (lastFlash == null || lastFlash.Alpha == 0)
-                                scoreDisplay.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
-                        };
-                    }
-                    showText("Scoring is based on a your accuracy and combo.");
-                    showTouchToContinue();
-                    break;
-                case TutorialSegments.Score_2:
-                    showText("You can also get score bonuses from reaching higher streams, and for spinning spinners fast!");
-                    showTouchToContinue();
-                    break;
-                case TutorialSegments.Score_3:
-                    showText("Your current combo can be seen in the bottom-left corner of the screen.");
-                    {
-                        GameBase.Scheduler.Add(delegate
-                        {
-                            comboCounter = new ComboCounter();
-                            comboCounter.SetCombo(35);
-
-                            pDrawable lastFlash = null;
-                            currentSegmentDelegate = delegate
-                            {
-                                if (comboCounter.displayCombo == 35)
-                                {
-                                    if (!touchToContinue)
-                                        showTouchToContinue(false);
-
-                                    if (lastFlash == null || lastFlash.Alpha == 0)
-                                        comboCounter.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
-                                }
-                            };
-                        }, 500);
-                    }
-                    break;
-                case TutorialSegments.Score_4:
-                    comboCounter.SetCombo(0);
-                    showText("Your combo will only show up when you are on a streak!");
-                    GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
-                    break;
-
-
-
-
-
-
-
                 case TutorialSegments.HitCircle_1:
                     resetScore();
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
 
-                    showText("\"Hit Circles\" are the most basic beat in osu!.");
+                    showText("\"Hit circles\" are the most basic beat in osu!.");
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_2:
@@ -595,7 +421,7 @@ namespace osum.GameModes.Play
                         showText("Getting there!\nWatch the approaching circle carefully and listen to the beat. Let's try once more!");
                         nextSegment = TutorialSegments.HitCircle_Interact;
                     }
-                    else if (CurrentScore.count100 > 0)
+                    else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 0)
                     {
                         showText("That's right!\nFocus on the beat of the song and try to time your taps to get higher accuracy.");
                     }
@@ -623,7 +449,7 @@ namespace osum.GameModes.Play
                         sampleHitObject = new HoldCircle(HitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
                         //arbitrary
 
-                        sampleHitObject.SetClocking(ClockTypes.Manual);
+                        sampleHitObject.Clocking = ClockTypes.Manual;
 
                         sampleHitObject.Colour = Color4.White;
                         sampleHitObject.ComboNumber = 1;
@@ -742,7 +568,7 @@ namespace osum.GameModes.Play
                         sampleHitObject.Colour = TextureManager.DefaultColours[0];
                         sampleHitObject.ComboNumber = 1;
 
-                        sampleHitObject.SetClocking(ClockTypes.Manual);
+                        sampleHitObject.Clocking = ClockTypes.Manual;
 
                         currentSegmentDelegate = delegate
                         {
@@ -799,7 +625,7 @@ namespace osum.GameModes.Play
                     sampleHitObject.Colour = TextureManager.DefaultColours[0];
                     sampleHitObject.ComboNumber = 1;
 
-                    sampleHitObject.SetClocking(ClockTypes.Manual);
+                    sampleHitObject.Clocking = ClockTypes.Manual;
 
                     pText arrowAtEnd = null;
 
@@ -811,7 +637,7 @@ namespace osum.GameModes.Play
                         {
                             showTouchToContinue();
                             arrowAtEnd.FadeOut(50);
-                            showText("Sometimes you will need to repeat more than once.", 120).Colour = Color4.SkyBlue;
+                            showText("Sometimes you will need to repeat more than once.", 20).Colour = Color4.SkyBlue;
                         }
 
                         sampleHitObject.CheckScoring();
@@ -1032,13 +858,13 @@ namespace osum.GameModes.Play
 
                         sampleHitObject = new HitCircle(HitObjectManager, new Vector2(128, 180), 1500, true, 0, HitObjectSoundType.Normal);
                         sampleHitObject.ComboNumber = 1;
-                        sampleHitObject.SetClocking(ClockTypes.Manual);
+                        sampleHitObject.Clocking = ClockTypes.Manual;
 
                         HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
                         sampleHitObject = new HitCircle(HitObjectManager, new Vector2(384, 180), 1500, true, 0, HitObjectSoundType.Normal);
                         sampleHitObject.ComboNumber = 1;
-                        sampleHitObject.SetClocking(ClockTypes.Manual);
+                        sampleHitObject.Clocking = ClockTypes.Manual;
 
                         HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
@@ -1159,13 +985,13 @@ namespace osum.GameModes.Play
 
                     sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 1500, true, 0, HitObjectSoundType.Normal);
                     sampleHitObject.ComboNumber = 1;
-                    sampleHitObject.SetClocking(ClockTypes.Manual);
+                    sampleHitObject.Clocking = ClockTypes.Manual;
 
                     HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
                     sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 2000, false, 0, HitObjectSoundType.Normal);
                     sampleHitObject.ComboNumber = 2;
-                    sampleHitObject.SetClocking(ClockTypes.Manual);
+                    sampleHitObject.Clocking = ClockTypes.Manual;
 
                     HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
 
@@ -1221,7 +1047,7 @@ namespace osum.GameModes.Play
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 180 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 182 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
                         HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
-                            2, 300, new List<Vector2>() { new Vector2(x1 + (x2 - x1)/2, y2 - 20), new Vector2(x2, y2) }, null, 200, 300f / 8), Difficulty.Easy);
+                            2, 300, new List<Vector2>() { new Vector2(x1 + (x2 - x1) / 2, y2 - 20), new Vector2(x2, y2) }, null, 200, 300f / 8), Difficulty.Easy);
 
                         Beatmap.StackLeniency = 2;
 
@@ -1264,6 +1090,292 @@ namespace osum.GameModes.Play
 
                         showTouchToContinue();
                     }, 500);
+                    break;
+
+                case TutorialSegments.Stream_1:
+                    showText("There are three different modes of play.");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Stream_2:
+                    showText("Stream mode consists of three separate difficulties, otherwise known as 'Streams'.");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Stream_3:
+                    showText("Reaching higher streams will make gameplay harder, but allow you to get a higher score.");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Stream_4:
+                    Clock.ResetManual();
+                    Player.Autoplay = true;
+
+                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager = new HitObjectManager(Beatmap);
+
+                    const int vpos = 240;
+
+                    int hpos = 20;
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1350, true, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Easy);
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1350, true, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1350, true, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+
+                    hpos += 100;
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1500, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(hpos, vpos), 1550, false, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
+                            2, 300, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
+                    HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(hpos, vpos), 1550, false, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
+                            2, 300, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+
+                    hpos += 180;
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1650, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1650, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos - 40, vpos - 40), 1650, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Easy);
+
+                    hpos += 100;
+
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos + 60), 1750, true, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+
+                    hpos += 100;
+
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1850, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Easy);
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1850, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
+                    HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1850, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+
+
+
+                    //HitObjectManager.Add(h, Difficulty.Hard);
+
+                    HitObjectManager.PostProcessing();
+                    HitObjectManager.SetActiveStream(Difficulty.Easy);
+                    playfieldBackground.ChangeColour(Difficulty.Easy, false);
+
+                    pText streamTitle = showText("Easy...", -90);
+
+                    Difficulty currentStream = Difficulty.Easy;
+                    int lastSecond = 0;
+                    bool forwards = true;
+                    int startTime = 0;
+
+                    const int delay_between_switches = 1200;
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (Clock.ManualTime < 1200)
+                        {
+                            Clock.IncrementManual(1f);
+                            startTime = Clock.Time;
+                        }
+                        else if ((Clock.Time - startTime) / delay_between_switches != lastSecond)
+                        {
+                            lastSecond = (Clock.Time - startTime) / delay_between_switches;
+
+                            if (forwards)
+                                currentStream = (Difficulty)(currentStream + 1);
+                            else
+                                currentStream = (Difficulty)(currentStream - 1);
+
+                            if (currentStream == Difficulty.Hard || currentStream == GameplayElements.Difficulty.Easy)
+                            {
+                                forwards = !forwards;
+                                showTouchToContinue();
+                            }
+
+                            streamTitle.FadeOut(50);
+                            streamTitle = showText(currentStream.ToString() + "...", -90);
+
+                            HitObjectManager.ActiveStream = currentStream;
+                            playfieldBackground.ChangeColour(currentStream, true);
+                        }
+
+                        //else if (!touchToContinue)
+                        //{
+                        //    showText("Watch for multiple approach circles and tap in time with them.", 120);
+                        //    showTouchToContinue();
+                        //}
+                    };
+
+                    break;
+                case TutorialSegments.Stream_5:
+                    HitObjectManager.ActiveStream = Difficulty.Normal;
+                    playfieldBackground.ChangeColour(Difficulty.Normal, true);
+
+                    foreach (SpriteManager sm in HitObjectManager.streamSpriteManagers)
+                        if (sm != null) sm.ScaleTo(0.5f, 500, EasingTypes.InOut).MoveTo(new Vector2(0,150),500,EasingTypes.In);
+
+                    loadNextSegment();
+                    break;
+                case TutorialSegments.Healthbar_1:
+                    showText("The health bar is located at the top-left of your display.", -120);
+                    healthBar = new HealthBar();
+                    {
+                        pDrawable lastFlash = null;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (lastFlash == null || lastFlash.Alpha == 0)
+                                lastFlash = healthBar.s_barBg.AdditiveFlash(1000, 1).ScaleTo(healthBar.s_barBg.ScaleScalar * 1.04f, 1000);
+                        };
+                    }
+
+                    streamSwitchDisplay = new StreamSwitchDisplay();
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Healthbar_2:
+                    showText("It will go up or down depending on your performance.", -120);
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Healthbar_3:
+                    showText("In stream mode gameplay, you can jump to the next stream by filling your health bar.", -120);
+
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
+
+                    healthBar.SetCurrentHp(100);
+                    {
+                        float increaseRate = 0;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (touchToContinue) return;
+
+                            if (healthBar.CurrentHp == 200)
+                            {
+                                if (increaseRate > 20)
+                                {
+                                    streamSwitchDisplay.EndSwitch();
+                                    HitObjectManager.ActiveStream = Difficulty.Hard;
+                                    healthBar.SetCurrentHp(100);
+                                    playfieldBackground.ChangeColour(Difficulty.Hard);
+                                    showTouchToContinue();
+                                }
+                                else
+                                {
+                                    increaseRate += 0.2f;
+                                    streamSwitchDisplay.BeginSwitch(true);
+                                    playfieldBackground.Move(increaseRate);
+                                }
+                            }
+                            else
+                            {
+                                healthBar.SetCurrentHp(healthBar.CurrentHp + 1);
+                            }
+                        };
+                    }
+                    break;
+                case TutorialSegments.Healthbar_4:
+                    showText("In a similar manner, if it reaches zero, you will drop down a stream.", -120);
+                    {
+                        float increaseRate = 0;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (touchToContinue) return;
+
+                            if (healthBar.CurrentHp == 0)
+                            {
+                                if (increaseRate > 20)
+                                {
+                                    streamSwitchDisplay.EndSwitch();
+                                    HitObjectManager.ActiveStream = Difficulty.Normal;
+                                    healthBar.SetCurrentHp(100);
+                                    playfieldBackground.ChangeColour(Difficulty.Normal);
+
+                                    showTouchToContinue();
+                                }
+                                else
+                                {
+                                    increaseRate += 0.2f;
+                                    streamSwitchDisplay.BeginSwitch(false);
+                                    playfieldBackground.Move(-increaseRate);
+                                }
+                            }
+                            else
+                            {
+                                healthBar.SetCurrentHp(healthBar.CurrentHp - 1);
+                            }
+                        };
+                    }
+                    break;
+                case TutorialSegments.Healthbar_5:
+                    showText("If it hits zero on the lowest stream you will fail instantly, so watch out!", -120);
+
+                    HitObjectManager.ActiveStream = Difficulty.Easy;
+                    playfieldBackground.ChangeColour(Difficulty.Easy, true);
+
+                    currentSegmentDelegate = delegate
+                    {
+                        if (playfieldBackground.Velocity == 0)
+                            healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
+                        if (healthBar.CurrentHp == 0)
+                        {
+
+                            if (!touchToContinue)
+                            {
+                                showTouchToContinue();
+                                playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+                                showFailSprite();
+                                Failed = true;
+                                AudioEngine.Music.Pause();
+                            }
+                        }
+                        else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                    };
+                    break;
+                case TutorialSegments.Healthbar_End:
+                    healthBar.SetCurrentHp(100);
+                    hideFailSprite();
+                    Failed = false;
+                    AudioEngine.Music.Play();
+                    healthBar.InitialIncrease = true;
+                    currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };
+                    break;
+
+                case TutorialSegments.Score_1:
+                    scoreDisplay = new ScoreDisplay();
+                    {
+                        pDrawable lastFlash = null;
+                        currentSegmentDelegate = delegate
+                        {
+                            if (lastFlash == null || lastFlash.Alpha == 0)
+                                scoreDisplay.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
+                        };
+                    }
+                    showText("Scoring is based on a your accuracy and combo.");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Score_2:
+                    showText("You can also get score bonuses from reaching higher streams, and for spinning spinners fast!");
+                    showTouchToContinue();
+                    break;
+                case TutorialSegments.Score_3:
+                    showText("Your current combo can be seen in the bottom-left corner of the screen.");
+                    {
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            comboCounter = new ComboCounter();
+                            comboCounter.SetCombo(35);
+
+                            pDrawable lastFlash = null;
+                            currentSegmentDelegate = delegate
+                            {
+                                if (comboCounter.displayCombo == 35)
+                                {
+                                    if (!touchToContinue)
+                                        showTouchToContinue(false);
+
+                                    if (lastFlash == null || lastFlash.Alpha == 0)
+                                        comboCounter.spriteManager.Sprites.ForEach(s => lastFlash = s.AdditiveFlash(1000, 1).ScaleTo(s.ScaleScalar * 1.1f, 1000));
+                                }
+                            };
+                        }, 500);
+                    }
+                    break;
+                case TutorialSegments.Score_4:
+                    comboCounter.SetCombo(0);
+                    showText("Your combo will only show up when you are on a streak!");
+                    GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
                     break;
 
                 case TutorialSegments.End:
