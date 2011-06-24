@@ -526,7 +526,7 @@ namespace osum.GameModes
             {
                 Completed = true;
                 Results.RankableScore = CurrentScore;
-                Results.RankableScore.accuracyBonusScore = (int)(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
+                Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
 
                 GameBase.Scheduler.Add(delegate
                 {
