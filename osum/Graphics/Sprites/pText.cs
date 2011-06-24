@@ -121,6 +121,18 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        internal override Vector2 FieldScale
+        {
+            get
+            {
+                switch (Field)
+                {
+                    default:
+                        return Scale;
+                }
+            }
+        }
+
         internal override void UpdateTextureSize()
         {
             DrawWidth = (int)Math.Round(lastMeasure.X);
