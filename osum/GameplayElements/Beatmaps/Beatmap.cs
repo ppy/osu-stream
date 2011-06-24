@@ -91,6 +91,8 @@ namespace osum.GameplayElements.Beatmaps
         public string Creator { get { return Package.GetMetadata(MapMetaType.Creator); } }
 
         public string Title { get { return Package.GetMetadata(MapMetaType.Title); } }
+
+        public double DifficultyStars { get { return double.Parse(Package.GetMetadata(MapMetaType.DifficultyRating), GameBase.nfi); } }
     }
 }
 

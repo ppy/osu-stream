@@ -350,7 +350,36 @@ namespace BeatmapCombinator
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 
-                string thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-128.jpg";
+                string dir = Path.GetDirectoryName(audioFilename);
+
+                string metadata = dir + "\\metadata.txt";
+                if (File.Exists(metadata))
+                {
+                    foreach (string line in File.ReadAllLines(metadata))
+                    {
+                        string[] split = line.Split(',');
+                        string[] var = line.Split(':');
+                        string key = string.Empty;
+                        string val = string.Empty;
+                        if (var.Length > 1)
+                        {
+                            key = var[0].Trim();
+                            val = var[1].Trim();
+
+                            switch (key)
+                            {
+                                case "ArtistUrl":
+                                    package.AddMetadata(MapMetaType.ArtistUrl, val);
+                                    break;
+                                case "Difficulty":
+                                    package.AddMetadata(MapMetaType.DifficultyRating, val);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))
                     package.AddFile("thumb-128.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
                 thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-256.jpg";

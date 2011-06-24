@@ -84,6 +84,8 @@ namespace osum.GameModes.SongSelect
             Sprites.Add(s_TextCreator);
 
             pTexture thumb = null;
+            
+            int starCount = 0;
 
             if (beatmap != null)
             {
@@ -100,6 +102,7 @@ namespace osum.GameModes.SongSelect
                     s_Text.Text = beatmap.Title;
                     s_TextArtist.Text = beatmap.Artist;
                     s_TextCreator.Text = beatmap.Creator;
+                    starCount = (int)beatmap.DifficultyStars;
                 }
                 catch
                 {
@@ -126,7 +129,7 @@ namespace osum.GameModes.SongSelect
 
             Sprites.Add(s_BackingPlate2);
 
-            int starCount = (int)Math.Max(1,Math.Ceiling(GameBase.Random.NextDouble() * 5));
+            
 
             Color4 col = Color4.YellowGreen;
             if (starCount > 4)

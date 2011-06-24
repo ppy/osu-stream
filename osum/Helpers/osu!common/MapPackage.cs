@@ -1591,6 +1591,8 @@ namespace osu_common.Libraries.Osz2
         Language,
         TitleUnicode,
         ArtistUnicode,
-        Unknown = 9999
+        ArtistUrl,
+        Unknown = 9999,
+        DifficultyRating,
     }
 }
