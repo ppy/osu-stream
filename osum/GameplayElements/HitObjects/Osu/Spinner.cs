@@ -320,6 +320,7 @@ namespace osum.GameplayElements
                 {
                     score = ScoreChange.SpinnerSpinPoints;
                     lastScoredRotationCount += sensitivity_modifier / 4;
+                    lastSamplePlayedRotationCount = currentRotationCount;
                 }
             }
 
