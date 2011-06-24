@@ -257,12 +257,7 @@ namespace osum.GameplayElements
         {
             if (m_HitObjectManager == null) return; //is the case for sliders, where we don't want to display this stuff.
 
-            float depth;
-            //todo: should this be changed?
-            if (this is Spinner)
-                depth = SpriteManager.drawOrderBwd(EndTime - 4);
-            else
-                depth = SpriteManager.drawOrderFwdPrio(EndTime - 4);
+            float depth = this is Spinner ? SpriteManager.drawOrderBwd(EndTime - 4) : SpriteManager.drawOrderFwdPrio(EndTime - 4);
 
             OsuTexture texture = OsuTexture.None;
 
@@ -303,16 +298,16 @@ namespace osum.GameplayElements
             m_HitObjectManager.ActiveStreamSpriteManager.Add(p);
 
             const int HitFadeIn = 120;
-            const int HitFadeOut = 600;
-            const int PostEmpt = 500;
+            const int HitFadeOutDuration = 300;
+            const int HitFadeOutStart = 600;
 
-            if (action > 0)
+            if (action > ScoreChange.Miss)
             {
                 p.Transform(
                     new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 1.4)), 1, 0.3f, 3));
                 p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
-                                       Clock.Time + PostEmpt, Clock.Time + PostEmpt + HitFadeOut));
+                                       Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
             }
             else
             {
@@ -320,8 +315,8 @@ namespace osum.GameplayElements
                             new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
                                                Clock.Time + HitFadeIn));
                 p.Transform(
-                    new Transformation(TransformationType.Fade, 1, 0, Clock.Time + PostEmpt,
-                                       Clock.Time + PostEmpt + HitFadeOut));
+                    new Transformation(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
+                                       Clock.Time + HitFadeOutStart + HitFadeOutDuration));
 
                 p.Transform(
                     new Transformation(TransformationType.Rotation, 0,
