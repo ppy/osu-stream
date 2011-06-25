@@ -373,18 +373,20 @@ namespace osum.Graphics.Sprites
                     TexturesEnabled = p.UsesTextures;
                     if (p.Draw())
                     {
-                        pSprite ps = p as pSprite;
-                        if (ps != null)
-                        {
-                            if (ps.Texture != currentBatchTexture)
-                            {
-                                //this texture is different from the current batch; we will need to flush and render fresh.
-                                flushBatch();
-                                currentBatchTexture = ps.Texture;
-                            }
+                        //todo: implement batching!
 
-                            addToBatch(ps);
-                        }
+                        //pSprite ps = p as pSprite;
+                        //if (ps != null)
+                        //{
+                        //    if (ps.Texture != currentBatchTexture)
+                        //    {
+                        //        //this texture is different from the current batch; we will need to flush and render fresh.
+                        //        flushBatch();
+                        //        currentBatchTexture = ps.Texture;
+                        //    }
+
+                        //    addToBatch(ps);
+                        //}
                     }
                     
                     if (Alpha < 1)
