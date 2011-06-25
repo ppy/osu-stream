@@ -277,7 +277,7 @@ namespace osum.GameModes
 
             //Average Timing
             {
-                float avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
+                float avg = (float)Math.Abs(RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount));
                 pText heading = new pText("Avg. Timing: " + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
