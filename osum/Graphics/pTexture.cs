@@ -143,7 +143,7 @@ namespace osum.Graphics
         {
             if (TextureGl == null || TextureGl.Id == -1)
             {
-                if (assetName != null)
+                if (assetName != null || OsuTextureInfo != OsuTexture.None)
                 {
 
                     pTexture reloadedTexture = OsuTextureInfo != OsuTexture.None ? TextureManager.Load(OsuTextureInfo) : FromFile(assetName);

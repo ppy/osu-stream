@@ -134,12 +134,15 @@ namespace osum.Graphics.Skins
 
         public static void ReloadAll(bool forceUnload = true)
         {
+            DisposeDisposable();
+
             List<pTexture> cache = SpriteCache.Values.ToList();
             if (forceUnload) SpriteCache.Clear();
 
             foreach (pTexture p in cache)
             {
-                if (forceUnload) p.TextureGl.Delete();
+                if (forceUnload && p.TextureGl != null)
+                    p.TextureGl.Dispose();
                 p.ReloadIfPossible();
             }
 
@@ -148,7 +151,8 @@ namespace osum.Graphics.Skins
 
             foreach (pTexture p in cache)
             {
-                if (forceUnload) p.TextureGl.Delete();
+                if (forceUnload && p.TextureGl != null)
+                    p.TextureGl.Dispose();
                 p.ReloadIfPossible();
             }
 
@@ -183,7 +187,6 @@ namespace osum.Graphics.Skins
                 tex.Y = info.Y;
                 tex.Width = info.Width;
                 tex.Height = info.Height;
-                tex.OsuTextureInfo = texture;
 
                 return tex;
             }
