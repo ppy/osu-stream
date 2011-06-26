@@ -62,7 +62,7 @@ namespace osum.GameModes
 
             pText artist = new pText(Player.Beatmap.Artist, 30, new Vector2(10, fill_height + 5), 0.5f, true, Color4.OrangeRed) { TextShadow = true };
             layer1.Add(artist);
-            pText title = new pText(Player.Beatmap.Title, 30, new Vector2(16 + artist.MeasureText().X / GameBase.BaseToNativeRatio, fill_height + 5), 0.5f, true, Color4.White) { TextShadow = true };
+            pText title = new pText(Player.Beatmap.Title, 30, new Vector2(16 + artist.MeasureText().X / GameBase.BaseToNativeRatioAligned, fill_height + 5), 0.5f, true, Color4.White) { TextShadow = true };
             layer1.Add(title);
 
             pTexture modeTex;
