@@ -478,7 +478,7 @@ namespace osum.GameplayElements
                     if (currHitObject.StackCount != 0)
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
-                    if (last != null && last.StartTime == currHitObject.StartTime)
+                    if (last != null && Math.Abs(last.StartTime - currHitObject.StartTime) < 10)
                         diffSpriteManager.Add(Connect(last, currHitObject));
 
                     //Draw follow lines
