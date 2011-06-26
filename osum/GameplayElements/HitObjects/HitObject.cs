@@ -307,6 +307,8 @@ namespace osum.GameplayElements
                             OriginTypes.Centre,
                             ClockTypes.Game, EndPosition, depth, false, Color4.White);
 
+            Sprites.Add(p);
+
             SpriteManager sm = m_HitObjectManager.ActiveStreamSpriteManager;
             if (sm == null)
                 m_HitObjectManager.spriteManager.Add(p);
