@@ -501,7 +501,7 @@ namespace osum.GameModes
                 if (finishedDisplaying)
                 {
                     if (!InputManager.IsPressed)
-                        offset *= 0.94f;
+                        offset *= 0.90f;
 
                     float thisOffset = 0;
                     if (offset != 0)
