@@ -203,6 +203,7 @@ namespace osum.GameModes.Play
             Score_2,
             Score_3,
             Score_4,
+            Outro,
             End,
         }
 
@@ -1377,7 +1378,10 @@ namespace osum.GameModes.Play
                     showText("Your combo will only show up when you are on a streak!");
                     GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
                     break;
-
+            case TutorialSegments.Outro:
+                    showText("Congratulations. You now have the skills required to challenge osu!");
+                    showTouchToContinue(false);
+                    break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
                     Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
