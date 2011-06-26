@@ -211,6 +211,7 @@ namespace osum.GameModes
         {
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.menuwhoosh);
                 ScaleTo(scale_offset, duration/2, EasingTypes.InOut);
                 MoveTo(new Vector2(75, -44), duration/2, EasingTypes.InOut);
                 RotateTo(rotation_offset, duration/2, EasingTypes.InOut);

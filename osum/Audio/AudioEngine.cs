@@ -20,7 +20,17 @@ namespace osum.Audio
         SliderSlide,
         MenuBack,
         SpinnerBonus,
-        SpinnerSpin
+        SpinnerSpin,
+        stream_down,
+        stream_up,
+        count3,
+        count2,
+        count1,
+        countgo,
+        miss,
+        PRELOAD_END,
+        fail,
+        menuwhoosh
     }
 
     internal static class AudioEngine
@@ -46,7 +56,11 @@ namespace osum.Audio
                 if (set == SampleSet.None)
                     continue;
                 foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
+                {
+                    if (s == OsuSamples.PRELOAD_END)
+                        break;
                     LoadSample(s, set);
+                }
             }
         }
 
@@ -66,7 +80,12 @@ namespace osum.Audio
                     return null;
             lastPlayedTimes[sample] = Clock.AudioTime;
 
-            return AudioEngine.Effect.PlayBuffer(buffer, volume);
+            Source src = AudioEngine.Effect.PlayBuffer(buffer, volume);
+
+            if (sample > OsuSamples.PRELOAD_END)
+                src.Disposable = true;
+
+            return src;
         }
 
         internal static void Reset()
@@ -102,9 +121,12 @@ namespace osum.Audio
 
             if (!loadedSamples.TryGetValue(filename, out buffer))
             {
+                bool oneShot = sample > OsuSamples.PRELOAD_END;
+
                 if (AudioEngine.Effect != null)
                     buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
-                loadedSamples.Add(filename, buffer);
+                if (!oneShot)
+                    loadedSamples.Add(filename, buffer);
             }
 
             return buffer;

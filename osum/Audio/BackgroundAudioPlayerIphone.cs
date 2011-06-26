@@ -4,6 +4,7 @@ using MonoTouch;
 using MonoTouch.Foundation;
 using MonoTouch.AudioToolbox;
 using System.IO;
+using osum.Helpers;
 
 namespace osum
 {
@@ -22,14 +23,14 @@ namespace osum
 		
 		public override float Volume {
 			get {
-				if (player == null) return 0;
+				if (player == null) return 1;
 				
 				return player.Volume;
 			}
 			set {
 				if (player == null) return;
 				
-				player.Volume = value;
+				player.Volume = pMathHelper.ClampToOne(value);
 			}
 		}
 		
@@ -71,6 +72,9 @@ namespace osum
         {
             if (!base.Load(audio, looping, identifier))
                 return false;
+
+            float vol = Volume;
+
             Unload();
 
             NSError error = null;
@@ -79,6 +83,7 @@ namespace osum
 			{
                 player = AVAudioPlayer.FromData(data,out error);
                 //player.MeteringEnabled = true; -- enable for CurrentPower readings
+                Volume = vol;
                 player.NumberOfLoops = looping ? -1 : 0;
 			}
 
@@ -87,6 +92,8 @@ namespace osum
 
         public bool Load(string filename)
         {
+            float vol = Volume;
+
             Unload();
 
             string path = filename;
@@ -96,6 +103,7 @@ namespace osum
             using (NSUrl url = NSUrl.FromFilename(path))
 			{
 	            player = AVAudioPlayer.FromUrl(url,out error);
+                Volume = vol;
 	            //player.MeteringEnabled = true;
 			}
 
@@ -148,6 +156,7 @@ namespace osum
             else
             {
                 player.CurrentTime = milliseconds/1000d;
+                player.PrepareToPlay();
             }
 
 			return true;

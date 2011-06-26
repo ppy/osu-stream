@@ -7,6 +7,7 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.Audio;
 
 namespace osum.GameModes.Play.Components
 {
@@ -107,6 +108,8 @@ namespace osum.GameModes.Play.Components
                     s.Transform(new Transformation(TransformationType.Fade, s.Alpha, 0, Clock.ModeTime, Clock.ModeTime + 400));
                     s.ScaleTo(3, 600, EasingTypes.In);
                 });
+
+            AudioEngine.PlaySample(increase ? OsuSamples.stream_up : OsuSamples.stream_down);
 
             if (!increase)
             {

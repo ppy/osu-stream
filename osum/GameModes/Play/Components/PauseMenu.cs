@@ -226,7 +226,8 @@ namespace osum.GameModes.Play.Components
 
         private void pause()
         {
-            AudioEngine.Music.Pause();
+            if (!Failed)
+                AudioEngine.Music.Pause();
             Clock.AbortLeadIn();
 
             Player p = Director.CurrentMode as Player;

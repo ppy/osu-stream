@@ -18,11 +18,6 @@ namespace osum
         /// </summary>
         AudioContext context;
 
-        /// <summary>
-        /// All loaded samples are accessible here in a filename-bufferid dictionary.
-        /// </summary>
-        Dictionary<string, int> BufferCache = new Dictionary<string, int>();
-
         const int MAX_SOURCES = 32; //hardware limitation
 
         int[] sources;
@@ -55,9 +50,19 @@ namespace osum
                 else
                 {
                     info.SourceId = sources[i];
-                    info.BufferId = -1;
+                    info.BufferId = 0;
                 }
             }
+
+            GameBase.Scheduler.Add(CheckUnload, 1000);
+        }
+
+        void CheckUnload()
+        {
+            foreach (Source s in sourceInfo)
+                if (s.Disposable && !s.Playing)
+                    s.DeleteBuffer();
+            GameBase.Scheduler.Add(CheckUnload, 1000);
         }
 
         /// <summary>
@@ -74,8 +79,8 @@ namespace osum
             using (Stream str = NativeAssetManager.Instance.GetFileStream(filename))
             using (AudioReader sound = new AudioReader(str))
             {
-                byte[] readSound = sound.ReadToEnd().Data;
-                AL.BufferData(buffer, OpenTK.Audio.OpenAL.ALFormat.Stereo16, readSound, readSound.Length, 44100);
+                SoundData s = sound.ReadToEnd();
+                AL.BufferData(buffer, s.SoundFormat.SampleFormatAsOpenALFormat, s.Data, s.Data.Length, s.SoundFormat.SampleRate);
             }
 
             if (AL.GetError() != ALError.NoError)
@@ -89,10 +94,6 @@ namespace osum
         /// </summary>
         public void UnloadAll()
         {
-            foreach (int id in BufferCache.Values)
-                AL.DeleteBuffer(id);
-            BufferCache.Clear();
-
             AL.DeleteSources(sources);
         }
 
@@ -146,7 +147,6 @@ namespace osum
         /// </summary>
         public void Update()
         {
-
         }
     }
 
@@ -159,7 +159,8 @@ namespace osum
             set
             {
                 sourceId = value;
-                BufferId = -1;
+                Disposable = false;
+                BufferId = 0;
                 pitch = 1;
             }
         }
@@ -182,7 +183,7 @@ namespace osum
 
         public bool Reserved;
 
-        int bufferId = -1;
+        int bufferId = 0;
         public int BufferId
         {
             get { return bufferId; }
@@ -191,7 +192,6 @@ namespace osum
                 if (bufferId == value)
                     return;
                 bufferId = value;
-
                 AL.Source(sourceId, ALSourcei.Buffer, bufferId);
             }
         }
@@ -215,6 +215,7 @@ namespace osum
         }
 
         bool looping;
+        public bool Disposable;
         public bool Looping
         {
             get { return looping; }
@@ -238,6 +239,17 @@ namespace osum
         {
             if (Playing)
                 AL.SourceStop(sourceId);
+        }
+
+        internal void DeleteBuffer()
+        {
+            if (Disposable)
+            {
+                int buffer = bufferId;
+                BufferId = 0;
+                AL.DeleteBuffer(buffer);
+                Disposable = false;
+            }
         }
     }
 }

@@ -174,7 +174,7 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                AudioEngine.Music.Volume = 0.5f + Director.ActiveTransition.CurrentValue * 0.5f;
+                AudioEngine.Music.Volume = 0.3f + Director.ActiveTransition.CurrentValue * 0.7f;
 
                 if (ActiveTransition.FadeOutDone)
                 {

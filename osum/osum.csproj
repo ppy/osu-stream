@@ -403,5 +403,14 @@
     <Content Include="Skins\Default\songselect_960.png" />
     <Content Include="Skins\Default\ranking_480.png" />
     <Content Include="Skins\Default\ranking_960.png" />
+    <Content Include="Skins\Default\fail.wav" />
+    <Content Include="Skins\Default\stream_down.wav" />
+    <Content Include="Skins\Default\stream_up.wav" />
+    <Content Include="Skins\Default\menuwhoosh.wav" />
+    <Content Include="Skins\Default\miss.wav" />
+    <Content Include="Skins\Default\count1.wav" />
+    <Content Include="Skins\Default\count2.wav" />
+    <Content Include="Skins\Default\count3.wav" />
+    <Content Include="Skins\Default\countgo.wav" />
   </ItemGroup>
 </Project>

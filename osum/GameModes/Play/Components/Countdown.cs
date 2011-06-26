@@ -7,6 +7,7 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using OpenTK.Graphics;
 using OpenTK;
+using osum.Audio;
 
 namespace osum.GameModes.Play.Components
 {
@@ -58,16 +59,20 @@ namespace osum.GameModes.Play.Components
                 case 0:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_go);
                     spriteManager.Sprites.ForEach(s => { s.FadeOut(150); s.ScaleTo(1.3f, 200); });
+                    AudioEngine.PlaySample(OsuSamples.countgo);
                     HasFinished = true;
                     break;
                 case 1:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_1);
+                    AudioEngine.PlaySample(OsuSamples.count1);
                     break;
                 case 2:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_2);
+                    AudioEngine.PlaySample(OsuSamples.count2);
                     break;
                 case 3:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_3);
+                    AudioEngine.PlaySample(OsuSamples.count3);
                     break;
                 case 4:
                     spriteManager.Sprites.ForEach(s => { s.FadeIn(200); });

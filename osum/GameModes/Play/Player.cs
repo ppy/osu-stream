@@ -290,7 +290,7 @@ namespace osum.GameModes
                 return;
 
             //pass on the event to hitObjectManager for handling.
-            if (HitObjectManager != null && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
+            if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
                 return;
 
             if (menu != null)
@@ -318,6 +318,8 @@ namespace osum.GameModes
 
             if (harsh)
             {
+                AudioEngine.PlaySample(OsuSamples.miss);
+
                 HitObjectManager.ActiveStreamSpriteManager.ScaleScalar = 0.9f;
                 HitObjectManager.ActiveStreamSpriteManager.ScaleTo(1, 400, EasingTypes.In);
             }
@@ -486,6 +488,15 @@ namespace osum.GameModes
 
         public override void Update()
         {
+            if (Failed)
+            {
+                float vol = AudioEngine.Music.Volume;
+                if (vol == 0)
+                    AudioEngine.Music.Pause();
+                else
+                    AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
+            }
+            
             if (HitObjectManager != null)
             {
                 CheckForCompletion();
@@ -561,7 +572,8 @@ namespace osum.GameModes
 
                             showFailSprite();
 
-                            AudioEngine.Music.Pause();
+                            AudioEngine.PlaySample(OsuSamples.fail);
+
                             HitObject activeObject = HitObjectManager.ActiveObject;
                             if (activeObject != null)
                                 activeObject.StopSound(false);
@@ -601,6 +613,8 @@ namespace osum.GameModes
 
         protected void hideFailSprite()
         {
+            Failed = false;
+
             if (HitObjectManager != null)
             {
                 HitObjectManager.spriteManager.Transformations.Clear();
@@ -615,10 +629,10 @@ namespace osum.GameModes
         {
             if (HitObjectManager != null)
             {
-                HitObjectManager.spriteManager.MoveTo(new Vector2(0,100),5000, EasingTypes.OutDouble);
+                HitObjectManager.spriteManager.MoveTo(new Vector2(0,400),5000, EasingTypes.OutDouble);
                 HitObjectManager.spriteManager.RotateTo(0.1f, 5000);
                 HitObjectManager.spriteManager.FadeOut(1000);
-                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0,300),5000, EasingTypes.OutDouble);
+                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0,400),3000, EasingTypes.OutDouble);
                 HitObjectManager.ActiveStreamSpriteManager.FadeOut(5000);
                 HitObjectManager.ActiveStreamSpriteManager.RotateTo(0.1f, 5000);
             }
