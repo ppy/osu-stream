@@ -244,22 +244,21 @@ namespace osum.Graphics.Sprites
         {
             base.Update();
 
-            texturesEnabled = false; //reset on new frame.
             lastUpdate = Clock.Time;
 
-            if (firstRender)
-            {
-                int loadTime = Clock.Time - creationTime;
+            //if (firstRender)
+            //{
+            //    int loadTime = Clock.Time - creationTime;
 
-                if (loadTime != 0)
-                {
-                    foreach (pDrawable p in Sprites)
-                        if (p.Clocking == ClockTypes.Game)
-                            p.Transformations.ForEach(t => t.Offset(loadTime));
-                }
+            //    if (loadTime != 0)
+            //    {
+            //        foreach (pDrawable p in Sprites)
+            //            if (p.Clocking == ClockTypes.Game)
+            //                p.Transformations.ForEach(t => t.Offset(loadTime));
+            //    }
 
-                firstRender = false;
-            }
+            //    firstRender = false;
+            //}
 
             if (SpriteQueue != null)
             {
