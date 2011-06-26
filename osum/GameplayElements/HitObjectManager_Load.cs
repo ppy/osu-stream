@@ -480,10 +480,9 @@ namespace osum.GameplayElements
 
                     if (last != null && Math.Abs(last.StartTime - currHitObject.StartTime) < 10)
                         diffSpriteManager.Add(Connect(last, currHitObject));
-
-                    //Draw follow lines
-                    if (last != null && !currHitObject.NewCombo && !(last is Spinner))
+                    else if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {
+                        //Draw follow lines
                         Vector2 pos1 = last.EndPosition;
                         int time1 = last.EndTime;
                         Vector2 pos2 = currHitObject.Position;
