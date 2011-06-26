@@ -184,8 +184,15 @@ namespace osum.GameModes
                 string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
-                    GameBase.Notify("This difficulty has not yet been mapped!", delegate { pendingModeChange = false; });
-                    isNewDifficulty = false;
+
+                    if (Player.Difficulty == Difficulty.Easy)
+                        //came from easy -> expert; drop back on normal!
+                        Player.Difficulty = Difficulty.Normal;
+                    else
+                    {
+                        isNewDifficulty = false;
+                        GameBase.Notify("This difficulty has not yet been mapped!", delegate { pendingModeChange = false; });
+                    }
                 }
                 else if (newDifficulty == Difficulty.Expert && mapRequiresUnlock)
                 {
