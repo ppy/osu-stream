@@ -290,6 +290,7 @@ namespace osum.GameModes
 
             //add a temporary button to allow returning to song select
             s_ButtonBack = new BackButton(returnToSelect);
+            s_ButtonBack.Alpha = 0;
             spriteManager.Add(s_ButtonBack);
 
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
@@ -371,6 +372,8 @@ namespace osum.GameModes
             {
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
+
+                s_ButtonBack.FadeIn(400);
 
                 finishedDisplaying = true;
 
