@@ -40,15 +40,6 @@ namespace osum.Graphics.Sprites
 
         private bool textChanged = true;
 
-        internal override Vector2 FieldPosition
-        {
-            get
-            {
-                ExactCoordinates = Transformations.Find(t => t.Type == TransformationType.Movement) == null;
-                return base.FieldPosition;
-            }
-        }
-
 #if iOS
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
 #else

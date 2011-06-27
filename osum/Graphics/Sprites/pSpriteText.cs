@@ -136,7 +136,6 @@ namespace osum.Graphics.Sprites
             }
 
             SpacingOverlap = spacingOverlap;
-            ExactCoordinates = true;
 
             //this will trigger a render call here
             Text = text;

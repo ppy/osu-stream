@@ -177,7 +177,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal bool ExactCoordinates;
+        internal virtual bool ExactCoordinates { get { return UsesTextures && !(hasMovement || hasMovementX); } }
 
 
         internal virtual Vector2 FieldPosition
@@ -340,17 +340,24 @@ namespace osum.Graphics.Sprites
                 Transform(t);
         }
 
+        bool hasColour;
+        bool hasAlpha;
+        bool hasRotation;
+        bool hasScale;
+        bool hasMovement;
+        bool hasMovementX;
+
         /// <summary>
         /// Iterates through each tansformation and applies where necessary.
         /// </summary>
         private void UpdateTransformations()
         {
-            bool hasColour = false;
-            bool hasAlpha = false;
-            bool hasRotation = false;
-            bool hasScale = false;
-            bool hasMovement = false;
-            bool hasMovementX = false;
+            hasColour = false;
+            hasAlpha = false;
+            hasRotation = false;
+            hasScale = false;
+            hasMovement = false;
+            hasMovementX = false;
 
             for (int i = 0; i < Transformations.Count; i++)
             {

@@ -113,7 +113,6 @@ namespace osum.GameModes
 
             stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(0, 180), 0.95f, true, Color4.White);
             stream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 900, initial_display + 1300));
-            stream.ExactCoordinates = true;
             spriteManager.Add(stream);
 
             additiveStream = stream.Clone();
