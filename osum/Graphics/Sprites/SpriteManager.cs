@@ -40,6 +40,7 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
+using osu_common.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -65,7 +66,7 @@ namespace osum.Graphics.Sprites
         internal SpriteManager()
             : this(new List<pDrawable>())
         {
-            
+
         }
 
         void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
@@ -162,30 +163,27 @@ namespace osum.Graphics.Sprites
             {
                 if (forwardPlayOptimisedAdd && !value)
                 {
-                    if (forwardPlayList.Count > 0)
+                    if (ForwardPlayList.Count > 0)
                     {
                         if (SpriteQueue == null)
-                            SpriteQueue = new Queue<pDrawable>(forwardPlayList);
-                        forwardPlayList.Clear();
+                            SpriteQueue = new Queue<pDrawable>(ForwardPlayList);
+                        else
+                            foreach (pDrawable p in ForwardPlayList)
+                                SpriteQueue.Enqueue(p);
+                        ForwardPlayList.Clear();
                     }
                 }
                 forwardPlayOptimisedAdd = value;
             }
         }
 
-        private List<pDrawable> forwardPlayList = new List<pDrawable>();
+        internal pList<pDrawable> ForwardPlayList = new pList<pDrawable>() { UseBackwardsSearch = true };
 
         internal void Add(pDrawable sprite)
         {
             if (ForwardPlayOptimisedAdd && sprite.Transformations.Count > 0)
             {
-                int index = forwardPlayList.BinarySearch(sprite);
-
-                if (index < 0)
-                    forwardPlayList.Insert(~index, sprite);
-                else
-                    forwardPlayList.Insert(index, sprite);
-
+                ForwardPlayList.AddInPlace(sprite);
                 return;
             }
 
@@ -246,20 +244,6 @@ namespace osum.Graphics.Sprites
 
             lastUpdate = Clock.Time;
 
-            //if (firstRender)
-            //{
-            //    int loadTime = Clock.Time - creationTime;
-
-            //    if (loadTime != 0)
-            //    {
-            //        foreach (pDrawable p in Sprites)
-            //            if (p.Clocking == ClockTypes.Game)
-            //                p.Transformations.ForEach(t => t.Offset(loadTime));
-            //    }
-
-            //    firstRender = false;
-            //}
-
             if (SpriteQueue != null)
             {
                 do
@@ -317,7 +301,7 @@ namespace osum.Graphics.Sprites
             lastBlendSrc = src;
             lastBlendDest = dst;
 
-            GL.BlendFunc(lastBlendSrc,lastBlendDest);
+            GL.BlendFunc(lastBlendSrc, lastBlendDest);
         }
 
         void addToBatch(pDrawable p)
@@ -336,7 +320,7 @@ namespace osum.Graphics.Sprites
         public override bool Draw()
         {
             if (!base.Draw()) return false;
-            
+
             pTexture currentBatchTexture = null;
             TexturesEnabled = false;
 
@@ -387,7 +371,7 @@ namespace osum.Graphics.Sprites
                         //    addToBatch(ps);
                         //}
                     }
-                    
+
                     if (Alpha < 1)
                         p.Alpha = tempAlpha;
                 }
