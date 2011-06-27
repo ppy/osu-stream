@@ -51,6 +51,7 @@
     <Compile Include="GameModes\MainMenu\MenuBackground.cs" />
     <Compile Include="GameModes\Play\Components\ComboCounter.cs" />
     <Compile Include="GameModes\Play\Components\Countdown.cs" />
+    <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="GameModes\Play\Components\PlayfieldBackground.cs" />
     <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />

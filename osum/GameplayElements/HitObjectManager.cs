@@ -364,6 +364,7 @@ namespace osum.GameplayElements
             //initialise to the last object. if we don't find an earlier one below, this wil be used.
 
             ActiveObject = null;
+            NextObject = null;
 
             for (int i = processFrom; i < activeObjects.Count; i++)
             {
@@ -377,6 +378,11 @@ namespace osum.GameplayElements
 
                     if (h.StartTime <= hitObjectNow && h.EndTime > hitObjectNow)
                         ActiveObject = h;
+                    else if (h.StartTime > hitObjectNow)
+                    {
+                        if (NextObject == null)
+                            NextObject = h;
+                    }
 
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;

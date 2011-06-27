@@ -343,6 +343,7 @@
     <Compile Include="GameModes\Results\ResultTransition.cs" />
     <Compile Include="GameModes\Results\Results.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
+    <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

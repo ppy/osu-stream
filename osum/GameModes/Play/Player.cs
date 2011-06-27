@@ -25,7 +25,16 @@ namespace osum.GameModes
 {
     public class Player : GameMode
     {
-        public HitObjectManager HitObjectManager;
+        private HitObjectManager hitObjectManager;
+        public HitObjectManager HitObjectManager
+        {
+            get { return hitObjectManager; }
+            set
+            {
+                hitObjectManager = value;
+                if (gf != null) gf.HitObjectManager = value;
+            }
+        }
 
         internal HealthBar healthBar;
 
@@ -90,6 +99,8 @@ namespace osum.GameModes
 
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
+
+            gf = new GuideFinger();
 
             loadBeatmap();
 
@@ -458,6 +469,8 @@ namespace osum.GameModes
         private pSprite failSprite;
         private double DifficultyComboMultiplier = 1;
 
+        GuideFinger gf;
+
         public override bool Draw()
         {
             base.Draw();
@@ -480,6 +493,8 @@ namespace osum.GameModes
 
             touchBurster.Draw();
 
+            if (gf != null) gf.Draw();
+
             topMostSpriteManager.Draw();
 
             frameCount++;
@@ -499,7 +514,9 @@ namespace osum.GameModes
                 else
                     AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
             }
-            
+
+            if (gf != null) gf.Update();
+
             if (HitObjectManager != null)
             {
                 CheckForCompletion();
@@ -540,7 +557,7 @@ namespace osum.GameModes
             {
                 Completed = true;
                 Results.RankableScore = CurrentScore;
-                Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0,CurrentScore.accuracy - 0.8)/0.2 * 200000);
+                Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0, CurrentScore.accuracy - 0.8) / 0.2 * 200000);
 
                 GameBase.Scheduler.Add(delegate
                 {
@@ -632,10 +649,10 @@ namespace osum.GameModes
         {
             if (HitObjectManager != null)
             {
-                HitObjectManager.spriteManager.MoveTo(new Vector2(0,400),5000, EasingTypes.OutDouble);
+                HitObjectManager.spriteManager.MoveTo(new Vector2(0, 400), 5000, EasingTypes.OutDouble);
                 HitObjectManager.spriteManager.RotateTo(0.1f, 5000);
                 HitObjectManager.spriteManager.FadeOut(1000);
-                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0,400),3000, EasingTypes.OutDouble);
+                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0, 400), 3000, EasingTypes.OutDouble);
                 HitObjectManager.ActiveStreamSpriteManager.FadeOut(5000);
                 HitObjectManager.ActiveStreamSpriteManager.RotateTo(0.1f, 5000);
             }
