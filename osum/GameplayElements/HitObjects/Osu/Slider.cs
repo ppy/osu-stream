@@ -212,7 +212,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
                 StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                EndTime, EndTime + DifficultyManager.HitWindow50);
+                EndTime, EndTime + DifficultyManager.FadeOut);
 
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
@@ -835,7 +835,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                     clone.Transform(circleScaleOut);
                     clone.Transform(circleFadeOut);
 
-                    m_HitObjectManager.spriteManager.Add(clone);
+                    Sprites.Add(clone);
+                    usableSpriteManager.Add(clone);
                 }
             }
 
