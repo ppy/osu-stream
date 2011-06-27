@@ -806,11 +806,13 @@ namespace osum.GameplayElements.HitObjects.Osu
                     clone.Transformations.Clear();
 
                     clone.Clocking = ClockTypes.Game;
+                    clone.AlwaysDraw = false;
 
                     clone.Transform(circleScaleOut);
                     clone.Transform(circleFadeOut);
 
-                    m_HitObjectManager.spriteManager.Add(clone);
+                    Sprites.Add(clone);
+                    usableSpriteManager.Add(clone);
                 }
             }
 

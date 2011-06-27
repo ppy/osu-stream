@@ -259,6 +259,16 @@ namespace osum.GameplayElements
             return ScoreChange.Ignore;
         }
 
+        internal SpriteManager usableSpriteManager
+        {
+            get
+            {
+                SpriteManager sm = m_HitObjectManager.ActiveStreamSpriteManager;
+                if (sm != null) return sm;
+                return m_HitObjectManager.spriteManager;
+            }
+        }
+
         /// <summary>
         /// Trigger a hit animation showing the score overlay above the object.
         /// </summary>
@@ -308,11 +318,7 @@ namespace osum.GameplayElements
 
             Sprites.Add(p);
 
-            SpriteManager sm = m_HitObjectManager.ActiveStreamSpriteManager;
-            if (sm == null)
-                m_HitObjectManager.spriteManager.Add(p);
-            else
-                sm.Add(p);
+            usableSpriteManager.Add(p);
 
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 300;
@@ -496,13 +502,13 @@ namespace osum.GameplayElements
         {
             int c = StartTime.CompareTo(other.StartTime);
             if (c != 0) return c;
-            
+
             if (NewCombo) return -1;
-            
+
             if (other.NewCombo) return 1;
-            
+
             return 0;
-   
+
         }
 
         public int CompareTo(int time)
