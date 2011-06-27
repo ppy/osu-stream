@@ -131,5 +131,13 @@ namespace osum.Audio
 
             return buffer;
         }
+
+        internal static void Suspend()
+        {
+            if (Effect != null)
+            {
+                Effect.UnloadAll();
+            }
+        }
     }
 }
