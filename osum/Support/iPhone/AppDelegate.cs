@@ -60,8 +60,6 @@ namespace osum.Support.iPhone
 		
 		public override void OnResignActivation(UIApplication app)
 		{
-            TextureManager.UnloadAll(true);
-
              if (glView.EAGLContext != null)
                  glView.Stop();
 		}

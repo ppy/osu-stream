@@ -104,6 +104,8 @@ namespace osum
                 AudioEngine.Music.Stop(false);
             }
 
+            TextureManager.UnloadAll(true);
+
             base.OnUnload(e);
         }
 
