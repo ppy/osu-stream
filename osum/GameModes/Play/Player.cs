@@ -436,11 +436,14 @@ namespace osum.GameModes
 
             if (healthBar != null)
             {
-                //then handle the hp addition
-                if (healthChange < 0)
-                    healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
-                else
-                    healthBar.IncreaseCurrentHp(healthChange);
+                if (HitObjectManager == null || !HitObjectManager.StreamChanging)
+                {
+                    //then handle the hp addition
+                    if (healthChange < 0)
+                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                    else
+                        healthBar.IncreaseCurrentHp(healthChange);
+                }
             }
 
             if (scoreDisplay != null)
