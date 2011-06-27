@@ -64,6 +64,8 @@ namespace osum.GameModes.Play.Components
             arrowSmall.ScaleScalar = 0.5f;
             arrowLarge.ScaleScalar = 1;
 
+            spriteManager.Sprites.ForEach(s => s.Transformations.Clear());
+
             text.ScaleScalar = 1;
             ((pSprite)text).Texture = TextureManager.Load(increase ? OsuTexture.stream_changing_up : OsuTexture.stream_changing_down);
 
