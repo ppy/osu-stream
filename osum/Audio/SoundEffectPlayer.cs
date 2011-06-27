@@ -94,7 +94,10 @@ namespace osum
         /// </summary>
         public void UnloadAll()
         {
-            AL.DeleteSources(sources);
+            foreach (Source s in sourceInfo)
+                s.DeleteBuffer();
+
+
         }
 
         internal float Volume = 0.9f;
@@ -243,13 +246,10 @@ namespace osum
 
         internal void DeleteBuffer()
         {
-            if (Disposable)
-            {
-                int buffer = bufferId;
-                BufferId = 0;
-                AL.DeleteBuffer(buffer);
-                Disposable = false;
-            }
+            int buffer = bufferId;
+            BufferId = 0;
+            AL.DeleteBuffer(buffer);
+            Disposable = false;
         }
     }
 }
