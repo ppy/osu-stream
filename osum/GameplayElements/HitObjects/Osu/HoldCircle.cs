@@ -85,8 +85,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
 
-            holdCircleOverlay = new pSprite(TextureManager.Load(OsuTexture.holdcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White);
+            holdCircleOverlay = new pSprite(TextureManager.Load(OsuTexture.holdcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White);
             holdCircleOverlay.Transform(new NullTransform(StartTime, EndTime));
+
             spriteCollectionStart.Add(holdCircleOverlay);
 
             spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
@@ -101,7 +102,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.Add(circularProgress);
 
             Sprites.AddRange(spriteCollectionStart);
-            SpriteCollectionDim.AddRange(spriteCollectionStart);
+            SpriteCollectionDim.Add(holdCircleOverlay);
         }
 
         protected override void initializeStartCircle()
@@ -129,6 +130,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, volume);
         }
 
+        static Color4 hold_colour = new Color4(0.648f, 0, 244 / 256f, 1);
+
         internal override Color4 Colour
         {
             get
@@ -137,7 +140,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
             set
             {
-                base.Colour = new Color4(0.648f, 0, 244 / 256f, 1);
+                base.Colour = hold_colour;
                 spriteCollectionStart[0].Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
                 spriteCollectionStart[0].Transform(new Transformation(Colour, Color4.White, StartTime, EndTime));
                 circularProgress.Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
@@ -169,6 +172,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             progressCurrent = pMathHelper.ClampToOne((float)(circularProgress.ClockingNow - StartTime) / (EndTime - StartTime)) * RepeatCount;
             circularProgress.Progress = progressCurrent / RepeatCount;
+
+            //don't want to base.Update() due to Slider-specific stuff, but we need to call this as per HitObject's Update().
+            UpdateDimming();
         }
 
         protected override void beginTracking()

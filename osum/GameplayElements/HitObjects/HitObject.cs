@@ -136,10 +136,9 @@ namespace osum.GameplayElements
         bool isDimmed;
 
         //todo: this is horribly memory inefficient.
-        private void UpdateDimming()
+        protected void UpdateDimming()
         {
-            bool shouldDim = Clock.AudioTime < StartTime &&
-                Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
+            bool shouldDim = Clock.AudioTime < StartTime && Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
 
             if (shouldDim != isDimmed)
             {
