@@ -210,6 +210,16 @@
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineHelper.cs" />
+    <Compile Include="Resources\Tutorial.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tutorial.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Tutorial.ja.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tutorial.ja.resx</DependentUpon>
+    </Compile>
     <Compile Include="Support\Benchmarker.cs" />
     <Compile Include="Support\FadeTransition.cs" />
     <Compile Include="Support\DebugOverlay.cs" />
@@ -377,6 +387,16 @@
     <None Include="Skins\Default\Futura-Medium.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Tutorial.ja.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Tutorial.ja.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Tutorial.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Tutorial.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>

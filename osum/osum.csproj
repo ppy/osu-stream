@@ -344,6 +344,7 @@
     <Compile Include="GameModes\Results\Results.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
+    <Compile Include="Resources\Tutorial.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -413,5 +414,13 @@
     <Content Include="Skins\Default\count2.wav" />
     <Content Include="Skins\Default\count3.wav" />
     <Content Include="Skins\Default\countgo.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Tutorial.ja.resx">
+      <LogicalName>Tutorial.ja.resx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Tutorial.resx">
+      <LogicalName>Tutorial.resx</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

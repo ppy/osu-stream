@@ -36,11 +36,10 @@ namespace osum.GameModes.Play
 
             base.Initialize();
 
-            touchToContinueText = new pText("Tap to continue!", 30, new Vector2(0, 20), 1, true, Color4.YellowGreen)
+            touchToContinueText = new pText(osum.Resources.Tutorial.TapToContinue, 30, new Vector2(0, 20), 1, true, Color4.YellowGreen)
             {
                 TextBounds = new Vector2(GameBase.BaseSizeFixedWidth.Width * 0.8f, 0),
                 Field = FieldTypes.StandardSnapBottomCentre,
-                TextAlignment = TextAlignment.Centre,
                 TextShadow = true,
                 Bold = true,
                 Origin = OriginTypes.BottomCentre
@@ -243,7 +242,7 @@ namespace osum.GameModes.Play
             switch (currentSegment)
             {
                 case TutorialSegments.Introduction_1:
-                    showText("Welcome to the world of osu!.\nThis tutorial will teach you everything you need to know in order to become a rhythm master.");
+                    showText(osum.Resources.Tutorial.WelcomeToTheWorldOfOsu);
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_2:
@@ -465,7 +464,7 @@ namespace osum.GameModes.Play
 
                             if (sampleHitObject.IsActive && !hasShownText)
                             {
-                                showText("...and hold until the circle explodes!", 100);
+                                showText(osum.Resources.Tutorial.AndHoldUntilTheCircleExplodes, 100);
                                 hasShownText = true;
                             }
 

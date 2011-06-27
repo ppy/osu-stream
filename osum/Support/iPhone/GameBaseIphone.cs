@@ -41,6 +41,7 @@ using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
+using System.Globalization;
 
 namespace osum
 {
@@ -59,6 +60,16 @@ namespace osum
 
         public override void Initialize()
         {
+            string culture = "en-US";
+            switch (NSLocale.PreferredLanguages[0])
+            {
+                case "ja":
+                    culture = "ja-JP";
+                    break;
+            }
+
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+
             gameWindow = GameWindowIphone.Instance;
             base.Initialize();
         }
