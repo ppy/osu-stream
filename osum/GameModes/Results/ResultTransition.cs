@@ -62,7 +62,7 @@ namespace osum.GameModes
             pDrawable fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count300 / Results.RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)Results.RankableScore.count300 / Results.RankableScore.totalHits + 0.005f;
             fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
             fillSprites.Add(fill);
 
@@ -74,7 +74,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits + 0.005f;
             fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
             fillSprites.Add(fill);
 
@@ -86,7 +86,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count50 / Results.RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)Results.RankableScore.count50 / Results.RankableScore.totalHits + 0.005f;
             fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
             fillSprites.Add(fill);
 
@@ -98,7 +98,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits + 0.005f;
             fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
             fillSprites.Add(fill);
 

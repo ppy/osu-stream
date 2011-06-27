@@ -422,7 +422,7 @@ namespace osum.GameModes
         {
             pDrawable fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
-            fill.Scale.X *= (float)RankableScore.count300 / RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)RankableScore.count300 / RankableScore.totalHits + 0.005f;
             fill.Scale.Y = fill_height;
             fill.DrawDepth = 0.9f;
             fill.Alpha = 1;
@@ -433,7 +433,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Position.X = fillSprites[fillSprites.Count - 1].Position.X + fillSprites[fillSprites.Count - 1].Scale.X;
-            fill.Scale.X *= (float)RankableScore.count100 / RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)RankableScore.count100 / RankableScore.totalHits + 0.005f;
             fill.Scale.Y = fill_height;
             fill.DrawDepth = 0.9f;
             fill.Alpha = 1;
@@ -444,7 +444,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Position.X = fillSprites[fillSprites.Count - 1].Position.X + fillSprites[fillSprites.Count - 1].Scale.X;
-            fill.Scale.X *= (float)RankableScore.count50 / RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)RankableScore.count50 / RankableScore.totalHits + 0.005f;
             fill.Scale.Y = fill_height;
             fill.DrawDepth = 0.9f;
             fill.Alpha = 1;
@@ -455,7 +455,7 @@ namespace osum.GameModes
             fill = pSprite.FullscreenWhitePixel;
             fill.AlignToSprites = true;
             fill.Position.X = fillSprites[fillSprites.Count - 1].Position.X + fillSprites[fillSprites.Count - 1].Scale.X;
-            fill.Scale.X *= (float)RankableScore.countMiss / RankableScore.totalHits + 1;
+            fill.Scale.X *= (float)RankableScore.countMiss / RankableScore.totalHits + 0.005f;
             fill.Scale.Y = fill_height;
             fill.DrawDepth = 0.9f;
             fill.Alpha = 1;
