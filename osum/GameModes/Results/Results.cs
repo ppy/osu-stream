@@ -373,7 +373,7 @@ namespace osum.GameModes
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
 
-                s_ButtonBack.FadeIn(400);
+                s_ButtonBack.FadeIn(500);
 
                 finishedDisplaying = true;
 

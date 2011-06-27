@@ -6,6 +6,7 @@ using osum.Helpers;
 using osum.Support;
 using OpenTK;
 using System.Drawing;
+using osu_common.Helpers;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -40,7 +41,6 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
-using osu_common.Helpers;
 #endif
 
 namespace osum.Graphics.Sprites
