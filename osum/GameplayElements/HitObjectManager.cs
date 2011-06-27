@@ -265,43 +265,22 @@ namespace osum.GameplayElements
         /// <param name="h">The hitObject to manage.</param>
         internal void Add(HitObject h, Difficulty difficulty)
         {
-            pList<HitObject> diffObjects = StreamHitObjects[(int)difficulty];
+            int diffIndex = (int)difficulty;
+
+            pList<HitObject> diffObjects = StreamHitObjects[diffIndex];
 
             if (diffObjects == null)
             {
                 diffObjects = new pList<HitObject>() { UseBackwardsSearch = true };
-                StreamHitObjects[(int)difficulty] = diffObjects;
-                streamSpriteManagers[(int)difficulty] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
+                StreamHitObjects[diffIndex] = diffObjects;
+                streamSpriteManagers[diffIndex] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
             }
 
-            HitObject lastDiffObject = diffObjects.Count > 0 ? diffObjects[diffObjects.Count - 1] : null;
-
-            int currentComboNumber = 1;
-
-            int colourIndex = lastDiffObject != null ? lastDiffObject.ColourIndex : 0;
-
-            bool sameTimeAsLastAdded = lastDiffObject != null && Math.Abs(h.StartTime - lastDiffObject.StartTime) < 5;
-
-            if (h.NewCombo)
-            {
-                currentComboNumber = 1;
-                if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
-                    colourIndex = (colourIndex + 1 + h.ComboOffset) % TextureManager.DefaultColours.Length;
-            }
-            else
-                currentComboNumber = lastDiffObject == null ? 1 : lastDiffObject.ComboNumber + (lastDiffObject.IncrementCombo ? 1 : 0);
-
-            if (sameTimeAsLastAdded)
-                currentComboNumber = Math.Max(1, --currentComboNumber);
-
-            h.ComboNumber = currentComboNumber;
-            h.ColourIndex = colourIndex;
             h.Difficulty = difficulty;
             h.Index = diffObjects.Count;
 
             diffObjects.AddInPlace(h);
-
-            streamSpriteManagers[(int)difficulty].Add(h);
+            streamSpriteManagers[diffIndex].Add(h);
         }
 
         /// <summary>

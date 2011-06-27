@@ -466,19 +466,42 @@ namespace osum.GameplayElements
                             }
                         }
                     }
-
                 }
 
                 HitObject last = null;
+
+                int currentComboNumber = 1;
+                int colourIndex = 0;
 
                 for (int i = 0; i < objects.Count; i++)
                 {
                     HitObject currHitObject = objects[i];
 
                     if (currHitObject.StackCount != 0)
+                        //add the previously calculated stack offset here.
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
-                    if (last != null && Math.Abs(last.StartTime - currHitObject.StartTime) < 10)
+                    bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
+
+                    if (last != null)
+                    {
+                        if (currHitObject.NewCombo)
+                        {
+                            currentComboNumber = 1;
+                            if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
+                                colourIndex = (colourIndex + 1 + currHitObject.ComboOffset) % TextureManager.DefaultColours.Length;
+                        }
+                        else
+                            currentComboNumber = currentComboNumber + (last.IncrementCombo ? 1 : 0);
+                    }
+
+                    if (sameTimeAsLastAdded)
+                        currentComboNumber = Math.Max(1, --currentComboNumber);
+
+                    currHitObject.ComboNumber = currentComboNumber;
+                    currHitObject.ColourIndex = colourIndex;
+
+                    if (sameTimeAsLastAdded)
                         diffSpriteManager.Add(Connect(last, currHitObject));
                     else if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {
