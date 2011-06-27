@@ -495,7 +495,15 @@ namespace osum.GameplayElements
 
         public int CompareTo(HitObject other)
         {
-            return StartTime.CompareTo(other.StartTime);
+            int c = StartTime.CompareTo(other.StartTime);
+            if (c != 0) return c;
+            
+            if (NewCombo) return -1;
+            
+            if (other.NewCombo) return 1;
+            
+            return 0;
+   
         }
 
         public int CompareTo(int time)
