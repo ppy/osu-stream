@@ -115,7 +115,7 @@ namespace osum.GameplayElements
         }
 
 
-        int nextSwitchTime;
+        int nextPossibleSwitchTime;
         int removeBeforeObjectIndex;
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace osum.GameplayElements
 
             if (oldStreamObjects != null)
             {
-                if (nextSwitchTime < switchTime)
+                if (nextPossibleSwitchTime < switchTime)
                 {
                     //need to find a new switch time.
                     removeBeforeObjectIndex = 0;
@@ -166,7 +166,7 @@ namespace osum.GameplayElements
                         if (!foundPoint)
                         {
                             //exhausted all stream switch points.
-                            nextSwitchTime = Int32.MaxValue;
+                            nextPossibleSwitchTime = Int32.MaxValue;
                             return -1;
                         }
                     }
@@ -181,23 +181,31 @@ namespace osum.GameplayElements
                             break;
                         }
 
-                    nextSwitchTime = switchTime;
+                    nextPossibleSwitchTime = switchTime;
                 }
 
                 if (removeBeforeObjectIndex == 0)
                 {
                     //failed to find a suitable stream switch point.
-                    nextSwitchTime = Int32.MaxValue;
+                    nextPossibleSwitchTime = Int32.MaxValue;
                     return -1;
                 }
 
-                switchTime = nextSwitchTime;
+                switchTime = nextPossibleSwitchTime;
+
+                int judgementStart = (int)(switchTime - Player.Beatmap.beatLengthAt(Clock.AudioTime) * 8);
 
                 //check we are close enough to the switch time to actually judge this
-                if (newDifficulty > oldActiveStream && Clock.AudioTime + Player.Beatmap.controlPointAt(Clock.AudioTime).beatLength * 8 < switchTime)
-                    return -1;
+                if (newDifficulty > oldActiveStream && Clock.AudioTime < judgementStart)
+                {
+#if FULL_DEBUG
+                    DebugOverlay.AddLine("Waiting for next judgement section starting at " + judgementStart + "...");
+#endif
 
-                nextSwitchTime = 0;
+                    return -1;
+                }
+
+                nextPossibleSwitchTime = 0;
 
                 ActiveStream = newDifficulty;
 
