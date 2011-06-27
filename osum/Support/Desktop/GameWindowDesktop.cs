@@ -57,11 +57,6 @@ namespace osum
                     TextureManager.UnloadAll(true);
                     TextureManager.ReloadAll();
                     break;
-                case 'p':
-                    Player p = Director.CurrentMode as Player;
-                    if (p != null)
-                        p.Pause();
-                    break;
                 case 'x':
                     TextureManager.ReloadAll(true);
                     break;
@@ -74,6 +69,9 @@ namespace osum
                         bmi.HighScore = 1;
                     }
                     break;
+                case 'p':
+                    Director.ChangeMode(OsuMode.SongSelect);
+                    break;
                 case 'j':
                     Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
                     break;
@@ -82,6 +80,17 @@ namespace osum
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            Player p = Director.CurrentMode as Player;
+            if (p != null)
+            {
+                if (AudioEngine.Music.IsElapsing)
+                {
+                    e.Cancel = true;
+                    p.Pause();
+                    return;
+                }
+            }
+            
             if (Director.CurrentOsuMode != OsuMode.MainMenu)
             {
                 e.Cancel = true;
