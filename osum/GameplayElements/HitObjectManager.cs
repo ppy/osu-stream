@@ -115,6 +115,9 @@ namespace osum.GameplayElements
         }
 
 
+        int nextSwitchTime;
+        int removeBeforeObjectIndex;
+
         /// <summary>
         /// Call at the point of judgement. Will switch stream to new difficulty as soon as possible (next new combo).
         /// </summary>
@@ -125,7 +128,7 @@ namespace osum.GameplayElements
             Difficulty oldActiveStream = ActiveStream;
 
             if (ActiveStream == newDifficulty || Clock.AudioTime < nextStreamChange)
-                return -1;
+                return -1; //already switching stream
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
@@ -135,48 +138,66 @@ namespace osum.GameplayElements
                 ActiveStream = newDifficulty;
                 return 0;
             }
-            
-            if (StreamHitObjects[(int)newDifficulty] == null)
-            {
-                return -1;
-            }
 
-            int switchTime = Clock.AudioTime;
+            if (StreamHitObjects[(int)newDifficulty] == null)
+                return -1; //no difficulty is mapped for the target stream.
+
+            int switchTime = Clock.AudioTime + DifficultyManager.PreEmpt;
 
             if (oldStreamObjects != null)
             {
-                int removeBeforeObjectIndex = 0;
-
-                int mustBeAfterTime = Clock.AudioTime + 2000;
-
-                if (beatmap.StreamSwitchPoints != null)
+                if (nextSwitchTime < switchTime)
                 {
-                    bool foundPoint = false;
-                    int c = beatmap.StreamSwitchPoints.Count;
-                    for (int i = 0; i < c; i++)
-                        if (beatmap.StreamSwitchPoints[i] > mustBeAfterTime)
+                    //need to find a new switch time.
+                    removeBeforeObjectIndex = 0;
+
+                    if (beatmap.StreamSwitchPoints != null)
+                    {
+                        bool foundPoint = false;
+                        int c = beatmap.StreamSwitchPoints.Count;
+                        for (int i = 0; i < c; i++)
+                            if (beatmap.StreamSwitchPoints[i] > switchTime)
+                            {
+                                switchTime = beatmap.StreamSwitchPoints[i];
+                                foundPoint = true;
+                                break;
+                            }
+
+                        if (!foundPoint)
                         {
-                            mustBeAfterTime = beatmap.StreamSwitchPoints[i];
-                            foundPoint = true;
+                            //exhausted all stream switch points.
+                            nextSwitchTime = Int32.MaxValue;
+                            return -1;
+                        }
+                    }
+
+
+                    //find a good point to stream switch. this will be mapper set later.
+                    for (int i = processFrom; i < oldStreamObjects.Count; i++)
+                        if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > switchTime)
+                        {
+                            removeBeforeObjectIndex = i;
+                            switchTime = i > 0 ? oldStreamObjects[i - 1].EndTime : oldStreamObjects[i].StartTime;
                             break;
                         }
 
-                    if (!foundPoint)
-                        return -1;
+                    nextSwitchTime = switchTime;
                 }
 
-                //find a good point to stream switch. this will be mapper set later.
-                for (int i = processFrom; i < oldStreamObjects.Count; i++)
-                    if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > mustBeAfterTime)
-                    {
-                        removeBeforeObjectIndex = i;
-                        switchTime = i > 0 ? oldStreamObjects[i - 1].EndTime : oldStreamObjects[i].StartTime;
-                        break;
-                    }
-
                 if (removeBeforeObjectIndex == 0)
+                {
                     //failed to find a suitable stream switch point.
+                    nextSwitchTime = Int32.MaxValue;
                     return -1;
+                }
+
+                switchTime = nextSwitchTime;
+
+                //check we are close enough to the switch time to actually judge this
+                if (newDifficulty > oldActiveStream && Clock.AudioTime + Player.Beatmap.controlPointAt(Clock.AudioTime).beatLength * 8 < switchTime)
+                    return -1;
+
+                nextSwitchTime = 0;
 
                 ActiveStream = newDifficulty;
 
