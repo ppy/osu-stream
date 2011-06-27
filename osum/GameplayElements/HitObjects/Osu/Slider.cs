@@ -539,6 +539,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
+        internal Vector2 trackingPosition;
+        public override Vector2 TrackingPosition { get { return trackingPosition; } }
+
         /// <summary>
         /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
         /// </summary>
@@ -838,7 +841,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         }
 
-        internal Vector2 TrackingPosition;
         private float startAngle;
         private float endAngle;
 
@@ -904,15 +906,15 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowBall.Reverse = isReversing;
 
             //cut back the line to required exact length
-            TrackingPosition = positionAtProgress(progressCurrent);
+            trackingPosition = positionAtProgress(progressCurrent);
 
             if (IsVisible && ClockingNow > StartTime - DifficultyManager.PreEmptSnakeStart)
                 UpdatePathTexture();
 
-            spriteFollowBall.Position = TrackingPosition;
+            spriteFollowBall.Position = trackingPosition;
             spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
 
-            spriteFollowCircle.Position = TrackingPosition;
+            spriteFollowCircle.Position = trackingPosition;
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)

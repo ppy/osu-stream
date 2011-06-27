@@ -33,7 +33,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected override void CalculateSplines()
         {
             EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
-            TrackingPosition = position;
+            trackingPosition = position;
         }
 
 

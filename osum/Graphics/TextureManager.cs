@@ -410,7 +410,6 @@ namespace osum.Graphics.Skins
         default_9,
         default_comma,
         default_dot,
-        default_percent,
         default_x,
         sliderb_0,
         sliderb_1,
@@ -504,6 +503,8 @@ namespace osum.Graphics.Skins
         personalbest,
         songselect_thumbnail_large,
         songselect_thumb_dl,
-        songselect_star
+        songselect_star,
+        finger_inner,
+        finger_outer
     }
 }

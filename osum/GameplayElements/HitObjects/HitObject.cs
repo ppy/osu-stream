@@ -366,7 +366,7 @@ namespace osum.GameplayElements
         /// </summary>
         internal virtual bool IsActive
         {
-            get { return !IsHit; }
+            get { return false; }
         }
 
         #endregion
@@ -580,5 +580,7 @@ namespace osum.GameplayElements
         }
 
         public virtual float HpMultiplier { get { return 1; } }
+
+        public virtual Vector2 TrackingPosition { get { return Position; } }
     }
 }

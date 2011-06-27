@@ -484,6 +484,7 @@ namespace osum.GameplayElements
         /// </summary>
         public double FirstBeatLength;
         public HitObject ActiveObject;
+        public HitObject NextObject;
 
         private void TriggerScoreChange(ScoreChange change, HitObject hitObject)
         {
