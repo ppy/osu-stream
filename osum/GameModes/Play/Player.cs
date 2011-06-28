@@ -240,7 +240,7 @@ namespace osum.GameModes
         {
             if (firstCountdown)
             {
-                if (Clock.AudioTime > countdown.StartTime)
+                if (Clock.AudioTime > countdown.StartTime && !Autoplay)
                     firstCountdown = false;
                 else
                 {
@@ -289,7 +289,8 @@ namespace osum.GameModes
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
 
-            Player.Autoplay = false;
+            if (Director.PendingOsuMode != OsuMode.Play)
+                Player.Autoplay = false;
 
             base.Dispose();
 
