@@ -510,11 +510,10 @@ namespace osum.GameplayElements
             int c = StartTime.CompareTo(other.StartTime);
             if (c != 0) return c;
 
-            if (NewCombo) return -1;
+            if (NewCombo && !other.NewCombo) return -1;
+            if (other.NewCombo && !NewCombo) return 1;
 
-            if (other.NewCombo) return 1;
-
-            return 0;
+            return EndTime.CompareTo(other.EndTime);
 
         }
 

@@ -482,6 +482,8 @@ namespace osum.GameplayElements
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
                     bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
+                    bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && last != null && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
+
 
                     if (last != null)
                     {
@@ -501,8 +503,8 @@ namespace osum.GameplayElements
                     currHitObject.ComboNumber = currentComboNumber;
                     currHitObject.ColourIndex = colourIndex;
 
-                    if (sameTimeAsLastAdded)
-                        diffSpriteManager.Add(Connect(last, currHitObject));
+                    if (sameTimeAsLastAdded || sameTimeAsLastAdded2)
+                        diffSpriteManager.Add(Connect(last, currHitObject, sameTimeAsLastAdded2));
                     else if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {
                         //Draw follow lines

@@ -294,12 +294,12 @@ namespace osum.GameplayElements
         /// <summary>
         /// Connect two objects that occur at the same time with a line.
         /// </summary>
-        pSprite Connect(HitObject h1, HitObject h2)
+        pSprite Connect(HitObject h1, HitObject h2, bool useEnd = false)
         {
-            Vector2 p1 = h1.Position;
+            Vector2 p1 = useEnd ? h1.EndPosition : h1.Position;
             Vector2 p2 = h2.Position;
 
-            HitObject firstObject = h1 is HitCircle || h1.EndTime < h2.EndTime ? h1 : h2;
+            HitObject firstObject = !useEnd && h1.CompareTo(h2) <= 0 ? h1 : h2;
 
             Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
