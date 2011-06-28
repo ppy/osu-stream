@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using osum.GameplayElements.Scoring;
 using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
@@ -26,6 +26,12 @@ namespace osum.GameModes
 
         List<pDrawable> fillSprites = new List<pDrawable>();
         List<pDrawable> countSprites = new List<pDrawable>();
+
+        public override bool SkipScreenClear {
+            get {
+                return true;
+            }
+        }
 
         public override bool FadeOutDone
         {

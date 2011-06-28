@@ -390,11 +390,12 @@ namespace osum
         {
             SpriteManager.Reset();
 
+            if (!ignoreNextFrameTime || !Director.ActiveTransition.SkipScreenClear)
+                //todo: Does clearing DEPTH as well here add a performance overhead?
+                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+
             if (ignoreNextFrameTime)
                 return;
-
-            GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-            //todo: Does clearing DEPTH as well here add a performance overhead?
 
             SpriteManager.Reset();
 

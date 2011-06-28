@@ -31,6 +31,11 @@ namespace osum
         public override void Initialize()
         {
         }
+
+        public virtual bool SkipScreenClear
+        {
+            get { return false; }
+        }
     }
 }
 
