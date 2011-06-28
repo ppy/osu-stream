@@ -15,6 +15,7 @@ using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
 using osum.GameplayElements.Scoring;
+using osum.Online;
 
 namespace osum.GameModes
 {
@@ -81,10 +82,10 @@ namespace osum.GameModes
             s_Header.OnClick += delegate { };
             spriteManager.Add(s_Header);
 
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, new Color4(200, 200, 200, 255));
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
             s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
-            s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(200, 200, 200, 255), 100); };
-            s_Footer.OnClick += onStartButtonPressed;
+            s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
+            s_Footer.OnClick += footer_onClick;
             spriteManager.Add(s_Footer);
 
             s_ButtonBack = new BackButton(onBackPressed);
@@ -92,8 +93,25 @@ namespace osum.GameModes
             spriteManager.Add(s_ButtonBack);
         }
 
+        private void footer_onClick(object sender, EventArgs e)
+        {
+            if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 2)
+            {
+                Player.Autoplay = true;
+                onStartButtonPressed(null, null);
+            }
+            else
+            {
+                spriteManager.FadeOut(800,0.2f);
+                OnlineHelper.ShowRanking(Player.SubmitString, delegate {
+                    spriteManager.FadeIn(300,1);
+                });
+            }
+        }
+
         private void onBackPressed(object sender, EventArgs args)
         {
+
             switch (State)
             {
                 case SelectState.SongSelect:

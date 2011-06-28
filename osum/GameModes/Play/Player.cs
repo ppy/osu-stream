@@ -20,6 +20,7 @@ using osum.Graphics.Skins;
 using osum.Graphics;
 using osum.Support;
 using System.IO;
+using osu_common.Helpers;
 
 namespace osum.GameModes
 {
@@ -559,13 +560,24 @@ namespace osum.GameModes
             if (HitObjectManager.AllNotesHit && !Director.IsTransitioning && !Completed)
             {
                 Completed = true;
-                Results.RankableScore = CurrentScore;
-                Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0, CurrentScore.accuracy - 0.8) / 0.2 * 200000);
 
-                GameBase.Scheduler.Add(delegate
+#if iOS
+                if (Player.Autoplay)
                 {
-                    Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
-                }, 500);
+                    Director.ChangeMode(OsuMode.SongSelect,new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                }
+                else
+#endif
+                {
+                    Results.RankableScore = CurrentScore;
+                    Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0, CurrentScore.accuracy - 0.8) / 0.2 * 200000);
+    
+                    GameBase.Scheduler.Add(delegate
+                    {
+    
+                        Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
+                    }, 500);
+                }
             }
 
             return Completed;
@@ -709,6 +721,10 @@ namespace osum.GameModes
 
             queuedStreamSwitchTime = switchTime;
             return true;
+        }
+
+        internal static string SubmitString {
+            get { return CryptoHelper.GetMd5String(Path.GetFileName(Player.Beatmap.ContainerFilename) + "-" + Player.Difficulty.ToString()); }
         }
     }
 }

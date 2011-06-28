@@ -1,5 +1,5 @@
-﻿
-using osum.GameplayElements;
+﻿using osum.GameplayElements;
+
 namespace osum.Helpers
 {
     public delegate void VoidDelegate();

@@ -1,4 +1,5 @@
 using System;
+using osum.Helpers;
 
 namespace osum.Online
 {
@@ -30,11 +31,11 @@ namespace osum.Online
             return onlineServices != null;
         }
 
-        public static bool ShowRanking(string id)
+        public static bool ShowRanking(string id, VoidDelegate finished = null)
         {
             if (!Initialize()) return false;
 
-            onlineServices.ShowLeaderboard(id);
+            onlineServices.ShowLeaderboard(id, finished);
             return true;
         }
 

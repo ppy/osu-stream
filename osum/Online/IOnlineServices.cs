@@ -1,4 +1,5 @@
 using System;
+using osum.Helpers;
 
 namespace osum.Online
 {
@@ -7,6 +8,6 @@ namespace osum.Online
         void SubmitScore(string id, int score);
         void Authenticate();
         bool IsAuthenticated { get; }
-        void ShowLeaderboard(string category);
+        void ShowLeaderboard(string category = null, VoidDelegate finished = null);
     }
 }

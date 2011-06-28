@@ -59,7 +59,6 @@ namespace osum.GameModes.Play
 
         public override void Dispose()
         {
-            Player.Autoplay = false;
             base.Dispose();
         }
 

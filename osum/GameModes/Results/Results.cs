@@ -384,7 +384,7 @@ namespace osum.GameModes
                 else
                 {
                     //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-                    OnlineHelper.SubmitScore(CryptoHelper.GetMd5String(Path.GetFileName(Player.Beatmap.ContainerFilename) + "-" + Player.Difficulty.ToString()), RankableScore.totalScore);
+                    OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore);
                 }
             }, time);
 
