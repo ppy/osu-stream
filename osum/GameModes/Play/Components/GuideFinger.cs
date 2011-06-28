@@ -115,7 +115,7 @@ namespace osum.GameModes.Play.Components
                     {
                         int timeUntilObject = obj.StartTime - Clock.AudioTime;
 
-                        if (timeUntilObject < 500)
+                        if (timeUntilObject < 350)
                         {
                             Vector2 src = finger.Position;
                             Vector2 dest = obj.TrackingPosition;
@@ -135,8 +135,15 @@ namespace osum.GameModes.Play.Components
                 }
             }
 
-            if (nextObject != null && !objectHasFinger) checkObject(nextObject);
-            if (nextObjectConnected != null && !connectedObjectHasFinger) checkObject(nextObjectConnected);
+            {
+                int timeUntilObject = nextObject == null ? Int32.MaxValue : nextObject.StartTime - Clock.AudioTime;
+
+                if (timeUntilObject < 500)
+                {
+                    if (!objectHasFinger) checkObject(nextObject);
+                    if (nextObjectConnected != null && !connectedObjectHasFinger) checkObject(nextObjectConnected);
+                }
+            }
 
             leftFinger2.Position = leftFinger.Position;
             leftFinger2.Offset = leftFinger.Offset;
@@ -156,6 +163,9 @@ namespace osum.GameModes.Play.Components
         {
             pDrawable preferred = null;
 
+            float leftPart = GameBase.GamefieldBaseSize.Width / 3f * 1;
+            float rightPart = GameBase.GamefieldBaseSize.Width / 3f * 2;
+
             //fall back to the closest finger.
             float distLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
             float distRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
@@ -171,9 +181,9 @@ namespace osum.GameModes.Play.Components
                 preferred = leftFinger;
             else if (distRight < 20)
                 preferred = rightFinger;
-            else if (nextObject.Position.X < GameBase.GamefieldBaseSize.Width / 3f * 1)
+            else if (nextObject.Position.X < leftPart || nextObject.Position2.X < leftPart)
                 preferred = leftFinger;
-            else if (nextObject.Position.X > GameBase.GamefieldBaseSize.Width / 3f * 2)
+            else if (nextObject.Position.X > rightPart || nextObject.Position2.X > rightPart)
                 preferred = rightFinger;
             else if (nextObject.StartTime - lastHitTime < 150)
                 preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
