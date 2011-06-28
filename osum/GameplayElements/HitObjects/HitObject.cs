@@ -394,7 +394,14 @@ namespace osum.GameplayElements
         internal virtual Vector2 EndPosition
         {
             get { return Position; }
-            set { throw new NotImplementedException(); }
+        }
+
+        /// <summary>
+        /// For objects with two distinct endpoints, this will be the "far" one.
+        /// </summary>
+        internal virtual Vector2 Position2
+        {
+            get { return Position; }
         }
 
         internal int StackCount;

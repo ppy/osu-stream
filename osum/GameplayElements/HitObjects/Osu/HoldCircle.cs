@@ -227,9 +227,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 return Position;
             }
-            set
-            {
-                throw new NotImplementedException();
+        }
+
+        internal override Vector2 Position2 {
+            get {
+                return Position;
             }
         }
     }
