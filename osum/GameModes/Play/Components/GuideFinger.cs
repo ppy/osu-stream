@@ -166,33 +166,41 @@ namespace osum.GameModes.Play.Components
             float leftPart = GameBase.GamefieldBaseSize.Width / 3f * 1;
             float rightPart = GameBase.GamefieldBaseSize.Width / 3f * 2;
 
-            //fall back to the closest finger.
-            float distLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
-            float distRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
+            float distFromLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
+            float distFromRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
 
             if (nextObject.connectedObject != null)
             {
+                //if there is a connected object, always use the correct L-R arrangement.
                 if (nextObject.Position.X < nextObject.connectedObject.Position.X)
                     preferred = leftFinger;
                 else
                     preferred = rightFinger;
             }
-            else if (distLeft < 20)
+            else if (distFromLeft < 20)
+                //stacked objects (left finger)
                 preferred = leftFinger;
-            else if (distRight < 20)
+            else if (distFromRight < 20)
+                //stacked objects (right finger)
                 preferred = rightFinger;
             else if (nextObject.Position.X < leftPart || nextObject.Position2.X < leftPart)
+                //starts or ends in left 1/3 of screen.
                 preferred = leftFinger;
             else if (nextObject.Position.X > rightPart || nextObject.Position2.X > rightPart)
+                //starts or ends in right 1/3 of screen.
                 preferred = rightFinger;
             else if (nextObject.StartTime - lastHitTime < 150)
+                //fast hits; always alternate fingers
                 preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
             else
-                preferred = distLeft < distRight ? leftFinger : rightFinger;
+                //fall back to the closest finger.
+                preferred = distFromLeft < distFromRight ? leftFinger : rightFinger;
 
             if (preferred == leftFinger && nextObject.Position.X > rightFinger.Position.X && rightFinger.Tag == null)
+                //if we're about to use left finger but the object is wedged between the right finger and right side of screen, use right instead.
                 preferred = rightFinger;
             else if (preferred == rightFinger && nextObject.Position.X < leftFinger.Position.X && leftFinger.Tag == null)
+                //if we're about to use right finger but the object is wedged between the left finger and right side of screen, use left instead.
                 preferred = leftFinger;
 
             pDrawable alternative = preferred == leftFinger ? rightFinger : leftFinger;
