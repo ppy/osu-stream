@@ -281,11 +281,14 @@ namespace osum.GameModes
             if (healthBar != null) healthBar.Dispose();
             if (scoreDisplay != null) scoreDisplay.Dispose();
             if (countdown != null) countdown.Dispose();
+            if (gf != null) gf.Dispose();
             if (menu != null) menu.Dispose();
             if (touchBurster != null) touchBurster.Dispose();
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
+
+            Player.Autoplay = false;
 
             base.Dispose();
 
@@ -480,6 +483,8 @@ namespace osum.GameModes
 
             if (comboCounter != null) comboCounter.Draw();
 
+            if (countdown != null) countdown.Draw();
+
             if (HitObjectManager != null)
                 HitObjectManager.Draw();
 
@@ -487,13 +492,11 @@ namespace osum.GameModes
 
             if (healthBar != null) healthBar.Draw();
 
+            if (gf != null) gf.Draw();
+
             if (menu != null) menu.Draw();
 
-            if (countdown != null) countdown.Draw();
-
             touchBurster.Draw();
-
-            if (gf != null) gf.Draw();
 
             topMostSpriteManager.Draw();
 
