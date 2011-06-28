@@ -494,7 +494,7 @@ namespace osum.GameModes
 
             if (healthBar != null) healthBar.Draw();
 
-            if (gf != null) gf.Draw();
+            if (gf != null && Autoplay) gf.Draw();
 
             if (menu != null) menu.Draw();
 
@@ -520,7 +520,7 @@ namespace osum.GameModes
                     AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
             }
 
-            if (gf != null) gf.Update();
+            if (gf != null && Autoplay) gf.Update();
 
             if (HitObjectManager != null)
             {
