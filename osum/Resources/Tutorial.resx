@@ -355,4 +355,16 @@ Focus on the beat of the song and try to time your taps to get higher accuracy.<
   <data name="Completion" xml:space="preserve">
     <value>Congratulations. You now have the skills required to challenge osu!</value>
   </data>
+  <data name="TimingEarly" xml:space="preserve">
+    <value>A bit early..</value>
+  </data>
+  <data name="TimingLate" xml:space="preserve">
+    <value>A bit late..</value>
+  </data>
+  <data name="TimingVeryEarly" xml:space="preserve">
+    <value>Very early..</value>
+  </data>
+  <data name="TimingVeryLate" xml:space="preserve">
+    <value>Very late..</value>
+  </data>
 </root>

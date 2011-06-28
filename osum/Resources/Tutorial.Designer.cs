@@ -757,6 +757,42 @@ namespace osum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A bit early...
+        /// </summary>
+        internal static string TimingEarly {
+            get {
+                return ResourceManager.GetString("TimingEarly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A bit late...
+        /// </summary>
+        internal static string TimingLate {
+            get {
+                return ResourceManager.GetString("TimingLate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Very early...
+        /// </summary>
+        internal static string TimingVeryEarly {
+            get {
+                return ResourceManager.GetString("TimingVeryEarly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Very late...
+        /// </summary>
+        internal static string TimingVeryLate {
+            get {
+                return ResourceManager.GetString("TimingVeryLate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to the world of osu!.
         ///This tutorial will teach you everything you need to know in order to become a rhythm master..
         /// </summary>

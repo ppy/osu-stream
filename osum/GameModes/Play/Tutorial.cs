@@ -1435,23 +1435,23 @@ namespace osum.GameModes.Play
                 case ScoreChange.Hit100m:
                 case ScoreChange.Hit100k:
                     if (Clock.AudioTime < hitObject.StartTime)
-                        showText("A bit early..", -60).FadeOut(1000);
+                        showText(osum.Resources.Tutorial.TimingEarly, -60).FadeOut(1000);
                     else
-                        showText("A bit late..", 60).FadeOut(1000);
+                        showText(osum.Resources.Tutorial.TimingLate, 60).FadeOut(1000);
                     break;
                 case ScoreChange.Hit50:
                 case ScoreChange.Hit50m:
                 case ScoreChange.Miss:
                     if (Clock.AudioTime < hitObject.StartTime)
                     {
-                        pText t = showText("Very early..", -60);
+                        pText t = showText(osum.Resources.Tutorial.TimingVeryEarly, -60);
                         t.TextSize *= 1.4f;
                         t.Colour = Color4.OrangeRed;
                         t.FadeOut(1000);
                     }
                     else
                     {
-                        pText t = showText("Very late..", 60);
+                        pText t = showText(osum.Resources.Tutorial.TimingVeryLate, 60);
                         t.TextSize *= 1.4f;
                         t.Colour = Color4.OrangeRed;
                         t.FadeOut(1000);
