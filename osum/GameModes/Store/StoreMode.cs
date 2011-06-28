@@ -78,7 +78,7 @@ namespace osum.GameModes.Store
 
             if (e != null || string.IsNullOrEmpty(_result))
             {
-                GameBase.Notify("Error while downloading song listing.", delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                GameBase.Notify(osum.Resources.General.ErrorWhileDownloadingSongListing, delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;
             }
 
@@ -95,7 +95,9 @@ namespace osum.GameModes.Store
                 if (line.Length == 0)
                 {
                     newPack = true;
+#if DEBUG
                     Console.WriteLine("Reading new pack");
+#endif
                     continue;
                 }
 
@@ -111,8 +113,9 @@ namespace osum.GameModes.Store
                             packs.Add(pp);
                         }
 
-
+#if DEBUG
                         Console.WriteLine("Adding pack: " + split[0]);
+#endif
                         pp = new PackPanel(split[0], split[1], null);
                     });
 
@@ -133,7 +136,9 @@ namespace osum.GameModes.Store
 
                 int thisY = y;
 
+#if DEBUG
                 Console.WriteLine("Adding beatmap: " + filename);
+#endif
 
                 GameBase.Scheduler.Add(delegate
                 {
@@ -155,7 +160,7 @@ namespace osum.GameModes.Store
 
                 if (y == 0)
                 {
-                    GameBase.Notify("You already have all available song packs!", delegate { Director.ChangeMode(Director.LastOsuMode); });
+                    GameBase.Notify(osum.Resources.General.HaveAllAvailableSongPacks, delegate { Director.ChangeMode(Director.LastOsuMode); });
                 }
             });
         }
@@ -217,7 +222,7 @@ namespace osum.GameModes.Store
             instance.packs.Remove(pp);
 
             if (instance.packs.Count == 0)
-                GameBase.Notify("You have all available packs.\nCheck back later!", delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(osum.Resources.General.HaveAllAvailableSongPacks, delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
                 instance.s_ButtonBack.FadeIn(100);

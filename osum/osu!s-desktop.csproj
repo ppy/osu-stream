@@ -210,6 +210,11 @@
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineHelper.cs" />
+    <Compile Include="Resources\General.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>General.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Tutorial.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -389,6 +394,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\General.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>General.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Tutorial.ja.Designer.cs</LastGenOutput>

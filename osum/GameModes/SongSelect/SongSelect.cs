@@ -170,7 +170,7 @@ namespace osum.GameModes
             }
 
             panelDownloadMore = new BeatmapPanel(null, this, index++);
-            panelDownloadMore.s_Text.Text = "Download more songs...";
+            panelDownloadMore.s_Text.Text = osum.Resources.General.DownloadMoreSongs;
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
