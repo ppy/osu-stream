@@ -8,6 +8,7 @@ using OpenTK;
 using osum.GameplayElements;
 using osum.Helpers;
 using OpenTK.Graphics;
+using osum.Graphics;
 
 namespace osum.GameModes.Play.Components
 {
@@ -15,9 +16,11 @@ namespace osum.GameModes.Play.Components
     {
         List<pDrawable> fingers = new List<pDrawable>();
 
+
         pSprite leftFinger;
 
         internal HitObjectManager HitObjectManager;
+        internal TouchBurster TouchBurster;
         private pSprite rightFinger;
         private pSprite leftFinger2;
         private pSprite rightFinger2;
@@ -72,8 +75,6 @@ namespace osum.GameModes.Play.Components
 
         public override bool Draw()
         {
-            //            if (!Player.Autoplay)
-            //                return false;
             if (HitObjectManager == null) return false;
 
             return base.Draw();
@@ -110,7 +111,12 @@ namespace osum.GameModes.Play.Components
                         finger.MoveTo(new Vector2(finger == leftFinger ? 50 : 512 - 50, 200), 1000, EasingTypes.InOut);
                     }
                     else if (obj.IsActive)
+                    {
                         finger.Position = obj.TrackingPosition;
+
+                        if (TouchBurster != null)
+                            TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
+                    }
                     else if (obj.IsVisible)
                     {
                         int timeUntilObject = obj.StartTime - Clock.AudioTime;
@@ -130,6 +136,9 @@ namespace osum.GameModes.Play.Components
 
                             finger.Offset.Y = vOffset * -55;
                             finger.ScaleScalar = 1 + 0.6f * vOffset;
+
+                            if (TouchBurster != null)
+                                TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                         }
                     }
                 }

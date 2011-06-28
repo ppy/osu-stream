@@ -101,11 +101,10 @@ namespace osum.GameModes
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
-            gf = new GuideFinger();
+            touchBurster = new TouchBurster(!Player.Autoplay);
+            gf = new GuideFinger() { TouchBurster = touchBurster };
 
             loadBeatmap();
-
-            touchBurster = new TouchBurster();
 
             initializeUIElements();
 

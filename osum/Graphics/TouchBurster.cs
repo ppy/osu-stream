@@ -17,6 +17,11 @@ namespace osum.Graphics
 
         int nextBurstSprite;
 
+        public TouchBurster(bool bindInput)
+        {
+            BindInput = bindInput;
+        }
+
         public override void Initialize()
         {
             for (int i = 0; i < 32; i++)
@@ -36,25 +41,44 @@ namespace osum.Graphics
                     new Transformation() { Type = TransformationType.Fade });
             }
 
-            InputManager.OnDown += InputManager_OnDown;
-            InputManager.OnMove += InputManager_OnMove;
-
             base.Initialize();
         }
 
         int spacing;
+        
+        private bool bindInput;
+        private bool BindInput
+        {
+            get { return bindInput; }
+            set
+            {
+                if (value == BindInput)
+                    return;
+                bindInput = value;
+                if (bindInput)
+                {
+                    InputManager.OnDown += InputManager_OnDown;
+                    InputManager.OnMove += InputManager_OnMove;
+                }
+                else
+                {
+                    InputManager.OnDown -= InputManager_OnDown;
+                    InputManager.OnMove -= InputManager_OnMove;
+                }
+            }
+        }
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (InputManager.IsPressed && spacing++ % 1 == 0)
-                burst(trackingPoint.BasePosition, 20, 0.5f,  1);
+                Burst(trackingPoint.BasePosition, 20, 0.5f,  1);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
-            burst(trackingPoint.BasePosition, 100, 1, 5);
+            Burst(trackingPoint.BasePosition, 100, 1, 5);
         }
 
-        private void burst(Vector2 pos, float spread, float scale, int count)
+        internal void Burst(Vector2 pos, float spread = 100, float scale = 1, int count = 5)
         {
             while (count-- > 0)
             {
@@ -102,8 +126,7 @@ namespace osum.Graphics
 
         public override void Dispose()
         {
-            InputManager.OnDown -= InputManager_OnDown;
-            InputManager.OnMove -= InputManager_OnMove;
+            BindInput = false;
 
             base.Dispose();
         }
