@@ -150,7 +150,7 @@ namespace osu_common.Libraries.Osz2
             {
                 // check magic number
                 byte[] magic = br.ReadBytes(3);
-                if (magic[0] != 0xec || magic[1] != 'H' || magic[2] != 'O')
+                if (magic.Length < 3 || magic[0] != 0xec || magic[1] != 'H' || magic[2] != 'O')
                     throw new IOException("Invalid file.");
 
                 // version

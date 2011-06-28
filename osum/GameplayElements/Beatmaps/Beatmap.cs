@@ -29,7 +29,15 @@ namespace osum.GameplayElements.Beatmaps
             {
                 if (ContainerFilename == null) return null;
 
-                if (package == null && ContainerFilename.EndsWith("osz2")) package = new MapPackage(ContainerFilename);
+                try
+                {
+                    if (package == null && ContainerFilename.EndsWith("osz2"))
+                        package = new MapPackage(ContainerFilename);
+                }
+                catch
+                {
+                    return null;
+                }
 
                 return package;
             }
@@ -49,10 +57,13 @@ namespace osum.GameplayElements.Beatmaps
 
         public Stream GetFileStream(string filename)
         {
-            if (Package == null)
+            if (ContainerFilename == null)
                 return new FileStream(
                     (ContainerFilename.EndsWith(".osc") ? Environment.GetFolderPath(Environment.SpecialFolder.Personal) : ContainerFilename) + "/" + filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return Package.GetFile(filename);
+
+            MapPackage p = Package;
+            if (p == null) return null;
+            return p.GetFile(filename);
         }
 
         internal byte[] GetFileBytes(string filename)
