@@ -102,9 +102,10 @@ namespace osum.GameModes
             }
             else
             {
-                spriteManager.FadeOut(800,0.2f);
-                OnlineHelper.ShowRanking(Player.SubmitString, delegate {
-                    spriteManager.FadeIn(300,1);
+                spriteManager.FadeOut(800, 0.2f);
+                OnlineHelper.ShowRanking(Player.SubmitString, delegate
+                {
+                    spriteManager.FadeIn(300, 1);
                 });
             }
         }
@@ -330,6 +331,7 @@ namespace osum.GameModes
             return true;
         }
 
+        int lastIntOffset;
         bool pendingModeChange;
         private BeatmapPanel panelDownloadMore;
         private pSprite background;
@@ -379,6 +381,7 @@ namespace osum.GameModes
                     {
                         float bound = offsetBound;
 
+                        float lastOffset = songSelectOffset;
                         songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
 
                         if (songSelectOffset != bound)
@@ -396,6 +399,13 @@ namespace osum.GameModes
                                 p.MoveTo(pos, touchingBegun ? 40 : 300);
                             pos.Y += 70;
                         }
+                    }
+
+                    int newIntOffset = (int)songSelectOffset / BeatmapPanel.PANEL_HEIGHT;
+                    if (newIntOffset != lastIntOffset)
+                    {
+                        lastIntOffset = newIntOffset;
+                        AudioEngine.PlaySample(OsuSamples.MenuClick);
                     }
                     break;
             }

@@ -56,8 +56,6 @@ namespace osum.GameModes.SongSelect
             {
                 s_BackingPlate.FadeOut(100, 0.01f);
                 s_BackingPlate2.FadeColour(BeatmapPanel.BACKGROUND_COLOUR, 80);
-
-                AudioEngine.PlaySample(OsuSamples.MenuClick);
             };
             s_BackingPlate.OnHoverLost += delegate
             {
