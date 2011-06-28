@@ -192,8 +192,7 @@ namespace osum
             get { return bufferId; }
             set
             {
-                if (bufferId == value)
-                    return;
+                if (Disposable) DeleteBuffer();
                 bufferId = value;
                 AL.Source(sourceId, ALSourcei.Buffer, bufferId);
             }
@@ -247,7 +246,11 @@ namespace osum
         internal void DeleteBuffer()
         {
             int buffer = bufferId;
-            BufferId = 0;
+
+            //must unload before deleting.
+            bufferId = 0;
+            AL.Source(sourceId, ALSourcei.Buffer, bufferId);
+
             AL.DeleteBuffer(buffer);
             Disposable = false;
         }
