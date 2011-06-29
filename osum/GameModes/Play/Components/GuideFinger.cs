@@ -6,6 +6,7 @@ using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using OpenTK;
 using osum.GameplayElements;
+using osum.GameplayElements.HitObjects.Osu;
 using osum.Helpers;
 using OpenTK.Graphics;
 using osum.Graphics;
@@ -31,7 +32,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = ColourHelper.Lighten2(Color4.LimeGreen, 0.5f),
-                Alpha = 0,
+                Alpha = 0.3f,
                 Additive = true
             };
 
@@ -40,7 +41,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = Color4.LimeGreen,
-                Alpha = 0,
+                Alpha = 0.3f,
                 Additive = false
             };
 
@@ -49,7 +50,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = ColourHelper.Lighten2(Color4.Red, 0.5f),
-                Alpha = 0,
+                Alpha = 0.3f,
                 Additive = true
             };
 
@@ -58,9 +59,12 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = Color4.Red,
-                Alpha = 0,
+                Alpha = 0.3f,
                 Additive = false
             };
+
+            leftFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(-100, 130), new Vector2(50, 200), 0, 800, EasingTypes.In));
+            rightFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(612, 130), new Vector2(512 - 50, 200), 0, 800, EasingTypes.In));
 
             spriteManager.Add(leftFinger);
             spriteManager.Add(rightFinger);
@@ -103,12 +107,9 @@ namespace osum.GameModes.Play.Components
 
                     if (obj.IsHit)
                     {
-                        lastHitTime = Clock.AudioTime;
-                        lastFinger = finger;
-
                         finger.Tag = null;
-                        finger.FadeOut(1000, 0.3f);
-                        finger.MoveTo(new Vector2(finger == leftFinger ? 50 : 512 - 50, 200), 1000, EasingTypes.InOut);
+                        finger.FadeOut(800, 0.3f);
+                        finger.MoveTo(new Vector2(finger == leftFinger ? 50 : 512 - 50, 200), 800, EasingTypes.InOut);
                     }
                     else if (obj.IsActive)
                     {
@@ -125,6 +126,8 @@ namespace osum.GameModes.Play.Components
                         {
                             Vector2 src = finger.Position;
                             Vector2 dest = obj.TrackingPosition;
+
+                            lastFinger = finger;
 
                             finger.Position = src + (dest - src) * 0.015f * (float)GameBase.ElapsedMilliseconds;
 
@@ -165,15 +168,15 @@ namespace osum.GameModes.Play.Components
             rightFinger2.Alpha = rightFinger.Alpha;
         }
 
-        int lastHitTime = 0;
         pDrawable lastFinger;
+        HitObject lastObject = null;
 
         private void checkObject(HitObject nextObject)
         {
             pDrawable preferred = null;
 
-            float leftPart = GameBase.GamefieldBaseSize.Width / 3f * 1;
-            float rightPart = GameBase.GamefieldBaseSize.Width / 3f * 2;
+            float leftPart = GameBase.GamefieldBaseSize.Width / 11f * 4;
+            float rightPart = GameBase.GamefieldBaseSize.Width / 11f * 7;
 
             float distFromLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
             float distFromRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
@@ -181,26 +184,58 @@ namespace osum.GameModes.Play.Components
             if (nextObject.connectedObject != null)
             {
                 //if there is a connected object, always use the correct L-R arrangement.
-                if (nextObject.Position.X < nextObject.connectedObject.Position.X)
+                if (nextObject.Position.X == nextObject.connectedObject.Position.X)
+                {
+                    // if same x we'll assign the closest finger to each note
+                    float connectedDistFromLeft = pMathHelper.Distance(nextObject.connectedObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
+                    float connectedDistFromRight = pMathHelper.Distance(nextObject.connectedObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
+
+                    float smallest = Math.Min(Math.Min(connectedDistFromLeft, connectedDistFromRight), Math.Min(distFromLeft, distFromLeft));
+                    preferred = smallest == distFromLeft || smallest == connectedDistFromRight ? leftFinger : rightFinger;
+                }
+                else if (nextObject.Position.X < nextObject.connectedObject.Position.X)
                     preferred = leftFinger;
                 else
                     preferred = rightFinger;
             }
+
             else if (distFromLeft < 20)
                 //stacked objects (left finger)
                 preferred = leftFinger;
             else if (distFromRight < 20)
                 //stacked objects (right finger)
                 preferred = rightFinger;
-            else if (nextObject.Position.X < leftPart || nextObject.Position2.X < leftPart)
-                //starts or ends in left 1/3 of screen.
-                preferred = leftFinger;
-            else if (nextObject.Position.X > rightPart || nextObject.Position2.X > rightPart)
-                //starts or ends in right 1/3 of screen.
-                preferred = rightFinger;
-            else if (nextObject.StartTime - lastHitTime < 150)
+
+            else if (lastObject != null && lastObject != nextObject && nextObject.StartTime - lastObject.EndTime < 150)
                 //fast hits; always alternate fingers
                 preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
+
+            /*
+            else if (nextObject.Position.X > nextObject.Position2.X && nextObject.Position.X < rightPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
+                //sliders that start right and end left, centered towards the left
+                preferred = leftFinger;
+            else if (nextObject.Position.X < nextObject.Position2.X && nextObject.Position.X > leftPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
+                //sliders that start left and end right, centered towards the right
+                preferred = rightFinger;
+            */
+
+            else if (nextObject.Position.X < leftPart)
+                //starts in left 1/3 of screen.
+                preferred = leftFinger;
+            else if (nextObject.Position.X > rightPart)
+                //starts in right 1/3 of screen.
+                preferred = rightFinger;
+            else if (nextObject.Position2.X < leftPart)
+                //ends in left 1/3 of screen.
+                preferred = leftFinger;
+            else if (nextObject.Position2.X > rightPart)
+                //ends in right 1/3 of screen.
+                preferred = rightFinger;
+
+            else if (lastObject is HoldCircle)
+                //hold note; always alternate fingers
+                preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
+
             else
                 //fall back to the closest finger.
                 preferred = distFromLeft < distFromRight ? leftFinger : rightFinger;
@@ -209,7 +244,7 @@ namespace osum.GameModes.Play.Components
                 //if we're about to use left finger but the object is wedged between the right finger and right side of screen, use right instead.
                 preferred = rightFinger;
             else if (preferred == rightFinger && nextObject.Position.X < leftFinger.Position.X && leftFinger.Tag == null)
-                //if we're about to use right finger but the object is wedged between the left finger and right side of screen, use left instead.
+                //if we're about to use right finger but the object is wedged between the left finger and left side of screen, use left instead.
                 preferred = leftFinger;
 
             pDrawable alternative = preferred == leftFinger ? rightFinger : leftFinger;
@@ -232,6 +267,8 @@ namespace osum.GameModes.Play.Components
                     alternative.FadeIn(300);
                 }
             }
+
+            lastObject = nextObject;
         }
 
     }
