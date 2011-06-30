@@ -463,7 +463,7 @@ namespace osum.GameplayElements
                 {
                     //check last hitObject has been hit already and isn't still active
                     HitObject last = ActiveStreamObjects[index - 1];
-                    if (!last.IsHit && Clock.AudioTime < last.StartTime)
+                    if (found.connectedObject != last && !last.IsHit && Clock.AudioTime < last.StartTime)
                     {
                         found.Shake();
                         return true;
