@@ -1,3 +1,4 @@
+
 //  Play.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
@@ -516,7 +517,7 @@ namespace osum.GameModes
             if (Failed)
             {
                 float vol = AudioEngine.Music.Volume;
-                if (vol == 0)
+                if (vol == 0 && AudioEngine.Music.IsElapsing)
                     AudioEngine.Music.Pause();
                 else
                     AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
