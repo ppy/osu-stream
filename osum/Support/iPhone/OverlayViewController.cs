@@ -10,7 +10,6 @@ namespace osum.Support.iPhone
         [Export("initWithCoder:")]
         public OverlayViewController(NSCoder coder) : base(coder)
         {
-
         }
 
         public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
