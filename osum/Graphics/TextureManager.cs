@@ -493,6 +493,7 @@ namespace osum.Graphics.Skins
         menu_store,
         menu_play,
         ranking_background,
+        ranking_footer,
         rank_x,
         rank_a,
         rank_d,
@@ -505,6 +506,7 @@ namespace osum.Graphics.Skins
         songselect_thumb_dl,
         songselect_star,
         finger_inner,
-        finger_outer
+        finger_outer,
+        gamecentre
     }
 }
