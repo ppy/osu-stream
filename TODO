@@ -3,7 +3,7 @@ Todo stuff for osu!stream (initial release)
 -Packs
 |- Figure out which maps are complete.
 |- Mod them very strictly.
-|- Spit them into packs.
+|- Split them into packs.
 |- Decide pricing, pack thumbnails.
 |- Add pack based skinning of some kind?
 -Server
@@ -15,7 +15,7 @@ Todo stuff for osu!stream (initial release)
 |- Finish IAP implementation.
 |- Download in background.
 -Results
-|- Retry button.
+|- Show unlocks.
 |- Feedback on score submission.
 |- Submit detailed score to osu! server (for future use).
 -Libraries/General
@@ -23,7 +23,6 @@ Todo stuff for osu!stream (initial release)
 |- Profile and optimise ~20% overhead.
 |- Revamp all sound effects.
 -Tutorial
-|- Stacking tutorial segment.
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
 -Options
 |- Volume levels.
@@ -32,11 +31,12 @@ Todo stuff for osu!stream (initial release)
 -Main Menu
 |- Add news ticker of some kind.
 |- Update initial icon screen.
-|- Update loading screen.
 |- Reencode music to AAC to avoid weird seek issues.
 -Song Select
-|- Ability to view ranking per-song/difficulty.
 |- Prompt to use easy mode on first run of app.
 |- Some kind of scroll progress bar/song count display? (see http://puu.sh/2OQI).
 |- Finish difficulty star display (better colours/positioning).
 |- Show ranks on song list and unlock status.
+
+fix lead-in time pausing going crazzzzzzzy.
+d ranking doesn't line up correctly with personal best.
