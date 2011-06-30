@@ -310,7 +310,9 @@ namespace osum.GameplayElements
 
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-            connectingLine.Transform(firstObject.Sprites[0].Transformations);
+            foreach (Transformation t in firstObject.Sprites[0].Transformations)
+                if (t.Type != TransformationType.Colour)
+                    connectingLine.Transform(t);
 
             h2.Sprites.Add(connectingLine);
 
