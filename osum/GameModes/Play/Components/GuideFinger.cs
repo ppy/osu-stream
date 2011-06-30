@@ -10,6 +10,7 @@ using osum.GameplayElements.HitObjects.Osu;
 using osum.Helpers;
 using OpenTK.Graphics;
 using osum.Graphics;
+using osum.Audio;
 
 namespace osum.GameModes.Play.Components
 {
@@ -115,7 +116,7 @@ namespace osum.GameModes.Play.Components
                     {
                         finger.Position = obj.TrackingPosition;
 
-                        if (TouchBurster != null)
+                        if (TouchBurster != null && AudioEngine.Music.IsElapsing)
                             TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                     }
                     else if (obj.IsVisible)
