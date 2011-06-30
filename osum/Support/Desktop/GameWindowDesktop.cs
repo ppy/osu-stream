@@ -73,7 +73,7 @@ namespace osum
                     Director.ChangeMode(OsuMode.SongSelect);
                     break;
                 case 'j':
-                    Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
+                    Director.ChangeMode(OsuMode.Results, new ResultTransition());
                     break;
             }
         }

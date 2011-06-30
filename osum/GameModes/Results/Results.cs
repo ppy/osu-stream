@@ -296,7 +296,8 @@ namespace osum.GameModes
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.ranking_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
             s_Footer.Alpha = 0;
-            s_Footer.OnClick += delegate {
+            s_Footer.OnClick += delegate
+            {
                 Director.ChangeMode(OsuMode.Play);
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
             };
@@ -310,8 +311,16 @@ namespace osum.GameModes
                 bmi.Ranking = RankableScore.Ranking;
             }
 
-            Director.OnTransitionEnded += Director_OnTransitionEnded;
+            //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
+            OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
+            {
+                if (finishedDisplaying)
+                    showOnlineRanking();
+                else
+                    submissionCompletePending = true;
+            });
 
+            Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
         }
 
@@ -381,45 +390,52 @@ namespace osum.GameModes
             {
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
-
-                s_ButtonBack.FadeIn(500);
-
-                s_Footer.Alpha = 1;
-                s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-
-                finishedDisplaying = true;
-
-                if (Player.Beatmap.DifficultyInfo.Count == 0)
-                {
-                    GameBase.Notify("Please update your maps from the store!",null);
-                }
-                else
-                {
-                    //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-                    OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore);
-                }
             }, time);
 
-            time += 1000;
+            time += 500;
 
-
-            GameBase.Scheduler.Add(delegate
+            if (isPersonalBest)
             {
-                if (isPersonalBest)
+                GameBase.Scheduler.Add(delegate
                 {
                     pSprite personalBest = new pSprite(TextureManager.Load(OsuTexture.personalbest), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(80, 250),
                             1, true, Color4.White);
-                    personalBest.FadeInFromZero(500);
+                    personalBest.FadeInFromZero(250);
                     personalBest.ScaleScalar = 1.6f;
-                    personalBest.RotateTo(0.2f, 500);
-                    personalBest.ScaleTo(1, 500, EasingTypes.Out);
-    
-                    GameBase.Scheduler.Add(delegate { personalBest.AdditiveFlash(1000, 1).ScaleTo(1.05f, 1000); }, 500);
-    
+                    personalBest.RotateTo(0.2f, 250);
+                    personalBest.ScaleTo(1, 250, EasingTypes.Out);
+
+                    GameBase.Scheduler.Add(delegate { personalBest.AdditiveFlash(1000, 1).ScaleTo(1.05f, 1000); }, 250);
+
                     layer1.Add(personalBest);
-                }
+                }, time);
+            }
+
+            time += 500;
+
+            GameBase.Scheduler.Add(delegate
+            {
+                finishedDisplaying = true;
+                if (submissionCompletePending)
+                    showOnlineRanking();
+                else
+                    showNavigation();
             }, time);
+        }
+
+        private void showNavigation()
+        {
+            s_ButtonBack.FadeIn(500);
+
+            s_Footer.Alpha = 1;
+            s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+        }
+
+        private void showOnlineRanking()
+        {
+            if (Director.CurrentOsuMode == OsuMode.Results) //we could have left already...
+                OnlineHelper.ShowRanking(Player.SubmitString, delegate { showNavigation(); });
         }
 
         bool finishedDisplaying;
@@ -430,6 +446,7 @@ namespace osum.GameModes
         private pSpriteText count50;
         private pSpriteText count0;
         private bool isPersonalBest;
+        private bool submissionCompletePending;
 
         private void initializeTransition()
         {
@@ -532,7 +549,7 @@ namespace osum.GameModes
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
                 foreach (pSprite p in fallingSprites)
-                        p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
+                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
 
                 if (fallingSprites.Count < 20)
                 {
@@ -558,7 +575,7 @@ namespace osum.GameModes
                 }
             }
 
-            int increaseAmount = (int)Math.Max(1,GameBase.ElapsedMilliseconds / 8);
+            int increaseAmount = (int)Math.Max(1, GameBase.ElapsedMilliseconds / 8);
             if (count300.LastInt < RankableScore.count300)
                 count300.ShowInt(Math.Min(RankableScore.count300, count300.LastInt + increaseAmount), 0, false, 'x');
             if (count100.LastInt < RankableScore.count100)

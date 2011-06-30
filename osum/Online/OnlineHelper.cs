@@ -39,11 +39,11 @@ namespace osum.Online
             return true;
         }
 
-        public static bool SubmitScore(string id, int score)
+        public static bool SubmitScore(string id, int score, VoidDelegate finished = null)
         {
             if (!Initialize()) return false;
 
-            onlineServices.SubmitScore(id, score);
+            onlineServices.SubmitScore(id, score, finished);
             return true;
         }
 

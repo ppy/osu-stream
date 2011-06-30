@@ -13,7 +13,7 @@ namespace osum.GameModes
         MainMenu,
         SongSelect,
         Play,
-        Ranking,
+        Results,
         Store,
         Options,
         Tutorial

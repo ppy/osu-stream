@@ -579,7 +579,7 @@ namespace osum.GameModes
                     GameBase.Scheduler.Add(delegate
                     {
     
-                        Director.ChangeMode(OsuMode.Ranking, new ResultTransition());
+                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
                     }, 500);
                 }
             }

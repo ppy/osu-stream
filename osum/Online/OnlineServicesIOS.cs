@@ -31,6 +31,16 @@ namespace osum.Online
             get { return localPlayer.Authenticated; }
         }
 
+        void TriggerFinished()
+        {
+            VoidDelegate finished = finishedDelegate;
+            if (finished != null)
+            {
+                finishedDelegate = null;
+                finished();
+            }
+        }
+
         static VoidDelegate finishedDelegate;
 
         /// <summary>
@@ -51,9 +61,7 @@ namespace osum.Online
 
         public override void DidFinish(GKLeaderboardViewController viewController)
         {
-            if (finishedDelegate != null)
-                finishedDelegate();
-            finishedDelegate = null;
+            TriggerFinished();
 
             AppDelegate.ViewController.DismissModalViewControllerAnimated(false);
             //if we want to animate, we need to delay the removal of the view, else it gets stuck.
@@ -62,22 +70,22 @@ namespace osum.Online
             AppDelegate.UsingViewController = false;
         }
 
-        public void SubmitScore(string id, int score)
+        public void SubmitScore(string id, int score, VoidDelegate finished = null)
         {
             GKScore gamekitScore = new GKScore(id);
             gamekitScore.Value = score;
             gamekitScore.ReportScore(delegate(NSError error) {
                 if (error != null)
                 {
+#if DEBUG
                     //todo: handle this
                     Console.WriteLine("submission error: " + error.ToString());
                     Console.WriteLine("using id " + id + " score " + score);
+#endif
                     return;
                 }
 
-                ShowLeaderboard(id);
-                Console.WriteLine("score submitted");
-
+                TriggerFinished();
             });
         }
     }
