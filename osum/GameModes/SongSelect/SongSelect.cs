@@ -83,13 +83,14 @@ namespace osum.GameModes
             spriteManager.Add(s_Header);
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
-            s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
-            s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
+            s_Footer.Alpha = 0;
             s_Footer.OnClick += footer_onClick;
             spriteManager.Add(s_Footer);
 
-            s_ButtonBack = new BackButton(onBackPressed);
+            //s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
+            //s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
 
+            s_ButtonBack = new BackButton(onBackPressed);
             spriteManager.Add(s_ButtonBack);
         }
 
@@ -260,7 +261,7 @@ namespace osum.GameModes
             }
 
             panel.s_BackingPlate2.Alpha = 1;
-            panel.s_BackingPlate2.AdditiveFlash(400, 1);
+            panel.s_BackingPlate2.AdditiveFlash(400, 1, true);
             panel.s_BackingPlate2.FadeColour(Color4.White, 0);
 
             GameBase.Scheduler.Add(delegate

@@ -83,6 +83,7 @@ namespace osum.GameModes
 
                 s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Alpha = 1;
 
                 SetDifficulty(Difficulty.Normal, true);
             }, true);
@@ -332,6 +333,7 @@ namespace osum.GameModes
 
                 s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Transform(new Transformation(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                GameBase.Scheduler.Add(delegate { s_Footer.Alpha = 0; }, 500);
             }, true);
         }
 
