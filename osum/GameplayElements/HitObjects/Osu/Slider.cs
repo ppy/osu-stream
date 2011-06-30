@@ -729,7 +729,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (spriteFollowCircle.Alpha > 0 && isTracking)
             {
                 int now = ClockingNow;
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 0.8f, now, now + 240, EasingTypes.In));
+                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));
                 spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
             }
         }
@@ -768,9 +768,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             int now = ClockingNow;
 
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 0.4f, 1.05f, now, Math.Min(EndTime, now + 200), EasingTypes.InHalf));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, now + 200, Math.Min(EndTime, now + 250), EasingTypes.OutHalf));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 140), EasingTypes.None));
+            spriteFollowCircle.Transform(new TransformationBounce(now, Math.Min(EndTime, now + 350), 1, 0.5f, 2));
+            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 100), EasingTypes.None));
         }
 
         protected virtual void endTracking()
