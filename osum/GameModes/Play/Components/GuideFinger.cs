@@ -206,7 +206,7 @@ namespace osum.GameModes.Play.Components
                 //stacked objects (right finger)
                 preferred = rightFinger;
 
-            else if (lastObject != null && lastObject != nextObject && nextObject.StartTime - lastObject.EndTime < 150)
+            else if (lastObject != null && lastObject != nextObject && !(lastObject is Slider) && !(nextObject is Slider) && nextObject.StartTime - lastObject.EndTime < 150)
                 //fast hits; always alternate fingers
                 preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
 
