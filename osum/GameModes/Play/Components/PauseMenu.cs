@@ -23,6 +23,8 @@ namespace osum.GameModes.Play.Components
 
             set
             {
+                if (menuDisplayed == value) return;
+
                 menuDisplayed = value;
 
                 if (menuDisplayed)
@@ -232,7 +234,7 @@ namespace osum.GameModes.Play.Components
 
             Player p = Director.CurrentMode as Player;
             if (p != null)
-                p.CountdownAbort();
+                p.Pause();
         }
     }
 }
