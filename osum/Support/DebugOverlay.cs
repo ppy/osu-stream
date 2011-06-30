@@ -101,7 +101,7 @@ namespace osum.Support
                 fpsDisplay.Position.Y = Director.CurrentOsuMode == OsuMode.Play ? 40 : 0;
 #else
                 fpsDisplay.ShowInt((int)Math.Round(Math.Min(60, fps), 0));
-                fpsDisplay.Alpha = fps < 59.9f ? 1 : 0.3f;
+                fpsDisplay.Alpha = fps < 58f ? 1 : 0;
 #endif
             }
         }
