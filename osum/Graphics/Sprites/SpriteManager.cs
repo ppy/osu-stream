@@ -54,6 +54,8 @@ namespace osum.Graphics.Sprites
         internal SpriteManager(IEnumerable<pDrawable> sprites)
         {
             Sprites = new List<pDrawable>(sprites);
+            foreach (pSprite s in Sprites)
+                s.SpriteManager = this;
 
             InputManager.OnMove += HandleInputManagerOnMove;
             InputManager.OnDown += HandleInputManagerOnDown;
@@ -186,6 +188,8 @@ namespace osum.Graphics.Sprites
                 ForwardPlayList.AddInPlace(sprite);
                 return;
             }
+
+            sprite.SpriteManager = this;
 
             int pos = Sprites.BinarySearch(sprite, depth);
 
