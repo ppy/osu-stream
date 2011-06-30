@@ -95,6 +95,8 @@ namespace osum
 
         internal static Scheduler Scheduler = new Scheduler();
 
+        internal virtual bool DisableDimming { get; set; }
+
         /// <summary>
         /// A list of components which get updated every frame.
         /// </summary>

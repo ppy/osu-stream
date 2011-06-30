@@ -58,6 +58,18 @@ namespace osum
             MonoTouch.UIKit.UIApplication.Main(new string[]{});
         }
 
+        bool disableDimming = false;
+        internal override bool DisableDimming {
+            get {
+                return disableDimming;
+            }
+            set {
+                if (value == disableDimming) return;
+                disableDimming = value;
+                UIApplication.SharedApplication.IdleTimerDisabled = value;
+            }
+        }
+
         public override void Initialize()
         {
             string culture = "en-US";
