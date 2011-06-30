@@ -205,15 +205,15 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                               ClockTypes.Audio, Position, 0.99f, false, Color.White){ ExactCoordinates = false };
+                               ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White){ ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
                 StartTime, StartTime);
             Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
                 StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
-            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
-                EndTime, EndTime + DifficultyManager.FadeOut);
+            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut / 2);
+            Transformation fadeOutInstant = new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime);
 
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
@@ -224,7 +224,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteSliderBody.Transform(fadeOut);
 
             spriteFollowBall.Transform(fadeIn);
-            spriteFollowBall.Transform(fadeOut);
+            spriteFollowBall.Transform(fadeOutInstant);
 
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
 
@@ -496,6 +496,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         break;
 
                 }
+
                 HitCircleStart.HitAnimation(startCircleChange);
 
                 scoringEndpointsHit++;
@@ -610,16 +611,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 newEndpoint();
 
+                bool finished = RepeatCount - lastJudgedEndpoint == 0;
+
                 if (isTracking)
                 {
                     PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType);
-
-                    burstEndpoint();
-
+                    if (!finished)
+                        burstEndpoint();
                     scoringEndpointsHit++;
                 }
 
-                if (RepeatCount - lastJudgedEndpoint == 0)
+                if (finished)
                 {
                     //we've hit the end of the slider altogether.
                     lastEndpoint();
@@ -797,9 +799,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 now, now + DifficultyManager.FadeOut);
 
-            bool finished = RepeatCount - lastJudgedEndpoint == 0;
-
-            if (lastJudgedEndpoint % 2 == 0 || finished)
+            if (lastJudgedEndpoint % 2 == 0)
             {
                 foreach (pSprite p in spriteCollectionStart)
                 {
@@ -821,7 +821,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 }
             }
 
-            if (lastJudgedEndpoint % 2 == 1 || finished)
+            if (lastJudgedEndpoint % 2 == 1)
             {
                 foreach (pSprite p in spriteCollectionEnd)
                 {
