@@ -61,6 +61,9 @@ namespace osum
         internal static Size BaseSize = new Size(640, 426);
         internal static Size GamefieldBaseSize = new Size(512, 384);
 
+        //calculations and internally, all textures are at 960-width-compatible sizes.
+        internal const float BASE_SPRITE_RES = 960;
+
         internal static int SpriteResolution;
 
         /// <summary>
@@ -126,26 +129,15 @@ namespace osum
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
         {
-            Vector2 newPosition = vec;
-            GamefieldToStandard(ref newPosition);
-            return newPosition;
-        }
-
-        internal static void GamefieldToStandard(ref Vector2 vec)
-        {
-            Vector2.Add(ref vec, ref GamefieldOffsetVector1, out vec);
+            return (vec + GameBase.GamefieldOffsetVector1) * (GameBase.BASE_SPRITE_RES / GameBase.SpriteResolution);
         }
 
         internal static Vector2 StandardToGamefield(Vector2 vec)
         {
-            Vector2 newPosition = vec;
-            StandardToGamefield(ref newPosition);
-            return newPosition;
-        }
-
-        internal static void StandardToGamefield(ref Vector2 vec)
-        {
-            Vector2.Subtract(ref vec, ref GamefieldOffsetVector1, out vec);
+            //base position is mapped using constant-width 640
+            //firstly we need to map this back over variable width
+            //*then* remove the offset.
+            return vec / (GameBase.BASE_SPRITE_RES / GameBase.SpriteResolution) - GameBase.GamefieldOffsetVector1;
         }
 
         /// <summary>
@@ -191,10 +183,6 @@ namespace osum
 
             BaseToNativeRatio = (float)NativeSize.Width / BaseSizeFixedWidth.Width;
 
-            GamefieldOffsetVector1 = new Vector2((float)(BaseSizeFixedWidth.Width - GamefieldBaseSize.Width) / 2,
-                                                 (float)(BaseSizeFixedWidth.Height - GamefieldBaseSize.Height) / 4 * 3);
-
-
             int oldResolution = SpriteSheetResolution;
 
             //define any available sprite sheets here.
@@ -207,21 +195,21 @@ namespace osum
             if (SpriteSheetResolution != oldResolution && oldResolution > 0)
                 TextureManager.ReloadAll(true);
 
-            //calculations and internally, all textures are at 960-width-compatible sizes.
-            const float base_sprite_res = 960;
-
             //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
             int testWidth = NativeSize.Width < 512 ? NativeSize.Width * 2 : NativeSize.Width;
 
-            SpriteResolution = (int)(Math.Max(base_sprite_res, Math.Min(1024, testWidth)));
+            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1024, testWidth)));
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
 
-            BaseToNativeRatioAligned = BaseToNativeRatio * (base_sprite_res / GameBase.SpriteResolution);
+            BaseToNativeRatioAligned = BaseToNativeRatio * (BASE_SPRITE_RES / GameBase.SpriteResolution);
 
-            SpriteToBaseRatio = BaseSizeFixedWidth.Width / base_sprite_res;
+            SpriteToBaseRatio = BaseSizeFixedWidth.Width / BASE_SPRITE_RES;
 
             BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
+
+            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.Width - GamefieldBaseSize.Width) / 2,
+                                     (float)Math.Max(31.5f,(BaseSize.Height - GamefieldBaseSize.Height) / 2));
 
             SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1

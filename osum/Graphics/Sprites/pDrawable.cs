@@ -177,7 +177,13 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal virtual bool ExactCoordinates { get { return UsesTextures && !(hasMovement || hasMovementX); } }
+        bool exactCoordinatesOverride;
+        internal virtual bool ExactCoordinates {
+            get { return !exactCoordinatesOverride && UsesTextures && !(hasMovement || hasMovementX); }
+            set {
+                exactCoordinatesOverride = !value;
+            }
+        }
 
 
         internal virtual Vector2 FieldPosition
@@ -235,8 +241,8 @@ namespace osum.Graphics.Sprites
                     case FieldTypes.GamefieldStandardScale:
                     case FieldTypes.GamefieldSprites:
                     case FieldTypes.GamefieldExact:
-                        GameBase.GamefieldToStandard(ref pos);
-                        Vector2.Multiply(ref pos, AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio, out pos);
+                        pos += GameBase.GamefieldOffsetVector1;
+                        pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
                         break;
                     case FieldTypes.Native:
                     default:
@@ -256,6 +262,8 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Because the resolution of sprites is not 1:1 to the resizing of the window (ie. between 960-1024 widths, where it stays constant)
         /// an extra ratio calculation must be applied to keep sprites aligned.
+        ///
+        /// Use FALSE to align to the cursor, or TRUE when aligning with other sprites.
         /// </summary>
         internal bool AlignToSprites = true;
 
@@ -616,21 +624,25 @@ namespace osum.Graphics.Sprites
             Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
-        internal pDrawable AdditiveFlash(int duration, float brightness)
+        internal SpriteManager SpriteManager;
+
+        internal pDrawable AdditiveFlash(int duration, float brightness, bool keepTransformations = false)
         {
             pDrawable clone = this.Clone();
 
             clone.UnbindAllEvents();
 
-            clone.Transformations.Clear();
-
-            GameBase.MainSpriteManager.Add(clone);
+            if (!keepTransformations)
+                clone.Transformations.Clear();
 
             clone.Alpha *= brightness;
             clone.Clocking = ClockTypes.Game;
+            clone.DrawDepth = Math.Min(1, DrawDepth + 0.001f);
             clone.Additive = true;
             clone.FadeOut(duration);
             clone.AlwaysDraw = false;
+
+            SpriteManager.Add(clone);
 
             return clone;
         }
