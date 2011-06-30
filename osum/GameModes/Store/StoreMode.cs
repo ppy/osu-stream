@@ -191,6 +191,7 @@ namespace osum.GameModes.Store
             if (isPausing)
             {
                 SongSelectMode.InitializeBgm();
+                AudioEngine.Music.Play();
                 instance.playingPreview = false;
             }
         }

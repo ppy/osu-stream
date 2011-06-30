@@ -284,9 +284,6 @@ namespace osum.GameplayElements
                 streamSpriteManagers[diffIndex] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
             }
 
-            h.Difficulty = difficulty;
-            h.Index = diffObjects.Count;
-
             diffObjects.AddInPlace(h);
             streamSpriteManagers[diffIndex].Add(h);
         }
@@ -441,8 +438,6 @@ namespace osum.GameplayElements
             for (int i = processFrom; i < processedTo + 1; i++)
             {
                 HitObject h = objects[i];
-                h.Index = i;
-
                 if (h.HitTestInitial(tracking))
                     return h;
             }
@@ -456,13 +451,17 @@ namespace osum.GameplayElements
 
             if (found == null) return false;
 
-            if (found.Index > 0)
+            if (Clock.AudioTime < found.StartTime - DifficultyManager.HitWindow300)
             {
-                if (Clock.AudioTime < found.StartTime - DifficultyManager.HitWindow300)
+                List<HitObject> objects = ActiveStreamObjects;
+
+                int index = objects.IndexOf(found);
+
+                if (index > 0)
                 {
                     //check last hitObject has been hit already and isn't still active
-                    HitObject last = ActiveStreamObjects[found.Index - 1];
-                    if (!last.IsHit && Clock.AudioTime < last.StartTime - DifficultyManager.HitWindow100)
+                    HitObject last = ActiveStreamObjects[index - 1];
+                    if (!last.IsHit && Clock.AudioTime < last.StartTime)
                     {
                         found.Shake();
                         return true;
