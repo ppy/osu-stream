@@ -274,9 +274,9 @@ namespace osum.GameplayElements
         /// <param name="action">The ssociated score change action.</param>
         internal virtual void HitAnimation(ScoreChange action)
         {
-            if (m_HitObjectManager == null) return; //is the case for sliders, where we don't want to display this stuff.
+            if (m_HitObjectManager == null) return; //is the case for sliders start circles, where we don't want to display this stuff.
 
-            float depth = this is Spinner ? SpriteManager.drawOrderBwd(EndTime - 4) : SpriteManager.drawOrderFwdPrio(EndTime - 4);
+            float depth = this is Spinner ? SpriteManager.drawOrderBwd(EndTime - 4) : SpriteManager.drawOrderFwdPrio(EndTime + 4);
 
             OsuTexture texture = OsuTexture.None;
 
@@ -320,13 +320,13 @@ namespace osum.GameplayElements
             usableSpriteManager.Add(p);
 
             const int HitFadeIn = 120;
-            const int HitFadeOutDuration = 300;
-            const int HitFadeOutStart = 600;
+            const int HitFadeOutDuration = 400;
+            const int HitFadeOutStart = 400;
 
             if (action > ScoreChange.Miss)
             {
                 p.Transform(
-                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 1.4)), 1, 0.3f, 3));
+                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.4f, 3));
                 p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
