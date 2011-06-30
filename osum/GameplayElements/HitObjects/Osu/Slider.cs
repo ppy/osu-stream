@@ -198,13 +198,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White);
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White){ ExactCoordinates = false };
+
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                               ClockTypes.Audio, Position, 0.99f, false, Color.White);
+                               ClockTypes.Audio, Position, 0.99f, false, Color.White){ ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
