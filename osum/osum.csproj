@@ -345,6 +345,8 @@
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
     <Compile Include="Resources\Tutorial.Designer.cs" />
+    <Compile Include="GameModes\Options\Options.cs" />
+    <Compile Include="GameModes\Options\Credits.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -365,6 +367,7 @@
     <Folder Include="GameModes\" />
     <Folder Include="Graphics\Drawables\" />
     <Folder Include="Online\" />
+    <Folder Include="GameModes\Options\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />

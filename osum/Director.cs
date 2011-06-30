@@ -7,6 +7,7 @@ using osum.Helpers;
 using osum.Audio;
 using osum.GameModes.Store;
 using osum.GameModes.Play;
+using osum.GameModes.Options;
 
 namespace osum
 {
@@ -39,7 +40,6 @@ namespace osum
 
         /// <summary>
         /// Actions to perform when transition finishes. NOTE: Is cleared after each transition.
-        /// </summary>
         public static event VoidDelegate OnTransitionEnded;
 
         private static void TriggerOnTransitionEnded()
@@ -140,6 +140,9 @@ namespace osum
                     break;
                 case OsuMode.Store:
                     mode = new StoreMode();
+                    break;
+                case OsuMode.Options:
+                    mode = new Options();
                     break;
                 case OsuMode.Tutorial:
                     mode = new Tutorial();

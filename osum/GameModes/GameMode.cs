@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.Graphics.Sprites;
+using osum.Graphics.Skins;
 
 namespace osum.GameModes
 {
@@ -14,6 +15,7 @@ namespace osum.GameModes
         Play,
         Ranking,
         Store,
+        Options,
         Tutorial
     }
 
@@ -43,7 +45,6 @@ namespace osum.GameModes
         public virtual void Dispose()
         {
             spriteManager.Dispose();
-            //GC.SuppressFinalize(this);
         }
 
         /// <summary>
