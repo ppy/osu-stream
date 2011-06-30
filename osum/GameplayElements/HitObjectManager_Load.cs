@@ -500,48 +500,53 @@ namespace osum.GameplayElements
                     currHitObject.ColourIndex = colourIndex;
 
                     if (sameTimeAsLastAdded || sameTimeAsLastAdded2)
+                        //connect multitouch beats
                         diffSpriteManager.Add(Connect(last, currHitObject, sameTimeAsLastAdded2));
                     else if (last != null && !currHitObject.NewCombo && !(last is Spinner))
                     {
-                        //Draw follow lines
-                        Vector2 pos1 = last.EndPosition;
                         int time1 = last.EndTime;
-                        Vector2 pos2 = currHitObject.Position;
                         int time2 = currHitObject.StartTime;
 
-                        int distance = (int)pMathHelper.Distance(pos1, pos2);
-                        Vector2 distanceVector = pos2 - pos1;
-                        int length = time2 - time1;
-
-                        int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
-
-                        if (distance >= DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
+                        if (time1 < time2)
                         {
-                            //find out how many points we can place (evenly)
-                            int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+                            Vector2 pos1 = last.EndPosition;
+                            Vector2 pos2 = currHitObject.Position;
 
-                            float usableDistance = (distance - buffer_size * 2) / (count);
+                            //Draw follow lines
+                            int distance = (int)pMathHelper.Distance(pos1, pos2);
+                            Vector2 distanceVector = pos2 - pos1;
+                            int length = time2 - time1;
 
-                            for (int j = 0; j < count + 1; j++)
+                            int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
+
+                            if (distance >= DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
                             {
-                                float fraction = (buffer_size + usableDistance * j) / distance;
-                                Vector2 pos = pos1 + fraction * distanceVector;
-                                int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
-                                int fadeout = (int)(time1 + fraction * length);
+                                //find out how many points we can place (evenly)
+                                int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
 
-                                pSprite dot =
-                                    new pSprite(fptexture,
-                                                   FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                                   0.01f, false, Color4.White);
+                                float usableDistance = (distance - buffer_size * 2) / (count);
 
-                                dot.Transform(
-                                    new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
-                                dot.Transform(
-                                    new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
-                                dot.Transform(
-                                    new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
-                                diffSpriteManager.Add(dot);
-                                currHitObject.Sprites.Add(dot);
+                                for (int j = 0; j < count + 1; j++)
+                                {
+                                    float fraction = (buffer_size + usableDistance * j) / distance;
+                                    Vector2 pos = pos1 + fraction * distanceVector;
+                                    int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
+                                    int fadeout = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt / 2;
+
+                                    pSprite dot =
+                                        new pSprite(fptexture,
+                                                       FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
+                                                       0.01f, false, Color4.White);
+
+                                    dot.Transform(
+                                        new Transformation(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
+                                    dot.Transform(
+                                        new Transformation(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
+                                    dot.Transform(
+                                        new Transformation(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
+                                    diffSpriteManager.Add(dot);
+                                    currHitObject.Sprites.Add(dot);
+                                }
                             }
                         }
                     }
