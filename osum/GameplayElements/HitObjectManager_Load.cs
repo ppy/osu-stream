@@ -482,8 +482,7 @@ namespace osum.GameplayElements
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
                     bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
-                    bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && last != null && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
-
+                    bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && (last is Slider && !(last is HoldCircle)) && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
 
                     if (last != null)
                     {
@@ -494,11 +493,8 @@ namespace osum.GameplayElements
                                 colourIndex = (colourIndex + 1 + currHitObject.ComboOffset) % TextureManager.DefaultColours.Length;
                         }
                         else
-                            currentComboNumber = currentComboNumber + (last.IncrementCombo ? 1 : 0);
+                            currentComboNumber = currentComboNumber + (currHitObject.IncrementCombo && !sameTimeAsLastAdded ? 1 : 0);
                     }
-
-                    if (sameTimeAsLastAdded)
-                        currentComboNumber = Math.Max(1, --currentComboNumber);
 
                     currHitObject.ComboNumber = currentComboNumber;
                     currHitObject.ColourIndex = colourIndex;
