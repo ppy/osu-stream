@@ -106,7 +106,8 @@ namespace osum.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You have all available packs.\nCheck back later!.
+        ///   Looks up a localized string similar to You have all available packs.
+        ///Check back later!.
         /// </summary>
         internal static string HaveAllAvailableSongPacks {
             get {

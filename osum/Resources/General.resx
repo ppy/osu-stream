@@ -145,6 +145,7 @@
     <value>Error while downloading song listing.</value>
   </data>
   <data name="HaveAllAvailableSongPacks" xml:space="preserve">
-    <value>You have all available packs.\nCheck back later!</value>
+    <value>You have all available packs.
+Check back later!</value>
   </data>
 </root>

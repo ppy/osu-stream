@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1230</BundleVersion>
+    <BundleVersion>1238</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -345,6 +345,7 @@
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
     <Compile Include="Resources\Tutorial.Designer.cs" />
+    <Compile Include="Resources\General.Designer.cs" />
     <Compile Include="GameModes\Options\Options.cs" />
     <Compile Include="GameModes\Options\Credits.cs" />
   </ItemGroup>
@@ -425,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Tutorial.resx">
       <LogicalName>Tutorial.resx</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\General.resx">
+      <LogicalName>General.resx</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
