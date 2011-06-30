@@ -175,7 +175,7 @@ namespace osum.GameModes
         {
             pDrawable d = sender as pDrawable;
 
-            d.FadeColour(Color4.White, 100);
+            d.FadeColour(Color4.White, 150);
             //d.FadeColour(ColourHelper.Lighten(d.Colour, 0.5f),50);
         }
 
@@ -186,6 +186,12 @@ namespace osum.GameModes
 
             pDrawable d = sender as pDrawable;
 
+            d.Colour = Color4.White;
+            d.FadeColour((Color4)d.Tag, 600);
+
+            ScaleTo(1.3f, 600, EasingTypes.None);
+            MoveTo(new Vector2(-75, 14), 600, EasingTypes.None);
+
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             if (sender == yellow)
@@ -195,7 +201,9 @@ namespace osum.GameModes
             else if (sender == blue)
                 Director.ChangeMode(OsuMode.Store);
             else
-            { }
+            {
+                Director.ChangeMode(OsuMode.Options);
+            }
         }
 
         int awesomeStartTime = -1;
