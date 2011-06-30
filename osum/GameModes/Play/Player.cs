@@ -139,7 +139,8 @@ namespace osum.GameModes
                 //countdown and lead-in time
                 int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
 
-                if (AudioEngine.Music != null) AudioEngine.Music.Stop();
+                if (AudioEngine.Music != null)
+                    AudioEngine.Music.Stop(true);
 
                 CountdownResume(firstObjectTime, 8);
                 firstCountdown = true;
@@ -695,6 +696,8 @@ namespace osum.GameModes
         {
             if (menu != null)
                 menu.ShowMenu();
+
+            CountdownAbort();
 
             if (HitObjectManager != null)
             {

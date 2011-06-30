@@ -25,6 +25,7 @@ namespace osum.GameModes
         List<pDrawable> resultSprites = new List<pDrawable>();
 
         private BackButton s_ButtonBack;
+        private pSprite s_Footer;
         private pSprite background;
         private pSprite rankingBackground;
         private pSprite modeGraphic;
@@ -44,6 +45,7 @@ namespace osum.GameModes
 
         SpriteManager layer1 = new SpriteManager();
         SpriteManager layer2 = new SpriteManager();
+        SpriteManager topMostLayer = new SpriteManager();
 
         public override void Initialize()
         {
@@ -290,7 +292,15 @@ namespace osum.GameModes
             //add a temporary button to allow returning to song select
             s_ButtonBack = new BackButton(returnToSelect);
             s_ButtonBack.Alpha = 0;
-            spriteManager.Add(s_ButtonBack);
+            topMostLayer.Add(s_ButtonBack);
+
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.ranking_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
+            s_Footer.Alpha = 0;
+            s_Footer.OnClick += delegate {
+                Director.ChangeMode(OsuMode.Play);
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
+            };
+            topMostLayer.Add(s_Footer);
 
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
             if (RankableScore.totalScore > bmi.HighScore)
@@ -373,6 +383,10 @@ namespace osum.GameModes
                 rankGraphic.AdditiveFlash(1500, 1);
 
                 s_ButtonBack.FadeIn(500);
+
+                s_Footer.Alpha = 1;
+                s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
                 finishedDisplaying = true;
 
@@ -473,8 +487,6 @@ namespace osum.GameModes
         public override void Dispose()
         {
             InputManager.OnMove -= HandleInputManagerOnMove;
-
-            AudioEngine.Music.Unload();
             base.Dispose();
         }
 
@@ -487,6 +499,7 @@ namespace osum.GameModes
             base.Draw();
             layer1.Draw();
             layer2.Draw();
+            topMostLayer.Draw();
 
             return true;
         }
@@ -497,6 +510,7 @@ namespace osum.GameModes
 
             layer1.Update();
             layer2.Update();
+            topMostLayer.Update();
 
             if (!Director.IsTransitioning)
             {
