@@ -119,7 +119,6 @@ namespace osum.GameplayElements
 
         internal HitObjectType Type;
 
-        internal int Index;
         internal int ComboOffset;
 
         internal HitObject connectedObject;
@@ -226,7 +225,7 @@ namespace osum.GameplayElements
         /// </returns>
         internal ScoreChange Hit()
         {
-            if (ClockingNow < StartTime - 200)
+            if (ClockingNow < StartTime - DifficultyManager.HitWindow50 * 1.5f)
             {
                 Shake();
                 return ScoreChange.Ignore;
@@ -543,7 +542,6 @@ namespace osum.GameplayElements
         }
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
-        public Difficulty Difficulty;
         internal SampleSet SampleSet = SampleSet.Soft;
         internal float Volume = 1;
 
