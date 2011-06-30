@@ -414,6 +414,7 @@
     <Content Include="Skins\Default\count2.wav" />
     <Content Include="Skins\Default\count3.wav" />
     <Content Include="Skins\Default\countgo.wav" />
+    <Content Include="Skins\Default\mainmenu_intro.wav" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">

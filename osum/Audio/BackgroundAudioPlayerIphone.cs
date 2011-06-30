@@ -82,6 +82,7 @@ namespace osum
 			using (NSData data = NSData.FromArray(audio))
 			{
                 player = AVAudioPlayer.FromData(data,out error);
+                player.PrepareToPlay();
                 //player.MeteringEnabled = true; -- enable for CurrentPower readings
                 Volume = vol;
                 player.NumberOfLoops = looping ? -1 : 0;
@@ -103,6 +104,7 @@ namespace osum
             using (NSUrl url = NSUrl.FromFilename(path))
 			{
 	            player = AVAudioPlayer.FromUrl(url,out error);
+                player.PrepareToPlay();
                 Volume = vol;
 	            //player.MeteringEnabled = true;
 			}
