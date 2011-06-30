@@ -11,6 +11,18 @@ Todo stuff for osu!stream (initial release)
 |- Send thumbnail/other data to client.
 -Store
 |- Show thumbnails
+-Options
+|- Volume levels.
+|- Game centre login options.
+|- Credits
+-Main Menu
+|- Add news ticker of some kind.
+|- Update initial icon screen.
+-Song Select
+|- Prompt to use easy mode on first run of app.
+|- Some kind of scroll progress bar/song count display? (see http://puu.sh/2OQI).
+|- Finish difficulty star display (better colours/positioning).
+|- Show ranks on song list and unlock status.
 |- Show correct price information.
 |- Finish IAP implementation.
 |- Download in background.
@@ -24,19 +36,8 @@ Todo stuff for osu!stream (initial release)
 |- Revamp all sound effects.
 -Tutorial
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
--Options
-|- Volume levels.
-|- Game centre login options.
-|- Credits
--Main Menu
-|- Add news ticker of some kind.
-|- Update initial icon screen.
-|- Reencode music to AAC to avoid weird seek issues.
--Song Select
-|- Prompt to use easy mode on first run of app.
-|- Some kind of scroll progress bar/song count display? (see http://puu.sh/2OQI).
-|- Finish difficulty star display (better colours/positioning).
-|- Show ranks on song list and unlock status.
 
 fix lead-in time pausing going crazzzzzzzy.
 d ranking doesn't line up correctly with personal best.
+songselect tick sounds horrible on headphones.
+ranking screen sound effects.
