@@ -91,7 +91,10 @@ namespace osum
             if (CurrentMode != null)
                 CurrentMode.Dispose();
 
-            TextureManager.DisposeAll(false);
+            if (CurrentOsuMode == PendingOsuMode)
+                TextureManager.DisposeDisposable();
+            else
+                TextureManager.DisposeAll(false);
 
             AudioEngine.Reset();
 
