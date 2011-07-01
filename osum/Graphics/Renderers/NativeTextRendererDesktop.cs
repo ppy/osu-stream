@@ -88,12 +88,6 @@ namespace osum.Graphics.Renderers
                         int width = (int)(measuredSize.Width + 1);
                         int height = (int)(measuredSize.Height + 1);
 
-                        if (restrictBounds.Y != 0)
-                            height = (int)restrictBounds.Y;
-
-                        if (restrictBounds.X != 0)
-                            width = (int)restrictBounds.X;
-
                         if (measureOnly)
                         {
                             int startSpace = 0;
