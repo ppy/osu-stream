@@ -8,11 +8,14 @@ using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
+using osum.Graphics.Renderers;
 
 namespace osum.GameModes.Play.Components
 {
     class PauseMenu : GameComponent
     {
+        pText menuText;
+        
         private bool menuDisplayed;
         internal bool MenuDisplayed
         {
@@ -27,10 +30,25 @@ namespace osum.GameModes.Play.Components
 
                 menuDisplayed = value;
 
+                Player p = Director.CurrentMode as Player;
+
                 if (menuDisplayed)
                 {
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
+
+                    
+                    menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,80), 1, true, Color4.LightGray)
+                    {
+                        TextAlignment = TextAlignment.Centre,
+                        Field = FieldTypes.StandardSnapBottomCentre,
+                        Origin = OriginTypes.Centre,
+                        TextShadow = true,
+                        Alpha = 0
+                    };
+
+                    menuText.FadeInFromZero(400);
+                    GameBase.MainSpriteManager.Add(menuText);
 
                     spriteManager.Sprites.ForEach(s =>
                     {
@@ -45,15 +63,20 @@ namespace osum.GameModes.Play.Components
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
 
+                    if (menuText != null)
+                    {
+                        menuText.AlwaysDraw = false;
+                        menuText.FadeOut(100);
+                        menuText = null;
+                    }
+
                     spriteManager.Sprites.ForEach(s =>
                     {
                         s.Transform(move);
                         s.Transform(fade);
                     });
 
-                    Player p = Director.CurrentMode as Player;
-                    if (p != null)
-                        p.CountdownResume(Clock.AudioTime, 8);
+                    if (p != null) p.CountdownResume(Clock.AudioTime, 8);
                 }
             }
         }
@@ -182,6 +205,9 @@ namespace osum.GameModes.Play.Components
 
         public override void Dispose()
         {
+            if (menuText != null)
+                menuText.AlwaysDraw = false;
+
             base.Dispose();
         }
 
@@ -218,7 +244,10 @@ namespace osum.GameModes.Play.Components
                 }
                 else
                 {
+                    //force a switch here, so the animation resets.
+                    menuDisplayed = !(pulledAmount >= valid_pull);
                     MenuDisplayed = pulledAmount >= valid_pull;
+
                     validPoint = null;
                 }
             }

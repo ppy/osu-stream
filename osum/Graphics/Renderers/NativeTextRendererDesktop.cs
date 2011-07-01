@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using osum.Helpers;
 using osu_common.Helpers;
-using Rectangle=System.Drawing.Rectangle;
+using Rectangle = System.Drawing.Rectangle;
 using osum.Graphics;
 using OpenTK;
 using OpenTK.Graphics;
@@ -16,7 +16,7 @@ namespace osum.Graphics.Renderers
     internal class NativeTextRendererDesktop : NativeTextRenderer
     {
         static readonly Brush blackBrush = Brushes.Black;
-       
+
         internal override pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
                                             bool bold, bool underline, TextAlignment alignment, bool forceAa,
                                             out Vector2 measured,
@@ -26,7 +26,7 @@ namespace osum.Graphics.Renderers
             size *= 0.72f;
             //todo: this is a temporary hack to make sizes the same on desktop and iphone.
             //need to switch this around so desktop is the base size and iphone matches instead.
-            
+
             try
             {
                 using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
@@ -135,19 +135,10 @@ namespace osum.Graphics.Renderers
 
                                 using (Brush brush = new SolidBrush(ColourHelper.CConvert(Color4)))
                                 {
-                                    if (restrictBounds != Vector2.Zero)
-                                    {
-                                        if (shadow)
-                                            g.DrawString(text, f, blackBrush,
-                                                         new RectangleF(1, 1, restrictBounds.X, restrictBounds.Y), sf);
-                                        g.DrawString(text, f, brush, new RectangleF(0, 0, restrictBounds.X, restrictBounds.Y), sf);
-                                    }
-                                    else
-                                    {
-                                        if (shadow)
-                                            g.DrawString(text, f, blackBrush, 1, 1);
-                                        g.DrawString(text, f, brush, 0, 0);
-                                    }
+                                    if (shadow)
+                                        g.DrawString(text, f, blackBrush,
+                                                     new RectangleF(1, 1, measuredSize.Width, measuredSize.Height), sf);
+                                    g.DrawString(text, f, brush, new RectangleF(0, 0, measuredSize.Width, measuredSize.Height), sf);
                                 }
                             }
 

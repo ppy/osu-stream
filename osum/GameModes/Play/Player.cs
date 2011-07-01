@@ -293,7 +293,12 @@ namespace osum.GameModes
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
 
             if (Director.PendingOsuMode != OsuMode.Play)
+            {
+                RestartCount = 0;
                 Player.Autoplay = false;
+            }
+            else
+                RestartCount++;
 
             base.Dispose();
 
@@ -472,12 +477,11 @@ namespace osum.GameModes
             }
         }
 
-        int frameCount = 0;
-        double msCount = 0;
         private pSprite failSprite;
         private double DifficultyComboMultiplier = 1;
 
         GuideFinger gf;
+        public static int RestartCount;
 
         public override bool Draw()
         {
@@ -504,10 +508,6 @@ namespace osum.GameModes
             touchBurster.Draw();
 
             topMostSpriteManager.Draw();
-
-            frameCount++;
-
-            msCount += GameBase.ElapsedMilliseconds;
 
             return true;
         }
@@ -575,10 +575,10 @@ namespace osum.GameModes
                 {
                     Results.RankableScore = CurrentScore;
                     Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0, CurrentScore.accuracy - 0.8) / 0.2 * 200000);
-    
+
                     GameBase.Scheduler.Add(delegate
                     {
-    
+
                         Director.ChangeMode(OsuMode.Results, new ResultTransition());
                     }, 500);
                 }
@@ -615,7 +615,7 @@ namespace osum.GameModes
 
                             HitObject activeObject = HitObjectManager.ActiveObject;
                             if (activeObject != null)
-                                activeObject.StopSound(false);
+                                activeObject.StopSound(true);
 
                             menu.Failed = true; //set this now so the menu will be in fail state if interacted with early.
 
@@ -727,8 +727,24 @@ namespace osum.GameModes
             return true;
         }
 
-        internal static string SubmitString {
+        internal static string SubmitString
+        {
             get { return CryptoHelper.GetMd5String(Path.GetFileName(Player.Beatmap.ContainerFilename) + "-" + Player.Difficulty.ToString()); }
+        }
+
+        public float Progress
+        {
+            get
+            {
+                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+                int first = objects[0].StartTime;
+                if (Clock.AudioTime < first)
+                    return 0;
+
+                int last = objects[objects.Count - 1].EndTime;
+
+                return pMathHelper.ClampToOne((float)(Clock.AudioTime - first) / (last - first));
+            }
         }
     }
 }
