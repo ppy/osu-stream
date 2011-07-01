@@ -561,6 +561,8 @@ namespace osum.GameModes.Play
 
                 case TutorialSegments.Slider_1:
                     {
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+
                         Clock.ResetManual();
                         Player.Autoplay = true;
 
@@ -715,6 +717,7 @@ namespace osum.GameModes.Play
 
 
                 case TutorialSegments.Spinner_1:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
                     resetScore();
 
                     showText(osum.Resources.Tutorial.Spinner1);
@@ -855,6 +858,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Multitouch_1:
                     {
+                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
                         Clock.ResetManual();
                         Player.Autoplay = true;
 
@@ -982,6 +986,7 @@ namespace osum.GameModes.Play
                     break;
 
                 case TutorialSegments.Stacked_1:
+                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
                     showText(osum.Resources.Tutorial.Stacked1, -100);
 
                     Clock.ResetManual();
