@@ -15,16 +15,17 @@ namespace osum.Online
 
         GKLocalPlayer localPlayer;
 
+        static bool authSucceededThisSession;
+
         public void Authenticate()
         {
-            localPlayer.Authenticate(authenticationComplete);
-
-
+            if (!localPlayer.Authenticated)
+                localPlayer.Authenticate(authenticationComplete);
         }
 
         void authenticationComplete(NSError error)
         {
-
+            authSucceededThisSession |= error == null;
         }
 
         public bool IsAuthenticated {

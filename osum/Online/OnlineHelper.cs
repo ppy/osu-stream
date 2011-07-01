@@ -15,17 +15,14 @@ namespace osum.Online
             }
         }
 
-        static bool initialized;
-
         public static bool Initialize()
         {
-            if (!initialized)
+            if (onlineServices == null)
             {
 #if iOS
                 onlineServices = new OnlineServicesIOS();
                 onlineServices.Authenticate();
 #endif
-                initialized = true;
             }
 
             return onlineServices != null;
