@@ -140,6 +140,14 @@ namespace osum.GameModes.Play
             tutorialSegmentManager.Update();
         }
 
+        protected override bool showGuideFingers
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         protected override void initializeUIElements()
         {
             //base.initializeUIElements();

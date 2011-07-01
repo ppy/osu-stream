@@ -501,7 +501,7 @@ namespace osum.GameModes
 
             if (healthBar != null) healthBar.Draw();
 
-            if (gf != null && Autoplay) gf.Draw();
+            if (gf != null && showGuideFingers) gf.Draw();
 
             if (menu != null) menu.Draw();
 
@@ -523,7 +523,7 @@ namespace osum.GameModes
                     AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
             }
 
-            if (gf != null && Autoplay) gf.Update();
+            if (gf != null && showGuideFingers) gf.Update();
 
             if (HitObjectManager != null)
             {
@@ -746,6 +746,8 @@ namespace osum.GameModes
                 return pMathHelper.ClampToOne((float)(Clock.AudioTime - first) / (last - first));
             }
         }
+
+        protected virtual bool showGuideFingers { get { return Autoplay; } }
     }
 }
 
