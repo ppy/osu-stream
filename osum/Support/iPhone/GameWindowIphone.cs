@@ -85,15 +85,16 @@ namespace osum
             else
             {
                 GameBase.Instance.SetupScreen();
+
                 TextureManager.ReloadAll();
 
-                pausedMusic = false;
+                if (Director.CurrentOsuMode == OsuMode.MainMenu)
+                    Director.ChangeMode(OsuMode.MainMenu, null);
             }
 
             base.OnLoad(e);
         }
 
-        bool pausedMusic;
         protected override void OnUnload(EventArgs e)
         {
             Player p = Director.CurrentMode as Player;
