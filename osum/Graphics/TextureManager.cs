@@ -507,6 +507,10 @@ namespace osum.Graphics.Skins
         songselect_star,
         finger_inner,
         finger_outer,
-        gamecentre
+        gamecentre,
+        notification_background,
+        notification_button_ok,
+        notification_button_no,
+        notification_button_yes
     }
 }

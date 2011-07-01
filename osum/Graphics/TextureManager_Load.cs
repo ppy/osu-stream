@@ -90,6 +90,10 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.menu_circle, new SpriteSheetTexture("menu", 1564, 0, 246, 248));
             textureLocations.Add(OsuTexture.menu_play, new SpriteSheetTexture("menu", 619, 624, 246, 133));
             textureLocations.Add(OsuTexture.menu_item_background, new SpriteSheetTexture("menu", 1129, 143, 4, 400));
+            textureLocations.Add(OsuTexture.notification_background, new SpriteSheetTexture("notification", 0, 0, 900, 514));
+            textureLocations.Add(OsuTexture.notification_button_ok, new SpriteSheetTexture("notification", 0, 516, 499, 79));
+            textureLocations.Add(OsuTexture.notification_button_no, new SpriteSheetTexture("notification", 0, 597, 359, 79));
+            textureLocations.Add(OsuTexture.notification_button_yes, new SpriteSheetTexture("notification", 0, 678, 359, 79));
             textureLocations.Add(OsuTexture.gamecentre, new SpriteSheetTexture("options", 0, 0, 128, 128));
             textureLocations.Add(OsuTexture.ranking_footer, new SpriteSheetTexture("ranking", 0, 0, 1024, 93));
             textureLocations.Add(OsuTexture.ranking_background, new SpriteSheetTexture("ranking", 0, 95, 814, 527));
