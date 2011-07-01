@@ -37,6 +37,12 @@ namespace osum
         int validity;
         
         public object HoveringObject;
+
+        /// <summary>
+        /// Each frame this will be set to false, and set to true when the previously hovering object
+        /// is confirmed to still be the "highest" hovering object.
+        /// </summary>
+        public bool HoveringObjectConfirmed;
         
         /// <summary>
         /// Is this point still valid (active)?

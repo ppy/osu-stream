@@ -71,7 +71,7 @@ namespace osum.Graphics.Sprites
 
         }
 
-        void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
+        internal void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time) return;
 
@@ -129,7 +129,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
+        internal void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 
@@ -142,7 +142,7 @@ namespace osum.Graphics.Sprites
                 Sprites[i].HandleOnDown(source, trackingPoint);
         }
 
-        void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
+        internal void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 

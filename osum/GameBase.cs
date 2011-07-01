@@ -46,6 +46,7 @@ using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.GameplayElements.Scoring;
+using osum.UI;
 #endif
 
 
@@ -357,6 +358,8 @@ namespace osum
 
             MainSpriteManager.Update();
 
+            UpdateNotifications();
+
             if (Director.Update())
             {
                 ignoreNextFrameTime = true;
@@ -368,6 +371,8 @@ namespace osum
             InputManager.Update();
 
             Components.ForEach(c => c.Update());
+
+            if (ActiveNotification != null) ActiveNotification.Update();
 
             return true;
         }
@@ -399,55 +404,33 @@ namespace osum
                 OnScreenLayoutChanged();
         }
 
-        internal static pSprite ActiveNotification;
+        internal static Notification ActiveNotification;
+        internal static Queue<Notification> NotificationQueue = new Queue<Notification>();
+
         internal static int SpriteSheetResolution;
 
-        internal static void Notify(string text, VoidDelegate action = null)
+        internal static void Notify(string simple, VoidDelegate action = null)
         {
-            GameBase.Scheduler.Add(delegate
+            Notify(new Notification(osum.Resources.General.Notice, simple, NotificationStyle.Okay, action, null));
+        }
+        
+        internal static void Notify(Notification notification)
+        {
+            NotificationQueue.Enqueue(notification);
+        }
+
+        private void UpdateNotifications()
+        {
+            if (ActiveNotification != null && ActiveNotification.Dismissed)
+                ActiveNotification = null;
+
+            if (NotificationQueue.Count > 0 && ActiveNotification == null)
             {
-                pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
-                ActiveNotification = back;
-
-                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width * 0.8f, 0), 1, false, Color4.White, true)
-                {
-                    Field = FieldTypes.StandardSnapCentre,
-                    Origin = OriginTypes.Centre,
-                    TextAlignment = TextAlignment.Centre,
-                    Clocking = ClockTypes.Game,
-                    DimImmune = true
-                };
-
-                Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
-                Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
-                Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, Clock.Time + 10000, Clock.Time + 10200);
-
-                t.Transform(bounce, fadeIn, fadeOut);
-                back.Transform(bounce, fadeIn, fadeOut);
-
-                back.OnClick += delegate
-                {
-                    back.HandleInput = false;
-
-                    Transformation bounce2 = new TransformationBounce(Clock.Time, Clock.Time + 300, 1.05f, 0.05f, 3);
-                    Transformation fadeOut2 = new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 300);
-
-                    back.Transformations.Clear();
-                    t.Transformations.Clear();
-
-                    back.Transform(bounce2, fadeOut2);
-                    t.Transform(bounce2, fadeOut2);
-
-                    if (action != null)
-                        action();
-
-                    ActiveNotification = null;
-                    SpriteManager.UniversalDim = 0;
-                };
-
-                MainSpriteManager.Add(t);
-                MainSpriteManager.Add(back);
-            });
+                ActiveNotification = NotificationQueue.Dequeue();
+                ActiveNotification.Display();
+                //use the main sprite manager to handle input before anything else.
+                MainSpriteManager.Add(ActiveNotification.spriteManager);
+            }
         }
     }
 }

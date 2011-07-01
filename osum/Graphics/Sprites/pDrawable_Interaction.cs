@@ -92,13 +92,15 @@ namespace osum.Graphics.Sprites
             onClick = null;
             onHover = null;
             onHoverLost = null;
+            IsHovering = false;
+            handleInput = false;
         }
 
         internal bool IsHovering;
 
         protected virtual bool checkHover(Vector2 position)
         {
-            if (Alpha == 0)
+            if (Alpha == 0 || Bypass)
                 return false;
 
             Box2 rect = DisplayRectangle;
@@ -112,18 +114,17 @@ namespace osum.Graphics.Sprites
         void inputUpdateHoverState(TrackingPoint trackingPoint)
         {
             if (!HandleInput)
-            {
-                if (trackingPoint.HoveringObject == this)
-                    trackingPoint.HoveringObject = null;
                 return;
-            }
 
-            bool isNowHovering =
-                (trackingPoint.HoveringObject == null || trackingPoint.HoveringObject == this) &&
-                checkHover(trackingPoint.BasePosition);
+            bool thisIsPreviouslyHovered = trackingPoint.HoveringObject == this;
+
+            bool isNowHovering = (thisIsPreviouslyHovered || !trackingPoint.HoveringObjectConfirmed) && checkHover(trackingPoint.BasePosition);
 
             if (isNowHovering)
+            {
+                trackingPoint.HoveringObjectConfirmed = true;
                 trackingPoint.HoveringObject = this;
+            }
             else if (trackingPoint.HoveringObject == this)
                 trackingPoint.HoveringObject = null;
 

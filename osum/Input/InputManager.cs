@@ -55,7 +55,7 @@ namespace osum
 
             source.OnDown += ReceiveDown;
             source.OnUp += ReceiveUp;
-            source.OnClick += ReceiveClick;
+            //source.OnClick += ReceiveClick;
             source.OnMove += ReceiveMove;
 
             RegisteredSources.Add(source);
@@ -109,12 +109,6 @@ namespace osum
             UpdatePointerPosition(point);
         }
 
-        private static void ReceiveClick(InputSource source, TrackingPoint point)
-        {
-            TriggerOnClick(source, point);
-            UpdatePointerPosition(point);
-        }
-
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
             TriggerOnMove(source, point);
@@ -131,7 +125,12 @@ namespace osum
             point.IncreaseValidity();
 
             if (OnDown != null)
-                OnDown(source, point);
+            {
+                if (GameBase.ActiveNotification != null)
+                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnDown(source, point);
+                else
+                    OnDown(source, point);
+            }
         }
 
         static public event InputHandler OnUp;
@@ -141,21 +140,24 @@ namespace osum
             point.DecreaseValidity();
 
             if (OnUp != null)
-                OnUp(source, point);
-        }
-
-        static public event InputHandler OnClick;
-        private static void TriggerOnClick(InputSource source, TrackingPoint point)
-        {
-            if (OnClick != null)
-                OnClick(source, point);
+            {
+                if (GameBase.ActiveNotification != null)
+                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnUp(source, point);
+                else
+                    OnUp(source, point);
+            }
         }
 
         static public event InputHandler OnMove;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
             if (OnMove != null)
-                OnMove(source, point);
+            {
+                if (GameBase.ActiveNotification != null)
+                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnMove(source, point);
+                else
+                    OnMove(source, point);
+            }
         }
 
         #endregion
