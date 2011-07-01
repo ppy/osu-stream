@@ -697,16 +697,14 @@ namespace osum.GameModes
 
         internal void Pause()
         {
-            if (menu != null)
-                menu.ShowMenu();
-
+            if (!Failed) AudioEngine.Music.Pause();
+            Clock.AbortLeadIn();
             CountdownAbort();
 
             if (HitObjectManager != null)
             {
                 HitObject activeObject = HitObjectManager.ActiveObject;
-                if (activeObject != null)
-                    activeObject.StopSound(false);
+                if (activeObject != null) activeObject.StopSound(false);
             }
         }
 
