@@ -141,7 +141,7 @@ namespace osum.GameModes.Play.Components
                             finger.Offset.Y = vOffset * -55;
                             finger.ScaleScalar = 1 + 0.6f * vOffset;
 
-                            if (TouchBurster != null)
+                            if (TouchBurster != null && AudioEngine.Music.IsElapsing)
                                 TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                         }
                     }
