@@ -106,7 +106,7 @@ namespace osum.GameModes
                     break;
             }
 
-            rankGraphic = new pSprite(rankLetter, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(15, 15), 0.3f, true, Color4.White) { Alpha = 0 };
+            rankGraphic = new pSprite(rankLetter, FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(120, 180), 0.46f, true, Color4.White) { Alpha = 0 };
 
             layer1.Add(rankGraphic);
 
