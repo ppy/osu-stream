@@ -36,19 +36,6 @@ namespace osum.GameplayElements.Scoring
         {
             get
             {
-                //temporary
-                if (accuracy == 1)
-                    return Rank.X;
-                if (accuracy > 0.95)
-                    return Rank.S;
-                if (accuracy > 0.9)
-                    return Rank.A;
-                if (accuracy > 0.8)
-                    return Rank.B;
-                if (accuracy > 0.7)
-                    return Rank.C;
-                return Rank.D;
-
                 if (accuracy == 1)
                     return Rank.X;
                 if (totalScore > 950000)
