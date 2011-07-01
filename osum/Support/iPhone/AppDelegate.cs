@@ -60,8 +60,9 @@ namespace osum.Support.iPhone
 		
 		public override void OnResignActivation(UIApplication app)
 		{
-             if (glView.EAGLContext != null)
+            if (glView.EAGLContext != null)
                  glView.Stop();
+            glView.Draw(glView.Bounds);
 		}
 
 		// This method is required in iPhoneOS 3.0
@@ -88,6 +89,7 @@ namespace osum.Support.iPhone
             }
 
 			//start the run loop.
+            if (glView.GraphicsContext != null) glView.Stop();
 			glView.Run(targetFps);
 		}
 
