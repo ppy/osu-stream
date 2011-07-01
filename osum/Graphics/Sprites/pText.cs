@@ -61,6 +61,30 @@ namespace osum.Graphics.Sprites
             TextBounds = bounds;
         }
 
+        public override bool Draw()
+        {
+            if (TextShadow)
+            {
+                Color4 oldColor = Colour;
+                Vector2 oldPosition = Position;
+
+                Colour = new Color4(0,0,0,oldColor.A);
+                Position = new Vector2(oldPosition.X + 1, oldPosition.Y + 1);
+
+                bool didDraw = base.Draw();
+
+                Colour = oldColor;
+                Position = oldPosition;
+
+                if (didDraw) Texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
+                return didDraw;
+            }
+            else
+            {
+                return base.Draw();
+            }
+        }
+
         public override void Dispose()
         {
             base.Dispose();

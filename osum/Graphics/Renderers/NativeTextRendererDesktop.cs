@@ -135,9 +135,9 @@ namespace osum.Graphics.Renderers
 
                                 using (Brush brush = new SolidBrush(ColourHelper.CConvert(Color4)))
                                 {
-                                    if (shadow)
-                                        g.DrawString(text, f, blackBrush,
-                                                     new RectangleF(1, 1, measuredSize.Width, measuredSize.Height), sf);
+                                    //if (shadow)
+                                    //    g.DrawString(text, f, blackBrush,
+                                    //                 new RectangleF(1, 1, measuredSize.Width, measuredSize.Height), sf);
                                     g.DrawString(text, f, brush, new RectangleF(0, 0, measuredSize.Width, measuredSize.Height), sf);
                                 }
                             }
