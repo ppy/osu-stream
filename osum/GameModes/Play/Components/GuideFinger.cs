@@ -123,7 +123,7 @@ namespace osum.GameModes.Play.Components
                     {
                         int timeUntilObject = obj.StartTime - Clock.AudioTime;
 
-                        if (timeUntilObject < 350)
+                        //if (timeUntilObject < 500)
                         {
                             Vector2 src = finger.Position;
                             Vector2 dest = obj.TrackingPosition;
