@@ -80,17 +80,6 @@ namespace osum
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            Player p = Director.CurrentMode as Player;
-            if (p != null)
-            {
-                if (AudioEngine.Music.IsElapsing)
-                {
-                    e.Cancel = true;
-                    p.Pause();
-                    return;
-                }
-            }
-            
             if (Director.CurrentOsuMode != OsuMode.MainMenu)
             {
                 e.Cancel = true;
