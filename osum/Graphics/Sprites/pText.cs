@@ -65,24 +65,23 @@ namespace osum.Graphics.Sprites
         {
             if (TextShadow)
             {
-                Color4 oldColor = Colour;
-                Vector2 oldPosition = Position;
+                if (Bypass) return false;
 
-                Colour = new Color4(0,0,0,oldColor.A);
-                Position = new Vector2(oldPosition.X + 1, oldPosition.Y + 1);
+                if (Alpha != 0 && Colour.A != 0 && (AlwaysDraw || Transformations.Count != 0) && IsOnScreen)
+                {
+                    pTexture texture = Texture;
+                    if (texture == null || texture.TextureGl == null)
+                        return false;
 
-                bool didDraw = base.Draw();
+                    texture.TextureGl.Draw(FieldPosition + Vector2.One, OriginVector, new Color4(0, 0, 0, AlphaAppliedColour.A), FieldScale, Rotation, TextureRectangle);
+                    texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
+                    return true;
+                }
 
-                Colour = oldColor;
-                Position = oldPosition;
-
-                if (didDraw) Texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
-                return didDraw;
+                return false;
             }
-            else
-            {
-                return base.Draw();
-            }
+
+            return base.Draw();
         }
 
         public override void Dispose()

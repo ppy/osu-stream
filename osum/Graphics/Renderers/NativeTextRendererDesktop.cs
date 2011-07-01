@@ -76,7 +76,7 @@ namespace osum.Graphics.Renderers
                                 if (text.Length == 0) text = " ";
                                 measuredSize = restrictBounds != Vector2.Zero
                                                    ? graphics.MeasureString(text, f, new SizeF(restrictBounds.X, restrictBounds.Y), sf)
-                                                   : graphics.MeasureString(text, f);
+                                                   : graphics.MeasureString(text, f, GameBase.NativeSize.Width);
                             }
                             catch (InvalidOperationException)
                             {
