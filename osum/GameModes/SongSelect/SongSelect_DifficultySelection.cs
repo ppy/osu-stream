@@ -144,7 +144,7 @@ namespace osum.GameModes
             s_ModeArrowRight.Rotation = 1;
             sprites.Add(s_ModeArrowRight);
 
-            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
+            s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), 1, true, Color4.White) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
             s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
@@ -283,22 +283,17 @@ namespace osum.GameModes
 
             if (isNewDifficulty)
             {
+                s_ModeDescriptionText.FadeOut(100);
 
-                if (s_ModeDescriptionText.Text != text)
+                GameBase.Scheduler.Add(delegate
                 {
-                    pDrawable clone = s_ModeDescriptionText.Clone();
-                    clone.FadeOut(200);
-                    clone.AlwaysDraw = false;
-                    spriteManager.Add(clone);
+                        s_ModeDescriptionText.Text = text;
+                        s_ModeDescriptionText.FadeInFromZero(300);
 
-                    s_ModeDescriptionText.Text = text;
-                    s_ModeDescriptionText.Alpha = 0;
-                    s_ModeDescriptionText.FadeInFromZero(200);
-                }
-
-
-                BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-                s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3, '0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7, '0');
+                        BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                        s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
+                        s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3, '0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7, '0');
+                }, 100);
             }
         }
 
