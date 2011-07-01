@@ -31,7 +31,9 @@ namespace osum.Audio
         PRELOAD_END,
         fail,
         menuwhoosh,
-        MainMenu_Intro
+        MainMenu_Intro,
+        RankingBam,
+        RankingBam2
     }
 
     internal static class AudioEngine

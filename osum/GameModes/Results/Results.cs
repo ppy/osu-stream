@@ -340,6 +340,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreHit.ShowInt(RankableScore.hitScore, 6, false);
                 pDrawable flash = countScoreHit.AdditiveFlash(500, 1);
 
@@ -352,8 +353,10 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6, false);
                 pDrawable flash = countScoreCombo.AdditiveFlash(500, 1);
+                
 
                 addedScore += RankableScore.comboBonusScore;
                 countTotalScore.ShowInt(addedScore, 6, true);
@@ -364,6 +367,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreAccuracy.ShowInt(RankableScore.accuracyBonusScore, 6, false);
                 pDrawable flash = countScoreAccuracy.AdditiveFlash(500, 1);
 
@@ -376,6 +380,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreSpin.ShowInt(RankableScore.spinnerBonusScore, 6, false);
                 pDrawable flash = countScoreSpin.AdditiveFlash(500, 1);
 
@@ -388,6 +393,7 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                AudioEngine.PlaySample(OsuSamples.RankingBam2);
                 rankGraphic.Alpha = 1;
                 rankGraphic.AdditiveFlash(1500, 1);
             }, time);
