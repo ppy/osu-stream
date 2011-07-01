@@ -211,7 +211,7 @@ namespace osum
             BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
 
             GamefieldOffsetVector1 = new Vector2((float)(BaseSize.Width - GamefieldBaseSize.Width) / 2,
-                                     (float)Math.Max(31.5f,(BaseSize.Height - GamefieldBaseSize.Height) / 2));
+                                     (float)Math.Max(31.5f, (BaseSize.Height - GamefieldBaseSize.Height) / 2));
 
             SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1
@@ -268,7 +268,7 @@ namespace osum
                 //Player.Difficulty = GameplayElements.Difficulty.Normal;
 
 
-                //Ranking.RankableScore = new GameplayElements.Scoring.Score()
+                //Results.RankableScore = new GameplayElements.Scoring.Score()
                 //{
                 //    count100 = 55,
                 //    count50 = 128,
@@ -280,15 +280,14 @@ namespace osum
                 //    spinnerBonusScore = 1500,
                 //    comboBonusScore = 578420,
                 //    accuracyBonusScore = 200000,
-                //    hitScore = 800000-578420,
-                //    maxCombo = 198,
-                //    totalScore = 1001500
+                //    hitScore = 800000 - 578420,
+                //    maxCombo = 198
                 //};
 
-                //Director.ChangeMode(OsuMode.Ranking, null);
+                //Director.ChangeMode(OsuMode.Results, null);
             }
 
-            OnlineHelper.Initialize();
+            GameBase.Scheduler.Add(delegate { OnlineHelper.Initialize(); }, 3500);
         }
 
         /// <summary>
@@ -410,7 +409,14 @@ namespace osum
                 pSprite back = new pSprite(TextureManager.Load("notification"), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.99f, false, Color4.White) { DimImmune = true };
                 ActiveNotification = back;
 
-                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width * 0.8f, 0), 1, false, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre, Clocking = ClockTypes.Game, DimImmune = true };
+                pText t = new pText(text, 36, Vector2.Zero, new Vector2(BaseSizeFixedWidth.Width * 0.8f, 0), 1, false, Color4.White, true)
+                {
+                    Field = FieldTypes.StandardSnapCentre,
+                    Origin = OriginTypes.Centre,
+                    TextAlignment = TextAlignment.Centre,
+                    Clocking = ClockTypes.Game,
+                    DimImmune = true
+                };
 
                 Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
                 Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
