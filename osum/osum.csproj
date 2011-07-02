@@ -425,13 +425,13 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
-      <LogicalName>Tutorial.ja.resx</LogicalName>
+      <LogicalName>osum.Resources.Tutorial.ja.resources</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Tutorial.resx">
-      <LogicalName>Tutorial.resx</LogicalName>
+      <LogicalName>osum.Resources.Tutorial.resources</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\General.resx">
-      <LogicalName>General.resx</LogicalName>
+      <LogicalName>osum.Resources.General.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
