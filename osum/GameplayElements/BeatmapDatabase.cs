@@ -17,11 +17,7 @@ namespace osum.GameplayElements
         const int DATABASE_VERSION = 2;
         const string FILENAME = "osu!.db";
 
-#if iOS
-        private static string fullPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/" + FILENAME; } }
-#else
-        private static string fullPath { get { return FILENAME; } }
-#endif
+        private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
 
         private static bool initialized;
         internal static int Version = -1;

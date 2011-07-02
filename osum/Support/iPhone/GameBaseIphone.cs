@@ -110,6 +110,12 @@ namespace osum
             InputManager.AddSource(source);
         }
 
+        public override string PathConfig {
+            get {
+                return return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/";
+            }
+        }
+
 
     }
 }

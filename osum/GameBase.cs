@@ -434,5 +434,7 @@ namespace osum
                 MainSpriteManager.Add(ActiveNotification.spriteManager);
             }
         }
+
+        public virtual string PathConfig { get { return string.Empty; } }
     }
 }
