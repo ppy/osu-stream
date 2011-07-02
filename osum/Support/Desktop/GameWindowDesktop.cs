@@ -54,7 +54,6 @@ namespace osum
                     Director.ChangeMode(Director.CurrentOsuMode);
                     break;
                 case 's':
-                    TextureManager.UnloadAll(true);
                     TextureManager.ReloadAll();
                     break;
                 case 'x':

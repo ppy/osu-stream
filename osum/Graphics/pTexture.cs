@@ -53,7 +53,6 @@ namespace osum.Graphics
         internal int Height;
         internal int X;
         internal int Y;
-        internal bool Permanent;
         internal bool Premultiplied;
 #if DEBUG
         internal int id;

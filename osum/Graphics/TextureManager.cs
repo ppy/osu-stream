@@ -102,24 +102,17 @@ namespace osum.Graphics.Skins
         }
 
 
-        public static void DisposeAll(bool force)
+        public static void DisposeAll()
         {
-            UnloadAll(force);
-
+            UnloadAll();
             SpriteCache.Clear();
             AnimationCache.Clear();
         }
 
-        public static void UnloadAll(bool force)
+        public static void UnloadAll()
         {
             foreach (pTexture p in SpriteCache.Values)
                 p.UnloadTexture();
-
-            if (force)
-            {
-                foreach (pTexture p in SpriteCachePermanent.Values)
-                    p.UnloadTexture();
-            }
 
             DisposeDisposable();
         }
@@ -141,18 +134,8 @@ namespace osum.Graphics.Skins
 
             foreach (pTexture p in cache)
             {
-                if (forceUnload && p.TextureGl != null)
-                    p.TextureGl.Dispose();
-                p.ReloadIfPossible();
-            }
-
-            cache = SpriteCachePermanent.Values.ToList();
-            if (forceUnload) SpriteCachePermanent.Clear();
-
-            foreach (pTexture p in cache)
-            {
-                if (forceUnload && p.TextureGl != null)
-                    p.TextureGl.Dispose();
+                if (forceUnload)
+                    p.UnloadTexture();
                 p.ReloadIfPossible();
             }
 
@@ -169,7 +152,6 @@ namespace osum.Graphics.Skins
         }
 
         internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
-        internal static Dictionary<string, pTexture> SpriteCachePermanent = new Dictionary<string, pTexture>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
         internal static List<pTexture> DisposableTextures = new List<pTexture>();
 
@@ -179,7 +161,7 @@ namespace osum.Graphics.Skins
 
             if (textureLocations.TryGetValue(texture, out info))
             {
-                pTexture tex = Load(info.SheetName, info.SheetName.StartsWith("hit"));
+                pTexture tex = Load(info.SheetName);
                 tex.OsuTextureInfo = texture; //set this so if we need to do a reload we will get the correct sheet.
 
                 tex = tex.Clone(); //make a new instance because we may be using different coords.
@@ -199,16 +181,9 @@ namespace osum.Graphics.Skins
 
         internal static pTexture Load(string name)
         {
-            return Load(name, false);
-        }
-
-        internal static pTexture Load(string name, bool permanent)
-        {
             pTexture texture;
 
-            Dictionary<string, pTexture> destinationCache = permanent ? SpriteCachePermanent : SpriteCache;
-
-            if (destinationCache.TryGetValue(name, out texture))
+            if (SpriteCache.TryGetValue(name, out texture))
                 return texture;
 
 
@@ -217,8 +192,7 @@ namespace osum.Graphics.Skins
             if (NativeAssetManager.Instance.FileExists(path))
             {
                 texture = pTexture.FromFile(path);
-                texture.Permanent = permanent;
-                destinationCache.Add(name, texture);
+                SpriteCache.Add(name, texture);
                 return texture;
             }
 

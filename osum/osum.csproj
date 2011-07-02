@@ -96,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseLlvm>false</MtouchUseLlvm>
@@ -407,8 +407,6 @@
     <Content Include="Skins\Default\menu_960.png" />
     <Content Include="Skins\Default\notification_480.png" />
     <Content Include="Skins\Default\notification_960.png" />
-    <Content Include="Skins\Default\songselect_480.png" />
-    <Content Include="Skins\Default\songselect_960.png" />
     <Content Include="Skins\Default\ranking_480.png" />
     <Content Include="Skins\Default\ranking_960.png" />
     <Content Include="Skins\Default\fail.wav" />

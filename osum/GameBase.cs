@@ -14,6 +14,7 @@ using osum.Graphics.Renderers;
 using osum.Graphics;
 using osum.Online;
 using osum.UI;
+using osu_common.Helpers;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -47,7 +48,6 @@ using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.GameplayElements.Scoring;
-using osu_common.Helpers;
 #endif
 
 
