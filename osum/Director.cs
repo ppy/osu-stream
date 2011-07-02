@@ -59,9 +59,7 @@ namespace osum
         /// <returns></returns>
         internal static bool ChangeMode(OsuMode mode, Transition transition)
         {
-            if (mode == OsuMode.Unknown) return false;
-
-            LastOsuMode = CurrentOsuMode;
+            if (mode == OsuMode.Unknown || mode == PendingOsuMode) return false;
 
             if (transition == null)
             {
@@ -118,6 +116,7 @@ namespace osum
             }
 
             PendingOsuMode = OsuMode.Unknown;
+            LastOsuMode = CurrentOsuMode;
             CurrentOsuMode = newMode;
 
             GC.Collect(); //force a full collect before we start displaying the new mode.
