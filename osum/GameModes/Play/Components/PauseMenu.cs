@@ -56,7 +56,7 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    pausePlayer();
+                    if (p != null) p.Pause();
                 }
                 else
                 {
@@ -240,7 +240,7 @@ namespace osum.GameModes.Play.Components
                     });
 
                     if (pulledAmount > valid_pull)
-                        pausePlayer();
+                        if (AudioEngine.Music != null) AudioEngine.Music.Pause();
                 }
                 else
                 {
@@ -253,13 +253,6 @@ namespace osum.GameModes.Play.Components
             }
 
             base.Update();
-        }
-
-        private void pausePlayer()
-        {
-            Player p = Director.CurrentMode as Player;
-            if (p != null)
-                p.Pause();
         }
     }
 }

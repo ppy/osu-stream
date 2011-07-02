@@ -34,7 +34,7 @@ namespace osum.GameModes
             set
             {
                 hitObjectManager = value;
-                if (gf != null) gf.HitObjectManager = value;
+                if (GuideFingers != null) GuideFingers.HitObjectManager = value;
             }
         }
 
@@ -86,7 +86,7 @@ namespace osum.GameModes
 
         internal StreamSwitchDisplay streamSwitchDisplay;
 
-        private TouchBurster touchBurster;
+        internal TouchBurster touchBurster;
 
         bool isIncreasingStream;
         protected bool Failed;
@@ -104,7 +104,6 @@ namespace osum.GameModes
                 TextureManager.RequireSurfaces = true;
 
             touchBurster = new TouchBurster(!Player.Autoplay);
-            gf = new GuideFinger() { TouchBurster = touchBurster };
 
             loadBeatmap();
 
@@ -112,6 +111,8 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
+                GuideFingers = new GuideFinger() { TouchBurster = touchBurster };
+
                 switch (Difficulty)
                 {
                     default:
@@ -183,7 +184,7 @@ namespace osum.GameModes
             menu = new PauseMenu();
         }
 
-        protected void resetScore()
+        protected virtual void resetScore()
         {
             if (comboCounter != null)
                 comboCounter.SetCombo(0);
@@ -285,7 +286,7 @@ namespace osum.GameModes
             if (healthBar != null) healthBar.Dispose();
             if (scoreDisplay != null) scoreDisplay.Dispose();
             if (countdown != null) countdown.Dispose();
-            if (gf != null) gf.Dispose();
+            if (GuideFingers != null) GuideFingers.Dispose();
             if (menu != null) menu.Dispose();
             if (touchBurster != null) touchBurster.Dispose();
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
@@ -480,7 +481,7 @@ namespace osum.GameModes
         private pSprite failSprite;
         private double DifficultyComboMultiplier = 1;
 
-        GuideFinger gf;
+        internal GuideFinger GuideFingers;
         public static int RestartCount;
 
         public override bool Draw()
@@ -501,7 +502,7 @@ namespace osum.GameModes
 
             if (healthBar != null) healthBar.Draw();
 
-            if (gf != null && showGuideFingers) gf.Draw();
+            if (GuideFingers != null && showGuideFingers) GuideFingers.Draw();
 
             if (menu != null) menu.Draw();
 
@@ -523,7 +524,7 @@ namespace osum.GameModes
                     AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
             }
 
-            if (gf != null && showGuideFingers) gf.Update();
+            if (GuideFingers != null && showGuideFingers) GuideFingers.Update();
 
             if (HitObjectManager != null)
             {
@@ -607,15 +608,8 @@ namespace osum.GameModes
                         if (!Completed)
                         {
                             Completed = true;
-                            Failed = true;
 
                             showFailSprite();
-
-                            AudioEngine.PlaySample(OsuSamples.fail);
-
-                            HitObject activeObject = HitObjectManager.ActiveObject;
-                            if (activeObject != null)
-                                activeObject.StopSound(true);
 
                             menu.Failed = true; //set this now so the menu will be in fail state if interacted with early.
 
@@ -666,12 +660,19 @@ namespace osum.GameModes
 
         protected void showFailSprite()
         {
+            Failed = true;
+            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
+            AudioEngine.PlaySample(OsuSamples.fail);
+
+            if (HitObjectManager != null)
+                HitObjectManager.StopAllSounds();
+
             if (HitObjectManager != null)
             {
-                HitObjectManager.spriteManager.MoveTo(new Vector2(0, 400), 5000, EasingTypes.OutDouble);
+                HitObjectManager.spriteManager.MoveTo(new Vector2(0, 700), 5000, EasingTypes.OutDouble);
                 HitObjectManager.spriteManager.RotateTo(0.1f, 5000);
                 HitObjectManager.spriteManager.FadeOut(1000);
-                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0, 400), 3000, EasingTypes.OutDouble);
+                HitObjectManager.ActiveStreamSpriteManager.MoveTo(new Vector2(0, 700), 5000, EasingTypes.OutDouble);
                 HitObjectManager.ActiveStreamSpriteManager.FadeOut(5000);
                 HitObjectManager.ActiveStreamSpriteManager.RotateTo(0.1f, 5000);
             }
@@ -702,10 +703,9 @@ namespace osum.GameModes
             CountdownAbort();
 
             if (HitObjectManager != null)
-            {
-                HitObject activeObject = HitObjectManager.ActiveObject;
-                if (activeObject != null) activeObject.StopSound(false);
-            }
+                HitObjectManager.StopAllSounds();
+
+            if (menu != null) menu.MenuDisplayed = true;
         }
 
         private bool switchStream(bool increase)

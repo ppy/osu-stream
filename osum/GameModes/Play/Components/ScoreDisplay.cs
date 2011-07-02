@@ -13,8 +13,8 @@ namespace osum.GameModes.Play.Components
 {
     class ScoreDisplay : GameComponent
     {
-        protected readonly pSpriteText s_Score;
-        protected readonly pSpriteText s_Accuracy;
+        internal readonly pSpriteText s_Score;
+        internal readonly pSpriteText s_Accuracy;
         private int displayScore;
         private double displayAccuracy;
         internal int currentScore;

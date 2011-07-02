@@ -176,8 +176,9 @@ namespace osum.GameplayElements
         {
             get
             {
-                return Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
-                     Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
+                int clock = ClockingNow;
+                return clock >= StartTime - DifficultyManager.PreEmpt &&
+                     clock <= EndTime + DifficultyManager.FadeOut;
             }
         }
 

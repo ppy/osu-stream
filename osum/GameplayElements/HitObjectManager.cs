@@ -533,6 +533,12 @@ namespace osum.GameplayElements
 
         public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
         public bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
+
+        internal void StopAllSounds()
+        {
+            if (ActiveObject != null)
+                ActiveObject.StopSound(true);
+        }
     }
 
     internal enum FileSection

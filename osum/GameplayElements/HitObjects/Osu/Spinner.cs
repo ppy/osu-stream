@@ -79,12 +79,13 @@ namespace osum.GameplayElements
         /// </summary>
         public const int sensitivity_modifier = 16;
 
-        Vector2 spinnerCentre = new Vector2(0, 210);
+        public static Vector2 SpinnerCentreFromBottom = new Vector2(0, 210);
+        public static Vector2 SpinnerCentre = new Vector2(GameBase.BaseSize.Width / 2, GameBase.BaseSize.Height) - SpinnerCentreFromBottom - GameBase.GamefieldOffsetVector1;
 
         internal Spinner(HitObjectManager hitObjectManager, int startTime, int endTime, HitObjectSoundType soundType)
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
-            Position = (new Vector2(GameBase.BaseSize.Width / 2, GameBase.BaseSize.Height) - spinnerCentre) - GameBase.GamefieldOffsetVector1;
+            Position = SpinnerCentre;
             EndTime = endTime;
             Type = HitObjectType.Spinner;
             Colour = Color4.Gray;
@@ -101,7 +102,7 @@ namespace osum.GameplayElements
             spriteCircle =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_circle),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            spinnerCentre, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
+                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
             Sprites.Add(spriteCircle);
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.
@@ -125,7 +126,7 @@ namespace osum.GameplayElements
 
             Sprites.Add(spriteScoreMetreForeground);
 
-            ApproachCircle = new ApproachCircle(spinnerCentre, 1, false, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), new Color4(77 / 255f, 139 / 255f, 217 / 255f, 1));
+            ApproachCircle = new ApproachCircle(SpinnerCentreFromBottom, 1, false, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), new Color4(77 / 255f, 139 / 255f, 217 / 255f, 1));
             ApproachCircle.Width = 8;
             ApproachCircle.Clocking = ClockTypes.Audio;
             ApproachCircle.Field = FieldTypes.StandardSnapBottomCentre;
@@ -133,7 +134,7 @@ namespace osum.GameplayElements
 
             spriteBonus = new pSpriteText("", "score", -5, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                                          spinnerCentre - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
+                                          SpinnerCentreFromBottom - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
             spriteBonus.Additive = true;
             Sprites.Add(spriteBonus);
 
@@ -148,7 +149,7 @@ namespace osum.GameplayElements
             SpriteSpin =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_spin),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            spinnerCentre, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), false, white);
+                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), false, white);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             SpriteSpin.AlignToSprites = true;
@@ -159,7 +160,7 @@ namespace osum.GameplayElements
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            spinnerCentre + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
+                            SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
             SpriteClear.AlignToSprites = true;
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
@@ -179,7 +180,8 @@ namespace osum.GameplayElements
         {
             get
             {
-                return Clock.AudioTime >= StartTime - DifficultyManager.FadeIn && Clock.AudioTime <= EndTime;
+                int now = ClockingNow;
+                return now >= StartTime - DifficultyManager.FadeIn && now <= EndTime;
             }
         }
 
@@ -198,6 +200,8 @@ namespace osum.GameplayElements
 
         TrackingPoint cursorTrackingPoint;
         Vector2 cursorTrackingPosition;
+
+        int lastScoreCheckTime;
         internal override ScoreChange CheckScoring()
         {
             //Update the angles
@@ -207,6 +211,10 @@ namespace osum.GameplayElements
                 hpMultiplier = 1;
                 return change;
             }
+
+            int now = ClockingNow;
+            int elapsed = lastScoreCheckTime == 0 ? 0 : now - lastScoreCheckTime;
+            lastScoreCheckTime = now;
 
             if (!Player.Autoplay)
             {
@@ -243,14 +251,14 @@ namespace osum.GameplayElements
                     else if (oldAngle - newAngle < -Math.PI)
                         angleDiff = (-2 * Math.PI) - angleDiff;
 
-                    velocityFromInputPerMillisecond = angleDiff / GameBase.ElapsedMilliseconds;
+                    velocityFromInputPerMillisecond = angleDiff / elapsed;
                 }
             }
 
             if (IsActive)
             {
-                if (Player.Autoplay && Director.CurrentOsuMode != OsuMode.Tutorial)
-                    velocityCurrent = 0.05;
+                if (Player.Autoplay)
+                    velocityCurrent = 0.03;
                 else
                     velocityCurrent = velocityFromInputPerMillisecond * 0.5 + velocityCurrent * 0.5;
 
@@ -262,7 +270,7 @@ namespace osum.GameplayElements
                 //hard rate limit
                 velocityCurrent = Math.Max(-0.05, Math.Min(velocityCurrent, 0.05));
 
-                double delta = velocityCurrent * GameBase.ElapsedMilliseconds;
+                double delta = velocityCurrent * elapsed;
 
                 spriteCircle.Rotation += (float)delta;
 
@@ -275,8 +283,6 @@ namespace osum.GameplayElements
                 if (SpriteSpin != null)
                 {
                     SpriteSpin.FadeOut(100);
-
-                    int now = Clock.GetTime(SpriteClear.Clocking);
 
                     SpriteClear.Transformations.Clear();
                     SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
@@ -296,8 +302,6 @@ namespace osum.GameplayElements
                 if (currentRotationCount > rotationRequirement + 3 * sensitivity_modifier)
                 {
                     score = ScoreChange.SpinnerBonus;
-
-                    int now = spriteBonus.ClockingNow;
 
                     spriteBonus.ShowInt((int)BonusScore);
 
@@ -347,7 +351,9 @@ namespace osum.GameplayElements
         {
             base.Update();
 
-            if (IsHit || Clock.AudioTime < StartTime)
+            int now = ClockingNow;
+
+            if (IsHit || now < StartTime)
                 return;
 
             if (sourceSpinning != null)
@@ -362,7 +368,7 @@ namespace osum.GameplayElements
             {
                 if (SpriteSpin != null)
                 {
-                    if (Clock.AudioTime > StartTime + 500)
+                    if (now > StartTime + 500)
                     {
                         SpriteSpin.FadeOut(300);
                         StartedSpinning = true;
@@ -418,7 +424,7 @@ namespace osum.GameplayElements
 
         protected override ScoreChange HitActionInitial()
         {
-            if (Clock.AudioTime < EndTime)
+            if (ClockingNow < EndTime)
                 return ScoreChange.Ignore;
 
             StopSound();

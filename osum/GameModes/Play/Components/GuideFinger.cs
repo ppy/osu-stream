@@ -19,13 +19,17 @@ namespace osum.GameModes.Play.Components
         List<pDrawable> fingers = new List<pDrawable>();
 
 
-        pSprite leftFinger;
+        Vector2 idleLeft = new Vector2(30, 200);
+        Vector2 idleRight = new Vector2(512 - 30, 200);
+
 
         internal HitObjectManager HitObjectManager;
         internal TouchBurster TouchBurster;
-        private pSprite rightFinger;
-        private pSprite leftFinger2;
-        private pSprite rightFinger2;
+
+        internal pSprite leftFinger;
+        internal pSprite leftFinger2;
+        internal pSprite rightFinger;
+        internal pSprite rightFinger2;
         public override void Initialize()
         {
             leftFinger = new pSprite(TextureManager.Load(OsuTexture.finger_inner), new Vector2(-100, 200))
@@ -64,8 +68,8 @@ namespace osum.GameModes.Play.Components
                 Additive = false
             };
 
-            leftFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(-100, 130), new Vector2(50, 200), 0, 800, EasingTypes.In));
-            rightFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(612, 130), new Vector2(512 - 50, 200), 0, 800, EasingTypes.In));
+            leftFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(-100, 130), idleLeft, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
+            rightFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(612, 130), idleRight, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
 
             spriteManager.Add(leftFinger);
             spriteManager.Add(rightFinger);
@@ -80,81 +84,89 @@ namespace osum.GameModes.Play.Components
 
         public override bool Draw()
         {
-            if (HitObjectManager == null) return false;
-
             return base.Draw();
+        }
+
+        Vector2 spinningPositionFor(int time)
+        {
+            float angle = (float)time / 30;
+            return Spinner.SpinnerCentre + new Vector2((float)Math.Cos(angle) * 50, (float)Math.Sin(angle) * 50);
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (HitObjectManager == null) return;
-
-            HitObject nextObject = HitObjectManager.NextObject;
-            HitObject nextObjectConnected = nextObject != null ? nextObject.connectedObject : null;
-
-            bool objectHasFinger = false;
-            bool connectedObjectHasFinger = false;
-
-            foreach (pDrawable finger in fingers)
+            if (HitObjectManager != null)
             {
-                HitObject obj = finger.Tag as HitObject;
+                HitObject nextObject = HitObjectManager.NextObject;
+                HitObject nextObjectConnected = nextObject != null ? nextObject.connectedObject : null;
 
-                if (obj != null)
+                bool objectHasFinger = false;
+                bool connectedObjectHasFinger = false;
+
+                foreach (pDrawable finger in fingers)
                 {
-                    if (obj == nextObject) objectHasFinger = true;
-                    if (obj == nextObjectConnected) connectedObjectHasFinger = true;
+                    HitObject obj = finger.Tag as HitObject;
 
-                    if (obj.IsHit)
+                    if (obj != null)
                     {
-                        finger.Tag = null;
-                        finger.FadeOut(800, 0.3f);
-                        finger.MoveTo(new Vector2(finger == leftFinger ? 50 : 512 - 50, 200), 800, EasingTypes.InOut);
-                    }
-                    else if (obj.IsActive)
-                    {
-                        finger.Position = obj.TrackingPosition;
+                        if (obj == nextObject) objectHasFinger = true;
+                        if (obj == nextObjectConnected) connectedObjectHasFinger = true;
 
-                        if (TouchBurster != null && AudioEngine.Music.IsElapsing)
-                            TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
-                    }
-                    else if (obj.IsVisible)
-                    {
-                        int timeUntilObject = obj.StartTime - Clock.AudioTime;
-
-                        //if (timeUntilObject < 500)
+                        if (obj.ClockingNow >= obj.EndTime)
                         {
-                            Vector2 src = finger.Position;
-                            Vector2 dest = obj.TrackingPosition;
-
-                            lastFinger = finger;
-
-                            finger.Position = src + (dest - src) * 0.015f * (float)GameBase.ElapsedMilliseconds;
-
-                            float vOffset = 0;
-                            if (timeUntilObject > 100)
-                                vOffset = (1 - pMathHelper.ClampToOne((timeUntilObject - 100) / 300f));
-                            else
-                                vOffset = pMathHelper.ClampToOne(timeUntilObject / 100f);
-
-                            finger.Offset.Y = vOffset * -55;
-                            finger.ScaleScalar = 1 + 0.6f * vOffset;
+                            finger.Tag = null;
+                            finger.FadeOut(800, 0.3f);
+                            finger.Transform(new Transformation(finger.Position, finger == leftFinger ? idleLeft : idleRight, Clock.ModeTime + 300, Clock.ModeTime + 1100, EasingTypes.InOut));
+                        }
+                        else if (obj.IsActive)
+                        {
+                            finger.Position = obj is Spinner ? spinningPositionFor(obj.ClockingNow) : obj.TrackingPosition;
 
                             if (TouchBurster != null && AudioEngine.Music.IsElapsing)
                                 TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                         }
+                        else if (obj.IsVisible)
+                        {
+                            int timeUntilObject = obj.StartTime - obj.ClockingNow;
+
+                            //if (timeUntilObject < 500)
+                            {
+                                Vector2 src = finger.Position;
+                                Vector2 dest = obj is Spinner ? spinningPositionFor(obj.StartTime) : obj.TrackingPosition;
+
+                                lastFinger = finger;
+
+                                finger.Position = src + (dest - src) * 0.015f * MovementSpeed * (float)GameBase.ElapsedMilliseconds;
+
+                                if (!(obj is Spinner))
+                                {
+                                    float vOffset = 0;
+                                    if (timeUntilObject > 100)
+                                        vOffset = (1 - pMathHelper.ClampToOne((timeUntilObject - 100) / 300f));
+                                    else
+                                        vOffset = pMathHelper.ClampToOne(timeUntilObject / 100f);
+
+                                    finger.Offset.Y = vOffset * -55;
+                                    finger.ScaleScalar = 1 + 0.6f * vOffset;
+                                }
+
+                                if (TouchBurster != null && AudioEngine.Music.IsElapsing)
+                                    TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
+                            }
+                        }
                     }
                 }
-            }
 
-            {
-                int timeUntilObject = nextObject == null ? Int32.MaxValue : nextObject.StartTime - Clock.AudioTime;
-
-                if (timeUntilObject < 500)
                 {
-                    if (!objectHasFinger) checkObject(nextObject);
-                    if (nextObjectConnected != null && !connectedObjectHasFinger) checkObject(nextObjectConnected);
+                    int timeUntilObject = nextObject == null ? Int32.MaxValue : nextObject.StartTime - nextObject.ClockingNow;
+
+                    if (timeUntilObject < 450)
+                    {
+                        if (!objectHasFinger) checkObject(nextObject);
+                        if (nextObjectConnected != null && !connectedObjectHasFinger) checkObject(nextObjectConnected);
+                    }
                 }
             }
 
@@ -171,6 +183,7 @@ namespace osum.GameModes.Play.Components
 
         pDrawable lastFinger;
         HitObject lastObject = null;
+        public float MovementSpeed = 1;
 
         private void checkObject(HitObject nextObject)
         {
@@ -258,7 +271,7 @@ namespace osum.GameModes.Play.Components
             }
             else
             {
-                //finger is bxusy...
+                //finger is busy...
                 HitObject busyObject = preferred.Tag as HitObject;
 
                 if (busyObject.EndTime > nextObject.StartTime - 80)
