@@ -280,6 +280,7 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            Clock.AbortLeadIn();
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
             if (Beatmap != null)
@@ -531,11 +532,14 @@ namespace osum.GameModes
         {
             if (Failed)
             {
-                float vol = AudioEngine.Music.Volume;
-                if (vol == 0 && AudioEngine.Music.IsElapsing)
-                    AudioEngine.Music.Pause();
-                else
-                    AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
+                if (AudioEngine.Music != null)
+                {
+                    float vol = AudioEngine.Music.Volume;
+                    if (vol == 0 && AudioEngine.Music.IsElapsing)
+                        AudioEngine.Music.Pause();
+                    else
+                        AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
+                }
             }
 
             if (GuideFingers != null && showGuideFingers) GuideFingers.Update();
@@ -556,6 +560,7 @@ namespace osum.GameModes
             }
 
             if (healthBar != null) healthBar.Update();
+
             UpdateStream();
 
             if (scoreDisplay != null) scoreDisplay.Update();

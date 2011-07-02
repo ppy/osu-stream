@@ -15,7 +15,7 @@ namespace osum.GameModes.Play.Components
     class PauseMenu : GameComponent
     {
         pText menuText;
-        
+
         private bool menuDisplayed;
         internal bool MenuDisplayed
         {
@@ -37,8 +37,8 @@ namespace osum.GameModes.Play.Components
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
-                    
-                    menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,80), 1, true, Color4.LightGray)
+
+                    menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
                     {
                         TextAlignment = TextAlignment.Centre,
                         Field = FieldTypes.StandardSnapBottomCentre,
@@ -109,6 +109,7 @@ namespace osum.GameModes.Play.Components
 
         const float offscreen_y = -160;
         private Color4 colourInactive = new Color4(200, 200, 200, 255);
+        private pSprite pullnotice;
 
         public override void Initialize()
         {
@@ -120,7 +121,7 @@ namespace osum.GameModes.Play.Components
 
             if (Director.LastOsuMode != OsuMode.Play)
             {
-                pSprite pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
+                pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
                 pullnotice.Offset = new Vector2(0, 30);
                 spriteManager.Add(pullnotice);
 
@@ -160,7 +161,7 @@ namespace osum.GameModes.Play.Components
         void HandleButtonHover(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
-            s.FadeColour(Color4.White,100);
+            s.FadeColour(Color4.White, 100);
         }
 
         void HandleButtonHoverLost(object sender, EventArgs e)
@@ -172,7 +173,7 @@ namespace osum.GameModes.Play.Components
         void ButtonQuit_OnClick(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
-            s.AdditiveFlash(500,1);
+            s.AdditiveFlash(500, 1);
 
             Director.ChangeMode(OsuMode.SongSelect);
             AudioEngine.PlaySample(OsuSamples.MenuBack);
@@ -181,7 +182,7 @@ namespace osum.GameModes.Play.Components
         void ButtonRestart_OnClick(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
-            s.AdditiveFlash(500,1);
+            s.AdditiveFlash(500, 1);
 
             Director.ChangeMode(OsuMode.Play);
             AudioEngine.PlaySample(OsuSamples.MenuHit);
@@ -225,8 +226,14 @@ namespace osum.GameModes.Play.Components
 
         public override void Update()
         {
-            if (validPoint != null && Clock.ModeTime > 1600 && !Failed)
+            if (validPoint != null && !Failed)
             {
+                if (pullnotice != null)
+                {
+                    spriteManager.Sprites.ForEach(s => s.Transformations.Clear());
+                    pullnotice = null;
+                }
+
                 float pulledAmount = Math.Min(1, (validPoint.BasePosition.Y - validPointOffset + (MenuDisplayed ? -offscreen_y : 30)) / -offscreen_y);
 
                 const float valid_pull = 0.7f;

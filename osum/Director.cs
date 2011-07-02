@@ -109,6 +109,7 @@ namespace osum
             {
                 if (PendingOsuMode != newMode)
                 {
+                    changeMode(PendingOsuMode);
                     //we got a new request to load a *different* mode during initialisation...
                     return;
                 }

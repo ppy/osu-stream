@@ -98,9 +98,12 @@ namespace osum.Helpers
 
         public static void AbortLeadIn()
         {
-            AudioLeadingIn = false;
-            AudioLeadingInRunning = false;
-            currentFrameAudioTime = AudioTimeSource.CurrentTime;
+            if (AudioLeadingIn)
+            {
+                AudioLeadingIn = false;
+                AudioLeadingInRunning = false;
+                currentFrameAudioTime = currentFrameAudioTimeOffset = 0;
+            }
         }
 
         public static void Update(double elapsed)
