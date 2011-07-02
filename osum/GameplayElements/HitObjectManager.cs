@@ -425,7 +425,18 @@ namespace osum.GameplayElements
         /// <summary>
         /// True when all notes have been hit in the current stream (to the end of the beatmap).
         /// </summary>
-        internal bool AllNotesHit { get { return ActiveStreamObjects[ActiveStreamObjects.Count - 1].IsHit; } }
+        internal bool AllNotesHit
+        {
+            get
+            {
+                List<HitObject> objects = ActiveStreamObjects;
+
+                if (objects == null) return false;
+                if (objects.Count == 0) return true;
+
+                return objects[objects.Count - 1].IsHit;
+            }
+        }
 
         /// <summary>
         /// Finds an object at the specified window-space location.
