@@ -392,10 +392,10 @@ namespace BeatmapCombinator
 
         private static double calculateMultiplier(Difficulty difficulty)
         {
-            //strange results == not resetting static variables:P
             double comboMultiplier = 1;
 
             Player.Difficulty = difficulty;
+            Player.Autoplay = true;
 
             using (Player p = new Player())
             {
@@ -431,6 +431,9 @@ namespace BeatmapCombinator
 
             while (finalScore < 1000000)
             {
+                Player.Difficulty = difficulty;
+                Player.Autoplay = true;
+
                 Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
 
                 //let's do some test runs

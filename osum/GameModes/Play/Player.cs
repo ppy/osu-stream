@@ -97,7 +97,8 @@ namespace osum.GameModes
 
         public override void Initialize()
         {
-            GameBase.Instance.DisableDimming = true;
+            if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
+
             InputManager.OnDown += InputManager_OnDown;
 
             if (GameBase.Instance != null)
@@ -270,7 +271,8 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
-            GameBase.Instance.DisableDimming = false;
+            if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
+
             if (Beatmap != null)
             {
                 if (Clock.AudioTime > 5000)
