@@ -42,41 +42,36 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 using osum.Audio;
+using System.Threading;
+using osum.GameModes;
+
 namespace osum.Support.iPhone
 {
-	// The name AppDelegate is referenced in the MainWindow.xib file.
-	public partial class AppDelegate : UIApplicationDelegate
-	{
-		public static AppDelegate Instance;
-		
-		// This method is invoked when the application has loaded its UI and is ready to run
-		public override void FinishedLaunching (UIApplication app)
-		{	
-			UIApplication.SharedApplication.StatusBarHidden = true;
-			UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight,false);
-			
-			Instance = this;
-		}
-		
-		public override void OnResignActivation(UIApplication app)
-		{
-            if (glView.EAGLContext != null)
-                 glView.Stop();
-            glView.Draw(glView.Bounds);
-		}
+    // The name AppDelegate is referenced in the MainWindow.xib file.
+    public partial class AppDelegate : UIApplicationDelegate
+    {
+        static bool active;
+        static bool firstActivation = true;
 
-		// This method is required in iPhoneOS 3.0
-		public override void OnActivated(UIApplication app)
-		{
+        public static AppDelegate Instance;
+
+        // This method is invoked when the application has loaded its UI and is ready to run
+        public override void FinishedLaunching(UIApplication app)
+        {    
+            UIApplication.SharedApplication.StatusBarHidden = true;
+            UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight, false);
+
+            Instance = this;
+
             glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
-			
-			GameBase.ScaleFactor = glView.ContentScaleFactor;
-			GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor), 
-			                               (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
-			
-			GameBase.TriggerLayoutChanged();
 
-            int targetFps = 1000;
+            GameBase.ScaleFactor = glView.ContentScaleFactor;
+            GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
+                                        (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+
+            GameBase.TriggerLayoutChanged();
+
+            int targetFps = 60;
 
             switch (HardwareDetection.Version)
             {
@@ -88,18 +83,57 @@ namespace osum.Support.iPhone
                     break;
             }
 
-			//start the run loop.
-            if (glView.GraphicsContext != null) glView.Stop();
-			glView.Run(targetFps);
-		}
+            glView.Run(targetFps);
+        }
+
+        public override void WillEnterForeground (UIApplication application)
+        {
+            if (Director.CurrentOsuMode == OsuMode.MainMenu)
+                Director.ChangeMode(OsuMode.MainMenu, null);
+        }
+
+        public override void OnActivated(UIApplication app)
+        {
+            active = true;
+            if (memoryJettisoned)
+                TextureManager.ReloadAll(false);
+        }
+
+        public override void OnResignActivation(UIApplication app)
+        {
+            active = false;
+
+            Player p = Director.CurrentMode as Player;
+
+            if (p != null)
+            {
+                p.Pause();
+                AudioEngine.Music.Stop(false);
+            }
+        }
+
+        bool memoryJettisoned;
+
+        public override void ReceiveMemoryWarning(UIApplication application)
+        {
+            //todo: implement this.
+            if (!memoryJettisoned && !active)
+            {
+                TextureManager.UnloadAll(true);
+                memoryJettisoned = true;
+            }
+        }
+
+        public static bool Running { get { return active && !usingViewController; } }
 
         static bool usingViewController;
-        public static bool UsingViewController
-        {
+
+        public static bool UsingViewController {
             get { return usingViewController; }
             set
             {
-                if (value == usingViewController) return;
+                if (value == usingViewController)
+                    return;
                 usingViewController = value;
 
                 if (usingViewController)
@@ -109,10 +143,9 @@ namespace osum.Support.iPhone
             }
         }
 
-        public static UIViewController ViewController
-        {
+        public static UIViewController ViewController {
             get { return Instance.viewController; }
         }
-	}
+    }
 }
 

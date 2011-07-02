@@ -74,39 +74,14 @@ namespace osum
             eaglLayer.Opaque = true;
         }
 
-        static bool firstLoad = true;
         protected override void OnLoad(EventArgs e)
         {
-            if (firstLoad)
-            {
-                GameBase.Instance.Initialize();
-                firstLoad = false;
-            }
-            else
-            {
-                GameBase.Instance.SetupScreen();
-
-                TextureManager.ReloadAll();
-
-                if (Director.CurrentOsuMode == OsuMode.MainMenu)
-                    Director.ChangeMode(OsuMode.MainMenu, null);
-            }
-
+            GameBase.Instance.Initialize();
             base.OnLoad(e);
         }
 
         protected override void OnUnload(EventArgs e)
         {
-            Player p = Director.CurrentMode as Player;
-
-            if (p != null)
-            {
-                p.Pause();
-                AudioEngine.Music.Stop(false);
-            }
-
-            TextureManager.UnloadAll(true);
-
             base.OnUnload(e);
         }
 
@@ -117,7 +92,7 @@ namespace osum
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (AppDelegate.UsingViewController)
+            if (!AppDelegate.Running)
                 return;
 
             base.OnUpdateFrame(e);
@@ -126,7 +101,7 @@ namespace osum
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            if (AppDelegate.UsingViewController)
+            if (!AppDelegate.Running)
                 return;
 
             base.OnRenderFrame(e);
