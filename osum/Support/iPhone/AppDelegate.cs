@@ -117,11 +117,11 @@ namespace osum.Support.iPhone
         public override void ReceiveMemoryWarning(UIApplication application)
         {
             //todo: implement this.
-            if (!memoryJettisoned && !active)
+            /*if (!memoryJettisoned && !active)
             {
-                TextureManager.UnloadAll(true);
+                TextureManager.UnloadAll();
                 memoryJettisoned = true;
-            }
+            }*/
         }
 
         public static bool Running { get { return active && !usingViewController; } }
