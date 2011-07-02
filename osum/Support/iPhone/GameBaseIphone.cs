@@ -112,7 +112,7 @@ namespace osum
 
         public override string PathConfig {
             get {
-                return return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/";
+                return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/";
             }
         }
 

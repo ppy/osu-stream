@@ -198,7 +198,7 @@ namespace osum.UI
             
         }
 
-        public float Alpha { get { return spriteManager.Sprites == null ? 0 : spriteManager.Sprites[0].Alpha; } }
+        public float Alpha { get { return spriteManager.Alpha; } }
 
         internal void Display()
         {

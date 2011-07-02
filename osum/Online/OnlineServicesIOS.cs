@@ -17,7 +17,7 @@ namespace osum.Online
 
         static bool authSucceededThisSession;
 
-        public void Authenticate()
+        public void Authenticate(VoidDelegate finished = null)
         {
             if (!localPlayer.Authenticated)
                 localPlayer.Authenticate(authenticationComplete);
@@ -26,6 +26,7 @@ namespace osum.Online
         void authenticationComplete(NSError error)
         {
             authSucceededThisSession |= error == null;
+            TriggerFinished();
         }
 
         public bool IsAuthenticated {

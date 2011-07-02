@@ -181,4 +181,10 @@ Check back later!</value>
   <data name="ExpertUnlock" xml:space="preserve">
     <value>Unlock Expert by passing this song on Stream mode!</value>
   </data>
+  <data name="GameCentreInactive" xml:space="preserve">
+    <value>Game Centre Inactive</value>
+  </data>
+  <data name="GameCentreInactiveExplanation" xml:space="preserve">
+    <value>Due to lack of connectivity or no login, game centre is currently inactive. Please visit the Options screen to log in at any time!</value>
+  </data>
 </root>

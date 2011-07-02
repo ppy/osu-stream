@@ -133,6 +133,24 @@ namespace osum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game Centre Inactive.
+        /// </summary>
+        internal static string GameCentreInactive {
+            get {
+                return ResourceManager.GetString("GameCentreInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Due to lack of connectivity or no login, game centre is currently inactive. Please visit the Options screen to log in at any time!.
+        /// </summary>
+        internal static string GameCentreInactiveExplanation {
+            get {
+                return ResourceManager.GetString("GameCentreInactiveExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have all available packs.
         ///Check back later!.
         /// </summary>
