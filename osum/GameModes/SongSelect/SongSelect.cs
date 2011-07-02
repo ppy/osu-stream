@@ -137,38 +137,13 @@ namespace osum.GameModes
 
             foreach (string s in Directory.GetFiles(docs, "*.osz2"))
             {
-                Beatmap map = new Beatmap(s);
+                Beatmap b = new Beatmap(s);
 
-                //string[] files;
+                BeatmapPanel panel = new BeatmapPanel(b, this, index++);
+                spriteManager.Add(panel);
 
-                //try
-                //{
-                //    if (map.Package == null)
-                //        files = new string[] { s };
-                //    else
-                //        files = map.Package.MapFiles;
-                //}
-                //catch
-                //{
-                //    //possibly corrupt file. just delete for now.
-                //    try
-                //    {
-                //        File.Delete(s);
-                //    }
-                //    catch { }
-                //    continue;
-                //}
-
-                //foreach (string file in files)
-                {
-                    Beatmap b = new Beatmap(s);
-
-                    BeatmapPanel panel = new BeatmapPanel(b, this, index++);
-                    spriteManager.Add(panel);
-
-                    availableMaps.Add(b);
-                    panels.Add(panel);
-                }
+                availableMaps.Add(b);
+                panels.Add(panel);
             }
 
             panelDownloadMore = new BeatmapPanel(null, this, index++);
@@ -177,13 +152,16 @@ namespace osum.GameModes
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
 
-            Vector2 pos = new Vector2(400, 0);
-            foreach (BeatmapPanel p in panels)
+            GameBase.Scheduler.Add(delegate
             {
-                p.MoveTo(pos, 0);
-                pos.Y += 70;
-                pos.X += 300;
-            }
+                Vector2 pos = new Vector2(400, 0);
+                foreach (BeatmapPanel p in panels)
+                {
+                    p.MoveTo(pos, 0);
+                    pos.Y += 70;
+                    pos.X += 300;
+                }
+            }, true);
 
             /*if (panels.Count > 1)
             {
