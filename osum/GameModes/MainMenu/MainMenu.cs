@@ -129,7 +129,7 @@ namespace osum.GameModes
             menuBackground.Transform(fadeIn);
 
 #if !iOS
-            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextShadow = true };
+            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
             spriteManager.Add(notice);
 #endif
 
@@ -155,10 +155,14 @@ namespace osum.GameModes
                 spriteManager.Add(headphones);
 
                 AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
-                GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950); 
+                GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
             }
             else
+            {
+                if (Director.LastOsuMode == OsuMode.Tutorial)
+                    AudioEngine.Music.SeekTo(0);
                 AudioEngine.Music.Play();
+            }
 
             firstDisplay = false;
         }
