@@ -78,8 +78,7 @@ namespace osum.UI
 
                         okayButton.OnClick += delegate
                         {
-                            if (Action != null) Action(true);
-                            dismiss();
+                            dismiss(true);
                         };
 
                         spriteManager.Add(okayButton);
@@ -121,8 +120,7 @@ namespace osum.UI
 
                         okayButton.OnClick += delegate
                         {
-                            if (Action != null) Action(true);
-                            dismiss();
+                            dismiss(true);
                         };
 
                         spriteManager.Add(okayButton);
@@ -162,8 +160,7 @@ namespace osum.UI
 
                         cancelButton.OnClick += delegate
                         {
-                            if (Action != null) Action(false);
-                            dismiss();
+                            dismiss(false);
                         };
 
                         spriteManager.Add(cancelButton);
@@ -186,8 +183,13 @@ namespace osum.UI
             spriteManager.Add(titleText);
         }
 
-        private void dismiss()
+        private void dismiss(bool completed)
         {
+            GameBase.Scheduler.Add(delegate
+            {
+                if (Action != null) Action(false);
+            }, 250);
+
             spriteManager.FadeOut(250);
             spriteManager.ScaleTo(0.95f, 250, EasingTypes.Out);
             spriteManager.RotateTo(0.05f, 250, EasingTypes.Out);

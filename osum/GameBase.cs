@@ -336,6 +336,8 @@ namespace osum
             //try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
             Clock.Update(thisTime);
 
+            UpdateNotifications();
+
             ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
 
             if (ElapsedMilliseconds > 1000)
@@ -357,8 +359,6 @@ namespace osum
             TextureManager.Update();
 
             MainSpriteManager.Update();
-
-            UpdateNotifications();
 
             if (Director.Update())
             {
