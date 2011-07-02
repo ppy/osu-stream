@@ -45,3 +45,4 @@ change unlock to require A rank?
 run update loop in the background on ranking screen to change music while gamecentre dialog is vsible?
 check audio unloads after suspended
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
+game centre auth dialog doesn't work on ipad?
