@@ -20,12 +20,6 @@ namespace osum.UI
         pSprite okayButton;
         pSprite cancelButton;
 
-        public override void Dispose()
-        {
-            Action = null;
-            base.Dispose();
-        }
-
         public Notification(string title, string description, NotificationStyle style, BoolDelegate action = null)
         {
             pSprite back = new pSprite(TextureManager.Load(OsuTexture.notification_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.98f, true, Color4.White)
@@ -198,6 +192,7 @@ namespace osum.UI
             spriteManager.ScaleTo(0.95f, 250, EasingTypes.Out);
             spriteManager.RotateTo(0.05f, 250, EasingTypes.Out);
             Dismissed = true;
+            spriteManager.AlwaysDraw = false;
         }
 
         public float Alpha { get { return spriteManager.Sprites[0].Alpha; } }

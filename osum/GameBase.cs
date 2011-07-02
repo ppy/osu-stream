@@ -423,7 +423,6 @@ namespace osum
         {
             if (ActiveNotification != null && ActiveNotification.Dismissed)
             {
-                ActiveNotification.Dispose();
                 ActiveNotification = null;
             }
 
