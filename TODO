@@ -37,7 +37,11 @@ Todo stuff for osu!stream (initial release)
 -Tutorial
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
 
-fix lead-in time pausing going crazzzzzzzy.
-d ranking doesn't line up correctly with personal best.
-songselect tick sounds horrible on headphones.
 ranking screen sound effects.
+check playcount is being added correctly on the 
+slider has 1px border being drawn (http://puu.sh/3110)
+score submission not working correctly.
+change unlock to require A rank?
+run update loop in the background on ranking screen to change music while gamecentre dialog is vsible?
+check audio unloads after suspended
+during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
