@@ -1092,7 +1092,7 @@ namespace osum.GameModes.Play
                     bool forwards = true;
                     int startTime = Clock.Time;
 
-                    const int delay_between_switches = 1200;
+                    const int delay_between_switches = 1600;
 
                     currentSegmentDelegate = delegate
                     {
