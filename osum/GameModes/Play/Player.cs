@@ -111,7 +111,7 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
-                GuideFingers = new GuideFinger() { TouchBurster = touchBurster };
+                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
 
                 switch (Difficulty)
                 {
