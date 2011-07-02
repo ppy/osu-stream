@@ -73,6 +73,7 @@ namespace osum.Online
 
         public void SubmitScore(string id, int score, VoidDelegate finished = null)
         {
+            finishedDelegate = finished;
             GKScore gamekitScore = new GKScore(id);
             gamekitScore.Value = score;
             gamekitScore.ReportScore(delegate(NSError error) {
@@ -83,6 +84,7 @@ namespace osum.Online
                     Console.WriteLine("submission error: " + error.ToString());
                     Console.WriteLine("using id " + id + " score " + score);
 #endif
+                    finishedDelegate = null;
                     return;
                 }
 
