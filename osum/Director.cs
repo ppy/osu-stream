@@ -91,8 +91,11 @@ namespace osum
 
             if (CurrentOsuMode == PendingOsuMode)
                 TextureManager.DisposeDisposable();
-            else
-                TextureManager.DisposeAll(false);
+            else if ((PendingOsuMode == OsuMode.Play && CurrentOsuMode != OsuMode.Results) ||
+                (CurrentOsuMode == OsuMode.Tutorial || PendingOsuMode == OsuMode.Tutorial) ||
+                (PendingOsuMode == OsuMode.SongSelect && (CurrentOsuMode == OsuMode.Play || CurrentOsuMode == OsuMode.Results)))
+                //todo: check memory pressure -- do we need to unload ever?
+                TextureManager.DisposeAll();
 
             AudioEngine.Reset();
 
