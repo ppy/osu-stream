@@ -87,16 +87,19 @@ namespace osum.Helpers
         }
 
         public static bool AudioLeadingIn;
+        public static bool AudioLeadingInRunning;
 
         public static void BeginLeadIn(int leadInStartTime)
         {
             currentFrameAudioTime = leadInStartTime / 1000d;
             AudioLeadingIn = true;
+            AudioLeadingInRunning = true;
         }
 
         public static void AbortLeadIn()
         {
             AudioLeadingIn = false;
+            AudioLeadingInRunning = false;
             currentFrameAudioTime = AudioTimeSource.CurrentTime;
         }
 
@@ -104,7 +107,7 @@ namespace osum.Helpers
         {
             time += elapsed;
 
-            if (AudioLeadingIn && elapsed < 0.1)
+            if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
             {
                 currentFrameAudioTime += elapsed;
 

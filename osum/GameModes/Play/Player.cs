@@ -146,7 +146,7 @@ namespace osum.GameModes
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
 
-                CountdownResume(firstObjectTime, 8);
+                Resume(firstObjectTime, 8);
                 firstCountdown = true;
             }
 
@@ -240,24 +240,33 @@ namespace osum.GameModes
         /// </summary>
         /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
         /// <param name="beats">How many beats we should count in.</param>
-        internal void CountdownResume(int startTime, int beats)
+        internal void Resume(int startTime, int beats)
         {
-            if (firstCountdown)
+            double beatLength = Beatmap.beatLengthAt(startTime);
+
+            int countdownStartTime;
+            if (!countdown.HasFinished)
+                countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
+            else
             {
-                if (Clock.AudioTime > countdown.StartTime && !Autoplay)
-                    firstCountdown = false;
-                else
-                {
-                    if (AudioEngine.Music != null)
-                        AudioEngine.Music.Play();
-                    return;
-                }
+                countdown.SetStartTime(startTime, beatLength);
+                countdownStartTime = startTime - (int)(beatLength * beats);
             }
 
-            double beatLength = Beatmap.beatLengthAt(startTime);
-            int countdownStartTime = startTime - (int)(beatLength * beats);
-
-            countdown.SetStartTime(startTime, beatLength);
+            //if (firstCountdown)
+            //{
+            //    if (Clock.AudioTime > countdown.StartTime && !Autoplay)
+            //        firstCountdown = false;
+            //    else
+            //    {
+            //        countdown.SetStartTime(startTime, beatLength);
+            //        if (Clock.AudioLeadingIn)
+            //            Clock.BeginLeadIn(countdownStartTime);
+            //        else if (AudioEngine.Music != null)
+            //            AudioEngine.Music.Play();
+            //        return;
+            //    }
+            //}
 
             if (countdownStartTime < Clock.AudioTime)
                 Clock.BeginLeadIn(countdownStartTime);
@@ -313,12 +322,15 @@ namespace osum.GameModes
 
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
-            if (menu != null && menu.MenuDisplayed || (Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
+            if (menu != null && menu.MenuDisplayed)
                 return;
 
-            //pass on the event to hitObjectManager for handling.
-            if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
-                return;
+            if (!(Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
+            {
+                //pass on the event to hitObjectManager for handling.
+                if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
+                    return;
+            }
 
             if (menu != null)
                 menu.handleInput(source, point);
@@ -530,11 +542,11 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
-                CheckForCompletion();
-                //check whether the map is finished
-
                 //this needs to be run even when paused to draw sliders on resuming from resign.
                 HitObjectManager.Update();
+
+                //check whether the map is finished
+                CheckForCompletion();
 
                 Spinner s = HitObjectManager.ActiveObject as Spinner;
                 if (s != null)
@@ -701,7 +713,8 @@ namespace osum.GameModes
         internal void Pause()
         {
             if (!Failed) AudioEngine.Music.Pause();
-            Clock.AbortLeadIn();
+            if (Clock.AudioLeadingIn) Clock.AudioLeadingInRunning = false;
+
             CountdownAbort();
 
             if (HitObjectManager != null)

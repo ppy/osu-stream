@@ -1346,7 +1346,7 @@ namespace osum.GameModes.Play
 
             firstCountdown = true;
             AudioEngine.Music.SeekTo(55000);
-            CountdownResume(music_offset + 160 * music_beatlength, 8);
+            Resume(music_offset + 160 * music_beatlength, 8);
 
             loadBeatmap();
         }

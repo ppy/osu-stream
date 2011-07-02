@@ -76,7 +76,7 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    if (p != null) p.CountdownResume(Clock.AudioTime, 8);
+                    if (p != null) p.Resume(Clock.AudioTime, 8);
                 }
             }
         }

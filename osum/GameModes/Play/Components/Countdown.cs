@@ -87,7 +87,6 @@ namespace osum.GameModes.Play.Components
                     break;
             }
 
-
             if (countdown < 4)
             {
                 text.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 150, 1, 0.2f, 2));
@@ -102,7 +101,7 @@ namespace osum.GameModes.Play.Components
         }
 
         int lastCountdownUpdate = -1;
-        private bool HasFinished;
+        public bool HasFinished = true;
         public override void Update()
         {
             base.Update();
