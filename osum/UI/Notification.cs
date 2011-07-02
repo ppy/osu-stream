@@ -187,17 +187,18 @@ namespace osum.UI
         {
             GameBase.Scheduler.Add(delegate
             {
-                if (Action != null) Action(false);
-            }, 250);
+                if (Action != null) Action(completed);
+                Dismissed = true;
+                spriteManager.AlwaysDraw = false;
+            }, 300);
 
-            spriteManager.FadeOut(250);
-            spriteManager.ScaleTo(0.95f, 250, EasingTypes.Out);
-            spriteManager.RotateTo(0.05f, 250, EasingTypes.Out);
-            Dismissed = true;
-            spriteManager.AlwaysDraw = false;
+            spriteManager.FadeOut(300);
+            spriteManager.ScaleTo(0.95f, 300, EasingTypes.Out);
+            spriteManager.RotateTo(0.05f, 300, EasingTypes.Out);
+            
         }
 
-        public float Alpha { get { return spriteManager.Sprites[0].Alpha; } }
+        public float Alpha { get { return spriteManager.Sprites == null ? 0 : spriteManager.Sprites[0].Alpha; } }
 
         internal void Display()
         {
@@ -206,6 +207,16 @@ namespace osum.UI
 
             spriteManager.Transform(bounce);
             spriteManager.Transform(fadeIn);
+        }
+
+        public override void Update()
+        {
+            
+        }
+
+        public override bool Draw()
+        {
+            return true;
         }
     }
 
