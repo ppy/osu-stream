@@ -324,6 +324,21 @@ namespace osum.GameModes
             InputManager.OnMove += HandleInputManagerOnMove;
         }
 
+        /// <summary>
+        /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
+        /// </summary>
+        internal void InitializeBgm()
+        {
+            //Start playing song select BGM.
+#if iOS
+            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.m4a", true);
+#else
+            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.mp3", true);
+#endif
+            if (didLoad)
+                AudioEngine.Music.Play();
+        }
+
         float offset;
 
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
@@ -421,6 +436,8 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
+                InitializeBgm();
+
                 finishedDisplaying = true;
                 if (submissionCompletePending)
                     showOnlineRanking();
@@ -530,6 +547,9 @@ namespace osum.GameModes
             layer1.Update();
             layer2.Update();
             topMostLayer.Update();
+
+            if (!AudioEngine.Music.IsElapsing)
+                InitializeBgm();
 
             if (!Director.IsTransitioning)
             {
