@@ -66,9 +66,8 @@ namespace osum.GameModes
             spriteManager.Add(background);
 
             pDrawable fill = pSprite.FullscreenWhitePixel;
-            fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count300 / Results.RankableScore.totalHits + 0.005f;
+            fill.Scale.X *= (float)Results.RankableScore.count300 / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
             fillSprites.Add(fill);
 
@@ -78,9 +77,8 @@ namespace osum.GameModes
             count_height += 80;
 
             fill = pSprite.FullscreenWhitePixel;
-            fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits + 0.005f;
+            fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
             fillSprites.Add(fill);
 
@@ -90,9 +88,8 @@ namespace osum.GameModes
             count_height += 80;
 
             fill = pSprite.FullscreenWhitePixel;
-            fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.count50 / Results.RankableScore.totalHits + 0.005f;
+            fill.Scale.X *= (float)Results.RankableScore.count50 / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
             fillSprites.Add(fill);
 
@@ -102,9 +99,8 @@ namespace osum.GameModes
             count_height += 80;
 
             fill = pSprite.FullscreenWhitePixel;
-            fill.AlignToSprites = true;
             fill.Clocking = ClockTypes.Game;
-            fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits + 0.005f;
+            fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
             fillSprites.Add(fill);
 
@@ -180,7 +176,7 @@ namespace osum.GameModes
                 pDrawable fill = fillSprites[i];
                 pDrawable count = countSprites[i];
 
-                fill.Scale.Y = GameBase.BaseSize.Height;
+                fill.Scale.Y = GameBase.BaseSizeFixedWidth.Height + 1;
 
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X;
@@ -189,7 +185,7 @@ namespace osum.GameModes
             }
 
             float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
-            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSize.Width));
+            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSizeFixedWidth.Width));
         }
     }
 }

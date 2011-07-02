@@ -150,7 +150,7 @@ namespace osum.Graphics.Sprites
             get
             {
                 pDrawable whiteLayer =
-                    new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSizeFixedWidth.Height), false, 1, Color4.White);
+                    new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width + 1, GameBase.BaseSizeFixedWidth.Height + 1), false, 1, Color4.White);
                 whiteLayer.AlignToSprites = false;
                 return whiteLayer;
             }
