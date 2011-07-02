@@ -1233,7 +1233,7 @@ namespace osum.GameModes.Play
                             if (!touchToContinue)
                             {
                                 showTouchToContinue();
-                                showFailSprite();
+                                showFailScreen();
                             }
                         }
                         else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
@@ -1242,7 +1242,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Healthbar_End:
                     healthBar.SetCurrentHp(100);
-                    hideFailSprite();
+                    hideFailScreen();
                     AudioEngine.Music.Play();
                     AudioEngine.Music.Volume = 1; //may have been dimmed during fail.
 

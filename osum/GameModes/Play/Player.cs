@@ -628,7 +628,7 @@ namespace osum.GameModes
                         {
                             Completed = true;
 
-                            showFailSprite();
+                            showFailScreen();
 
                             menu.Failed = true; //set this now so the menu will be in fail state if interacted with early.
 
@@ -663,9 +663,11 @@ namespace osum.GameModes
 
         }
 
-        protected void hideFailSprite()
+        protected void hideFailScreen()
         {
             Failed = false;
+
+            if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
             if (HitObjectManager != null)
             {
@@ -677,11 +679,13 @@ namespace osum.GameModes
                 failSprite.FadeOut(100);
         }
 
-        protected void showFailSprite()
+        protected void showFailScreen()
         {
             Failed = true;
             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
             AudioEngine.PlaySample(OsuSamples.fail);
+
+            if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
             if (HitObjectManager != null)
                 HitObjectManager.StopAllSounds();
