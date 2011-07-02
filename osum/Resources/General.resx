@@ -163,4 +163,22 @@ Check back later!</value>
   <data name="Alert" xml:space="preserve">
     <value>Alert</value>
   </data>
+  <data name="PlayCount" xml:space="preserve">
+    <value>Play Count:</value>
+  </data>
+  <data name="HighScore" xml:space="preserve">
+    <value>High Score:</value>
+  </data>
+  <data name="YouCantFail" xml:space="preserve">
+    <value>You can't fail.</value>
+  </data>
+  <data name="DynamicStreamSwitching" xml:space="preserve">
+    <value>Dynamic stream switching!</value>
+  </data>
+  <data name="NotForTheFaintHearted" xml:space="preserve">
+    <value>Not for the faint-hearted!</value>
+  </data>
+  <data name="ExpertUnlock" xml:space="preserve">
+    <value>Unlock Expert by passing this song on Stream mode!</value>
+  </data>
 </root>

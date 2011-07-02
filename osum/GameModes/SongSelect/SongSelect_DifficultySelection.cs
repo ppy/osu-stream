@@ -91,6 +91,7 @@ namespace osum.GameModes
 
         private void initializeTabOptions()
         {
+            //todo: clean this up
             List<pDrawable> sprites = new List<pDrawable>();
 
             pSprite text = new pText("Local record goes here.", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
@@ -203,7 +204,7 @@ namespace osum.GameModes
                     else
                     {
                         isNewDifficulty = false;
-                        GameBase.Notify("Unlock Expert by passing this song on Stream mode!", delegate { pendingModeChange = false; });
+                        GameBase.Notify(osum.Resources.General.ExpertUnlock, delegate { pendingModeChange = false; });
                     }
 
 
@@ -263,18 +264,18 @@ namespace osum.GameModes
                 case Difficulty.Easy:
                     hasNext = true;
                     difficultySelectOffset = mode_button_width;
-                    text = "You can't fail.";
+                    text = osum.Resources.General.YouCantFail;
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
                     difficultySelectOffset = 0;
-                    text = "Dynamic stream switching!";
+                    text = osum.Resources.General.DynamicStreamSwitching;
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
                     difficultySelectOffset = -mode_button_width;
-                    text = "Not for the faint-hearted!";
+                    text = osum.Resources.General.NotForTheFaintHearted;
                     break;
             }
 

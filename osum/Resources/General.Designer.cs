@@ -106,11 +106,29 @@ namespace osum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dynamic stream switching!.
+        /// </summary>
+        internal static string DynamicStreamSwitching {
+            get {
+                return ResourceManager.GetString("DynamicStreamSwitching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while downloading song listing..
         /// </summary>
         internal static string ErrorWhileDownloadingSongListing {
             get {
                 return ResourceManager.GetString("ErrorWhileDownloadingSongListing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock Expert by passing this song on Stream mode!.
+        /// </summary>
+        internal static string ExpertUnlock {
+            get {
+                return ResourceManager.GetString("ExpertUnlock", resourceCulture);
             }
         }
         
@@ -121,6 +139,15 @@ namespace osum.Resources {
         internal static string HaveAllAvailableSongPacks {
             get {
                 return ResourceManager.GetString("HaveAllAvailableSongPacks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High Score:.
+        /// </summary>
+        internal static string HighScore {
+            get {
+                return ResourceManager.GetString("HighScore", resourceCulture);
             }
         }
         
@@ -152,6 +179,15 @@ namespace osum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not for the faint-hearted!.
+        /// </summary>
+        internal static string NotForTheFaintHearted {
+            get {
+                return ResourceManager.GetString("NotForTheFaintHearted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Notice.
         /// </summary>
         internal static string Notice {
@@ -166,6 +202,15 @@ namespace osum.Resources {
         internal static string Okay {
             get {
                 return ResourceManager.GetString("Okay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play Count:.
+        /// </summary>
+        internal static string PlayCount {
+            get {
+                return ResourceManager.GetString("PlayCount", resourceCulture);
             }
         }
         
@@ -193,6 +238,15 @@ namespace osum.Resources {
         internal static string Yes {
             get {
                 return ResourceManager.GetString("Yes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t fail..
+        /// </summary>
+        internal static string YouCantFail {
+            get {
+                return ResourceManager.GetString("YouCantFail", resourceCulture);
             }
         }
     }
