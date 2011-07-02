@@ -379,7 +379,7 @@ namespace osum.GameplayElements
                         ActiveObject = h;
                     else if (h.StartTime > hitObjectNow)
                     {
-                        if (NextObject == null)
+                        if (NextObject == null && !h.IsHit)
                             NextObject = h;
                     }
 
