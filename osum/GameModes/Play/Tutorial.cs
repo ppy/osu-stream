@@ -161,12 +161,14 @@ namespace osum.GameModes.Play
 
         protected override void resetScore()
         {
+#if DEBUG
             if (GuideFingers == null)
             {
                 //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
                 GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
                 _showFingerGuides = true;
             }
+#endif
 
             base.resetScore();
         }
@@ -215,7 +217,12 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.GuideFingers_1:
-                    resetScore();
+                    if (GuideFingers == null)
+                    {
+                        //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
+                        GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
+                        _showFingerGuides = true;
+                    }
                     showText("Meet the two finger guides! These circles will show you where to tap throughout the tutorial.", -80);
 
                     GameBase.Scheduler.Add(delegate
