@@ -64,7 +64,7 @@ namespace osum.GameModes.Play
         }
 
         TutorialSegments currentSegment;
-        TutorialSegments nextSegment = TutorialSegments.Stream_1;
+        TutorialSegments nextSegment = TutorialSegments.Introduction_1;
 
         VoidDelegate currentSegmentDelegate;
 
