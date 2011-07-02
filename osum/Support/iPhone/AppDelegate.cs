@@ -71,7 +71,7 @@ namespace osum.Support.iPhone
 
             GameBase.TriggerLayoutChanged();
 
-            int targetFps = 60;
+            int targetFps = 10000;
 
             switch (HardwareDetection.Version)
             {
