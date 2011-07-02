@@ -47,6 +47,7 @@ using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.GameplayElements.Scoring;
+using osu_common.Helpers;
 #endif
 
 
@@ -76,6 +77,8 @@ namespace osum
 
         internal static float ScaleFactor = 1;
         internal static Size NativeSize;
+
+        public static pConfigManager Config;
 
         /// <summary>
         /// The ratio of actual-pixel window size in relation to the base resolution used internally.
@@ -238,6 +241,8 @@ namespace osum
             TextureManager.Initialize();
 
             InputManager.Initialize();
+
+            Config = new pConfigManager(Instance.PathConfig + "osum.cfg") { WriteOnChange = true };
 
             InitializeInput();
 
@@ -413,7 +418,7 @@ namespace osum
         {
             Notify(new Notification(Resources.General.Alert, simple, NotificationStyle.Okay, action));
         }
-        
+
         internal static void Notify(Notification notification)
         {
             NotificationQueue.Enqueue(notification);

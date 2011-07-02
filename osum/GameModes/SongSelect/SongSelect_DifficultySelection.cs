@@ -85,7 +85,7 @@ namespace osum.GameModes
                 s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Alpha = 1;
 
-                SetDifficulty(Difficulty.Normal, true);
+                SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             }, true);
         }
 

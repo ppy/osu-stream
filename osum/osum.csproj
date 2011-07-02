@@ -349,6 +349,7 @@
     <Compile Include="GameModes\Options\Options.cs" />
     <Compile Include="GameModes\Options\Credits.cs" />
     <Compile Include="UI\Notification.cs" />
+    <Compile Include="Helpers\pConfigManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

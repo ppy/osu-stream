@@ -113,6 +113,7 @@ namespace osum.GameModes
             if (HitObjectManager != null)
             {
                 GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
+                ShowGuideFingers = Autoplay || GameBase.Config.GetValue<bool>("GuideFingers", false);
 
                 switch (Difficulty)
                 {
@@ -517,7 +518,7 @@ namespace osum.GameModes
 
             if (healthBar != null) healthBar.Draw();
 
-            if (GuideFingers != null && showGuideFingers) GuideFingers.Draw();
+            if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
             if (menu != null) menu.Draw();
 
@@ -542,7 +543,7 @@ namespace osum.GameModes
                 }
             }
 
-            if (GuideFingers != null && showGuideFingers) GuideFingers.Update();
+            if (GuideFingers != null && ShowGuideFingers) GuideFingers.Update();
 
             if (HitObjectManager != null)
             {
@@ -771,7 +772,7 @@ namespace osum.GameModes
             }
         }
 
-        protected virtual bool showGuideFingers { get { return Autoplay; } }
+        protected bool ShowGuideFingers;
     }
 }
 

@@ -124,6 +124,7 @@
     <Compile Include="Helpers\osu!common\MapPackage.cs" />
     <Compile Include="Helpers\osu!common\MapStream.cs" />
     <Compile Include="Helpers\osu!common\Scheduler.cs" />
+    <Compile Include="Helpers\pConfigManager.cs" />
     <Compile Include="Helpers\pList.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
@@ -349,6 +350,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\ranking_960.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\results.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\soft-hitclap.wav">
