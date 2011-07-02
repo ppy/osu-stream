@@ -326,7 +326,7 @@ namespace osum.GameplayElements
             if (action > ScoreChange.Miss)
             {
                 p.Transform(
-                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.4f, 3));
+                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.2f, 3));
                 p.Transform(
                     new Transformation(TransformationType.Fade, 1, 0,
                                        Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
