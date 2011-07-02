@@ -13,7 +13,7 @@
     <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1238</BundleVersion>
+    <BundleVersion>1245</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>icon.png</BundleIcon>
     <BundleIconHigh>icon@2x.png</BundleIconHigh>
@@ -348,6 +348,7 @@
     <Compile Include="Resources\General.Designer.cs" />
     <Compile Include="GameModes\Options\Options.cs" />
     <Compile Include="GameModes\Options\Credits.cs" />
+    <Compile Include="UI\Notification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

@@ -15,13 +15,18 @@ namespace osum.UI
     public class Notification : GameComponent
     {
         public bool Dismissed;
-        private VoidDelegate OkayAction;
-        private VoidDelegate CancelAction;
+        private BoolDelegate Action;
 
         pSprite okayButton;
         pSprite cancelButton;
 
-        public Notification(string title, string description, NotificationStyle style, VoidDelegate okayAction = null, VoidDelegate cancelAction = null)
+        public override void Dispose()
+        {
+            Action = null;
+            base.Dispose();
+        }
+
+        public Notification(string title, string description, NotificationStyle style, BoolDelegate action = null)
         {
             pSprite back = new pSprite(TextureManager.Load(OsuTexture.notification_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.98f, true, Color4.White)
             {
@@ -48,8 +53,7 @@ namespace osum.UI
 
             spriteManager.Alpha = 0;
 
-            OkayAction = okayAction;
-            CancelAction = cancelAction;
+            Action = action;
 
             const int button_height = 95;
 
@@ -80,7 +84,7 @@ namespace osum.UI
 
                         okayButton.OnClick += delegate
                         {
-                            if (OkayAction != null) OkayAction();
+                            if (Action != null) Action(true);
                             dismiss();
                         };
 
@@ -123,7 +127,7 @@ namespace osum.UI
 
                         okayButton.OnClick += delegate
                         {
-                            if (OkayAction != null) OkayAction();
+                            if (Action != null) Action(true);
                             dismiss();
                         };
 
@@ -164,7 +168,7 @@ namespace osum.UI
 
                         cancelButton.OnClick += delegate
                         {
-                            if (CancelAction != null) CancelAction();
+                            if (Action != null) Action(false);
                             dismiss();
                         };
 

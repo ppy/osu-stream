@@ -13,6 +13,7 @@ using osum.Support;
 using osum.Graphics.Renderers;
 using osum.Graphics;
 using osum.Online;
+using osum.UI;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -46,7 +47,6 @@ using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.GameplayElements.Scoring;
-using osum.UI;
 #endif
 
 
@@ -409,9 +409,9 @@ namespace osum
 
         internal static int SpriteSheetResolution;
 
-        internal static void Notify(string simple, VoidDelegate action = null)
+        internal static void Notify(string simple, BoolDelegate action = null)
         {
-            Notify(new Notification(osum.Resources.General.Notice, simple, NotificationStyle.Okay, action, null));
+            Notify(new Notification(Resources.General.Alert, simple, NotificationStyle.Okay, action));
         }
         
         internal static void Notify(Notification notification)
@@ -422,7 +422,10 @@ namespace osum
         private void UpdateNotifications()
         {
             if (ActiveNotification != null && ActiveNotification.Dismissed)
+            {
+                ActiveNotification.Dispose();
                 ActiveNotification = null;
+            }
 
             if (NotificationQueue.Count > 0 && ActiveNotification == null)
             {

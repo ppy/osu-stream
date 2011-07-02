@@ -160,4 +160,7 @@ Check back later!</value>
   <data name="Okay" xml:space="preserve">
     <value>Okay</value>
   </data>
+  <data name="Alert" xml:space="preserve">
+    <value>Alert</value>
+  </data>
 </root>
