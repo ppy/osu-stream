@@ -967,7 +967,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal virtual void UpdatePathTexture()
         {
-            if (lengthDrawn == PathLength) return; //finished drawing already.
+            if (lengthDrawn == PathLength || IsHit) return; //finished drawing already.
 
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
