@@ -287,12 +287,16 @@ namespace osum.GameModes
 
                 GameBase.Scheduler.Add(delegate
                 {
+                    //could have hit the back button really fast.
+                    if (State == SelectState.DifficultySelect)
+                    {
                         s_ModeDescriptionText.Text = text;
                         s_ModeDescriptionText.FadeInFromZero(300);
 
                         BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
-                        s_ScoreInfo.Text = "Play Count: " + bmi.Playcount.ToString().PadLeft(3, '0') + "\nHigh Score: " + bmi.HighScore.ToString().PadLeft(7, '0');
+                        s_ScoreInfo.Text = osum.Resources.General.PlayCount + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + osum.Resources.General.HighScore + " " + bmi.HighScore.ToString().PadLeft(7, '0');
+                    }
                 }, 100);
             }
         }
