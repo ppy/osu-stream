@@ -269,7 +269,7 @@ namespace osum.GameModes
             //    }
             //}
 
-            if (countdownStartTime < Clock.AudioTime)
+            if (countdownStartTime < Clock.AudioTime && !Autoplay)
                 Clock.BeginLeadIn(countdownStartTime);
             else
                 if (AudioEngine.Music != null)
