@@ -576,7 +576,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Slider_3:
-                    showText(osum.Resources.Tutorial.Slider3, -80);
+                    showText(osum.Resources.Tutorial.Slider3, -100);
 
                     Clock.ResetManual();
                     Player.Autoplay = true;
