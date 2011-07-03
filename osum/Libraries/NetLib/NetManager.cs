@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using MonoTouch.UIKit;
 using osum;
 
 namespace osu_common.Libraries.NetLib
