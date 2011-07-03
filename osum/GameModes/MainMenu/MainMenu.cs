@@ -209,6 +209,9 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            //we will never use these textures again (the "intro" sheet) so get rid of them for good.
+            TextureManager.Dispose(OsuTexture.menu_headphones);
+
             menuBackgroundNew.Dispose();
             spriteManagerBehind.Dispose();
             base.Dispose();

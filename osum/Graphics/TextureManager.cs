@@ -102,6 +102,21 @@ namespace osum.Graphics.Skins
         }
 
 
+        public static void Dispose(OsuTexture texture)
+        {
+            SpriteSheetTexture info;
+
+            if (textureLocations.TryGetValue(texture, out info))
+            {
+                pTexture tex;
+                if (SpriteCache.TryGetValue(info.SheetName, out tex))
+                {
+                    tex.UnloadTexture();
+                    SpriteCache.Remove(info.SheetName);
+                }
+            }
+        }
+
         public static void DisposeAll()
         {
             UnloadAll();
