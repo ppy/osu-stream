@@ -8,8 +8,10 @@ namespace osum.Graphics.Sprites
     {
         internal float EndExcess = 10;
 
-        internal override void HandleInputManagerOnMove (InputSource source, TrackingPoint trackingPoint)
+        internal override void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) return;
+
             float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
             float bound = offsetBound;
 

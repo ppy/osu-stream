@@ -111,6 +111,11 @@ namespace osum
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
+#if MONO
+            if (PrimaryTrackingPoint == null)
+                PrimaryTrackingPoint = point;
+#endif
+
             TriggerOnMove(source, point);
             UpdatePointerPosition(point);
         }
