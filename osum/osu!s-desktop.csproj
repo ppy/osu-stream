@@ -91,6 +91,7 @@
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
+    <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
     <Compile Include="Graphics\TextureManager_Load.cs" />
     <Compile Include="Graphics\TouchBurster.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
@@ -287,6 +288,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\hit_960.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\intro_480.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skins\Default\intro_960.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Skins\Default\mainmenu_intro.wav">

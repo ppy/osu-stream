@@ -423,6 +423,8 @@
     <Content Include="Skins\Default\rankingbam.wav" />
     <Content Include="Skins\Default\rankingbam2.wav" />
     <Content Include="Skins\Default\results.m4a" />
+    <Content Include="Skins\Default\intro_480.png" />
+    <Content Include="Skins\Default\intro_960.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
