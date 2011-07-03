@@ -2,36 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using osu_common.Bancho;
+using osu_common.Helpers;
 
 namespace osum.GameplayElements.Scoring
 {
-    public class Score
+    public class Score : bSerializable
     {
         public ushort count100;
         public ushort count300;
         public ushort count50;
-        public ushort countGeki;
-        public ushort countKatu;
         public ushort countMiss;
         public DateTime date;
-        public bool isOnline;
         public int maxCombo;
-        public bool pass;
-        public bool exit;
-        public int failTime;
-        public string playerName;
-        public string rawGraph;
-        public int totalScore
-        {
-            get { return spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore; }
-        }
-
         public int spinnerBonusScore;
         public int hitOffsetMilliseconds;
         public int hitOffsetCount;
         public int comboBonusScore;
         public int accuracyBonusScore;
         public int hitScore;
+
+        public int totalScore
+        {
+            get { return spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore; }
+        }
+
         public Rank Ranking
         {
             get
@@ -64,6 +59,37 @@ namespace osum.GameplayElements.Scoring
         {
             get { return count50 + count100 + count300; }
         }
+
+        #region bSerializable implementation
+        public void ReadFromStream (SerializationReader sr)
+        {
+            count300 = sr.ReadUInt16();
+            count100 = sr.ReadUInt16();
+            count50 = sr.ReadUInt16();
+            countMiss = sr.ReadUInt16();
+            date = sr.ReadDateTime();
+            maxCombo = sr.ReadUInt16();
+            spinnerBonusScore = sr.ReadInt32();
+            comboBonusScore = sr.ReadInt32();
+            accuracyBonusScore = sr.ReadInt32();
+            hitScore = sr.ReadInt32();
+        }
+
+        public void WriteToStream (SerializationWriter sw)
+        {
+            sw.Write(count300);
+            sw.Write(count100);
+            sw.Write(count50);
+            sw.Write(countMiss);
+            sw.Write(date);
+            sw.Write(maxCombo);
+            sw.Write(spinnerBonusScore);
+            sw.Write(comboBonusScore);
+            sw.Write(accuracyBonusScore);
+            sw.Write(hitScore);
+
+        }
+        #endregion
     }
 
     public enum Rank
