@@ -74,6 +74,7 @@ namespace osum.GameModes
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
+            background.Alpha = 0;
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
