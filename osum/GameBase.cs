@@ -15,6 +15,7 @@ using osum.Graphics;
 using osum.Online;
 using osum.UI;
 using osu_common.Helpers;
+using System.Threading;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -438,6 +439,15 @@ namespace osum
                 //use the main sprite manager to handle input before anything else.
                 MainSpriteManager.Add(ActiveNotification.spriteManager);
             }
+        }
+
+        public virtual Thread RunInBackground(VoidDelegate task)
+        {
+            Thread t = new Thread((ThreadStart)delegate { task(); });
+            t.Priority = ThreadPriority.Highest;
+            t.IsBackground = true;
+            t.Start();
+            return t;
         }
 
         public virtual string PathConfig { get { return string.Empty; } }

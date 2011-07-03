@@ -1,5 +1,6 @@
 using System;
 using MonoTouch.UIKit;
+using osum.Helpers;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -42,6 +43,7 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 using System.Globalization;
+using System.Threading;
 
 namespace osum
 {
@@ -116,7 +118,45 @@ namespace osum
             }
         }
 
+        public override Thread RunInBackground(VoidDelegate task)
+        {
+            ParameterizedThreadStart pts = delegate {
+                int ourTask = 0;
+                UIApplication application = UIApplication.SharedApplication;
 
+                if (UIDevice.CurrentDevice.IsMultitaskingSupported)
+                {
+                    application.BeginBackgroundTask(delegate {
+                        //expired
+                        if (ourTask != 0)
+                        {
+                            application.EndBackgroundTask(ourTask);
+                            ourTask = 0;
+                        }
+                    });
+                }
+
+                task();
+
+                if (ourTask != 0)
+                {
+                    application.BeginInvokeOnMainThread(delegate
+                    {
+                        if (ourTask != 0) //same as above
+                        {
+                            application.EndBackgroundTask(ourTask);
+                            ourTask = 0;
+                        }
+                    });
+                }
+            };
+
+            Thread t = new Thread (pts);
+            t.Priority = ThreadPriority.Highest;
+            t.IsBackground = true;
+            t.Start();
+            return t;
+        }
     }
 }
 

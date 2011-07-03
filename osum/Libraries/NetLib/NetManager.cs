@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using MonoTouch.UIKit;
+using osum;
 
 namespace osu_common.Libraries.NetLib
 {
@@ -11,9 +13,7 @@ namespace osu_common.Libraries.NetLib
     {
         static long lastRequestTick;
         static int chainedFastRequests;
-        
-        private static readonly object RequestLock = new object();
-
+        private static readonly object RequestLock = new object ();
         const int DELAY_BETWEEN_REQUESTS = 150;
 
         /// <summary>
@@ -33,8 +33,7 @@ namespace osu_common.Libraries.NetLib
                 {
                     requireDelay = true;
                     chainedFastRequests++;
-                }
-                else
+                } else
                 {
                     chainedFastRequests = 0;
                 }
@@ -43,37 +42,28 @@ namespace osu_common.Libraries.NetLib
                 lastRequestTick = nowTick;
             }
 
-            ParameterizedThreadStart pts = delegate
-                                               {
-                                                   try
-                                                   {
-                                                       if (requireDelay)
-                                                       {
-                                                           request.IsQueued = true;
-                                                           Thread.Sleep(delayLength);
-                                                           request.IsQueued = false;
-                                                       }
+            request.thread = GameBase.Instance.RunInBackground(delegate {
+                try
+                {
+                    if (requireDelay)
+                    {
+                        request.IsQueued = true;
+                        Thread.Sleep(delayLength);
+                        request.IsQueued = false;
+                    }
 
-                                                       if (request.AbortRequested) return;
+                    if (request.AbortRequested) return;
 
-                                                       request.Perform();
-                                                   }
-                                                   catch (ThreadAbortException)
-                                                   {
-                                                   }
-                                                   catch (Exception ex)
-                                                   {
-                                                       request.OnException(ex);
-                                                   }
-                                               };
-
-
-            Thread t = new Thread(pts);
-            t.Priority = ThreadPriority.Highest;
-            t.IsBackground = true;
-            t.Start();
-
-            request.thread = t;
+                     request.Perform();
+                }
+                catch (ThreadAbortException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    request.OnException(ex);
+                }
+            });
 
             return true;
         }
