@@ -72,7 +72,12 @@ namespace osum
                     Director.ChangeMode(OsuMode.SongSelect);
                     break;
                 case 'j':
-                    Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                    Player p = Director.CurrentMode as Player;
+                    if (p != null)
+                    {
+                        Results.RankableScore = p.CurrentScore;
+                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                    }
                     break;
             }
         }
