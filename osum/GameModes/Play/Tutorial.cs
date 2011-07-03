@@ -1346,10 +1346,8 @@ namespace osum.GameModes.Play
 
             if (countdown == null) countdown = new CountdownDisplay();
 
-            firstCountdown = true;
             AudioEngine.Music.SeekTo(55000);
             Resume(music_offset + 160 * music_beatlength, 8);
-
             loadBeatmap();
         }
 

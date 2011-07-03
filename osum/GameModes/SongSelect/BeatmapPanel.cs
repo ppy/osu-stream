@@ -30,7 +30,7 @@ namespace osum.GameModes.SongSelect
         static Color4 colourHover = new Color4(28, 139, 242, 255);
 
         internal const int PANEL_HEIGHT = 60;
-        public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 160);
+        public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
         private pSprite s_Star;
 
         internal BeatmapPanel(Beatmap beatmap, SongSelectMode select, int index)
@@ -41,7 +41,7 @@ namespace osum.GameModes.SongSelect
             s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
             {
                 DrawDepth = base_depth,
-                Colour = new Color4(255, 255, 255, 160)
+                Colour = new Color4(255, 255, 255, 170)
             };
 
             Sprites.Add(s_BackingPlate);
@@ -63,22 +63,21 @@ namespace osum.GameModes.SongSelect
                 s_BackingPlate2.FadeColour(Color4.Transparent, 100);
             };
 
-            s_Text = new pText(string.Empty, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false);
+            s_Text = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false);
             s_Text.Bold = true;
-            s_Text.Offset = new Vector2(100, 14);
+            s_Text.Offset = new Vector2(100, 0);
             Sprites.Add(s_Text);
 
-            s_TextArtist = new pText(string.Empty, 56, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, BACKGROUND_COLOUR, false);
-            s_TextArtist.TextAlignment = TextAlignment.Right;
-            s_TextArtist.Origin = OriginTypes.TopRight;
-            s_TextArtist.Field = FieldTypes.StandardSnapRight;
-            s_TextArtist.Offset = new Vector2(0, 3);
+            s_TextArtist = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, Color4.OrangeRed, false);
+            //s_TextArtist.TextAlignment = TextAlignment.Right;
+            //s_TextArtist.Origin = OriginTypes.TopRight;
+            //s_TextArtist.Field = FieldTypes.StandardSnapRight;
+            s_TextArtist.Offset = new Vector2(100, 29);
             Sprites.Add(s_TextArtist);
 
             s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, BACKGROUND_COLOUR, false);
-            s_TextCreator.TextAlignment = TextAlignment.Left;
-            s_TextCreator.Origin = OriginTypes.TopCentre;
-            s_TextCreator.Field = FieldTypes.StandardSnapTopCentre;
+            s_TextCreator.Origin = OriginTypes.TopRight;
+            s_TextCreator.Field = FieldTypes.StandardSnapRight;
             Sprites.Add(s_TextCreator);
 
             pTexture thumb = null;
@@ -116,8 +115,9 @@ namespace osum.GameModes.SongSelect
                 s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
                 s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = base_depth + 0.02f };
-            s_Thumbnail.Offset = new Vector2(8, 2.7f);
+            
             s_Thumbnail.AlphaBlend = false;
+            s_Thumbnail.Offset = new Vector2(8.5f, 3.8f);
             Sprites.Add(s_Thumbnail);
 
             s_BackingPlate2 = new pSprite(TextureManager.Load(OsuTexture.songselect_panel_selected), Vector2.Zero)
