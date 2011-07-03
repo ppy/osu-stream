@@ -25,13 +25,11 @@ Todo stuff for osu!stream (initial release)
 |- Show ranks on song list and unlock status.
 |- Show correct price information.
 |- Finish IAP implementation.
-|- Download in background.
 -Results
 |- Show unlocks.
 |- Feedback on score submission.
 |- Submit detailed score to osu! server (for future use).
 -Libraries/General
-|- HTTP library needs to handle timeouts better (backgrounding of app etc.)
 |- Profile and optimise ~20% overhead.
 |- Revamp all sound effects.
 -Tutorial
