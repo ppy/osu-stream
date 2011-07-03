@@ -75,8 +75,6 @@ namespace osum.GameModes
                 foreach (pDrawable s in SelectedPanel.Sprites)
                     s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
 
-                background.FadeIn(500);
-
                 tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
                 tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
 
@@ -329,8 +327,6 @@ namespace osum.GameModes
                 }
 
                 if (tabController != null) tabController.Hide();
-
-                background.FadeOut(500);
 
                 s_Header.Transform(new Transformation(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));

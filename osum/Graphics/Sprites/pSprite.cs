@@ -152,6 +152,7 @@ namespace osum.Graphics.Sprites
                 pDrawable whiteLayer =
                     new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width + 1, GameBase.BaseSizeFixedWidth.Height + 1), false, 1, Color4.White);
                 whiteLayer.AlignToSprites = false;
+                whiteLayer.AlphaBlend = false;
                 return whiteLayer;
             }
         }

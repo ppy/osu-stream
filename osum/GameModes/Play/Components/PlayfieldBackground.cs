@@ -178,10 +178,21 @@ namespace osum.GameModes.Play.Components
                 //change to the darker colour for bottom vertices and diagonals
                 if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
 
-                colours[i * 4] = col.R;
-                colours[i * 4 + 1] = col.G;
-                colours[i * 4 + 2] = col.B;
-                colours[i * 4 + 3] = col.A * (1 - SpriteManager.UniversalDim);
+                if (SpriteManager.UniversalDim > 0)
+                {
+                    float mult = 1 - SpriteManager.UniversalDim;
+                    colours[i * 4] = col.R * mult;
+                    colours[i * 4 + 1] = col.G * mult;
+                    colours[i * 4 + 2] = col.B * mult;
+                    colours[i * 4 + 3] = col.A;
+                }
+                else
+                {
+                    colours[i * 4] = col.R;
+                    colours[i * 4 + 1] = col.G;
+                    colours[i * 4 + 2] = col.B;
+                    colours[i * 4 + 3] = col.A;
+                }
             }
         }
 
@@ -193,9 +204,13 @@ namespace osum.GameModes.Play.Components
 
             GL.EnableClientState(ArrayCap.ColorArray);
 
+            SpriteManager.AlphaBlend = false;
+
             GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
             GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
+
+            SpriteManager.AlphaBlend = true;
 
             SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
 

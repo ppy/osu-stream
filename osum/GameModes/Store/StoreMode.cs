@@ -32,6 +32,7 @@ namespace osum.GameModes.Store
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
+            background.AlphaBlend = false;
             spriteManager.Add(background);
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); });

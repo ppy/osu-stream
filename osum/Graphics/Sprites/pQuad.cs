@@ -60,7 +60,8 @@ namespace osum.Graphics.Drawables
 
         float[] coordinates = new float[8];
         Vector2[] vertices = new Vector2[4];
-        public Color4[] colours;
+        public Color4[] Colours;
+        private Color4[] colours = new Color4[4];
 
         public pTexture Texture;
 
@@ -121,15 +122,21 @@ namespace osum.Graphics.Drawables
                 Vector2 scale = FieldScale;
                 Vector2 origin = OriginVector * GameBase.BaseToNativeRatio;
 
-                if (colours == null)
+                if (Colours == null)
                     GL.Color4(c.R, c.G, c.B, c.A);
                 else
                 {
-                    for (int i = 0; i < colours.Length; i++)
+                    for (int i = 0; i < Colours.Length; i++)
                     {
-                        Color4 col = colours[i];
-                        
-                        colours[i] = new Color4(col.R, col.G, col.B, c.A * (1 - SpriteManager.UniversalDim));
+                        Color4 col = Colours[i];
+
+                        if (SpriteManager.UniversalDim > 0)
+                        {
+                            float multi = 1 - SpriteManager.UniversalDim;
+                            colours[i] = new Color4(col.R * multi, col.G * multi, col.B * multi, c.A);
+                        }
+                        else
+                            colours[i] = new Color4(col.R, col.G, col.B, c.A);
                         //todo: optimise
                     }
                     
@@ -196,7 +203,7 @@ namespace osum.Graphics.Drawables
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
-                if (colours != null)
+                if (Colours != null)
                     GL.DisableClientState(ArrayCap.ColorArray);
 
                 return true;

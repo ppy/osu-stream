@@ -359,6 +359,8 @@ namespace osum.Graphics.Sprites
                     }
 
                     TexturesEnabled = p.UsesTextures;
+                    AlphaBlend = p.AlphaBlend || p.Alpha != 1;
+
                     if (p.Draw())
                     {
                         //todo: implement batching!
@@ -390,8 +392,9 @@ namespace osum.Graphics.Sprites
             return true;
         }
 
-        static bool texturesEnabled = false;
         private bool matrixOperations;
+
+        static bool texturesEnabled = false;
         internal static bool TexturesEnabled
         {
             get { return texturesEnabled; }
@@ -415,6 +418,30 @@ namespace osum.Graphics.Sprites
                 }
             }
         }
+
+        static bool alphaBlend = false;
+        internal static bool AlphaBlend
+        {
+            get { return alphaBlend; }
+
+            set
+            {
+                if (alphaBlend == value)
+                    return;
+
+                alphaBlend = value;
+
+                if (alphaBlend)
+                {
+                    GL.Enable(EnableCap.Blend);
+                }
+                else
+                {
+                    GL.Disable(EnableCap.Blend);
+                }
+            }
+        }
+
 
         internal static void Reset()
         {

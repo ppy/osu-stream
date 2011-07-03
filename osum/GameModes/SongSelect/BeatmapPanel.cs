@@ -117,6 +117,7 @@ namespace osum.GameModes.SongSelect
             else
                 s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = base_depth + 0.02f };
             s_Thumbnail.Offset = new Vector2(8, 2.7f);
+            s_Thumbnail.AlphaBlend = false;
             Sprites.Add(s_Thumbnail);
 
             s_BackingPlate2 = new pSprite(TextureManager.Load(OsuTexture.songselect_panel_selected), Vector2.Zero)

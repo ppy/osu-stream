@@ -625,6 +625,7 @@ namespace osum.Graphics.Sprites
         }
 
         internal SpriteManager SpriteManager;
+        public bool AlphaBlend = true;
 
         internal pDrawable AdditiveFlash(int duration, float brightness, bool keepTransformations = false)
         {

@@ -142,7 +142,7 @@ namespace osum.GameplayElements
             {
                 p.Transformations.Clear();
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
-                p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 2 : DifficultyManager.FadeOut)));
+                p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 4 : DifficultyManager.FadeOut / 2)));
                 p.AlignToSprites = true;
             }
 
@@ -280,6 +280,7 @@ namespace osum.GameplayElements
             if (currentRotationCount >= rotationRequirement && !Cleared)
             {
                 Cleared = true;
+
                 if (SpriteSpin != null)
                 {
                     SpriteSpin.FadeOut(100);
@@ -426,6 +427,10 @@ namespace osum.GameplayElements
         {
             if (ClockingNow < EndTime)
                 return ScoreChange.Ignore;
+
+            if (Cleared)
+                //a quick hack to reduce fill during fade out. we have cleared so most of the bar is going to be orange already.
+                spriteScoreMetreBackground.Bypass = true;
 
             StopSound();
 
