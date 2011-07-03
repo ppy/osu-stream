@@ -147,8 +147,7 @@ namespace osum.GameModes
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
 
-                Resume(firstObjectTime, 8);
-                firstCountdown = true;
+                Resume(firstObjectTime, 8, true);
             }
 
             resetScore();
@@ -221,27 +220,11 @@ namespace osum.GameModes
         }
 
         /// <summary>
-        /// Set to true after the initial countdown is set to ensure it is not overridden by a pause menu countdown.
-        /// </summary>
-        protected bool firstCountdown;
-
-        /// <summary>
-        /// Abort (and hide) the active countdown display. Is ignored for the initial countdown.
-        /// </summary>
-        internal void CountdownAbort()
-        {
-            if (firstCountdown) return;
-
-            if (countdown != null)
-                countdown.Hide();
-        }
-
-        /// <summary>
         /// Setup a new countdown process.
         /// </summary>
         /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
         /// <param name="beats">How many beats we should count in.</param>
-        internal void Resume(int startTime, int beats)
+        internal void Resume(int startTime, int beats, bool forceCountdown = false)
         {
             double beatLength = Beatmap.beatLengthAt(startTime);
 
@@ -269,7 +252,7 @@ namespace osum.GameModes
             //    }
             //}
 
-            if (countdownStartTime < Clock.AudioTime && !Autoplay)
+            if (countdownStartTime < Clock.AudioTime && (forceCountdown || !Autoplay))
                 Clock.BeginLeadIn(countdownStartTime);
             else
                 if (AudioEngine.Music != null)
@@ -724,8 +707,6 @@ namespace osum.GameModes
         {
             if (!Failed) AudioEngine.Music.Pause();
             if (Clock.AudioLeadingIn) Clock.AudioLeadingInRunning = false;
-
-            CountdownAbort();
 
             if (HitObjectManager != null)
                 HitObjectManager.StopAllSounds();
