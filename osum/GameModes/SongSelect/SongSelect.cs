@@ -30,17 +30,15 @@ namespace osum.GameModes
         private static List<Beatmap> availableMaps;
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
-        private float songSelectOffset;
-        private float difficultySelectOffset;
-
-
-
         SelectState State;
 
+        private float songSelectOffset;
+        private float difficultySelectOffset;
 
         private float offset_min { get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Height - s_Header.DrawHeight - 80; } }
         private float offset_max = 0;
         private float velocity;
+
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>

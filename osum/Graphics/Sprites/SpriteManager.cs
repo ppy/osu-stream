@@ -45,7 +45,7 @@ using osum.Input;
 
 namespace osum.Graphics.Sprites
 {
-    internal class SpriteManager : pDrawable, IDisposable
+    public class SpriteManager : pDrawable, IDisposable
     {
         internal List<pDrawable> Sprites;
 
@@ -71,7 +71,7 @@ namespace osum.Graphics.Sprites
 
         }
 
-        internal void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time) return;
 
@@ -85,6 +85,7 @@ namespace osum.Graphics.Sprites
 
         void mapToCoordinates(ref TrackingPoint t)
         {
+            //todo: optimise?
             if (!matrixOperations)
                 return;
 
@@ -113,7 +114,7 @@ namespace osum.Graphics.Sprites
             pos.X += GameBase.BaseSizeFixedWidth.Width / 2;
             pos.Y += GameBase.BaseSizeFixedWidth.Height / 2;
 
-            pos -= Position;
+            pos -= (Position + Offset);
 
             t.BasePosition = pos;
             t.WindowDelta = pos - origPos;
@@ -129,7 +130,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 
@@ -142,7 +143,7 @@ namespace osum.Graphics.Sprites
                 Sprites[i].HandleOnDown(source, trackingPoint);
         }
 
-        internal void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
+        internal virtual void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 

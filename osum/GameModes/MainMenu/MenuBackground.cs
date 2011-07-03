@@ -14,7 +14,7 @@ using osum.Graphics;
 
 namespace osum.GameModes
 {
-    class MenuBackground : SpriteManager
+    class MenuBackground : SpriteManagerDraggable
     {
         Vector2 centre = new Vector2(320, 200);
         private pQuad yellow;
@@ -24,6 +24,8 @@ namespace osum.GameModes
 
         public MenuBackground()
         {
+            EndExcess = 0.5f;
+
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
             rectangleLineRight = new Line(new Vector2(-100, -855) - centre, new Vector2(1200, 250) - centre);
 
@@ -64,7 +66,7 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(254, 242, 0, 255));
             yellow.Tag = yellow.Colour;
-            //yellow.HandleClickOnUp = true;
+            yellow.HandleClickOnUp = true;
             yellow.Texture = specialTexture;
             yellow.Field = FieldTypes.StandardSnapCentre;
             yellow.Origin = OriginTypes.Centre;
@@ -80,7 +82,7 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(255, 102, 0, 255));
             orange.Tag = orange.Colour;
-            //orange.HandleClickOnUp = true;
+            orange.HandleClickOnUp = true;
             orange.Texture = specialTexture;
             orange.Field = FieldTypes.StandardSnapCentre;
             orange.Origin = OriginTypes.Centre;
@@ -97,7 +99,7 @@ namespace osum.GameModes
                 Vector2.Zero,
                 true, 0.5f, new Color4(0, 192, 245, 255));
             blue.Tag = blue.Colour;
-            //blue.HandleClickOnUp = true;
+            blue.HandleClickOnUp = true;
             blue.Texture = specialTexture;
             blue.Field = FieldTypes.StandardSnapCentre;
             blue.Origin = OriginTypes.Centre;
@@ -114,7 +116,7 @@ namespace osum.GameModes
                 true, 0.5f, new Color4(237, 0, 140, 255));
             pink.Texture = specialTexture;
             pink.Tag = pink.Colour;
-            //pink.HandleClickOnUp = true;
+            pink.HandleClickOnUp = true;
             pink.Field = FieldTypes.StandardSnapCentre;
             pink.Origin = OriginTypes.Centre;
             pink.OnClick += Option_OnClick;

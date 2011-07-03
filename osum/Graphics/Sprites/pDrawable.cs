@@ -41,7 +41,7 @@ using osum.Input;
 
 namespace osum.Graphics.Sprites
 {
-    internal partial class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
+    public partial class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
     {
         internal float Alpha;
 
@@ -140,7 +140,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
         /// </summary>
-        public pList<Transformation> Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
+        internal pList<Transformation> Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
 
         internal virtual bool IsRemovable
         {

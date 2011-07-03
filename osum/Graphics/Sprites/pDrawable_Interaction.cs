@@ -42,7 +42,7 @@ using OpenTK;
 
 namespace osum.Graphics.Sprites
 {
-    internal partial class pDrawable : IDrawable, IDisposable
+    public partial class pDrawable : IDrawable, IDisposable
     {
         internal bool IsClickable { get { return onClick != null; } }
 
