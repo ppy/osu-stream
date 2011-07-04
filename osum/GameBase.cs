@@ -122,7 +122,7 @@ namespace osum
 
         public GameBase()
         {
-            if (DateTime.Now > new DateTime(2011, 07, 05))
+            if (DateTime.Now > new DateTime(2011, 07, 10))
                 Environment.Exit(-1);
 
             Instance = this;
@@ -223,6 +223,8 @@ namespace osum
 
 #if DEBUG
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
+            Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
+            Console.WriteLine("prite multiplier is " + SpriteToBaseRatio);
 #endif
 
             TriggerLayoutChanged();
