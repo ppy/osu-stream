@@ -138,7 +138,7 @@ namespace osum.GameModes
             Add(text);
             textSprites.Add(text);
 
-            text = new pSprite(TextureManager.Load(OsuTexture.menu_play), new Vector2(-48, 22));
+            text = new pSprite(TextureManager.Load(OsuTexture.menu_play), new Vector2(-48, 23.5f));
             text.Field = FieldTypes.StandardSnapCentre;
             text.Origin = OriginTypes.Centre;
             text.Rotation = -rotation_offset;
@@ -235,7 +235,6 @@ namespace osum.GameModes
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
                 //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
-            awesomeTransformation.Clocking = ClockTypes.Mode;
 
             textSprites.ForEach(s => s.FadeIn(500));
         }
@@ -247,6 +246,9 @@ namespace osum.GameModes
         {
             if (awesomeTransformation != null || first)
             {
+                if (awesomeTransformation != null)
+                    awesomeTransformation.Update(ClockingNow);
+
                 float progress = awesomeTransformation == null ? 0 : awesomeTransformation.CurrentFloat;
                 yellow.p1 = rectangleLineLeft.PositionAt(0.575f + 0.08f * progress);
                 yellow.p2 = rectangleLineRight.PositionAt(0.575f + 0.08f * progress);
