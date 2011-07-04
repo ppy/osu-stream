@@ -30,7 +30,6 @@ Todo stuff for osu!stream (initial release)
 |- Feedback on score submission.
 |- Submit detailed score to osu! server (for future use).
 -Libraries/General
-|- Profile and optimise ~20% overhead.
 |- Revamp all sound effects.
 -Tutorial
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
@@ -45,3 +44,9 @@ check audio unloads after suspended
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
 game centre auth dialog doesn't work on ipad?
 follow lines for multitouch hits
+change loading/unloading texture behaviour (ranking screen uses menu textures already!! background image)
+autoplay finger centre for spinners is too high on ipad and iphone
+
+make spritesheet creation FAIL on non-div-2 texture
+
+check sprites are using exact pixels ast runtime
