@@ -52,10 +52,17 @@ namespace osum.Graphics.Sprites
                 float lastOffset = songSelectOffset;
                 songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
 
+                if (songSelectOffset != lastOffset)
+                    hasMovement = true;
+
                 if (songSelectOffset != bound)
                     velocity *= 0.7f;
                 else
                     velocity *= 0.94f;
+            }
+            else
+            {
+                hasMovement = true;
             }
 
             if (Director.PendingOsuMode == OsuMode.Unknown)

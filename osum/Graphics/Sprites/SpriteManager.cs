@@ -273,16 +273,18 @@ namespace osum.Graphics.Sprites
                 while (true);
             }
 
-            int i = 0;
-            foreach (pDrawable p in Sprites)
+
+            int count = Sprites.Count;
+            for (int i = 0; i < count; i++)
             {
+                pDrawable p = Sprites[i];
                 p.Update();
+
                 if (p.IsRemovable)
                 {
                     removableSprites.Add(i);
                     p.Dispose();
                 }
-                i++;
             }
 
 #if FULLER_DEBUG
@@ -290,9 +292,13 @@ namespace osum.Graphics.Sprites
                 DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites (" + Sprites.FindAll(s => s.IsOnScreen).Count + " on-screen)");
 #endif
 
-            for (i = removableSprites.Count - 1; i >= 0; i--)
-                Sprites.RemoveAt(removableSprites[i]);
-            removableSprites.Clear();
+            count = removableSprites.Count;
+            if (count > 0)
+            {
+                for (int i = count - 1; i >= 0; i--)
+                    Sprites.RemoveAt(removableSprites[i]);
+                removableSprites.Clear();
+            }
         }
 
         static BlendingFactorDest lastBlendDest = BlendingFactorDest.One;
@@ -319,6 +325,14 @@ namespace osum.Graphics.Sprites
             //todo: implement batching.
         }
 
+        bool exactCoordinatesOverride;
+        internal override bool ExactCoordinates {
+            get { return !exactCoordinatesOverride && !(hasMovement || hasMovementX); }
+            set {
+                exactCoordinatesOverride = !value;
+            }
+        }
+
         /// <summary>
         ///   Draw all sprites managed by this sprite manager.
         /// </summary>
@@ -333,6 +347,8 @@ namespace osum.Graphics.Sprites
 
             if (matrixOperations)
             {
+                GL.PushMatrix();
+
                 GL.Translate(GameBase.NativeSize.Width / 2f, GameBase.NativeSize.Height / 2f, 0);
                 if (Rotation != 0)
                     GL.Rotate(Rotation / (float)Math.PI * 180, 0, 0, 1);
@@ -385,7 +401,7 @@ namespace osum.Graphics.Sprites
             }
 
             if (matrixOperations)
-                GameBase.Instance.SetViewport();
+                GL.PopMatrix();
 
             flushBatch();
 
