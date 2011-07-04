@@ -58,22 +58,13 @@ namespace osum.Graphics.Sprites
         internal int EndTime;
         internal TransformationType Type;
 
-        internal ClockTypes Clocking { get; set; }
-
         internal int Duration
         {
             get { return EndTime - StartTime; }
         }
 
-        internal bool Initiated
-        {
-            get { return Clock.GetTime(Clocking) >= StartTime; }
-        }
-
-        internal bool Terminated
-        {
-            get { return Clock.GetTime(Clocking) >= EndTime && !Looping; }
-        }
+        internal bool Initiated;
+        internal bool Terminated;
 
         internal bool Is(TransformationType type)
         {
@@ -84,10 +75,10 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (!this.Initiated)
+                if (!Initiated)
                     return StartVector;
 
-                if (this.Terminated)
+                if (Terminated)
                     return EndVector;
 
                 return new Vector2(
@@ -101,10 +92,10 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (!this.Initiated)
+                if (!Initiated)
                     return StartColour;
 
-                if (this.Terminated)
+                if (Terminated)
                     return EndColour;
 
                 return new Color4(
@@ -120,10 +111,10 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (!this.Initiated)
+                if (!Initiated)
                     return StartFloat;
 
-                if (this.Terminated)
+                if (Terminated)
                     return EndFloat;
 
                 return CalculateCurrent(StartFloat, EndFloat);
@@ -132,8 +123,6 @@ namespace osum.Graphics.Sprites
 
         protected virtual float CalculateCurrent(float start, float end)
         {
-            int now = Clock.GetTime(Clocking);
-
             switch (Easing)
             {
                 case EasingTypes.InDouble:
@@ -151,7 +140,7 @@ namespace osum.Graphics.Sprites
                     return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 4));
                 case EasingTypes.InOut:
                     float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
-                    return start + (float)(-2 * Math.Pow(progress,3) + 3 * Math.Pow(progress, 2)) * (end - start);
+                    return start + (float)(-2 * Math.Pow(progress, 3) + 3 * Math.Pow(progress, 2)) * (end - start);
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
@@ -181,7 +170,6 @@ namespace osum.Graphics.Sprites
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockTypes.Game;
         }
 
         internal Transformation(Color4 source, Color4 destination, int start, int end)
@@ -197,7 +185,6 @@ namespace osum.Graphics.Sprites
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockTypes.Game;
         }
 
         internal Transformation(TransformationType type, float source, float destination, int start, int end)
@@ -218,7 +205,6 @@ namespace osum.Graphics.Sprites
             StartTime = start;
             EndTime = end;
             Easing = easing;
-            Clocking = ClockTypes.Game;
         }
 
         public Transformation()
@@ -244,7 +230,7 @@ namespace osum.Graphics.Sprites
 
         internal Transformation Clone()
         {
-            Transformation t = (Transformation)this.MemberwiseClone();
+            Transformation t = (Transformation)MemberwiseClone();
 
             return t;
         }
@@ -294,15 +280,26 @@ namespace osum.Graphics.Sprites
                 StartTime, EndTime, StartFloat, EndFloat, Type);
         }
 
-        internal void Update()
-        {
-            int now = Clock.GetTime(Clocking);
+        /// <summary>
+        /// Current time for transformation. Updated by running Update().
+        /// </summary>
+        protected int now;
 
-            if (Looping && EndTime < now)
+        internal void Update(int time)
+        {
+            now = time;
+
+            if (Looping)
             {
-                int endTimeBefore = EndTime;
-                Offset(((now - EndTime) / (Duration + LoopDelay) + 1) * (Duration + LoopDelay));
+                if (EndTime < now)
+                {
+                    int duration = Duration + LoopDelay;
+                    Offset(((now - EndTime) / duration + 1) * duration);
+                }
             }
+
+            Initiated = now >= StartTime;
+            Terminated = Initiated && now > EndTime && !Looping;
         }
     }
 
@@ -326,8 +323,6 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                int now = Clock.GetTime(Clocking);
-
                 float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
 
                 float rawSine = (float)Math.Sin(Pulses * Math.PI * (progress - 0.5f / Pulses));
