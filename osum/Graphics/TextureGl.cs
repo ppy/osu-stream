@@ -202,7 +202,7 @@ namespace osum.Graphics
             float drawHeight = drawRect.Height * scaleVector.Y;
             float drawWidth = drawRect.Width * scaleVector.X;
 
-            Vector2 originVector = new Vector2(origin.X * drawWidth / drawRect.Width, origin.Y * drawHeight / drawRect.Height);
+            Vector2 originVector = Vector2.Multiply(origin, scaleVector);
 
             GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
 
