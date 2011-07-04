@@ -44,17 +44,22 @@ namespace osu_common.Helpers
             {
                 int count = Count;
                 if (count == 0)
+                {
                     base.Add(item);
+                    index = 0;
+                }
                 else
                 {
                     for (index = count - 1; index >= 0; index--)
                     {
                         if (base[index].CompareTo(item) > 0)
                             continue;
-                        base.Insert(index + 1, item);
+                        base.Insert(++index, item);
                         return index;
                     }
+
                     base.Insert(0, item);
+                    index = 0;
                 }
             }
             else
