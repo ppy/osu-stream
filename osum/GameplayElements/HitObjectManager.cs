@@ -307,6 +307,7 @@ namespace osum.GameplayElements
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
             connectingLine.DrawWidth -= 2;
+            connectingLine.ExactCoordinates = false;
 
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
