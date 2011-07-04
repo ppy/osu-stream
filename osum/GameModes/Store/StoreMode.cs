@@ -42,7 +42,7 @@ namespace osum.GameModes.Store
             netRequest.onFinish += netRequest_onFinish;
             NetManager.AddRequest(netRequest);
 
-            loading = new pText("Loading...", 36, Vector2.Zero, 1, true, Color4.OrangeRed)
+            loading = new pText(osum.Resources.General.Loading, 36, Vector2.Zero, 1, true, Color4.OrangeRed)
             {
                 TextAlignment = TextAlignment.Centre,
                 Origin = OriginTypes.Centre,

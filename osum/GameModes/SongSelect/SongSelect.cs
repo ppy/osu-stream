@@ -24,7 +24,7 @@ namespace osum.GameModes
 #if iOS
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
 #else
-        public static string BeatmapPath { get { return "Beatmaps"; } }
+        public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
 
         private static List<Beatmap> availableMaps;

@@ -28,3 +28,4 @@ osu!m-desktop.sln.docstates
 osum/Resources/Tutorial*.resources
 Sounds/*
 osum/Resources/*.resources
+osum/Resources/*.txt

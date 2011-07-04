@@ -367,4 +367,19 @@ Focus on the beat of the song and try to time your taps to get higher accuracy.<
   <data name="TimingVeryLate" xml:space="preserve">
     <value>Very late..</value>
   </data>
+  <data name="UseFingerGuides" xml:space="preserve">
+    <value>Use Finger Guides?</value>
+  </data>
+  <data name="UseGuideFingers_Explanation" xml:space="preserve">
+    <value>Do you want to leave finger guides turned on while you play the game? This can help you get started. You can toggle this at any time from the Options screen.</value>
+  </data>
+  <data name="DefaultToEasyMode" xml:space="preserve">
+    <value>Default to Easy Mode?</value>
+  </data>
+  <data name="DefaultToEasyMode_Explanation" xml:space="preserve">
+    <value>Would you like Easy Mode to be the default choice of play? This is recommended until you are used to gameplay!</value>
+  </data>
+  <data name="MeetTheTwoFingerGuides" xml:space="preserve">
+    <value>Meet the two finger guides! These circles will show you where to tap throughout the tutorial.</value>
+  </data>
 </root>

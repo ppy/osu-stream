@@ -215,7 +215,7 @@ namespace osum.GameModes.Play
                         ShowGuideFingers = true;
                     }
 
-                    showText("Meet the two finger guides! These circles will show you where to tap throughout the tutorial.", -80);
+                    showText(osum.Resources.Tutorial.MeetTheTwoFingerGuides, -80);
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -1103,7 +1103,7 @@ namespace osum.GameModes.Play
                             }
 
                             streamTitle.FadeOut(50);
-                            streamTitle = showText(currentStream.ToString() + "...", -90);
+                            streamTitle = showText(getDifficultyName(currentStream), -90);
 
                             HitObjectManager.ActiveStream = currentStream;
                             playfieldBackground.ChangeColour(currentStream, true);
@@ -1295,12 +1295,12 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
-                    Notification notification = new Notification("Use Finger Guides?", "Do you want to leave finger guides turned on while you play the game? This can help you get started. You can toggle this at any time from the Options screen.",
+                    Notification notification = new Notification(osum.Resources.Tutorial.UseFingerGuides, osum.Resources.Tutorial.UseGuideFingers_Explanation,
                         NotificationStyle.YesNo,
                         fingerGuidesResponse);
                     GameBase.Notify(notification);
 
-                    notification = new Notification("Default to Easy Mode?", "Would you like Easy Mode to be the default choice of play? This is recommended until you are used to gameplay!",
+                    notification = new Notification(osum.Resources.Tutorial.DefaultToEasyMode, osum.Resources.Tutorial.DefaultToEasyMode_Explanation,
                         NotificationStyle.YesNo,
                         easyModeResponse);
                     GameBase.Notify(notification);
@@ -1311,12 +1311,12 @@ namespace osum.GameModes.Play
 
         void fingerGuidesResponse(bool yes)
         {
-            GameBase.Config.SetValue<bool>("GuideFingers", yes);
+            GameBase.Config.SetValue<bool>(@"GuideFingers", yes);
         }
 
         void easyModeResponse(bool yes)
         {
-            GameBase.Config.SetValue<bool>("EasyMode", yes);
+            GameBase.Config.SetValue<bool>(@"EasyMode", yes);
             Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
         }
 

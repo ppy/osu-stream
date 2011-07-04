@@ -79,6 +79,24 @@ namespace osum.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default to Easy Mode?.
+        /// </summary>
+        internal static string DefaultToEasyMode {
+            get {
+                return ResourceManager.GetString("DefaultToEasyMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like Easy Mode to be the default choice of play? This is recommended until you are used to gameplay!.
+        /// </summary>
+        internal static string DefaultToEasyMode_Explanation {
+            get {
+                return ResourceManager.GetString("DefaultToEasyMode_Explanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Easy....
         /// </summary>
         internal static string Easy {
@@ -339,6 +357,15 @@ namespace osum.Resources {
         internal static string Introduction4 {
             get {
                 return ResourceManager.GetString("Introduction4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Meet the two finger guides! These circles will show you where to tap throughout the tutorial..
+        /// </summary>
+        internal static string MeetTheTwoFingerGuides {
+            get {
+                return ResourceManager.GetString("MeetTheTwoFingerGuides", resourceCulture);
             }
         }
         
@@ -789,6 +816,24 @@ namespace osum.Resources {
         internal static string TimingVeryLate {
             get {
                 return ResourceManager.GetString("TimingVeryLate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Finger Guides?.
+        /// </summary>
+        internal static string UseFingerGuides {
+            get {
+                return ResourceManager.GetString("UseFingerGuides", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to leave finger guides turned on while you play the game? This can help you get started. You can toggle this at any time from the Options screen..
+        /// </summary>
+        internal static string UseGuideFingers_Explanation {
+            get {
+                return ResourceManager.GetString("UseGuideFingers_Explanation", resourceCulture);
             }
         }
         
