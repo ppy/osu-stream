@@ -79,7 +79,7 @@ namespace osum.Support.iPhone
                 case HardwareVersion.iPhone3G:
                 case HardwareVersion.iPod1G:
                 case HardwareVersion.iPod2G:
-                    targetFps = 40; //aim a bit lower with older devices.
+                    //targetFps = 40; //aim a bit lower with older devices.
                     break;
             }
 
