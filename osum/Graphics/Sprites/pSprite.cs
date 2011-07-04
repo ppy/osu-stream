@@ -137,7 +137,6 @@ namespace osum.Graphics.Sprites
             get
             {
                 Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - Vector2.Multiply(OriginVector,Scale) * GameBase.SpriteToBaseRatio;
-                //Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X, pos.Y,
                     pos.X + (float)DrawWidth * GameBase.SpriteToBaseRatio * Scale.X,
@@ -199,33 +198,53 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                if (texture == null)
-                    return Vector2.Zero;
+                Vector2 origin = Vector2.Zero;
+
+                if (texture == null || Origin == OriginTypes.TopLeft)
+                    return origin;
 
                 switch (Origin)
                 {
                     default:
                     case OriginTypes.TopLeft:
-                        return Vector2.Zero;
+                        origin = Vector2.Zero;
+                        break;
                     case OriginTypes.TopCentre:
-                        return new Vector2(DrawWidth / 2, 0);
+                        origin.X = DrawWidth / 2;
+                        break;
                     case OriginTypes.TopRight:
-                        return new Vector2(DrawWidth, 0);
+                        origin.X = DrawWidth;
+                        break;
                     case OriginTypes.CentreLeft:
-                        return new Vector2(0, DrawHeight / 2);
+                        origin.Y = DrawHeight / 2;
+                        break;
                     case OriginTypes.Centre:
-                        return new Vector2(DrawWidth / 2, DrawHeight / 2);
+                        origin = new Vector2(DrawWidth / 2, DrawHeight / 2);
+                        break;
                     case OriginTypes.CentreRight:
-                        return new Vector2(DrawWidth, DrawHeight / 2);
+                        origin = new Vector2(DrawWidth, DrawHeight / 2);
+                        break;
                     case OriginTypes.BottomLeft:
-                        return new Vector2(0, DrawHeight);
+                        origin.Y = DrawHeight;
+                        break;
                     case OriginTypes.BottomCentre:
-                        return new Vector2(DrawWidth / 2, DrawHeight);
+                        origin = new Vector2(DrawWidth / 2, DrawHeight);
+                        break;
                     case OriginTypes.BottomRight:
-                        return new Vector2(DrawWidth, DrawHeight);
+                        origin = new Vector2(DrawWidth, DrawHeight);
+                        break;
                     case OriginTypes.Custom:
-                        return Offset;
+                        origin = Offset;
+                        break;
                 }
+
+                if (!exactCoordinatesOverride)
+                {
+                    if (origin.X % 2 != 0) origin.X--;
+                    if (origin.Y % 2 != 0) origin.Y--;
+                }
+
+                return origin;
             }
         }
 
