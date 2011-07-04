@@ -71,7 +71,7 @@ namespace osum.GameModes
 
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, Color4.White);
+                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56,56,56,255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
@@ -344,11 +344,15 @@ namespace osum.GameModes
                         if (Director.PendingOsuMode == OsuMode.Unknown)
                         {
                             Vector2 pos = new Vector2(difficultySelectOffset, 0);
-                            s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
+                            if (Math.Abs(pos.X - s_ModeButtonEasy.Position.X) > 10)
+                            {
+                                s_ModeButtonEasy.MoveTo(pos, 300, EasingTypes.In);
+                                s_ModeButtonStream.MoveTo(pos, 300, EasingTypes.In);
+                                s_ModeButtonExpert.MoveTo(pos, 300, EasingTypes.In);
+                            }
+
                             s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
-                            s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
                             s_ModeButtonStream.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonStream.Offset.X + s_ModeButtonStream.Position.X));
-                            s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
                             s_ModeButtonExpert.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonExpert.Offset.X + s_ModeButtonExpert.Position.X));
                         }
                     }
@@ -384,6 +388,7 @@ namespace osum.GameModes
                     {
                         lastIntOffset = newIntOffset;
                         AudioEngine.PlaySample(OsuSamples.MenuClick);
+                        background.FlashColour(new Color4(140, 140, 140, 255), 400);
                     }
                     break;
             }

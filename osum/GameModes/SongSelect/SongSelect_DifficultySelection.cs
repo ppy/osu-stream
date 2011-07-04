@@ -259,23 +259,28 @@ namespace osum.GameModes
 
             string text = null;
 
+            velocity = 0;
+
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
                     hasNext = true;
                     difficultySelectOffset = mode_button_width;
                     text = osum.Resources.General.YouCantFail;
+                    background.FadeColour(new Color4(110, 110, 110, 255), 500);
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
                     difficultySelectOffset = 0;
                     text = osum.Resources.General.DynamicStreamSwitching;
+                    background.FadeColour(new Color4(70, 70, 70, 255), 500);
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
                     difficultySelectOffset = -mode_button_width;
                     text = osum.Resources.General.NotForTheFaintHearted;
+                    background.FadeColour(new Color4(30, 30, 30, 255), 500);
                     break;
             }
 
@@ -310,6 +315,8 @@ namespace osum.GameModes
             State = SelectState.SongSelect;
 
             InitializeBgm();
+            
+            background.FadeColour(new Color4(56, 56, 56, 255), 200);
 
             if (SelectedPanel != null)
             {
@@ -370,6 +377,8 @@ namespace osum.GameModes
             activatedSprite.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 500, 1.2f, 0.4f, 1));
 
             activatedSprite.AdditiveFlash(800, 0.8f).Transform(new Transformation(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
+
+            background.FlashColour(new Color4(200, 200, 200, 255), 800);
 
             s_ModeArrowLeft.FadeOut(200);
             s_ModeArrowRight.FadeOut(200);
