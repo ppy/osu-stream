@@ -170,10 +170,7 @@ namespace osum.GameplayElements
                 clocking = value;
 
                 foreach (pDrawable d in Sprites)
-                {
                     d.Clocking = clocking;
-                    d.Transformations.ForEach(t => t.Clocking = clocking);
-                }
             }
 
         }
@@ -564,8 +561,7 @@ namespace osum.GameplayElements
 
                     int e = i == shake_count - 1 ? 0 : -s;
 
-                    p.Transform(new Transformation(TransformationType.OffsetX, s, e,
-                        Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period) { Tag = TAG_SHAKE_TRANSFORMATION });
+                    p.Transform(new Transformation(TransformationType.OffsetX, s, e, Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period));
                 }
             }
 
