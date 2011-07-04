@@ -75,6 +75,9 @@ namespace sspack
             sb.AppendLine(@"}");
 
             File.WriteAllText(@"C:\Users\peppy\Dropbox\Projects\osum\osum\Graphics\TextureManager_Load.cs", sb.ToString());
+
+            Console.WriteLine("------- DONE! -------");
+            Console.ReadLine();
         }
 
         public static void Launch(string dir)
@@ -126,6 +129,11 @@ namespace sspack
 
             foreach (var m in outputMap)
             {
+                if (m.Value.Width % 2 != 0)
+                    Console.WriteLine("FATAL: width of " + m.Key + " is not div 2");
+                if (m.Value.Height % 2 != 0)
+                    Console.WriteLine("FATAL: width of " + m.Key + " is not div 2");
+
                 string spriteName = m.Key.Substring(m.Key.LastIndexOf(@"\") + 1).Replace(".png","");
                 sb.AppendFormat("            textureLocations.Add(OsuTexture.{0}, new SpriteSheetTexture(\"{1}\", {2}, {3}, {4}, {5}));\r\n",
                     spriteName, sheetName, m.Value.Left, m.Value.Top, m.Value.Width, m.Value.Height);
@@ -144,7 +152,6 @@ namespace sspack
             using (Image i = Image.FromFile(dir + "_960.png"))
             using (Bitmap b = new Bitmap(i, new Size(i.Width / 2, i.Height / 2)))
                 b.Save(dir + "_480.png", ImageFormat.Png);
-
         }
     }
 }
