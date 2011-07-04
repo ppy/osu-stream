@@ -36,6 +36,7 @@ namespace osum.GameModes.Play.Components
             {
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
+                ExactCoordinates = false,
                 Colour = ColourHelper.Lighten2(Color4.LimeGreen, 0.5f),
                 Alpha = 0.3f,
                 Additive = true
@@ -46,6 +47,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = Color4.LimeGreen,
+                ExactCoordinates = false,
                 Alpha = 0.3f,
                 Additive = false
             };
@@ -55,6 +57,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = ColourHelper.Lighten2(Color4.Red, 0.5f),
+                ExactCoordinates = false,
                 Alpha = 0.3f,
                 Additive = true
             };
@@ -64,6 +67,7 @@ namespace osum.GameModes.Play.Components
                 Field = FieldTypes.GamefieldSprites,
                 Origin = OriginTypes.Centre,
                 Colour = Color4.Red,
+                ExactCoordinates = false,
                 Alpha = 0.3f,
                 Additive = false
             };
