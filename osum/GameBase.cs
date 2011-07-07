@@ -122,7 +122,8 @@ namespace osum
 
         public GameBase()
         {
-            if (DateTime.Now > new DateTime(2011, 07, 10))
+            //todo: remove before sapp submission.
+            if (DateTime.Now > new DateTime(2011, 07, 30))
                 Environment.Exit(-1);
 
             Instance = this;
