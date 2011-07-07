@@ -104,6 +104,8 @@ namespace osum
 
             Clock.ModeTimeReset();
 
+            LastOsuMode = CurrentOsuMode; //the case for the main menu on first load.
+
             CurrentMode.Initialize();
 
             if (PendingOsuMode != OsuMode.Unknown) //can be unknown on first startup
@@ -119,7 +121,6 @@ namespace osum
             }
 
             PendingOsuMode = OsuMode.Unknown;
-            LastOsuMode = CurrentOsuMode;
             CurrentOsuMode = newMode;
 
             GC.Collect(); //force a full collect before we start displaying the new mode.
