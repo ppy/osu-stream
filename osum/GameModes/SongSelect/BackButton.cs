@@ -58,13 +58,17 @@ namespace osum.GameModes.SongSelect
             OnHover += delegate
             {
                 MoveTo(visiblePosition, 200, EasingTypes.InOut);
+                FadeColour(Color4.Gray, 200);
                 dist = 0;
             };
 
             OnHoverLost += delegate
             {
                 if (tp == null)
+                {
                     MoveTo(hiddenPosition, 200, EasingTypes.InDouble);
+                    FadeColour(Color4.White, 200);
+                }
             };
             arrow = new pSprite(TextureManager.Load(OsuTexture.songselect_back_arrow), FieldTypes.StandardSnapBottomLeft, OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset + 15, offset + 18), 1, true, Color4.White);
 
