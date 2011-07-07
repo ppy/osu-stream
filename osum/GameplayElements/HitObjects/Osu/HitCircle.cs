@@ -26,22 +26,19 @@ namespace osum.GameplayElements
             Color4 white = Color4.White;
 
             SpriteHitCircle1 =
-                new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
+                new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             Sprites.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
             SpriteCollectionDim.Add(SpriteHitCircle1);
 
 
-            SpriteHitCircle2 =
-                new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites,
-                            OriginTypes.Centre, ClockTypes.Audio, Position,
-                            SpriteManager.drawOrderBwd(StartTime - 2), false, Color4.White);
-            Sprites.Add(SpriteHitCircle2);
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
                                                     FieldTypes.GamefieldSprites, OriginTypes.Centre,
                                                     ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - 1),
                                                     false, white);
             SpriteHitCircleText.TextConstantSpacing = false;
+
+            SpriteCollectionDim.Add(SpriteHitCircleText);
 
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
@@ -67,14 +64,12 @@ namespace osum.GameplayElements
                 startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
 
             SpriteHitCircle1.Transform(fadeIn);
-            SpriteHitCircle2.Transform(fadeIn);
             SpriteHitCircleText.Transform(fadeIn);
 
             Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
                 startTime, startTime + DifficultyManager.HitWindow50);
 
             SpriteHitCircle1.Transform(fadeOut);
-            SpriteHitCircle2.Transform(fadeOut);
             SpriteHitCircleText.Transform(fadeOut);
         }
 
@@ -111,7 +106,6 @@ namespace osum.GameplayElements
         internal override void HitAnimation(ScoreChange action)
         {
             SpriteHitCircle1.Transformations.Clear();
-            SpriteHitCircle2.Transformations.Clear();
             SpriteHitCircleText.Transformations.Clear();
             SpriteApproachCircle.Transformations.Clear();
 
@@ -136,10 +130,6 @@ namespace osum.GameplayElements
                 SpriteHitCircle1.Transform(circleScaleOut);
                 SpriteHitCircle1.Transform(circleFadeOut);
 
-                SpriteHitCircle2.Transformations.Clear();
-                SpriteHitCircle2.Transform(circleScaleOut);
-                SpriteHitCircle2.Transform(circleFadeOut);
-
                 SpriteHitCircleText.Transformations.Clear();
                 SpriteHitCircleText.Transform(textScaleOut);
                 SpriteHitCircleText.Transform(circleFadeOut);
@@ -152,7 +142,6 @@ namespace osum.GameplayElements
 
         internal pDrawable SpriteApproachCircle;
         internal pSprite SpriteHitCircle1;
-        internal pSprite SpriteHitCircle2;
         internal pSpriteText SpriteHitCircleText;
 
         private int comboNumber;
@@ -182,6 +171,16 @@ namespace osum.GameplayElements
             }
         }
 
+        internal override int ColourIndex {
+            get {
+                return base.ColourIndex;
+            }
+            set {
+                SpriteHitCircle1.Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
+                base.ColourIndex = value;
+            }
+        }
+
         internal override Color4 Colour
         {
             get
@@ -190,7 +189,6 @@ namespace osum.GameplayElements
             }
             set
             {
-                SpriteHitCircle1.Colour = value;
                 SpriteApproachCircle.Colour = value;
 
                 base.Colour = value;

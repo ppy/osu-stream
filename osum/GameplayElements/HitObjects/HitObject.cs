@@ -186,9 +186,6 @@ namespace osum.GameplayElements
             set
             {
                 colour = value;
-
-                float dimFactor = 0.75f;
-                ColourDim = new Color4(colour.R * dimFactor, colour.G * dimFactor, colour.B * dimFactor, 255);
             }
         }
 
@@ -413,7 +410,6 @@ namespace osum.GameplayElements
 
         #region Sound
 
-        internal Color4 ColourDim;
         internal HitObjectSoundType SoundType;
 
         /// <summary>

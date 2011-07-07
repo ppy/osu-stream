@@ -236,8 +236,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //Start and end circles
 
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
-            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 8), false, Color.White));
+            spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
             if (RepeatCount > 2)
                 spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true });
 
@@ -245,8 +244,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
 
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
-            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircleoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 11), false, Color.White));
+            spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
             if (RepeatCount > 1)
                 spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true });
 
@@ -414,9 +412,18 @@ namespace osum.GameplayElements.HitObjects.Osu
             set
             {
                 base.Colour = value;
-                HitCircleStart.Colour = value;
-                if (spriteCollectionStart.Count > 0) spriteCollectionStart[0].Colour = value;
-                if (spriteCollectionEnd.Count > 0) spriteCollectionEnd[0].Colour = value;
+            }
+        }
+
+        internal override int ColourIndex {
+            get {
+                return base.ColourIndex;
+            }
+            set {
+                HitCircleStart.ColourIndex = value;
+                if (spriteCollectionStart.Count > 0) ((pSprite)spriteCollectionStart[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
+                if (spriteCollectionEnd.Count > 0) ((pSprite)spriteCollectionEnd[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
+                base.ColourIndex = value;
             }
         }
 
@@ -746,9 +753,9 @@ namespace osum.GameplayElements.HitObjects.Osu
                 pDrawable arrow;
 
                 if (lastJudgedEndpoint % 2 == 0)
-                    arrow = spriteCollectionStart[2];
+                    arrow = spriteCollectionStart[1];
                 else
-                    arrow = spriteCollectionEnd[2];
+                    arrow = spriteCollectionEnd[1];
 
                 arrow.Alpha = 0;
                 arrow.Transformations.Clear();
@@ -921,9 +928,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
-                spriteCollectionEnd[2].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                spriteCollectionEnd[1].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
-                spriteCollectionStart[2].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                spriteCollectionStart[1].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
 
             base.Update();
         }
