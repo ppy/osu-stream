@@ -144,6 +144,9 @@ namespace osum.GameModes
                 //countdown and lead-in time
                 int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
 
+                if (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename) //could have switched to the results screen bgm.
+                    AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
+
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
 

@@ -38,7 +38,7 @@ namespace osum
             return true;
         }
 
-        protected string lastLoaded;
+        public string lastLoaded;
 
         /// <summary>
         /// Loads an audio track directly from a file.
