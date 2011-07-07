@@ -123,27 +123,27 @@ namespace osum.Graphics.Sprites
 
         protected virtual float CalculateCurrent(float start, float end)
         {
+            float progress = (float)(now - StartTime) / Duration;
+
             switch (Easing)
             {
                 case EasingTypes.InDouble:
-                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 4));
+                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 4));
                 case EasingTypes.In:
-                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 2));
+                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 2));
                 case EasingTypes.InHalf:
-                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - (float)(now - StartTime) / Duration, 1.5));
-
+                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 1.5));
                 case EasingTypes.Out:
-                    return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 2));
+                    return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 2));
                 case EasingTypes.OutHalf:
-                    return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 1.5));
+                    return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 1.5));
                 case EasingTypes.OutDouble:
-                    return pMathHelper.Lerp(start, end, (float)Math.Pow((float)(now - StartTime) / Duration, 4));
+                    return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 4));
                 case EasingTypes.InOut:
-                    float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
                     return start + (float)(-2 * Math.Pow(progress, 3) + 3 * Math.Pow(progress, 2)) * (end - start);
                 default:
                 case EasingTypes.None:
-                    return pMathHelper.Lerp(start, end, (float)(now - StartTime) / Duration);
+                    return pMathHelper.Lerp(start, end, progress);
             }
         }
 
