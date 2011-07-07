@@ -573,7 +573,7 @@ namespace osum.GameModes
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
                 foreach (pSprite p in fallingSprites)
-                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.05f;
+                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.003f * (float)GameBase.ElapsedMilliseconds;
 
                 if (fallingSprites.Count < 20)
                 {
