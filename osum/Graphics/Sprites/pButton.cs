@@ -8,6 +8,7 @@ using osum.Helpers;
 using System.Text.RegularExpressions;
 using osum.Graphics.Drawables;
 using osum.Graphics.Renderers;
+using osum.Audio;
 namespace osum.GameModes.SongSelect
 {
     internal class pButton : pSpriteCollection
@@ -57,12 +58,12 @@ namespace osum.GameModes.SongSelect
                 s_BackingPlate.FadeColour(colourNormal, 150);
             };
 
-            s_Text = new pText(text, 25, position, size, base_depth + 0.01f, true, Color4.White, false);
-            s_Text.TextAlignment = TextAlignment.Centre;
+            s_Text = new pText(text, 25, position, base_depth + 0.01f, true, Color4.White);
+            s_Text.Offset = size * 0.5f;
+            s_Text.Origin = OriginTypes.Centre;
             s_Text.Bold = true;
 
-            if (s_Text.Texture != null)
-                Sprites.Add(s_Text);
+            Sprites.Add(s_Text);
         }
 
         internal Color4 Colour
@@ -83,6 +84,8 @@ namespace osum.GameModes.SongSelect
         void s_BackingPlate_OnClick(object sender, EventArgs e)
         {
             if (!Enabled) return;
+
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             s_BackingPlate.FlashColour(Color4.White, 500);
             pendingUnhover = false;
