@@ -24,7 +24,11 @@ namespace osum.GameModes
 
         public MenuBackground()
         {
-            EndExcess = 0.5f;
+            EndStopLenience = 0.5f;
+            EndBufferZone = 0;
+            AutomaticHeight = false;
+            ShowScrollbar = false;
+            ExactCoordinates = false;
 
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
             rectangleLineRight = new Line(new Vector2(-100, -855) - centre, new Vector2(1200, 250) - centre);
