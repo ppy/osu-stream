@@ -156,18 +156,27 @@ namespace osum
 
         public static event VoidDelegate OnScreenLayoutChanged;
 
+        private bool flipView;
+        public bool FlipView {
+            get { return flipView; }
+
+            set {
+                if (flipView == value) return;
+
+                flipView = value;
+                Config.SetValue<bool>("flip",flipView);
+                Instance.SetViewport();
+            }
+        }
+
         public virtual void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
-#if iOS
-            GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
-            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
-#else
             GL.Viewport(0, 0, NativeSize.Width, NativeSize.Height);
             GL.Ortho(0, NativeSize.Width, NativeSize.Height, 0, -1, 1);
-#endif
+
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
         }
@@ -229,6 +238,19 @@ namespace osum
 #endif
 
             TriggerLayoutChanged();
+        }
+        /// <summary>
+        /// As per Apple recommendations, we should pre-warm any mode changes before actually displaying to avoid stuttering.
+        /// </summary>
+        public void Warmup()
+        {
+            SpriteManager.AlphaBlend = false;
+            SpriteManager.AlphaBlend = true;
+
+            SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+            SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.One);
+            SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
         }
 
         /// <summary>
@@ -236,15 +258,18 @@ namespace osum
         /// </summary>
         public virtual void Initialize()
         {
+            Config = new pConfigManager(Instance.PathConfig + "osum.cfg") { WriteOnChange = true };
+
+            flipView = Config.GetValue<bool>("flip",false);
             SetupScreen();
+
+            Warmup();
 
             InitializeAssetManager();
 
             TextureManager.Initialize();
 
             InputManager.Initialize();
-
-            Config = new pConfigManager(Instance.PathConfig + "osum.cfg") { WriteOnChange = true };
 
             InitializeInput();
 
@@ -272,27 +297,25 @@ namespace osum
             Director.ChangeMode(OsuMode.MainMenu, null);
 
             {
-                //Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
-                //Player.Difficulty = GameplayElements.Difficulty.Normal;
-
-
-                //Results.RankableScore = new GameplayElements.Scoring.Score()
-                //{
-                //    count100 = 55,
-                //    count50 = 128,
-                //    count300 = 387,
-                //    countGeki = 55,
-                //    countKatu = 0,
-                //    countMiss = 0,
-                //    date = DateTime.Now,
-                //    spinnerBonusScore = 1500,
-                //    comboBonusScore = 578420,
-                //    accuracyBonusScore = 200000,
-                //    hitScore = 800000 - 578420,
-                //    maxCombo = 198
-                //};
-
-                //Director.ChangeMode(OsuMode.Results, null);
+//                Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+//                Player.Difficulty = GameplayElements.Difficulty.Normal;
+//
+//
+//                Results.RankableScore = new GameplayElements.Scoring.Score()
+//                {
+//                    count100 = 55,
+//                    count50 = 128,
+//                    count300 = 387,
+//                    countMiss = 0,
+//                    date = DateTime.Now,
+//                    spinnerBonusScore = 1500,
+//                    comboBonusScore = 578420,
+//                    accuracyBonusScore = 200000,
+//                    hitScore = 800000 - 578420,
+//                    maxCombo = 198
+//                };
+//
+//                Director.ChangeMode(OsuMode.Results, null);
             }
 
             GameBase.Scheduler.Add(delegate { OnlineHelper.Initialize(); }, 4000);
@@ -397,8 +420,6 @@ namespace osum
 
             if (ignoreNextFrameTime)
                 return;
-
-            SpriteManager.Reset();
 
             Director.Draw();
 

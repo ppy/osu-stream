@@ -84,18 +84,41 @@ namespace osum
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
+            UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
+            UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
+
             gameWindow = GameWindowIphone.Instance;
             base.Initialize();
         }
 
+        void HandleUIAccelerometerSharedAccelerometerAcceleration (object sender, UIAccelerometerEventArgs e)
+        {
+            float angle = (float)(Math.Atan2(e.Acceleration.X, e.Acceleration.Y) * 180/Math.PI);
+
+            if (Math.Abs(e.Acceleration.Z) < 0.6f)
+            {
+                if (angle > 45 && angle < 135)
+                    FlipView = true;
+                else if (angle < -45 && angle > -135)
+                    FlipView = false;
+            }
+        }
+
         public override void SetViewport()
         {
-            base.SetViewport();
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+
+            GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
+            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
 
             float width = GameBase.NativeSize.Height;
             float height = GameBase.NativeSize.Width;
             GL.Translate(width / 2, height / 2, 0);
-            GL.Rotate(90, 0, 0, 1);
+            GL.Rotate(FlipView ? 270 : 90, 0, 0, 1);
             GL.Translate(-height / 2, -width / 2, 0);
         }
 

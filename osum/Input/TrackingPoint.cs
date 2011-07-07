@@ -15,8 +15,6 @@ namespace osum
         {
             get	{ return location; }
             set { 
-                if (location != Point.Empty)
-                    Delta = new PointF(value.X - location.X, value.Y - location.Y);
                 location = value;
 
                 UpdatePositions();
@@ -25,11 +23,10 @@ namespace osum
 
         public virtual void UpdatePositions()
         {
+            Vector2 baseLast = BasePosition;
             BasePosition = new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
-            WindowDelta = new Vector2(GameBase.ScaleFactor * Delta.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Delta.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
+            WindowDelta = BasePosition - baseLast;
         }
-        
-        protected PointF Delta;
 
         /// <summary>
         /// Increased for every press that is associated with the tracking point.

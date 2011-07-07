@@ -11,11 +11,14 @@ namespace osum
 
         public override void UpdatePositions()
         {
-            WindowDelta = new Vector2((GameBase.ScaleFactor * Delta.Y / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.Width,
-                                    -((GameBase.ScaleFactor * Delta.X / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Height));
+            float x = GameBase.Instance.FlipView ? GameBase.NativeSize.Width - Location.Y : Location.Y;
+            float y = GameBase.Instance.FlipView ? GameBase.NativeSize.Height - Location.X : Location.X;
+
+            Vector2 oldBase = BasePosition;
             BasePosition = new Vector2(
-                (GameBase.ScaleFactor * Location.Y / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.Width,
-                GameBase.BaseSizeFixedWidth.Height - ((GameBase.ScaleFactor * Location.X / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Height));
+                (GameBase.ScaleFactor * x / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.Width,
+                GameBase.BaseSizeFixedWidth.Height - ((GameBase.ScaleFactor * y / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Height));
+            WindowDelta = BasePosition - oldBase;
         }
 	}
 }
