@@ -60,6 +60,9 @@ namespace osum
 
         public static Random Random = new Random();
 
+        /// <summary>
+        /// use for input handling, sprites etc.
+        /// </summary>
         internal static Size BaseSizeFixedWidth = new Size(640, 426);
         internal static Size BaseSize = new Size(640, 426);
         internal static Size GamefieldBaseSize = new Size(512, 384);
@@ -244,13 +247,35 @@ namespace osum
         /// </summary>
         public void Warmup()
         {
+            SpriteManager.TexturesEnabled = true;
+
             SpriteManager.AlphaBlend = false;
+
+            SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
+            SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.One);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
+            SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
+            SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
             SpriteManager.AlphaBlend = true;
 
             SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
             SpriteManager.SetBlending(BlendingFactorSrc.One, BlendingFactorDest.One);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
             SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
+
             SpriteManager.SetBlending(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            GL.DrawArrays(BeginMode.TriangleFan, 0, 0);
         }
 
         /// <summary>
