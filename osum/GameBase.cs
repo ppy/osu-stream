@@ -342,8 +342,6 @@ namespace osum
 //
 //                Director.ChangeMode(OsuMode.Results, null);
             }
-
-            GameBase.Scheduler.Add(delegate { OnlineHelper.Initialize(); }, 4000);
         }
 
         /// <summary>

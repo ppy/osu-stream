@@ -16,8 +16,15 @@ namespace osum.Online
             }
         }
 
+        static bool hasInitialised;
+
         public static bool Initialize(bool forceAuthentication = false)
         {
+            if (hasInitialised && !forceAuthentication)
+                return false;
+
+            hasInitialised = true;
+
             if (onlineServices == null)
             {
 #if iOS

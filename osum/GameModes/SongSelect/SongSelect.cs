@@ -91,6 +91,7 @@ namespace osum.GameModes
 
             s_ButtonBack = new BackButton(onBackPressed);
             spriteManager.Add(s_ButtonBack);
+            OnlineHelper.Initialize();
         }
 
         private void footer_onClick(object sender, EventArgs e)
