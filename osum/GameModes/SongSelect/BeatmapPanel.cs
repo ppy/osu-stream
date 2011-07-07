@@ -24,7 +24,7 @@ namespace osum.GameModes.SongSelect
         internal pText s_TextCreator;
         internal pSprite s_Thumbnail;
 
-        float base_depth = 0.6f;
+        float base_depth = 0.4f;
 
         static Color4 colourNormal = new Color4(50, 50, 50, 255);
         static Color4 colourHover = new Color4(28, 139, 242, 255);
@@ -63,19 +63,19 @@ namespace osum.GameModes.SongSelect
                 s_BackingPlate2.FadeColour(Color4.Transparent, 100);
             };
 
-            s_Text = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false);
+            s_Text = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, 0.5f, true, Color4.White, false);
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(100, 0);
             Sprites.Add(s_Text);
 
-            s_TextArtist = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, Color4.OrangeRed, false);
+            s_TextArtist = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, 0.51f, true, Color4.OrangeRed, false);
             //s_TextArtist.TextAlignment = TextAlignment.Right;
             //s_TextArtist.Origin = OriginTypes.TopRight;
             //s_TextArtist.Field = FieldTypes.StandardSnapRight;
             s_TextArtist.Offset = new Vector2(100, 29);
             Sprites.Add(s_TextArtist);
 
-            s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, base_depth + 0.04f, true, BACKGROUND_COLOUR, false);
+            s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
             s_TextCreator.Origin = OriginTypes.TopRight;
             s_TextCreator.Field = FieldTypes.StandardSnapRight;
             Sprites.Add(s_TextCreator);
@@ -114,7 +114,7 @@ namespace osum.GameModes.SongSelect
             if (thumb != null)
                 s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
-                s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = base_depth + 0.02f };
+                s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
             
             s_Thumbnail.AlphaBlend = false;
             s_Thumbnail.Offset = new Vector2(8.5f, 3.8f);
