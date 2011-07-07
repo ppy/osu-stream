@@ -667,6 +667,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                     )
                    )
                 {
+                    if (!HitCircleStart.IsHit)
+                    {
+                        HitCircleStart.IsHit = true;
+                        return ScoreChange.MissMinor;
+                    }
+
                     lastJudgedScoringPoint++;
 
                     if (isTracking)
