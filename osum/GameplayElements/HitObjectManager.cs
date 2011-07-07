@@ -316,6 +316,7 @@ namespace osum.GameplayElements
                     connectingLine.Transform(t);
 
             h2.Sprites.Add(connectingLine);
+            h2.SpriteCollectionDim.Add(connectingLine);
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;

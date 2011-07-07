@@ -115,6 +115,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             activeOverlay.Transform(new Transformation(hold_colour, Color4.White, StartTime, EndTime));
             circularProgress.Transform(new Transformation(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), ColourHelper.Lighten(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), 0.5f),
                 StartTime, EndTime));
+
+            SpriteCollectionDim.Add(border);
+            SpriteCollectionDim.Add(inactiveOverlay);
         }
 
         protected override void initializeStartCircle()
