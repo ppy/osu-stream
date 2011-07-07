@@ -97,11 +97,21 @@ namespace osum.GameplayElements.Beatmaps
 
         #endregion
 
-        public string Artist { get { return Package.GetMetadata(MapMetaType.Artist); } }
+        public string Artist { get {
+                try {
+                    return Package.GetMetadata(MapMetaType.Artist);
+                }
+                catch { return "error"; }
+        } }
 
         public string Creator { get { return Package.GetMetadata(MapMetaType.Creator); } }
 
-        public string Title { get { return Package.GetMetadata(MapMetaType.Title); } }
+        public string Title { get {
+                try {
+                    return Package.GetMetadata(MapMetaType.Title);
+                }
+                catch { return "error"; }
+        } }
 
         public double DifficultyStars { get { return double.Parse(Package.GetMetadata(MapMetaType.DifficultyRating) ?? "0", GameBase.nfi); } }
     }
