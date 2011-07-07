@@ -1298,29 +1298,17 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;
-                    Notification notification = new Notification(osum.Resources.Tutorial.UseFingerGuides, osum.Resources.Tutorial.UseGuideFingers_Explanation,
-                        NotificationStyle.YesNo,
-                        fingerGuidesResponse);
-                    GameBase.Notify(notification);
+                    Options.Options.DisplayFingerGuideDialog();
+                    Options.Options.DisplayEasyModeDialog();
 
-                    notification = new Notification(osum.Resources.Tutorial.DefaultToEasyMode, osum.Resources.Tutorial.DefaultToEasyMode_Explanation,
-                        NotificationStyle.YesNo,
-                        easyModeResponse);
-                    GameBase.Notify(notification);
+                    currentSegmentDelegate = delegate
+                    {
+                        if (!Director.IsTransitioning && GameBase.NotificationQueue.Count == 0 && GameBase.ActiveNotification == null)
+                            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    };
                     break;
 
             }
-        }
-
-        void fingerGuidesResponse(bool yes)
-        {
-            GameBase.Config.SetValue<bool>(@"GuideFingers", yes);
-        }
-
-        void easyModeResponse(bool yes)
-        {
-            GameBase.Config.SetValue<bool>(@"EasyMode", yes);
-            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
         }
 
         private string getDifficultyName(Difficulty difficulty)
