@@ -42,6 +42,8 @@ namespace osum.Graphics.Sprites
 
         internal override void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            base.HandleInputManagerOnMove(source, trackingPoint);
+
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
                 return;
 
@@ -49,9 +51,6 @@ namespace osum.Graphics.Sprites
 
             songSelectOffset += change;
             velocity = change;
-
-
-            base.HandleInputManagerOnMove(source, trackingPoint);
         }
 
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)

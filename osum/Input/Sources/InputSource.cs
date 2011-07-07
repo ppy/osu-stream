@@ -25,6 +25,9 @@ namespace osum
 
             if (OnDown != null)
                 OnDown(this, trackingPoint);
+
+            if (!trackingPoint.HoveringObjectConfirmed)
+                trackingPoint.HoveringObject = null;
         }
 
         public event InputHandler OnUp;
@@ -34,6 +37,9 @@ namespace osum
 
             if (OnUp != null)
                 OnUp(this, trackingPoint);
+
+            if (!trackingPoint.HoveringObjectConfirmed)
+                trackingPoint.HoveringObject = null;
         }
 
         public event InputHandler OnClick;
@@ -43,6 +49,9 @@ namespace osum
 
             if (OnClick != null)
                 OnClick(this, trackingPoint);
+
+            if (!trackingPoint.HoveringObjectConfirmed)
+                trackingPoint.HoveringObject = null;
         }
 
         public event InputHandler OnMove;
