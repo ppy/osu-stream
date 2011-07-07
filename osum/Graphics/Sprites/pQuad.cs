@@ -123,7 +123,7 @@ namespace osum.Graphics.Drawables
                 Vector2 origin = OriginVector * GameBase.BaseToNativeRatio;
 
                 if (Colours == null)
-                    GL.Color4(c.R, c.G, c.B, c.A);
+                    SpriteManager.SetColour(c);
                 else
                 {
                     for (int i = 0; i < Colours.Length; i++)

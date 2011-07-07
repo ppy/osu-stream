@@ -68,7 +68,7 @@ namespace osum.Graphics.Drawables
                 Vector2 scale = FieldScale;
                 Vector2 origin = OriginVector * GameBase.BaseToNativeRatio;
 
-                GL.Color4(c.R, c.G, c.B, c.A);
+                SpriteManager.SetColour(c);
 
                 //first move everything so it is centered on (0,0)
                 float vLeft = -origin.X;

@@ -7,6 +7,7 @@ using osum.Support;
 using OpenTK;
 using System.Drawing;
 using osu_common.Helpers;
+using OpenTK.Graphics;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -182,7 +183,7 @@ namespace osum.Graphics.Sprites
 
         internal pList<pDrawable> ForwardPlayList = new pList<pDrawable>() { UseBackwardsSearch = true };
 
-        internal void Add(pDrawable sprite)
+        internal virtual void Add(pDrawable sprite)
         {
             if (ForwardPlayOptimisedAdd && sprite.Transformations.Count > 0)
             {
@@ -341,7 +342,6 @@ namespace osum.Graphics.Sprites
             if (!base.Draw()) return false;
 
             pTexture currentBatchTexture = null;
-            TexturesEnabled = false;
 
             matrixOperations = Rotation != 0 || ScaleScalar != 1 || FieldPosition != Vector2.Zero;
 
