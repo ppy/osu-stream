@@ -458,13 +458,22 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        public static Color4 lastDrawColour;
+        public static void SetColour(Color4 colour)
+        {
+            if (lastDrawColour != colour)
+            {
+                GL.Color4(colour.R, colour.G, colour.B, colour.A);
+                lastDrawColour = colour;
+            }
+        }
 
         internal static void Reset()
         {
-            texturesEnabled = true;
-            TexturesEnabled = false; //force a reset
-            SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
-            TextureGl.Reset();
+            //texturesEnabled = true;
+            //TexturesEnabled = false; //force a reset
+            //SetBlending(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+            //TextureGl.Reset();
         }
 
         /// <summary>

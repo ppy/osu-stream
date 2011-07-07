@@ -204,7 +204,7 @@ namespace osum.Graphics
 
             Vector2 originVector = Vector2.Multiply(origin, scaleVector);
 
-            GL.Color4(drawColour.R, drawColour.G, drawColour.B, drawColour.A);
+            SpriteManager.SetColour(drawColour);
 
             float left = (float)drawRect.Left / potWidth;
             float right = (float)drawRect.Right / potWidth;

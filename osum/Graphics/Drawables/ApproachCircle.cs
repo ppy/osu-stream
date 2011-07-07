@@ -90,7 +90,7 @@ namespace osum.Graphics.Drawables
 
                 SpriteManager.TexturesEnabled = false;
 
-                GL.Color4(c.R, c.G, c.B, c.A);
+                SpriteManager.SetColour(c);
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
                 GL.DrawArrays(BeginMode.TriangleStrip, 0, PARTS * 2 + 2);
 
