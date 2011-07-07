@@ -197,7 +197,7 @@ namespace osum.GameModes
         /// <summary>
         /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
         /// </summary>
-        internal static void InitializeBgm()
+        internal static bool InitializeBgm()
         {
             //Start playing song select BGM.
 #if iOS
@@ -205,6 +205,8 @@ namespace osum.GameModes
 #else
             bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.mp3", true);
 #endif
+
+            return didLoad;
         }
 
         public override void Dispose()
