@@ -29,7 +29,7 @@ namespace osum.GameModes.Options
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
-            s_ButtonBack = new BackButton (delegate { Director.ChangeMode(OsuMode.MainMenu); });
+            s_ButtonBack = new BackButton (delegate { Director.ChangeMode(OsuMode.MainMenu); }, Director.LastOsuMode == OsuMode.MainMenu);
             smd.AddNonDraggable(s_ButtonBack);
 
             if (MainMenu.InitializeBgm())

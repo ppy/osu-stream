@@ -65,6 +65,17 @@ namespace osum.GameModes
             specialTexture.X++;
             specialTexture.Width -= 2;
 
+            //osuLogo = new pSprite(TextureManager.Load(OsuTexture.menu_logo), new Vector2(-135, 28))
+            //{
+            //    Colour = new Color4(254, 242, 0, 255),
+            //    Field = FieldTypes.StandardSnapCentre,
+            //    Origin = OriginTypes.Centre,
+            //    Rotation = -rotation_offset,
+            //    ScaleScalar = 1 / scale_offset,
+            //    Alpha = 0
+            //};
+            //Add(osuLogo);
+
             yellow = new pQuad(
                 Vector2.Zero,
                 Vector2.Zero,
@@ -175,6 +186,10 @@ namespace osum.GameModes
         void Option_OnHoverLost(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
+
+            //if (d == yellow)
+            //    osuLogo.FadeColour((Color4)d.Tag, 600);
+
             d.FadeColour((Color4)d.Tag, 600);
             //d.FadeColour(ColourHelper.Darken(d.Colour, 0.5f), 50);
         }
@@ -182,6 +197,9 @@ namespace osum.GameModes
         void Option_OnHover(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
+
+            //if (d == yellow)
+            //    osuLogo.FadeColour(Color4.White, 150);
 
             d.FadeColour(Color4.White, 150);
             //d.FadeColour(ColourHelper.Lighten(d.Colour, 0.5f),50);
@@ -228,9 +246,9 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(delegate
             {
                 AudioEngine.PlaySample(OsuSamples.menuwhoosh);
-                ScaleTo(scale_offset, duration/2, EasingTypes.InOut);
-                MoveTo(new Vector2(75, -44), duration/2, EasingTypes.InOut);
-                RotateTo(rotation_offset, duration/2, EasingTypes.InOut);
+                ScaleTo(scale_offset, duration / 2, EasingTypes.InOut);
+                MoveTo(new Vector2(75, -44), duration / 2, EasingTypes.InOut);
+                RotateTo(rotation_offset, duration / 2, EasingTypes.InOut);
 
                 //rect.FadeOut(duration);
                 rectBorder.FadeOut(duration);
@@ -238,14 +256,16 @@ namespace osum.GameModes
 
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
-                //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
+            //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
 
             textSprites.ForEach(s => s.FadeIn(500));
+            
         }
 
         bool first = true;
         private pQuad rectBorder;
         private pQuad rect;
+        private pSprite osuLogo;
         public override void Update()
         {
             if (awesomeTransformation != null || first)

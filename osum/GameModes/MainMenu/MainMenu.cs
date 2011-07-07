@@ -121,17 +121,20 @@ namespace osum.GameModes
 
             spriteManager.Add(additiveStream);
 
-
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
             spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
+
+            osuLogoSmall = new pSprite(TextureManager.Load(OsuTexture.menu_logo), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(5, 5), 0.9f, true, Color4.White);
+            osuLogoSmall.Alpha = 0;
+            spriteManager.Add(osuLogoSmall);
 
             menuBackgroundNew.Transform(fadeIn);
             menuBackground.Transform(fadeIn);
 
-#if !iOS
-            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
-            spriteManager.Add(notice);
-#endif
+//#if !iOS
+//            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
+//            spriteManager.Add(notice);
+//#endif
 
             osuLogo.Transform(fadeIn);
 
@@ -176,6 +179,8 @@ namespace osum.GameModes
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             menuBackgroundNew.BeAwesome();
+
+            osuLogoSmall.Transform(new Transformation(TransformationType.Fade, 0, 0.98f, Clock.ModeTime + 1300, Clock.ModeTime + 1700));
 
             osuLogo.Transformations.Clear();
             osuLogo.Transform(new Transformation(TransformationType.Scale, osuLogo.ScaleScalar, osuLogo.ScaleScalar * 2.4f, Clock.ModeTime, Clock.ModeTime + 1300, EasingTypes.InDouble));
@@ -230,6 +235,7 @@ namespace osum.GameModes
         const int bar = 8;
         private pDrawable additiveStream;
         private MenuBackground menuBackgroundNew;
+        private pSprite osuLogoSmall;
 
         public override void Update()
         {

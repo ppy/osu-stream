@@ -504,6 +504,9 @@ namespace osum.Graphics.Skins
         notification_background,
         notification_button_ok,
         notification_button_no,
-        notification_button_yes
+        notification_button_yes,
+        backbutton,
+        menu_logo,
+        kokoban
     }
 }

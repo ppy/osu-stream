@@ -51,10 +51,6 @@ namespace osum.GameModes.Play
             Beatmap = new Beatmap();
             Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
 
-            backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); });
-            backButton.Alpha = 0;
-            topMostSpriteManager.Add(backButton);
-
             loadNextSegment();
         }
 
@@ -78,9 +74,6 @@ namespace osum.GameModes.Play
 
             GameBase.Scheduler.Add(delegate
             {
-                if (showBackButton)
-                    backButton.FadeIn(1000, 0.3f);
-
                 touchToContinueText.Transformations.Clear();
                 touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 600, Clock.ModeTime + 1400, EasingTypes.In) { LoopDelay = 600, Looping = true });
             }, 400);
@@ -152,14 +145,14 @@ namespace osum.GameModes.Play
 
         protected override void resetScore()
         {
-#if DEBUG
-            if (GuideFingers == null)
-            {
-                //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
-                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
-                ShowGuideFingers = true;
-            }
-#endif
+//#if DEBUG
+//            if (GuideFingers == null)
+//            {
+//                //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
+//                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
+//                ShowGuideFingers = true;
+//            }
+//#endif
 
             base.resetScore();
         }
@@ -191,12 +184,21 @@ namespace osum.GameModes.Play
 
             touchToContinue = false;
 
-            backButton.FadeOut(200);
-
             switch (currentSegment)
             {
                 case TutorialSegments.Introduction_1:
                     showText(osum.Resources.Tutorial.WelcomeToTheWorldOfOsu);
+
+                    GameBase.Scheduler.Add(delegate
+                    {
+
+                        backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, true);
+                        backButton.Alpha = 0;
+                        backButton.FadeIn(500, 0.5f);
+                        topMostSpriteManager.Add(backButton);
+                    }, 500);
+
+
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_2:
@@ -1275,7 +1277,7 @@ namespace osum.GameModes.Play
                                 if (comboCounter.displayCombo == 35)
                                 {
                                     if (!touchToContinue)
-                                        showTouchToContinue(false);
+                                        showTouchToContinue();
 
                                     if (lastFlash == null || lastFlash.Alpha == 0)
                                         lastFlash = comboCounter.s_hitCombo.AdditiveFlash(1000, 1).ScaleTo(comboCounter.s_hitCombo.ScaleScalar * 1.1f, 1000);
@@ -1291,7 +1293,8 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Outro:
                     showText(osum.Resources.Tutorial.Completion);
-                    showTouchToContinue(false);
+                    showTouchToContinue();
+                    backButton.FadeOut(100);
                     break;
                 case TutorialSegments.End:
                     backButton.HandleInput = false;

@@ -31,11 +31,11 @@ namespace osum.GameModes.Store
         {
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56,56,56,255));
+                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); });
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             spriteManager.Add(s_ButtonBack);
 
             StringNetRequest netRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
@@ -60,16 +60,16 @@ namespace osum.GameModes.Store
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) return;
-            {
-                float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-                float bound = offsetBound;
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
+                return;
 
-                if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
-                    change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
-                scrollOffset = scrollOffset + change;
-                velocity = change;
-            }
+            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+            float bound = offsetBound;
+
+            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
+                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
+            scrollOffset = scrollOffset + change;
+            velocity = change;
         }
 
         void netRequest_onFinish(string _result, Exception e)

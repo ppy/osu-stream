@@ -458,14 +458,18 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public static Color4 lastDrawColour;
+        //public static Color4 lastDrawColour;
         public static void SetColour(Color4 colour)
         {
-            if (lastDrawColour != colour)
+            GL.Color4(colour.R, colour.G, colour.B, colour.A);
+
+            //i'm going to call the a micro-optimisation to the point i can't benchmark. therefore not using.
+
+            /*if (lastDrawColour != colour)
             {
                 GL.Color4(colour.R, colour.G, colour.B, colour.A);
                 lastDrawColour = colour;
-            }
+            }*/
         }
 
         internal static void Reset()

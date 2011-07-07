@@ -291,8 +291,7 @@ namespace osum.GameModes
 
             layer2.Add(resultSprites);
 
-            //add a temporary button to allow returning to song select
-            s_ButtonBack = new BackButton(returnToSelect);
+            s_ButtonBack = new BackButton(returnToSelect, false);
             s_ButtonBack.Alpha = 0;
             topMostLayer.Add(s_ButtonBack);
 
@@ -345,7 +344,7 @@ namespace osum.GameModes
 
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (InputManager.IsPressed && finishedDisplaying)
+            if (InputManager.IsPressed && finishedDisplaying && !s_ButtonBack.IsHovering)
                 offset += trackingPoint.WindowDelta.Y;
         }
 

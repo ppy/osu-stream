@@ -7,24 +7,26 @@ using OpenTK.Graphics;
 using osum.Helpers;
 using osum.Graphics.Renderers;
 using osum.GameModes.SongSelect;
+using osum.Graphics.Skins;
 
 namespace osum.GameModes.Options
 {
     public class Credits : Player
     {
+        SpriteManager topMostSpriteManager = new SpriteManager();
+        
         string[] creditsRoll = new string[] {
-            "*osu! stream",
+            "OsuTexture.menu_logo",
             "*Project Management / Overall Design",
             "Dean Herbert (peppy)",
-            "*Art Concept",
-            "Koko Ban",
             "*Graphics",
-            "Koko Ban - Interface designs, colour scheme",
+            "OsuTexture.kokoban",
+            "Koko Ban - Concept, Interface designs, colour scheme",
             "LuigiHann - Gameplay elements, rank letters",
             "*Implementation",
             "mm201 - Slider drawing, gameplay mechanic tweaking",
             "Intermezzo - Android platform management, file format",
-            "Echo49 - file format, general tweaking",
+            "Echo49 - file format, engine upgrades, general tweaking",
             "*Music",
             "kodex - osu! stream theme music",
             "Natteke - credit screen mix",
@@ -58,14 +60,15 @@ namespace osum.GameModes.Options
 
             base.Initialize();
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); });
-            spriteManager.Add(s_ButtonBack);
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); }, false);
+            topMostSpriteManager.Add(s_ButtonBack);
 
             int time = Clock.ModeTime;
 
             const int speed = 17000;
             const int spacing = 1800;
             const int header_spacing = 2100;
+            const int image_spacing = 2500;
 
             int len = creditsRoll.Length;
             for (int i = 0; i < len; i++)
@@ -82,7 +85,7 @@ namespace osum.GameModes.Options
                     isHeader = true;
                 }
 
-                pText text;
+                pDrawable text;
 
                 if (isHeader)
                 {
@@ -101,6 +104,24 @@ namespace osum.GameModes.Options
 
                     text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSize.Height + 60), new Vector2(0, -100), time, time + speed));
                     time += header_spacing;
+                }
+                else if (drawString.StartsWith("OsuTexture."))
+                {
+                    text = new pSprite(TextureManager.Load((OsuTexture)Enum.Parse(typeof(OsuTexture), drawString.Replace("OsuTexture.",""))), Vector2.Zero)
+                    {
+                        Field = FieldTypes.StandardSnapTopCentre,
+                        Origin = OriginTypes.Centre,
+                        Clocking = ClockTypes.Manual,
+                        RemoveOldTransformations = false,
+                        Alpha = 1
+                    };
+
+                    if (i > 0)
+                        time += image_spacing - spacing;
+
+                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSize.Height + 60), new Vector2(0, -100), time, time + speed));
+                    time += image_spacing;
+
                 }
                 else
                 {
@@ -155,6 +176,7 @@ namespace osum.GameModes.Options
         public override void Dispose()
         {
             InputManager.OnMove -= new InputHandler(InputManager_OnMove);
+            topMostSpriteManager.Dispose();
             base.Dispose();
         }
 
@@ -163,7 +185,7 @@ namespace osum.GameModes.Options
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!InputManager.IsPressed)
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
                 return;
 
             incrementalSpeed = (-trackingPoint.WindowDelta.Y * 2) * 0.5f + incrementalSpeed * 0.5f;
@@ -190,12 +212,23 @@ namespace osum.GameModes.Options
             AudioEngine.Music.Play();
         }
 
+        public override bool Draw()
+        {
+            base.Draw();
+            topMostSpriteManager.Draw();
+
+            return true;
+
+        }
+
         int lastBeat;
         int lastBeatNoLoop;
         public override void Update()
         {
             int currentBeat = (int)((Clock.AudioTime - 110) / (beatLength / 4f)) % 16;
             int currentBeatNoLoop = (int)((Clock.AudioTime - 110) / (beatLength / 4f));
+
+            topMostSpriteManager.Update();
 
             if (currentBeat != lastBeat)
             {

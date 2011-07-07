@@ -30,6 +30,8 @@ namespace osum.GameModes
         private static List<Beatmap> availableMaps;
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
+        SpriteManager topmostSpriteManager = new SpriteManager();
+
         SelectState State;
 
         private float songSelectOffset;
@@ -71,7 +73,7 @@ namespace osum.GameModes
 
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56,56,56,255));
+                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
@@ -89,8 +91,9 @@ namespace osum.GameModes
             //s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
             //s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
 
-            s_ButtonBack = new BackButton(onBackPressed);
-            spriteManager.Add(s_ButtonBack);
+            s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu);
+            topmostSpriteManager.Add(s_ButtonBack);
+
             OnlineHelper.Initialize();
         }
 
@@ -256,6 +259,8 @@ namespace osum.GameModes
         {
             base.Dispose();
 
+            topmostSpriteManager.Dispose();
+
             foreach (Beatmap b in availableMaps)
                 b.Dispose();
 
@@ -270,7 +275,7 @@ namespace osum.GameModes
         bool touchingBegun;
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null) return;
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || inputStolen) return;
 
             touchingBegun = true;
 
@@ -292,10 +297,12 @@ namespace osum.GameModes
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
                         float bound = Math.Min(mode_button_width, Math.Max(mapRequiresUnlock ? 0 : -mode_button_width, difficultySelectOffset));
 
+                        velocity = change * 4;
+
                         if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
                         difficultySelectOffset = difficultySelectOffset + change;
-                        velocity = change * 4;
+                        
                     }
                     break;
             }
@@ -304,8 +311,10 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
-
             if (tabController != null) tabController.Draw();
+            topmostSpriteManager.Draw();
+
+
 
             return true;
         }
@@ -314,11 +323,20 @@ namespace osum.GameModes
         bool pendingModeChange;
         private BeatmapPanel panelDownloadMore;
         private pSprite background;
+
+        /// <summary>
+        /// Input is being handled by back button.
+        /// </summary>
+        private bool inputStolen;
         public override void Update()
         {
             base.Update();
 
             if (tabController != null) tabController.Update();
+            topmostSpriteManager.Update();
+
+
+            inputStolen = InputManager.PrimaryTrackingPoint != null && InputManager.PrimaryTrackingPoint.HoveringObject == s_ButtonBack;
 
             //handle touch scrolling
             switch (State)
@@ -326,7 +344,7 @@ namespace osum.GameModes
                 case SelectState.DifficultySelect:
                     if (tabController.SelectedTab == s_TabBarPlay)
                     {
-                        if (InputManager.IsPressed)
+                        if (InputManager.IsPressed && !inputStolen)
                             pendingModeChange = true;
                         else if (pendingModeChange)
                         {

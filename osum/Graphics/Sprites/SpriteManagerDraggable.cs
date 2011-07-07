@@ -4,6 +4,7 @@ using OpenTK;
 using osum.Graphics.Drawables;
 using OpenTK.Graphics;
 using osum.Helpers;
+using osum.GameModes.SongSelect;
 
 namespace osum.Graphics.Sprites
 {
@@ -21,7 +22,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal float EndBufferZone = 60;
 
-        pRectangle scrollbar = new pRectangle (new Vector2 (5,0), new Vector2 (4,0), true, 1, new Color4 (255,255,255,200))
+        pRectangle scrollbar = new pRectangle (new Vector2 (5,0), new Vector2 (4,0), true, 1, new Color4 (255,255,255,255))
         {
             Field = FieldTypes.StandardSnapRight,
             Origin = OriginTypes.TopRight
@@ -41,7 +42,7 @@ namespace osum.Graphics.Sprites
 
         internal override void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null)
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
                 return;
 
             float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
