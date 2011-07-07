@@ -372,23 +372,27 @@ namespace osum.GameModes
                             velocity *= 0.94f;
                     }
 
+                    int newIntOffset = (int)Math.Round(songSelectOffset / BeatmapPanel.PANEL_HEIGHT);
+
                     if (Director.PendingOsuMode == OsuMode.Unknown)
                     {
-                        Vector2 pos = new Vector2(0, 60 + songSelectOffset);
+                        if (newIntOffset != lastIntOffset)
+                        {
+                            lastIntOffset = newIntOffset;
+
+                            AudioEngine.PlaySample(OsuSamples.MenuClick);
+                            background.FlashColour(new Color4(140, 140, 140, 255), 400);
+                        }
+
+                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * BeatmapPanel.PANEL_HEIGHT) * 0.5f + songSelectOffset * 0.5f);
+
                         foreach (BeatmapPanel p in panels)
                         {
                             if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
-                                p.MoveTo(pos, touchingBegun ? 40 : 300);
+                                //todo: change this to use a draggable spritemanager instead. better performance and will move smoother on lower fps.
+                                p.MoveTo(pos, touchingBegun ? 50 : 300);
                             pos.Y += 70;
                         }
-                    }
-
-                    int newIntOffset = (int)songSelectOffset / BeatmapPanel.PANEL_HEIGHT;
-                    if (newIntOffset != lastIntOffset)
-                    {
-                        lastIntOffset = newIntOffset;
-                        AudioEngine.PlaySample(OsuSamples.MenuClick);
-                        background.FlashColour(new Color4(140, 140, 140, 255), 400);
                     }
                     break;
             }
