@@ -50,3 +50,9 @@ autoplay finger centre for spinners is too high on ipad and iphone
 make spritesheet creation FAIL on non-div-2 texture
 
 check sprites are using exact pixels ast runtime
+
+make mode selection arrows more tappable
+
+ranking music playing on retry
+
+use non-exact pixels when dragging results
