@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using osum.Graphics.Drawables;
 using osum.Graphics.Renderers;
 using osum.Audio;
+using osum.Graphics.Skins;
 namespace osum.GameModes.SongSelect
 {
     internal class pButton : pSpriteCollection
@@ -31,6 +32,7 @@ namespace osum.GameModes.SongSelect
         public bool Enabled = true;
 
         bool pendingUnhover = false;
+        private pDrawable additiveButton;
 
         internal pButton(string text, Vector2 position, Vector2 size, Color4 colour, EventHandler action)
         {
@@ -38,31 +40,34 @@ namespace osum.GameModes.SongSelect
 
             Colour = colour;
 
-            s_BackingPlate = new pRectangle(position, size, true, base_depth, colourNormal);
+            s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.notification_button_ok), position)
+            {
+                Origin = OriginTypes.Centre,
+                DrawDepth = base_depth,
+                HandleClickOnUp = true
+            };
             Sprites.Add(s_BackingPlate);
+
+            s_BackingPlate.OnHover += delegate
+            {
+                if (!Enabled) return;
+                additiveButton = s_BackingPlate.AdditiveFlash(10000, 0.4f);
+                pendingUnhover = true;
+            };
+
+            s_BackingPlate.OnHoverLost += delegate
+            {
+                if (!Enabled || !pendingUnhover) return;
+                if (additiveButton != null) additiveButton.FadeOut(100);
+            };
+
 
             s_BackingPlate.OnClick += s_BackingPlate_OnClick;
 
             s_BackingPlate.HandleClickOnUp = true;
 
-            s_BackingPlate.OnHover += delegate
-            {
-                if (!Enabled) return;
-                s_BackingPlate.FadeColour(colourHover, 150);
-
-                pendingUnhover = true;
-            };
-            s_BackingPlate.OnHoverLost += delegate
-            {
-                if (!Enabled || !pendingUnhover) return;
-                s_BackingPlate.FadeColour(colourNormal, 150);
-            };
-
             s_Text = new pText(text, 25, position, base_depth + 0.01f, true, Color4.White);
-            s_Text.Offset = size * 0.5f;
             s_Text.Origin = OriginTypes.Centre;
-            s_Text.Bold = true;
-
             Sprites.Add(s_Text);
         }
 
@@ -85,9 +90,10 @@ namespace osum.GameModes.SongSelect
         {
             if (!Enabled) return;
 
+            if (additiveButton != null) additiveButton.FadeOut(100);
+
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
-            s_BackingPlate.FlashColour(Color4.White, 500);
             pendingUnhover = false;
 
             if (action != null)
