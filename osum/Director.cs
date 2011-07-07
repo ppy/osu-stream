@@ -153,6 +153,9 @@ namespace osum
                 case OsuMode.Tutorial:
                     mode = new Tutorial();
                     break;
+                case OsuMode.Credits:
+                    mode = new Credits();
+                    break;
             }
 
             PendingMode = mode;

@@ -16,7 +16,8 @@ namespace osum.GameModes
         Results,
         Store,
         Options,
-        Tutorial
+        Tutorial,
+        Credits
     }
 
     /// <summary>

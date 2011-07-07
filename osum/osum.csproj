@@ -425,6 +425,7 @@
     <Content Include="Skins\Default\results.m4a" />
     <Content Include="Skins\Default\intro_480.png" />
     <Content Include="Skins\Default\intro_960.png" />
+    <Content Include="Skins\Default\credits.m4a" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
