@@ -12,11 +12,11 @@ namespace osum.Online
         public static bool Available {
             get
             {
-                return Initialize() && onlineServices.IsAuthenticated;
+                return onlineServices != null && onlineServices.IsAuthenticated;
             }
         }
 
-        public static bool Initialize()
+        public static bool Initialize(bool forceAuthentication = false)
         {
             if (onlineServices == null)
             {
