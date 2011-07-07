@@ -43,6 +43,7 @@ namespace osum.GameModes.Play.Components
                         TextAlignment = TextAlignment.Centre,
                         Field = FieldTypes.StandardSnapBottomCentre,
                         Origin = OriginTypes.Centre,
+                        Clocking = ClockTypes.Game,
                         TextShadow = true,
                         Alpha = 0
                     };
@@ -66,6 +67,7 @@ namespace osum.GameModes.Play.Components
                     if (menuText != null)
                     {
                         menuText.AlwaysDraw = false;
+                        menuText.Transformations.Clear();
                         menuText.FadeOut(100);
                         menuText = null;
                     }
