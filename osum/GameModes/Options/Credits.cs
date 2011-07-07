@@ -8,6 +8,7 @@ using osum.Helpers;
 using osum.Graphics.Renderers;
 using osum.GameModes.SongSelect;
 using osum.Graphics.Skins;
+using osum.Support;
 
 namespace osum.GameModes.Options
 {
@@ -49,6 +50,8 @@ namespace osum.GameModes.Options
 
         int beatLength = 800;
 
+        pDrawable lastText;
+
         public override void Initialize()
         {
             Difficulty = Difficulty.None;
@@ -61,6 +64,7 @@ namespace osum.GameModes.Options
             base.Initialize();
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); }, false);
+            s_ButtonBack.DimImmune = true;
             topMostSpriteManager.Add(s_ButtonBack);
 
             int time = Clock.ModeTime;
@@ -168,6 +172,7 @@ namespace osum.GameModes.Options
                 }
 
                 spriteManager.Add(text);
+                lastText = text;
             }
 
             InputManager.OnMove += new InputHandler(InputManager_OnMove);
@@ -229,6 +234,11 @@ namespace osum.GameModes.Options
             int currentBeatNoLoop = (int)((Clock.AudioTime - 110) / (beatLength / 4f));
 
             topMostSpriteManager.Update();
+
+            if (lastText.Position.Y < 0 && !Director.IsTransitioning)
+            {
+                Director.ChangeMode(OsuMode.Options, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+            }
 
             if (currentBeat != lastBeat)
             {
