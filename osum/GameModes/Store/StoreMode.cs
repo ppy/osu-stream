@@ -151,18 +151,19 @@ namespace osum.GameModes.Store
 
             GameBase.Scheduler.Add(delegate
             {
-                if (Director.CurrentOsuMode != OsuMode.Store)
+                if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
                     return;
 
                 if (pp != null && pp.BeatmapCount > 0)
-                    spriteManager.Add(pp); packs.Add(pp);
+                {
+                    spriteManager.Add(pp);
+                    packs.Add(pp);
+                }
 
                 loading.FadeOut(200);
 
                 if (y == 0)
-                {
                     GameBase.Notify(osum.Resources.General.HaveAllAvailableSongPacks, delegate { Director.ChangeMode(Director.LastOsuMode); });
-                }
             });
         }
 
