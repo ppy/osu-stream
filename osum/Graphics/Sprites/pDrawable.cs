@@ -112,9 +112,18 @@ namespace osum.Graphics.Sprites
             {
                 Box2 rect = DisplayRectangle;
 
-                if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right < 0 ||
-                    rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 || rect.Bottom < 0)
-                    return false;
+                if (SpriteManager != null)
+                {
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 - SpriteManager.Offset.X || rect.Right < -SpriteManager.Offset.X ||
+                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 - SpriteManager.Offset.Y || rect.Bottom < -SpriteManager.Offset.Y)
+                        return false;
+                }
+                else
+                {
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right  < 0 ||
+                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 || rect.Bottom < 0)
+                        return false;
+                }
 
                 return true;
             }
@@ -770,8 +779,7 @@ namespace osum.Graphics.Sprites
             if (Bypass) return false;
 
             if (Alpha != 0 && Colour.A != 0 &&
-                (AlwaysDraw || Transformations.Count != 0) &&
-                IsOnScreen)
+                (AlwaysDraw || Transformations.Count != 0) && IsOnScreen)
             {
                 return true;
             }
