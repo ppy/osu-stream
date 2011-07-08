@@ -459,14 +459,14 @@ namespace osum.Graphics
             GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
 
             GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
-            GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent24Oes, Width, Height);
+            GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
             GL.Oes.BindRenderbuffer(All.RenderbufferOes, 0);
 
             GL.Oes.GenFramebuffers(1, ref fboId);
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
 
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);
-            GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
+            //GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 
 #else
