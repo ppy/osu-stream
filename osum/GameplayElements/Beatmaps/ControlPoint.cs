@@ -25,6 +25,13 @@ namespace osum.GameplayElements.Beatmaps
         SimpleTriple = 3
     }
 
+    public struct SampleSetInfo
+    {
+        public SampleSet SampleSet;
+        public CustomSampleSet CustomSampleSet;
+        public float Volume;
+    }
+
     public class ControlPoint : IComparable<ControlPoint>, ICloneable//, bSerializable
     {
         public double beatLength;

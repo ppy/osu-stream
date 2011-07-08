@@ -461,16 +461,21 @@ namespace osum.GameplayElements
 
         internal virtual void PlaySound(HitObjectSoundType type)
         {
+            PlaySound(type, SampleSet);
+        }
+
+        internal virtual void PlaySound(HitObjectSoundType type, SampleSetInfo ssi)
+        {
             if ((type & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet, Volume);
+                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet.SampleSet, SampleSet.Volume);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet, Volume);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet.SampleSet, SampleSet.Volume);
 
             if ((type & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet, Volume);
+                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet.SampleSet, SampleSet.Volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, Volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.SampleSet, SampleSet.Volume);
         }
 
         protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }
@@ -535,8 +540,7 @@ namespace osum.GameplayElements
         }
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
-        internal SampleSet SampleSet = SampleSet.Soft;
-        internal float Volume = 1;
+        internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Soft, CustomSampleSet = CustomSampleSet.Default, Volume = 1 };
 
         internal virtual void Shake()
         {

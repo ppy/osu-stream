@@ -190,19 +190,37 @@ namespace BeatmapCombinator
                             case "HitObjects":
                                 {
                                     HitObjectType type = (HitObjectType)(Int32.Parse(split[3]) & 15);
+                                    bool slider = (type & HitObjectType.Slider) > 0;
                                     int time = (int)Decimal.Parse(split[2]);
 
-                                    ControlPoint cp = bd.controlPointAt(time);
 
-                                    string stringRep = (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume : "") + "," + line;
+                                    // take the slider's slide sampleset from 20ms after the head in case the head has a different sampleset
+                                    ControlPoint cp = bd.controlPointAt(slider ? time + 20 : time);
+
+                                    string stringRep = MakeSampleset(cp) + "," + line;
 
                                     //add addition difficulty-specific information
                                     if ((type & HitObjectType.Slider) > 0)
                                     {
                                         if (split.Length < 9) stringRep += ",";
+                                        int repeatCount = Convert.ToInt32(split[6]);
+                                        double length = Convert.ToDouble(split[7]);
+                                        double velocity = bd.VelocityAt(time);
 
                                         //velocity and scoring distance.
-                                        stringRep += "," + bd.VelocityAt(time).ToString(nfi) + "," + bd.ScoringDistanceAt(time).ToString(nfi);
+                                        stringRep += "," + velocity.ToString(nfi) + "," + bd.ScoringDistanceAt(time).ToString(nfi);
+                                        double ReboundTime = length / velocity;
+
+                                        double currTime = time;
+                                        cp = bd.controlPointAt(currTime);
+
+                                        stringRep += "," + MakeSampleset(cp);
+                                        for (int repeatNo = 0; repeatNo < repeatCount; repeatNo++)
+                                        {
+                                            currTime += ReboundTime;
+                                            cp = bd.controlPointAt(currTime);
+                                            stringRep += ":" + MakeSampleset(cp);
+                                        }
                                     }
 
                                     bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });
@@ -388,6 +406,11 @@ namespace BeatmapCombinator
 
                 package.Save();
             }
+        }
+
+        private static string MakeSampleset(ControlPoint cp)
+        {
+            return (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume : "");
         }
 
         private static double calculateMultiplier(Difficulty difficulty)

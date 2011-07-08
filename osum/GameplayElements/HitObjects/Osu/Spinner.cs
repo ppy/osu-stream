@@ -309,7 +309,7 @@ namespace osum.GameplayElements
                     if (currentRotationCount - lastSamplePlayedRotationCount > sensitivity_modifier)
                     {
                         hpMultiplier = 50;
-                        AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet, Volume);
+                        AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet.SampleSet, SampleSet.Volume);
 
                         spriteBonus.Transformations.Clear();
                         spriteBonus.Transform(new Transformation(TransformationType.Scale, 2F, 1.28f, now, now + 600, EasingTypes.In));

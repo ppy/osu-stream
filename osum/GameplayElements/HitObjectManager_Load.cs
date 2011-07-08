@@ -233,14 +233,7 @@ namespace osum.GameplayElements
                                         break;
                                 }
 
-                                string sample = split[offset++];
-
-                                //most optimal way. need to rewrite if there are ever more samplesets :p.
-                                SampleSet sampleSet = sample[0] == '2' ? SampleSet.Soft : SampleSet.Normal;
-                                float volume = 1;
-
-                                if (sample.Length > 1)
-                                    volume = Int32.Parse(sample.Substring(2)) / 100f;
+                                SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
                                 int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
@@ -300,13 +293,17 @@ namespace osum.GameplayElements
 
                                     length = Convert.ToDouble(split[offset++], GameBase.nfi);
 
+                                    List<SampleSetInfo> listSampleSets = null;
+
                                     //Per-endpoint Sample Additions
                                     if (split[offset].Length > 0)
                                     {
                                         string[] adds = split[offset++].Split('|');
+                                        string[] samplesets = split[13].Split(':');
+                                        
                                         if (adds.Length > 0)
                                         {
-                                            sounds = new List<HitObjectSoundType>();
+                                            sounds = new List<HitObjectSoundType>(adds.Length);
                                             for (int i = 0; i < adds.Length; i++)
                                             {
                                                 int sound;
@@ -314,17 +311,23 @@ namespace osum.GameplayElements
                                                 sounds.Add((HitObjectSoundType)sound);
                                             }
                                         }
+                                        listSampleSets = new List<SampleSetInfo>(samplesets.Length);
+                                        for (int i = 0; i < samplesets.Length; i++)
+                                        {
+                                            SampleSetInfo node_ssi = parseSampleSet(samplesets[i]);
+                                            listSampleSets.Add(node_ssi);
+                                        }
                                     }
                                     else
-                                        offset++;
+                                        offset += 1;
 
                                     if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
                                     {
-                                        h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi));
+                                        h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi), listSampleSets);
                                     }
                                     else
                                     {
-                                        h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi));
+                                        h = hitFactory.CreateSlider(pos, time, newCombo, soundType, curveType, repeatCount, length, points, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi), listSampleSets);
                                     }
                                 }
                                 else if ((type & HitObjectType.Spinner) > 0)
@@ -335,8 +338,7 @@ namespace osum.GameplayElements
                                 //Make sure we have a valid  hitObject and actually add it to this manager.
                                 if (h != null)
                                 {
-                                    h.SampleSet = sampleSet;
-                                    h.Volume = volume;
+                                    h.SampleSet = ssi;
                                     Add(h, difficulty);
                                 }
                                 objnumber++;
@@ -350,6 +352,18 @@ namespace osum.GameplayElements
             }
 
             PostProcessing();
+        }
+
+        internal SampleSetInfo parseSampleSet(string sample)
+        {
+            //most optimal way. need to rewrite if there are ever more samplesets :p.
+            SampleSet sampleSet = sample[0] == '2' ? SampleSet.Soft : SampleSet.Normal;
+            float volume = 1;
+
+            if (sample.Length > 1)
+                volume = Int32.Parse(sample.Substring(2)) / 100f;
+
+            return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume };
         }
 
         internal virtual void PostProcessing()

@@ -11,11 +11,17 @@ using osum.Graphics.Primitives;
 using System.Drawing;
 using osum.Graphics.Drawables;
 using osum.Audio;
+using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
     class HoldCircle : Slider
     {
+        internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
+            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance, sampleSets)
+        {
+        }
+
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance)
         {
@@ -129,20 +135,20 @@ namespace osum.GameplayElements.HitObjects.Osu
             HitCircleStart.Colour = hold_colour;
         }
 
-        internal override void PlaySound(HitObjectSoundType type)
+        internal override void PlaySound(HitObjectSoundType type, SampleSetInfo ssi)
         {
-            float volume = Volume * (0.5f + 0.5f * circularProgress.Progress);
+            float volume = ssi.Volume * (0.5f + 0.5f * circularProgress.Progress);
 
             if ((type & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitFinish, ssi.SampleSet, volume);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, ssi.SampleSet, volume);
 
             if ((type & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet, volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
         }
 
         static Color4 hold_colour = new Color4(0.648f, 0, 244 / 256f, 1);

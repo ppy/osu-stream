@@ -50,6 +50,7 @@ using osum.Graphics.Renderers;
 using OpenTK.Graphics;
 using osum.Audio;
 using osum.GameModes;
+using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
@@ -93,6 +94,11 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// A list of soundTypes for each end-point on the slider.
         /// </summary>
         private List<HitObjectSoundType> SoundTypeList;
+
+        /// <summary>
+        /// A list of the samplesets used for each slider end
+        /// </summary>
+        private List<SampleSetInfo> SampleSets;
 
         /// <summary>
         /// The raw control points as read from the beatmap file.
@@ -166,7 +172,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
                         CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
-                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
+                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
             : base(hitObjectManager, startPosition, startTime, soundType, newCombo, comboOffset)
         {
             CurveType = curveType;
@@ -184,6 +190,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             PathLength = pathLength;
             Velocity = velocity;
             TickDistance = tickDistance;
+            SampleSets = sampleSets;
 
             Type = HitObjectType.Slider;
 
@@ -195,6 +202,15 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (PRERENDER_ALL)
                 UpdatePathTexture();
+        }
+
+        internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
+                        CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
+                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
+            : this(hitObjectManager, startPosition, startTime, newCombo, comboOffset, soundType,
+                curveType, repeatCount, pathLength, sliderPoints,
+                soundTypes, velocity, tickDistance, null)
+        {
         }
 
         protected virtual void initializeStartCircle()
@@ -520,8 +536,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected override ScoreChange HitActionInitial()
         {
             //todo: this is me being HORRIBLY lazy.
-            HitCircleStart.SampleSet = SampleSet;
-            HitCircleStart.Volume = Volume;
+            HitCircleStart.SampleSet = SampleSets == null ? SampleSet : SampleSets[0];
 
             ScoreChange startCircleChange = HitCircleStart.Hit();
 
@@ -663,7 +678,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (isTracking)
                 {
-                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType);
+                    SampleSetInfo ssi = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
+                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType, ssi);
                     if (!finished)
                         burstEndpoint();
                     scoringEndpointsHit++;
@@ -756,7 +772,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void playTick()
         {
-            AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet, Volume);
+            AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
         }
 
         internal override void StopSound(bool done = true)
@@ -814,7 +830,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (AudioEngine.Effect != null)
             {
                 if (sourceSliding == null || sourceSliding.BufferId == 0)
-                    sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet), Volume * 0.8f, true, true);
+                    sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.SampleSet), SampleSet.Volume * 0.8f, true, true);
                 else
                     sourceSliding.Play();
             }
