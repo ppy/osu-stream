@@ -61,6 +61,8 @@ namespace osum.Graphics.Drawables
         }
 
         const int PARTS = 48;
+
+        static float[] precalculatedAngles;
         float[] vertices = new float[PARTS * 4 + 4];
 
         public override bool Draw()
@@ -75,12 +77,29 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
+                if (precalculatedAngles == null)
+                {
+                    precalculatedAngles = new float[PARTS * 2 + 2];
+
+                    for (int v = 0; v < PARTS; v++)
+                    {
+                        precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * Math.PI / PARTS);
+                        precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * Math.PI / PARTS);
+                    }
+
+                    precalculatedAngles[PARTS * 2] = vertices[0];
+                    precalculatedAngles[PARTS * 2 + 1] = vertices[1];
+                }
+
                 for (int v = 0; v < PARTS; v++)
                 {
-                    vertices[v * 4] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / PARTS) * rad1);
-                    vertices[v * 4 + 1] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / PARTS) * rad1);
-                    vertices[v * 4 + 2] = (float)(pos.X + Math.Cos(v * 2.0f * Math.PI / PARTS) * rad2);
-                    vertices[v * 4 + 3] = (float)(pos.Y + Math.Sin(v * 2.0f * Math.PI / PARTS) * rad2);
+                    float angle1 = precalculatedAngles[v * 2];
+                    float angle2 = precalculatedAngles[v * 2 + 1];
+
+                    vertices[v * 4] = pos.X + angle1 * rad1;
+                    vertices[v * 4 + 1] = pos.Y + angle2 * rad1;
+                    vertices[v * 4 + 2] = pos.X + angle1 * rad2;
+                    vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
                 }
 
                 vertices[PARTS * 4] = vertices[0];
