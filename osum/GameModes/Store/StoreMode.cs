@@ -29,6 +29,8 @@ namespace osum.GameModes.Store
 
         public override void Initialize()
         {
+            spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
+
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));

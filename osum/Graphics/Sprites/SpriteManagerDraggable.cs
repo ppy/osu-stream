@@ -30,6 +30,7 @@ namespace osum.Graphics.Sprites
 
         public SpriteManagerDraggable()
         {
+            CheckSpritesAreOnScreenBeforeRendering = true;
             scrollbar.Transform(new Transformation (TransformationType.Fade, 1, 0, Clock.ModeTime + 800, Clock.ModeTime + 1400));
             nonDraggableManager.Add(scrollbar);
         }

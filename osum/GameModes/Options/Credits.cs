@@ -52,6 +52,8 @@ namespace osum.GameModes.Options
 
         public override void Initialize()
         {
+            spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
+
             Difficulty = Difficulty.None;
             Beatmap = null;
 

@@ -60,6 +60,8 @@ namespace osum.GameModes
 
         public override void Initialize()
         {
+            spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
+
             //todo: write less
             BeatmapDatabase.Write();
 

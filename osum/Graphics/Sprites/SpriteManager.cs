@@ -52,6 +52,8 @@ namespace osum.Graphics.Sprites
 
         int creationTime = Clock.Time;
 
+        internal bool CheckSpritesAreOnScreenBeforeRendering;
+
         internal SpriteManager(IEnumerable<pDrawable> sprites)
         {
             Sprites = new List<pDrawable>(sprites);

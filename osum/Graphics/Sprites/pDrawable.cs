@@ -778,8 +778,8 @@ namespace osum.Graphics.Sprites
         {
             if (Bypass) return false;
 
-            if (Alpha != 0 && Colour.A != 0 &&
-                (AlwaysDraw || Transformations.Count != 0) && IsOnScreen)
+            if (Alpha != 0 && //Colour.A != 0 &&
+                (AlwaysDraw || !noTransformationsLeft) && ((SpriteManager == null || !SpriteManager.CheckSpritesAreOnScreenBeforeRendering) || IsOnScreen))
             {
                 return true;
             }
