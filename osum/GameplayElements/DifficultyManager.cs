@@ -65,11 +65,18 @@ namespace osum.GameplayElements
             }
         }
 
-        // TODO: PreEmptSnakeStart should depend on the slider length.
-        // For very short sliders, it should be around 50% of PreEmpt,
-        // whereas for long ones, it should be as large as (but never larger than) PreEmpt.
-        internal static int PreEmptSnakeStart { get { return PreEmpt; } }
-        internal static int PreEmptSnakeEnd { get { return 500; } }
+        // at what time does the snaking animation of a LONG slider begin?
+        internal static int SnakeStart { get { return PreEmpt * 9 / 10; } }
+
+        // at what time does the snaking animation of a SHORT slider end?
+        internal static int SnakeEndDesired { get { return PreEmpt / 2; } }
+
+        // at what time does the snaking animation of a LONG slider end?
+        internal static int SnakeEndLimit { get { return PreEmpt * 3 / 10; } }
+
+        // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
+        internal static double SnakeSpeedInverse { get { return 3.0d; } }
+
         internal static int HitWindow50
         {
             get

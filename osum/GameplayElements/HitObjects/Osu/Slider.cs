@@ -130,6 +130,16 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal Rectangle trackBounds;
 
         /// <summary>
+        /// Gameplay time when this slider begins snaking out
+        /// </summary>
+        internal int snakingBegin;
+
+        /// <summary>
+        /// Gameplay time when this slider ends its snake
+        /// </summary>
+        internal int snakingEnd;
+
+        /// <summary>
         /// Sprites which are stuck to the start position of the slider path.
         /// </summary>
         protected List<pDrawable> spriteCollectionStart = new List<pDrawable>();
@@ -179,6 +189,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             CalculateSplines();
 
+            CalculateSnakingTimes();
             initializeSprites();
             initializeStartCircle();
 
@@ -275,8 +286,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
-                    StartTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress),
-                    StartTime - DifficultyManager.PreEmptSnakeStart + (int)((DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd) * progress) + 100));
+                    snakingBegin + (int)((snakingEnd - snakingBegin) * progress),
+                    snakingBegin + (int)((snakingEnd - snakingBegin) * progress) + 100));
 
                 spriteCollectionScoringPoints.Add(scoringDot);
             }
@@ -364,8 +375,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private static RectangleF FindBoundingBox(List<Line> curve, float radius)
         {
-            // TODO: FIX this to use SCREEN coordinates instead of osupixels.
-
             if (curve.Count == 0) throw new ArgumentException("Curve must have at least one segment.");
 
             float Left = (int)curve[0].p1.X;
@@ -389,6 +398,39 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
+        }
+
+        private void CalculateSnakingTimes()
+        {
+            // time this slider wants to snake at
+            int DesiredTime = (int)(PathLength * (double)DifficultyManager.SnakeSpeedInverse);
+
+            // time our difficulty allows for const speed snaking
+            int AllowedTime = DifficultyManager.SnakeStart - DifficultyManager.SnakeEndDesired;
+
+            // time it must finish within no matter what
+            int RequiredTime = DifficultyManager.SnakeStart - DifficultyManager.SnakeEndLimit;
+
+            if (DesiredTime < AllowedTime)
+            {
+                // we have ample time, so end at the desired end time, and work our way back
+                snakingBegin = StartTime - DifficultyManager.SnakeEndDesired - DesiredTime;
+                snakingEnd = StartTime - DifficultyManager.SnakeEndDesired;
+            }
+            else if (DesiredTime < RequiredTime)
+            {
+                // we take more time than the desired window so allow the snaking to continue a little later
+                snakingBegin = StartTime - DifficultyManager.SnakeStart;
+                snakingEnd = StartTime - DifficultyManager.SnakeStart + DesiredTime;
+            }
+            else
+            {
+                // we are way over limit so speed up the snaking
+                snakingBegin = StartTime - DifficultyManager.SnakeStart;
+                snakingEnd = StartTime - DifficultyManager.SnakeEndLimit;
+            }
+
+            if (snakingBegin < StartTime - DifficultyManager.SnakeStart) throw new Exception();
         }
 
         internal override bool IsVisible
@@ -923,7 +965,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             //cut back the line to required exact length
             trackingPosition = positionAtProgress(progressCurrent);
 
-            if (IsVisible && ClockingNow > StartTime - DifficultyManager.PreEmptSnakeStart)
+            if (IsVisible && ClockingNow > snakingBegin)
                 UpdatePathTexture();
 
             spriteFollowBall.Position = trackingPosition;
@@ -984,8 +1026,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
 
-            double drawProgress = Math.Max(0, (double)(ClockingNow - StartTime + DifficultyManager.PreEmptSnakeStart) /
-                          (double)(DifficultyManager.PreEmptSnakeStart - DifficultyManager.PreEmptSnakeEnd));
+            double drawProgress = Math.Max(0, (double)(ClockingNow - snakingBegin) /
+                          (double)(snakingEnd - snakingBegin));
 
             if (drawProgress <= 0) return; //haven't started drawing yet.
 
