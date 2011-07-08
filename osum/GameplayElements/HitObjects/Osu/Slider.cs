@@ -994,6 +994,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 CreatePathTexture();
 
+                lastDrawnSegmentIndex = -1;
+                FirstSegmentIndex = 0;
                 if (sliderBodyTexture == null)
                     //creation failed
                     return;
@@ -1001,7 +1003,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (sliderBodyTexture.fboId < 0)
             {
-                lastDrawnSegmentIndex = 0;
+                lastDrawnSegmentIndex = -1;
                 FirstSegmentIndex = 0;
             }
 
