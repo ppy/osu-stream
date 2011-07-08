@@ -506,7 +506,7 @@ namespace osum.GameplayElements
                     {
                         if (currHitObject.NewCombo)
                         {
-                            currentComboNumber = 1;
+                            currentComboNumber = 0;
                             if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
                             {
                                 colourIndex += currHitObject.ComboOffset;
@@ -514,8 +514,8 @@ namespace osum.GameplayElements
                                 colourIndex %= TextureManager.DefaultColours.Length;
                             }
                         }
-                        else
-                            currentComboNumber = currentComboNumber + (currHitObject.IncrementCombo && !sameTimeAsLastAdded ? 1 : 0);
+                        
+                        currentComboNumber = currentComboNumber + (currHitObject.IncrementCombo && !sameTimeAsLastAdded ? 1 : 0);
                     }
 
                     currHitObject.ComboNumber = currentComboNumber;

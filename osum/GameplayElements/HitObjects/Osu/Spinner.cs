@@ -176,6 +176,14 @@ namespace osum.GameplayElements
             set { }
         }
 
+        public override bool IncrementCombo
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         internal override bool IsVisible
         {
             get
