@@ -125,10 +125,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal List<double> cumulativeLengths = new List<double>();
 
         /// <summary>
-        /// Track bounding rectangle measured in SCREEN COORDINATES
+        /// Track bounding rectangle measured in native (screen) coordinates
         /// </summary>
         internal Rectangle trackBounds;
-        internal Rectangle trackBoundsNative;
 
         /// <summary>
         /// Sprites which are stuck to the start position of the slider path.
@@ -1056,11 +1055,15 @@ namespace osum.GameplayElements.HitObjects.Osu
                 {
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
 
-                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
                     GL.MatrixMode(MatrixMode.Projection);
 
                     GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                    GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             -1, 1);
 
                     if (waitingForPathTextureClear)
                     {
@@ -1076,11 +1079,15 @@ namespace osum.GameplayElements.HitObjects.Osu
                 }
                 else
                 {
-                    GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
+                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
                     GL.MatrixMode(MatrixMode.Projection);
 
                     GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                    GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             -1, 1);
 
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
 
@@ -1109,26 +1116,21 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             RectangleF rectf = FindBoundingBox(drawableSegments, DifficultyManager.HitObjectRadiusGamefield);
 
-            trackBounds.X = (int)(rectf.X);
-            trackBounds.Y = (int)(rectf.Y);
-            trackBounds.Width = (int)rectf.Width + 1;
-            trackBounds.Height = (int)rectf.Height + 1;
-
-            trackBoundsNative.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatioAligned);
-            trackBoundsNative.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatioAligned);
-            trackBoundsNative.Width = (int)(rectf.Width * GameBase.BaseToNativeRatioAligned) + 1;
-            trackBoundsNative.Height = (int)(rectf.Height * GameBase.BaseToNativeRatioAligned) + 1;
+            trackBounds.X = (int)((rectf.X + GameBase.GamefieldOffsetVector1.X) * GameBase.BaseToNativeRatioAligned);
+            trackBounds.Y = (int)((rectf.Y + GameBase.GamefieldOffsetVector1.Y) * GameBase.BaseToNativeRatioAligned);
+            trackBounds.Width = (int)(rectf.Width * GameBase.BaseToNativeRatioAligned) + 1;
+            trackBounds.Height = (int)(rectf.Height * GameBase.BaseToNativeRatioAligned) + 1;
 
             lengthDrawn = 0;
             lastDrawnSegmentIndex = -1;
 
-            sliderBodyTexture = TextureManager.RequireTexture(trackBoundsNative.Width, trackBoundsNative.Height);
+            sliderBodyTexture = TextureManager.RequireTexture(trackBounds.Width, trackBounds.Height);
 
             if (sliderBodyTexture == null)
                 return;
 
             spriteSliderBody.Texture = sliderBodyTexture;
-            spriteSliderBody.Position = new Vector2(trackBoundsNative.X, trackBoundsNative.Y);
+            spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
 
             waitingForPathTextureClear = true;
         }
