@@ -37,19 +37,20 @@ namespace osum.GameModes.Play.Components
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
-
-                    menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                    if (menuText == null)
                     {
-                        TextAlignment = TextAlignment.Centre,
-                        Field = FieldTypes.StandardSnapBottomCentre,
-                        Origin = OriginTypes.Centre,
-                        Clocking = ClockTypes.Game,
-                        TextShadow = true,
-                        Alpha = 0
-                    };
-
-                    menuText.FadeInFromZero(400);
-                    GameBase.MainSpriteManager.Add(menuText);
+                        menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                        {
+                            TextAlignment = TextAlignment.Centre,
+                            Field = FieldTypes.StandardSnapBottomCentre,
+                            Origin = OriginTypes.Centre,
+                            Clocking = ClockTypes.Game,
+                            TextShadow = true,
+                        };
+    
+                        menuText.FadeInFromZero(400);
+                        GameBase.MainSpriteManager.Add(menuText);
+                    }
 
                     spriteManager.Sprites.ForEach(s =>
                     {
