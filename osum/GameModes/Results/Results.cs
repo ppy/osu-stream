@@ -523,6 +523,7 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+            TextureManager.Dispose(OsuTexture.ranking_background);
             InputManager.OnMove -= HandleInputManagerOnMove;
             base.Dispose();
         }
