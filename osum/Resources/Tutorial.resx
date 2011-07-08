@@ -341,7 +341,7 @@ Focus on the beat of the song and try to time your taps to get higher accuracy.<
     <value>If it hits zero on the lowest stream you will fail instantly, so watch out!</value>
   </data>
   <data name="Score1" xml:space="preserve">
-    <value>Scoring is based on a your accuracy and combo.</value>
+    <value>Scoring is based on your accuracy and combo.</value>
   </data>
   <data name="Score2" xml:space="preserve">
     <value>You can also get score bonuses from reaching higher streams, and for spinning spinners fast!</value>
