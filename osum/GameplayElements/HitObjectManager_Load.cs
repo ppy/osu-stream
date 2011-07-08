@@ -314,12 +314,15 @@ namespace osum.GameplayElements
                                     else
                                         offset += 1;
 
-                                    string[] samplesets = split[13].Split(':');
-                                    listSampleSets = new List<SampleSetInfo>(samplesets.Length);
-                                    for (int i = 0; i < samplesets.Length; i++)
+                                    if (split.Length > 13)
                                     {
-                                        SampleSetInfo node_ssi = parseSampleSet(samplesets[i]);
-                                        listSampleSets.Add(node_ssi);
+                                        string[] samplesets = split[13].Split(':');
+                                        listSampleSets = new List<SampleSetInfo>(samplesets.Length);
+                                        for (int i = 0; i < samplesets.Length; i++)
+                                        {
+                                            SampleSetInfo node_ssi = parseSampleSet(samplesets[i]);
+                                            listSampleSets.Add(node_ssi);
+                                        }
                                     }
 
                                     if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
