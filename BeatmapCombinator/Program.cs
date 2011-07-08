@@ -197,7 +197,7 @@ namespace BeatmapCombinator
                                     if ((type & HitObjectType.Spinner) > 0) endTime = (int)Decimal.Parse(split[5]);
 
                                     // take the slider's slide sampleset from 20ms after the head in case the head has a different sampleset
-                                    ControlPoint cp = bd.controlPointAt(slider ? time + 20 : endTime);
+                                    ControlPoint cp = bd.controlPointAt(slider ? time + 20 : endTime + 5);
 
                                     string stringRep = MakeSampleset(cp) + "," + line;
 
@@ -214,13 +214,13 @@ namespace BeatmapCombinator
                                         double ReboundTime = length / velocity;
 
                                         double currTime = time;
-                                        cp = bd.controlPointAt(currTime);
+                                        cp = bd.controlPointAt(currTime + 5);
 
                                         stringRep += "," + MakeSampleset(cp);
                                         for (int repeatNo = 0; repeatNo < repeatCount; repeatNo++)
                                         {
                                             currTime += ReboundTime;
-                                            cp = bd.controlPointAt(currTime);
+                                            cp = bd.controlPointAt(currTime + 5);
                                             stringRep += ":" + MakeSampleset(cp);
                                         }
                                     }
