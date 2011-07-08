@@ -1036,8 +1036,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.LoadIdentity();
                 
-                GL.Viewport(0, 0, trackBoundsNative.Width, trackBoundsNative.Height);
-                GL.Ortho(trackBounds.Left, trackBounds.Right, trackBounds.Top, trackBounds.Bottom, -1, 1);
+                GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
+                GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                             -1, 1);
 
                 if (waitingForPathTextureClear)
                 {
