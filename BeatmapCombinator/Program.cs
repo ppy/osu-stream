@@ -211,7 +211,7 @@ namespace BeatmapCombinator
 
                                         //velocity and scoring distance.
                                         stringRep += "," + velocity.ToString(nfi) + "," + bd.ScoringDistanceAt(time).ToString(nfi);
-                                        double ReboundTime = length / velocity;
+                                        double ReboundTime = 1000 * length / velocity;
 
                                         double currTime = time;
                                         cp = bd.controlPointAt(currTime + 5);
