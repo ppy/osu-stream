@@ -13,13 +13,10 @@ Todo stuff for osu!stream (initial release)
 |- Show thumbnails
 -Options
 |- Volume levels.
-|- Game centre login options.
-|- Credits
 -Main Menu
 |- Add news ticker of some kind.
 |- Update initial icon screen.
 -Song Select
-|- Prompt to use easy mode on first run of app.
 |- Some kind of scroll progress bar/song count display? (see http://puu.sh/2OQI).
 |- Finish difficulty star display (better colours/positioning).
 |- Show ranks on song list and unlock status.
@@ -34,27 +31,9 @@ Todo stuff for osu!stream (initial release)
 -Tutorial
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
 
-ranking screen sound effects.
-check playcount is being added correctly on the 
 slider has 1px border being drawn (http://puu.sh/3110)
-score submission not working correctly.
 change unlock to require A rank?
 run update loop in the background on ranking screen to change music while gamecentre dialog is vsible?
-check audio unloads after suspended
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
-game centre auth dialog doesn't work on ipad?
-follow lines for multitouch hits
-change loading/unloading texture behaviour (ranking screen uses menu textures already!! background image)
-autoplay finger centre for spinners is too high on ipad and iphone
-
-make spritesheet creation FAIL on non-div-2 texture
-
-check sprites are using exact pixels ast runtime
-
 make mode selection arrows more tappable
-
-ranking music playing on retry
-
-use non-exact pixels when dragging results
-
 slider stacked on slider breaks
