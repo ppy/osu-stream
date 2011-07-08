@@ -93,19 +93,22 @@ namespace osum.GameModes
             menuBackgroundNew.Add(osuLogoGloss);
 
             pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110 * 0.625f, -110 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255));
-            explosion.Transform(new TransformationBounce(initial_display + 50, initial_display + 2600, 1 * 0.625f * 0.625f, 1f, 7));
+            explosion.Transform(new TransformationBounce(initial_display, initial_display + 2600, 1 * 0.625f * 0.625f, 1f, 7));
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
             explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(140 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255));
-            explosion.Transform(new TransformationBounce(initial_display + 200, initial_display + 2900, 1.4f * 0.625f, 1.4f * 0.625f, 8));
+            explosion.Transform(new TransformationBounce(initial_display, initial_display + 2900, 1.4f * 0.625f, 1.4f * 0.625f, 8));
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
             explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-120 * 0.625f, 60 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255));
-            explosion.Transform(new TransformationBounce(initial_display + 400, initial_display + 3200, 1.2f * 0.625f, 1.7f * 0.625f, 5));
+            explosion.Transform(new TransformationBounce(initial_display, initial_display + 3200, 1.2f * 0.625f, 1.7f * 0.625f, 5));
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
+
+            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
+            spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
 
             stream = new pSprite(TextureManager.Load(OsuTexture.menu_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 180), 0.95f, true, Color4.White);
             stream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 900, initial_display + 1300));
@@ -114,15 +117,9 @@ namespace osum.GameModes
             additiveStream = stream.Clone();
             additiveStream.Additive = true;
             additiveStream.DrawDepth = 0.96f;
-            additiveStream.Alpha = 0;
-            additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 1300, initial_display + 2000));
-            additiveStream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 5000, initial_display + 5200) { Looping = true, LoopDelay = 5000 });
-            additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 5200, initial_display + 6000) { Looping = true, LoopDelay = 4400 });
-
+            additiveStream.Transform(new Transformation(TransformationType.Fade, 0, 1, initial_display + 1000, initial_display + 1200) { Looping = true, LoopDelay = 5000 });
+            additiveStream.Transform(new Transformation(TransformationType.Fade, 1, 0, initial_display + 1200, initial_display + 2000) { Looping = true, LoopDelay = 4400 });
             spriteManager.Add(additiveStream);
-
-            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, initial_display, initial_display);
-            spriteManager.Sprites.ForEach(s => s.Transform(fadeIn));
 
             osuLogoSmall = new pSprite(TextureManager.Load(OsuTexture.menu_logo), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(5, 5), 0.9f, true, Color4.White);
             osuLogoSmall.Alpha = 0;
@@ -143,6 +140,7 @@ namespace osum.GameModes
             if (firstDisplay)
             {
                 pDrawable whiteLayer = pSprite.FullscreenWhitePixel;
+                whiteLayer.Alpha = 0;
                 whiteLayer.Clocking = ClockTypes.Mode;
                 //whiteLayer.Additive = true;
                 spriteManager.Add(whiteLayer);

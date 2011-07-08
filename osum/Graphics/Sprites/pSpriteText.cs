@@ -309,43 +309,44 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
+        Color4 colZeroCached;
         public override bool Draw()
         {
-            if (AlwaysDraw || Transformations.Count != 0)
+            if (Alpha > 0 && (AlwaysDraw || !noTransformationsLeft))
             {
-                if (Alpha != 0)
+                if (textChanged) MeasureText();
+
+                Vector2 pos = FieldPosition;
+                Vector2 scale = FieldScale;
+                Color4 col = AlphaAppliedColour;
+                if (ZeroAlpha < 1)
+                    colZeroCached = new Color4(col.R * ZeroAlpha, col.G * ZeroAlpha, col.B * ZeroAlpha, col.A * ZeroAlpha);
+
+                bool isPaddedZero = true;
+
+                int i = 0;
+                foreach (pTexture tex in renderTextures)
                 {
-                    if (textChanged) MeasureText();
-
-                    int i = 0;
-
-                    Vector2 pos = FieldPosition;
-                    Vector2 scale = FieldScale;
-                    Color4 col = AlphaAppliedColour;
-                    Color4 colZero = new Color4(col.R * ZeroAlpha, col.G * ZeroAlpha, col.B * ZeroAlpha, col.A * ZeroAlpha);
-
-                    bool isPaddedZero = true;
-
-                    foreach (pTexture tex in renderTextures)
+                    // note: no srcRect calculation
+                    if (ZeroAlpha == 1)
                     {
-                        // note: no srcRect calculation
-                        if (tex.TextureGl != null)
-                        {
-                            if (textArray[i] != '0')
-                                isPaddedZero = false;
+                        tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                    }
+                    else
+                    {
+                        if (textArray[i] != '0')
+                            isPaddedZero = false;
 
-                            if (isPaddedZero)
-                                tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, colZero, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
-                            else
-                                tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
-                        }
-
-                        i++;
+                        if (isPaddedZero)
+                            tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, colZeroCached, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        else
+                            tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                     }
 
-                    return true;
+                    i++;
                 }
 
+                return true;
             }
 
             return false;

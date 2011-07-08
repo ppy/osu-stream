@@ -330,7 +330,7 @@ namespace osum.Graphics.Sprites
 
         bool exactCoordinatesOverride;
         internal override bool ExactCoordinates {
-            get { return !exactCoordinatesOverride && !(hasMovement || hasMovementX); }
+            get { return !exactCoordinatesOverride && !hasMovement; }
             set {
                 exactCoordinatesOverride = !value;
             }

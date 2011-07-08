@@ -134,9 +134,7 @@ namespace osum.Graphics.Sprites
 
             pDrawable clone = (pDrawable)this.MemberwiseClone();
             clone.Transformations = new pList<Transformation>();
-
-            foreach (Transformation t in Transformations)
-                clone.Transform(t.Clone());
+            clone.readInitialTransformationsOnce = false;
 
             return clone;
         }
@@ -190,7 +188,7 @@ namespace osum.Graphics.Sprites
 
         protected bool exactCoordinatesOverride;
         internal virtual bool ExactCoordinates {
-            get { return !exactCoordinatesOverride && UsesTextures && !(hasMovement || hasMovementX); }
+            get { return !exactCoordinatesOverride && UsesTextures && !hasMovement; }
             set {
                 exactCoordinatesOverride = !value;
             }
@@ -360,33 +358,78 @@ namespace osum.Graphics.Sprites
                 Transform(t);
         }
 
-        protected bool hasColour;
-        protected bool hasAlpha;
-        protected bool hasRotation;
-        protected bool hasScale;
         protected bool hasMovement;
-        protected bool hasMovementX;
+
+        bool readInitialTransformationsOnce;
 
         /// <summary>
         /// Iterates through each tansformation and applies where necessary.
         /// </summary>
         private void UpdateTransformations()
         {
-            hasColour = false;
-            hasAlpha = false;
-            hasRotation = false;
-            hasScale = false;
             hasMovement = false;
-            hasMovementX = false;
 
             int count = Transformations.Count;
 
             int now = ClockingNow;
 
+            noTransformationsLeft = count == 0;
+
+            if (!readInitialTransformationsOnce)
+            {
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    Transformation t = Transformations[i];
+
+                    t.Update(now);
+
+                    if (!t.Initiated)
+                    {
+                        switch (t.Type)
+                        {
+                            case TransformationType.Colour:
+                                Colour = t.StartColour;
+                                break;
+
+                            case TransformationType.Fade:
+                                Alpha = t.StartFloat;
+                                break;
+    
+                            case TransformationType.Movement:
+                                Position = t.StartVector;
+                                break;
+    
+                            case TransformationType.MovementX:
+                                Position.X = t.StartFloat;
+                                break;
+
+                            case TransformationType.MovementY:
+                                Position.Y = t.StartFloat;
+                                break;
+
+                            case TransformationType.Rotation:
+                                Rotation = t.StartFloat;
+                                break;
+
+                            case TransformationType.Scale:
+                                Scale = new Vector2(t.StartFloat, t.StartFloat);
+                                break;
+
+                            case TransformationType.VectorScale:
+                                Scale = t.StartVector;
+                                break;
+                        }
+                    }
+                }
+
+                readInitialTransformationsOnce = true;
+            }
+            else if (noTransformationsLeft || StartTime > now)
+                return;
+
             for (int i = 0; i < count; i++)
             {
                 Transformation t = Transformations[i];
-
                 t.Update(now);
 
                 // remove old transformations
@@ -396,26 +439,18 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.EndColour;
-                            if (!RemoveOldTransformations)
-                                hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.EndFloat;
-                            if (!RemoveOldTransformations)
-                                hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
                             Position = t.EndVector;
-                            if (!RemoveOldTransformations)
-                                hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
                             Position.X = t.EndFloat;
-                            if (!RemoveOldTransformations)
-                                hasMovementX = true;
                             break;
 
                         case TransformationType.MovementY:
@@ -426,26 +461,16 @@ namespace osum.Graphics.Sprites
                             Offset.X = t.EndFloat;
                             break;
 
-                        case TransformationType.ParameterAdditive:
-                            BlendingMode = BlendingFactorDest.One;
-                            break;
-
                         case TransformationType.Rotation:
                             Rotation = t.EndFloat;
-                            if (!RemoveOldTransformations)
-                                hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.EndFloat, t.EndFloat);
-                            if (!RemoveOldTransformations)
-                                hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.EndVector;
-                            if (!RemoveOldTransformations)
-                                hasScale = true;
                             break;
                     }
 
@@ -462,12 +487,10 @@ namespace osum.Graphics.Sprites
                     {
                         case TransformationType.Colour:
                             Colour = t.CurrentColour;
-                            hasColour = true;
                             break;
 
                         case TransformationType.Fade:
                             Alpha = t.CurrentFloat;
-                            hasAlpha = true;
                             break;
 
                         case TransformationType.Movement:
@@ -477,103 +500,33 @@ namespace osum.Graphics.Sprites
 
                         case TransformationType.MovementX:
                             Position.X = t.CurrentFloat;
-                            hasMovementX = true;
+                            hasMovement = true;
                             break;
 
                         case TransformationType.MovementY:
                             Position.Y = t.CurrentFloat;
+                            hasMovement = true;
                             break;
 
                         case TransformationType.OffsetX:
                             Offset.X = t.CurrentFloat;
-                            break;
-
-                        case TransformationType.ParameterAdditive:
-                            BlendingMode = BlendingFactorDest.One;
+                            hasMovement = true;
                             break;
 
                         case TransformationType.Rotation:
                             Rotation = t.CurrentFloat;
-                            hasRotation = true;
                             break;
 
                         case TransformationType.Scale:
                             Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
-                            hasScale = true;
                             break;
 
                         case TransformationType.VectorScale:
                             Scale = t.CurrentVector;
-                            hasScale = true;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (t.Type)
-                    {
-                        case TransformationType.Colour:
-                            if (!hasColour)
-                            {
-                                hasColour = true;
-                                Colour = t.CurrentColour;
-                            }
-                            break;
-
-                        case TransformationType.Fade:
-                            if (!hasAlpha)
-                            {
-                                hasAlpha = true;
-                                Alpha = t.CurrentFloat;
-                            }
-                            break;
-
-                        case TransformationType.Movement:
-                            if (!hasMovement)
-                                Position = t.CurrentVector;
-                            break;
-
-                        case TransformationType.MovementX:
-                            if (!hasMovementX)
-                                Position.X = t.CurrentFloat;
-                            break;
-
-                        case TransformationType.MovementY:
-                            Position.Y = t.CurrentFloat;
-                            break;
-
-                        case TransformationType.ParameterAdditive:
-                            BlendingMode = BlendingFactorDest.One;
-                            break;
-
-                        case TransformationType.Rotation:
-                            if (!hasRotation)
-                            {
-                                hasRotation = true;
-                                Rotation = t.CurrentFloat;
-                            }
-                            break;
-
-                        case TransformationType.Scale:
-                            if (!hasScale)
-                            {
-                                hasScale = true;
-                                Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
-                            }
-                            break;
-
-                        case TransformationType.VectorScale:
-                            if (!hasScale)
-                            {
-                                hasScale = true;
-                                Scale = t.CurrentVector;
-                            }
                             break;
                     }
                 }
             }
-
-            noTransformationsLeft = count == 0;
         }
 
         internal int ClockingNow
@@ -641,7 +594,7 @@ namespace osum.Graphics.Sprites
 
         internal SpriteManager SpriteManager;
         public bool AlphaBlend = true;
-        private bool noTransformationsLeft;
+        protected bool noTransformationsLeft;
 
         internal pDrawable AdditiveFlash(int duration, float brightness, bool keepTransformations = false)
         {

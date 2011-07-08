@@ -34,7 +34,6 @@ namespace osum.Graphics.Sprites
         MovementX,
         MovementY,
         VectorScale,
-        ParameterAdditive,
         OffsetX
     }
 
@@ -230,9 +229,7 @@ namespace osum.Graphics.Sprites
 
         internal Transformation Clone()
         {
-            Transformation t = (Transformation)MemberwiseClone();
-
-            return t;
+            return (Transformation)MemberwiseClone();
         }
 
         internal Transformation CloneReverse()
