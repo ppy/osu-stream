@@ -192,10 +192,12 @@ namespace BeatmapCombinator
                                     HitObjectType type = (HitObjectType)(Int32.Parse(split[3]) & 15);
                                     bool slider = (type & HitObjectType.Slider) > 0;
                                     int time = (int)Decimal.Parse(split[2]);
+                                    int endTime = time;
 
+                                    if ((type & HitObjectType.Spinner) > 0) endTime = (int)Decimal.Parse(split[5]);
 
                                     // take the slider's slide sampleset from 20ms after the head in case the head has a different sampleset
-                                    ControlPoint cp = bd.controlPointAt(slider ? time + 20 : time);
+                                    ControlPoint cp = bd.controlPointAt(slider ? time + 20 : endTime);
 
                                     string stringRep = MakeSampleset(cp) + "," + line;
 
