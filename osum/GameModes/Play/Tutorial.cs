@@ -81,6 +81,9 @@ namespace osum.GameModes.Play
 
         protected override void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
+            if (point.HoveringObject is BackButton)
+                return;
+
             if (touchToContinue && !backButton.IsHovering)
             {
                 if (touchToContinueText.Transformations.Count > 0)
@@ -191,10 +194,9 @@ namespace osum.GameModes.Play
 
                     GameBase.Scheduler.Add(delegate
                     {
-
                         backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, true);
                         backButton.Alpha = 0;
-                        backButton.FadeIn(500, 0.5f);
+                        backButton.FadeIn(100);
                         topMostSpriteManager.Add(backButton);
                     }, 500);
 
