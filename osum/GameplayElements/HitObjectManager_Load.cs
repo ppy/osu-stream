@@ -299,7 +299,6 @@ namespace osum.GameplayElements
                                     if (split[offset].Length > 0)
                                     {
                                         string[] adds = split[offset++].Split('|');
-                                        string[] samplesets = split[13].Split(':');
                                         
                                         if (adds.Length > 0)
                                         {
@@ -311,15 +310,17 @@ namespace osum.GameplayElements
                                                 sounds.Add((HitObjectSoundType)sound);
                                             }
                                         }
-                                        listSampleSets = new List<SampleSetInfo>(samplesets.Length);
-                                        for (int i = 0; i < samplesets.Length; i++)
-                                        {
-                                            SampleSetInfo node_ssi = parseSampleSet(samplesets[i]);
-                                            listSampleSets.Add(node_ssi);
-                                        }
                                     }
                                     else
                                         offset += 1;
+
+                                    string[] samplesets = split[13].Split(':');
+                                    listSampleSets = new List<SampleSetInfo>(samplesets.Length);
+                                    for (int i = 0; i < samplesets.Length; i++)
+                                    {
+                                        SampleSetInfo node_ssi = parseSampleSet(samplesets[i]);
+                                        listSampleSets.Add(node_ssi);
+                                    }
 
                                     if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
                                     {
