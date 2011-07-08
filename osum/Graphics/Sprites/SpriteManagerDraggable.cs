@@ -48,7 +48,7 @@ namespace osum.Graphics.Sprites
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
                 return;
 
-            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+            float change = trackingPoint.WindowDelta.Y;
 
             songSelectOffset += change;
             velocity = change;
