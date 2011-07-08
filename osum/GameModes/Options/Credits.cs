@@ -25,9 +25,9 @@ namespace osum.GameModes.Options
             "Koko Ban - Concept, Interface designs, colour scheme",
             "LuigiHann - Gameplay elements, rank letters",
             "*Implementation",
-            "mm201 - Slider drawing, gameplay mechanic tweaking",
-            "Intermezzo - Android platform management, file format",
-            "Echo49 - file format, engine upgrades, general tweaking",
+            "mm201 - Sliders sliders sliders, gameplay mechanic tweaking",
+            "Intermezzo - Android platform management, beatmap file format",
+            "Echo49 - beatmap file format, engine upgrades, general tweaking",
             "*Music",
             "kodex - osu! stream theme music",
             "Natteke - credit screen mix",
@@ -42,10 +42,8 @@ namespace osum.GameModes.Options
             "*Thanks",
             "Nintendo (iNiS) - Ouendan gameplay concept, original level design style",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
-            "Testers - Special thanks to Doddler, dvorak, James, kodex, Saphier, tim0liver and my mum",
+            "Testers - Special thanks to Doddler, dvorak, James, kodex, Saphier, tim0liver and my mum (i'm serious)",
             "#bat - For all the support and help on various occasions",
-            "*Note",
-            "Missed People - If your name isn't on this list and you think it should be, tell peppy quickly!"
         };
 
         int beatLength = 800;
@@ -62,6 +60,8 @@ namespace osum.GameModes.Options
             InitializeBgm();
 
             base.Initialize();
+
+            playfieldBackground.Colour = new Color4(33,81,138,255);
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); }, false);
             s_ButtonBack.DimImmune = true;
