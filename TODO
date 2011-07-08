@@ -56,3 +56,5 @@ make mode selection arrows more tappable
 ranking music playing on retry
 
 use non-exact pixels when dragging results
+
+slider stacked on slider breaks
