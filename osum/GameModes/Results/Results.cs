@@ -569,6 +569,9 @@ namespace osum.GameModes
                         p.Scale.Y = fill_height + thisOffset * 0.5f;
                     layer1.Position.Y = thisOffset * 0.6f;
                     layer2.Position.Y = thisOffset;
+
+                    layer1.ExactCoordinates = thisOffset == 0;
+                    layer2.ExactCoordinates = thisOffset == 0;
                 }
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
