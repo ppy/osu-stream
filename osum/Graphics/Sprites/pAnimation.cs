@@ -130,10 +130,9 @@ namespace osum.Graphics.Sprites
 
             timeSinceLastFrame += GameBase.ElapsedMilliseconds;
 
-            if (timeSinceLastFrame > FrameDelay)
+            while (timeSinceLastFrame > FrameDelay)
             {
                 increaseCurrentFrame(false);
-
                 timeSinceLastFrame -= FrameDelay;
             }
 
