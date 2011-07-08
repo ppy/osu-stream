@@ -128,7 +128,7 @@ namespace osum.GameModes.Play.Components
                         {
                             finger.Position = obj is Spinner ? spinningPositionFor(obj.ClockingNow) : obj.TrackingPosition;
 
-                            if (TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
+                            if (Player.Autoplay && TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
                                 TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                         }
                         else if (obj.IsVisible)
@@ -156,7 +156,7 @@ namespace osum.GameModes.Play.Components
                                     finger.ScaleScalar = 1 + 0.6f * vOffset;
                                 }
 
-                                if (TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
+                                if (Player.Autoplay && TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
                                     TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
                             }
                         }
