@@ -98,6 +98,8 @@ namespace osum.Graphics.Sprites
 
         internal bool IsHovering;
 
+        const int extraTouchSpace = 20;
+
         protected virtual bool checkHover(Vector2 position)
         {
             if (Alpha == 0 || Bypass)
@@ -105,10 +107,10 @@ namespace osum.Graphics.Sprites
 
             Box2 rect = DisplayRectangle;
 
-            return rect.Left < position.X &&
-                rect.Right >= position.X &&
-                rect.Top < position.Y &&
-                rect.Bottom >= position.Y;
+            return rect.Left - extraTouchSpace < position.X &&
+                rect.Right + extraTouchSpace >= position.X &&
+                rect.Top - extraTouchSpace < position.Y &&
+                rect.Bottom + extraTouchSpace >= position.Y;
         }
 
         void inputUpdateHoverState(TrackingPoint trackingPoint)
