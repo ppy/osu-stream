@@ -74,21 +74,6 @@ namespace osum.Graphics.Sprites
 
         }
 
-        internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
-        {
-            if (ContainingSpriteManager != null)
-                return;
-
-            if (lastUpdate != Clock.Time) return;
-
-            if (Sprites == null) return;
-
-            mapToCoordinates(ref trackingPoint);
-
-            for (int i = Sprites.Count - 1; i >= 0; i--)
-                Sprites[i].HandleOnUp(source, trackingPoint);
-        }
-
         void mapToCoordinates(ref TrackingPoint t)
         {
             //todo: optimise?
@@ -176,6 +161,18 @@ namespace osum.Graphics.Sprites
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
+        }
+
+        internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
+        {
+            if (lastUpdate != Clock.Time) return;
+
+            if (Sprites == null) return;
+
+            mapToCoordinates(ref trackingPoint);
+
+            for (int i = Sprites.Count - 1; i >= 0; i--)
+                Sprites[i].HandleOnUp(source, trackingPoint);
         }
 
         pDrawableDepthComparer depth = new pDrawableDepthComparer();
@@ -356,9 +353,11 @@ namespace osum.Graphics.Sprites
         }
 
         bool exactCoordinatesOverride;
-        internal override bool ExactCoordinates {
+        internal override bool ExactCoordinates
+        {
             get { return !exactCoordinatesOverride && !hasMovement; }
-            set {
+            set
+            {
                 exactCoordinatesOverride = !value;
             }
         }
@@ -564,8 +563,6 @@ namespace osum.Graphics.Sprites
             InputManager.OnMove -= HandleInputManagerOnMove;
             InputManager.OnDown -= HandleInputManagerOnDown;
             InputManager.OnUp -= HandleInputManagerOnUp;
-
-            Sprites = null;
         }
     }
 }

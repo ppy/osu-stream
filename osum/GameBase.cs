@@ -482,7 +482,7 @@ namespace osum
                 ActiveNotification = NotificationQueue.Dequeue();
                 ActiveNotification.Display();
                 //use the main sprite manager to handle input before anything else.
-                MainSpriteManager.Add(ActiveNotification.spriteManager);
+                MainSpriteManager.Add(ActiveNotification);
             }
         }
 

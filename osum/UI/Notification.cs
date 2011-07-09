@@ -12,7 +12,7 @@ using osum.Graphics.Renderers;
 
 namespace osum.UI
 {
-    public class Notification : GameComponent
+    public class Notification : SpriteManager
     {
         public bool Dismissed;
         private BoolDelegate Action;
@@ -45,7 +45,7 @@ namespace osum.UI
                 DimImmune = true
             };
 
-            spriteManager.Alpha = 0;
+            Alpha = 0;
 
             Action = action;
 
@@ -81,7 +81,7 @@ namespace osum.UI
                             dismiss(true);
                         };
 
-                        spriteManager.Add(okayButton);
+                        Add(okayButton);
 
                         pText okayText = new pText(osum.Resources.General.Okay, 24, new Vector2(0, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
@@ -91,7 +91,7 @@ namespace osum.UI
                             DimImmune = true
                         };
 
-                        spriteManager.Add(okayText);
+                        Add(okayText);
                     }
                     break;
                 case NotificationStyle.YesNo:
@@ -123,7 +123,7 @@ namespace osum.UI
                             dismiss(true);
                         };
 
-                        spriteManager.Add(okayButton);
+                        Add(okayButton);
 
                         pText okayText = new pText(osum.Resources.General.Yes, 24, new Vector2(-140, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
@@ -133,7 +133,7 @@ namespace osum.UI
                             DimImmune = true
                         };
 
-                        spriteManager.Add(okayText);
+                        Add(okayText);
                     }
                     {
                         pDrawable additiveButton = null;
@@ -163,7 +163,7 @@ namespace osum.UI
                             dismiss(false);
                         };
 
-                        spriteManager.Add(cancelButton);
+                        Add(cancelButton);
 
                         pText cancelText = new pText(osum.Resources.General.No, 24, new Vector2(140, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
@@ -173,14 +173,14 @@ namespace osum.UI
                             DimImmune = true
                         };
 
-                        spriteManager.Add(cancelText);
+                        Add(cancelText);
                     }
                     break;
             }
 
-            spriteManager.Add(back);
-            spriteManager.Add(descText);
-            spriteManager.Add(titleText);
+            Add(back);
+            Add(descText);
+            Add(titleText);
         }
 
         private void dismiss(bool completed)
@@ -189,34 +189,22 @@ namespace osum.UI
             {
                 if (Action != null) Action(completed);
                 Dismissed = true;
-                spriteManager.AlwaysDraw = false;
+                AlwaysDraw = false;
             }, 300);
 
-            spriteManager.FadeOut(300);
-            spriteManager.ScaleTo(0.95f, 300, EasingTypes.Out);
-            spriteManager.RotateTo(0.05f, 300, EasingTypes.Out);
+            FadeOut(300);
+            ScaleTo(0.95f, 300, EasingTypes.Out);
+            RotateTo(0.05f, 300, EasingTypes.Out);
             
         }
-
-        public float Alpha { get { return spriteManager.Alpha; } }
 
         internal void Display()
         {
             Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
             Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
 
-            spriteManager.Transform(bounce);
-            spriteManager.Transform(fadeIn);
-        }
-
-        public override void Update()
-        {
-            
-        }
-
-        public override bool Draw()
-        {
-            return true;
+            Transform(bounce);
+            Transform(fadeIn);
         }
     }
 

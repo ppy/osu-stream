@@ -132,7 +132,7 @@ namespace osum
             if (OnDown != null)
             {
                 if (GameBase.ActiveNotification != null)
-                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnDown(source, point);
+                    GameBase.ActiveNotification.HandleOnDown(source, point);
                 else
                     OnDown(source, point);
             }
@@ -147,7 +147,7 @@ namespace osum
             if (OnUp != null)
             {
                 if (GameBase.ActiveNotification != null)
-                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnUp(source, point);
+                    GameBase.ActiveNotification.HandleOnUp(source, point);
                 else
                     OnUp(source, point);
             }
@@ -159,7 +159,7 @@ namespace osum
             if (OnMove != null)
             {
                 if (GameBase.ActiveNotification != null)
-                    GameBase.ActiveNotification.spriteManager.HandleInputManagerOnMove(source, point);
+                    GameBase.ActiveNotification.HandleOnMove(source, point);
                 else
                     OnMove(source, point);
             }
