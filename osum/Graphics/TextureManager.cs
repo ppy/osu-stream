@@ -507,6 +507,10 @@ namespace osum.Graphics.Skins
         notification_button_yes,
         backbutton,
         menu_logo,
-        kokoban
+        kokoban,
+        sliderbar,
+        backbutton_arrows1,
+        backbutton_arrows2
+        
     }
 }

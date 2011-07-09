@@ -16,15 +16,14 @@ namespace osum.GameModes.SongSelect
 {
     class BackButton : pSprite
     {
-        pSprite arrow;
-
-        SpriteManager sm = new SpriteManager();
+        pAnimation arrow;
 
         EventHandler Action;
         const float offset = 0;
 
-        int colourIndex;
         private double elapsedRotation;
+
+        SpriteManager sm = new SpriteManager();
 
         static Vector2 hiddenPosition = new Vector2(-80, -218);
         static Vector2 visiblePosition { get { return positionAtDistance(10); } }
@@ -70,10 +69,10 @@ namespace osum.GameModes.SongSelect
                     FadeColour(Color4.White, 200);
                 }
             };
-            arrow = new pSprite(TextureManager.Load(OsuTexture.songselect_back_arrow), FieldTypes.StandardSnapBottomLeft, OriginTypes.Centre, ClockTypes.Mode, new Vector2(offset + 15, offset + 18), 1, true, Color4.White);
-
-            InputManager.OnMove += new InputHandler(InputManager_OnMove);
-            InputManager.OnUp += new InputHandler(InputManager_OnUp);
+            arrow = new pAnimation(TextureManager.LoadAnimation(OsuTexture.backbutton_arrows1, 2), FieldTypes.StandardSnapBottomLeft, OriginTypes.Custom, ClockTypes.Mode, new Vector2(offset + 15, offset + 18), 1, true, Color4.White);
+            arrow.FrameDelay = 500;
+            arrow.Offset = new Vector2(-330, 190);
+            sm.Add(arrow);
 
             Rotation = -(float)Math.PI / 4;
 
@@ -84,8 +83,11 @@ namespace osum.GameModes.SongSelect
         const int pull_limit_distance = 110;
         bool minimumHitPossible;
 
-        void InputManager_OnUp(InputSource source, TrackingPoint trackingPoint)
+
+        internal override void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            base.HandleOnUp(source, trackingPoint);
+
             if (tp != null)
             {
                 bool success = (minimumHitPossible && dist < hit_minimum_distance) || (dist > hit_pull_distance && dist < pull_limit_distance);
@@ -114,8 +116,11 @@ namespace osum.GameModes.SongSelect
             }
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+
+        internal override void HandleOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            base.HandleOnMove(source, trackingPoint);
+
             if (tp != null)
             {
                 Line l = new Line(downPoint, trackingPoint.BasePosition);
@@ -172,9 +177,6 @@ namespace osum.GameModes.SongSelect
 
         public override void Dispose()
         {
-            InputManager.OnMove -= InputManager_OnMove;
-            InputManager.OnUp -= InputManager_OnUp;
-
             sm.Dispose();
             base.Dispose();
         }
@@ -212,6 +214,9 @@ namespace osum.GameModes.SongSelect
             //}
 
             arrow.Alpha = this.Alpha;
+            arrow.Position = Position;
+            arrow.Rotation = Rotation;
+            arrow.Colour = Colour;
 
             sm.Update();
 
