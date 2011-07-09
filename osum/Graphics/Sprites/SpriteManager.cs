@@ -58,7 +58,7 @@ namespace osum.Graphics.Sprites
         {
             Sprites = new List<pDrawable>(sprites);
             foreach (pSprite s in Sprites)
-                s.SpriteManager = this;
+                s.ContainingSpriteManager = this;
 
             InputManager.OnMove += HandleInputManagerOnMove;
             InputManager.OnDown += HandleInputManagerOnDown;
@@ -76,6 +76,9 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            if (ContainingSpriteManager != null)
+                return;
+
             if (lastUpdate != Clock.Time) return;
 
             if (Sprites == null) return;
@@ -131,6 +134,23 @@ namespace osum.Graphics.Sprites
             {
                 return true;
             }
+        }
+
+        //the following three overrides pass events on to our actualy SpriteManager handlers.
+        //this is the case where we are contained inside another sprite manager.
+        internal override void HandleOnDown(InputSource source, TrackingPoint trackingPoint)
+        {
+            HandleInputManagerOnDown(source, trackingPoint);
+        }
+
+        internal override void HandleOnMove(InputSource source, TrackingPoint trackingPoint)
+        {
+            HandleInputManagerOnMove(source, trackingPoint);
+        }
+
+        internal override void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
+        {
+            HandleInputManagerOnUp(source, trackingPoint);
         }
 
         internal virtual void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
@@ -193,7 +213,14 @@ namespace osum.Graphics.Sprites
                 return;
             }
 
-            sprite.SpriteManager = this;
+            sprite.ContainingSpriteManager = this;
+
+            if (sprite is SpriteManager)
+            {
+                SpriteManager sm = (SpriteManager)sprite;
+                sm.UnbindAllEvents(); //events will be passed on via the standard pDrawable methods.
+                sm.CheckSpritesAreOnScreenBeforeRendering = CheckSpritesAreOnScreenBeforeRendering; //we want it to check for on-screen if we are.
+            }
 
             int pos = Sprites.BinarySearch(sprite, depth);
 
@@ -438,6 +465,17 @@ namespace osum.Graphics.Sprites
         }
 
         static bool alphaBlend = false;
+
+        public Vector2 ViewOffset
+        {
+            get
+            {
+                if (ContainingSpriteManager != null)
+                    return ContainingSpriteManager.ViewOffset + Offset;
+                return Offset;
+            }
+        }
+
         internal static bool AlphaBlend
         {
             get { return alphaBlend; }

@@ -112,10 +112,11 @@ namespace osum.Graphics.Sprites
             {
                 Box2 rect = DisplayRectangle;
 
-                if (SpriteManager != null)
+                if (ContainingSpriteManager != null)
                 {
-                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 - SpriteManager.Offset.X || rect.Right < -SpriteManager.Offset.X ||
-                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 - SpriteManager.Offset.Y || rect.Bottom < -SpriteManager.Offset.Y)
+                    Vector2 offset = ContainingSpriteManager.ViewOffset;
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 - offset.X || rect.Right < -offset.X ||
+                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 - offset.Y || rect.Bottom < -offset.Y)
                         return false;
                 }
                 else
@@ -592,7 +593,7 @@ namespace osum.Graphics.Sprites
             Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
-        internal SpriteManager SpriteManager;
+        internal SpriteManager ContainingSpriteManager;
         public bool AlphaBlend = true;
         protected bool noTransformationsLeft;
 
@@ -612,7 +613,7 @@ namespace osum.Graphics.Sprites
             clone.FadeOut(duration);
             clone.AlwaysDraw = false;
 
-            SpriteManager.Add(clone);
+            ContainingSpriteManager.Add(clone);
 
             return clone;
         }
@@ -732,7 +733,7 @@ namespace osum.Graphics.Sprites
             if (Bypass) return false;
 
             if (Alpha != 0 && //Colour.A != 0 &&
-                (AlwaysDraw || !noTransformationsLeft) && ((SpriteManager == null || !SpriteManager.CheckSpritesAreOnScreenBeforeRendering) || IsOnScreen))
+                (AlwaysDraw || !noTransformationsLeft) && ((ContainingSpriteManager == null || !ContainingSpriteManager.CheckSpritesAreOnScreenBeforeRendering) || IsOnScreen))
             {
                 return true;
             }
