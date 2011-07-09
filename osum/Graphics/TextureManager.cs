@@ -111,7 +111,7 @@ namespace osum.Graphics.Skins
                 pTexture tex;
                 if (SpriteCache.TryGetValue(info.SheetName, out tex))
                 {
-                    tex.UnloadTexture();
+                    tex.Dispose();
                     SpriteCache.Remove(info.SheetName);
                 }
             }
@@ -122,6 +122,20 @@ namespace osum.Graphics.Skins
             UnloadAll();
             SpriteCache.Clear();
             AnimationCache.Clear();
+        }
+
+        public static void ModeChange()
+        {
+            DisposeDisposable();
+            foreach (pTexture p in SpriteCache.Values)
+                p.usedSinceLastModeChange = false;
+        }
+
+        public static void PurgeUnusedTexture()
+        {
+            foreach (pTexture p in SpriteCache.Values.ToArray<pTexture>())
+                if (!p.usedSinceLastModeChange)
+                    Dispose(p.OsuTextureInfo);
         }
 
         public static void UnloadAll()
@@ -199,7 +213,10 @@ namespace osum.Graphics.Skins
             pTexture texture;
 
             if (SpriteCache.TryGetValue(name, out texture))
+            {
+                texture.usedSinceLastModeChange = true;
                 return texture;
+            }
 
 
             string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution) + ".png";
@@ -207,6 +224,7 @@ namespace osum.Graphics.Skins
             if (NativeAssetManager.Instance.FileExists(path))
             {
                 texture = pTexture.FromFile(path);
+                texture.usedSinceLastModeChange = true;
                 SpriteCache.Add(name, texture);
                 return texture;
             }

@@ -116,12 +116,17 @@ namespace osum.Support.iPhone
 
         public override void ReceiveMemoryWarning(UIApplication application)
         {
-            //todo: implement this.
-            /*if (!memoryJettisoned && !active)
+            Console.WriteLine("OSU MEMORY CLEANUP!");
+
+            if (!Director.IsTransitioning)
             {
-                TextureManager.UnloadAll();
-                memoryJettisoned = true;
-            }*/
+                TextureManager.PurgeUnusedTexture();
+                GC.Collect();
+            }
+            else
+            {
+                GameBase.Scheduler.Add(delegate { ReceiveMemoryWarning(application); }, 500);
+            }
         }
 
         public static bool Running { get { return active && !usingViewController; } }

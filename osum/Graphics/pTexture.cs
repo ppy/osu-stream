@@ -60,6 +60,11 @@ namespace osum.Graphics
 #endif
         //public SkinSource Source;
 
+        public override string ToString()
+        {
+            return assetName ?? "unknown texture " + Width + "x" + Height;
+        }
+
         public pTexture(TextureGl textureGl, int width, int height)
         {
             TextureGl = textureGl;
@@ -446,6 +451,7 @@ namespace osum.Graphics
 
         internal int fboId = -1;
         internal int fboDepthBuffer = -1;
+        public bool usedSinceLastModeChange;
 
         internal int BindFramebuffer()
         {

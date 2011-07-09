@@ -83,14 +83,13 @@ namespace osum
         /// <param name="newMode">The new mode specification.</param>
         private static void changeMode(OsuMode newMode)
         {
-            if (PendingMode == null)
-                loadNewMode(newMode);
-
             if (CurrentMode != null)
                 CurrentMode.Dispose();
 
-            if (CurrentOsuMode == PendingOsuMode)
-                TextureManager.DisposeDisposable();
+            TextureManager.ModeChange();
+
+            if (PendingMode == null)
+                loadNewMode(newMode);
             /*else if ((PendingOsuMode == OsuMode.Play && CurrentOsuMode != OsuMode.Results) ||
                 (CurrentOsuMode == OsuMode.Tutorial || PendingOsuMode == OsuMode.Tutorial) ||
                 (PendingOsuMode == OsuMode.SongSelect && (CurrentOsuMode == OsuMode.Play || CurrentOsuMode == OsuMode.Results)))
