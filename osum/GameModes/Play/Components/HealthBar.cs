@@ -80,7 +80,7 @@ namespace osum.GameplayElements.Scoring
         {
             get
             {
-                return s_barFill.DisplayRectangle.Right / GameBase.InputToFixedWidthAlign;
+                return s_barFill.DisplayRectangle.Right / GameBase.InputToFixedWidthAlign;  
             }
         }
 
