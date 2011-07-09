@@ -98,7 +98,7 @@ namespace osum.Graphics.Sprites
 
         internal bool IsHovering;
 
-        const int extraTouchSpace = 20;
+        const int extraTouchSpace = 0;
 
         protected virtual bool checkHover(Vector2 position)
         {
