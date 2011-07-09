@@ -87,28 +87,31 @@ namespace osum.Graphics.Sprites
             Vector2 pos = t.BasePosition;
             Vector2 origPos = pos;
 
-            pos.X -= GameBase.BaseSizeFixedWidth.Width / 2;
-            pos.Y -= GameBase.BaseSizeFixedWidth.Height / 2;
+            if (Rotation != 0)
+            {
+                pos.X -= GameBase.BaseSizeFixedWidth.Width / 2f;
+                pos.Y -= GameBase.BaseSizeFixedWidth.Height / 2f;
 
-            float cos = (float)Math.Cos(-Rotation);
-            float sin = (float)Math.Sin(-Rotation);
+                float cos = (float)Math.Cos(-Rotation);
+                float sin = (float)Math.Sin(-Rotation);
 
-            float newX = cos * pos.X - sin * pos.Y;
-            float newY = sin * pos.X + cos * pos.Y;
+                float newX = cos * pos.X - sin * pos.Y;
+                float newY = sin * pos.X + cos * pos.Y;
 
-            pos.X = newX;
-            pos.Y = newY;
+                pos.X = newX;
+                pos.Y = newY;
 
-            pos.X /= Scale.X;
-            pos.Y /= Scale.Y;
+                pos.X /= Scale.X;
+                pos.Y /= Scale.Y;
 
-            pos.X += GameBase.BaseSizeFixedWidth.Width / 2;
-            pos.Y += GameBase.BaseSizeFixedWidth.Height / 2;
+                pos.X += GameBase.BaseSizeFixedWidth.Width / 2f;
+                pos.Y += GameBase.BaseSizeFixedWidth.Height / 2f;
+            }
 
-            pos -= (Position + Offset);
+            pos -= (Position + Offset) * GameBase.InputToFixedWidthAlign;
 
             t.BasePosition = pos;
-            t.WindowDelta = pos - origPos;
+            //t.WindowDelta = pos - origPos;
 
             return;
         }

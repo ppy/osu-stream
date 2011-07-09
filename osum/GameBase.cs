@@ -220,9 +220,12 @@ namespace osum
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
 
-            BaseToNativeRatioAligned = BaseToNativeRatio * (BASE_SPRITE_RES / GameBase.SpriteResolution);
+            InputToFixedWidthAlign = BASE_SPRITE_RES / GameBase.SpriteResolution;
+
+            BaseToNativeRatioAligned = BaseToNativeRatio * InputToFixedWidthAlign;
 
             SpriteToBaseRatio = BaseSizeFixedWidth.Width / BASE_SPRITE_RES;
+            SpriteToBaseRatioAligned = (float)BaseSizeFixedWidth.Width / SpriteResolution;
 
             BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
 
@@ -237,7 +240,7 @@ namespace osum
 #if DEBUG
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
             Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
-            Console.WriteLine("prite multiplier is " + SpriteToBaseRatio);
+            Console.WriteLine("Sprite multiplier is " + SpriteToBaseRatio + " or aligned at " + SpriteToBaseRatioAligned);
 #endif
 
             TriggerLayoutChanged();
@@ -459,6 +462,8 @@ namespace osum
         internal static Queue<Notification> NotificationQueue = new Queue<Notification>();
 
         internal static int SpriteSheetResolution;
+        public static float InputToFixedWidthAlign;
+        public static float SpriteToBaseRatioAligned;
 
         internal static void Notify(string simple, BoolDelegate action = null)
         {

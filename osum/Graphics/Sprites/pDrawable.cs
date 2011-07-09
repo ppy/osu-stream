@@ -114,7 +114,7 @@ namespace osum.Graphics.Sprites
 
                 if (ContainingSpriteManager != null)
                 {
-                    Vector2 offset = ContainingSpriteManager.ViewOffset;
+                    Vector2 offset = ContainingSpriteManager.ViewOffset * GameBase.InputToFixedWidthAlign;
                     if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 - offset.X || rect.Right < -offset.X ||
                         rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 - offset.Y || rect.Bottom < -offset.Y)
                         return false;

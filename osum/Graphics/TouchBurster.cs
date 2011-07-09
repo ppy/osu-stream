@@ -29,11 +29,11 @@ namespace osum.Graphics
                 pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
                 burst.Additive = true;
                 burst.Alpha = 0;
-                burst.AlignToSprites = false;
                 burstSprites.Add(burst);
                 spriteManager.Add(burst);
 
                 burst.RemoveOldTransformations = false;
+                burst.AlignToSprites = false;
 
                 //make transformations beforehand to avoid creating many.
                 burst.Transform(new Transformation() { Type = TransformationType.Movement },

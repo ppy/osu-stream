@@ -143,7 +143,6 @@ namespace osum.GameplayElements
                 p.Transformations.Clear();
                 p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
                 p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 4 : DifficultyManager.FadeOut / 2)));
-                p.AlignToSprites = true;
             }
 
             SpriteSpin =
@@ -152,7 +151,6 @@ namespace osum.GameplayElements
                             SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), false, white);
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
-            SpriteSpin.AlignToSprites = true;
             Sprites.Add(SpriteSpin);
 
             ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Height * 0.47f, 0.1f, StartTime, EndTime));
@@ -161,7 +159,6 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
                             SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
-            SpriteClear.AlignToSprites = true;
             SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
 

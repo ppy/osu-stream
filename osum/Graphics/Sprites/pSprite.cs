@@ -136,11 +136,16 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - Vector2.Multiply(OriginVector,Scale) * GameBase.SpriteToBaseRatio;
+                Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - Vector2.Multiply(OriginVector, Scale) * GameBase.SpriteToBaseRatioAligned;
+
+                //new pRectangle(pos, new Vector2(
+                //       (float)DrawWidth * GameBase.SpriteToBaseRatioAligned * Scale.X,
+                //       (float)DrawHeight * GameBase.SpriteToBaseRatioAligned * Scale.Y)
+                //    , true, 1, Color4.LimeGreen) { AlignToSprites = false }.Draw();
 
                 return new Box2(pos.X, pos.Y,
-                    pos.X + (float)DrawWidth * GameBase.SpriteToBaseRatio * Scale.X,
-                    pos.Y + (float)DrawHeight * GameBase.SpriteToBaseRatio * Scale.Y);
+                    pos.X + (float)DrawWidth * GameBase.SpriteToBaseRatioAligned * Scale.X,
+                    pos.Y + (float)DrawHeight * GameBase.SpriteToBaseRatioAligned * Scale.Y);
             }
         }
 

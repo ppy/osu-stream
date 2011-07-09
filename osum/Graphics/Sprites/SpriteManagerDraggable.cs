@@ -71,14 +71,14 @@ namespace osum.Graphics.Sprites
 
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
-            movedX = 0;
-            movedY = 0;
-
             base.HandleInputManagerOnDown(source, trackingPoint);
         }
 
         internal override void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            movedX = 0;
+            movedY = 0;
+
             scrollbar.Transformations.Clear();
             scrollbar.Transform(new Transformation(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
 
@@ -112,11 +112,11 @@ namespace osum.Graphics.Sprites
 
             if (AutomaticHeight)
             {
-                float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSize.Height;
+                float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSizeFixedWidth.Height;
                 if (newOffset < offset_min)
                 {
                     offset_min = newOffset;
-                    scrollbar.Scale.Y = (float)GameBase.BaseSize.Height / (-offset_min + GameBase.BaseSize.Height) * GameBase.BaseSize.Height;
+                    scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace osum.Graphics.Sprites
             if (Director.PendingOsuMode == OsuMode.Unknown)
                 Offset.Y = scaledBackOffset;
 
-            scrollbar.Position.Y = Offset.Y / (offset_min - GameBase.BaseSize.Height) * GameBase.BaseSize.Height;
+            scrollbar.Position.Y = Offset.Y / (offset_min - GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
         }
     }
 }

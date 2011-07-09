@@ -96,7 +96,7 @@ namespace osum.GameModes.Play
 
         private pText showText(string text, float verticalOffset = 0)
         {
-            pText pt = new pText(text, 30, new Vector2(0, verticalOffset), new Vector2(GameBase.BaseSize.Width * 0.9f, 0), 1, true, Color4.White, true)
+            pText pt = new pText(text, 30, new Vector2(0, verticalOffset), new Vector2(GameBase.BaseSizeFixedWidth.Width * 0.9f, 0), 1, true, Color4.White, true)
             {
                 Field = FieldTypes.StandardSnapCentre,
                 TextAlignment = TextAlignment.Centre,

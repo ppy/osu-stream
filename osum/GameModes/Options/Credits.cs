@@ -50,6 +50,8 @@ namespace osum.GameModes.Options
 
         pDrawable lastText;
 
+        const int height_extra = 100;
+
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
@@ -66,7 +68,6 @@ namespace osum.GameModes.Options
             playfieldBackground.Colour = new Color4(33,81,138,255);
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); }, false);
-            s_ButtonBack.DimImmune = true;
             topMostSpriteManager.Add(s_ButtonBack);
 
             int time = Clock.ModeTime;
@@ -108,7 +109,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += header_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSize.Height + 60), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += header_spacing;
                 }
                 else if (drawString.StartsWith("OsuTexture."))
@@ -125,7 +126,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += image_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSize.Height + 60), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += image_spacing;
 
                 }
@@ -165,11 +166,11 @@ namespace osum.GameModes.Options
                             Alpha = 1
                         };
 
-                        text2.Transform(new Transformation(new Vector2(text2.Position.X, GameBase.BaseSize.Height + 60), new Vector2(text2.Position.X, -100), time, time + speed));
+                        text2.Transform(new Transformation(new Vector2(text2.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text2.Position.X, -100), time, time + speed));
                         spriteManager.Add(text2);
                     }
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSize.Height + 60), new Vector2(text.Position.X, -100), time, time + speed));
+                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text.Position.X, -100), time, time + speed));
                     time += spacing;
                 }
 
@@ -282,7 +283,6 @@ namespace osum.GameModes.Options
                         playfieldBackground.FlashColour(Color4.White, 500);
                         break;
                 }
-                Console.WriteLine(currentBeatNoLoop);
                 lastBeatNoLoop = currentBeatNoLoop;
             }
 
