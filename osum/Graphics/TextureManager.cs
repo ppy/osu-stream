@@ -135,7 +135,10 @@ namespace osum.Graphics.Skins
         {
             foreach (pTexture p in SpriteCache.Values.ToArray<pTexture>())
                 if (!p.usedSinceLastModeChange)
+                {
+                    Console.WriteLine("unloaded texture " + p.assetName);
                     Dispose(p.OsuTextureInfo);
+                }
             AnimationCache.Clear();
         }
 
