@@ -467,15 +467,15 @@ namespace osum.GameplayElements
         internal virtual void PlaySound(HitObjectSoundType type, SampleSetInfo ssi)
         {
             if ((type & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet.SampleSet, SampleSet.Volume);
+                AudioEngine.PlaySample(OsuSamples.HitFinish, ssi.SampleSet, ssi.Volume);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet.SampleSet, SampleSet.Volume);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, ssi.SampleSet, ssi.Volume);
 
             if ((type & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitClap, SampleSet.SampleSet, SampleSet.Volume);
+                AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, ssi.Volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.SampleSet, SampleSet.Volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, ssi.Volume);
         }
 
         protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }

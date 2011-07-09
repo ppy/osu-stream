@@ -676,8 +676,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (isTracking)
                 {
-                    SampleSetInfo ssi = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
-                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType, ssi);
+                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
+                              SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
                     if (!finished)
                         burstEndpoint();
                     scoringEndpointsHit++;
