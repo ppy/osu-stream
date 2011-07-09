@@ -327,9 +327,9 @@ namespace osum.Graphics.Sprites
                 float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress, 2));
 
                 if (Type == TransformationType.Scale)
-                    return Math.Max(0, StartFloat + diminishingMagnitude * rawSine);
+                    return Math.Max(0, EndFloat + diminishingMagnitude * rawSine);
                 else
-                    return StartFloat + diminishingMagnitude * rawSine;
+                    return EndFloat + diminishingMagnitude * rawSine;
             }
         }
     }

@@ -67,10 +67,6 @@ namespace osum.GameModes
         {
             int initial_display = firstDisplay ? 2950 : 0;
 
-            menuBackground =
-                new pSprite(TextureManager.Load(OsuTexture.menu_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(255,255,255,255));
-            menuBackground.ScaleScalar = 1.1f;
             //spriteManagerBehind.Add(menuBackground);
 
             menuBackgroundNew = new MenuBackground();
@@ -89,21 +85,20 @@ namespace osum.GameModes
             osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_gloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, new Color4(255, 255, 255, 100));
             osuLogoGloss.Offset = new Vector2(255, 248);
             osuLogoGloss.Additive = true;
-            osuLogoGloss.Transform(logoBounce);
             menuBackgroundNew.Add(osuLogoGloss);
 
-            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110 * 0.625f, -110 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255));
-            explosion.Transform(new TransformationBounce(initial_display, initial_display + 2600, 1 * 0.625f * 0.625f, 1f, 7));
+            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-110 * 0.625f, -110 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(252, 6, 127, 255)) { Alpha = 0 };
+            explosion.ScaleScalar = sizeForExplosion(0);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(140 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255));
-            explosion.Transform(new TransformationBounce(initial_display, initial_display + 2900, 1.4f * 0.625f, 1.4f * 0.625f, 8));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(170 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(255, 212, 27, 255)) { Alpha = 0 };
+            explosion.ScaleScalar = sizeForExplosion(1);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-120 * 0.625f, 60 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255));
-            explosion.Transform(new TransformationBounce(initial_display, initial_display + 3200, 1.2f * 0.625f, 1.7f * 0.625f, 5));
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-130 * 0.625f, 88 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(29, 209, 255, 255)) { Alpha = 0 };
+            explosion.ScaleScalar = sizeForExplosion(2);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
@@ -126,16 +121,17 @@ namespace osum.GameModes
             spriteManager.Add(osuLogoSmall);
 
             menuBackgroundNew.Transform(fadeIn);
-            menuBackground.Transform(fadeIn);
 
-//#if !iOS
-//            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
-//            spriteManager.Add(notice);
-//#endif
+            //#if !iOS
+            //            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
+            //            spriteManager.Add(notice);
+            //#endif
 
             osuLogo.Transform(fadeIn);
 
             InitializeBgm();
+
+            menuBackgroundNew.Transform(new TransformationBounce(initial_display, initial_display + 2000, menuBackgroundNew.ScaleScalar, 0.8f, 2));
 
             if (firstDisplay)
             {
@@ -155,7 +151,8 @@ namespace osum.GameModes
                 headphones.Transform(new Transformation(TransformationType.Fade, 1, 1, 1000, initial_display));
                 spriteManager.Add(headphones);
 
-                GameBase.Scheduler.Add(delegate {
+                GameBase.Scheduler.Add(delegate
+                {
                     AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
                     GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
                 }, true);
@@ -199,7 +196,7 @@ namespace osum.GameModes
         }
 
 
-        
+
         /// <summary>
         /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
         /// </summary>
@@ -226,12 +223,11 @@ namespace osum.GameModes
         }
 
         double elapsedRotation;
-        private pSprite menuBackground;
         private pSprite menuOptions;
         private pSprite stream;
 
         int lastBgmBeat = 0;
-        float between_beats = 375 / 2f;
+        float between_beats = 375 / 4f;
         int offset = 0;
         const int bar = 8;
         private pDrawable additiveStream;
@@ -240,11 +236,6 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            base.Update();
-
-            spriteManagerBehind.Update();
-            menuBackgroundNew.Update();
-
             osuLogoGloss.Rotation = -menuBackgroundNew.Rotation;
 
             if (AudioEngine.Music.IsElapsing)
@@ -269,54 +260,45 @@ namespace osum.GameModes
                     menuBackgroundNew.ScaleScalar += sCh;
             }
 
-            menuBackground.Rotation += -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00003 * GameBase.ElapsedMilliseconds);
-            menuBackground.ScaleScalar += -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00001 * GameBase.ElapsedMilliseconds);
+            updateBeat();
 
-            int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
-            if (osuLogo.Transformations.Count == 0)
-            {
-                if (newBeat > 15)
-                {
-                    if (lastBgmBeat != newBeat)
-                    {
-                        switch (newBeat % 8)
-                        {
-                            case 0:
-                                explode(0);
-                                osuLogo.ScaleScalar -= 0.03f;
-                                osuLogoGloss.ScaleScalar -= 0.03f;
-                                break;
-                            case 2:
-                                explode(1);
-                                osuLogo.ScaleScalar += 0.03f;
-                                osuLogoGloss.ScaleScalar += 0.03f;
-                                break;
-                            case 5:
-                                explode(0);
-                                osuLogo.ScaleScalar -= 0.03f;
-                                osuLogoGloss.ScaleScalar -= 0.03f;
-                                break;
-                            case 6:
-                                explode(1);
-                                osuLogo.ScaleScalar += 0.03f;
-                                osuLogoGloss.ScaleScalar += 0.03f;
-                                break;
-                            case 7:
-                                explode(2);
-                                break;
-                        }
-    
-                        lastBgmBeat = newBeat;
-                    }
-                }
-            }
+            base.Update();
+            spriteManagerBehind.Update();
+            menuBackgroundNew.Update();
+
+            osuLogoGloss.ScaleScalar = osuLogo.ScaleScalar;
         }
 
         private void explode(int beat)
         {
-            if (explosions[beat].Transformations.Count > 0) return;
+            pDrawable explosion = explosions[beat];
 
-            explosions[beat].Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + (int)(between_beats * 2), explosions[beat].ScaleScalar, (1.3f * 0.625f  - explosions[beat].ScaleScalar) * 0.5f, 3));
+            if (explosion.Alpha == 0 && !menuBackgroundNew.IsAwesome && osuLogo.ScaleScalar >= 0.6f)
+            {
+                explosion.ScaleScalar *= 1.3f;
+                explosion.FadeIn(100);
+            }
+
+            if (!menuBackgroundNew.IsAwesome)
+            {
+                float adjust = beat == 0 ? 0.95f : (beat == 1 ? 1.05f : 1);
+                if (osuLogo.Transformations.Count != 0 && osuLogo.Transformations[0] is TransformationBounce)
+                    osuLogo.Transformations[0].EndFloat *= adjust;
+                else
+                {
+                    osuLogo.ScaleScalar *= adjust;
+                    osuLogo.ScaleTo(0.625f, 500, EasingTypes.In);
+                }
+            }
+
+            explosion.FlashColour(ColourHelper.Lighten2(explosion.Colour, 0.4f), 350);
+            explosion.ScaleScalar *= 1.2f;
+            explosion.ScaleTo(sizeForExplosion(beat), 400, EasingTypes.In);
+        }
+
+        private float sizeForExplosion(int beat)
+        {
+            return 0.7f - beat * 0.05f;
         }
 
         public override bool Draw()
@@ -326,12 +308,505 @@ namespace osum.GameModes
 
             base.Draw();
 
-            
+
 
             //if (!Director.IsTransitioning)
             //	osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
 
             return true;
+        }
+
+        private void updateBeat()
+        {
+            int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
+            if (lastBgmBeat != newBeat)
+            {
+                switch (newBeat)
+                {
+                    case 0:
+                    case 10:
+                    case 16:
+                    case 24:
+                    case 26:
+                    case 32:
+                    case 42:
+                    case 48:
+                    case 56:
+                    case 58:
+                    case 64:
+                    case 74:
+                    case 80:
+                    case 88:
+                    case 90:
+                    case 96:
+                    case 106:
+                    case 112:
+                    case 120:
+                    case 126:
+                    case 128:
+                    case 138:
+                    case 144:
+                    case 152:
+                    case 154:
+                    case 160:
+                    case 170:
+                    case 176:
+                    case 184:
+                    case 186:
+                    case 192:
+                    case 202:
+                    case 208:
+                    case 216:
+                    case 218:
+                    case 224:
+                    case 234:
+                    case 240:
+                    case 248:
+                    case 249:
+                    case 250:
+                    case 254:
+                    case 256:
+                    case 266:
+                    case 272:
+                    case 280:
+                    case 282:
+                    case 288:
+                    case 298:
+                    case 304:
+                    case 312:
+                    case 314:
+                    case 320:
+                    case 330:
+                    case 336:
+                    case 344:
+                    case 346:
+                    case 352:
+                    case 362:
+                    case 368:
+                    case 376:
+                    case 378:
+                    case 382:
+                    case 384:
+                    case 394:
+                    case 400:
+                    case 408:
+                    case 410:
+                    case 416:
+                    case 426:
+                    case 432:
+                    case 440:
+                    case 442:
+                    case 448:
+                    case 458:
+                    case 464:
+                    case 472:
+                    case 474:
+                    case 480:
+                    case 484:
+                    case 488:
+                    case 492:
+                    case 496:
+                    case 498:
+                    case 500:
+                    case 502:
+                    case 504:
+                    case 505:
+                    case 506:
+                    case 507:
+                    case 508:
+                    case 509:
+                    case 510:
+                    case 511:
+                    case 608:
+                    case 612:
+                    case 616:
+                    case 620:
+                    case 624:
+                    case 626:
+                    case 628:
+                    case 630:
+                    case 632:
+                    case 633:
+                    case 634:
+                    case 635:
+                    case 636:
+                    case 637:
+                    case 638:
+                    case 639:
+                    case 640:
+                    case 650:
+                    case 656:
+                    case 664:
+                    case 666:
+                    case 672:
+                    case 682:
+                    case 688:
+                    case 696:
+                    case 698:
+                    case 704:
+                    case 714:
+                    case 720:
+                    case 728:
+                    case 730:
+                    case 736:
+                    case 746:
+                    case 752:
+                    case 760:
+                    case 762:
+                    case 766:
+                    case 768:
+                    case 778:
+                    case 784:
+                    case 792:
+                    case 794:
+                    case 800:
+                    case 810:
+                    case 816:
+                    case 824:
+                    case 826:
+                    case 832:
+                    case 842:
+                    case 848:
+                    case 856:
+                    case 858:
+                    case 864:
+                    case 874:
+                    case 880:
+                    case 888:
+                    case 890:
+                    case 894:
+                    case 896:
+                    case 906:
+                    case 912:
+                    case 920:
+                    case 922:
+                    case 928:
+                    case 938:
+                    case 944:
+                    case 952:
+                    case 954:
+                    case 960:
+                    case 970:
+                    case 976:
+                    case 984:
+                    case 986:
+                    case 992:
+                    case 1002:
+                    case 1008:
+                    case 1016:
+                    case 1018:
+                    case 1022:
+                        explode(0);
+                        break;
+                }
+
+                switch (newBeat)
+                {
+                    case 4:
+                    case 12:
+                    case 20:
+                    case 28:
+                    case 36:
+                    case 44:
+                    case 52:
+                    case 60:
+                    case 68:
+                    case 76:
+                    case 84:
+                    case 92:
+                    case 100:
+                    case 108:
+                    case 116:
+                    case 123:
+                    case 125:
+                    case 132:
+                    case 140:
+                    case 148:
+                    case 156:
+                    case 164:
+                    case 172:
+                    case 180:
+                    case 188:
+                    case 196:
+                    case 204:
+                    case 212:
+                    case 220:
+                    case 228:
+                    case 236:
+                    case 244:
+                    case 249:
+                    case 252:
+                    case 253:
+                    case 260:
+                    case 268:
+                    case 276:
+                    case 284:
+                    case 292:
+                    case 300:
+                    case 308:
+                    case 316:
+                    case 324:
+                    case 332:
+                    case 340:
+                    case 348:
+                    case 356:
+                    case 364:
+                    case 372:
+                    case 379:
+                    case 381:
+                    case 388:
+                    case 396:
+                    case 404:
+                    case 412:
+                    case 420:
+                    case 428:
+                    case 436:
+                    case 444:
+                    case 452:
+                    case 460:
+                    case 468:
+                    case 476:
+                    case 480:
+                    case 484:
+                    case 488:
+                    case 492:
+                    case 496:
+                    case 498:
+                    case 500:
+                    case 502:
+                    case 504:
+                    case 505:
+                    case 506:
+                    case 507:
+                    case 508:
+                    case 509:
+                    case 510:
+                    case 511:
+                    case 608:
+                    case 612:
+                    case 616:
+                    case 620:
+                    case 624:
+                    case 626:
+                    case 628:
+                    case 630:
+                    case 632:
+                    case 633:
+                    case 634:
+                    case 635:
+                    case 636:
+                    case 637:
+                    case 638:
+                    case 639:
+                    case 644:
+                    case 652:
+                    case 660:
+                    case 668:
+                    case 676:
+                    case 684:
+                    case 692:
+                    case 700:
+                    case 708:
+                    case 716:
+                    case 724:
+                    case 732:
+                    case 740:
+                    case 748:
+                    case 756:
+                    case 763:
+                    case 765:
+                    case 772:
+                    case 780:
+                    case 788:
+                    case 796:
+                    case 804:
+                    case 812:
+                    case 820:
+                    case 828:
+                    case 836:
+                    case 844:
+                    case 852:
+                    case 860:
+                    case 868:
+                    case 876:
+                    case 884:
+                    case 892:
+                    case 900:
+                    case 908:
+                    case 916:
+                    case 924:
+                    case 932:
+                    case 940:
+                    case 948:
+                    case 956:
+                    case 964:
+                    case 972:
+                    case 980:
+                    case 988:
+                    case 996:
+                    case 1004:
+                    case 1012:
+                    case 1017:
+                    case 1020:
+                    case 1021:
+                        explode(1);
+                        break;
+                }
+
+                switch (newBeat)
+                {
+                    case 130:
+                    case 134:
+                    case 138:
+                    case 142:
+                    case 146:
+                    case 150:
+                    case 154:
+                    case 158:
+                    case 162:
+                    case 166:
+                    case 170:
+                    case 174:
+                    case 178:
+                    case 182:
+                    case 186:
+                    case 190:
+                    case 194:
+                    case 198:
+                    case 202:
+                    case 206:
+                    case 210:
+                    case 214:
+                    case 218:
+                    case 222:
+                    case 226:
+                    case 230:
+                    case 234:
+                    case 238:
+                    case 258:
+                    case 262:
+                    case 266:
+                    case 270:
+                    case 274:
+                    case 278:
+                    case 282:
+                    case 286:
+                    case 290:
+                    case 294:
+                    case 298:
+                    case 302:
+                    case 306:
+                    case 310:
+                    case 314:
+                    case 318:
+                    case 322:
+                    case 326:
+                    case 330:
+                    case 334:
+                    case 338:
+                    case 342:
+                    case 346:
+                    case 350:
+                    case 354:
+                    case 358:
+                    case 362:
+                    case 366:
+                    case 374:
+                    case 378:
+                    case 386:
+                    case 390:
+                    case 394:
+                    case 398:
+                    case 402:
+                    case 406:
+                    case 410:
+                    case 414:
+                    case 418:
+                    case 422:
+                    case 426:
+                    case 430:
+                    case 434:
+                    case 438:
+                    case 442:
+                    case 446:
+                    case 450:
+                    case 454:
+                    case 458:
+                    case 462:
+                    case 466:
+                    case 470:
+                    case 474:
+                    case 478:
+                    case 482:
+                    case 486:
+                    case 490:
+                    case 494:
+                    case 642:
+                    case 646:
+                    case 650:
+                    case 654:
+                    case 658:
+                    case 662:
+                    case 666:
+                    case 670:
+                    case 674:
+                    case 678:
+                    case 682:
+                    case 686:
+                    case 690:
+                    case 694:
+                    case 698:
+                    case 702:
+                    case 706:
+                    case 710:
+                    case 714:
+                    case 718:
+                    case 722:
+                    case 726:
+                    case 730:
+                    case 734:
+                    case 738:
+                    case 742:
+                    case 746:
+                    case 750:
+                    case 758:
+                    case 762:
+                    case 770:
+                    case 774:
+                    case 778:
+                    case 782:
+                    case 786:
+                    case 790:
+                    case 794:
+                    case 798:
+                    case 802:
+                    case 806:
+                    case 810:
+                    case 814:
+                    case 818:
+                    case 822:
+                    case 826:
+                    case 830:
+                    case 834:
+                    case 838:
+                    case 842:
+                    case 846:
+                    case 850:
+                    case 854:
+                    case 858:
+                    case 862:
+                    case 866:
+                    case 870:
+                    case 874:
+                    case 878:
+                    case 886:
+                    case 890:
+                        explode(2);
+                        break;
+                }
+
+                lastBgmBeat = newBeat;
+            }
         }
     }
 
