@@ -332,7 +332,7 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.m4a", true);
+            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.aac", true);
 #else
             bool didLoad = AudioEngine.Music.Load("Skins/Default/results.mp3", true);
 #endif

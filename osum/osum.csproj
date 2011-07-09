@@ -397,7 +397,6 @@
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\menuback.wav" />
-    <Content Include="Skins\Default\songselect.m4a" />
     <Content Include="Skins\Default\spinnerbonus.wav" />
     <Content Include="Skins\Default\menuclick.wav" />
     <Content Include="Skins\Default\spinnerspin.wav" />
@@ -421,11 +420,12 @@
     <Content Include="Skins\Default\mainmenu_intro.wav" />
     <Content Include="Skins\Default\rankingbam.wav" />
     <Content Include="Skins\Default\rankingbam2.wav" />
-    <Content Include="Skins\Default\results.m4a" />
     <Content Include="Skins\Default\intro_480.png" />
     <Content Include="Skins\Default\intro_960.png" />
     <Content Include="Skins\Default\credits.m4a" />
     <Content Include="Skins\Default\mainmenu.aac" />
+    <Content Include="Skins\Default\results.aac" />
+    <Content Include="Skins\Default\songselect.aac" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
