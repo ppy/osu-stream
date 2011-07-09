@@ -445,8 +445,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 snakingBegin = StartTime - DifficultyManager.SnakeStart;
                 snakingEnd = StartTime - DifficultyManager.SnakeEndLimit;
             }
-
-            if (snakingBegin < StartTime - DifficultyManager.SnakeStart) throw new Exception();
         }
 
         internal override bool IsVisible
