@@ -76,7 +76,7 @@ namespace osum.GameModes.Store
 
         void netRequest_onFinish(string _result, Exception e)
         {
-            if (Director.CurrentOsuMode != OsuMode.Store)
+            if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
                 return;
 
             if (e != null || string.IsNullOrEmpty(_result))
