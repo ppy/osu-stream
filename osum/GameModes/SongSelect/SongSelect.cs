@@ -63,7 +63,10 @@ namespace osum.GameModes
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
 
             //todo: write less
-            BeatmapDatabase.Write();
+            if (Director.LastOsuMode == OsuMode.Results || Director.LastOsuMode == OsuMode.Play)
+                BeatmapDatabase.Write();
+            else
+                BeatmapDatabase.Initialize();
 
             GameBase.Config.SaveConfig();
 
