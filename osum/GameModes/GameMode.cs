@@ -17,7 +17,8 @@ namespace osum.GameModes
         Store,
         Options,
         Tutorial,
-        Credits
+        Credits,
+        PositioningTest
     }
 
     /// <summary>

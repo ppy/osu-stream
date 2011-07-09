@@ -156,6 +156,11 @@ namespace osum
                 case OsuMode.Credits:
                     mode = new Credits();
                     break;
+#if MONO
+                case OsuMode.PositioningTest:
+                    mode = new PositioningTest();
+                    break;
+#endif
             }
 
             PendingMode = mode;

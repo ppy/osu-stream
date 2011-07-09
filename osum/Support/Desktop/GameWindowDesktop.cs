@@ -71,6 +71,18 @@ namespace osum
                         bmi.HighScore = 1;
                     }
                     break;
+                case 'k':
+                    Director.ChangeMode(OsuMode.PositioningTest);
+                    break;
+                case 'h':
+                    if (ClientSize.Width == 960)
+                        ClientSize = new Size(480, 320);
+                    else
+                        ClientSize = new Size(960, 640);
+                    break;
+                case 'i':
+                    ClientSize = new Size(1024, 768);
+                    break;
                 case 'p':
                     Director.ChangeMode(OsuMode.SongSelect);
                     break;
@@ -122,13 +134,6 @@ namespace osum
                 Exit();
             if (Keyboard[Key.Right])
                 AudioEngine.Music.SeekTo(Clock.AudioTime + 500);
-            if (Keyboard[Key.H])
-            {
-                if (ClientSize.Width == 960)
-                    ClientSize = new Size(480, 320);
-                else
-                    ClientSize = new Size(960, 640);
-            }
             if (Keyboard[Key.T])
                 Director.ChangeMode(OsuMode.Tutorial);
 

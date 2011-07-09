@@ -61,6 +61,7 @@
     <Compile Include="GameModes\Play\Player.cs" />
     <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
     <Compile Include="GameModes\Play\Tutorial.cs" />
+    <Compile Include="GameModes\PositioningTest.cs" />
     <Compile Include="GameModes\Results\Results.cs" />
     <Compile Include="GameModes\Results\ResultTransition.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect.cs" />
