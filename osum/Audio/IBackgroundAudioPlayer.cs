@@ -12,7 +12,7 @@ namespace osum
         /// Gets the current volume.
         /// </summary>
         /// <value>The current volume.</value>
-        private float dimmableVolume = -1;
+        private float dimmableVolume = 1;
         public float DimmableVolume
         {
             get { return dimmableVolume; }
