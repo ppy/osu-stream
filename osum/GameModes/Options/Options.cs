@@ -31,8 +31,7 @@ namespace osum.GameModes.Options
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); s_ButtonBack.DimImmune = false; }, Director.LastOsuMode == OsuMode.MainMenu);
-            if (Director.LastOsuMode != OsuMode.MainMenu) s_ButtonBack.DimImmune = true;
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, Director.LastOsuMode == OsuMode.MainMenu);
             smd.AddNonDraggable(s_ButtonBack);
 
             if (MainMenu.InitializeBgm())
@@ -47,7 +46,6 @@ namespace osum.GameModes.Options
 
             pButton button = new pButton("Credits", new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
-                s_ButtonBack.DimImmune = true;
                 Director.ChangeMode(OsuMode.Credits);
             });
             smd.Add(button);
@@ -115,8 +113,6 @@ namespace osum.GameModes.Options
             smd.Add(text);
 
             vPos += 50;
-
-
         }
 
         internal static void DisplayFingerGuideDialog()

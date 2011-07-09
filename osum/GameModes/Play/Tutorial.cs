@@ -56,6 +56,8 @@ namespace osum.GameModes.Play
 
         public override void Dispose()
         {
+            InputManager.OnDown -= InputManager_OnDown;
+
             base.Dispose();
         }
 
@@ -84,7 +86,7 @@ namespace osum.GameModes.Play
             if (point.HoveringObject is BackButton)
                 return;
 
-            if (touchToContinue && !backButton.IsHovering)
+            if (touchToContinue && backButton != null && !backButton.IsHovering)
             {
                 if (touchToContinueText.Transformations.Count > 0)
                     loadNextSegment();
