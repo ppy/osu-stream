@@ -11,8 +11,6 @@ Todo stuff for osu!stream (initial release)
 |- Send thumbnail/other data to client.
 -Store
 |- Show thumbnails
--Options
-|- Volume levels.
 -Main Menu
 |- Add news ticker of some kind.
 |- Update initial icon screen.
