@@ -236,7 +236,7 @@ namespace osum.Graphics.Renderers
         /// <param name="OuterColour">Track edges</param>
         internal static void ComputeSliderColour(Color colour, out Color InnerColour, out Color OuterColour)
         {
-            Color col = new Color(colour.R, colour.G, colour.B, 230 / 255f); // Weird opengl transparency issue
+            Color col = new Color(colour.R, colour.G, colour.B, 200 / 255f); // Weird opengl transparency issue
             InnerColour = ColourHelper.Lighten2(col, 0.5f);
             OuterColour = ColourHelper.Darken(col, 0.1f);
         }
