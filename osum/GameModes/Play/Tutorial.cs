@@ -1241,7 +1241,7 @@ namespace osum.GameModes.Play
                     healthBar.SetCurrentHp(100);
                     hideFailScreen();
                     AudioEngine.Music.Play();
-                    AudioEngine.Music.Volume = 1; //may have been dimmed during fail.
+                    AudioEngine.Music.DimmableVolume = 1; //may have been dimmed during fail.
 
                     healthBar.InitialIncrease = true;
                     currentSegmentDelegate = delegate { if (healthBar.DisplayHp > 20) loadNextSegment(); };

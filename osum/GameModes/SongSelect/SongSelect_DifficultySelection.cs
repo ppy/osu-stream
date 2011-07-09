@@ -44,7 +44,7 @@ namespace osum.GameModes
         {
             if (State != SelectState.LoadingPreview) return;
 
-            AudioEngine.Music.Volume = 0;
+            AudioEngine.Music.DimmableVolume = 0;
             AudioEngine.Music.SeekTo(30000);
             AudioEngine.Music.Play();
 

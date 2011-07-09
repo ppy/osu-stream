@@ -521,11 +521,11 @@ namespace osum.GameModes
             {
                 if (AudioEngine.Music != null)
                 {
-                    float vol = AudioEngine.Music.Volume;
+                    float vol = AudioEngine.Music.DimmableVolume;
                     if (vol == 0 && AudioEngine.Music.IsElapsing)
                         AudioEngine.Music.Pause();
                     else
-                        AudioEngine.Music.Volume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
+                        AudioEngine.Music.DimmableVolume -= (float)(GameBase.ElapsedMilliseconds) * 0.001f;
                 }
             }
 

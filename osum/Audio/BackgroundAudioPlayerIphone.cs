@@ -21,17 +21,10 @@ namespace osum
 #endif
 		}
 		
-		public override float Volume {
-			get {
-				if (player == null) return 1;
-				
-				return player.Volume;
-			}
-			set {
-				if (player == null) return;
-				
-				player.Volume = pMathHelper.ClampToOne(value);
-			}
+		protected override void updateVolume()
+        {
+            if (player == null) return;
+            player.Volume = pMathHelper.ClampToOne(DimmableVolume * MaxVolume);
 		}
 		
 		public override float CurrentPower {
@@ -73,8 +66,6 @@ namespace osum
             if (!base.Load(audio, looping, identifier))
                 return false;
 
-            float vol = Volume;
-
             Unload();
 
             NSError error = null;
@@ -84,7 +75,7 @@ namespace osum
                 player = AVAudioPlayer.FromData(data,out error);
                 player.PrepareToPlay();
                 //player.MeteringEnabled = true; -- enable for CurrentPower readings
-                Volume = vol;
+                updateVolume();
                 player.NumberOfLoops = looping ? -1 : 0;
 			}
 
@@ -93,8 +84,6 @@ namespace osum
 
         public bool Load(string filename)
         {
-            float vol = Volume;
-
             Unload();
 
             string path = filename;
@@ -105,7 +94,7 @@ namespace osum
 			{
 	            player = AVAudioPlayer.FromUrl(url,out error);
                 player.PrepareToPlay();
-                Volume = vol;
+                updateVolume();
 	            //player.MeteringEnabled = true;
 			}
 

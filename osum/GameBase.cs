@@ -286,7 +286,7 @@ namespace osum
         /// </summary>
         public virtual void Initialize()
         {
-            Config = new pConfigManager(Instance.PathConfig + "osum.cfg") { WriteOnChange = true };
+            Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
 
             flipView = Config.GetValue<bool>("flip",false);
             SetupScreen();

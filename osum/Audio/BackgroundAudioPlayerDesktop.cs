@@ -116,24 +116,6 @@ namespace osum.Audio
 
         #region IBackgroundAudioPlayer Members
 
-        public override float Volume
-        {
-            get
-            {
-                if (audioStream == 0) return 1;
-
-                float o = 1;
-                Bass.BASS_ChannelGetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, ref o);
-                return o;
-            }
-            set
-            {
-                if (audioStream == 0) return;
-
-                Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(value));
-            }
-        }
-
         public override float CurrentPower
         {
             get
@@ -158,5 +140,11 @@ namespace osum.Audio
         }
 
         #endregion
+
+        protected override void updateVolume()
+        {
+            if (audioStream == 0) return;
+            Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(DimmableVolume * MaxVolume));
+        }
     }
 }

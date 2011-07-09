@@ -12,11 +12,31 @@ namespace osum
         /// Gets the current volume.
         /// </summary>
         /// <value>The current volume.</value>
-        public virtual float Volume
+        private float dimmableVolume = -1;
+        public float DimmableVolume
         {
-            get;
-            set;
+            get { return dimmableVolume; }
+            set
+            {
+                if (dimmableVolume == value) return;
+                dimmableVolume = value;
+                updateVolume();
+            }
         }
+
+        private float maxVolume = -1;
+        public float MaxVolume
+        {
+            get { return maxVolume; }
+            set
+            {
+                if (maxVolume == value) return;
+                maxVolume = value;
+                updateVolume();
+            }
+        }
+
+        protected abstract void updateVolume();
 
         /// <summary>
         /// Gets the current power of the music.

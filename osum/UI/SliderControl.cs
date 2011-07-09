@@ -73,10 +73,14 @@ namespace osum.UI
             }
         }
 
+        public float Value;
+
         private void UpdateValue(float value)
         {
+            Value = value;
             s_FrontPlate.DrawWidth = (int)(s_BackingPlate.TextureWidth * value);
             s_FrontPlate.FlashColour(new Color4(131,240,0,255), 150);
+            action(value);
         }
 
         internal override void HandleOnMove(InputSource source, TrackingPoint trackingPoint)

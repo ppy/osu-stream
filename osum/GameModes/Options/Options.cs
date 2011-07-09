@@ -86,12 +86,35 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl("Effect Volume", 0.5f, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos), null);
+            soundEffectSlider = new SliderControl("Effect Volume", AudioEngine.Effect.Volume, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos),
+                delegate(float v)
+                {
+                    AudioEngine.Effect.Volume = v;
+                    if (Clock.ModeTime / 200 != lastEffectSound)
+                    {
+                        lastEffectSound = Clock.ModeTime / 200;
+                        switch (lastEffectSound % 4)
+                        {
+                            case 0:
+                                AudioEngine.PlaySample(OsuSamples.HitNormal);
+                                break;
+                            case 1:
+                            case 3:
+                                AudioEngine.PlaySample(OsuSamples.HitWhistle);
+                                break;
+                            case 2:
+                                AudioEngine.PlaySample(OsuSamples.HitFinish);
+                                break;
+
+                        }
+                    }
+                });
             smd.Add(soundEffectSlider);
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl("Music Volume", 0.5f, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos), null);
+            soundEffectSlider = new SliderControl("Music Volume", AudioEngine.Music.MaxVolume, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos),
+                delegate(float v) { AudioEngine.Music.MaxVolume = v; });
             smd.Add(soundEffectSlider);
 
             vPos += 50;
@@ -115,6 +138,8 @@ namespace osum.GameModes.Options
             vPos += 50;
         }
 
+        int lastEffectSound;
+
         internal static void DisplayFingerGuideDialog()
         {
             Notification notification = new Notification(osum.Resources.Tutorial.UseFingerGuides, osum.Resources.Tutorial.UseGuideFingers_Explanation,
@@ -133,6 +158,10 @@ namespace osum.GameModes.Options
 
         public override void Dispose()
         {
+            GameBase.Config.SetValue<int>("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
+            GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
+            GameBase.Config.SaveConfig();
+            
             smd.Dispose();
             base.Dispose();
         }

@@ -105,7 +105,7 @@ namespace osum
 
         }
 
-        internal float Volume = 0.9f;
+        internal float Volume = 1;
 
         /// <summary>
         /// Plays the sample in provided buffer on a new source.

@@ -65,6 +65,8 @@ namespace osum.GameModes
             //todo: write less
             BeatmapDatabase.Write();
 
+            GameBase.Config.SaveConfig();
+
             Player.Difficulty = Difficulty.Normal;
 
             InputManager.OnMove += InputManager_OnMove;
@@ -422,13 +424,13 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.LoadingPreview:
-                    if (AudioEngine.Music.Volume > 0)
-                        AudioEngine.Music.Volume = Math.Max(0.5f, AudioEngine.Music.Volume * 0.97f);
+                    if (AudioEngine.Music.DimmableVolume > 0)
+                        AudioEngine.Music.DimmableVolume = Math.Max(0.5f, AudioEngine.Music.DimmableVolume * 0.97f);
                     break;
                 case SelectState.RankingDisplay:
                 case SelectState.DifficultySelect:
-                    if (AudioEngine.Music.Volume < 1)
-                        AudioEngine.Music.Volume = Math.Min(1, AudioEngine.Music.Volume + 0.02f);
+                    if (AudioEngine.Music.DimmableVolume < 1)
+                        AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
                     break;
                 default:
                     break;
