@@ -350,6 +350,7 @@
     <Compile Include="UI\Notification.cs" />
     <Compile Include="Helpers\pConfigManager.cs" />
     <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
+    <Compile Include="UI\SliderControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

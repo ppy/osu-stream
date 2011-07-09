@@ -21,6 +21,7 @@ namespace osum.GameModes.Options
         {
             ShowScrollbar = true
         };
+        private SliderControl soundEffectSlider;
 
         public override void Initialize()
         {
@@ -85,15 +86,15 @@ namespace osum.GameModes.Options
             text = new pText("Audio", 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
             smd.Add(text);
 
-            vPos += 40;
+            vPos += 60;
 
-            text = new pText("Sound effect volume", 24, new Vector2(180, vPos), 1, true, Color4.White);
-            smd.Add(text);
+            soundEffectSlider = new SliderControl("Effect Volume", 0.5f, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos), null);
+            smd.Add(soundEffectSlider);
 
-            vPos += 40;
+            vPos += 60;
 
-            text = new pText("Music volume", 24, new Vector2(180, vPos), 1, true, Color4.White);
-            smd.Add(text);
+            soundEffectSlider = new SliderControl("Music Volume", 0.5f, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos), null);
+            smd.Add(soundEffectSlider);
 
             vPos += 50;
 

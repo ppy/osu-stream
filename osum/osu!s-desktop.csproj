@@ -247,6 +247,7 @@
     <Compile Include="Support\IUpdateable.cs" />
     <Compile Include="Support\Transition.cs" />
     <Compile Include="UI\Notification.cs" />
+    <Compile Include="UI\SliderControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BassNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
