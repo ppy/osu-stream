@@ -59,6 +59,9 @@ namespace osum
                 case 'x':
                     TextureManager.ReloadAll(true);
                     break;
+                case 'o':
+                    Director.ChangeMode(OsuMode.Options);
+                    break;
                 case 'e':
                     BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
                     if (bmi == null) break;
