@@ -37,7 +37,7 @@ namespace osum.GameModes.Play
 
             base.Initialize();
 
-            touchToContinueText = new pText(osum.Resources.Tutorial.TapToContinue, 30, new Vector2(0, 20), 1, true, Color4.YellowGreen)
+            touchToContinueText = new pText(osum.Resources.Tutorial.TapToContinue, 30, new Vector2(0, 20), 1, true, Color4.Yellow)
             {
                 TextBounds = new Vector2(GameBase.BaseSizeFixedWidth.Width * 0.8f, 0),
                 Field = FieldTypes.StandardSnapBottomCentre,
@@ -387,7 +387,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.HitCircle_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     if (CurrentScore.countMiss > 2)
                     {
@@ -501,7 +501,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Hold_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -642,7 +642,7 @@ namespace osum.GameModes.Play
 
                     break;
                 case TutorialSegments.Slider_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -751,7 +751,7 @@ namespace osum.GameModes.Play
 
                     break;
                 case TutorialSegments.Spinner_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -880,7 +880,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Multitouch_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -993,7 +993,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Stacked_Judge:
-                    playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+                    judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -1270,6 +1270,7 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Score_3:
                     showText(osum.Resources.Tutorial.Score3);
                     {
+                        backButton.FadeOut(500);
                         GameBase.Scheduler.Add(delegate
                         {
                             comboCounter = new ComboCounter();
@@ -1293,7 +1294,10 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Score_4:
                     comboCounter.SetCombo(0);
                     showText(osum.Resources.Tutorial.Score4);
-                    GameBase.Scheduler.Add(delegate { showTouchToContinue(); }, 1500);
+                    GameBase.Scheduler.Add(delegate {
+                        backButton.FadeOut(500);
+                        showTouchToContinue();
+                    }, 1500);
                     break;
                 case TutorialSegments.Outro:
                     showText(osum.Resources.Tutorial.Completion);
@@ -1315,6 +1319,12 @@ namespace osum.GameModes.Play
             }
         }
 
+        private void judge()
+        {
+            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
+            backButton.FadeIn(500);
+        }
+
         private string getDifficultyName(Difficulty difficulty)
         {
             switch (difficulty)
@@ -1332,6 +1342,8 @@ namespace osum.GameModes.Play
 
         private void prepareInteract()
         {
+            backButton.FadeOut(500);
+
             resetScore();
             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
 
