@@ -397,7 +397,6 @@
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
     <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\menuback.wav" />
-    <Content Include="Skins\Default\mainmenu.m4a" />
     <Content Include="Skins\Default\songselect.m4a" />
     <Content Include="Skins\Default\spinnerbonus.wav" />
     <Content Include="Skins\Default\menuclick.wav" />
@@ -426,6 +425,7 @@
     <Content Include="Skins\Default\intro_480.png" />
     <Content Include="Skins\Default\intro_960.png" />
     <Content Include="Skins\Default\credits.m4a" />
+    <Content Include="Skins\Default\mainmenu.aac" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">

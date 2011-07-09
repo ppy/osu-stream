@@ -155,8 +155,11 @@ namespace osum.GameModes
                 headphones.Transform(new Transformation(TransformationType.Fade, 1, 1, 1000, initial_display));
                 spriteManager.Add(headphones);
 
-                AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
-                GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
+                GameBase.Scheduler.Add(delegate {
+                    AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
+                    GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
+                }, true);
+
             }
             else
             {
@@ -204,7 +207,7 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.m4a", true);
+            bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.aac", true);
 #else
             bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.mp3", true);
 #endif
