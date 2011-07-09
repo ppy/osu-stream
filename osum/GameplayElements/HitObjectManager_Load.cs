@@ -514,9 +514,11 @@ namespace osum.GameplayElements
                                 colourIndex %= TextureManager.DefaultColours.Length;
                             }
                         }
-                        
-                        currentComboNumber = currentComboNumber + (currHitObject.IncrementCombo && !sameTimeAsLastAdded ? 1 : 0);
-                        if (currentComboNumber == 0) currentComboNumber = 1;
+
+                        if (currHitObject.IncrementCombo)
+                        {
+                            if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;
+                        }
                     }
 
                     currHitObject.ComboNumber = currentComboNumber;
