@@ -514,9 +514,15 @@ namespace osum.GameplayElements
                 List<HitObject> objects = ActiveStreamObjects;
 
                 int index = objects.IndexOf(hitObject);
+                int count = objects.Count;
+
+                bool multitouchSameEndTime = hitObject.connectedObject != null && Math.Abs(hitObject.connectedObject.EndTime - hitObject.EndTime) < 10;
 
                 //is next hitObject the end of a combo?
-                if (objects.Count - 1 == index || objects[index + 1].NewCombo)
+                if (index == count - 1 //last object in the song.
+                    || objects[index + 1].NewCombo //next object is a new combo.
+                    || (multitouchSameEndTime && index < count - 2 && objects[index + 1] == hitObject.connectedObject && objects[index + 2].NewCombo)  //this is part of a multitouch sequence with a new combo following.
+                    )
                 {
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
@@ -526,7 +532,8 @@ namespace osum.GameplayElements
                     else
                         change |= ScoreChange.MuAddition;
 
-                    ResetComboCounts();
+                    if (!(multitouchSameEndTime && !hitObject.connectedObject.IsHit))
+                        ResetComboCounts();
                 }
             }
 
