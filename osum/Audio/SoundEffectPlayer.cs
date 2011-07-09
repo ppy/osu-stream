@@ -32,10 +32,15 @@ namespace osum
             catch (DllNotFoundException)
             {
                 //needs openal32.dll
+                throw new ApplicationException("OpenAL failed to initialize. Please run oainst.exe and try again.");
             }
             catch (AudioException)
             {
                 //todo: handle error here.
+            }
+            catch (TypeInitializationException)
+            {
+                throw new ApplicationException("OpenAL failed to initialize. Please run oainst.exe and try again.");
             }
 
             sources = AL.GenSources(MAX_SOURCES);
