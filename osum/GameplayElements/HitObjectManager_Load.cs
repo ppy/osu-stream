@@ -516,6 +516,7 @@ namespace osum.GameplayElements
                         }
                         
                         currentComboNumber = currentComboNumber + (currHitObject.IncrementCombo && !sameTimeAsLastAdded ? 1 : 0);
+                        if (currentComboNumber == 0) currentComboNumber = 1;
                     }
 
                     currHitObject.ComboNumber = currentComboNumber;
