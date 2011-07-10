@@ -151,6 +151,20 @@ namespace osum.GameplayElements.HitObjects.Osu
             AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
         }
 
+        protected override void playRebound(int lastJudgedEndpoint)
+        {
+            if (lastJudgedEndpoint - 1 == RepeatCount) base.playRebound(lastJudgedEndpoint);
+            else
+                PlaySound(HitObjectSoundType.Normal,
+                          new SampleSetInfo
+                          {
+                              SampleSet = Beatmaps.SampleSet.Soft,
+                              CustomSampleSet = CustomSampleSet.Default,
+                              Volume = (SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet).Volume
+                          });
+        }
+
+
         static Color4 hold_colour = new Color4(0.648f, 0, 244 / 256f, 1);
 
         internal override Color4 Colour

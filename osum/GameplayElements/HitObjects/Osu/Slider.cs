@@ -93,12 +93,12 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// A list of soundTypes for each end-point on the slider.
         /// </summary>
-        private List<HitObjectSoundType> SoundTypeList;
+        protected List<HitObjectSoundType> SoundTypeList;
 
         /// <summary>
         /// A list of the samplesets used for each slider end
         /// </summary>
-        private List<SampleSetInfo> SampleSets;
+        protected List<SampleSetInfo> SampleSets;
 
         /// <summary>
         /// The raw control points as read from the beatmap file.
@@ -676,8 +676,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 if (isTracking)
                 {
-                    PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
-                              SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
+                    playRebound(lastJudgedEndpoint);
                     if (!finished)
                         burstEndpoint();
                     scoringEndpointsHit++;
@@ -771,6 +770,12 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void playTick()
         {
             AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
+        }
+
+        protected virtual void playRebound(int lastJudgedEndpoint)
+        {
+            PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
+                      SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
         }
 
         internal override void StopSound(bool done = true)
