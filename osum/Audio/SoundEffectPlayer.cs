@@ -82,7 +82,7 @@ namespace osum
             int buffer = AL.GenBuffer();
 
             using (Stream str = NativeAssetManager.Instance.GetFileStream(filename))
-            using (AudioReader sound = new AudioReader(str))
+            using (WaveReader sound = new WaveReader(str))
             {
                 SoundData s = sound.ReadToEnd();
                 AL.BufferData(buffer, s.SoundFormat.SampleFormatAsOpenALFormat, s.Data, s.Data.Length, s.SoundFormat.SampleRate);
