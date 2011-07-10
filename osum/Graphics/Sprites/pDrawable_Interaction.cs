@@ -98,7 +98,7 @@ namespace osum.Graphics.Sprites
 
         internal bool IsHovering;
 
-        const int extraTouchSpace = 0;
+        internal int HoverLenienceRadius = 0;
 
         protected virtual bool checkHover(Vector2 position)
         {
@@ -107,10 +107,10 @@ namespace osum.Graphics.Sprites
 
             Box2 rect = DisplayRectangle;
 
-            return rect.Left - extraTouchSpace < position.X &&
-                rect.Right + extraTouchSpace >= position.X &&
-                rect.Top - extraTouchSpace < position.Y &&
-                rect.Bottom + extraTouchSpace >= position.Y;
+            return rect.Left - HoverLenienceRadius < position.X &&
+                rect.Right + HoverLenienceRadius >= position.X &&
+                rect.Top - HoverLenienceRadius < position.Y &&
+                rect.Bottom + HoverLenienceRadius >= position.Y;
         }
 
         void inputUpdateHoverState(TrackingPoint trackingPoint)
