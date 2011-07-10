@@ -59,7 +59,10 @@
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
 						</object>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<object class="IBUIAccessibilityConfiguration" key="IBUIAccessibilityConfiguration">
+							<integer value="256" key="IBUIAccessibilityTraits"/>
+						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</object>
@@ -73,6 +76,7 @@
 					<bytes key="NSRGB">MC4xMjU0OTAyMDM1IDAuMTI1NDkwMjAzNSAwLjEyNTQ5MDIwMzUAA</bytes>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+				<bool key="IBUIMultipleTouchEnabled">YES</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIVisibleAtLaunch">YES</bool>
 				<bool key="IBUIResizesToFullScreen">YES</bool>
@@ -140,6 +144,7 @@
 							<reference ref="773737154"/>
 						</object>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">Window</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">-1</int>
