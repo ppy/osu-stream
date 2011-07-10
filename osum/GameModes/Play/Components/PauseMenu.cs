@@ -46,6 +46,7 @@ namespace osum.GameModes.Play.Components
                             Origin = OriginTypes.Centre,
                             Clocking = ClockTypes.Game,
                             TextShadow = true,
+                            Alpha = 0
                         };
     
                         menuText.FadeInFromZero(400);
