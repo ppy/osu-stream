@@ -51,6 +51,9 @@ namespace osum.GameModes.Play
             Beatmap = new Beatmap();
             Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
 
+            s_Demo = new pSprite(TextureManager.Load(OsuTexture.demo), new Vector2(0,50)) { Alpha = 0, Field = FieldTypes.StandardSnapTopCentre, Origin = OriginTypes.Centre };
+            spriteManager.Add(s_Demo);
+
             loadNextSegment();
         }
 
@@ -59,6 +62,18 @@ namespace osum.GameModes.Play
             InputManager.OnDown -= InputManager_OnDown;
 
             base.Dispose();
+        }
+
+        private void showDemo()
+        {
+            s_Demo.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 500) { Looping = true, LoopDelay = 500 });
+            s_Demo.Transform(new Transformation(TransformationType.Fade, 0.5f, 0.5f, Clock.ModeTime + 500, Clock.ModeTime + 1000) { Looping = true, LoopDelay = 500 });
+        }
+
+        private void hideDemo()
+        {
+            s_Demo.Transformations.Clear();
+            s_Demo.FadeOut(300);
         }
 
         TutorialSegments currentSegment;
@@ -77,6 +92,7 @@ namespace osum.GameModes.Play
             GameBase.Scheduler.Add(delegate
             {
                 touchToContinueText.Transformations.Clear();
+                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 600, EasingTypes.In) { LoopDelay = 800, Looping = true });
                 touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 600, Clock.ModeTime + 1400, EasingTypes.In) { LoopDelay = 600, Looping = true });
             }, 400);
         }
@@ -147,6 +163,7 @@ namespace osum.GameModes.Play
         SpriteManager tutorialSegmentManager = new SpriteManager();
 
         private HitObject sampleHitObject;
+        private pSprite s_Demo;
 
         protected override void resetScore()
         {
@@ -260,6 +277,7 @@ namespace osum.GameModes.Play
                     {
                         showText(osum.Resources.Tutorial.HitCircle2, -50);
 
+                        showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
                         HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -352,6 +370,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.HitCircle_6:
+                    hideDemo();
                     showText(osum.Resources.Tutorial.HitCircle6);
                     showTouchToContinue();
                     break;
@@ -420,6 +439,7 @@ namespace osum.GameModes.Play
 
                         showText(osum.Resources.Tutorial.Hold1, -110);
 
+                        showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
                         HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -452,6 +472,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Hold_2:
+                    hideDemo();
                     showText(osum.Resources.Tutorial.Hold2);
                     showTouchToContinue();
                     break;
@@ -533,6 +554,7 @@ namespace osum.GameModes.Play
 
                         showText(osum.Resources.Tutorial.Slider1, -80);
 
+                        showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
                         HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -620,6 +642,7 @@ namespace osum.GameModes.Play
 
                     break;
                 case TutorialSegments.Slider_4:
+                    hideDemo();
                     showText(osum.Resources.Tutorial.Slider4);
                     showTouchToContinue();
                     break;
@@ -687,6 +710,7 @@ namespace osum.GameModes.Play
                         Clock.ResetManual();
                         Player.Autoplay = true;
 
+                        showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
                         HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -730,6 +754,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Spinner_4:
+                    hideDemo();
                     showText(osum.Resources.Tutorial.Spinner4);
                     showTouchToContinue();
                     break;
@@ -783,6 +808,7 @@ namespace osum.GameModes.Play
 
                         showText(osum.Resources.Tutorial.Multitouch1, -100);
 
+                        showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
                         HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -831,6 +857,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Multitouch_3:
+                    hideDemo();
                     showText(osum.Resources.Tutorial.Multitouch3);
                     showTouchToContinue();
                     break;
@@ -911,6 +938,7 @@ namespace osum.GameModes.Play
                     Clock.ResetManual();
                     Player.Autoplay = true;
 
+                    showDemo();
                     if (HitObjectManager != null) HitObjectManager.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
@@ -954,6 +982,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Stacked_3:
                     int i = 0;
+                    hideDemo();
                     showText(osum.Resources.Tutorial.Stacked3);
                     showTouchToContinue();
                     break;
@@ -1040,6 +1069,7 @@ namespace osum.GameModes.Play
                     Clock.ManualTime = 1200;
                     Player.Autoplay = true;
 
+                    showDemo();
                     if (HitObjectManager != null) HitObjectManager.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 

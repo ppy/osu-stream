@@ -136,7 +136,9 @@ namespace osum.Graphics.Skins
             foreach (pTexture p in SpriteCache.Values.ToArray<pTexture>())
                 if (!p.usedSinceLastModeChange)
                 {
+#if !DIST
                     Console.WriteLine("unloaded texture " + p.assetName);
+#endif
                     Dispose(p.OsuTextureInfo);
                 }
             AnimationCache.Clear();
@@ -533,7 +535,8 @@ namespace osum.Graphics.Skins
         sliderbar,
         backbutton_arrows1,
         backbutton_arrows2,
-        tracks
-        
+        tracks,
+        demo
+
     }
 }
