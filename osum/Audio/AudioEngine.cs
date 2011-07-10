@@ -66,8 +66,8 @@ namespace osum.Audio
                 }
             }
 
-            Effect.Volume = GameBase.Config.GetValue<int>("VolumeEffect", 100) / 100f;
-            Music.MaxVolume = GameBase.Config.GetValue<int>("VolumeMusic", 100) / 100f;
+            Effect.Volume = GameBase.Config.GetValue<int>("VolumeEffect", 90) / 100f;
+            Music.MaxVolume = GameBase.Config.GetValue<int>("VolumeMusic", 90) / 100f;
         }
 
         static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
