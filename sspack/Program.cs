@@ -63,7 +63,7 @@ namespace sspack
             sb.AppendLine(@"        internal static void LoadSprites()");
             sb.AppendLine(@"        {");
 
-            string skinDir = @"c:/Users/peppy/Dropbox/Projects/osum/osum/Skins/Default/";
+            string skinDir = @"../../../osum/Skins/Default/";
             foreach (string dir in Directory.GetDirectories(skinDir))
             {
                 Console.WriteLine(dir);
@@ -74,7 +74,7 @@ namespace sspack
             sb.AppendLine(@"    }");
             sb.AppendLine(@"}");
 
-            File.WriteAllText(@"C:\Users\peppy\Dropbox\Projects\osum\osum\Graphics\TextureManager_Load.cs", sb.ToString());
+            File.WriteAllText(@"..\..\..\osum\Graphics\TextureManager_Load.cs", sb.ToString());
 
             Console.WriteLine("------- DONE! -------");
             Console.ReadLine();
