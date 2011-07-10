@@ -34,6 +34,8 @@ namespace osum.GameModes.Play.Components
 
                 if (menuDisplayed)
                 {
+                    if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
+
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
@@ -63,6 +65,8 @@ namespace osum.GameModes.Play.Components
                 }
                 else
                 {
+                    if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
+
                     Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
 

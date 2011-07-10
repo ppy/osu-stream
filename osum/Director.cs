@@ -103,6 +103,9 @@ namespace osum
 
             Clock.ModeTimeReset();
 
+            //enable dimming in case it got left on somewhere.
+            if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
+
             LastOsuMode = CurrentOsuMode; //the case for the main menu on first load.
 
             CurrentMode.Initialize();
