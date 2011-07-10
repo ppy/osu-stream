@@ -97,10 +97,13 @@ namespace osum.Graphics.Renderers
         bool boundEvents;
 
         // size of the sprite sheet if this were a retina screen
-        private int retinaWidth, retinaHeight;
+        private int retinaHeight;
 
         // ptexture info of where in the sheet our tracks are
-        private int sheetX, sheetY, sheetWidth, sheetHeight;
+        private int sheetY, sheetHeight;
+
+        // cache actual texel coordinates for x-axis since they are always the same
+        private float sheetStart, sheetEnd;
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.
@@ -117,12 +120,14 @@ namespace osum.Graphics.Renderers
 
             pTexture texture = TextureManager.Load(OsuTexture.tracks);
 
-            retinaWidth = texture.TextureGl.TextureWidth;
+            float retinaWidth = texture.TextureGl.TextureWidth;
             retinaHeight = texture.TextureGl.TextureHeight;
-            sheetX = texture.X;
+            float sheetX = texture.X;
             sheetY = texture.Y;
-            sheetWidth = texture.Width;
             sheetHeight = texture.Height;
+
+            sheetStart = (1.0f + sheetX + TEXEL_ORIGIN) / retinaWidth;
+            sheetEnd = (-1.0f + sheetX + texture.Width + TEXEL_ORIGIN - TEXTURE_SHRINKAGE_FACTOR) / retinaWidth;
 
             glCalculateCapMesh();
             CalculateQuadMesh();
@@ -165,24 +170,22 @@ namespace osum.Graphics.Renderers
 
             for (int x = 0; x < COLOUR_COUNT; x++)
             {
-                float y = (2.0f + 4.0f * x + sheetY) / retinaHeight;
-                float start = (1.0f + sheetX) / retinaWidth;
-                float end = (-1.0f + sheetX + sheetWidth) / retinaWidth;
+                float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
 
                 float[] this_coordinates = new float[(numVertices_cap) * 2];
-                this_coordinates[0] = end;
+                this_coordinates[0] = sheetEnd;
                 this_coordinates[1] = y;
 
-                this_coordinates[2] = start;
+                this_coordinates[2] = sheetStart;
                 this_coordinates[3] = y;
 
                 for (int z = 1; z < MAXRES; z++)
                 {
-                    this_coordinates[z * 2 + 2] = start;
+                    this_coordinates[z * 2 + 2] = sheetStart;
                     this_coordinates[z * 2 + 3] = y;
                 }
 
-                this_coordinates[MAXRES * 2 + 2] = start;
+                this_coordinates[MAXRES * 2 + 2] = sheetStart;
                 this_coordinates[MAXRES * 2 + 3] = y;
 
                 coordinates_cap[x] = this_coordinates;
@@ -202,16 +205,14 @@ namespace osum.Graphics.Renderers
 
             for (int x = 0; x < COLOUR_COUNT; x++)
             {
-                float y = (2.0f + 4.0f * x + sheetY) / retinaHeight;
-                float start = (1.0f + sheetX) / retinaWidth;
-                float end = (-1.0f + sheetX + sheetWidth) / retinaWidth;
+                float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
 
-                coordinates_quad[x] = new[]{start, y,
-                                            start, y,
-                                            end, y,
-                                            end, y,
-                                            start, y,
-                                            start, y};
+                coordinates_quad[x] = new[]{sheetStart, y,
+                                            sheetStart, y,
+                                            sheetEnd, y,
+                                            sheetEnd, y,
+                                            sheetStart, y,
+                                            sheetStart, y};
             }
         }
 
