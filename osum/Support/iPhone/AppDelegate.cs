@@ -116,7 +116,9 @@ namespace osum.Support.iPhone
 
         public override void ReceiveMemoryWarning(UIApplication application)
         {
+#if !DIST
             Console.WriteLine("OSU MEMORY CLEANUP!");
+#endif
 
             if (!Director.IsTransitioning)
             {

@@ -84,6 +84,12 @@ namespace osum
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
+#if !DIST
+            Console.WriteLine("Runningwith culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
+#endif
+
+
+
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
             UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
 
