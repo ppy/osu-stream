@@ -173,6 +173,7 @@ namespace osum.GameModes
             State = MenuState.Select;
 
             osuLogo.HandleInput = false;
+            osuLogo.Transformations.Clear();
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
