@@ -93,7 +93,7 @@ namespace osum.Support
 
                 fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
 #if FULL_DEBUG
-                int accurateAudio = (int)(AudioEngine.Music.CurrentTime*1000);
+                int accurateAudio = (int)(AudioEngine.Music.CurrentTime * 1000) + Clock.UNIVERSAL_OFFSET;
                 fpsDisplay.Text = String.Format("{0:0}fps Game:{1:#,0}ms Mode:{4:#,0} Audio:{2:#,0}ms ({6}) {3}",
                                                 Math.Round(fps),
                                                 Clock.Time, Clock.AudioTime, Player.Autoplay ? "-AUTOPLAY-" : "", Clock.ModeTime,

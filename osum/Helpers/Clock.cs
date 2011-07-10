@@ -21,9 +21,9 @@ namespace osum.Helpers
         private static double time = 0;
 
 #if iOS
-        private const int UNIVERSAL_OFFSET = 45;
+        public const int UNIVERSAL_OFFSET = 0;//45;
 #else
-        private const int UNIVERSAL_OFFSET = 60;
+        public const int UNIVERSAL_OFFSET = 60;
 #endif
 
         /// <summary>
@@ -135,8 +135,10 @@ namespace osum.Helpers
                 else
                 {
                     double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
-                    if (inaccuracy > 0.03)
+                    if (inaccuracy > 0.05)
                         currentFrameAudioTime = sourceTime;
+                    if (inaccuracy > 0.005)
+                        currentFrameAudioTime = sourceTime * 0.01 + currentFrameAudioTime * 0.99;
                 }
             }
 
