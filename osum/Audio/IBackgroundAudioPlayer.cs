@@ -1,6 +1,7 @@
 using System;
 using osum.Support;
 using System.IO;
+using osum.Helpers;
 namespace osum
 {
     /// <summary>
@@ -19,7 +20,7 @@ namespace osum
             set
             {
                 if (dimmableVolume == value) return;
-                dimmableVolume = value;
+                dimmableVolume = pMathHelper.ClampToOne(value);
                 updateVolume();
             }
         }
@@ -31,7 +32,7 @@ namespace osum
             set
             {
                 if (maxVolume == value) return;
-                maxVolume = value;
+                maxVolume = pMathHelper.ClampToOne(value);
                 updateVolume();
             }
         }
