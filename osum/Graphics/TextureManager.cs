@@ -532,7 +532,8 @@ namespace osum.Graphics.Skins
         kokoban,
         sliderbar,
         backbutton_arrows1,
-        backbutton_arrows2
+        backbutton_arrows2,
+        tracks
         
     }
 }
