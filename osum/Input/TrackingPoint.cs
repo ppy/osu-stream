@@ -16,7 +16,6 @@ namespace osum
             get	{ return location; }
             set { 
                 location = value;
-
                 UpdatePositions();
             }
         }
@@ -52,6 +51,7 @@ namespace osum
         public TrackingPoint(PointF location, object tag)
         {
             Location = location;
+            WindowDelta = Vector2.Zero; //no delta on first ctor.
             Tag = tag;
         }
 

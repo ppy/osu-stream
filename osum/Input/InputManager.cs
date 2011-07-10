@@ -70,43 +70,36 @@ namespace osum
 #endif
         }
 
-        private static void UpdatePointerPosition(TrackingPoint point)
-        {
-            if (PrimaryTrackingPoint == point)
-                MainPointerPosition = point.BasePosition;
-
-            TrackingPoints.Clear();
-            foreach (InputSource source in RegisteredSources)
-                TrackingPoints.AddRange(source.trackingPoints);
-        }
-
         private static void ReceiveDown(InputSource source, TrackingPoint point)
         {
             //if (PrimaryTrackingPoint == null)
             PrimaryTrackingPoint = point;
-
-            UpdatePointerPosition(point);
+            MainPointerPosition = point.BasePosition;
+            TrackingPoints.Add(point);
             TriggerOnDown(source, point);
         }
 
         private static void ReceiveUp(InputSource source, TrackingPoint point)
         {
+            TrackingPoints.Remove(point);
+
             if (PrimaryTrackingPoint == point)
             {
-                //find the next valid tracking point.
                 PrimaryTrackingPoint = null;
+
+                //find the next valid tracking point.
                 foreach (TrackingPoint p in TrackingPoints)
                 {
                     if (p != point && p.Valid)
                     {
                         PrimaryTrackingPoint = p;
+                        MainPointerPosition = point.BasePosition;
                         break;
                     }
                 }
             }
 
             TriggerOnUp(source, point);
-            UpdatePointerPosition(point);
         }
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
@@ -115,9 +108,9 @@ namespace osum
             if (PrimaryTrackingPoint == null)
                 PrimaryTrackingPoint = point;
 #endif
-
+            if (PrimaryTrackingPoint == point)
+                MainPointerPosition = point.BasePosition;
             TriggerOnMove(source, point);
-            UpdatePointerPosition(point);
         }
 
         #endregion
