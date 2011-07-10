@@ -1184,6 +1184,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             lastDrawnSegmentIndex = -1;
 
             sliderBodyTexture = TextureManager.RequireTexture(trackBounds.Width, trackBounds.Height);
+#if iOS
+            sliderBodyTexture.Premultiplied = true;
+#endif
 
             if (sliderBodyTexture == null)
                 return;
