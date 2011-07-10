@@ -10,6 +10,7 @@ using osum.Helpers;
 using System.Diagnostics;
 using osum.Audio;
 using osum.UI;
+using osum.Resources;
 
 namespace osum.GameModes.Options
 {
@@ -142,7 +143,7 @@ namespace osum.GameModes.Options
 
         internal static void DisplayFingerGuideDialog()
         {
-            Notification notification = new Notification(osum.Resources.Tutorial.UseFingerGuides, osum.Resources.Tutorial.UseGuideFingers_Explanation,
+            Notification notification = new Notification(LocalisationManager.GetString(OsuString.UseFingerGuides), LocalisationManager.GetString(OsuString.UseGuideFingers_Explanation),
                         NotificationStyle.YesNo,
                         delegate(bool yes) { GameBase.Config.SetValue<bool>(@"GuideFingers", yes); });
             GameBase.Notify(notification);
@@ -150,7 +151,7 @@ namespace osum.GameModes.Options
 
         internal static void DisplayEasyModeDialog()
         {
-            Notification notification = new Notification(osum.Resources.Tutorial.DefaultToEasyMode, osum.Resources.Tutorial.DefaultToEasyMode_Explanation,
+            Notification notification = new Notification(LocalisationManager.GetString(OsuString.DefaultToEasyMode), LocalisationManager.GetString(OsuString.DefaultToEasyMode_Explanation),
                         NotificationStyle.YesNo,
                         delegate(bool yes) { GameBase.Config.SetValue<bool>(@"EasyMode", yes); });
             GameBase.Notify(notification);

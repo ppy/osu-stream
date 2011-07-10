@@ -14,6 +14,7 @@ using osum.Graphics.Drawables;
 using osum.Audio;
 using osum.Helpers;
 using osum.Graphics.Skins;
+using osum.Resources;
 
 namespace osum.GameModes.Store
 {
@@ -44,7 +45,7 @@ namespace osum.GameModes.Store
             netRequest.onFinish += netRequest_onFinish;
             NetManager.AddRequest(netRequest);
 
-            loading = new pText(osum.Resources.General.Loading, 36, Vector2.Zero, 1, true, Color4.OrangeRed)
+            loading = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.OrangeRed)
             {
                 TextAlignment = TextAlignment.Centre,
                 Origin = OriginTypes.Centre,
@@ -81,7 +82,7 @@ namespace osum.GameModes.Store
 
             if (e != null || string.IsNullOrEmpty(_result))
             {
-                GameBase.Notify(osum.Resources.General.ErrorWhileDownloadingSongListing, delegate { Director.ChangeMode(OsuMode.SongSelect); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;
             }
 
@@ -165,7 +166,7 @@ namespace osum.GameModes.Store
                 loading.FadeOut(200);
 
                 if (y == 0)
-                    GameBase.Notify(osum.Resources.General.HaveAllAvailableSongPacks, delegate { Director.ChangeMode(Director.LastOsuMode); });
+                    GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
             });
         }
 
@@ -227,7 +228,7 @@ namespace osum.GameModes.Store
             instance.packs.Remove(pp);
 
             if (instance.packs.Count == 0)
-                GameBase.Notify(osum.Resources.General.HaveAllAvailableSongPacks, delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
                 instance.s_ButtonBack.FadeIn(100);

@@ -28,7 +28,7 @@
     <DefineConstants>iOS OSUM DEBUG SIMULATOR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
-    <MtouchI18n />
+    <MtouchI18n>cjk</MtouchI18n>
     <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
@@ -97,7 +97,8 @@
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>iOS OSUM</DefineConstants>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
@@ -345,14 +346,13 @@
     <Compile Include="GameModes\Results\Results.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
-    <Compile Include="Resources\Tutorial.Designer.cs" />
-    <Compile Include="Resources\General.Designer.cs" />
     <Compile Include="GameModes\Options\Options.cs" />
     <Compile Include="GameModes\Options\Credits.cs" />
     <Compile Include="UI\Notification.cs" />
     <Compile Include="Helpers\pConfigManager.cs" />
     <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
     <Compile Include="UI\SliderControl.cs" />
+    <Compile Include="Localisation\LocalisationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -374,6 +374,7 @@
     <Folder Include="Graphics\Drawables\" />
     <Folder Include="Online\" />
     <Folder Include="GameModes\Options\" />
+    <Folder Include="Localisation\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Support\iPhone\MainWindow.xib" />
@@ -428,16 +429,7 @@
     <Content Include="Skins\Default\mainmenu.m4a" />
     <Content Include="Skins\Default\results.m4a" />
     <Content Include="Skins\Default\songselect.m4a" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Tutorial.ja.resx">
-      <LogicalName>osum.Resources.Tutorial.ja.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Tutorial.resx">
-      <LogicalName>osum.Resources.Tutorial.resources</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\General.resx">
-      <LogicalName>osum.Resources.General.resources</LogicalName>
-    </EmbeddedResource>
+    <Content Include="Localisation\en.txt" />
+    <Content Include="Localisation\ja.txt" />
   </ItemGroup>
 </Project>

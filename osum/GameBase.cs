@@ -16,6 +16,7 @@ using osum.Online;
 using osum.UI;
 using osu_common.Helpers;
 using System.Threading;
+using osum.Resources;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -467,7 +468,7 @@ namespace osum
 
         internal static void Notify(string simple, BoolDelegate action = null)
         {
-            Notify(new Notification(Resources.General.Alert, simple, NotificationStyle.Okay, action));
+            Notify(new Notification(LocalisationManager.GetString(OsuString.Alert), simple, NotificationStyle.Okay, action));
         }
 
         internal static void Notify(Notification notification)

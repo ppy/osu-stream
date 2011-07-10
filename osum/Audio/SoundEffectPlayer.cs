@@ -77,7 +77,9 @@ namespace osum
         /// <returns>-1 on error, bufferId on success.</returns>
         public int Load(string filename)
         {
+#if DEBUG
             if (!NativeAssetManager.Instance.FileExists(filename)) return -1;
+#endif
 
             int buffer = AL.GenBuffer();
 

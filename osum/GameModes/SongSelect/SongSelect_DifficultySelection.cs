@@ -16,6 +16,7 @@ using osum.GameplayElements;
 using System.Threading;
 using osum.Graphics.Renderers;
 using osu_common.Libraries.Osz2;
+using osum.Resources;
 
 namespace osum.GameModes
 {
@@ -204,7 +205,7 @@ namespace osum.GameModes
                     else
                     {
                         isNewDifficulty = false;
-                        GameBase.Notify(osum.Resources.General.ExpertUnlock, delegate { pendingModeChange = false; });
+                        GameBase.Notify(LocalisationManager.GetString(OsuString.ExpertUnlock), delegate { pendingModeChange = false; });
                     }
 
 
@@ -266,20 +267,20 @@ namespace osum.GameModes
                 case Difficulty.Easy:
                     hasNext = true;
                     difficultySelectOffset = mode_button_width;
-                    text = osum.Resources.General.YouCantFail;
+                    text = LocalisationManager.GetString(OsuString.YouCantFail);
                     background.FadeColour(new Color4(110, 110, 110, 255), 500);
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
                     hasNext = !mapRequiresUnlock;
                     difficultySelectOffset = 0;
-                    text = osum.Resources.General.DynamicStreamSwitching;
+                    text = LocalisationManager.GetString(OsuString.DynamicStreamSwitching);
                     background.FadeColour(new Color4(70, 70, 70, 255), 500);
                     break;
                 case Difficulty.Expert:
                     hasPrevious = true;
                     difficultySelectOffset = -mode_button_width;
-                    text = osum.Resources.General.NotForTheFaintHearted;
+                    text = LocalisationManager.GetString(OsuString.NotForTheFaintHearted);
                     background.FadeColour(new Color4(30, 30, 30, 255), 500);
                     break;
             }
@@ -301,7 +302,7 @@ namespace osum.GameModes
 
                         BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
-                        s_ScoreInfo.Text = osum.Resources.General.PlayCount + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + osum.Resources.General.HighScore + " " + bmi.HighScore.ToString().PadLeft(7, '0');
+                        s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " " + bmi.HighScore.ToString().PadLeft(7, '0');
                     }
                 }, 100);
             }

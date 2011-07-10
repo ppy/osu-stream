@@ -9,6 +9,7 @@ using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Graphics.Renderers;
+using osum.Resources;
 
 namespace osum.UI
 {
@@ -83,7 +84,7 @@ namespace osum.UI
 
                         Add(okayButton);
 
-                        pText okayText = new pText(osum.Resources.General.Okay, 24, new Vector2(0, button_height), Vector2.Zero, 1, true, Color4.White, true)
+                        pText okayText = new pText(LocalisationManager.GetString(OsuString.Okay), 24, new Vector2(0, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
                             Field = FieldTypes.StandardSnapCentre,
                             Origin = OriginTypes.Centre,
@@ -125,7 +126,7 @@ namespace osum.UI
 
                         Add(okayButton);
 
-                        pText okayText = new pText(osum.Resources.General.Yes, 24, new Vector2(-140, button_height), Vector2.Zero, 1, true, Color4.White, true)
+                        pText okayText = new pText(LocalisationManager.GetString(OsuString.Yes), 24, new Vector2(-140, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
                             Field = FieldTypes.StandardSnapCentre,
                             Origin = OriginTypes.Centre,
@@ -165,7 +166,7 @@ namespace osum.UI
 
                         Add(cancelButton);
 
-                        pText cancelText = new pText(osum.Resources.General.No, 24, new Vector2(140, button_height), Vector2.Zero, 1, true, Color4.White, true)
+                        pText cancelText = new pText(LocalisationManager.GetString(OsuString.No), 24, new Vector2(140, button_height), Vector2.Zero, 1, true, Color4.White, true)
                         {
                             Field = FieldTypes.StandardSnapCentre,
                             Origin = OriginTypes.Centre,

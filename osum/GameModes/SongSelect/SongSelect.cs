@@ -16,6 +16,7 @@ using osum.GameplayElements;
 using System.Threading;
 using osum.GameplayElements.Scoring;
 using osum.Online;
+using osum.Resources;
 
 namespace osum.GameModes
 {
@@ -157,7 +158,7 @@ namespace osum.GameModes
             }
 
             panelDownloadMore = new BeatmapPanel(null, this, index++);
-            panelDownloadMore.s_Text.Text = osum.Resources.General.DownloadMoreSongs;
+            panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
@@ -205,7 +206,7 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load("Skins/Default/songselect.aac", true);
+            AudioEngine.Music.Load("Skins/Default/songselect.m4a", true);
 #else
             AudioEngine.Music.Load("Skins/Default/songselect.mp3", true);
 #endif

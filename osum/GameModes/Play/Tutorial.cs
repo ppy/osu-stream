@@ -17,6 +17,7 @@ using osum.Audio;
 using osum.GameplayElements.HitObjects.Osu;
 using osum.Graphics.Skins;
 using osum.UI;
+using osum.Resources;
 
 namespace osum.GameModes.Play
 {
@@ -37,7 +38,7 @@ namespace osum.GameModes.Play
 
             base.Initialize();
 
-            touchToContinueText = new pText(osum.Resources.Tutorial.TapToContinue, 30, new Vector2(0, 20), 1, true, Color4.Yellow)
+            touchToContinueText = new pText(LocalisationManager.GetString(OsuString.TapToContinue), 30, new Vector2(0, 20), 1, true, Color4.Yellow)
             {
                 TextBounds = new Vector2(GameBase.BaseSizeFixedWidth.Width * 0.8f, 0),
                 Field = FieldTypes.StandardSnapBottomCentre,
@@ -209,7 +210,7 @@ namespace osum.GameModes.Play
             switch (currentSegment)
             {
                 case TutorialSegments.Introduction_1:
-                    showText(osum.Resources.Tutorial.WelcomeToTheWorldOfOsu);
+                    showText(LocalisationManager.GetString(OsuString.WelcomeToTheWorldOfOsu));
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -223,11 +224,11 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_2:
-                    showText(osum.Resources.Tutorial.Introduction2);
+                    showText(LocalisationManager.GetString(OsuString.Introduction2));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_3:
-                    showText(osum.Resources.Tutorial.Introduction3);
+                    showText(LocalisationManager.GetString(OsuString.Introduction3));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.GuideFingers_1:
@@ -238,7 +239,7 @@ namespace osum.GameModes.Play
                         ShowGuideFingers = true;
                     }
 
-                    showText(osum.Resources.Tutorial.MeetTheTwoFingerGuides, -80);
+                    showText(LocalisationManager.GetString(OsuString.MeetTheTwoFingerGuides), -80);
 
                     GameBase.Scheduler.Add(delegate
                     {
@@ -261,7 +262,7 @@ namespace osum.GameModes.Play
 
                     break;
                 case TutorialSegments.Introduction_4:
-                    showText(osum.Resources.Tutorial.Introduction4);
+                    showText(LocalisationManager.GetString(OsuString.Introduction4));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_1:
@@ -270,12 +271,12 @@ namespace osum.GameModes.Play
                     Autoplay = true;
 
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
-                    showText(osum.Resources.Tutorial.HitCircle1);
+                    showText(LocalisationManager.GetString(OsuString.HitCircle1));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_2:
                     {
-                        showText(osum.Resources.Tutorial.HitCircle2, -50);
+                        showText(LocalisationManager.GetString(OsuString.HitCircle2), -50);
 
                         showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
@@ -298,7 +299,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_3:
                     {
-                        showText(osum.Resources.Tutorial.HitCircle3, -80);
+                        showText(LocalisationManager.GetString(OsuString.HitCircle3), -80);
 
                         HitCircle c = sampleHitObject as HitCircle;
                         c.SpriteApproachCircle.Bypass = false;
@@ -308,7 +309,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_4:
                     {
-                        showText(osum.Resources.Tutorial.HitCircle4, -100);
+                        showText(LocalisationManager.GetString(OsuString.HitCircle4), -100);
 
                         HitCircle c = sampleHitObject as HitCircle;
 
@@ -321,7 +322,7 @@ namespace osum.GameModes.Play
                             if (Clock.ManualTime > 700 && !textShown)
                             {
                                 textShown = true;
-                                showText(osum.Resources.Tutorial.HitCircle4_1, 100).Colour = Color4.Yellow;
+                                showText(LocalisationManager.GetString(OsuString.HitCircle4_1), 100).Colour = Color4.Yellow;
                             }
 
                             if (Clock.ManualTime > 1300)
@@ -334,7 +335,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_5:
                     {
-                        showText(osum.Resources.Tutorial.HitCircle5, -90);
+                        showText(LocalisationManager.GetString(OsuString.HitCircle5), -90);
 
                         HitCircle c = sampleHitObject as HitCircle;
 
@@ -343,7 +344,7 @@ namespace osum.GameModes.Play
                         GameBase.Scheduler.Add(delegate
                         {
                             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
-                            showText(osum.Resources.Tutorial.Good, 80).FadeOut(1000);
+                            showText(LocalisationManager.GetString(OsuString.Good), 80).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit50);
                         }, 2000);
 
@@ -351,7 +352,7 @@ namespace osum.GameModes.Play
                         {
                             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
                             AudioEngine.PlaySample(OsuSamples.HitWhistle, SampleSet.Normal);
-                            showText(osum.Resources.Tutorial.Great, 90).FadeOut(1000);
+                            showText(LocalisationManager.GetString(OsuString.Great), 90).FadeOut(1000);
                             c.HitAnimation(ScoreChange.Hit100);
                         }, 3000);
 
@@ -359,7 +360,7 @@ namespace osum.GameModes.Play
                         {
                             AudioEngine.PlaySample(OsuSamples.HitNormal, SampleSet.Normal);
                             AudioEngine.PlaySample(OsuSamples.HitFinish, SampleSet.Normal);
-                            showText(osum.Resources.Tutorial.Perfect, 100).FadeOut(2000);
+                            showText(LocalisationManager.GetString(OsuString.Perfect), 100).FadeOut(2000);
                             c.HitAnimation(ScoreChange.Hit300);
                         }, 4000);
 
@@ -371,7 +372,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_6:
                     hideDemo();
-                    showText(osum.Resources.Tutorial.HitCircle6);
+                    showText(LocalisationManager.GetString(OsuString.HitCircle6));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.HitCircle_Interact:
@@ -411,21 +412,21 @@ namespace osum.GameModes.Play
                     if (CurrentScore.countMiss > 2)
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                        showText(osum.Resources.Tutorial.HitCircleJudge1);
+                        showText(LocalisationManager.GetString(OsuString.HitCircleJudge1));
                         nextSegment = TutorialSegments.HitCircle_1;
                     }
                     else if (CurrentScore.count50 > 1 || CurrentScore.countMiss > 1)
                     {
-                        showText(osum.Resources.Tutorial.HitCircleJudge2);
+                        showText(LocalisationManager.GetString(OsuString.HitCircleJudge2));
                         nextSegment = TutorialSegments.HitCircle_Interact;
                     }
                     else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 0)
                     {
-                        showText(osum.Resources.Tutorial.HitCircleJudge3);
+                        showText(LocalisationManager.GetString(OsuString.HitCircleJudge3));
                     }
                     else
                     {
-                        showText(osum.Resources.Tutorial.HitCircleJudge4);
+                        showText(LocalisationManager.GetString(OsuString.HitCircleJudge4));
                     }
 
                     showTouchToContinue();
@@ -437,7 +438,7 @@ namespace osum.GameModes.Play
                         Player.Autoplay = true;
                         Clock.ResetManual();
 
-                        showText(osum.Resources.Tutorial.Hold1, -110);
+                        showText(LocalisationManager.GetString(OsuString.Hold1), -110);
 
                         showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
@@ -458,7 +459,7 @@ namespace osum.GameModes.Play
 
                             if (sampleHitObject.IsActive && !hasShownText)
                             {
-                                showText(osum.Resources.Tutorial.AndHoldUntilTheCircleExplodes, 100);
+                                showText(LocalisationManager.GetString(OsuString.AndHoldUntilTheCircleExplodes), 100);
                                 hasShownText = true;
                             }
 
@@ -473,7 +474,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Hold_2:
                     hideDemo();
-                    showText(osum.Resources.Tutorial.Hold2);
+                    showText(LocalisationManager.GetString(OsuString.Hold2));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Hold_Interact:
@@ -515,7 +516,7 @@ namespace osum.GameModes.Play
                             if (Clock.AudioTime > music_offset + 188 * music_beatlength && !warned)
                             {
                                 warned = true;
-                                pText t = showText(osum.Resources.Tutorial.Hold3);
+                                pText t = showText(LocalisationManager.GetString(OsuString.Hold3));
                                 t.Transform(new Transformation(TransformationType.Fade, 1, 0, t.ClockingNow + music_beatlength * 4, t.ClockingNow + music_beatlength * 5));
                             }
                         };
@@ -530,16 +531,16 @@ namespace osum.GameModes.Play
                         if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.HoldJudge1);
+                            showText(LocalisationManager.GetString(OsuString.HoldJudge1));
                             nextSegment = TutorialSegments.Hold_1;
                         }
                         else if (CurrentScore.count100 > 0)
                         {
-                            showText(osum.Resources.Tutorial.HoldJudge2);
+                            showText(LocalisationManager.GetString(OsuString.HoldJudge2));
                         }
                         else
                         {
-                            showText(osum.Resources.Tutorial.Perfect);
+                            showText(LocalisationManager.GetString(OsuString.Perfect));
                         }
 
                         showTouchToContinue();
@@ -552,7 +553,7 @@ namespace osum.GameModes.Play
                         Clock.ResetManual();
                         Player.Autoplay = true;
 
-                        showText(osum.Resources.Tutorial.Slider1, -80);
+                        showText(LocalisationManager.GetString(OsuString.Slider1), -80);
 
                         showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
@@ -576,18 +577,18 @@ namespace osum.GameModes.Play
 
                         GameBase.Scheduler.Add(delegate
                         {
-                            showText(osum.Resources.Tutorial.Slider1_1, 80);
+                            showText(LocalisationManager.GetString(OsuString.Slider1_1), 80);
                         }, 1000);
 
                     }
                     break;
                 case TutorialSegments.Slider_2:
                     {
-                        showText(osum.Resources.Tutorial.Slider2, -100);
+                        showText(LocalisationManager.GetString(OsuString.Slider2), -100);
 
                         GameBase.Scheduler.Add(delegate
                         {
-                            showText(osum.Resources.Tutorial.Slider2_1, 120);
+                            showText(LocalisationManager.GetString(OsuString.Slider2_1), 120);
                         }, 1000);
 
                         currentSegmentDelegate = delegate
@@ -604,7 +605,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Slider_3:
-                    showText(osum.Resources.Tutorial.Slider3, -100);
+                    showText(LocalisationManager.GetString(OsuString.Slider3), -100);
 
                     Clock.ResetManual();
                     Player.Autoplay = true;
@@ -631,19 +632,19 @@ namespace osum.GameModes.Play
                         {
                             showTouchToContinue();
                             arrowAtEnd.FadeOut(50);
-                            showText(osum.Resources.Tutorial.Slider3_1).Colour = Color4.SkyBlue;
+                            showText(LocalisationManager.GetString(OsuString.Slider3_1)).Colour = Color4.SkyBlue;
                         }
                     };
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        arrowAtEnd = showText(osum.Resources.Tutorial.Slider3_2, 120);
+                        arrowAtEnd = showText(LocalisationManager.GetString(OsuString.Slider3_2), 120);
                     }, 1000);
 
                     break;
                 case TutorialSegments.Slider_4:
                     hideDemo();
-                    showText(osum.Resources.Tutorial.Slider4);
+                    showText(LocalisationManager.GetString(OsuString.Slider4));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Slider_Interact:
@@ -673,22 +674,22 @@ namespace osum.GameModes.Play
                         if (CurrentScore.countMiss > 1 || CurrentScore.count50 > 3)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.SliderJudge1);
+                            showText(LocalisationManager.GetString(OsuString.SliderJudge1));
                             nextSegment = TutorialSegments.Slider_1;
                         }
                         else if (CurrentScore.count50 > 2)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.SliderJudge2);
+                            showText(LocalisationManager.GetString(OsuString.SliderJudge2));
                             nextSegment = TutorialSegments.Slider_Interact;
                         }
                         else if (CurrentScore.count100 > 0)
                         {
-                            showText(osum.Resources.Tutorial.SliderJudge3);
+                            showText(LocalisationManager.GetString(OsuString.SliderJudge3));
                         }
                         else
                         {
-                            showText(osum.Resources.Tutorial.Perfect);
+                            showText(LocalisationManager.GetString(OsuString.Perfect));
                         }
 
                         showTouchToContinue();
@@ -699,13 +700,13 @@ namespace osum.GameModes.Play
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
                     resetScore();
 
-                    showText(osum.Resources.Tutorial.Spinner1);
+                    showText(LocalisationManager.GetString(OsuString.Spinner1));
                     showTouchToContinue();
                     break;
 
                 case TutorialSegments.Spinner_2:
                     {
-                        showText(osum.Resources.Tutorial.Spinner2, -140);
+                        showText(LocalisationManager.GetString(OsuString.Spinner2), -140);
 
                         Clock.ResetManual();
                         Player.Autoplay = true;
@@ -733,12 +734,12 @@ namespace osum.GameModes.Play
 
                         GameBase.Scheduler.Add(delegate
                         {
-                            showText(osum.Resources.Tutorial.Spinner2_1, 80);
+                            showText(LocalisationManager.GetString(OsuString.Spinner2_1), 80);
                         }, 800);
                     }
                     break;
                 case TutorialSegments.Spinner_3:
-                    showText(osum.Resources.Tutorial.Spinner3, -140);
+                    showText(LocalisationManager.GetString(OsuString.Spinner3), -140);
                     {
                         Spinner sp = sampleHitObject as Spinner;
 
@@ -755,7 +756,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Spinner_4:
                     hideDemo();
-                    showText(osum.Resources.Tutorial.Spinner4);
+                    showText(LocalisationManager.GetString(OsuString.Spinner4));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Spinner_Interact:
@@ -784,17 +785,17 @@ namespace osum.GameModes.Play
                         if (CurrentScore.countMiss > 1)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.SpinnerJudge1);
+                            showText(LocalisationManager.GetString(OsuString.SpinnerJudge1));
                             nextSegment = TutorialSegments.Spinner_Interact;
                         }
                         else if (CurrentScore.count50 > 1 || CurrentScore.count100 > 1)
                         {
-                            showText(osum.Resources.Tutorial.SpinnerJudge2);
+                            showText(LocalisationManager.GetString(OsuString.SpinnerJudge2));
                             nextSegment = TutorialSegments.Spinner_Interact;
                         }
                         else
                         {
-                            showText(osum.Resources.Tutorial.SpinnerJudge3);
+                            showText(LocalisationManager.GetString(OsuString.SpinnerJudge3));
                         }
 
                         showTouchToContinue();
@@ -806,7 +807,7 @@ namespace osum.GameModes.Play
                         Clock.ResetManual();
                         Player.Autoplay = true;
 
-                        showText(osum.Resources.Tutorial.Multitouch1, -100);
+                        showText(LocalisationManager.GetString(OsuString.Multitouch1), -100);
 
                         showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
@@ -833,7 +834,7 @@ namespace osum.GameModes.Play
                                 Clock.IncrementManual(0.5f);
                             else if (!touchToContinue)
                             {
-                                showText(osum.Resources.Tutorial.Multitouch1_1, 120);
+                                showText(LocalisationManager.GetString(OsuString.Multitouch1_1), 120);
                                 showTouchToContinue();
                             }
                         };
@@ -850,7 +851,7 @@ namespace osum.GameModes.Play
                             }
                             else if (!touchToContinue)
                             {
-                                showText(string.Format(osum.Resources.Tutorial.Multitouch2, GameBase.Instance.PlayersUseThumbs ? osum.Resources.Tutorial.Thumbs : osum.Resources.Tutorial.Fingers), 0);
+                                showText(string.Format(LocalisationManager.GetString(OsuString.Multitouch2), GameBase.Instance.PlayersUseThumbs ? LocalisationManager.GetString(OsuString.Thumbs) : LocalisationManager.GetString(OsuString.Fingers)), 0);
                                 showTouchToContinue();
                             }
                         };
@@ -858,7 +859,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Multitouch_3:
                     hideDemo();
-                    showText(osum.Resources.Tutorial.Multitouch3);
+                    showText(LocalisationManager.GetString(OsuString.Multitouch3));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Multitouch_Interact:
@@ -915,16 +916,16 @@ namespace osum.GameModes.Play
                         if (CurrentScore.countMiss + CurrentScore.count50 > 5)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.MultitouchJudge1);
+                            showText(LocalisationManager.GetString(OsuString.MultitouchJudge1));
                             nextSegment = TutorialSegments.Multitouch_Interact;
                         }
                         else if (CurrentScore.count100 > 2)
                         {
-                            showText(osum.Resources.Tutorial.MultitouchJudge2);
+                            showText(LocalisationManager.GetString(OsuString.MultitouchJudge2));
                         }
                         else
                         {
-                            showText(osum.Resources.Tutorial.MultitouchJudge3);
+                            showText(LocalisationManager.GetString(OsuString.MultitouchJudge3));
                         }
 
                         showTouchToContinue();
@@ -933,7 +934,7 @@ namespace osum.GameModes.Play
 
                 case TutorialSegments.Stacked_1:
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO, false);
-                    showText(osum.Resources.Tutorial.Stacked1, -100);
+                    showText(LocalisationManager.GetString(OsuString.Stacked1), -100);
 
                     Clock.ResetManual();
                     Player.Autoplay = true;
@@ -963,7 +964,7 @@ namespace osum.GameModes.Play
                             Clock.IncrementManual(0.5f);
                         else if (!touchToContinue)
                         {
-                            showText(osum.Resources.Tutorial.Stacked1_1, 120);
+                            showText(LocalisationManager.GetString(OsuString.Stacked1_1), 120);
                             showTouchToContinue();
                         }
                     };
@@ -975,7 +976,7 @@ namespace osum.GameModes.Play
                             Clock.IncrementManual(0.5f);
                         else if (!touchToContinue)
                         {
-                            showText(osum.Resources.Tutorial.Stacked2);
+                            showText(LocalisationManager.GetString(OsuString.Stacked2));
                             showTouchToContinue();
                         }
                     };
@@ -983,7 +984,7 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Stacked_3:
                     int i = 0;
                     hideDemo();
-                    showText(osum.Resources.Tutorial.Stacked3);
+                    showText(LocalisationManager.GetString(OsuString.Stacked3));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Stacked_Interact:
@@ -1030,22 +1031,22 @@ namespace osum.GameModes.Play
                         if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 4)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.StackedJudge1);
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge1));
                             nextSegment = TutorialSegments.Stacked_1;
                         }
                         else if (CurrentScore.count50 > 6)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText(osum.Resources.Tutorial.StackedJudge2);
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge2));
                             nextSegment = TutorialSegments.Slider_Interact;
                         }
                         else if (CurrentScore.count100 > 0)
                         {
-                            showText(osum.Resources.Tutorial.StackedJudge3);
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge3));
                         }
                         else
                         {
-                            showText(osum.Resources.Tutorial.StackedJudge4);
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge4));
                         }
 
                         showTouchToContinue();
@@ -1054,15 +1055,15 @@ namespace osum.GameModes.Play
 
                 case TutorialSegments.Stream_1:
                     ShowGuideFingers = false;
-                    showText(osum.Resources.Tutorial.Stream1);
+                    showText(LocalisationManager.GetString(OsuString.Stream1));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Stream_2:
-                    showText(osum.Resources.Tutorial.Stream2);
+                    showText(LocalisationManager.GetString(OsuString.Stream2));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Stream_3:
-                    showText(osum.Resources.Tutorial.Stream3);
+                    showText(LocalisationManager.GetString(OsuString.Stream3));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Stream_4:
@@ -1157,7 +1158,7 @@ namespace osum.GameModes.Play
                     loadNextSegment();
                     break;
                 case TutorialSegments.Healthbar_1:
-                    showText(osum.Resources.Tutorial.Healthbar1, -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar1), -120);
                     healthBar = new HealthBar();
                     {
                         pDrawable lastFlash = null;
@@ -1172,11 +1173,11 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Healthbar_2:
-                    showText(osum.Resources.Tutorial.Healthbar2, -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar2), -120);
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Healthbar_3:
-                    showText(osum.Resources.Tutorial.Healthbar3, -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar3), -120);
 
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
 
@@ -1212,7 +1213,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Healthbar_4:
-                    showText(osum.Resources.Tutorial.Healthbar4, -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar4), -120);
                     {
                         float increaseRate = 0;
                         currentSegmentDelegate = delegate
@@ -1245,7 +1246,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Healthbar_5:
-                    showText(osum.Resources.Tutorial.Healthbar5, -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar5), -120);
 
                     HitObjectManager.ActiveStream = Difficulty.Easy;
                     playfieldBackground.ChangeColour(Difficulty.Easy, true);
@@ -1290,15 +1291,15 @@ namespace osum.GameModes.Play
                             }
                         };
                     }
-                    showText(osum.Resources.Tutorial.Score1);
+                    showText(LocalisationManager.GetString(OsuString.Score1));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Score_2:
-                    showText(osum.Resources.Tutorial.Score2);
+                    showText(LocalisationManager.GetString(OsuString.Score2));
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Score_3:
-                    showText(osum.Resources.Tutorial.Score3);
+                    showText(LocalisationManager.GetString(OsuString.Score3));
                     {
                         backButton.FadeOut(500);
                         GameBase.Scheduler.Add(delegate
@@ -1323,14 +1324,14 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.Score_4:
                     comboCounter.SetCombo(0);
-                    showText(osum.Resources.Tutorial.Score4);
+                    showText(LocalisationManager.GetString(OsuString.Score4));
                     GameBase.Scheduler.Add(delegate {
                         backButton.FadeOut(500);
                         showTouchToContinue();
                     }, 1500);
                     break;
                 case TutorialSegments.Outro:
-                    showText(osum.Resources.Tutorial.Completion);
+                    showText(LocalisationManager.GetString(OsuString.Completion));
                     showTouchToContinue();
                     backButton.FadeOut(100);
                     break;
@@ -1360,11 +1361,11 @@ namespace osum.GameModes.Play
             switch (difficulty)
             {
                 case Difficulty.Easy:
-                    return osum.Resources.Tutorial.Easy;
+                    return LocalisationManager.GetString(OsuString.Easy);
                 case Difficulty.Normal:
-                    return osum.Resources.Tutorial.Normal;
+                    return LocalisationManager.GetString(OsuString.Normal);
                 case Difficulty.Hard:
-                    return osum.Resources.Tutorial.Hard;
+                    return LocalisationManager.GetString(OsuString.Hard);
             }
 
             return string.Empty;
@@ -1396,29 +1397,29 @@ namespace osum.GameModes.Play
                 case ScoreChange.Hit300g:
                 case ScoreChange.Hit300k:
                 case ScoreChange.Hit300m:
-                    showText(osum.Resources.Tutorial.Perfect, 0).FadeOut(1000);
+                    showText(LocalisationManager.GetString(OsuString.Perfect), 0).FadeOut(1000);
                     break;
                 case ScoreChange.Hit100:
                 case ScoreChange.Hit100m:
                 case ScoreChange.Hit100k:
                     if (Clock.AudioTime < hitObject.StartTime)
-                        showText(osum.Resources.Tutorial.TimingEarly, -60).FadeOut(1000);
+                        showText(LocalisationManager.GetString(OsuString.TimingEarly), -60).FadeOut(1000);
                     else
-                        showText(osum.Resources.Tutorial.TimingLate, 60).FadeOut(1000);
+                        showText(LocalisationManager.GetString(OsuString.TimingLate), 60).FadeOut(1000);
                     break;
                 case ScoreChange.Hit50:
                 case ScoreChange.Hit50m:
                 case ScoreChange.Miss:
                     if (Clock.AudioTime < hitObject.StartTime)
                     {
-                        pText t = showText(osum.Resources.Tutorial.TimingVeryEarly, -60);
+                        pText t = showText(LocalisationManager.GetString(OsuString.TimingVeryEarly), -60);
                         t.TextSize *= 1.4f;
                         t.Colour = Color4.OrangeRed;
                         t.FadeOut(1000);
                     }
                     else
                     {
-                        pText t = showText(osum.Resources.Tutorial.TimingVeryLate, 60);
+                        pText t = showText(LocalisationManager.GetString(OsuString.TimingVeryLate), 60);
                         t.TextSize *= 1.4f;
                         t.Colour = Color4.OrangeRed;
                         t.FadeOut(1000);

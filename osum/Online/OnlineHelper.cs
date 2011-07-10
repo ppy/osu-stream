@@ -1,6 +1,7 @@
 using System;
 using osum.Helpers;
 using osum.UI;
+using osum.Resources;
 
 namespace osum.Online
 {
@@ -49,7 +50,7 @@ namespace osum.Online
             {
                 if (!GameBase.Config.GetValue<bool>("GamecentreFailureAnnounced", false))
                 {
-                    Notification n = new Notification(osum.Resources.General.GameCentreInactive, osum.Resources.General.GameCentreInactiveExplanation, NotificationStyle.Okay);
+                    Notification n = new Notification(LocalisationManager.GetString(OsuString.GameCentreInactive), LocalisationManager.GetString(OsuString.GameCentreInactiveExplanation), NotificationStyle.Okay);
                     GameBase.Notify(n);
                     GameBase.Config.SetValue<bool>("GamecentreFailureAnnounced", true);
                 }

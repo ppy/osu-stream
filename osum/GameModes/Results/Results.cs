@@ -14,6 +14,7 @@ using osum.Online;
 using osu_common.Helpers;
 using osum.GameplayElements;
 using System.IO;
+using osum.Resources;
 namespace osum.GameModes
 {
     public class Results : GameMode
@@ -118,7 +119,7 @@ namespace osum.GameModes
             {
                 float v_offset = -165;
 
-                pText heading = new pText(osum.Resources.General.Score, 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
+                pText heading = new pText(LocalisationManager.GetString(OsuString.Score), 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -137,7 +138,7 @@ namespace osum.GameModes
                 v_offset += 40;
 
                 //Spin Bonus
-                heading = new pText(osum.Resources.General.Hit, 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Hit), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -156,7 +157,7 @@ namespace osum.GameModes
                 v_offset += 25;
 
 
-                heading = new pText(osum.Resources.General.Combo, 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Combo), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -174,7 +175,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(osum.Resources.General.Accuracy, 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -192,7 +193,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(osum.Resources.General.Spin, 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Spin), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -210,7 +211,7 @@ namespace osum.GameModes
 
                 v_offset += 30;
 
-                heading = new pText(osum.Resources.General.Accuracy, 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
+                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -226,7 +227,7 @@ namespace osum.GameModes
 
                 v_offset += 20;
 
-                heading = new pText(osum.Resources.General.MaxCombo, 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
+                heading = new pText(LocalisationManager.GetString(OsuString.MaxCombo), 28, new Vector2(240, v_offset), 0.5f, true, Color4.White)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -281,7 +282,7 @@ namespace osum.GameModes
             //Average Timing
             {
                 float avg = (float)Math.Abs(RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount));
-                pText heading = new pText(osum.Resources.General.AvgTiming + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
+                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
                     Origin = OriginTypes.BottomCentre
@@ -332,7 +333,7 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.aac", true);
+            bool didLoad = AudioEngine.Music.Load("Skins/Default/results.m4a", true);
 #else
             bool didLoad = AudioEngine.Music.Load("Skins/Default/results.mp3", true);
 #endif
