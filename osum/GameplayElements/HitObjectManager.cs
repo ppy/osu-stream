@@ -296,7 +296,8 @@ namespace osum.GameplayElements
             Vector2 p1 = useEnd ? h1.EndPosition : h1.Position;
             Vector2 p2 = h2.Position;
 
-            HitObject firstObject = !useEnd && h1.CompareTo(h2) <= 0 ? h1 : h2;
+            HitObject firstObject = h1.CompareTo(h2) <= 0 ? h1 : h2;
+            HitObject secondObject = h1.CompareTo(h2) <= 0 ? h2 : h1;
 
             Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
@@ -311,8 +312,11 @@ namespace osum.GameplayElements
 
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
+            foreach (Transformation t in secondObject.Sprites[0].Transformations)
+                if (t.Type == TransformationType.Fade && t.EndFloat == 1)
+                    connectingLine.Transform(t);
             foreach (Transformation t in firstObject.Sprites[0].Transformations)
-                if (t.Type != TransformationType.Colour)
+                if (t.Type == TransformationType.Fade && t.EndFloat == 0)
                     connectingLine.Transform(t);
 
             h2.Sprites.Add(connectingLine);
