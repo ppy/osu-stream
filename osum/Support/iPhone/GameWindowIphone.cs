@@ -123,7 +123,7 @@ namespace osum
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
-            base.TouchesBegan(touches, evt);
+            //base.TouchesBegan(touches, evt);
 
             if (inputHandler != null)
                 inputHandler.HandleTouchesBegan(touches, evt);
@@ -131,7 +131,7 @@ namespace osum
 
         public override void TouchesMoved(NSSet touches, UIEvent evt)
         {
-            base.TouchesMoved(touches, evt);
+            //base.TouchesMoved(touches, evt);
 
             if (inputHandler != null)
                 inputHandler.HandleTouchesMoved(touches, evt);
@@ -139,7 +139,7 @@ namespace osum
 
         public override void TouchesEnded(NSSet touches, UIEvent evt)
         {
-            base.TouchesEnded(touches, evt);
+            //base.TouchesEnded(touches, evt);
 
             if (inputHandler != null)
                 inputHandler.HandleTouchesEnded(touches, evt);
@@ -147,7 +147,7 @@ namespace osum
 
         public override void TouchesCancelled(NSSet touches, UIEvent evt)
         {
-            base.TouchesCancelled(touches, evt);
+            //base.TouchesCancelled(touches, evt);
 
             if (inputHandler != null)
                 inputHandler.HandleTouchesCancelled(touches, evt);

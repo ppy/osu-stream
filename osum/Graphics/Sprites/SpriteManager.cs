@@ -76,10 +76,6 @@ namespace osum.Graphics.Sprites
 
         void mapToCoordinates(ref TrackingPoint t)
         {
-            //todo: optimise?
-            if (!matrixOperations)
-                return;
-
             t = (TrackingPoint)t.Clone();
 
             t.UpdatePositions();
@@ -145,7 +141,7 @@ namespace osum.Graphics.Sprites
         {
             if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
 
-            mapToCoordinates(ref trackingPoint);
+            if (matrixOperations) mapToCoordinates(ref trackingPoint);
 
             //todo: find out why these are needed (see tutorial hitcircles part when failing)
             if (Sprites == null) return;
@@ -160,7 +156,7 @@ namespace osum.Graphics.Sprites
 
             if (Sprites == null) return;
 
-            mapToCoordinates(ref trackingPoint);
+            if (matrixOperations) mapToCoordinates(ref trackingPoint);
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnMove(source, trackingPoint);
@@ -172,7 +168,7 @@ namespace osum.Graphics.Sprites
 
             if (Sprites == null) return;
 
-            mapToCoordinates(ref trackingPoint);
+            if (matrixOperations) mapToCoordinates(ref trackingPoint);
 
             for (int i = Sprites.Count - 1; i >= 0; i--)
                 Sprites[i].HandleOnUp(source, trackingPoint);

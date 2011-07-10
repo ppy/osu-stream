@@ -96,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseLlvm>false</MtouchUseLlvm>
@@ -104,12 +104,13 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Testflight</OutputPath>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
@@ -133,6 +134,7 @@
         <Command type="AfterBuild" command="curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" />
       </CustomCommands>
     </CustomCommands>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -423,9 +425,9 @@
     <Content Include="Skins\Default\intro_480.png" />
     <Content Include="Skins\Default\intro_960.png" />
     <Content Include="Skins\Default\credits.m4a" />
-    <Content Include="Skins\Default\mainmenu.aac" />
     <Content Include="Skins\Default\results.aac" />
     <Content Include="Skins\Default\songselect.aac" />
+    <Content Include="Skins\Default\mainmenu.m4a" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Tutorial.ja.resx">
