@@ -239,7 +239,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             int now = ClockingNow;
 
-            circularProgress.Alpha = 0.8f;
+            if (circularProgress.Alpha > 0.5f)
+                circularProgress.Alpha = 0.8f;
             circularProgress.FadeOut(500);
             circularProgress.EvenShading = true;
             circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, now, now + 500, EasingTypes.In));
