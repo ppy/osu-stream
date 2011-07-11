@@ -17,6 +17,7 @@ using System.Threading;
 using osum.GameplayElements.Scoring;
 using osum.Online;
 using osum.Resources;
+using osu_common.Helpers;
 
 namespace osum.GameModes
 {
@@ -124,9 +125,10 @@ namespace osum.GameModes
 
         private void onBackPressed(object sender, EventArgs args)
         {
-
             switch (State)
             {
+                default:
+                    break;
                 case SelectState.SongSelect:
                     State = SelectState.Exiting;
                     Director.ChangeMode(OsuMode.MainMenu);
@@ -308,7 +310,7 @@ namespace osum.GameModes
                         if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
                         difficultySelectOffset = difficultySelectOffset + change;
-                        
+
                     }
                     break;
             }

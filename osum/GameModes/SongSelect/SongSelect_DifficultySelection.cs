@@ -157,6 +157,8 @@ namespace osum.GameModes
 
         void onModeButtonClick(object sender, EventArgs e)
         {
+            if (State == SelectState.Starting) return;
+            
             pDrawable d = sender as pDrawable;
             if (d == null) return;
 
@@ -219,6 +221,8 @@ namespace osum.GameModes
 
         void onSelectPreviousMode(object sender, EventArgs e)
         {
+            if (State == SelectState.Starting) return;
+
             switch (Player.Difficulty)
             {
                 case Difficulty.Normal:
@@ -232,6 +236,8 @@ namespace osum.GameModes
 
         void onSelectNextMode(object sender, EventArgs e)
         {
+            if (State == SelectState.Starting) return;
+
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
@@ -347,8 +353,7 @@ namespace osum.GameModes
 
         private void onStartButtonPressed(object sender, EventArgs args)
         {
-            if (State == SelectState.Starting)
-                return;
+            if (State == SelectState.Starting) return;
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
