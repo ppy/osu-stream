@@ -160,6 +160,15 @@ namespace osum.Resources
         ExpertUnlock,
         GameCentreInactive,
         GameCentreInactiveExplanation,
-        Loading
+        Loading,
+        About,
+        Credits,
+        OnlineHelp,
+        DifficultySettings,
+        EffectVolume,
+        MusicVolume,
+        OnlineOptions,
+        GameCentreLoggedIn,
+        GameCentreTapToLogin
     }
 }
