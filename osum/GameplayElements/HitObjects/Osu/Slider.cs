@@ -1045,8 +1045,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
 
-            double drawProgress = Math.Max(0, (double)(ClockingNow - snakingBegin) /
-                          (double)(snakingEnd - snakingBegin));
+            double drawProgress = Math.Max(0, (double)(ClockingNow - snakingBegin) / (double)(snakingEnd - snakingBegin));
 
             if (drawProgress <= 0) return; //haven't started drawing yet.
 
@@ -1057,8 +1056,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 lastDrawnSegmentIndex = -1;
                 FirstSegmentIndex = 0;
                 if (sliderBodyTexture == null)
-                    //creation failed
-                    return;
+                    return; //creation failed
             }
 
             if (sliderBodyTexture.fboId < 0)
@@ -1189,13 +1187,13 @@ namespace osum.GameplayElements.HitObjects.Osu
             lastDrawnSegmentIndex = -1;
 
             sliderBodyTexture = TextureManager.RequireTexture(trackBounds.Width, trackBounds.Height);
-#if iOS
-            sliderBodyTexture.Premultiplied = true;
-#endif
 
             if (sliderBodyTexture == null)
                 return;
 
+#if iOS
+            sliderBodyTexture.Premultiplied = true;
+#endif
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
 
