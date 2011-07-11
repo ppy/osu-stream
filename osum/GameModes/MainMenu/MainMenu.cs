@@ -261,7 +261,7 @@ namespace osum.GameModes
                     menuBackgroundNew.ScaleScalar += sCh;
             }
 
-            if (!menuBackgroundNew.IsAwesome)
+            if (State != MenuState.Select)
                 updateBeat();
 
             base.Update();
