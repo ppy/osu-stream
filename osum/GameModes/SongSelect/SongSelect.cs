@@ -28,7 +28,7 @@ namespace osum.GameModes
         public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
 
-        private static List<Beatmap> availableMaps;
+        private static pList<Beatmap> availableMaps = new pList<Beatmap>();
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
         SpriteManager topmostSpriteManager = new SpriteManager();
@@ -140,20 +140,18 @@ namespace osum.GameModes
 
         private void InitializeBeatmaps()
         {
-            availableMaps = new List<Beatmap>();
+            foreach (string s in Directory.GetFiles(BeatmapPath, "*.osz2"))
+            {
+                Beatmap b = new Beatmap(s);
+                availableMaps.AddInPlace(b);
+            }
 
             int index = 0;
 
-            string docs = BeatmapPath;
-
-            foreach (string s in Directory.GetFiles(docs, "*.osz2"))
+            foreach (Beatmap b in availableMaps)
             {
-                Beatmap b = new Beatmap(s);
-
                 BeatmapPanel panel = new BeatmapPanel(b, this, index++);
                 spriteManager.Add(panel);
-
-                availableMaps.Add(b);
                 panels.Add(panel);
             }
 

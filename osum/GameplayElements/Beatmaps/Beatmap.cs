@@ -6,9 +6,10 @@ using System.IO;
 using System.Collections.Generic;
 using osum.GameplayElements.Beatmaps;
 using osu_common.Libraries.Osz2;
+using System.Globalization;
 namespace osum.GameplayElements.Beatmaps
 {
-    public partial class Beatmap : IDisposable
+    public partial class Beatmap : IDisposable, IComparable<Beatmap>
     {
         public string ContainerFilename;
 
@@ -97,23 +98,54 @@ namespace osum.GameplayElements.Beatmaps
 
         #endregion
 
-        public string Artist { get {
-                try {
+        public string Artist
+        {
+            get
+            {
+                try
+                {
                     return Package.GetMetadata(MapMetaType.Artist);
                 }
                 catch { return "error"; }
-        } }
+            }
+        }
 
         public string Creator { get { return Package.GetMetadata(MapMetaType.Creator); } }
 
-        public string Title { get {
-                try {
+        public string Title
+        {
+            get
+            {
+                try
+                {
                     return Package.GetMetadata(MapMetaType.Title);
                 }
                 catch { return "error"; }
-        } }
+            }
+        }
 
-        public double DifficultyStars { get { return double.Parse(Package.GetMetadata(MapMetaType.DifficultyRating) ?? "0", GameBase.nfi); } }
+        private int difficultyStars = -1;
+        public int DifficultyStars
+        {
+            get
+            {
+                if (difficultyStars == -1)
+                    Int32.TryParse(Package.GetMetadata(MapMetaType.DifficultyRating), out difficultyStars);
+                return difficultyStars;
+            }
+        }
+
+        #region IComparable<Beatmap> Members
+
+        public int CompareTo(Beatmap other)
+        {
+            int comp = this.DifficultyStars.CompareTo(other.DifficultyStars);
+            if (comp == 0)
+                return this.ContainerFilename.CompareTo(other.ContainerFilename);
+            return comp;
+        }
+
+        #endregion
     }
 }
 
