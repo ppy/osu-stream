@@ -193,7 +193,7 @@ namespace osum.GameModes
 
             osuLogo.FadeOut(800);
 
-            explosions.ForEach(s => s.FadeOut(100));
+            explosions.ForEach(s => { s.Transformations.Clear(); s.FadeOut(100); });
         }
 
 
@@ -261,7 +261,8 @@ namespace osum.GameModes
                     menuBackgroundNew.ScaleScalar += sCh;
             }
 
-            updateBeat();
+            if (!menuBackgroundNew.IsAwesome)
+                updateBeat();
 
             base.Update();
             spriteManagerBehind.Update();
