@@ -142,6 +142,8 @@ namespace osum.GameModes
 
         private void InitializeBeatmaps()
         {
+            availableMaps.Clear();
+
             foreach (string s in Directory.GetFiles(BeatmapPath, "*.osz2"))
             {
                 Beatmap b = new Beatmap(s);
