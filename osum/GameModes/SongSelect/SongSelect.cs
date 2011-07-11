@@ -433,6 +433,7 @@ namespace osum.GameModes
                     break;
                 case SelectState.RankingDisplay:
                 case SelectState.DifficultySelect:
+                case SelectState.SongSelect:
                     if (AudioEngine.Music.DimmableVolume < 1)
                         AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
                     break;
