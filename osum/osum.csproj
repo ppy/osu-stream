@@ -10,16 +10,15 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>osum</RootNamespace>
     <MainNibFile>MainWindow.nib</MainNibFile>
-    <AssemblyName>osum</AssemblyName>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1280</BundleVersion>
+    <BundleVersion>1300</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
-    <BundleIcon>icon.png</BundleIcon>
-    <BundleIconHigh>icon@2x.png</BundleIconHigh>
+    <BundleIcon>Icon.png</BundleIcon>
+    <BundleIconHigh>Icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
     <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
-    <BundleIconIPad>icon72.png</BundleIconIPad>
+    <BundleIconIPad>Icon-72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -42,6 +41,7 @@
     <MtouchUseSGen>false</MtouchUseSGen>
     <DebugSymbols>true</DebugSymbols>
     <MtouchArch>ARMv6</MtouchArch>
+    <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -63,6 +63,7 @@
     <MtouchUseSGen>false</MtouchUseSGen>
     <additionalargs>/unsafe</additionalargs>
     <MtouchArch>ARMv6</MtouchArch>
+    <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,6 +85,7 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
+    <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -106,6 +108,7 @@
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
+    <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
@@ -136,6 +139,27 @@
       </CustomCommands>
     </CustomCommands>
     <MtouchLink>Full</MtouchLink>
+    <AssemblyName>osum</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Distribution</OutputPath>
+    <DefineConstants>iOS OSUM DIST</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <MtouchI18n />
+    <MtouchDebug>False</MtouchDebug>
+    <additionalargs>/unsafe</additionalargs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchMinimumOS>3.2</MtouchMinimumOS>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <AssemblyName>osustream</AssemblyName>
+    <MtouchArch>ARMv6</MtouchArch>
+    <MtouchLink>Full</MtouchLink>
+    <MtouchUseSGen>false</MtouchUseSGen>
+    <MtouchUseThumb>false</MtouchUseThumb>
+    <CodesignProvision>FB1023E2-3C5E-41CD-819D-8FDF88B365E8</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -146,9 +170,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="icon.png" />
-    <None Include="icon%402x.png" />
-    <None Include="icon72.png" />
+    <None Include="Icon.png" />
+    <None Include="Icon%402x.png" />
+    <None Include="Icon-72.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
