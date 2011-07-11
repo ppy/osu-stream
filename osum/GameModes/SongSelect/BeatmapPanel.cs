@@ -75,10 +75,12 @@ namespace osum.GameModes.SongSelect
             s_TextArtist.Offset = new Vector2(100, 29);
             Sprites.Add(s_TextArtist);
 
+#if !DIST
             s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
             s_TextCreator.Origin = OriginTypes.TopRight;
             s_TextCreator.Field = FieldTypes.StandardSnapRight;
             Sprites.Add(s_TextCreator);
+#endif
 
             pTexture thumb = null;
             
@@ -98,7 +100,7 @@ namespace osum.GameModes.SongSelect
                 {
                     s_Text.Text = beatmap.Title;
                     s_TextArtist.Text = beatmap.Artist;
-                    s_TextCreator.Text = beatmap.Creator;
+                    if (s_TextCreator != null) s_TextCreator.Text = beatmap.Creator;
                     starCount = (int)beatmap.DifficultyStars;
                 }
                 catch
