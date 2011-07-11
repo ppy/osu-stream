@@ -41,7 +41,12 @@ namespace osum.GameModes.Play.Components
 
                     if (menuText == null)
                     {
+#if DIST
+                        //todo: localise
+                        menuText = new pText(string.Format("{0} restarts\n{1}% completed", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+#else
                         menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+#endif
                         {
                             TextAlignment = TextAlignment.Centre,
                             Field = FieldTypes.StandardSnapBottomCentre,
