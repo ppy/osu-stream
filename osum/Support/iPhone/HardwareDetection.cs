@@ -7,6 +7,7 @@ namespace osum.Support.iPhone
 {
     public enum HardwareVersion
     {
+        Uncached = 0,
         iPhone,
         iPhone3G,
         iPhone3GS,
@@ -16,6 +17,7 @@ namespace osum.Support.iPhone
         iPod3G,
         iPod4G,
         iPad,
+        iPad2,
         iPhoneSimulator,
         iPhone4Simulator,
         iPadSimulator,
@@ -32,10 +34,14 @@ namespace osum.Support.iPhone
         [DllImport(MonoTouch.Constants.SystemLibrary)]
         static internal extern int sysctlbyname([MarshalAs(UnmanagedType.LPStr)] string property, IntPtr output, IntPtr oldLen, IntPtr newp, uint newlen);
 
+        static HardwareVersion cachedVersion = HardwareVersion.Uncached;
+
         public static HardwareVersion Version {
             get
             {
-                Console.WriteLine("system library is {0}.", MonoTouch.Constants.SystemLibrary);
+                if (cachedVersion != HardwareVersion.Uncached)
+                    return cachedVersion;
+
                 var pLen = Marshal.AllocHGlobal(sizeof(int));
                 sysctlbyname(HardwareProperty, IntPtr.Zero, pLen, IntPtr.Zero, 0);
 
@@ -54,35 +60,53 @@ namespace osum.Support.iPhone
                 var hardwareStr = Marshal.PtrToStringAnsi(pStr);
                 var ret = HardwareVersion.Unknown;
 
-                if (hardwareStr == "iPhone1,1")
-                    ret = HardwareVersion.iPhone;
-                else if (hardwareStr == "iPhone1,2")
-                    ret = HardwareVersion.iPhone3G;
-                else if (hardwareStr == "iPhone2,1")
-                    ret = HardwareVersion.iPhone3GS;
-                else if (hardwareStr == "iPhone3,1")
-                    ret = HardwareVersion.iPhone4;
-                else if (hardwareStr == "iPad1,1")
-                    ret = HardwareVersion.iPad;
-                else if (hardwareStr == "iPod1,1")
-                    ret = HardwareVersion.iPod1G;
-                else if (hardwareStr == "iPod2,1")
-                    ret = HardwareVersion.iPod2G;
-                else if (hardwareStr == "iPod3,1")
-                    ret = HardwareVersion.iPod3G;
-                else if (hardwareStr == "iPod4,1")
-                    ret = HardwareVersion.iPod3G;
-                else if (hardwareStr == "i386" || hardwareStr == "x86_64")
+                switch (hardwareStr)
                 {
+                case "iPhone1,1":
+                    ret = HardwareVersion.iPhone;
+                    break;
+                case "iPhone1,2":
+                    ret = HardwareVersion.iPhone3G;
+                    break;
+                case "iPhone2,1":
+                    ret = HardwareVersion.iPhone3GS;
+                    break;
+                case "iPhone3,1":
+                    ret = HardwareVersion.iPhone4;
+                    break;
+                case "iPad1,1":
+                    ret = HardwareVersion.iPad;
+                    break;
+                case "iPad2,1":
+                case "iPad2,2":
+                case "iPad2,3":
+                    ret = HardwareVersion.iPad2;
+                    break;
+                case "iPod1,1":
+                    ret = HardwareVersion.iPod1G;
+                    break;
+                case "iPod2,1":
+                    ret = HardwareVersion.iPod2G;
+                    break;
+                case "iPod3,1":
+                    ret = HardwareVersion.iPod3G;
+                    break;
+                case "iPod4,1":
+                    ret = HardwareVersion.iPod3G;
+                    break;
+                case "i386":
+                case "x86_64":
                     if (UIDevice.CurrentDevice.Model.Contains("iPhone"))
                         ret = UIScreen.MainScreen.Bounds.Height * UIScreen.MainScreen.Scale == 960 || UIScreen.MainScreen.Bounds.Width * UIScreen.MainScreen.Scale == 960 ? HardwareVersion.iPhone4Simulator : HardwareVersion.iPhoneSimulator;
                     else
                         ret = HardwareVersion.iPadSimulator;
+                    break;
                 }
 
                 Marshal.FreeHGlobal(pLen);
                 Marshal.FreeHGlobal(pStr);
 
+                cachedVersion = ret;
                 return ret;
             }
         }

@@ -45,6 +45,7 @@ using osum.Graphics.Skins;
 using System.Globalization;
 using System.Threading;
 using osum.GameModes;
+using osum.Support.iPhone;
 
 namespace osum
 {
@@ -88,6 +89,14 @@ namespace osum
 #if !DIST
             Console.WriteLine("Runningwith culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
 #endif
+
+            switch (HardwareDetection.Version)
+            {
+                case HardwareVersion.iPad:
+                case HardwareVersion.iPad2:
+                    IsHandheld = false;
+                    break;
+            }
 
 
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;

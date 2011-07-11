@@ -121,8 +121,8 @@ namespace osum
         /// </summary>
         private bool ignoreNextFrameTime;
 
-        //todo: override this for ipad.
-        internal virtual bool PlayersUseThumbs { get { return true; } }
+        //false for tablets etc.
+        internal static bool IsHandheld = true;
 
         public GameBase()
         {

@@ -851,7 +851,7 @@ namespace osum.GameModes.Play
                             }
                             else if (!touchToContinue)
                             {
-                                showText(string.Format(LocalisationManager.GetString(OsuString.Multitouch2), GameBase.Instance.PlayersUseThumbs ? LocalisationManager.GetString(OsuString.Thumbs) : LocalisationManager.GetString(OsuString.Fingers)), 0);
+                                showText(string.Format(LocalisationManager.GetString(OsuString.Multitouch2), GameBase.IsHandheld ? LocalisationManager.GetString(OsuString.Thumbs) : LocalisationManager.GetString(OsuString.Fingers)), 0);
                                 showTouchToContinue();
                             }
                         };
