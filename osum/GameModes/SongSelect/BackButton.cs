@@ -79,7 +79,7 @@ namespace osum.GameModes.SongSelect
         }
 
         const int hit_minimum_distance = 20;
-        const int hit_pull_distance = 70;
+        const int hit_pull_distance = 60;
         const int pull_limit_distance = 110;
         bool minimumHitPossible;
 
@@ -129,7 +129,7 @@ namespace osum.GameModes.SongSelect
                 if (l.p1.X > l.p2.X && l.p1.Y < l.p2.Y)
                     l.p2 = l.p1;
 
-                dist = 6f * (float)Math.Pow(Math.Abs(l.p2.X - l.p1.X) / 2 + Math.Abs(l.p2.Y - l.p1.Y) / 2, 0.49f);
+                dist = 6f * (float)Math.Pow(Math.Abs(l.p2.X - l.p1.X) / 2 + Math.Abs(l.p2.Y - l.p1.Y) / 2, 0.5f);
 
                 Vector2 subd = trackingPoint.BasePosition - new Vector2(hiddenPosition.X, GameBase.BaseSizeFixedWidth.Height - hiddenPosition.Y);
 
@@ -143,8 +143,8 @@ namespace osum.GameModes.SongSelect
 
                 if (dist > pull_limit_distance)
                 {
-                    RotateTo(defaultRotation, 200, EasingTypes.In);
-                    MoveTo(hiddenPosition, 200, EasingTypes.In);
+                    RotateTo(defaultRotation, 100, EasingTypes.In);
+                    MoveTo(hiddenPosition, 100, EasingTypes.In);
                 }
                 else
                 {
