@@ -87,7 +87,7 @@ namespace osum
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
 #if !DIST
-            Console.WriteLine("Runningwith culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
+            Console.WriteLine("Running with culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
 #endif
 
             switch (HardwareDetection.Version)
