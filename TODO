@@ -29,9 +29,10 @@ Todo stuff for osu!stream (initial release)
 -Tutorial
 |- Final tutorial map (basically map out part of mainmenu to include all practised elements.
 
-slider has 1px border being drawn (http://puu.sh/3110)
 change unlock to require A rank?
 run update loop in the background on ranking screen to change music while gamecentre dialog is vsible?
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
-make mode selection arrows more tappable
-slider stacked on slider breaks
+
+rerender icons
+disable itunes file sharing
+chagne osz2 key.
