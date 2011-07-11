@@ -49,15 +49,8 @@ namespace osum.Helpers
 
             foreach (VoidDelegate v in runnable)
             {
-                try
-                {
-                    VoidDelegate mi = new VoidDelegate(v);
-                    mi.Invoke();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("super duper error on delegate " + e);
-                }
+                VoidDelegate mi = new VoidDelegate(v);
+                mi.Invoke();
             }
         }
 
@@ -67,7 +60,7 @@ namespace osum.Helpers
             timedQueue.Add(del);
         }
 
-        public void Add(VoidDelegate d, bool forceDelayed)
+        public void Add(VoidDelegate d, bool forceDelayed = false)
         {
             if (!forceDelayed && Thread.CurrentThread.ManagedThreadId == mainThreadID)
             {
@@ -78,10 +71,6 @@ namespace osum.Helpers
 
             lock (schedulerQueue)
                 schedulerQueue.Enqueue(d);
-        }
-        public void Add(VoidDelegate d)
-        {
-            Add(d, false);
         }
     }
 

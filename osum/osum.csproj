@@ -12,7 +12,7 @@
     <MainNibFile>MainWindow.nib</MainNibFile>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1300</BundleVersion>
+    <BundleVersion>1305</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
@@ -163,8 +163,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="OpenTK" />
   </ItemGroup>
@@ -280,73 +278,11 @@
     <Compile Include="GameModes\SongSelect\pTabController.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect.cs" />
     <Compile Include="GameModes\Store\StoreMode.cs" />
-    <Compile Include="Libraries\NetLib\AsyncAcceptStatusObject.cs" />
-    <Compile Include="Libraries\NetLib\AsyncStatusObject.cs" />
-    <Compile Include="Libraries\NetLib\AuthenticationType.cs" />
-    <Compile Include="Libraries\NetLib\BinaryRequestItem.cs" />
-    <Compile Include="Libraries\NetLib\ChunkedStream.cs" />
-    <Compile Include="Libraries\NetLib\Connection.cs" />
-    <Compile Include="Libraries\NetLib\CookieItem.cs" />
-    <Compile Include="Libraries\NetLib\CookieList.cs" />
-    <Compile Include="Libraries\NetLib\DataAddedEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\DataAddedEventHandler.cs" />
     <Compile Include="Libraries\NetLib\DataNetRequest.cs" />
-    <Compile Include="Libraries\NetLib\DataStringCollection.cs" />
     <Compile Include="Libraries\NetLib\FileNetRequest.cs" />
-    <Compile Include="Libraries\NetLib\FileUploadNetRequest.cs" />
-    <Compile Include="Libraries\NetLib\FormFieldRequestItem.cs" />
-    <Compile Include="Libraries\NetLib\FormNetRequest.cs" />
-    <Compile Include="Libraries\NetLib\GetDataStreamEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\GetDataStreamEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\HeaderField.cs" />
-    <Compile Include="Libraries\NetLib\HeaderFieldList.cs" />
-    <Compile Include="Libraries\NetLib\HostInfo.cs" />
-    <Compile Include="Libraries\NetLib\HostList.cs" />
-    <Compile Include="Libraries\NetLib\Http.cs" />
-    <Compile Include="Libraries\NetLib\HttpEntityHeader.cs" />
-    <Compile Include="Libraries\NetLib\HttpError.cs" />
-    <Compile Include="Libraries\NetLib\HttpProxySettings.cs" />
-    <Compile Include="Libraries\NetLib\HttpRedirectEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\HttpRedirectEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequest.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestHeader.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestItem.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestItemList.cs" />
-    <Compile Include="Libraries\NetLib\HttpRequestUtils.cs" />
-    <Compile Include="Libraries\NetLib\HttpResponseEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\HttpResponseEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\HttpResponseHeader.cs" />
-    <Compile Include="Libraries\NetLib\HttpVersion.cs" />
-    <Compile Include="Libraries\NetLib\MultiStream.cs" />
     <Compile Include="Libraries\NetLib\NetManager.cs" />
     <Compile Include="Libraries\NetLib\NetRequest.cs" />
-    <Compile Include="Libraries\NetLib\NetworkStream.cs" />
-    <Compile Include="Libraries\NetLib\NetworkStreamAction.cs" />
-    <Compile Include="Libraries\NetLib\SetFlagsMethod.cs" />
-    <Compile Include="Libraries\NetLib\SocketError.cs" />
-    <Compile Include="Libraries\NetLib\SocketProgressEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\SocketProgressEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\StreamError.cs" />
-    <Compile Include="Libraries\NetLib\StreamUtils.cs" />
-    <Compile Include="Libraries\NetLib\StringCollectionEx.cs" />
     <Compile Include="Libraries\NetLib\StringNetRequest.cs" />
-    <Compile Include="Libraries\NetLib\StringStream.cs" />
-    <Compile Include="Libraries\NetLib\StringUtils.cs" />
-    <Compile Include="Libraries\NetLib\SubmitFileRequestItem.cs" />
-    <Compile Include="Libraries\NetLib\SymbolType.cs" />
-    <Compile Include="Libraries\NetLib\SyncConnection.cs" />
-    <Compile Include="Libraries\NetLib\TcpClient.cs" />
-    <Compile Include="Libraries\NetLib\TcpClientConnection.cs" />
-    <Compile Include="Libraries\NetLib\TcpListEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\TcpListEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\TcpTextEventArgs.cs" />
-    <Compile Include="Libraries\NetLib\TcpTextEventHandler.cs" />
-    <Compile Include="Libraries\NetLib\TextRequestItem.cs" />
-    <Compile Include="Libraries\NetLib\Translator.cs" />
-    <Compile Include="Libraries\NetLib\UrlParser.cs" />
-    <Compile Include="Libraries\NetLib\Utils.cs" />
     <Compile Include="Helpers\osu!common\CryptoHelper.cs" />
     <Compile Include="Online\OnlineHelper.cs" />
     <Compile Include="Online\IOnlineServices.cs" />
