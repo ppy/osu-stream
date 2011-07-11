@@ -44,6 +44,7 @@ using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 using System.Globalization;
 using System.Threading;
+using osum.GameModes;
 
 namespace osum
 {
@@ -89,7 +90,6 @@ namespace osum
 #endif
 
 
-
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
             UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
 
@@ -97,9 +97,16 @@ namespace osum
             base.Initialize();
         }
 
+        static float pi = (float)Math.PI;
+
         void HandleUIAccelerometerSharedAccelerometerAcceleration (object sender, UIAccelerometerEventArgs e)
         {
-            float angle = (float)(Math.Atan2(e.Acceleration.X, e.Acceleration.Y) * 180/Math.PI);
+            Player p = Director.CurrentMode as Player;
+
+            if (p != null && !p.IsPaused)
+                return; //don't rotate during gameplay.
+
+            float angle = (float)(Math.Atan2(e.Acceleration.X, e.Acceleration.Y) * 180/pi);
 
             if (Math.Abs(e.Acceleration.Z) < 0.6f)
             {

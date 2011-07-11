@@ -706,6 +706,11 @@ namespace osum.GameModes
             topMostSpriteManager.Add(failGlow);
         }
 
+        internal bool IsPaused
+        {
+            get { return menu != null && menu.MenuDisplayed; }
+        }
+
         internal void Pause()
         {
             if (!Failed) AudioEngine.Music.Pause();
