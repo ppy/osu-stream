@@ -41,7 +41,7 @@ namespace osum.Resources
                 {
                     string[] spl = sw.ReadLine().Split('=');
                     if (spl.Length != 2) continue;
-                    strings[(OsuString)Enum.Parse(typeof(OsuString), spl[0], false)] = spl[1];
+                    strings[(OsuString)Enum.Parse(typeof(OsuString), spl[0], false)] = spl[1].Replace("\\n", "\n");
                 }
             }
         }
