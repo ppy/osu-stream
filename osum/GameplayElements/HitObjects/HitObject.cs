@@ -112,8 +112,8 @@ namespace osum.GameplayElements
 
         #region General & Timing
 
-        internal int StartTime;
-        internal int EndTime;
+        public int StartTime;
+        public int EndTime;
 
         internal ScoreChange hitValue;
 
@@ -156,7 +156,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal virtual bool NewCombo { get; set; }
+        public virtual bool NewCombo { get; set; }
 
         private ClockTypes clocking;
         internal ClockTypes Clocking
@@ -204,7 +204,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal virtual bool IsHit { get; set; }
+        public virtual bool IsHit { get; set; }
 
         internal int ClockingNow
         {

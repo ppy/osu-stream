@@ -592,7 +592,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         int lastJudgedEndpoint;
 
-        internal override bool IsHit
+        public override bool IsHit
         {
             get
             {

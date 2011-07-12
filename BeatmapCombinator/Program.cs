@@ -41,6 +41,7 @@ namespace BeatmapCombinator
     {
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
         private static List<string> headerContent;
+        private static double healthMultiplier;
 
         /// <summary>
         /// Combines many .osu files into one .osc
@@ -298,6 +299,9 @@ namespace BeatmapCombinator
             if (orderedDifficulties[(int)Difficulty.Expert] != null)
                 headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
 
+            if (healthMultiplier != 0)
+                headerContent.Add("HP:" + healthMultiplier);
+
             headerContent.Add(string.Empty);
             headerContent.Add("[HitObjects]");
 
@@ -426,6 +430,18 @@ namespace BeatmapCombinator
             {
                 p.Initialize();
 
+                
+                HitObject switchHpObject = null;
+                if (difficulty == Difficulty.Normal && Player.Beatmap.StreamSwitchPoints != null && Player.Beatmap.StreamSwitchPoints.Count > 0)
+                {
+                    //stream mode specific. make sure we have enough hp to hit the first stream switch
+                    int testStreamSwitch = Player.Beatmap.StreamSwitchPoints[0] - DifficultyManager.PreEmpt;
+                    int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; });
+                    switchHpObject = p.HitObjectManager.ActiveStreamObjects[index - 1];
+
+                }
+
+
                 FakeAudioTimeSource source = new FakeAudioTimeSource();
                 Clock.AudioTimeSource = source;
 
@@ -433,9 +449,22 @@ namespace BeatmapCombinator
                 {
                     Clock.Update(0.01);
                     source.InternalTime += 0.01;
-                    GameBase.ElapsedMilliseconds = 10;
+                    Clock.ElapsedMilliseconds = 10;
 
                     p.Update();
+
+                    if (switchHpObject != null && switchHpObject.IsHit)
+                    {
+                        double currentHp = p.healthBar.CurrentHp;
+                        Console.WriteLine("HP at required stream switch point (" + switchHpObject.EndTime + ") is " + currentHp);
+
+                        if (currentHp < HealthBar.HP_BAR_MAXIMUM)
+                        {
+                            healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                            Console.WriteLine("Need a multiplier of " + healthMultiplier);
+                        }
+                        switchHpObject = null;
+                    }
 
                     if (p.Completed)
                     {

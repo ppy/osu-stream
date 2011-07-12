@@ -38,7 +38,7 @@ namespace osum.GameModes
             }
         }
 
-        internal HealthBar healthBar;
+        public HealthBar healthBar;
 
         internal ScoreDisplay scoreDisplay;
 
@@ -469,7 +469,7 @@ namespace osum.GameModes
                     if (healthChange < 0)
                         healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
                     else
-                        healthBar.IncreaseCurrentHp(healthChange);
+                        healthBar.IncreaseCurrentHp(healthChange * Beatmap.HpStreamAdjustmentMultiplier);
                 }
             }
 

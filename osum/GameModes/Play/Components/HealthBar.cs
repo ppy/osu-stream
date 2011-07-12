@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,16 +12,17 @@ using osum.GameModes;
 
 namespace osum.GameplayElements.Scoring
 {
-    internal class HealthBar : GameComponent
+    public class HealthBar : GameComponent
     {
-        protected pSprite s_barFill;
-        protected internal pSprite s_barBg;
-        protected pSprite s_kiIcon;
+        internal pSprite s_barFill;
+        internal pSprite s_barBg;
+        internal pSprite s_kiIcon;
         private pSprite s_kiExplode;
 
         protected pTexture t_kiNormal;
 
-        internal const int HP_BAR_MAXIMUM = 200;
+        public const int HP_BAR_MAXIMUM = 200;
+        public const int HP_BAR_INITIAL = 100;
 
         /// <summary>
         /// Are we currently doing the initial "fill" stage?
@@ -51,7 +52,7 @@ namespace osum.GameplayElements.Scoring
         /// <summary>
         /// Current and accurate HP counter.
         /// </summary>
-        internal double CurrentHp { get; private set; }
+        public double CurrentHp { get; private set; }
 
         /// <summary>
         /// Current HP with no upper limiter.
@@ -124,7 +125,7 @@ namespace osum.GameplayElements.Scoring
             {
                 if (InitialIncrease)
                 {
-                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * GameBase.ElapsedMilliseconds);
+                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * Clock.ElapsedMilliseconds);
                     if (s_kiIcon.Transformations.Count == 0)
                     {
                         s_kiIcon.Transform(
@@ -133,12 +134,12 @@ namespace osum.GameplayElements.Scoring
                     }
                 }
                 else
-                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + Math.Abs(CurrentHp - DisplayHp) / 4 * GameBase.ElapsedMilliseconds * 0.03);
+                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + Math.Abs(CurrentHp - DisplayHp) / 4 * Clock.ElapsedMilliseconds * 0.03);
             }
             else if (DisplayHp > CurrentHp)
             {
                 InitialIncrease = false;
-                DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 4 * GameBase.ElapsedMilliseconds * 0.1);
+                DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 4 * Clock.ElapsedMilliseconds * 0.1);
             }
 
             s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
@@ -215,8 +216,8 @@ namespace osum.GameplayElements.Scoring
             spriteManager.Add(s_kiIcon);
             spriteManager.Add(s_kiExplode);
 
-            CurrentHp = HP_BAR_MAXIMUM / 2;
-            CurrentHpUncapped = HP_BAR_MAXIMUM / 2;
+            CurrentHp = HP_BAR_INITIAL;
+            CurrentHpUncapped = HP_BAR_INITIAL;
 
             DisplayHp = 0;
         }

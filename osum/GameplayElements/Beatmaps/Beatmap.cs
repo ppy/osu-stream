@@ -125,6 +125,7 @@ namespace osum.GameplayElements.Beatmaps
         }
 
         private int difficultyStars = -1;
+        public double HpStreamAdjustmentMultiplier = 1;
         public int DifficultyStars
         {
             get
