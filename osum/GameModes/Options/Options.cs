@@ -123,17 +123,23 @@ namespace osum.GameModes.Options
             text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
             smd.Add(text);
 
-            vPos += 50;
+            vPos += 90;
 
-            gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(50, vPos));
-            gameCentre.OnClick += delegate
+            gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
             {
-                OnlineHelper.Initialize();
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
             };
+
+            gameCentre.OnClick += delegate {  OnlineHelper.Initialize(); };
             smd.Add(gameCentre);
 
-            vPos += 20;
-            text = new pText(LocalisationManager.GetString(OnlineHelper.Available ? OsuString.GameCentreLoggedIn : OsuString.GameCentreTapToLogin), 24, new Vector2(180, vPos), 1, true, Color4.White);
+            vPos += 60;
+            text = new pText(LocalisationManager.GetString(OnlineHelper.Available ? OsuString.GameCentreLoggedIn : OsuString.GameCentreTapToLogin), 24, new Vector2(0, vPos), 1, true, Color4.White)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
             smd.Add(text);
 
             vPos += 50;
