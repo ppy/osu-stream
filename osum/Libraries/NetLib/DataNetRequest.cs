@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Net;
 using osum;
-
+using System.Text;
 #if iOS
 using MonoTouch.Foundation;
 using System.Runtime.InteropServices;
@@ -87,7 +87,7 @@ namespace osu_common.Libraries.NetLib
                 {
                     del = new NRDelegate();
 
-                    NSUrlRequest req = new NSUrlRequest (new NSUrl(m_url.Replace(" ","%20")), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 15);
+                    NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 15);
                     NSUrlConnection conn = new NSUrlConnection(req, del, false);
                     conn.Start();
 
@@ -100,8 +100,23 @@ namespace osu_common.Libraries.NetLib
                                 onUpdate(this, del.written, del.result.Length);
                             progress = del.written;
                         }
+
                         NSRunLoop.Current.RunUntil(NSDate.FromTimeIntervalSinceNow(0.1));
+
+                        if (AbortRequested)
+                        {
+                            conn.Cancel();
+                            break;
+                        }
                     }
+
+#if !DIST
+                    Console.WriteLine("requst finished with error " + error);
+#endif
+
+                    //do one last update to full progress if we haven't yet.
+                    if (progress != del.written && onUpdate != null)
+                        onUpdate(this, del.written, del.result.Length);
 
                     data = del.result;
                     error = del.error;
@@ -123,6 +138,24 @@ namespace osu_common.Libraries.NetLib
             }
             catch (ThreadAbortException)
             { }
+        }
+
+        private const string badChars = " \"%'\\";
+        public static String UrlEncode(String s)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char c in s.ToCharArray())
+            {
+                ushort u = (ushort)c;
+                if (u < 32 || badChars.IndexOf(c) >= 0)
+                {
+                    result.Append('%');
+                    result.Append(u.ToString("X2"));
+                }
+                else result.Append(c);
+            }
+
+            return result.ToString();
         }
 
         protected virtual void processFinishedRequest()

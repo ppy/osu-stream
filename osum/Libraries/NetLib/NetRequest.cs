@@ -36,13 +36,7 @@ namespace osu_common.Libraries.NetLib
 
         public virtual void Abort()
         {
-            if (IsQueued)
-            {
-                AbortRequested = true;
-                return;
-            }
-            
-            if (thread != null && thread.IsAlive) thread.Abort();
+            AbortRequested = true;
         }
 
         /// <summary>

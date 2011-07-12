@@ -28,6 +28,8 @@ namespace osum.GameModes.Store
 
         //InAppPurchaseManager iap = new InAppPurchaseManager();
 
+        StringNetRequest fetchRequest;
+
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
@@ -41,9 +43,9 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             spriteManager.Add(s_ButtonBack);
 
-            StringNetRequest netRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
-            netRequest.onFinish += netRequest_onFinish;
-            NetManager.AddRequest(netRequest);
+            fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
+            fetchRequest.onFinish += netRequest_onFinish;
+            NetManager.AddRequest(fetchRequest);
 
             loading = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.OrangeRed)
             {
@@ -58,7 +60,7 @@ namespace osum.GameModes.Store
 
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
 
-            //iap.requestProUpgradeProductData();
+            //iap.requestProductData("");
         }
 
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
@@ -77,7 +79,7 @@ namespace osum.GameModes.Store
 
         void netRequest_onFinish(string _result, Exception e)
         {
-            if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
+            if (fetchRequest.AbortRequested)
                 return;
 
             if (e != null || string.IsNullOrEmpty(_result))
@@ -172,6 +174,8 @@ namespace osum.GameModes.Store
 
         public override void Dispose()
         {
+            if (fetchRequest != null)
+                fetchRequest.Abort();
             base.Dispose();
         }
 
