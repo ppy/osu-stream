@@ -70,7 +70,7 @@ namespace osum.Audio
             Music.MaxVolume = GameBase.Config.GetValue<int>("VolumeMusic", 90) / 100f;
         }
 
-        static Dictionary<OsuSamples, int> lastPlayedTimes = new Dictionary<OsuSamples, int>();
+        static Dictionary<int, int> lastPlayedTimes = new Dictionary<int, int>();
 
         internal static Source PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
         {
@@ -81,10 +81,10 @@ namespace osum.Audio
                 return null;
 
             int lastPlayed = -1;
-            if (lastPlayedTimes.TryGetValue(sample, out lastPlayed))
+            if (lastPlayedTimes.TryGetValue(buffer, out lastPlayed))
                 if (Math.Abs(Clock.Time - lastPlayed) < 40)
                     return null;
-            lastPlayedTimes[sample] = Clock.Time;
+            lastPlayedTimes[buffer] = Clock.Time;
 
             Source src = AudioEngine.Effect.PlayBuffer(buffer, volume);
 
