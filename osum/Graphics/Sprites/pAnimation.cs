@@ -128,7 +128,7 @@ namespace osum.Graphics.Sprites
                 return; //no time has elapsed; the clocking is likely paused.
             lastFrameSpriteTime = spriteTime;
 
-            timeSinceLastFrame += GameBase.ElapsedMilliseconds;
+            timeSinceLastFrame += Clock.ElapsedMilliseconds;
 
             while (timeSinceLastFrame > FrameDelay)
             {

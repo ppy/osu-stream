@@ -603,8 +603,8 @@ namespace osum.Graphics.Sprites
 
             clone.UnbindAllEvents();
 
-            if (!keepTransformations)
-                clone.Transformations.Clear();
+            if (keepTransformations)
+                clone.Transformations.AddRange(Transformations);
 
             clone.Alpha *= brightness;
             clone.Clocking = ClockTypes.Game;
@@ -634,7 +634,7 @@ namespace osum.Graphics.Sprites
 
             Transform(
                       new Transformation(Colour, colour,
-                                         ClockingNow - (int)GameBase.ElapsedMilliseconds,
+                                         ClockingNow - (int)Clock.ElapsedMilliseconds,
                                          ClockingNow + duration));
         }
 

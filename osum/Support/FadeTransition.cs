@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.Support
 {
@@ -50,13 +51,13 @@ namespace osum.Support
                     if (FadeInTime == 0)
                         SpriteManager.UniversalDim = 0;
                     else
-                        SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - GameBase.ElapsedMilliseconds / FadeInTime);
+                        SpriteManager.UniversalDim = (float)Math.Max(0, SpriteManager.UniversalDim - Clock.ElapsedMilliseconds / FadeInTime);
                     break;
                 case FadeState.FadeOut:
                     if (FadeOutTime == 0)
                         SpriteManager.UniversalDim = 1;
                     else
-                        SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + GameBase.ElapsedMilliseconds / FadeOutTime);
+                        SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + Clock.ElapsedMilliseconds / FadeOutTime);
                     break;
             }
             

@@ -241,12 +241,12 @@ namespace osum.GameModes
 
             if (AudioEngine.Music.IsElapsing)
             {
-                elapsedRotation += GameBase.ElapsedMilliseconds;
-                osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
+                elapsedRotation += Clock.ElapsedMilliseconds;
+                osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * Clock.ElapsedMilliseconds);
 
                 Transformation tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Rotation);
 
-                float rCh = -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                float rCh = -(float)(Math.Cos((elapsedRotation + 500) / 3000f) * 0.00002 * Clock.ElapsedMilliseconds);
                 if (tr != null)
                     tr.EndFloat += rCh;
                 else
@@ -254,7 +254,7 @@ namespace osum.GameModes
 
                 tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Scale);
 
-                float sCh = -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * GameBase.ElapsedMilliseconds);
+                float sCh = -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * Clock.ElapsedMilliseconds);
                 if (tr != null)
                     tr.EndFloat += sCh;
                 else

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -142,7 +142,7 @@ namespace osum.GameModes.Play.Components
 
                                 lastFinger = finger;
 
-                                finger.Position = src + (dest - src) * 0.015f * MovementSpeed * (float)GameBase.ElapsedMilliseconds;
+                                finger.Position = src + (dest - src) * 0.015f * MovementSpeed * (float)Clock.ElapsedMilliseconds;
 
                                 if (!(obj is Spinner))
                                 {

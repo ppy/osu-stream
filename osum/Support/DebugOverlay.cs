@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,10 +49,10 @@ namespace osum.Support
 #endif
             }
 
-            weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + GameBase.ElapsedMilliseconds * 0.02;
+            weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + Clock.ElapsedMilliseconds * 0.02;
 
 #if iOS
-            if (GameBase.ElapsedMilliseconds > 25)
+            if (Clock.ElapsedMilliseconds > 25)
             {
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 5);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
@@ -71,7 +71,7 @@ namespace osum.Support
 
             double fps = (1000 / weightedAverageFrameTime);
 
-            lastUpdateTime += GameBase.ElapsedMilliseconds;
+            lastUpdateTime += Clock.ElapsedMilliseconds;
 
 #if FULL_DEBUG
             if (lastUpdateTime > 50)

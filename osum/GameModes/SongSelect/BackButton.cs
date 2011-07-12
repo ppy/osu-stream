@@ -203,9 +203,9 @@ namespace osum.GameModes.SongSelect
         {
             base.Update();
 
-            elapsedRotation += GameBase.ElapsedMilliseconds;
+            elapsedRotation += Clock.ElapsedMilliseconds;
 
-            //arrow.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * GameBase.ElapsedMilliseconds);
+            //arrow.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * Clock.ElapsedMilliseconds);
 
             //if (Transformations.Count == 0 && !IsHovering)
             //{
@@ -220,7 +220,7 @@ namespace osum.GameModes.SongSelect
 
             sm.Update();
 
-            //Rotation += (float)GameBase.ElapsedMilliseconds * 0.0005f;
+            //Rotation += (float)Clock.ElapsedMilliseconds * 0.0005f;
         }
     }
 }

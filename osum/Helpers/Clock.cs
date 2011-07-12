@@ -21,7 +21,7 @@ namespace osum.Helpers
         private static double time = 0;
 
 #if iOS
-        public const int UNIVERSAL_OFFSET = 0;//45;
+        public const int UNIVERSAL_OFFSET = 45;
 #else
         public const int UNIVERSAL_OFFSET = 60;
 #endif
@@ -29,17 +29,15 @@ namespace osum.Helpers
         /// <summary>
         /// Get the current game time in milliseconds.
         /// </summary>
-        public static int Time
-        {
-            get { return (int)(time * 1000); }
-        }
+        public static int Time;
 
-        private static int lastModeLoadTime;
-        public static int ModeTime { get { return Time - lastModeLoadTime; } }
+        private static double modeTime;
+        public static int ModeTime;
 
         public static void ModeTimeReset()
         {
-            lastModeLoadTime = Time;
+            modeTime = 0;
+            ModeTime = 0;
         }
 
         public static int ManualTime;
@@ -53,17 +51,14 @@ namespace osum.Helpers
             get { return (time * 1000); }
         }
 
-        static double currentFrameAudioTime;
-        static int currentFrameAudioTimeOffset;
+        public static double ElapsedMilliseconds = 1000 / 60f;
 
+        static double currentFrameAudioTime;
 
         /// <summary>
         /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
         /// </summary>
-        public static int AudioTime
-        {
-            get { return currentFrameAudioTimeOffset; }
-        }
+        public static int AudioTime;
 
         /// <summary>
         /// Gets the current time for a specific clock type.
@@ -102,13 +97,22 @@ namespace osum.Helpers
             {
                 AudioLeadingIn = false;
                 AudioLeadingInRunning = false;
-                currentFrameAudioTime = currentFrameAudioTimeOffset = 0;
+                currentFrameAudioTime = AudioTime = 0;
             }
         }
 
         public static void Update(double elapsed)
         {
+            if (elapsed > 0.1) elapsed = 1d/60;
+            //let's disregard slow frames for mode time calculations.
+
+            ElapsedMilliseconds = elapsed * 1000;
+
+            modeTime += elapsed;
             time += elapsed;
+
+            Time = (int)Math.Round(time * 1000);
+            ModeTime = (int)Math.Round(modeTime * 1000);
 
             if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
             {
@@ -129,7 +133,7 @@ namespace osum.Helpers
 
                 if (sourceTime == 0)
                 {
-                    currentFrameAudioTimeOffset = 0;
+                    AudioTime = 0;
                     return;
                 }
                 else
@@ -142,14 +146,14 @@ namespace osum.Helpers
                 }
             }
 
-            currentFrameAudioTimeOffset = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
+            AudioTime = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
         }
 
         public static ITimeSource AudioTimeSource { get; set; }
 
         internal static void IncrementManual(float rate = 1)
         {
-            ManualTime += (int)(GameBase.ElapsedMilliseconds * rate);
+            ManualTime += (int)(ElapsedMilliseconds * rate);
         }
 
         internal static void ResetManual()

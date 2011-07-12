@@ -100,8 +100,6 @@ namespace osum
 
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-        public static double ElapsedMilliseconds = 1000 / 60f;
-
         internal static Scheduler Scheduler = new Scheduler();
 
         internal virtual bool DisableDimming { get; set; }
@@ -386,19 +384,13 @@ namespace osum
         /// <returns>true if a draw should occur</returns>
         public bool Update(FrameEventArgs e)
         {
-            double lastTime = Clock.TimeAccurate;
             double thisTime = 0;
             try { thisTime = e.Time; }
             catch { }
             //try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
-            Clock.Update(thisTime);
+            Clock.Update(ignoreNextFrameTime ? 0 : thisTime);
 
             UpdateNotifications();
-
-            ElapsedMilliseconds = ignoreNextFrameTime ? 0 : Clock.TimeAccurate - lastTime;
-
-            if (ElapsedMilliseconds > 1000)
-                ElapsedMilliseconds = 0;
 
             ignoreNextFrameTime = false;
 
