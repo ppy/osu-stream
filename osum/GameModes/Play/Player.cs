@@ -445,12 +445,12 @@ namespace osum.GameModes
             if (increaseCombo && comboCounter != null)
             {
                 comboCounter.IncreaseCombo();
-                CurrentScore.maxCombo = Math.Max(comboCounter.currentCombo, CurrentScore.maxCombo);
+                CurrentScore.maxCombo = (ushort)Math.Max(comboCounter.currentCombo, CurrentScore.maxCombo);
 
                 if (comboMultiplier)
                 {
 
-                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 100) * DifficultyComboMultiplier));
+                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 60) * DifficultyComboMultiplier));
 
                     //check we don't exceed 0.8mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
@@ -581,7 +581,7 @@ namespace osum.GameModes
 #endif
                 {
                     Results.RankableScore = CurrentScore;
-                    Results.RankableScore.accuracyBonusScore = (int)Math.Round(Math.Max(0, CurrentScore.accuracy - 0.8) / 0.2 * 200000);
+                    Results.RankableScore.UseAccuracyBonus = true;
 
                     GameBase.Scheduler.Add(delegate
                     {

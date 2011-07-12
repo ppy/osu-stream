@@ -15,6 +15,7 @@ using osu_common.Helpers;
 using osum.GameplayElements;
 using System.IO;
 using osum.Resources;
+using osum.UI;
 namespace osum.GameModes
 {
     public class Results : GameMode
@@ -86,30 +87,7 @@ namespace osum.GameModes
             modeGraphic = new pSprite(modeTex, FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(5, 7), 0.45f, true, Color4.White) { ScaleScalar = 0.5f };
             layer1.Add(modeGraphic);
 
-            pTexture rankLetter;
-            switch (RankableScore.Ranking)
-            {
-                case Rank.X:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_x);
-                    break;
-                case Rank.S:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_s);
-                    break;
-                case Rank.A:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_a);
-                    break;
-                case Rank.B:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_b);
-                    break;
-                case Rank.C:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_c);
-                    break;
-                default:
-                    rankLetter = TextureManager.Load(OsuTexture.rank_d);
-                    break;
-            }
-
-            rankGraphic = new pSprite(rankLetter, FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(120, 180), 0.46f, true, Color4.White) { Alpha = 0 };
+            rankGraphic = new pSprite(RankableScore.RankingTexture, FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Mode, new Vector2(120, 180), 0.46f, true, Color4.White) { Alpha = 0 };
 
             layer1.Add(rankGraphic);
 
@@ -306,11 +284,13 @@ namespace osum.GameModes
             topMostLayer.Add(s_Footer);
 
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            if (RankableScore.totalScore > bmi.HighScore)
+            if (RankableScore.totalScore > bmi.HighScore.totalHits)
             {
+                if (RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
+                    unlockedExpert = true;
+
                 isPersonalBest = true;
-                bmi.HighScore = RankableScore.totalScore;
-                bmi.Ranking = RankableScore.Ranking;
+                bmi.HighScore = RankableScore;
             }
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
@@ -324,7 +304,16 @@ namespace osum.GameModes
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
+
+            if (Director.LastOsuMode == OsuMode.SongSelect)
+            {
+                cameFromSongSelect = true;
+                InitializeBgm();
+            }
         }
+
+        bool cameFromSongSelect = false;
+        bool unlockedExpert = false;
 
         /// <summary>
         /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
@@ -440,12 +429,20 @@ namespace osum.GameModes
             {
                 InitializeBgm();
 
-                finishedDisplaying = true;
-                if (submissionCompletePending)
-                    showOnlineRanking();
+                if (unlockedExpert)
+                    GameBase.Notify(new Notification("Congratulations!", "You have unlocked expert mode for this song. Good luck!", NotificationStyle.Okay, delegate { finishDisplaying(); }));
                 else
-                    showNavigation();
+                    finishDisplaying();
             }, time);
+        }
+
+        private void finishDisplaying()
+        {
+            finishedDisplaying = true;
+            if (submissionCompletePending)
+                showOnlineRanking();
+            else
+                showNavigation();
         }
 
         private void showNavigation()
@@ -464,6 +461,7 @@ namespace osum.GameModes
         }
 
         bool finishedDisplaying;
+
 
         int addedScore;
         private pSpriteText count300;
@@ -577,7 +575,7 @@ namespace osum.GameModes
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
                 foreach (pSprite p in fallingSprites)
-                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.003f * (float)GameBase.ElapsedMilliseconds;
+                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.003f * (float)Clock.ElapsedMilliseconds;
 
                 if (fallingSprites.Count < 20)
                 {
@@ -603,7 +601,7 @@ namespace osum.GameModes
                 }
             }
 
-            int increaseAmount = (int)Math.Max(1, GameBase.ElapsedMilliseconds / 8);
+            int increaseAmount = (int)Math.Max(1, Clock.ElapsedMilliseconds / 8);
             if (count300.LastInt < RankableScore.count300)
                 count300.ShowInt(Math.Min(RankableScore.count300, count300.LastInt + increaseAmount), 0, false, 'x');
             if (count100.LastInt < RankableScore.count100)

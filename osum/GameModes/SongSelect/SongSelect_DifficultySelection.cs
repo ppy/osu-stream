@@ -17,6 +17,7 @@ using System.Threading;
 using osum.Graphics.Renderers;
 using osu_common.Libraries.Osz2;
 using osum.Resources;
+using osum.GameplayElements.Scoring;
 
 namespace osum.GameModes
 {
@@ -30,6 +31,8 @@ namespace osum.GameModes
         private pSprite s_ModeButtonExpert;
         private pText s_ModeDescriptionText;
 
+        private BeatmapInfo bmi;
+
         /// <summary>
         /// True when expert mode is not yet unlocked for the current map.
         /// </summary>
@@ -37,7 +40,8 @@ namespace osum.GameModes
         {
             get
             {
-                return BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal).HighScore == 0;
+                BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
+                return bmi.HighScore == null || bmi.HighScore.Ranking < Rank.A;
             }
         }
 
@@ -150,9 +154,21 @@ namespace osum.GameModes
             sprites.Add(s_ModeDescriptionText);
 
             s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo.OnClick += Handle_ScoreInfoOnClick;
             sprites.Add(s_ScoreInfo);
 
+            s_ScoreRank = new pSprite(null, new Vector2(40,64));
+            sprites.Add(s_ScoreRank);
+
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
+        }
+
+        void Handle_ScoreInfoOnClick(object sender, EventArgs e)
+        {
+            if (bmi == null || bmi.HighScore.totalScore == 0)
+                return;
+            Results.RankableScore = bmi.HighScore;
+            Director.ChangeMode(OsuMode.Results);
         }
 
         void onModeButtonClick(object sender, EventArgs e)
@@ -255,6 +271,7 @@ namespace osum.GameModes
         private pDrawable s_TabBarRank;
         private pDrawable s_TabBarOther;
         private pText s_ScoreInfo;
+        private pSprite s_ScoreRank;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
@@ -306,9 +323,15 @@ namespace osum.GameModes
                         s_ModeDescriptionText.Text = text;
                         s_ModeDescriptionText.FadeInFromZero(300);
 
-                        BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                        bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
-                        s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " " + bmi.HighScore.ToString().PadLeft(7, '0');
+                        s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " ";
+                        int total = bmi.HighScore.totalScore;
+                        s_ScoreInfo.Text += total.ToString().PadLeft(7, '0') + (total > 0 ? " (" + bmi.HighScore.Ranking + ")" : "");
+                        s_ScoreRank.Texture = bmi.HighScore.RankingTextureSmall;
+                        if (s_ScoreRank.Texture != null)
+                            s_ScoreRank.AdditiveFlash(1, 0.5f);
+
                     }
                 }, 100);
             }
@@ -323,15 +346,13 @@ namespace osum.GameModes
 
             InitializeBgm();
 
-            background.FadeColour(new Color4(56, 56, 56, 255), 200);
-
-            if (SelectedPanel != null)
-            {
-                SelectedPanel.s_BackingPlate2.FadeColour(Color4.Transparent, 150);
-            }
-
             GameBase.Scheduler.Add(delegate
             {
+                background.FadeColour(new Color4(56, 56, 56, 255), 200);
+
+                if (SelectedPanel != null)
+                    SelectedPanel.s_BackingPlate2.FadeColour(Color4.Transparent, 150);
+
                 foreach (BeatmapPanel p in panels)
                 {
                     p.s_BackingPlate.HandleInput = true;

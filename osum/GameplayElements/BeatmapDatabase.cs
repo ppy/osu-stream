@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 2;
+        const int DATABASE_VERSION = 3;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -40,7 +40,8 @@ namespace osum.GameplayElements
                 using (SerializationReader reader = new SerializationReader(fs))
                 {
                     Version = reader.ReadInt32();
-                    BeatmapInfo = reader.ReadBList<BeatmapInfo>();
+                    if (Version > 2)
+                        BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                 }
             }
             catch { }
@@ -70,7 +71,7 @@ namespace osum.GameplayElements
 
             if (i == null)
             {
-                i = new BeatmapInfo() { filename = filename, difficulty = d };
+                i = new BeatmapInfo() { filename = filename, difficulty = d, HighScore = new Score() };
                 BeatmapInfo.Add(i);
             }
 
@@ -82,9 +83,8 @@ namespace osum.GameplayElements
     {
         public string filename;
         public Difficulty difficulty;
-        public int HighScore;
-        public Rank Ranking;
-        public int Playcount;
+        public Score HighScore;
+        public ushort Playcount;
 
         #region bSerializable Members
 
@@ -92,19 +92,21 @@ namespace osum.GameplayElements
         {
             filename = sr.ReadString();
             difficulty = (Difficulty)sr.ReadByte();
-            HighScore = sr.ReadInt32();
-            Playcount = sr.ReadInt32();
-            if (BeatmapDatabase.Version > 1)
-                Ranking = (Rank)sr.ReadByte();
+
+            HighScore = new Score();
+            HighScore.ReadFromStream(sr);
+
+            Playcount = sr.ReadUInt16();
         }
 
         public void WriteToStream(SerializationWriter sw)
         {
             sw.Write(filename);
             sw.Write((byte)difficulty);
-            sw.Write(HighScore);
+
+            HighScore.WriteToStream(sw);
+
             sw.Write(Playcount);
-            sw.Write((byte)Ranking);
         }
 
         #endregion

@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG SIMULATOR</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG SIMULATOR FULL_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchI18n>cjk</MtouchI18n>
@@ -98,7 +98,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
@@ -206,7 +206,6 @@
     <Compile Include="Input\TrackingPoint.cs" />
     <Compile Include="Input\TrackingPointIphone.cs" />
     <Compile Include="Audio\SoundEffectPlayer.cs" />
-    <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
     <Compile Include="Helpers\Audio\SoundData.cs" />
@@ -313,6 +312,7 @@
     <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
     <Compile Include="UI\SliderControl.cs" />
     <Compile Include="Localisation\LocalisationManager.cs" />
+    <Compile Include="Helpers\Audio\AudioReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

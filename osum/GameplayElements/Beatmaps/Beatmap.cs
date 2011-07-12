@@ -130,8 +130,12 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
+                try {
                 if (difficultyStars == -1)
                     Int32.TryParse(Package.GetMetadata(MapMetaType.DifficultyRating), out difficultyStars);
+                }
+                catch { difficultyStars = 0; }
+
                 return difficultyStars;
             }
         }
