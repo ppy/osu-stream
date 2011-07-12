@@ -216,54 +216,56 @@ namespace osum.GameModes.Play.Components
                 else
                     preferred = rightFinger;
             }
-
-            else if (distFromLeft < 20)
-                //stacked objects (left finger)
-                preferred = leftFinger;
-            else if (distFromRight < 20)
-                //stacked objects (right finger)
-                preferred = rightFinger;
-
-            else if (lastObject != null && lastObject != nextObject && !(lastObject is Slider) && !(nextObject is Slider) && nextObject.StartTime - lastObject.EndTime < 150)
-                //fast hits; always alternate fingers
-                preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
-
-            /*
-            else if (nextObject.Position.X > nextObject.Position2.X && nextObject.Position.X < rightPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
-                //sliders that start right and end left, centered towards the left
-                preferred = leftFinger;
-            else if (nextObject.Position.X < nextObject.Position2.X && nextObject.Position.X > leftPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
-                //sliders that start left and end right, centered towards the right
-                preferred = rightFinger;
-            */
-
-            else if (nextObject.Position.X < leftPart)
-                //starts in left 1/3 of screen.
-                preferred = leftFinger;
-            else if (nextObject.Position.X > rightPart)
-                //starts in right 1/3 of screen.
-                preferred = rightFinger;
-            else if (nextObject.Position2.X < leftPart)
-                //ends in left 1/3 of screen.
-                preferred = leftFinger;
-            else if (nextObject.Position2.X > rightPart)
-                //ends in right 1/3 of screen.
-                preferred = rightFinger;
-
-            else if (lastObject is HoldCircle)
-                //hold note; always alternate fingers
-                preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
-
             else
-                //fall back to the closest finger.
-                preferred = distFromLeft < distFromRight ? leftFinger : rightFinger;
+            {
+                if (distFromLeft < 20)
+                    //stacked objects (left finger)
+                    preferred = leftFinger;
+                else if (distFromRight < 20)
+                    //stacked objects (right finger)
+                    preferred = rightFinger;
 
-            if (preferred == leftFinger && nextObject.Position.X > rightFinger.Position.X && rightFinger.Tag == null)
-                //if we're about to use left finger but the object is wedged between the right finger and right side of screen, use right instead.
-                preferred = rightFinger;
-            else if (preferred == rightFinger && nextObject.Position.X < leftFinger.Position.X && leftFinger.Tag == null)
-                //if we're about to use right finger but the object is wedged between the left finger and left side of screen, use left instead.
-                preferred = leftFinger;
+                else if (lastObject != null && lastObject != nextObject && !(lastObject is Slider) && !(nextObject is Slider) && nextObject.StartTime - lastObject.EndTime < 150)
+                    //fast hits; always alternate fingers
+                    preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
+
+                /*
+                else if (nextObject.Position.X > nextObject.Position2.X && nextObject.Position.X < rightPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
+                    //sliders that start right and end left, centered towards the left
+                    preferred = leftFinger;
+                else if (nextObject.Position.X < nextObject.Position2.X && nextObject.Position.X > leftPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
+                    //sliders that start left and end right, centered towards the right
+                    preferred = rightFinger;
+                */
+
+                else if (nextObject.Position.X < leftPart)
+                    //starts in left 1/3 of screen.
+                    preferred = leftFinger;
+                else if (nextObject.Position.X > rightPart)
+                    //starts in right 1/3 of screen.
+                    preferred = rightFinger;
+                else if (nextObject.Position2.X < leftPart)
+                    //ends in left 1/3 of screen.
+                    preferred = leftFinger;
+                else if (nextObject.Position2.X > rightPart)
+                    //ends in right 1/3 of screen.
+                    preferred = rightFinger;
+
+                else if (lastObject is HoldCircle)
+                    //hold note; always alternate fingers
+                    preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
+
+                else
+                    //fall back to the closest finger.
+                    preferred = distFromLeft < distFromRight ? leftFinger : rightFinger;
+
+                if (preferred == leftFinger && nextObject.Position.X > rightFinger.Position.X && rightFinger.Tag == null)
+                    //if we're about to use left finger but the object is wedged between the right finger and right side of screen, use right instead.
+                    preferred = rightFinger;
+                else if (preferred == rightFinger && nextObject.Position.X < leftFinger.Position.X && leftFinger.Tag == null)
+                    //if we're about to use right finger but the object is wedged between the left finger and left side of screen, use left instead.
+                    preferred = leftFinger;
+            }
 
             pDrawable alternative = preferred == leftFinger ? rightFinger : leftFinger;
 
