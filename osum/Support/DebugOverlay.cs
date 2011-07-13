@@ -49,10 +49,10 @@ namespace osum.Support
 #endif
             }
 
-            weightedAverageFrameTime = weightedAverageFrameTime * 0.98 + Clock.ElapsedMilliseconds * 0.02;
+            weightedAverageFrameTime = weightedAverageFrameTime * 0.5 + Clock.ElapsedMilliseconds * 0.5;
 
 #if iOS
-            if (Clock.ElapsedMilliseconds > 25)
+            /*if (Clock.ElapsedMilliseconds > 25)
             {
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 5);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
@@ -66,7 +66,7 @@ namespace osum.Support
                 gcCount = newGcCount;
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X + 40, fpsDisplay.Position.Y);
                 fpsDisplay.MoveTo(new Vector2(horizontal_offset, vertical_offset), 600, EasingTypes.In);
-            }
+            }*/
 #endif
 
             double fps = (1000 / weightedAverageFrameTime);
