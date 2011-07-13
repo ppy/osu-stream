@@ -1,4 +1,4 @@
-﻿AndHoldUntilTheCircleExplodes=...サークルが消えるまで押し続ける必要があります
+AndHoldUntilTheCircleExplodes=...サークルが消えるまで押し続ける必要があります
 WelcomeToTheWorldOfOsu=osu!にようこそ！　このチュートリアルでリズムマスターになるために必要なことを学びましょう
 TapToContinue=タップして次へ進む
 Introduction2=osu!streamは　リズムに合わせてタップするゲームです
@@ -92,7 +92,7 @@ HighScore=ハイスコア
 YouCantFail=最後までプレイすることができます
 DynamicStreamSwitching=難易度がダイナミックに変化します
 NotForTheFaintHearted=頑張ってください！
-ExpertUnlock= ストリームの最高難易度をクリアすればアンロックされます
+ExpertUnlock= ストリームモードでAランク獲得すれば解放されます
 GameCentreInactive=ゲームセンターとの通信ができません
 GameCentreInactiveExplanation=回線がつながっていないかログインしていないために　ゲームセンターへの記録ができません
 Loading=ロード中
