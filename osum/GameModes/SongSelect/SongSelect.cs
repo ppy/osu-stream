@@ -171,7 +171,7 @@ namespace osum.GameModes
                 foreach (BeatmapPanel p in panels)
                 {
                     p.MoveTo(pos, 0);
-                    pos.Y += 70;
+                    pos.Y += BeatmapPanel.PANEL_HEIGHT + 10;
                     pos.X += 300;
                 }
             }, true);
@@ -329,8 +329,9 @@ namespace osum.GameModes
             return true;
         }
 
-        int lastIntOffset;
+        float lastIntOffset;
         bool pendingModeChange;
+        bool isBound;
         private BeatmapPanel panelDownloadMore;
         private pSprite background;
 
@@ -388,10 +389,13 @@ namespace osum.GameModes
 
                     break;
                 case SelectState.SongSelect:
+
+                    float bound = offsetBound;
+                    bool wasBound = isBound;
+                    isBound = songSelectOffset == bound;
+
                     if (!InputManager.IsPressed)
                     {
-                        float bound = offsetBound;
-
                         float lastOffset = songSelectOffset;
                         songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
 
@@ -401,19 +405,24 @@ namespace osum.GameModes
                             velocity *= 0.94f;
                     }
 
-                    int newIntOffset = (int)Math.Round(songSelectOffset / BeatmapPanel.PANEL_HEIGHT);
+                    float panelHeightPadded = BeatmapPanel.PANEL_HEIGHT + 10;
+
+                    float newIntOffset = isBound ? (int)Math.Round(songSelectOffset / panelHeightPadded) : songSelectOffset / panelHeightPadded;
 
                     if (Director.PendingOsuMode == OsuMode.Unknown)
                     {
                         if (newIntOffset != lastIntOffset)
                         {
-                            lastIntOffset = newIntOffset;
+                            if (isBound && wasBound)
+                            {
+                                AudioEngine.PlaySample(OsuSamples.MenuClick);
+                                background.FlashColour(new Color4(140, 140, 140, 255), 400);
+                            }
 
-                            AudioEngine.PlaySample(OsuSamples.MenuClick);
-                            background.FlashColour(new Color4(140, 140, 140, 255), 400);
+                            lastIntOffset = newIntOffset;
                         }
 
-                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * BeatmapPanel.PANEL_HEIGHT) * 0.5f + songSelectOffset * 0.5f);
+                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0.5f + songSelectOffset * 0.5f);
 
                         foreach (BeatmapPanel p in panels)
                         {
