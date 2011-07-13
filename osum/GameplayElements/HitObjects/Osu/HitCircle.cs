@@ -16,8 +16,6 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
-        private const float TEXT_SIZE = 0.8f;
-
         internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType)
             : base(hit_object_manager, pos, startTime, soundType, newCombo, comboOffset)
         {
@@ -43,8 +41,6 @@ namespace osum.GameplayElements
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
             Sprites.Add(SpriteApproachCircle);
-
-            SpriteHitCircleText.ScaleScalar = TEXT_SIZE;
 
             if (ShowCircleText)
             {
@@ -120,7 +116,7 @@ namespace osum.GameplayElements
                 Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
                     now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
-                Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F * TEXT_SIZE, 1.4F * TEXT_SIZE,
+                Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
                     now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
                 Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
