@@ -355,11 +355,7 @@ namespace osum.Graphics.Sprites
                     Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, pos.Y);
                     // note: no srcRect calculation
                     if (ZeroAlpha == 1)
-                    {
-                        if (renderTextures.Count == 1)
-                            Console.WriteLine(scale +  " draw at " + pos + " " + renderCoordinates[i] + " " + OriginVector + " " + drawPos);
                         tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
-                    }
                     else
                     {
                         if (textArray[i] != '0')
