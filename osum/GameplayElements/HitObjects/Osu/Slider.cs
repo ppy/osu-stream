@@ -1092,24 +1092,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
 
-                GL.MatrixMode(MatrixMode.Projection);
-                GL.LoadIdentity();
-                
-                GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
-                GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             -1, 1);
-
-                if (waitingForPathTextureClear)
-                {
-                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-                    waitingForPathTextureClear = false;
-                }
-
-                m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                            DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+                DrawPath(partialDrawable, prev, waitingForPathTextureClear);
 
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 #else
@@ -1117,44 +1100,13 @@ namespace osum.GameplayElements.HitObjects.Osu
                 {
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
 
-                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
-                    GL.MatrixMode(MatrixMode.Projection);
-
-                    GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             -1, 1);
-
-                    if (waitingForPathTextureClear)
-                    {
-                        GL.DepthMask(true);
-                        GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-                        waitingForPathTextureClear = false;
-                    }
-
-                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                                DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+                    DrawPath(partialDrawable, prev, waitingForPathTextureClear);
 
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }
                 else
                 {
-                    GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
-                    GL.MatrixMode(MatrixMode.Projection);
-
-                    GL.LoadIdentity();
-                    GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                             trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                             -1, 1);
-
-                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-
-                    m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                                DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+                    DrawPath(partialDrawable, prev, waitingForPathTextureClear);
 
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potWidth, 0);
@@ -1163,9 +1115,33 @@ namespace osum.GameplayElements.HitObjects.Osu
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                 }
 #endif
+                waitingForPathTextureClear = false;
 
                 GameBase.Instance.SetViewport();
             }
+        }
+
+        private void DrawPath(List<Line> partialDrawable, Line prev, bool clear)
+        {
+            GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
+            GL.MatrixMode(MatrixMode.Projection);
+
+            GL.LoadIdentity();
+            GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                        trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                        trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                        trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                        -1, 1);
+
+            if (clear)
+            {
+                GL.DepthMask(true);
+                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+            }
+
+            m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
+                                                        DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+
         }
 
         /// <summary>
