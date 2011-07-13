@@ -31,7 +31,7 @@ namespace osum.GameModes.Options
             "Greg \"mm201\" Edwards - Pretty sliders, gameplay mechanic tweaking",
             "Echo49 - beatmap file format, engine upgrades, general tweaking",
             "*Game Audio",
-            "Jamie \"nekodex\" Taylor - osu!stream theme music",
+            "Jamie \"nekodex\" Taylor - osu!stream theme music, results screen sfx",
             "Natteke - credits screen mix",
             "XiaoUnlimited - countdown voice",
             "*Level Music",
@@ -55,7 +55,7 @@ namespace osum.GameModes.Options
             "SiRiRu & co. - Japanese localisation",
             "*Thanks to",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
-            "Testers - Special thanks to Doddler, dvorak, James, nekodex, Saphier, tim0liver and my mum (i'm serious)",
+            "Testers - Special thanks to Cyclone, Doddler, dvorak, James, nekodex, Saphier, tobebuta and my mum (i'm serious)",
             "#bat - For all the support and help on various occasions",
         };
 
