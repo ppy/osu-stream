@@ -210,10 +210,6 @@ namespace osum.Graphics.Sprites
 
                 switch (Origin)
                 {
-                    default:
-                    case OriginTypes.TopLeft:
-                        origin = Vector2.Zero;
-                        break;
                     case OriginTypes.TopCentre:
                         origin.X = DrawWidth / 2;
                         break;

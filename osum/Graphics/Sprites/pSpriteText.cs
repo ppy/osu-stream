@@ -43,7 +43,7 @@ namespace osum.Graphics.Sprites
 {
     internal class pSpriteText : pSprite
     {
-        internal List<Vector2> renderCoordinates = new List<Vector2>();
+        internal List<int> renderCoordinates = new List<int>();
         internal List<pTexture> renderTextures = new List<pTexture>();
 
         internal bool TextConstantSpacing = false;
@@ -155,25 +155,40 @@ namespace osum.Graphics.Sprites
         {
             get
             {
+                Vector2 origin = Vector2.Zero;
+
                 switch (Origin)
                 {
-                    default:
-                        return Vector2.Zero;
                     case OriginTypes.Centre:
-                        return lastMeasure * 0.5F;
+                        origin = lastMeasure * 0.5F;
+                        break;
                     case OriginTypes.TopCentre:
-                        return new Vector2(lastMeasure.X * 0.5F, 0);
+                        origin.X = lastMeasure.X * 0.5F;
+                        break;
                     case OriginTypes.TopRight:
-                        return new Vector2(lastMeasure.X, 0);
+                        origin.X = lastMeasure.X;
+                        break;
                     case OriginTypes.CentreRight:
-                        return new Vector2(lastMeasure.X, lastMeasure.Y * 0.5f);
+                        origin = new Vector2(lastMeasure.X, lastMeasure.Y * 0.5f);
+                        break;
                     case OriginTypes.BottomCentre:
-                        return new Vector2(lastMeasure.X / 2, lastMeasure.Y);
+                        origin = new Vector2(lastMeasure.X / 2, lastMeasure.Y);
+                        break;
                     case OriginTypes.BottomRight:
-                        return lastMeasure;
+                        origin = lastMeasure;
+                        break;
                     case OriginTypes.BottomLeft:
-                        return new Vector2(0, lastMeasure.Y);
+                        origin.Y = lastMeasure.Y;
+                        break;
                 }
+
+                if (!exactCoordinatesOverride)
+                {
+                    if (origin.X % 2 != 0) origin.X--;
+                    if (origin.Y % 2 != 0) origin.Y--;
+                }
+
+                return origin;
             }
         }
 
@@ -265,9 +280,9 @@ namespace osum.Graphics.Sprites
                 renderTextures.Add(tex);
 
                 if (TextConstantSpacing)
-                    renderCoordinates.Add(new Vector2(currentX - x, 0));
+                    renderCoordinates.Add(currentX - x);
                 else
-                    renderCoordinates.Add(new Vector2(x, 0));
+                    renderCoordinates.Add(x);
 
                 if (height == 0)
                     height = tex.Height;
@@ -275,26 +290,36 @@ namespace osum.Graphics.Sprites
 
             if (TextConstantSpacing)
             {
-                //float last = 0;
                 pTexture spacingTexture = textureFor('6');
                 int charWidth = spacingTexture != null ? spacingTexture.Width : 0;
 
                 currentX = 0;
 
+                bool exact = ExactCoordinates;
+
                 for (int i = 0; i < renderCoordinates.Count; i++)
                 {
-                    float special = renderCoordinates[i].X;
+                    int x = renderCoordinates[i];
 
-                    if (special == 0)
+                    if (x == 0)
                     {
-                        renderCoordinates[i] = new Vector2(currentX + Math.Max(0, (charWidth - renderTextures[i].Width) / 2), 0);
+                        x = currentX + Math.Max(0, (charWidth - renderTextures[i].Width) / 2);
                         currentX += charWidth - SpacingOverlap;
                     }
                     else
                     {
-                        renderCoordinates[i] = new Vector2(currentX, 0);
-                        currentX += (int)special - SpacingOverlap;
+                        int oldX = x;
+                        x = currentX;
+                        currentX += oldX - SpacingOverlap;
                     }
+
+                    if (!exactCoordinatesOverride)
+                    {
+                        x = (int)x;
+                        if (x % 2 != 0) x++;
+                    }
+
+                    renderCoordinates[i] = x;
                 }
             }
 
@@ -327,10 +352,13 @@ namespace osum.Graphics.Sprites
                 int i = 0;
                 foreach (pTexture tex in renderTextures)
                 {
+                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, pos.Y);
                     // note: no srcRect calculation
                     if (ZeroAlpha == 1)
                     {
-                        tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        if (renderTextures.Count == 1)
+                            Console.WriteLine(scale +  " draw at " + pos + " " + renderCoordinates[i] + " " + OriginVector + " " + drawPos);
+                        tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                     }
                     else
                     {
@@ -338,9 +366,9 @@ namespace osum.Graphics.Sprites
                             isPaddedZero = false;
 
                         if (isPaddedZero)
-                            tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, colZeroCached, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                            tex.TextureGl.Draw(drawPos, OriginVector, colZeroCached, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                         else
-                            tex.TextureGl.Draw(pos + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                            tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                     }
 
                     i++;
