@@ -266,7 +266,7 @@ namespace osum.GameplayElements
         /// Trigger a hit animation showing the score overlay above the object.
         /// </summary>
         /// <param name="action">The ssociated score change action.</param>
-        internal virtual void HitAnimation(ScoreChange action)
+        internal virtual void HitAnimation(ScoreChange action, bool animateNumber = false)
         {
             if (m_HitObjectManager == null) return; //is the case for sliders start circles, where we don't want to display this stuff.
 

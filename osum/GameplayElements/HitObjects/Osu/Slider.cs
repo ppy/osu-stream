@@ -558,7 +558,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 }
 
-                HitCircleStart.HitAnimation(startCircleChange);
+                HitCircleStart.HitAnimation(startCircleChange, true);
 
                 scoringEndpointsHit++;
                 return ScoreChange.SliderEnd;

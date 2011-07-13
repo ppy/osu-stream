@@ -103,7 +103,7 @@ namespace osum.GameplayElements
             return hitValue;
         }
 
-        internal override void HitAnimation(ScoreChange action)
+        internal override void HitAnimation(ScoreChange action, bool animateNumber = false)
         {
             SpriteHitCircle1.Transformations.Clear();
             SpriteHitCircleText.Transformations.Clear();
@@ -131,8 +131,11 @@ namespace osum.GameplayElements
                 SpriteHitCircle1.Transform(circleFadeOut);
 
                 SpriteHitCircleText.Transformations.Clear();
-                SpriteHitCircleText.Transform(textScaleOut);
-                SpriteHitCircleText.Transform(circleFadeOut);
+                if (animateNumber)
+                {
+                    SpriteHitCircleText.Transform(textScaleOut);
+                    SpriteHitCircleText.Transform(circleFadeOut);
+                }
             }
 
             base.HitAnimation(action);
