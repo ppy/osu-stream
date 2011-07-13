@@ -31,7 +31,7 @@ namespace osum.GameplayElements.Scoring
         }
 
         public int hitScore;
-        public bool UseAccuracyBonus;
+        public bool UseAccuracyBonus = true;
 
         public int totalScore
         {
@@ -157,7 +157,6 @@ namespace osum.GameplayElements.Scoring
             sw.Write(count100);
             sw.Write(count50);
             sw.Write(countMiss);
-            //sw.Write(date);
             sw.Write(maxCombo);
             sw.Write(spinnerBonusScore);
             sw.Write(comboBonusScore);
