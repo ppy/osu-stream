@@ -460,21 +460,22 @@ namespace osum.Graphics
 
 #if iOS
             int oldFBO = 0;
-            GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+            int oldRB = 0;
 
+
+            GL.GetInteger(All.RenderbufferBindingOes, ref oldRB);
             GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
-
             GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
             GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
-            GL.Oes.BindRenderbuffer(All.RenderbufferOes, 0);
 
+            GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
             GL.Oes.GenFramebuffers(1, ref fboId);
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
-
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);
             //GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
-            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
 
+            GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+            GL.Oes.BindRenderbuffer(All.RenderbufferOes, oldRB);
 #else
             try
             {
