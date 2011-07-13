@@ -96,6 +96,12 @@ namespace osum
                 case HardwareVersion.iPad2:
                     IsHandheld = false;
                     break;
+                case HardwareVersion.iPhone:
+                case HardwareVersion.iPhone3G:
+                case HardwareVersion.iPod2G:
+                case HardwareVersion.iPod1G:
+                    IsSlowDevice = true;
+                    break;
             }
 
 

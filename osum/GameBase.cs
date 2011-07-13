@@ -114,13 +114,11 @@ namespace osum
         /// </summary>
         internal static SpriteManager MainSpriteManager = new SpriteManager();
 
-        /// <summary>
-        /// May be set in the update loop to force the next frame to have an ElapsedMilliseconds of 0
-        /// </summary>
-        private bool ignoreNextFrameTime;
-
         //false for tablets etc.
         internal static bool IsHandheld = true;
+
+        //true for iphone 3g etc.
+        internal static bool IsSlowDevice = false;
 
         public GameBase()
         {
@@ -243,7 +241,8 @@ namespace osum
 #endif
 
             TriggerLayoutChanged();
-        }
+        }
+
         /// <summary>
         /// As per Apple recommendations, we should pre-warm any mode changes before actually displaying to avoid stuttering.
         /// </summary>
@@ -344,6 +343,8 @@ namespace osum
 //
 //                Director.ChangeMode(OsuMode.Results, null);
             }
+
+            Clock.Start();
         }
 
         /// <summary>
@@ -384,15 +385,9 @@ namespace osum
         /// <returns>true if a draw should occur</returns>
         public bool Update(FrameEventArgs e)
         {
-            double thisTime = 0;
-            try { thisTime = e.Time; }
-            catch { }
-            //try-catch is precautionary after reading this http://xnatouch.codeplex.com/Thread/View.aspx?ThreadId=237507
-            Clock.Update(ignoreNextFrameTime ? 0 : thisTime);
+            Clock.Update(false);
 
             UpdateNotifications();
-
-            ignoreNextFrameTime = false;
 
             Scheduler.Update();
 
@@ -410,12 +405,6 @@ namespace osum
             MainSpriteManager.Update();
 
             if (Director.Update())
-            {
-                ignoreNextFrameTime = true;
-                //Mode change occurred; we don't need to do anything this frame.
-                //We are on a blank screen and don't want to throw off timings, so let's cancel the draw.
-                return false;
-            }
 
             InputManager.Update();
 
@@ -433,12 +422,9 @@ namespace osum
         {
             SpriteManager.Reset();
 
-            if (!ignoreNextFrameTime || !Director.ActiveTransition.SkipScreenClear)
+            if (Director.ActiveTransition == null || !Director.ActiveTransition.SkipScreenClear)
                 //todo: Does clearing DEPTH as well here add a performance overhead?
                 GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-
-            if (ignoreNextFrameTime)
-                return;
 
             Director.Draw();
 

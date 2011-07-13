@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using osum.Support;
 using osum.Audio;
+using System.Diagnostics;
 
 namespace osum.Helpers
 {
@@ -21,7 +22,8 @@ namespace osum.Helpers
         private static double time = 0;
 
 #if iOS
-        public const int UNIVERSAL_OFFSET = 45;
+        //higher offset == notes appear earlier
+        public const int UNIVERSAL_OFFSET = 30;
 #else
         public const int UNIVERSAL_OFFSET = 60;
 #endif
@@ -42,6 +44,10 @@ namespace osum.Helpers
 
         public static int ManualTime;
 
+        public static void Start()
+        {
+            sw.Start();
+        }
 
         /// <summary>
         /// Gets the current game time in milliseconds, accurate to many decimal places.
@@ -101,24 +107,42 @@ namespace osum.Helpers
             }
         }
 
-        public static void Update(double elapsed)
+        public static Stopwatch sw = new Stopwatch();
+        static double swLast;
+        static double swLastUpdate;
+
+        public static void Update(bool ignoreFrame)
         {
+            double swTime = (double)sw.ElapsedTicks / Stopwatch.Frequency;
+
+            double elapsed = swTime - swLast;
+            swLast = swTime;
+
             if (elapsed > 0.1) elapsed = 1d/60;
             //let's disregard slow frames for mode time calculations.
 
-            ElapsedMilliseconds = elapsed * 1000;
+            if (!ignoreFrame)
+            {
+                double elapsedSinceUpdate = swTime - swLastUpdate;
+                if (elapsedSinceUpdate > 0.1) elapsedSinceUpdate = 1d/60;
 
-            modeTime += elapsed;
-            time += elapsed;
+                ElapsedMilliseconds = elapsedSinceUpdate * 1000;
+                swLastUpdate = swTime;
+
+                modeTime += elapsedSinceUpdate;
+                time += elapsedSinceUpdate;
+            }
 
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
+
+            int offset = AudioEngine.Music.lastLoaded.Contains(".mp3") ? UNIVERSAL_OFFSET : 0;
 
             if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
             {
                 currentFrameAudioTime += elapsed;
 
-                if (currentFrameAudioTime + UNIVERSAL_OFFSET / 1000f >= AudioTimeSource.CurrentTime)
+                if (currentFrameAudioTime + offset / 1000f >= AudioTimeSource.CurrentTime)
                 {
                     if (AudioEngine.Music != null)
                         AudioEngine.Music.Play();
@@ -141,14 +165,14 @@ namespace osum.Helpers
                     double inaccuracy = currentFrameAudioTime - sourceTime;
                     if (inaccuracy > 0.05 || inaccuracy < -0.05)
                         currentFrameAudioTime = sourceTime;
-                    else if (inaccuracy > 0.005)
+                    else if (inaccuracy > 0.004)
                         currentFrameAudioTime -= 0.001;
-                    else if (inaccuracy < -0.005)
+                    else if (inaccuracy < -0.004)
                         currentFrameAudioTime += 0.001;
                 }
             }
 
-            AudioTime = (int)(currentFrameAudioTime * 1000) + UNIVERSAL_OFFSET;
+            AudioTime = (int)(currentFrameAudioTime * 1000) + offset;
         }
 
         public static ITimeSource AudioTimeSource { get; set; }

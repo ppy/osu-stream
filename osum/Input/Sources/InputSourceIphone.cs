@@ -2,6 +2,7 @@ using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.Collections.Generic;
+using osum.Helpers;
 namespace osum
 {
 	public class InputSourceIphone : InputSource
@@ -15,19 +16,20 @@ namespace osum
 
 		public void HandleTouchesBegan(NSSet touches, UIEvent evt)
 		{
-			TrackingPoint newPoint = null;
+            Clock.Update(true);
+            TrackingPoint newPoint = null;
+
 			foreach (UITouch u in touches.ToArray<UITouch>()) {
 				newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
 				trackingPoints.Add(newPoint);
 				TriggerOnDown(newPoint);
 			}
-
-			
 		}
 
 		public void HandleTouchesMoved(NSSet touches, UIEvent evt)
 		{
-			TrackingPoint point = null;
+            Clock.Update(true);
+            TrackingPoint point = null;
 
 			foreach (UITouch u in touches.ToArray<UITouch>()) {
 				point = trackingPoints.Find(t => t.Tag == u);
@@ -41,7 +43,8 @@ namespace osum
 
 		public void HandleTouchesEnded(NSSet touches, UIEvent evt)
 		{
-			TrackingPoint point = null;
+            Clock.Update(true);
+            TrackingPoint point = null;
 
             //todo: don't need to foreach where there's only one point (likely 99%)
 			foreach (UITouch u in touches.ToArray<UITouch>()) {

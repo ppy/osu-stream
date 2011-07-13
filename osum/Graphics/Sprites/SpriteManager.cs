@@ -139,7 +139,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
-            if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
+            if (Math.Abs(lastUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
 
             if (matrixOperations) mapToCoordinates(ref trackingPoint);
 
@@ -152,7 +152,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (lastUpdate != Clock.Time || Director.IsTransitioning) return;
+            if (Math.Abs(lastUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
 
             if (Sprites == null) return;
 
@@ -164,7 +164,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
-            if (lastUpdate != Clock.Time) return;
+            if (Math.Abs(lastUpdate - Clock.Time) > 50) return;
 
             if (Sprites == null) return;
 
