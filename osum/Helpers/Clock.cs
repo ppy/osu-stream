@@ -138,11 +138,13 @@ namespace osum.Helpers
                 }
                 else
                 {
-                    double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
-                    if (inaccuracy > 0.05)
+                    double inaccuracy = currentFrameAudioTime - sourceTime;
+                    if (inaccuracy > 0.05 || inaccuracy < -0.05)
                         currentFrameAudioTime = sourceTime;
-                    if (inaccuracy > 0.005)
-                        currentFrameAudioTime = sourceTime * 0.01 + currentFrameAudioTime * 0.99;
+                    else if (inaccuracy > 0.005)
+                        currentFrameAudioTime -= 0.001;
+                    else if (inaccuracy < -0.005)
+                        currentFrameAudioTime += 0.001;
                 }
             }
 
