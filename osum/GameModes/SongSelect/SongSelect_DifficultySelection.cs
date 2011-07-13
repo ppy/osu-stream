@@ -40,8 +40,13 @@ namespace osum.GameModes
         {
             get
             {
+#if !DIST
+                return false;
+#else
+                //todo: use the bmi field.
                 BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
                 return bmi.HighScore == null || bmi.HighScore.Ranking < Rank.A;
+#endif
             }
         }
 
