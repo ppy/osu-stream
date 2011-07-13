@@ -54,16 +54,18 @@ namespace osum.Graphics.Drawables
             Position = position;
             Radius = radius;
             Colour = colour;
+            parts = GameBase.IsSlowDevice ? 24 : 48;
+            vertices = new float[parts * 4 + 4];
         }
 
         public override void Dispose()
         {
         }
 
-        const int PARTS = 48;
+        int parts = 48;
 
         static float[] precalculatedAngles;
-        float[] vertices = new float[PARTS * 4 + 4];
+        float[] vertices;
 
         public override bool Draw()
         {
@@ -79,19 +81,19 @@ namespace osum.Graphics.Drawables
 
                 if (precalculatedAngles == null)
                 {
-                    precalculatedAngles = new float[PARTS * 2 + 2];
+                    precalculatedAngles = new float[parts * 2 + 2];
 
-                    for (int v = 0; v < PARTS; v++)
+                    for (int v = 0; v < parts; v++)
                     {
-                        precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * Math.PI / PARTS);
-                        precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * Math.PI / PARTS);
+                        precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * Math.PI / parts);
+                        precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * Math.PI / parts);
                     }
 
-                    precalculatedAngles[PARTS * 2] = vertices[0];
-                    precalculatedAngles[PARTS * 2 + 1] = vertices[1];
+                    precalculatedAngles[parts * 2] = vertices[0];
+                    precalculatedAngles[parts * 2 + 1] = vertices[1];
                 }
 
-                for (int v = 0; v < PARTS; v++)
+                for (int v = 0; v < parts; v++)
                 {
                     float angle1 = precalculatedAngles[v * 2];
                     float angle2 = precalculatedAngles[v * 2 + 1];
@@ -102,16 +104,16 @@ namespace osum.Graphics.Drawables
                     vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
                 }
 
-                vertices[PARTS * 4] = vertices[0];
-                vertices[PARTS * 4 + 1] = vertices[1];
-                vertices[PARTS * 4 + 2] = vertices[2];
-                vertices[PARTS * 4 + 3] = vertices[3];
+                vertices[parts * 4] = vertices[0];
+                vertices[parts * 4 + 1] = vertices[1];
+                vertices[parts * 4 + 2] = vertices[2];
+                vertices[parts * 4 + 3] = vertices[3];
 
                 SpriteManager.TexturesEnabled = false;
 
                 SpriteManager.SetColour(c);
                 GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                GL.DrawArrays(BeginMode.TriangleStrip, 0, PARTS * 2 + 2);
+                GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
 
                 return true;
             }
