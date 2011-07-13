@@ -464,9 +464,9 @@ namespace osum.Graphics
 
 
             GL.GetInteger(All.RenderbufferBindingOes, ref oldRB);
-            GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
-            GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
-            GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
+            //GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
+            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
+            //GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
 
             GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
             GL.Oes.GenFramebuffers(1, ref fboId);
@@ -475,7 +475,7 @@ namespace osum.Graphics
             //GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
 
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-            GL.Oes.BindRenderbuffer(All.RenderbufferOes, oldRB);
+            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, oldRB);
 #else
             try
             {
