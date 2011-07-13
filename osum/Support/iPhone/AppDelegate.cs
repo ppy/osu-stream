@@ -79,7 +79,7 @@ namespace osum.Support.iPhone
                 case HardwareVersion.iPhone3G:
                 case HardwareVersion.iPod1G:
                 case HardwareVersion.iPod2G:
-                    //targetFps = 40; //aim a bit lower with older devices.
+                    //targetFps = 30; //aim a bit lower with older devices.
                     break;
             }
 
@@ -95,8 +95,6 @@ namespace osum.Support.iPhone
         public override void OnActivated(UIApplication app)
         {
             active = true;
-            if (memoryJettisoned)
-                TextureManager.ReloadAll(false);
         }
 
         public override void OnResignActivation(UIApplication app)
@@ -111,8 +109,6 @@ namespace osum.Support.iPhone
                 AudioEngine.Music.Stop(false);
             }
         }
-
-        bool memoryJettisoned;
 
         public override void ReceiveMemoryWarning(UIApplication application)
         {
