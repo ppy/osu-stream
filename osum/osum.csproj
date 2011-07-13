@@ -12,7 +12,7 @@
     <MainNibFile>MainWindow.nib</MainNibFile>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1305</BundleVersion>
+    <BundleVersion>1314</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
@@ -98,7 +98,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
@@ -114,7 +114,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Testflight</OutputPath>
-    <DefineConstants>iOS OSUM RELEASE DIST</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
@@ -145,7 +145,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Distribution</OutputPath>
-    <DefineConstants>iOS OSUM DIST</DefineConstants>
+    <DefineConstants>iOS OSUM DIST RELEASE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
     <MtouchDebug>False</MtouchDebug>

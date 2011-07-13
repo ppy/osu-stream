@@ -19,13 +19,13 @@ namespace osum.GameModes.Store
 
         public InAppPurchaseManager()
         {
-            theObserver = new MySKPaymentObserver (this);
+            theObserver = new MySKPaymentObserver(this);
         }
 
         public void requestProductData(string productId)
         {
             NSSet productIdentifiers = NSSet.MakeNSObjectSet<NSString>(new NSString[]{new NSString(InAppPurchaseProUpgradeProductId)});
-            productsRequest = new SKProductsRequest (productIdentifiers);
+            productsRequest = new SKProductsRequest(productIdentifiers);
 
             productsRequest.Delegate = this;
             productsRequest.Start();
@@ -77,7 +77,7 @@ namespace osum.GameModes.Store
         //
         public void PurchaseProUpgrade()
         {
-            SKPayment payment = SKPayment.PaymentWithProduct(InAppPurchaseProUpgradeProductId);  
+            SKPayment payment = SKPayment.PaymentWithProduct(InAppPurchaseProUpgradeProductId);
             SKPaymentQueue.DefaultQueue.AddPayment(payment);
         }
 
