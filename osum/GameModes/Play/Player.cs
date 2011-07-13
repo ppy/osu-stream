@@ -202,7 +202,7 @@ namespace osum.GameModes
                 scoreDisplay.SetScore(0);
             }
 
-            CurrentScore = new Score();
+            CurrentScore = new Score() { UseAccuracyBonus = false };
         }
 
         protected void loadBeatmap()
