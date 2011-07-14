@@ -87,8 +87,8 @@ namespace osum.GameModes
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
-            s_Header.Transform(new Transformation(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
+            s_Header.Transform(new TransformationV(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
+            s_Header.Transform(new TransformationF(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
             s_Header.OnClick += delegate { };
             spriteManager.Add(s_Header);
 

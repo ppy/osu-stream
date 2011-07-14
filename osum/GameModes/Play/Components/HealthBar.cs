@@ -102,7 +102,7 @@ namespace osum.GameplayElements.Scoring
             s_barBg.MoveTo(s_barBg.StartPosition - off, 500);
 
             s_kiIcon.StartPosition = new Vector2(s_kiIcon.Position.X, s_kiIcon.StartPosition.Y);
-            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
+            s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
         }
 
         internal virtual void SlideIn()
@@ -113,7 +113,7 @@ namespace osum.GameplayElements.Scoring
 
             s_barFill.MoveTo(s_barFill.StartPosition, 500);
             s_barBg.MoveTo(s_barBg.StartPosition, 500);
-            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
+            s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
         }
 
         Transformation initialAppearTransformation;
@@ -132,7 +132,7 @@ namespace osum.GameplayElements.Scoring
                         if (s_kiIcon.Transformations.Count == 0)
                         {
                             if (initialAppearTransformation == null)
-                                initialAppearTransformation = new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,Clock.Time + 150);
+                                initialAppearTransformation = new TransformationF(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,Clock.Time + 150);
                             else
                             {
                                 initialAppearTransformation.StartTime = Clock.Time;
@@ -216,8 +216,8 @@ namespace osum.GameplayElements.Scoring
             s_kiExplode.RemoveOldTransformations = false;
             s_kiExplode.Additive = true;
 
-            burstScale = new Transformation(TransformationType.Scale, 1, 2F, 0, 0, EasingTypes.In);
-            burstFade = new Transformation(TransformationType.Fade, 1, 0, 0, 0, EasingTypes.None);
+            burstScale = new TransformationF(TransformationType.Scale, 1, 2F, 0, 0, EasingTypes.In);
+            burstFade = new TransformationF(TransformationType.Fade, 1, 0, 0, 0, EasingTypes.None);
 
             s_kiExplode.Transform(burstScale);
             s_kiExplode.Transform(burstFade);

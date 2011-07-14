@@ -64,7 +64,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             int now = spriteCollectionStart[0].ClockingNow;
 
-            Transformation bounce = new Transformation(TransformationType.Scale,
+            Transformation bounce = new TransformationF(TransformationType.Scale,
                 1.1f + 0.4f * progressCurrent / RepeatCount,
                 1 + 0.3f * progressCurrent / RepeatCount,
                 now, now + duration,
@@ -90,8 +90,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void initializeSprites()
         {
-            Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
-            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.HitWindow50);
+            Transformation fadeInTrack = new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
+            Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.HitWindow50);
 
             activeOverlay =new pSprite(TextureManager.Load(OsuTexture.holdactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White);
             spriteCollectionStart.Add(activeOverlay);
@@ -118,8 +118,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             Sprites.AddRange(spriteCollectionStart);
 
-            activeOverlay.Transform(new Transformation(hold_colour, Color4.White, StartTime, EndTime));
-            circularProgress.Transform(new Transformation(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), ColourHelper.Lighten(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), 0.5f),
+            activeOverlay.Transform(new TransformationC(hold_colour, Color4.White, StartTime, EndTime));
+            circularProgress.Transform(new TransformationC(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), ColourHelper.Lighten(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), 0.5f),
                 StartTime, EndTime));
 
             SpriteCollectionDim.Add(border);
@@ -227,7 +227,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.FadeOut(80);
             circularProgress.AlwaysDraw = false;
 
-            Transformation returnto = new Transformation(TransformationType.Scale, spriteCollectionStart[0].ScaleScalar, 1, ClockingNow, ClockingNow + 150, EasingTypes.In);
+            Transformation returnto = new TransformationF(TransformationType.Scale, spriteCollectionStart[0].ScaleScalar, 1, ClockingNow, ClockingNow + 150, EasingTypes.In);
 
             foreach (pDrawable p in spriteCollectionStart)
             {
@@ -257,8 +257,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 circularProgress.Alpha = 0.8f;
             circularProgress.FadeOut(500);
             circularProgress.EvenShading = true;
-            circularProgress.Transform(new Transformation(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, now, now + 500, EasingTypes.In));
-            circularProgress.Transform(new Transformation(circularProgress.Colour, Color4.White, now, now + 100, EasingTypes.In));
+            circularProgress.Transform(new TransformationF(TransformationType.Scale, circularProgress.ScaleScalar + 0.1f, circularProgress.ScaleScalar + 0.4f, now, now + 500, EasingTypes.In));
+            circularProgress.Transform(new TransformationC(circularProgress.Colour, Color4.White, now, now + 100, EasingTypes.In));
             circularProgress.AlwaysDraw = false;
         }
 

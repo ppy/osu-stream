@@ -49,15 +49,7 @@ namespace osum.Graphics.Sprites
         internal ClockTypes Clocking;
 
         internal Color4 Colour = Color4.White;
-        /*protected Color4 colour;
-        internal Color4 Colour
-        {
-            get { return colour; }
-            set { colour = value; StartColour = value; }
-        }
         
-        internal Color4 StartColour;*/
-
         internal bool Disposable;
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
@@ -389,35 +381,35 @@ namespace osum.Graphics.Sprites
                         switch (t.Type)
                         {
                             case TransformationType.Colour:
-                                Colour = t.StartColour;
+                                Colour = ((TransformationC)t).StartColour;
                                 break;
 
                             case TransformationType.Fade:
-                                Alpha = t.StartFloat;
+                                Alpha = ((TransformationF)t).StartFloat;
                                 break;
     
                             case TransformationType.Movement:
-                                Position = t.StartVector;
+                                Position = ((TransformationV)t).StartVector;
                                 break;
     
                             case TransformationType.MovementX:
-                                Position.X = t.StartFloat;
+                                Position.X = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.MovementY:
-                                Position.Y = t.StartFloat;
+                                Position.Y = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.Rotation:
-                                Rotation = t.StartFloat;
+                                Rotation = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.Scale:
-                                Scale = new Vector2(t.StartFloat, t.StartFloat);
+                                ScaleScalar = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.VectorScale:
-                                Scale = t.StartVector;
+                                Scale = ((TransformationV)t).StartVector;
                                 break;
                         }
                     }
@@ -439,39 +431,39 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            Colour = t.EndColour;
+                            Colour = ((TransformationC)t).EndColour;
                             break;
 
                         case TransformationType.Fade:
-                            Alpha = t.EndFloat;
+                            Alpha = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Movement:
-                            Position = t.EndVector;
+                            Position = ((TransformationV)t).EndVector;
                             break;
 
                         case TransformationType.MovementX:
-                            Position.X = t.EndFloat;
+                            Position.X = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.MovementY:
-                            Position.Y = t.EndFloat;
+                            Position.Y = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.OffsetX:
-                            Offset.X = t.EndFloat;
+                            Offset.X = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Rotation:
-                            Rotation = t.EndFloat;
+                            Rotation = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Scale:
-                            Scale = new Vector2(t.EndFloat, t.EndFloat);
+                            ScaleScalar =((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.VectorScale:
-                            Scale = t.EndVector;
+                            Scale = ((TransformationV)t).EndVector;
                             break;
                     }
 
@@ -487,43 +479,43 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            Colour = t.CurrentColour;
+                            Colour = ((TransformationC)t).CurrentColour;
                             break;
 
                         case TransformationType.Fade:
-                            Alpha = t.CurrentFloat;
+                            Alpha = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.Movement:
-                            Position = t.CurrentVector;
+                            Position = ((TransformationV)t).CurrentVector;
                             hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
-                            Position.X = t.CurrentFloat;
+                            Position.X = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.MovementY:
-                            Position.Y = t.CurrentFloat;
+                            Position.Y = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.OffsetX:
-                            Offset.X = t.CurrentFloat;
+                            Offset.X = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.Rotation:
-                            Rotation = t.CurrentFloat;
+                            Rotation = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.Scale:
-                            Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
+                            ScaleScalar = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.VectorScale:
-                            Scale = t.CurrentVector;
+                            Scale = ((TransformationV)t).CurrentVector;
                             break;
                     }
                 }
@@ -542,7 +534,7 @@ namespace osum.Graphics.Sprites
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && ((TransformationF)t).EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
@@ -552,7 +544,7 @@ namespace osum.Graphics.Sprites
                 return;
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeInFromZero(int duration)
@@ -560,7 +552,7 @@ namespace osum.Graphics.Sprites
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade,
+            Transform(new TransformationF(TransformationType.Fade,
                                          0, (Colour.A != 0 ? Colour.A : 1),
                                          now, now + duration));
         }
@@ -572,7 +564,7 @@ namespace osum.Graphics.Sprites
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && ((TransformationF)t).EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
@@ -582,7 +574,7 @@ namespace osum.Graphics.Sprites
                 return;
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeOutFromOne(int duration)
@@ -590,7 +582,7 @@ namespace osum.Graphics.Sprites
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
         internal SpriteManager ContainingSpriteManager;
@@ -633,7 +625,7 @@ namespace osum.Graphics.Sprites
             }
 
             Transform(
-                      new Transformation(Colour, colour,
+                      new TransformationC(Colour, colour,
                                          ClockingNow - (int)Clock.ElapsedMilliseconds,
                                          ClockingNow + duration));
         }
@@ -642,7 +634,7 @@ namespace osum.Graphics.Sprites
         {
             Color4 end = Colour;
 
-            Transformation last = Transformations.FindLast(t => t.Type == TransformationType.Colour);
+            TransformationC last = Transformations.FindLast(t => t is TransformationC) as TransformationC;
 
             if (last != null)
             {
@@ -650,7 +642,7 @@ namespace osum.Graphics.Sprites
                 Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
             }
 
-            Transformation flash = new Transformation(colour, end,
+            Transformation flash = new TransformationC(colour, end,
                                    ClockingNow,
                                    ClockingNow + duration);
             Transform(flash);
@@ -677,7 +669,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(Position, destination, now, now + duration, easing));
+            Transform(new TransformationV(Position, destination, now, now + duration, easing));
         }
 
         /// <summary>
@@ -698,7 +690,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
+            Transform(new TransformationF(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
 
             return this;
         }
@@ -721,7 +713,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(TransformationType.Rotation, Rotation, target, now, now + duration, easing));
+            Transform(new TransformationF(TransformationType.Rotation, Rotation, target, now, now + duration, easing));
 
             return this;
         }

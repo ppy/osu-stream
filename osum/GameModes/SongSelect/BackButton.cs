@@ -47,8 +47,8 @@ namespace osum.GameModes.SongSelect
 
             if (showIntroAnimation)
             {
-                Transform(new Transformation(positionAtDistance(50), fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
-                Transform(new Transformation(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
+                Transform(new TransformationV(positionAtDistance(50), fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
+                Transform(new TransformationV(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
             }
             else
                 Position = hiddenPosition;
@@ -98,8 +98,8 @@ namespace osum.GameModes.SongSelect
                 {
 
                     RotateTo(defaultRotation, 200, EasingTypes.In);
-                    Transform(new Transformation(Position, fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
-                    Transform(new Transformation(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
+                    Transform(new TransformationV(Position, fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
+                    Transform(new TransformationV(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
 
                     FadeColour(Color4.White, 0);
                     AudioEngine.PlaySample(OsuSamples.MenuBack);

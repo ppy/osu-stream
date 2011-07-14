@@ -47,22 +47,22 @@ namespace osum.GameplayElements
                 Sprites.Add(SpriteHitCircleText);
             }
 
-            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0, 0.9F,
+            SpriteApproachCircle.Transform(new TransformationF(TransformationType.Fade, 0, 0.9F,
                 startTime - DifficultyManager.PreEmpt, Math.Min(startTime, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn * 2)));
 
-            SpriteApproachCircle.Transform(new Transformation(TransformationType.Scale, 4, 1,
+            SpriteApproachCircle.Transform(new TransformationF(TransformationType.Scale, 4, 1,
                 startTime - DifficultyManager.PreEmpt, startTime));
 
-            SpriteApproachCircle.Transform(new Transformation(TransformationType.Fade, 0.9f, 0,
+            SpriteApproachCircle.Transform(new TransformationF(TransformationType.Fade, 0.9f, 0,
                 startTime, startTime + (int)(DifficultyManager.PreEmpt * 0.1f)));
 
-            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
+            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1,
                 startTime - DifficultyManager.PreEmpt, startTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
 
             SpriteHitCircle1.Transform(fadeIn);
             SpriteHitCircleText.Transform(fadeIn);
 
-            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0,
+            Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0,
                 startTime, startTime + DifficultyManager.HitWindow50);
 
             SpriteHitCircle1.Transform(fadeOut);
@@ -113,13 +113,13 @@ namespace osum.GameplayElements
             if (action > ScoreChange.Miss)
             {
                 //Fade out the actual hit circle
-                Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
+                Transformation circleScaleOut = new TransformationF(TransformationType.Scale, 1.1F, 1.4F,
                     now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
-                Transformation textScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
+                Transformation textScaleOut = new TransformationF(TransformationType.Scale, 1.1F, 1.4F,
                     now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
-                Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
+                Transformation circleFadeOut = new TransformationF(TransformationType.Fade, 1, 0,
                     now, now + DifficultyManager.FadeOut);
 
                 SpriteHitCircle1.Transformations.Clear();

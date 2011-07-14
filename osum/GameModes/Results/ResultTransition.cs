@@ -116,8 +116,8 @@ namespace osum.GameModes
                 p.Additive = true;
 
                 int offset = Clock.Time + i++ * time_between_fills;
-                //p.Transform(new Transformation(TransformationType.Fade, 0, 0.5f, offset - 50, offset + 200));
-                //p.Transform(new Transformation(TransformationType.Fade, 1, 0, offset + 100, offset + 800));
+                //p.Transform(new TransformationFloat(TransformationType.Fade, 0, 0.5f, offset - 50, offset + 200));
+                //p.Transform(new TransformationFloat(TransformationType.Fade, 1, 0, offset + 100, offset + 800));
             }
 
 
@@ -132,8 +132,8 @@ namespace osum.GameModes
 
                 int offset = Clock.Time + i++ * time_between_fills;
 
-                p.Transform(new Transformation(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
-                p.Transform(new Transformation(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
+                p.Transform(new TransformationC(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
+                p.Transform(new TransformationC(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
                 //force the initial colour to be an ambiguous gray.
 
                 p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));

@@ -450,8 +450,8 @@ namespace osum.GameModes
             s_ButtonBack.FadeIn(500);
 
             s_Footer.Alpha = 1;
-            s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
         }
 
         private void showOnlineRanking()
@@ -593,8 +593,8 @@ namespace osum.GameModes
                     {
                         pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fillSprites[0].Scale.Y - 30), 0.3f, false, Color4.White);
                         f.ScaleScalar = 0.2f;
-                        f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
-                        f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
+                        f.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
+                        f.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
                         fallingSprites.Add(f);
                         spriteManager.Add(f);
                     }

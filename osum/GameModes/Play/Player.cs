@@ -699,15 +699,15 @@ namespace osum.GameModes
             pDrawable failGlow = failSprite.Clone();
 
             failSprite.FadeInFromZero(500);
-            failSprite.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
-            failSprite.Transform(new Transformation(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+            failSprite.Transform(new TransformationF(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+            failSprite.Transform(new TransformationF(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
 
             failGlow.DrawDepth = 0.51f;
             failGlow.AlwaysDraw = false;
             failGlow.ScaleScalar = 1.04f;
             failGlow.Additive = true;
-            failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
-            failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
+            failGlow.Transform(new TransformationF(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
+            failGlow.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
 
             topMostSpriteManager.Add(failSprite);
             topMostSpriteManager.Add(failGlow);

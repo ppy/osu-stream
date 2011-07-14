@@ -69,16 +69,16 @@ namespace osum.Graphics
                 burst.AlignToSprites = false;
 
                 //make transformations beforehand to avoid creating many.
-                burst.Transform(new Transformation() { Type = TransformationType.Movement },
-                    new Transformation() { Type = TransformationType.Scale },
-                    new Transformation() { Type = TransformationType.Fade });
+                burst.Transform(new TransformationV() { Type = TransformationType.Movement },
+                    new TransformationF() { Type = TransformationType.Scale },
+                    new TransformationF() { Type = TransformationType.Fade });
             }
 
             base.Initialize();
         }
 
         int spacing;
-        
+
         private bool bindInput;
         private bool BindInput
         {
@@ -103,7 +103,7 @@ namespace osum.Graphics
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (InputManager.IsPressed && spacing++ % 1 == 0)
-                Burst(trackingPoint.BasePosition, 20, 0.5f,  1);
+                Burst(trackingPoint.BasePosition, 20, 0.5f, 1);
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
@@ -129,29 +129,24 @@ namespace osum.Graphics
 
                 pSprite burst = burstSprites[nextBurstSprite];
 
-                for (int i = 0; i < 3; i++)
-                {
-                    Transformation t = burst.Transformations[i];
+                TransformationV tPos = (TransformationV)burst.Transformations[0];
+                TransformationF tScale = (TransformationF)burst.Transformations[1];
+                TransformationF tFade = (TransformationF)burst.Transformations[2];
 
-                    t.StartTime = Clock.Time;
-                    t.EndTime = Clock.Time + randTime;
+                tPos.StartTime = Clock.Time;
+                tPos.EndTime = Clock.Time + randTime;
+                tPos.StartVector = pos;
+                tPos.EndVector = end;
 
-                    switch (i)
-                    {
-                        case 0:
-                            t.StartVector = pos;
-                            t.EndVector = end;
-                            break;
-                        case 1:
-                            t.StartFloat = scale * 0.8f + 0.4f * (float)nextRand();
-                            t.EndFloat = scale * 0.4f + 0.4f * (float)nextRand();
-                            break;
-                        case 2:
-                            t.StartFloat = (float)nextRand() * 0.6f;
-                            t.EndFloat = 0;
-                            break;
-                    }
-                }
+                tScale.StartTime = Clock.Time;
+                tScale.EndTime = Clock.Time + randTime;
+                tScale.StartFloat = scale * 0.8f + 0.4f * (float)nextRand();
+                tScale.EndFloat = scale * 0.4f + 0.4f * (float)nextRand();
+
+                tFade.StartTime = Clock.Time;
+                tFade.EndTime = Clock.Time + randTime;
+                tFade.StartFloat = (float)nextRand() * 0.6f;
+                tFade.EndFloat = 0;
 
                 nextBurstSprite = (nextBurstSprite + 1) % burstSprites.Count;
             }

@@ -234,12 +234,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                                ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White){ ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
-            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1,
+            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1,
                 StartTime, StartTime);
-            Transformation fadeInTrack = new Transformation(TransformationType.Fade, 0, 1,
+            Transformation fadeInTrack = new TransformationF(TransformationType.Fade, 0, 1,
                 StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
-            Transformation fadeOut = new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut / 2);
-            Transformation fadeOutInstant = new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime);
+            Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut / 2);
+            Transformation fadeOutInstant = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime);
 
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
@@ -301,7 +301,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                                                 FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
-                scoringDot.Transform(new Transformation(TransformationType.Fade, 0, 1,
+                scoringDot.Transform(new TransformationF(TransformationType.Fade, 0, 1,
                     snakingBegin + (int)((snakingEnd - snakingBegin) * progress),
                     snakingBegin + (int)((snakingEnd - snakingBegin) * progress) + 100));
 
@@ -739,7 +739,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
                         if (spriteFollowCircle.Transformations.Find(t => t.Type == TransformationType.Scale) == null)
-                            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1.05f, 1, now, now + 100, EasingTypes.OutHalf));
+                            spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1.05f, 1, now, now + 100, EasingTypes.OutHalf));
 
                         if (RepeatCount > progressCurrent + 1)
                         {
@@ -747,9 +747,9 @@ namespace osum.GameplayElements.HitObjects.Osu
                             int nextRepeatStartTime = (int)(StartTime + (EndTime - StartTime) * (((int)progressCurrent + 1) / (float)RepeatCount));
 
                             spriteCollectionScoringPoints[judgePointNormalized].Transform(
-                                new Transformation(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
+                                new TransformationF(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
                             spriteCollectionScoringPoints[judgePointNormalized].Transform(
-                                new Transformation(TransformationType.Scale, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
+                                new TransformationF(TransformationType.Scale, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
                         }
                         else
                         {
@@ -804,8 +804,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (spriteFollowCircle.Alpha > 0 && isTracking)
             {
                 int now = ClockingNow;
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));
-                spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
+                spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));
+                spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
             }
         }
 
@@ -844,7 +844,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             int now = ClockingNow;
 
             spriteFollowCircle.Transform(new TransformationBounce(now, Math.Min(EndTime, now + 350), 1, 0.5f, 2));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 100), EasingTypes.None));
+            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 100), EasingTypes.None));
         }
 
         protected virtual void endTracking()
@@ -858,18 +858,18 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, now, now + 150, EasingTypes.In));
-            spriteFollowCircle.Transform(new Transformation(TransformationType.Fade, spriteFollowCircle.Alpha, 0, now, now + 150, EasingTypes.None));
+            spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, now, now + 150, EasingTypes.In));
+            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, spriteFollowCircle.Alpha, 0, now, now + 150, EasingTypes.None));
         }
 
         internal virtual void burstEndpoint()
         {
             int now = Clock.Time;
 
-            Transformation circleScaleOut = new Transformation(TransformationType.Scale, 1.1F, 1.4F,
+            Transformation circleScaleOut = new TransformationF(TransformationType.Scale, 1.1F, 1.4F,
                     now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
-            Transformation circleFadeOut = new Transformation(TransformationType.Fade, 1, 0,
+            Transformation circleFadeOut = new TransformationF(TransformationType.Fade, 1, 0,
                 now, now + DifficultyManager.FadeOut);
 
             if (lastJudgedEndpoint % 2 == 0)

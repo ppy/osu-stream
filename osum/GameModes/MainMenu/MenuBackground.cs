@@ -238,7 +238,7 @@ namespace osum.GameModes
 
         int awesomeStartTime = -1;
         private Line rectangleLineLeft;
-        private Transformation awesomeTransformation;
+        private TransformationBounce awesomeTransformation;
         private Line rectangleLineRight;
         const int duration = 3000;
 
@@ -260,7 +260,7 @@ namespace osum.GameModes
 
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
-            //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
+            //new TransformationFloat(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
 
             textSprites.ForEach(s => s.FadeIn(500));
             

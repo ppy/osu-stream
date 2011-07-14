@@ -313,11 +313,18 @@ namespace osum.GameplayElements
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             foreach (Transformation t in secondObject.Sprites[0].Transformations)
-                if (t.Type == TransformationType.Fade && t.EndFloat == 1)
+            {
+                TransformationF tf = t as TransformationF;
+                if (tf != null && tf.EndFloat == 1)
                     connectingLine.Transform(t);
+            }
+
             foreach (Transformation t in firstObject.Sprites[0].Transformations)
-                if (t.Type == TransformationType.Fade && t.EndFloat == 0)
+            {
+                TransformationF tf = t as TransformationF;
+                if (tf != null && tf.EndFloat == 0)
                     connectingLine.Transform(t);
+            }
 
             h2.Sprites.Add(connectingLine);
             h2.SpriteCollectionDim.Add(connectingLine);

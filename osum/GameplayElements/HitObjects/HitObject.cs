@@ -322,20 +322,20 @@ namespace osum.GameplayElements
                 p.Transform(
                     new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.2f, 3));
                 p.Transform(
-                    new Transformation(TransformationType.Fade, 1, 0,
+                    new TransformationF(TransformationType.Fade, 1, 0,
                                        Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
             }
             else
             {
                 p.Transform(
-                            new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
+                            new TransformationF(TransformationType.Scale, 2, 1, Clock.Time,
                                                Clock.Time + HitFadeIn));
                 p.Transform(
-                    new Transformation(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
+                    new TransformationF(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
                                        Clock.Time + HitFadeOutStart + HitFadeOutDuration));
 
                 p.Transform(
-                    new Transformation(TransformationType.Rotation, 0,
+                    new TransformationF(TransformationType.Rotation, 0,
                                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
                                        Clock.Time + HitFadeIn));
             }
@@ -561,7 +561,7 @@ namespace osum.GameplayElements
 
                     int e = i == shake_count - 1 ? 0 : -s;
 
-                    p.Transform(new Transformation(TransformationType.OffsetX, s, e, Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period));
+                    p.Transform(new TransformationF(TransformationType.OffsetX, s, e, Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period));
                 }
             }
 

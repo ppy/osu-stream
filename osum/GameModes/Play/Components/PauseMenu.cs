@@ -36,8 +36,8 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
-                    Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
-                    Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
                     if (menuText == null)
                     {
@@ -72,8 +72,8 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
-                    Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
-                    Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
 
                     if (menuText != null)
                     {
@@ -138,8 +138,8 @@ namespace osum.GameModes.Play.Components
                 pullnotice.Offset = new Vector2(0, 30);
                 spriteManager.Add(pullnotice);
 
-                Transformation move = new Transformation(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
-                Transformation fade = new Transformation(TransformationType.Fade, 1, 0.4f, 1000, 1500);
+                Transformation move = new TransformationF(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
+                Transformation fade = new TransformationF(TransformationType.Fade, 1, 0.4f, 1000, 1500);
 
                 spriteManager.Sprites.ForEach(s =>
                 {

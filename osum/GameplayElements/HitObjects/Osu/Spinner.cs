@@ -141,25 +141,25 @@ namespace osum.GameplayElements
             foreach (pDrawable p in Sprites)
             {
                 p.Transformations.Clear();
-                p.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
-                p.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 4 : DifficultyManager.FadeOut / 2)));
+                p.Transform(new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn, StartTime));
+                p.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + (spriteScoreMetreForeground == p ? DifficultyManager.FadeOut / 4 : DifficultyManager.FadeOut / 2)));
             }
 
             SpriteSpin =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_spin),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
                             SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), false, white);
-            SpriteSpin.Transform(new Transformation(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
-            SpriteSpin.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
+            SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
+            SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             Sprites.Add(SpriteSpin);
 
-            ApproachCircle.Transform(new Transformation(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Height * 0.47f, 0.1f, StartTime, EndTime));
+            ApproachCircle.Transform(new TransformationF(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Height * 0.47f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
                             SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
-            SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 0, startTime, endTime));
+            SpriteClear.Transform(new TransformationF(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
 
             currentRotationCount = 0;
@@ -291,10 +291,10 @@ namespace osum.GameplayElements
                     SpriteSpin.FadeOut(100);
 
                     SpriteClear.Transformations.Clear();
-                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
-                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 2, 0.8f, now, Math.Min(EndTime, now + 240), EasingTypes.In));
-                    SpriteClear.Transform(new Transformation(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400), EasingTypes.None));
-                    SpriteClear.Transform(new Transformation(TransformationType.Fade, 1, 0, EndTime - 50, EndTime));
+                    SpriteClear.Transform(new TransformationF(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
+                    SpriteClear.Transform(new TransformationF(TransformationType.Scale, 2, 0.8f, now, Math.Min(EndTime, now + 240), EasingTypes.In));
+                    SpriteClear.Transform(new TransformationF(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400), EasingTypes.None));
+                    SpriteClear.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - 50, EndTime));
                 }
             }
 
@@ -317,10 +317,10 @@ namespace osum.GameplayElements
                         AudioEngine.PlaySample(OsuSamples.SpinnerBonus, SampleSet.SampleSet, SampleSet.Volume);
 
                         spriteBonus.Transformations.Clear();
-                        spriteBonus.Transform(new Transformation(TransformationType.Scale, 2F, 1.28f, now, now + 600, EasingTypes.In));
-                        spriteBonus.Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + 600, EasingTypes.Out));
+                        spriteBonus.Transform(new TransformationF(TransformationType.Scale, 2F, 1.28f, now, now + 600, EasingTypes.In));
+                        spriteBonus.Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + 600, EasingTypes.Out));
                         //Ensure we don't recycle this too early.
-                        spriteBonus.Transform(new Transformation(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
+                        spriteBonus.Transform(new TransformationF(TransformationType.Fade, 0, 0, EndTime + 800, EndTime + 800));
 
                         lastSamplePlayedRotationCount += sensitivity_modifier;
                     }

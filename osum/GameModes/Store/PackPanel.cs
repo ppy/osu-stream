@@ -150,16 +150,17 @@ namespace osum.GameModes.Store
 
             pDrawable back = songPreviewBacks[currentDownload];
 
-            back.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
+            back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
 
             fnr.onUpdate += delegate(object sender, long current, long total)
             {
                 if (back.Alpha != 1)
                 {
-                    GameBase.Scheduler.Add(delegate {
+                    GameBase.Scheduler.Add(delegate
+                    {
                         back.Transformations.Clear();
                         back.Alpha = 1;
-                    },true);
+                    }, true);
                 }
 
                 back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
@@ -223,7 +224,7 @@ namespace osum.GameModes.Store
             back.HandleClickOnUp = true;
 
             back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
-            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40,40,40,0), 200); };
+            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 0), 200); };
 
             back.OnClick += delegate(object sender, EventArgs e)
             {
@@ -259,11 +260,11 @@ namespace osum.GameModes.Store
                 NetManager.AddRequest(previewRequest);
 
                 back.FadeColour(colourHover, 0);
-                back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
+                back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
-                preview.Transform(new Transformation(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
+                preview.Transform(new TransformationF(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
                 StoreMode.EnsureVisible(s_BackingPlate);

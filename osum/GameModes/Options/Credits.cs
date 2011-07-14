@@ -122,7 +122,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += header_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += header_spacing;
                 }
                 else if (drawString.StartsWith("OsuTexture."))
@@ -139,7 +139,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += image_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += image_spacing;
 
                 }
@@ -179,11 +179,11 @@ namespace osum.GameModes.Options
                             Alpha = 1
                         };
 
-                        text2.Transform(new Transformation(new Vector2(text2.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text2.Position.X, -100), time, time + speed));
+                        text2.Transform(new TransformationV(new Vector2(text2.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text2.Position.X, -100), time, time + speed));
                         spriteManager.Add(text2);
                     }
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text.Position.X, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text.Position.X, -100), time, time + speed));
                     time += spacing;
                 }
 
