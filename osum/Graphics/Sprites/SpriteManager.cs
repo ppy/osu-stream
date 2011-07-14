@@ -370,7 +370,7 @@ namespace osum.Graphics.Sprites
 
             pTexture currentBatchTexture = null;
 
-            matrixOperations = Rotation != 0 || ScaleScalar != 1 || FieldPosition != Vector2.Zero;
+            matrixOperations = Rotation != 0 || ScaleScalar != 1 || Position != Vector2.Zero;
 
             if (matrixOperations)
             {
@@ -383,8 +383,11 @@ namespace osum.Graphics.Sprites
                     GL.Scale(Scale.X, Scale.Y, 0);
                 GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);
 
-                if (FieldPosition != Vector2.Zero)
-                    GL.Translate(FieldPosition.X, FieldPosition.Y, 0);
+                if (Position != Vector2.Zero)
+                {
+                    Vector2 field = FieldPosition;
+                    GL.Translate(field.X, field.Y, 0);
+                }
             }
 
             float tempAlpha = 0;
@@ -430,7 +433,7 @@ namespace osum.Graphics.Sprites
             if (matrixOperations)
                 GL.PopMatrix();
 
-            flushBatch();
+            //flushBatch();
 
             return true;
         }
