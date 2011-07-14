@@ -34,16 +34,19 @@ namespace osum.GameModes
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
             rectangleLineRight = new Line(new Vector2(-100, -855) - centre, new Vector2(1200, 250) - centre);
 
-            rectBorder = new pQuad(
-                rectangleLineLeft.p1 + new Vector2(-2, -2),
-                new Vector2(444 + 2, 172 - 2) - centre,
-                rectangleLineLeft.p2 + new Vector2(-2, 2),
-                new Vector2(528 + 3, 297 + 2) - centre,
-                true, 0.4f, new Color4(13, 13, 13, 255));
-            rectBorder.AlphaBlend = false;
-            rectBorder.Field = FieldTypes.StandardSnapCentre;
-            rectBorder.Origin = OriginTypes.Centre;
-            Add(rectBorder);
+            //if (!GameBase.IsSlowDevice)
+            {
+                rectBorder = new pQuad(
+                    rectangleLineLeft.p1 + new Vector2(-2, -2),
+                    new Vector2(444 + 2, 172 - 2) - centre,
+                    rectangleLineLeft.p2 + new Vector2(-2, 2),
+                    new Vector2(528 + 3, 297 + 2) - centre,
+                    true, 0.4f, new Color4(13, 13, 13, 255));
+                rectBorder.AlphaBlend = false;
+                rectBorder.Field = FieldTypes.StandardSnapCentre;
+                rectBorder.Origin = OriginTypes.Centre;
+                Add(rectBorder);
+            }
 
             rect = new pQuad(
                 rectangleLineLeft.p1,

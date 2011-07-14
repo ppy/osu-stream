@@ -95,6 +95,8 @@ namespace osum.GameModes
             : base()
         { }
 
+        int frameCount;
+
         public override void Initialize()
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
@@ -267,6 +269,9 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+#if !DIST
+            Console.WriteLine("Player.cs produced " + frameCount + " frames.");
+#endif
             Clock.AbortLeadIn();
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
@@ -489,6 +494,8 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
+
+            frameCount++;
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 

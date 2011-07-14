@@ -44,8 +44,8 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
-        internal int potHeight { get; private set; }
-        internal int potWidth { get; private set; }
+        internal int potHeight;
+        internal int potWidth;
 
         private int textureHeight;
         internal int TextureHeight
@@ -72,11 +72,29 @@ namespace osum.Graphics
         public int Id;
         public bool Loaded { get { return Id > 0; } }
 
+        float[] coordinates;
+        float[] vertices;
+
+        GCHandle handle_vertices;
+        GCHandle handle_coordinates;
+
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_coordinates_pointer;
+
         public TextureGl(int width, int height)
         {
             Id = -1;
             TextureWidth = width;
             TextureHeight = height;
+
+            coordinates = new float[8];
+            vertices = new float[8];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
         }
 
         #region IDisposable Members
@@ -113,6 +131,8 @@ namespace osum.Graphics
 
         protected virtual void Dispose(bool disposing)
         {
+            handle_vertices.Free();
+            handle_coordinates.Free();
             Delete();
         }
 
@@ -186,9 +206,6 @@ namespace osum.Graphics
             }
         }
 
-        float[] coordinates = new float[8];
-        float[] vertices = new float[8];
-
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
@@ -259,8 +276,8 @@ namespace osum.Graphics
 
             Bind();
 
-            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+            GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
         }
 

@@ -32,6 +32,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -45,6 +46,9 @@ namespace osum.Graphics.Drawables
         internal float Radius;
         internal float Width = 2 / 20f;
 
+        GCHandle handle_vertices;
+        IntPtr handle_vertices_pointer;
+
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
             AlwaysDraw = alwaysDraw;
@@ -54,12 +58,16 @@ namespace osum.Graphics.Drawables
             Position = position;
             Radius = radius;
             Colour = colour;
-            parts = GameBase.IsSlowDevice ? 24 : 48;
+            parts = GameBase.IsSlowDevice ? 36 : 48;
             vertices = new float[parts * 4 + 4];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
         }
 
         public override void Dispose()
         {
+            handle_vertices.Free();
         }
 
         int parts = 48;
@@ -112,7 +120,7 @@ namespace osum.Graphics.Drawables
                 SpriteManager.TexturesEnabled = false;
 
                 SpriteManager.SetColour(c);
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
                 GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
 
                 return true;

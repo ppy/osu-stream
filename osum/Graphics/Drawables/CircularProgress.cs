@@ -32,6 +32,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -46,8 +47,19 @@ namespace osum.Graphics.Drawables
         internal float Radius;
         internal bool EvenShading;
 
+        int parts = 48;
+        float[] vertices;
+        float[] colours;
+
+        GCHandle handle_vertices;
+        GCHandle handle_colours;
+
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_colours_pointer;
+
         public CircularProgress(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
+            parts = GameBase.IsSlowDevice ? 36 : 48;
             AlwaysDraw = alwaysDraw;
             Alpha = alwaysDraw ? 1 : 0;
             DrawDepth = drawDepth;
@@ -56,15 +68,22 @@ namespace osum.Graphics.Drawables
             Radius = radius;
             Colour = colour;
             Field = FieldTypes.Standard;
+
+            vertices = new float[parts * 2 + 2];
+            colours = new float[parts * 4 + 4];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_colours_pointer = handle_colours.AddrOfPinnedObject();
         }
 
         public override void Dispose()
         {
+            handle_colours.Free();
+            handle_vertices.Free();
         }
-
-        const int parts = 48;
-        float[] vertices = new float[parts * 2 + 2];
-        float[] colours = new float[parts * 4 + 4];
 
         public override bool Draw()
         {
@@ -106,8 +125,8 @@ namespace osum.Graphics.Drawables
 
                 GL.EnableClientState(ArrayCap.ColorArray);
 
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+                GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
                 GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
 
                 GL.DisableClientState(ArrayCap.ColorArray);

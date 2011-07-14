@@ -36,6 +36,7 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using ArrayCap =  OpenTK.Graphics.ES11.All;
+using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -53,8 +54,14 @@ namespace osum.GameModes.Play.Components
     {
         const int line_count = 5;
 
-        float[] vertices = new float[(line_count + 1) * 4 * 2];
-        float[] colours = new float[(line_count + 1) * 4 * 4];
+        float[] vertices;
+        float[] colours;
+
+        GCHandle handle_vertices;
+        GCHandle handle_colours;
+
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_colours_pointer;
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_EASY = new Color4(122, 172, 37, 255);
@@ -67,6 +74,15 @@ namespace osum.GameModes.Play.Components
         public PlayfieldBackground()
             : base()
         {
+            vertices = new float[(line_count + 1) * 4 * 2];
+            colours = new float[(line_count + 1) * 4 * 4];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+
             initialize();
 
             DrawDepth = 0;
@@ -136,6 +152,9 @@ namespace osum.GameModes.Play.Components
 
         public override void Dispose()
         {
+            handle_vertices.Free();
+            handle_colours.Free();
+
             GameBase.OnScreenLayoutChanged -= initialize;
 
             base.Dispose();
@@ -206,8 +225,8 @@ namespace osum.GameModes.Play.Components
 
             SpriteManager.AlphaBlend = false;
 
-            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-            GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+            GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+            GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
             SpriteManager.AlphaBlend = true;
