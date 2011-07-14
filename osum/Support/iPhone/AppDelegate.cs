@@ -44,6 +44,8 @@ using osum.Graphics.Skins;
 using osum.Audio;
 using System.Threading;
 using osum.GameModes;
+using OpenTK.Graphics;
+using OpenTK.Platform;
 
 namespace osum.Support.iPhone
 {
@@ -55,6 +57,10 @@ namespace osum.Support.iPhone
 
         public static AppDelegate Instance;
 
+        public static EAGLView glView;
+        public static GameBase game;
+        static IGraphicsContext context;
+
         // This method is invoked when the application has loaded its UI and is ready to run
         public override void FinishedLaunching(UIApplication app)
         {    
@@ -63,27 +69,22 @@ namespace osum.Support.iPhone
 
             Instance = this;
 
+            HardwareVersion hardware = HardwareDetection.Version;
+
+            context = Utilities.CreateGraphicsContext(EAGLRenderingAPI.OpenGLES1);
+
+            glView = new EAGLView(window.Bounds);
             glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
+            window.AddSubview(glView);
 
             GameBase.ScaleFactor = glView.ContentScaleFactor;
+            Console.WriteLine("scale factor " + GameBase.ScaleFactor);
             GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
                                         (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
-
             GameBase.TriggerLayoutChanged();
 
-            int targetFps = 10000;
-
-            switch (HardwareDetection.Version)
-            {
-                case HardwareVersion.iPhone:
-                case HardwareVersion.iPhone3G:
-                case HardwareVersion.iPod1G:
-                case HardwareVersion.iPod2G:
-                    //targetFps = 30; //aim a bit lower with older devices.
-                    break;
-            }
-
-            glView.Run(targetFps);
+            game.Initialize();
+            glView.Run(game);
         }
 
         public override void WillEnterForeground (UIApplication application)
@@ -139,15 +140,17 @@ namespace osum.Support.iPhone
                     return;
                 usingViewController = value;
 
-                if (usingViewController)
+                /*if (usingViewController)
                     Instance.window.AddSubview(Instance.viewController.View);
                 else
-                    Instance.viewController.View.RemoveFromSuperview();
+                    Instance.viewController.View.RemoveFromSuperview();*/
             }
         }
 
         public static UIViewController ViewController {
-            get { return Instance.viewController; }
+            get {
+                return null;//Instance.viewController;
+            }
         }
     }
 }

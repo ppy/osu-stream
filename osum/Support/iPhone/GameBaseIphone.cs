@@ -51,14 +51,13 @@ namespace osum
 {
     public class GameBaseIphone : GameBase
     {
-        GameWindowIphone gameWindow;
-
         public GameBaseIphone()
         {
         }
 
         override public void MainLoop()
         {
+            AppDelegate.game = this;
             MonoTouch.UIKit.UIApplication.Main(new string[]{});
         }
 
@@ -108,7 +107,6 @@ namespace osum
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
             UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
 
-            gameWindow = GameWindowIphone.Instance;
             base.Initialize();
         }
 
@@ -158,8 +156,7 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSource source = new InputSourceIphone (gameWindow);
-            gameWindow.SetInputHandler(source);
+            InputSource source = new InputSourceIphone();
             InputManager.AddSource(source);
         }
 

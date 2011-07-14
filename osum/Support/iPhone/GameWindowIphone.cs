@@ -42,116 +42,267 @@ using osum.Graphics.Skins;
 using osum.Support.iPhone;
 using osum.GameModes;
 using osum.Audio;
+using OpenTK.Graphics;
 
 namespace osum
 {
-    [MonoTouch.Foundation.Register("GameWindowIphone")]
-    public partial class GameWindowIphone : iPhoneOSGameView
+    [MonoTouch.Foundation.Register("EAGLView")]
+    public partial class EAGLView : UIView
     {
-        public static GameWindowIphone Instance;
+        public static EAGLView Instance;
+        All _depthFormat;
+        bool _autoResize;
+        iPhoneOSGraphicsContext _context;
+        uint _framebuffer;
+        uint _renderbuffer;
+        uint _depthbuffer;
+        SizeF _size;
+        bool _hasBeenCurrent;
+        private NSTimer _animationTimer;
 
         [Export("layerClass")]
-        static Class LayerClass()
+        public static Class LayerClass()
         {
-            return iPhoneOSGameView.GetLayerClass();
+            return new Class (typeof(CAEAGLLayer));
         }
 
-        [Export("initWithCoder:")]
-        public GameWindowIphone(NSCoder coder)
-            : base(coder)
+        public EAGLView(RectangleF frame) : this(frame, All.Rgba8Oes, 0, false)
         {
-            LayerRetainsBacking = false;
-            LayerColorFormat = EAGLColorFormat.RGBA8;
-            ContextRenderingApi = EAGLRenderingAPI.OpenGLES1;
-            UserInteractionEnabled = true;
-            ExclusiveTouch = true;
+        }
+
+        public EAGLView(RectangleF frame,All format) : this(frame, format, 0, false)
+        {
+        }
+
+        public EAGLView(RectangleF frame,All format,All depth, bool retained) : base(frame)
+        {
+            CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;
+
+            eaglLayer.DrawableProperties = NSDictionary.FromObjectsAndKeys(new NSObject[] {
+                 NSNumber.FromBoolean(true),
+                 EAGLColorFormat.RGBA8
+             }, new NSObject[] {
+                 EAGLDrawableProperty.RetainedBacking,
+                 EAGLDrawableProperty.ColorFormat
+             });
+
+            _depthFormat = depth;
+            _context = (iPhoneOSGraphicsContext)((IGraphicsContextInternal)GraphicsContext.CurrentContext).Implementation;
+            CreateSurface();
 
             Instance = this;
+
+            ExclusiveTouch = true;
+            MultipleTouchEnabled = true;
+            UserInteractionEnabled = true;
         }
 
-        protected override void ConfigureLayer(CAEAGLLayer eaglLayer)
+        protected override void Dispose(bool disposing)
         {
-            eaglLayer.Opaque = true;
+            DestroySurface();
+            _context.Dispose();
+            _context = null;
         }
 
-        protected override void OnLoad(EventArgs e)
+        void CreateSurface()
         {
-            GameBase.Instance.Initialize();
-            base.OnLoad(e);
+            CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;
+            if (!_context.IsCurrent)
+                _context.MakeCurrent(null);
+
+            var newSize = eaglLayer.Bounds.Size;
+            newSize.Width = (float)Math.Round(newSize.Width);
+            newSize.Height = (float)Math.Round(newSize.Height);
+
+            int oldRenderbuffer = 0, oldFramebuffer = 0;
+            GL.GetInteger(All.RenderbufferBindingOes, ref oldRenderbuffer);
+            GL.GetInteger(All.FramebufferBindingOes, ref oldFramebuffer);
+
+            GL.Oes.GenRenderbuffers(1, ref _renderbuffer);
+            GL.Oes.BindRenderbuffer(All.RenderbufferOes, _renderbuffer);
+
+            if (!_context.EAGLContext.RenderBufferStorage((uint)All.RenderbufferOes, eaglLayer))
+            {
+                GL.Oes.DeleteRenderbuffers(1, ref _renderbuffer);
+                GL.Oes.BindRenderbuffer(All.RenderbufferBindingOes, (uint)oldRenderbuffer);
+                throw new InvalidOperationException ("Error with RenderbufferStorage()!");
+            }
+
+            GL.Oes.GenFramebuffers(1, ref _framebuffer);
+            GL.Oes.BindFramebuffer(All.FramebufferOes, _framebuffer);
+            GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.ColorAttachment0Oes, All.RenderbufferOes, _renderbuffer);
+            if (_depthFormat != 0)
+            {
+                GL.Oes.GenRenderbuffers(1, ref _depthbuffer);
+                GL.Oes.BindFramebuffer(All.RenderbufferOes, _depthbuffer);
+                GL.Oes.RenderbufferStorage(All.RenderbufferOes, _depthFormat, (int)newSize.Width, (int)newSize.Height);
+                GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, _depthbuffer);
+            }
+            _size = newSize;
+            if (!_hasBeenCurrent)
+            {
+                GL.Viewport(0, 0, (int)newSize.Width, (int)newSize.Height);
+                GL.Scissor(0, 0, (int)newSize.Width, (int)newSize.Height);
+                _hasBeenCurrent = true;
+            } else
+                GL.Oes.BindFramebuffer(All.FramebufferOes, (uint)oldFramebuffer);
+            GL.Oes.BindRenderbuffer(All.RenderbufferOes, (uint)oldRenderbuffer);
+
+            Action<EAGLView> a = OnResized;
+            if (a != null)
+                a(this);
         }
 
-        protected override void OnUnload(EventArgs e)
+        void DestroySurface()
         {
-            base.OnUnload(e);
+            EAGLContext oldContext = EAGLContext.CurrentContext;
+
+            if (!_context.IsCurrent)
+                _context.MakeCurrent(null);
+
+            if (_depthFormat != 0)
+            {
+                GL.Oes.DeleteRenderbuffers(1, ref _depthbuffer);
+                _depthbuffer = 0;
+            }
+
+            GL.Oes.DeleteRenderbuffers(1, ref _renderbuffer);
+            _renderbuffer = 0;
+
+            GL.Oes.DeleteFramebuffers(1, ref _framebuffer);
+            _framebuffer = 0;
+
+            EAGLContext.SetCurrentContext(oldContext);
         }
 
-        protected override void OnResize(EventArgs e)
+        public override void LayoutSubviews()
         {
-            base.OnResize(e);
+            var bounds = Bounds;
+            if (_autoResize && ((float)Math.Round(bounds.Width) != _size.Width) || ((float)Math.Round(bounds.Height) != _size.Height))
+            {
+                DestroySurface();
+                CreateSurface();
+            }
         }
 
-        protected override void OnUpdateFrame(FrameEventArgs e)
+        public void SetAutoResizesEaglSurface(bool resize)
         {
-            if (!AppDelegate.Running)
-                return;
-
-            base.OnUpdateFrame(e);
-            GameBase.Instance.Update(e);
+            _autoResize = resize;
+            if (_autoResize)
+                LayoutSubviews();
         }
 
-        protected override void OnRenderFrame(FrameEventArgs e)
+        public void SetCurrentContext()
         {
-            if (!AppDelegate.Running)
-                return;
+            SetCurrentContext(_context);
+        }
 
-            base.OnRenderFrame(e);
-            GameBase.Instance.Draw(e);
+        public void SetCurrentContext(IGraphicsContext context)
+        {
+            context.MakeCurrent(null);
+        }
+
+        public bool IsCurrentContext {
+            get { return _context.IsCurrent; }
+        }
+
+        public void ClearCurrentContext()
+        {
+            if (!EAGLContext.SetCurrentContext(null))
+                Console.WriteLine("Failed to clear current context!");
+        }
+
+        public void SwapBuffers()
+        {
+            EAGLContext oldContext = EAGLContext.CurrentContext;
+
+            if (!_context.IsCurrent) _context.MakeCurrent(null);
+
+            int oldRenderbuffer = 0;
+            GL.GetInteger(All.RenderbufferBindingOes, ref oldRenderbuffer);
+            GL.Oes.BindRenderbuffer(All.RenderbufferOes, _renderbuffer);
+
+            if (!_context.EAGLContext.PresentRenderBuffer((uint)All.RenderbufferOes))
+                Console.WriteLine("Failed to swap renderbuffer!");
+
+            EAGLContext.SetCurrentContext(oldContext);
+        }
+
+        private void StartAnimation()
+        {
+            // creating a TimeSpan with ticks. 10 million ticks per second.
+            _animationTimer = NSTimer.CreateRepeatingTimer(0.0001, DrawFrame);
+
+            NSRunLoop.Main.AddTimer(_animationTimer, "NSDefaultRunLoopMode");
+        }
+
+        private void StopAnimation()
+        {
+            _animationTimer.Dispose();
+            _animationTimer = null;
+        }
+
+        public PointF ConvertPointFromViewToSurface(PointF point)
+        {
+            var bounds = Bounds;
+            return new PointF ((point.X - bounds.X) / bounds.Width * _size.Width, (point.Y - bounds.Y) / bounds.Height * _size.Height);
+        }
+
+        public RectangleF ConvertRectFromViewToSurface(RectangleF rect)
+        {
+            var bounds = Bounds;
+            return new RectangleF ((rect.X - bounds.X) / bounds.Width * _size.Width, (rect.Y - bounds.Y) / bounds.Height * _size.Height, rect.Width / bounds.Width * _size.Width, rect.Height / bounds.Height * _size.Height);
+        }
+
+        GameBase game;
+
+        private void DrawFrame()
+        {
+            SetCurrentContext();
+            game.Update();
+            game.Draw();
             SwapBuffers();
         }
 
-        InputSourceIphone inputHandler;
-
-        public void SetInputHandler(InputSource source)
+        public void Run(GameBase game)
         {
-            InputSourceIphone addableSource = source as InputSourceIphone;
-
-            if (addableSource == null)
-                return;
-
-            inputHandler = addableSource;
+            this.game = game;
+            StartAnimation();
         }
 
-        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        public override void TouchesBegan (NSSet touches, UIEvent evt)
         {
-            //base.TouchesBegan(touches, evt);
+            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+            source.HandleTouchesBegan(touches,evt);
 
-            if (inputHandler != null)
-                inputHandler.HandleTouchesBegan(touches, evt);
+            base.TouchesBegan (touches, evt);
         }
 
-        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        public override void TouchesEnded (NSSet touches, UIEvent evt)
         {
-            //base.TouchesMoved(touches, evt);
+            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+            source.HandleTouchesEnded(touches,evt);
 
-            if (inputHandler != null)
-                inputHandler.HandleTouchesMoved(touches, evt);
+            base.TouchesEnded (touches, evt);
         }
 
-        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        public override void TouchesMoved (NSSet touches, UIEvent evt)
         {
-            //base.TouchesEnded(touches, evt);
+            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+            source.HandleTouchesMoved(touches,evt);
 
-            if (inputHandler != null)
-                inputHandler.HandleTouchesEnded(touches, evt);
+            base.TouchesMoved (touches, evt);
         }
 
-        public override void TouchesCancelled(NSSet touches, UIEvent evt)
+        public override void TouchesCancelled (NSSet touches, UIEvent evt)
         {
-            //base.TouchesCancelled(touches, evt);
+            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+            source.HandleTouchesCancelled(touches,evt);
 
-            if (inputHandler != null)
-                inputHandler.HandleTouchesCancelled(touches, evt);
+            base.TouchesCancelled (touches, evt);
         }
+
+        public event Action<EAGLView> OnResized;
     }
 }
 

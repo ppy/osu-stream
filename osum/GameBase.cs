@@ -383,7 +383,7 @@ namespace osum
         /// Main update cycle
         /// </summary>
         /// <returns>true if a draw should occur</returns>
-        public bool Update(FrameEventArgs e)
+        public bool Update()
         {
             Clock.Update(false);
 
@@ -418,7 +418,7 @@ namespace osum
         /// <summary>
         /// Main draw cycle.
         /// </summary>
-        public void Draw(FrameEventArgs e)
+        public void Draw()
         {
             SpriteManager.Reset();
 

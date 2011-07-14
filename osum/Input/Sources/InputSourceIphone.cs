@@ -7,11 +7,8 @@ namespace osum
 {
 	public class InputSourceIphone : InputSource
 	{
-		private GameWindowIphone gameWindow;
-
-		public InputSourceIphone(GameWindowIphone gameWindow) : base()
+		public InputSourceIphone() : base()
 		{
-			this.gameWindow = gameWindow;
 		}
 
 		public void HandleTouchesBegan(NSSet touches, UIEvent evt)
@@ -20,7 +17,7 @@ namespace osum
             TrackingPoint newPoint = null;
 
 			foreach (UITouch u in touches.ToArray<UITouch>()) {
-				newPoint = new TrackingPointIphone(u.LocationInView(gameWindow), u);
+				newPoint = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
 				trackingPoints.Add(newPoint);
 				TriggerOnDown(newPoint);
 			}
@@ -35,7 +32,7 @@ namespace osum
 				point = trackingPoints.Find(t => t.Tag == u);
 				if (point != null)
 				{
-					point.Location = u.LocationInView(gameWindow);
+					point.Location = u.LocationInView(EAGLView.Instance);
 					TriggerOnMove(point);
 				}
 			}

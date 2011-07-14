@@ -50,7 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchMinimumOS>3.0</MtouchMinimumOS>
-    <MtouchDebug>False</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -88,13 +88,13 @@
     <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchMinimumOS>3.2</MtouchMinimumOS>
-    <MtouchDebug>False</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -109,6 +109,7 @@
     <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
     <AssemblyName>osum</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>

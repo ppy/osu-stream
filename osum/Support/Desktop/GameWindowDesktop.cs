@@ -138,7 +138,7 @@ namespace osum
                 Director.ChangeMode(OsuMode.Tutorial);
 
             //todo: make update happen from here.
-            GameBase.Instance.Update(e);
+            GameBase.Instance.Update();
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace osum
         {
             base.OnRenderFrame(e);
 
-            GameBase.Instance.Draw(e);
+            GameBase.Instance.Draw();
 
             // display
             SwapBuffers();
