@@ -144,11 +144,11 @@ namespace osum.Graphics
                             t.EndVector = end;
                             break;
                         case 1:
-                            t.StartFloat = scale * 0.8f + 0.4f * (float)GameBase.Random.NextDouble();
-                            t.EndFloat = scale * 0.4f + 0.4f * (float)GameBase.Random.NextDouble();
+                            t.StartFloat = scale * 0.8f + 0.4f * (float)nextRand();
+                            t.EndFloat = scale * 0.4f + 0.4f * (float)nextRand();
                             break;
                         case 2:
-                            t.StartFloat = (float)GameBase.Random.NextDouble() * 0.6f;
+                            t.StartFloat = (float)nextRand() * 0.6f;
                             t.EndFloat = 0;
                             break;
                     }
