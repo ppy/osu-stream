@@ -32,6 +32,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -53,10 +54,32 @@ namespace osum.Graphics.Drawables
             Clocking = ClockTypes.Mode;
             Field = FieldTypes.Standard;
             Scale = size;
+
+            coordinates = new float[8];
+            vertices = new float[8];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
         }
 
-        float[] coordinates = new float[8];
-        float[] vertices = new float[8];
+        float[] coordinates;
+        float[] vertices;
+
+        GCHandle handle_vertices;
+        GCHandle handle_coordinates;
+
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_coordinates_pointer;
+
+        public override void Dispose()
+        {
+            handle_vertices.Free();
+            handle_coordinates.Free();
+            base.Dispose();
+        }
 
         public override bool Draw()
         {
@@ -109,8 +132,8 @@ namespace osum.Graphics.Drawables
 
                 SpriteManager.TexturesEnabled = false;
 
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+                GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
                 return true;
