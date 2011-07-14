@@ -49,6 +49,23 @@ using OpenTK.Platform;
 
 namespace osum.Support.iPhone
 {
+    [MonoTouch.Foundation.Register("HaxApplication")]
+    public class HaxApplication : UIApplication
+    {
+        public override void SendEvent (UIEvent e)
+        {
+            if (e.Type == UIEventType.Touches)
+            {
+                InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+                source.HandleTouches(e.AllTouches);
+                return;
+            }
+
+            base.SendEvent(e);
+        }
+    }
+
+
     // The name AppDelegate is referenced in the MainWindow.xib file.
     public partial class AppDelegate : UIApplicationDelegate
     {

@@ -58,7 +58,7 @@ namespace osum
         override public void MainLoop()
         {
             AppDelegate.game = this;
-            MonoTouch.UIKit.UIApplication.Main(new string[]{});
+            MonoTouch.UIKit.UIApplication.Main(new string[]{},"HaxApplication","AppDelegate");
         }
 
         bool disableDimming = false;

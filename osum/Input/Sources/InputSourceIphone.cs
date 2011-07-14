@@ -3,6 +3,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using System.Collections.Generic;
 using osum.Helpers;
+using osum.Support.iPhone;
 namespace osum
 {
 	public class InputSourceIphone : InputSource
@@ -11,54 +12,40 @@ namespace osum
 		{
 		}
 
-		public void HandleTouchesBegan(NSSet touches, UIEvent evt)
-		{
-            Clock.Update(true);
-            TrackingPoint newPoint = null;
-
-			foreach (UITouch u in touches.ToArray<UITouch>()) {
-				newPoint = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
-				trackingPoints.Add(newPoint);
-				TriggerOnDown(newPoint);
-			}
-		}
-
-		public void HandleTouchesMoved(NSSet touches, UIEvent evt)
-		{
+        public void HandleTouches(NSSet touches)
+        {
             Clock.Update(true);
             TrackingPoint point = null;
 
-			foreach (UITouch u in touches.ToArray<UITouch>()) {
-				point = trackingPoints.Find(t => t.Tag == u);
-				if (point != null)
-				{
-					point.Location = u.LocationInView(EAGLView.Instance);
-					TriggerOnMove(point);
-				}
-			}
-		}
-
-		public void HandleTouchesEnded(NSSet touches, UIEvent evt)
-		{
-            Clock.Update(true);
-            TrackingPoint point = null;
-
-            //todo: don't need to foreach where there's only one point (likely 99%)
-			foreach (UITouch u in touches.ToArray<UITouch>()) {
-				point = trackingPoints.Find(t => t.Tag == u);
-				if (point != null)
-				{
-					trackingPoints.Remove(point);
-					TriggerOnUp(point);
-				}
-			}
-			
-		}
-
-		public void HandleTouchesCancelled(NSSet touches, UIEvent evt)
-		{
-			HandleTouchesEnded(touches, evt);
-		}		
+            foreach (UITouch u in touches.ToArray<UITouch>())
+            {
+                switch (u.Phase)
+                {
+                    case UITouchPhase.Began:
+                        point = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
+                        trackingPoints.Add(point);
+                        TriggerOnDown(point);
+                        break;
+                    case UITouchPhase.Cancelled:
+                    case UITouchPhase.Ended:
+                        point = trackingPoints.Find(t => t.Tag == u);
+                         if (point != null)
+                         {
+                             trackingPoints.Remove(point);
+                             TriggerOnUp(point);
+                         }
+                        break;
+                    case UITouchPhase.Moved:
+                        point = trackingPoints.Find(t => t.Tag == u);
+                        if (point != null)
+                        {
+                            point.Location = u.LocationInView(EAGLView.Instance);
+                            TriggerOnMove(point);
+                        }
+                        break;
+                }
+            }
+        }
 	}
 }
 

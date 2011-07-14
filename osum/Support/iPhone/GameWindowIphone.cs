@@ -270,38 +270,6 @@ namespace osum
             StartAnimation();
         }
 
-        public override void TouchesBegan (NSSet touches, UIEvent evt)
-        {
-            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
-            source.HandleTouchesBegan(touches,evt);
-
-            base.TouchesBegan (touches, evt);
-        }
-
-        public override void TouchesEnded (NSSet touches, UIEvent evt)
-        {
-            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
-            source.HandleTouchesEnded(touches,evt);
-
-            base.TouchesEnded (touches, evt);
-        }
-
-        public override void TouchesMoved (NSSet touches, UIEvent evt)
-        {
-            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
-            source.HandleTouchesMoved(touches,evt);
-
-            base.TouchesMoved (touches, evt);
-        }
-
-        public override void TouchesCancelled (NSSet touches, UIEvent evt)
-        {
-            InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
-            source.HandleTouchesCancelled(touches,evt);
-
-            base.TouchesCancelled (touches, evt);
-        }
-
         public event Action<EAGLView> OnResized;
     }
 }
