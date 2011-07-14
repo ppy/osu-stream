@@ -101,6 +101,8 @@ namespace BeatmapCombinator
 
             string Artist = string.Empty, Creator = string.Empty, Source = string.Empty, Title = string.Empty;
 
+            string previewPoint = "30000";
+
             foreach (string f in orderedDifficulties)
             {
                 if (f == null)
@@ -145,6 +147,9 @@ namespace BeatmapCombinator
                                 {
                                     case "AudioFilename":
                                         writeLine = "AudioFilename: audio.mp3";
+                                        break;
+                                    case "PreviewTime":
+                                        previewPoint = val;
                                         break;
                                 }
                                 break;
@@ -267,7 +272,7 @@ namespace BeatmapCombinator
 
 
             //write the package initially so we can use it for score testing purposes.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
 
             //scoring
 
@@ -308,11 +313,11 @@ namespace BeatmapCombinator
             Player.Beatmap.Dispose();
 
             //write the package a second time with new multiplier header data.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
         }
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered,
-            string Artist, string Creator, string Source, string Title)
+            string Artist, string Creator, string Source, string Title, string previewPoint)
         {
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
@@ -363,6 +368,7 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Creator, Creator);
                 package.AddMetadata(MapMetaType.Source, Source);
                 package.AddMetadata(MapMetaType.Title, Title);
+                package.AddMetadata(MapMetaType.PreviewPoint, previewPoint);
 
                 string versionsAvailable = "";
                 if (ordered[0] != null) versionsAvailable += "|Easy";

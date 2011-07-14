@@ -124,8 +124,9 @@ namespace osum.GameplayElements.Beatmaps
             }
         }
 
-        private int difficultyStars = -1;
         public double HpStreamAdjustmentMultiplier = 1;
+
+        private int difficultyStars = -1;
         public int DifficultyStars
         {
             get
@@ -139,6 +140,26 @@ namespace osum.GameplayElements.Beatmaps
                 return difficultyStars;
             }
         }
+
+        private int previewPoint = -1;
+        public int PreviewPoint
+        {
+            get
+            {
+                if (previewPoint == -1)
+                {
+                    try
+                    {
+    
+                            Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewPoint), out previewPoint);
+                    }
+                    catch { previewPoint = 0; }
+                }
+
+                return previewPoint;
+            }
+        }
+
 
         #region IComparable<Beatmap> Members
 

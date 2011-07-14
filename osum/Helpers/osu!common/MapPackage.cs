@@ -1594,5 +1594,6 @@ namespace osu_common.Libraries.Osz2
         ArtistUrl,
         Unknown = 9999,
         DifficultyRating,
+        PreviewPoint,
     }
 }

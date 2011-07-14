@@ -55,7 +55,7 @@ namespace osum.GameModes
             if (State != SelectState.LoadingPreview) return;
 
             AudioEngine.Music.DimmableVolume = 0;
-            AudioEngine.Music.SeekTo(30000);
+            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
             AudioEngine.Music.Play();
 
             //do a second callback so we account for lost gametime due to the above audio load.
