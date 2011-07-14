@@ -350,9 +350,10 @@ namespace osum.Graphics.Sprites
                 bool isPaddedZero = true;
 
                 int i = 0;
+                float coordScale = Scale.X * GameBase.SpriteToNativeRatio;
                 foreach (pTexture tex in renderTextures)
                 {
-                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, pos.Y);
+                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * coordScale, pos.Y);
                     // note: no srcRect calculation
                     if (ZeroAlpha == 1)
                         tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));

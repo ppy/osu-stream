@@ -261,8 +261,8 @@ namespace osum.Graphics.Sprites
 
                 if (ExactCoordinates)
                 {
-                    pos.X = (int)Math.Round(pos.X);
-                    pos.Y = (int)Math.Round(pos.Y);
+                    pos.X = (int)(pos.X + 0.5f);
+                    pos.Y = (int)(pos.Y + 0.5f);
                 }
 
                 return pos;
