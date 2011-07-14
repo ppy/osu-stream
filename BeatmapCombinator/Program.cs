@@ -453,7 +453,7 @@ namespace BeatmapCombinator
 
                 while (true)
                 {
-                    Clock.Update(0.01);
+                    Clock.UpdateCustom(0.01);
                     source.InternalTime += 0.01;
                     Clock.ElapsedMilliseconds = 10;
 
@@ -506,7 +506,7 @@ namespace BeatmapCombinator
 
                     while (true)
                     {
-                        Clock.Update(0.01);
+                        Clock.UpdateCustom(0.01);
                         source.InternalTime += 0.01;
 
                         p.Update();

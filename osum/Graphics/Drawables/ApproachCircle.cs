@@ -67,7 +67,8 @@ namespace osum.Graphics.Drawables
 
         public override void Dispose()
         {
-            handle_vertices.Free();
+            if (handle_vertices.IsAllocated) handle_vertices.Free();
+            
         }
 
         int parts = 48;

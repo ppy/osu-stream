@@ -117,6 +117,18 @@ namespace osum.Helpers
         static int audioCheckFrame;
         const int CHECK_AUDIO_FRAME_COUNT = 20;
 
+        public static void UpdateCustom(double elapsed)
+        {
+            ElapsedMilliseconds = elapsed * 1000;
+
+            time += elapsed;
+            
+            Time = (int)Math.Round(time * 1000);
+            ModeTime = Time;
+            currentFrameAudioTime += elapsed;
+            AudioTime = (int)Math.Round(currentFrameAudioTime * 1000);
+        }
+
         public static void Update(bool ignoreFrame)
         {
             double swTime = (double)sw.ElapsedTicks / Stopwatch.Frequency;
@@ -181,7 +193,7 @@ namespace osum.Helpers
             else
                 audioCheckFrame = 0;
 
-            AudioTime = (int)(currentFrameAudioTime * 1000) + offset;
+            AudioTime = (int)Math.Round(currentFrameAudioTime * 1000) + offset;
         }
 
         public static ITimeSource AudioTimeSource { get; set; }

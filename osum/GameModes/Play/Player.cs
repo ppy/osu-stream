@@ -269,7 +269,7 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
-#if !DIST
+#if !DIST && !MONO
             Console.WriteLine("Player.cs produced " + frameCount + " frames.");
 #endif
             Clock.AbortLeadIn();

@@ -228,7 +228,7 @@ namespace osum.GameplayElements
                             break;
                         }
 
-                        h.Sprites.ForEach(s => s.Bypass = true);
+                        h.Sprites.ForEach(s => { s.Transformations.Clear(); s.Alpha = 0; });
                         h.Dispose();
                     }
 
