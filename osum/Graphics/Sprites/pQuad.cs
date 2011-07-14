@@ -58,7 +58,7 @@ namespace osum.Graphics.Drawables
             p4 = bottomRight;
         }
 
-        float[] coordinates = new float[8];
+        float[] coordinates;
         Vector2[] vertices = new Vector2[4];
         public Color4[] Colours;
         private Color4[] colours = new Color4[4];
@@ -185,16 +185,16 @@ namespace osum.Graphics.Drawables
                 {
                     SpriteManager.TexturesEnabled = true;
                     Texture.TextureGl.Bind();
-                    coordinates = new float[] { 
-                        (float)Texture.X / Texture.TextureGl.potWidth, 
-                        (float)Texture.Y / Texture.TextureGl.potHeight, 
-                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                        (float)Texture.Y / Texture.TextureGl.potHeight, 
-                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
-                        (float)Texture.X / Texture.TextureGl.potWidth, 
-                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
-
+                    if (coordinates == null)
+                        coordinates = new float[] {
+                            (float)Texture.X / Texture.TextureGl.potWidth,
+                            (float)Texture.Y / Texture.TextureGl.potHeight,
+                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                            (float)Texture.Y / Texture.TextureGl.potHeight,
+                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
+                            (float)Texture.X / Texture.TextureGl.potWidth,
+                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
                     GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
                 }
                 else
