@@ -15,6 +15,40 @@ namespace osum.Graphics
     {
         List<pSprite> burstSprites = new List<pSprite>();
 
+        float[] random = new float[] {
+            0.54668277924985f,
+            0.63373556682948f,
+            0.52338286143199f,
+            0.58051766265361f,
+            0.36986539137682f,
+            0.22496573513127f,
+            0.56130552458487f,
+            0.41475260860106f,
+            0.51371260619368f,
+            0.8843259537782f,
+            0.69453112710452f,
+            0.80740271434236f,
+            0.092567767498132f,
+            0.65969450403575f,
+            0.20929404448393f,
+            0.65064912941003f,
+            0.84573072457247f,
+            0.16164668727024f,
+            0.43498435995396f,
+            0.77836153829616f,
+            0.15949302103904f,
+            0.79974378282781f,
+            0.35293735193193f,
+            0.45251322803513f
+        };
+
+        int nextRandIndex;
+        float nextRand()
+        {
+            return random[nextRandIndex++ % random.Length];
+        }
+
+
         int nextBurstSprite;
 
         public TouchBurster(bool bindInput)
@@ -82,14 +116,14 @@ namespace osum.Graphics
         {
             while (count-- > 0)
             {
-                int randTime = 300 + (int)(GameBase.Random.NextDouble() * 400);
+                int randTime = 300 + (int)(nextRand() * 400);
 
                 Vector2 end = pos;
 
                 if (spread > 0)
                 {
-                    float randX = (float)(GameBase.Random.NextDouble() * spread);
-                    float randY = (float)(GameBase.Random.NextDouble() * spread);
+                    float randX = (float)(nextRand() * spread);
+                    float randY = (float)(nextRand() * spread);
 
                     end += new Vector2(randX - spread / 2, randY - spread / 2);
                 }
