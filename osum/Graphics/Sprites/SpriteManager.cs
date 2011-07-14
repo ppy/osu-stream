@@ -370,7 +370,7 @@ namespace osum.Graphics.Sprites
 
             pTexture currentBatchTexture = null;
 
-            matrixOperations = Rotation != 0 || ScaleScalar != 1 || Position != Vector2.Zero;
+            matrixOperations = Rotation != 0 || ScaleScalar != 1 || Offset.Y != 0 || Position != Vector2.Zero;
 
             if (matrixOperations)
             {
@@ -383,7 +383,7 @@ namespace osum.Graphics.Sprites
                     GL.Scale(Scale.X, Scale.Y, 0);
                 GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);
 
-                if (Position != Vector2.Zero)
+                if (Offset.Y != 0 || Position != Vector2.Zero)
                 {
                     Vector2 field = FieldPosition;
                     GL.Translate(field.X, field.Y, 0);
