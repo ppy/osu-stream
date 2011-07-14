@@ -183,12 +183,17 @@ namespace osum.Helpers
                         double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
                         if (inaccuracy > 0.05)
                             currentFrameAudioTime = sourceTime;
-                        else if (inaccuracy > 0.004)
+                        else if (inaccuracy > 0.005)
                             currentFrameAudioTime = currentFrameAudioTime * 0.6 + sourceTime * 0.4;
                         else
+                        {
+                            currentFrameAudioTime = currentFrameAudioTime * 0.95 + sourceTime * 0.05;
                             audioCheckFrame++;
+                        }
                     }
                 }
+                else
+                    audioCheckFrame++;
             }
             else
                 audioCheckFrame = 0;
