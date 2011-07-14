@@ -28,6 +28,8 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET = 60;
 #endif
 
+        public static bool UseMp3Offset = true;
+
         /// <summary>
         /// Get the current game time in milliseconds.
         /// </summary>
@@ -40,6 +42,7 @@ namespace osum.Helpers
         {
             modeTime = 0;
             ModeTime = 0;
+            audioCheckFrame = 0;
         }
 
         public static int ManualTime;
@@ -111,15 +114,15 @@ namespace osum.Helpers
         static double swLast;
         static double swLastUpdate;
 
+        static int audioCheckFrame;
+        const int CHECK_AUDIO_FRAME_COUNT = 20;
+
         public static void Update(bool ignoreFrame)
         {
             double swTime = (double)sw.ElapsedTicks / Stopwatch.Frequency;
 
             double elapsed = swTime - swLast;
             swLast = swTime;
-
-            if (elapsed > 0.1) elapsed = 1d/60;
-            //let's disregard slow frames for mode time calculations.
 
             if (!ignoreFrame)
             {
@@ -136,7 +139,7 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = AudioEngine.Music.lastLoaded.Contains(".mp3") ? UNIVERSAL_OFFSET : 0;
+            int offset = UseMp3Offset ? UNIVERSAL_OFFSET : 0;
 
             if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
             {
@@ -153,24 +156,30 @@ namespace osum.Helpers
             if (AudioTimeSource.IsElapsing)
             {
                 currentFrameAudioTime += elapsed;
-                double sourceTime = AudioTimeSource.CurrentTime;
 
-                if (sourceTime == 0)
+                if (audioCheckFrame % CHECK_AUDIO_FRAME_COUNT == 0)
                 {
-                    AudioTime = 0;
-                    return;
-                }
-                else
-                {
-                    double inaccuracy = currentFrameAudioTime - sourceTime;
-                    if (inaccuracy > 0.05 || inaccuracy < -0.05)
-                        currentFrameAudioTime = sourceTime;
-                    else if (inaccuracy > 0.004)
-                        currentFrameAudioTime -= 0.001;
-                    else if (inaccuracy < -0.004)
-                        currentFrameAudioTime += 0.001;
+                    double sourceTime = AudioTimeSource.CurrentTime;
+
+                    if (sourceTime == 0)
+                    {
+                        AudioTime = 0;
+                        return;
+                    }
+                    else
+                    {
+                        double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
+                        if (inaccuracy > 0.05)
+                            currentFrameAudioTime = sourceTime;
+                        else if (inaccuracy > 0.004)
+                            currentFrameAudioTime = currentFrameAudioTime * 0.6 + sourceTime * 0.4;
+                        else
+                            audioCheckFrame++;
+                    }
                 }
             }
+            else
+                audioCheckFrame = 0;
 
             AudioTime = (int)(currentFrameAudioTime * 1000) + offset;
         }
