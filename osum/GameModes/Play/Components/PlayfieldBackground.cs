@@ -5,6 +5,7 @@ using System.Text;
 using osum.Graphics.Sprites;
 using OpenTK.Graphics;
 using osum.Helpers;
+using System.Runtime.InteropServices;
 using osum.GameplayElements;
 
 #if iOS
@@ -36,7 +37,6 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using ArrayCap =  OpenTK.Graphics.ES11.All;
-using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;

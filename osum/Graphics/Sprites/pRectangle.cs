@@ -2,6 +2,7 @@
 using osum.Graphics.Sprites;
 using osum.Graphics.Drawables;
 using osum.Helpers;
+using System.Runtime.InteropServices;
 using OpenTK.Graphics;
 using OpenTK;
 #if iOS
@@ -32,7 +33,6 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;

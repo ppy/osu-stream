@@ -1,5 +1,6 @@
 ﻿using System;
 using osum.Graphics.Sprites;
+using System.Runtime.InteropServices;
 using osum.Graphics.Drawables;
 using osum.Helpers;
 using OpenTK.Graphics;
@@ -32,7 +33,6 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using System.Runtime.InteropServices;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
