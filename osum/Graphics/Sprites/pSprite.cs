@@ -60,7 +60,6 @@ namespace osum.Graphics.Sprites
             Clocking = clocking;
 
             Position = position;
-            StartPosition = position;
             Colour = colour;
 
             Scale = Vector2.One;

@@ -44,7 +44,7 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(s_hitCombo_Incoming);
         }
 
-        internal virtual void SlideOut()
+        /*internal virtual void SlideOut()
         {
             s_hitCombo.FadeOut(1000);
             s_hitCombo.MoveTo(s_hitCombo.StartPosition - new Vector2(80, 0), 1000, EasingTypes.Out);
@@ -54,7 +54,7 @@ namespace osum.GameModes.Play.Components
         {
             s_hitCombo.FadeIn(1000);
             s_hitCombo.MoveTo(s_hitCombo.StartPosition, 1000, EasingTypes.In);
-        }
+        }*/
 
         internal virtual void EnsureVisible()
         {

@@ -48,7 +48,6 @@ namespace osum.Graphics.Drawables
             AlwaysDraw = alwaysDraw;
             Alpha = alwaysDraw ? 1 : 0;
             DrawDepth = drawDepth;
-            StartPosition = position;
             Position = position;
             Colour = colour;
             Clocking = ClockTypes.Mode;

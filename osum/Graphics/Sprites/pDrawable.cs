@@ -53,7 +53,6 @@ namespace osum.Graphics.Sprites
         internal bool Disposable;
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
-        internal Vector2 StartPosition;
         internal Vector2 Offset;
         public object Tag;
         public int TagNumeric;
@@ -186,7 +185,6 @@ namespace osum.Graphics.Sprites
                 exactCoordinatesOverride = !value;
             }
         }
-
 
         internal virtual Vector2 FieldPosition
         {

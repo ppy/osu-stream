@@ -90,7 +90,7 @@ namespace osum.GameplayElements.Scoring
 
         }
 
-        internal virtual void SlideOut()
+        /*internal virtual void SlideOut()
         {
             s_barFill.FadeOut(500);
             s_barBg.FadeOut(500);
@@ -114,7 +114,7 @@ namespace osum.GameplayElements.Scoring
             s_barFill.MoveTo(s_barFill.StartPosition, 500);
             s_barBg.MoveTo(s_barBg.StartPosition, 500);
             s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
-        }
+        }*/
 
         Transformation initialAppearTransformation;
 
