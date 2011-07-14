@@ -332,9 +332,9 @@ namespace osum.Graphics.Renderers
             if (renderingToTexture)
             {
                 GL.Disable(EnableCap.Blend);
-                GL.DepthMask(true);
-                GL.DepthFunc(DepthFunction.Lequal);
-                GL.Enable(EnableCap.DepthTest);
+                //GL.DepthMask(true);
+                //GL.DepthFunc(DepthFunction.Lequal);
+                //GL.Enable(EnableCap.DepthTest);
             }
 
             SpriteManager.TexturesEnabled = true;
@@ -357,8 +357,8 @@ namespace osum.Graphics.Renderers
             if (renderingToTexture)
             {
                 GL.Enable(EnableCap.Blend);
-                GL.Disable(EnableCap.DepthTest);
-                GL.DepthMask(false);
+                //GL.Disable(EnableCap.DepthTest);
+                //GL.DepthMask(false);
             }
         }
 
