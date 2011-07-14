@@ -53,12 +53,14 @@ namespace osum.GameplayElements
         {
             Initialize();
 
+#if !MONO
             using (FileStream fs = File.Create(fullPath))
             using (SerializationWriter writer = new SerializationWriter(fs))
             {
                 writer.Write(Version);
                 writer.Write(BeatmapInfo);
             }
+#endif
         }
 
         internal static BeatmapInfo GetBeatmapInfo(Beatmap b, Difficulty d)
