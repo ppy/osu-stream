@@ -107,6 +107,8 @@ namespace osum
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
             UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
 
+            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
+
             base.Initialize();
         }
 
@@ -133,10 +135,9 @@ namespace osum
         public override void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
 
+            GL.LoadIdentity();
             GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
-            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
@@ -144,16 +145,20 @@ namespace osum
             float width = GameBase.NativeSize.Height;
             float height = GameBase.NativeSize.Width;
 
+            float[] matrix;
+
             if (FlipView)
-                GL.LoadMatrix(new float[]{0, -1, 0, 0,
+                matrix = new float[]{0, -1, 0, 0,
                               1, 0, 0, 0,
                               0, 0, 1, 0,
-                              0, height, 0, 1});
+                              0, height, 0, 1};
             else
-                GL.LoadMatrix(new float[]{0, 1, 0, 0,
+                matrix = new float[]{0, 1, 0, 0,
                               -1, 0, 0, 0,
                               0, 0, 1, 0,
-                              width, 0, 0, 1});
+                              width, 0, 0, 1};
+
+            GL.LoadMatrix(ref matrix[0]);
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()
