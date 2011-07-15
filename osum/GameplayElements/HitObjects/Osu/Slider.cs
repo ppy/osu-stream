@@ -1171,6 +1171,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
+            spriteSliderBody.Update();
 
             waitingForPathTextureClear = true;
         }

@@ -112,6 +112,7 @@ namespace osum.Graphics.Sprites
 
             if (AutomaticHeight)
             {
+                sprite.Update();
                 float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSizeFixedWidth.Height;
                 if (newOffset < offset_min)
                 {
@@ -132,10 +133,6 @@ namespace osum.Graphics.Sprites
         float lastFrameOffset;
         public override void Update()
         {
-            base.Update();
-
-            nonDraggableManager.Update();
-
             float bound = offsetBound;
 
             if (!InputManager.IsPressed)
@@ -160,6 +157,9 @@ namespace osum.Graphics.Sprites
                 Offset.Y = scaledBackOffset;
 
             scrollbar.Position.Y = Offset.Y / (offset_min - GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
+
+            base.Update();
+            nonDraggableManager.Update();
         }
     }
 }

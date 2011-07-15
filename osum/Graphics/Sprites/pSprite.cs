@@ -73,19 +73,12 @@ namespace osum.Graphics.Sprites
                 Alpha = 1;
 
             Texture = texture;
+            UsesTextures = true;
         }
 
         public pSprite(pTexture tex, Vector2 pos) :
             this(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, pos, 1, true, Color4.White)
         {
-        }
-
-        internal override bool UsesTextures
-        {
-            get
-            {
-                return true;
-            }
         }
 
         internal int TextureWidth
@@ -166,11 +159,6 @@ namespace osum.Graphics.Sprites
 
         #region IDrawable Members
 
-        public override void Update()
-        {
-            base.Update();
-        }
-
         public override bool Draw()
         {
             if (!base.Draw()) return false;
@@ -193,54 +181,54 @@ namespace osum.Graphics.Sprites
             DrawLeft = TextureX;
         }
 
-        internal override Vector2 OriginVector
+        internal override void UpdateOriginVector()
         {
-            get
+            Vector2 origin = Vector2.Zero;
+
+            if (texture == null || Origin == OriginTypes.TopLeft)
             {
-                Vector2 origin = Vector2.Zero;
-
-                if (texture == null || Origin == OriginTypes.TopLeft)
-                    return origin;
-
-                switch (Origin)
-                {
-                    case OriginTypes.TopCentre:
-                        origin.X = DrawWidth / 2;
-                        break;
-                    case OriginTypes.TopRight:
-                        origin.X = DrawWidth;
-                        break;
-                    case OriginTypes.CentreLeft:
-                        origin.Y = DrawHeight / 2;
-                        break;
-                    case OriginTypes.Centre:
-                        origin = new Vector2(DrawWidth / 2, DrawHeight / 2);
-                        break;
-                    case OriginTypes.CentreRight:
-                        origin = new Vector2(DrawWidth, DrawHeight / 2);
-                        break;
-                    case OriginTypes.BottomLeft:
-                        origin.Y = DrawHeight;
-                        break;
-                    case OriginTypes.BottomCentre:
-                        origin = new Vector2(DrawWidth / 2, DrawHeight);
-                        break;
-                    case OriginTypes.BottomRight:
-                        origin = new Vector2(DrawWidth, DrawHeight);
-                        break;
-                    case OriginTypes.Custom:
-                        origin = Offset;
-                        break;
-                }
-
-                if (!exactCoordinatesOverride)
-                {
-                    if (origin.X % 2 != 0) origin.X--;
-                    if (origin.Y % 2 != 0) origin.Y--;
-                }
-
-                return origin;
+                OriginVector = origin;
+                return;
             }
+
+            switch (Origin)
+            {
+                case OriginTypes.TopCentre:
+                    origin.X = DrawWidth / 2;
+                    break;
+                case OriginTypes.TopRight:
+                    origin.X = DrawWidth;
+                    break;
+                case OriginTypes.CentreLeft:
+                    origin.Y = DrawHeight / 2;
+                    break;
+                case OriginTypes.Centre:
+                    origin = new Vector2(DrawWidth / 2, DrawHeight / 2);
+                    break;
+                case OriginTypes.CentreRight:
+                    origin = new Vector2(DrawWidth, DrawHeight / 2);
+                    break;
+                case OriginTypes.BottomLeft:
+                    origin.Y = DrawHeight;
+                    break;
+                case OriginTypes.BottomCentre:
+                    origin = new Vector2(DrawWidth / 2, DrawHeight);
+                    break;
+                case OriginTypes.BottomRight:
+                    origin = new Vector2(DrawWidth, DrawHeight);
+                    break;
+                case OriginTypes.Custom:
+                    origin = Offset;
+                    break;
+            }
+
+            if (!exactCoordinatesOverride)
+            {
+                if (origin.X % 2 != 0) origin.X--;
+                if (origin.Y % 2 != 0) origin.Y--;
+            }
+
+            OriginVector = origin;
         }
 
         public override string ToString()

@@ -362,8 +362,6 @@ namespace osum.GameplayElements
         {
             AllowSpinnerOptimisation = false;
 
-            spriteManager.Update();
-
             List<HitObject> activeObjects = ActiveStreamObjects;
 
             if (activeObjects == null) return;
@@ -431,6 +429,8 @@ namespace osum.GameplayElements
 
                 nextStreamChange = 0;
             }
+
+            spriteManager.Update();
         }
 
         #endregion
