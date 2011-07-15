@@ -368,11 +368,7 @@ namespace osum.Graphics.Renderers
         protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius, int ColourIndex)
         {
             // Quad
-            Matrix4 matrix = new Matrix4(curr.rho, 0, 0, 0, // Scale-X
-                                        0, globalRadius, 0, 0, // Scale-Y
-                                        0, 0, 1, 0,
-                                        0, 0, 0, 1) * curr.WorldMatrix;
-
+            Matrix4 matrix = curr.QuadMatrix(globalRadius);
             GL.LoadMatrix(ref matrix.Row0.X);
 
             glDrawQuad(ColourIndex);
@@ -411,25 +407,8 @@ namespace osum.Graphics.Renderers
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
             // Cap on end
-            if (flip)
-            {
-                matrix = new Matrix4(globalRadius, 0, 0, 0,
-                                    0, -globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix;
-
-                GL.LoadMatrix(ref matrix.Row0.X);
-                
-            }
-            else
-            {
-                matrix = new Matrix4(globalRadius, 0, 0, 0,
-                                    0, globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix;
-
-                GL.LoadMatrix(ref matrix.Row0.X);
-            }
+            matrix = curr.EndCapMatrix(globalRadius, flip);
+            GL.LoadMatrix(ref matrix.Row0.X);
 
             glDrawHalfCircle(end_triangles, ColourIndex);
 
@@ -445,11 +424,7 @@ namespace osum.Graphics.Renderers
                 // Catch for Darrinub and other slider inconsistencies. (Redpoints seem to be causing some.)
                 // Render a complete beginning cap if this Line isn't connected to the end of the previous line.
 
-                matrix = new Matrix4(-globalRadius, 0, 0, 0,
-                                    0, -globalRadius, 0, 0,
-                                    0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.WorldMatrix;
-
+                matrix = curr.CapMatrix(globalRadius);
                 GL.LoadMatrix(ref matrix.Row0.X);
 
                 glDrawHalfCircle(numPrimitives_cap, ColourIndex);

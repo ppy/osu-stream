@@ -19,7 +19,7 @@ namespace osum.Graphics.Primitives
         internal Vector2 p2; // End point of the line
         internal float radius = 0.1f; // The line's total thickness is twice its radius
         internal Vector2 rhoTheta; // Length and angle of the line
-
+        internal Vector2 unitAngle; // angle as a unit vector
 
         internal Line(Vector2 p1, Vector2 p2)
         {
@@ -72,7 +72,8 @@ namespace osum.Graphics.Primitives
             float rho = delta.Length;
             float theta = (float) Math.Atan2(delta.Y, delta.X);
             rhoTheta = new Vector2(rho, theta);
-            GetMatrices();
+            unitAngle = (p2 - p1) / rhoTheta.X;
+            if (Single.IsNaN(unitAngle.X)) unitAngle = new Vector2(1, 0);
         }
 
 
@@ -103,24 +104,56 @@ namespace osum.Graphics.Primitives
             return pMathHelper.DistanceSquared(p, pB);
         }
 
-        internal Matrix4 WorldMatrix, EndWorldMatrix;
-
-        private void GetMatrices()
+        internal Matrix4 WorldMatrix
         {
-            float r = rhoTheta.X;
-            Vector2 majorAxis = (p2 - p1) / r;
-            if (Single.IsNaN(majorAxis.X)) majorAxis = new Vector2(1, 0);
-            Vector2 minorAxis = new Vector2(-majorAxis.Y, majorAxis.X);
+            get
+            {
+                return new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
+                                   -unitAngle.Y, unitAngle.X, 0, 0,
+                                   0, 0, 1, 0,
+                                   p1.X, p1.Y, 0, 1);
+            }
+        }
 
-            WorldMatrix = new Matrix4(majorAxis.X, majorAxis.Y, 0, 0,
-                                      minorAxis.X, minorAxis.Y, 0, 0,
-                                      0, 0, 1, 0,
-                                      p1.X, p1.Y, 0, 1);
+        internal Matrix4 EndWorldMatrix
+        {
+            get
+            {
+                return new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
+                                   -unitAngle.Y, unitAngle.X, 0, 0,
+                                   0, 0, 1, 0,
+                                   p2.X, p2.Y, 0, 1);
+            }
+        }
 
-            EndWorldMatrix = new Matrix4(majorAxis.X, majorAxis.Y, 0, 0,
-                                         minorAxis.X, minorAxis.Y, 0, 0,
-                                         0, 0, 1, 0,
-                                         p2.X, p2.Y, 0, 1);
+        internal Matrix4 QuadMatrix(float radius)
+        {
+            return new Matrix4(unitAngle.X * rho, unitAngle.Y * rho, 0, 0,
+                               -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
+                               0, 0, 1, 0,
+                               p1.X, p1.Y, 0, 1);
+        }
+
+        internal Matrix4 CapMatrix(float radius)
+        {
+            return new Matrix4(-unitAngle.X * radius, -unitAngle.Y * radius, 0, 0,
+                               unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
+                               0, 0, 1, 0,
+                               p1.X, p1.Y, 0, 1);
+        }
+
+        internal Matrix4 EndCapMatrix(float radius, bool flip)
+        {
+            if (flip)
+                return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
+                                   unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
+                                   0, 0, 1, 0,
+                                   p2.X, p2.Y, 0, 1);
+            else
+                return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
+                                   -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
+                                   0, 0, 1, 0,
+                                   p2.X, p2.Y, 0, 1);
         }
 
         internal Vector2 PositionAt(float p)
