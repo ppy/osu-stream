@@ -172,7 +172,6 @@ namespace osum
         public virtual void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
 
             GL.Viewport(0, 0, NativeSize.Width, NativeSize.Height);
             GL.Ortho(0, NativeSize.Width, NativeSize.Height, 0, -1, 1);
@@ -234,7 +233,7 @@ namespace osum
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
 
-#if DEBUG
+#if !DIST
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
             Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
             Console.WriteLine("Sprite multiplier is " + SpriteToBaseRatio + " or aligned at " + SpriteToBaseRatioAligned);

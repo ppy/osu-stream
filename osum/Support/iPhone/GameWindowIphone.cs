@@ -86,6 +86,8 @@ namespace osum
                  EAGLDrawableProperty.ColorFormat
              });
 
+            eaglLayer.ContentsScale = UIScreen.MainScreen.Scale;
+
             _depthFormat = depth;
             _context = (iPhoneOSGraphicsContext)((IGraphicsContextInternal)GraphicsContext.CurrentContext).Implementation;
             CreateSurface();

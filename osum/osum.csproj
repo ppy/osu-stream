@@ -9,7 +9,6 @@
     <ProjectTypeGuids>{E613F3A2-FE9C-494F-B74E-F63BCB86FEA6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>osum</RootNamespace>
-    <MainNibFile>MainWindow.nib</MainNibFile>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
     <BundleVersion>1350</BundleVersion>
@@ -17,7 +16,6 @@
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
-    <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
     <BundleIconIPad>Icon-72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
@@ -190,9 +188,6 @@
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Support\iPhone\MainWindow.xib.designer.cs">
-      <DependentUpon>..\..\iPhone\MainWindow.xib</DependentUpon>
-    </Compile>
     <Compile Include="Support\iPhone\GameBaseIphone.cs" />
     <Compile Include="Support\iPhone\GameWindowIphone.cs" />
     <Compile Include="GameModes\GameMode.cs" />
@@ -335,9 +330,6 @@
     <Folder Include="Online\" />
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Support\iPhone\MainWindow.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

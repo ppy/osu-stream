@@ -67,7 +67,8 @@ namespace osum.Support.iPhone
 
 
     // The name AppDelegate is referenced in the MainWindow.xib file.
-    public partial class AppDelegate : UIApplicationDelegate
+    [MonoTouch.Foundation.Register("AppDelegate")]
+    public class AppDelegate : UIApplicationDelegate
     {
         static bool active;
         static bool firstActivation = true;
@@ -78,9 +79,13 @@ namespace osum.Support.iPhone
         public static GameBase game;
         static IGraphicsContext context;
 
-        // This method is invoked when the application has loaded its UI and is ready to run
-        public override void FinishedLaunching(UIApplication app)
-        {    
+        UIWindow window;
+
+        public override bool FinishedLaunching (UIApplication application, NSDictionary launcOptions)
+        {
+            window = new UIWindow(UIScreen.MainScreen.Bounds);
+            window.MakeKeyAndVisible();
+
             UIApplication.SharedApplication.StatusBarHidden = true;
             UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight, false);
 
@@ -91,17 +96,20 @@ namespace osum.Support.iPhone
             context = Utilities.CreateGraphicsContext(EAGLRenderingAPI.OpenGLES1);
 
             glView = new EAGLView(window.Bounds);
-            glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
+            GameBase.ScaleFactor = UIScreen.MainScreen.Scale;
+
             window.AddSubview(glView);
 
-            GameBase.ScaleFactor = glView.ContentScaleFactor;
             Console.WriteLine("scale factor " + GameBase.ScaleFactor);
             GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
                                         (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+            Console.WriteLine("native size " + GameBase.NativeSize);
             GameBase.TriggerLayoutChanged();
 
             game.Initialize();
             glView.Run(game);
+
+            return true;
         }
 
         public override void WillEnterForeground (UIApplication application)
