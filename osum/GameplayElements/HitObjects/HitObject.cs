@@ -37,42 +37,6 @@ namespace osum.GameplayElements
         Clap = 8
     }
 
-    [Flags]
-    public enum ScoreChange
-    {
-        Ignore = 0,
-        MissMinor = 1 << 0,
-        Miss = 1 << 1,
-        MuAddition = 1 << 3,
-        KatuAddition = 1 << 4,
-        GekiAddition = 1 << 5,
-        SliderTick = 1 << 6,
-        SliderRepeat = 1 << 7,
-        SliderEnd = 1 << 8,
-        Hit50 = 1 << 9,
-        Hit100 = 1 << 10,
-        Hit300 = 1 << 11,
-        SpinnerSpinPoints = 1 << 12,
-        SpinnerBonus = 1 << 13,
-        Hit50m = Hit50 | MuAddition,
-        Hit100m = Hit100 | MuAddition,
-        Hit300m = Hit300 | MuAddition,
-        Hit100k = Hit100 | KatuAddition,
-        Hit300k = Hit300 | KatuAddition,
-        Hit300g = Hit300 | GekiAddition,
-        HitValuesOnly = Miss | Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
-        ComboAddition = MuAddition | KatuAddition | GekiAddition,
-    }
-
-    public enum Difficulty
-    {
-        None = -1,
-        Easy = 0,
-        Normal = 1,
-        Hard = 2,
-        Expert = 3
-    }
-
     internal class HitObjectDummy : HitObject
     {
         public HitObjectDummy(int time)
