@@ -217,7 +217,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             HitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
             Sprites.AddRange(HitCircleStart.Sprites);
-            SpriteCollectionDim.AddRange(HitCircleStart.SpriteCollectionDim);
         }
 
         protected virtual void initializeSprites()
@@ -258,7 +257,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Sprites.Add(spriteFollowBall);
             Sprites.Add(spriteFollowCircle);
 
-            SpriteCollectionDim.Add(spriteSliderBody);
+            spriteSliderBody.TagNumeric = HitObject.DIMMABLE_TAG;
 
             //Start and end circles
 
@@ -314,9 +313,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             Sprites.AddRange(spriteCollectionEnd);
             Sprites.AddRange(spriteCollectionScoringPoints);
 
-            SpriteCollectionDim.AddRange(spriteCollectionStart);
-            SpriteCollectionDim.AddRange(spriteCollectionEnd);
-            SpriteCollectionDim.AddRange(spriteCollectionScoringPoints);
+            spriteCollectionStart.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
+            spriteCollectionEnd.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
+            spriteCollectionScoringPoints.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
         }
 
         protected virtual void CalculateSplines()

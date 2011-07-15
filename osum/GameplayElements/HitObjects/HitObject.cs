@@ -38,6 +38,8 @@ namespace osum.GameplayElements
     {
         protected HitObjectManager m_HitObjectManager;
 
+        public const int DIMMABLE_TAG = 1293;
+
         protected HitObject()
         {
         }
@@ -80,7 +82,7 @@ namespace osum.GameplayElements
         //todo: this is horribly memory inefficient.
         protected void UpdateDimming()
         {
-            bool shouldDim = Clock.AudioTime < StartTime && Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
+            bool shouldDim = StartTime - Clock.AudioTime > m_HitObjectManager.FirstBeatLength;
 
             if (shouldDim != isDimmed)
             {
@@ -88,13 +90,13 @@ namespace osum.GameplayElements
 
                 if (isDimmed)
                 {
-                    foreach (pDrawable p in SpriteCollectionDim)
-                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.3f), 0);
+                    foreach (pDrawable p in Sprites)
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.Colour = ColourHelper.Darken(p.Colour, 0.3f);
                 }
                 else
                 {
-                    foreach (pDrawable p in SpriteCollectionDim)
-                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
+                    foreach (pDrawable p in Sprites)
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
                 }
             }
         }
@@ -309,11 +311,6 @@ namespace osum.GameplayElements
 
         #region Drawing
 
-        /// <summary>
-        /// Sprites which should be dimmed when not the active object.
-        /// </summary>
-        internal List<pDrawable> SpriteCollectionDim = new List<pDrawable>();
-
         protected Vector2 position;
         internal virtual Vector2 Position
         {
@@ -484,6 +481,7 @@ namespace osum.GameplayElements
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
         internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Soft, CustomSampleSet = CustomSampleSet.Default, Volume = 1 };
+
 
         internal virtual void Shake()
         {

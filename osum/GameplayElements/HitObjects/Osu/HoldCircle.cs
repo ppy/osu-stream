@@ -122,8 +122,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.Transform(new TransformationC(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), ColourHelper.Lighten(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), 0.5f),
                 StartTime, EndTime));
 
-            SpriteCollectionDim.Add(border);
-            SpriteCollectionDim.Add(inactiveOverlay);
+            border.TagNumeric = HitObject.DIMMABLE_TAG;
+            inactiveOverlay.TagNumeric = HitObject.DIMMABLE_TAG;
         }
 
         protected override void initializeStartCircle()

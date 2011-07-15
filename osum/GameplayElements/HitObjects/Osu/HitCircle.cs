@@ -16,6 +16,8 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
+        public const int DIMMABLE_TAG = 12348;
+
         internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType)
             : base(hit_object_manager, pos, startTime, soundType, newCombo, comboOffset)
         {
@@ -27,7 +29,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             Sprites.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
-            SpriteCollectionDim.Add(SpriteHitCircle1);
+            SpriteHitCircle1.TagNumeric = HitObject.DIMMABLE_TAG;
 
 
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
@@ -36,7 +38,7 @@ namespace osum.GameplayElements
                                                     false, white);
             SpriteHitCircleText.TextConstantSpacing = false;
 
-            SpriteCollectionDim.Add(SpriteHitCircleText);
+            SpriteHitCircleText.TagNumeric = HitObject.DIMMABLE_TAG;
 
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;

@@ -327,7 +327,7 @@ namespace osum.GameplayElements
             }
 
             h2.Sprites.Add(connectingLine);
-            h2.SpriteCollectionDim.Add(connectingLine);
+            connectingLine.TagNumeric = HitObject.DIMMABLE_TAG;
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
