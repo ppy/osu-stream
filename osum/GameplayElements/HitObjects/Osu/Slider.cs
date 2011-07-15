@@ -1034,6 +1034,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         bool waitingForPathTextureClear;
 
+        static int oldFboId = -1;
+
         /// <summary>
         /// Updates the slider's path texture if required.
         /// </summary>
@@ -1078,7 +1080,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
-            spriteCollectionEnd.ForEach(s => s.Position = drawEndPosition);
+            foreach (pDrawable p in spriteCollectionEnd)
+                p.Position = drawEndPosition;
 
             Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
 
@@ -1086,14 +1089,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
 #if iOS
-                int oldFBO = 0;
-                GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-                
+                if (oldFboId < 0)
+                    GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
-
                 DrawPath(partialDrawable, prev, waitingForPathTextureClear);
-
-                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);
 #else
                 if (sliderBodyTexture.fboId >= 0)
                 {
@@ -1134,7 +1134,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (clear)
             {
-                GL.DepthMask(true);
+                //GL.DepthMask(true);
                 GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
             }
 
