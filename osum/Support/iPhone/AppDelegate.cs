@@ -65,8 +65,6 @@ namespace osum.Support.iPhone
         }
     }
 
-
-    // The name AppDelegate is referenced in the MainWindow.xib file.
     [MonoTouch.Foundation.Register("AppDelegate")]
     public class AppDelegate : UIApplicationDelegate
     {
@@ -120,6 +118,7 @@ namespace osum.Support.iPhone
 
         public override void OnActivated(UIApplication app)
         {
+            glView.StartAnimation();
             active = true;
         }
 
@@ -134,6 +133,8 @@ namespace osum.Support.iPhone
                 p.Pause();
                 AudioEngine.Music.Stop(false);
             }
+
+            glView.StopAnimation();
         }
 
         public override void ReceiveMemoryWarning(UIApplication application)

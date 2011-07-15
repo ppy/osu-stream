@@ -230,15 +230,16 @@ namespace osum
             EAGLContext.SetCurrentContext(oldContext);
         }
 
-        private void StartAnimation()
+        public void StartAnimation()
         {
-            // creating a TimeSpan with ticks. 10 million ticks per second.
-            _animationTimer = NSTimer.CreateRepeatingTimer(0.0001, DrawFrame);
+            if (_animationTimer != null)
+                return;
 
+            _animationTimer = NSTimer.CreateRepeatingTimer(0.0001, DrawFrame);
             NSRunLoop.Main.AddTimer(_animationTimer, "NSDefaultRunLoopMode");
         }
 
-        private void StopAnimation()
+        public void StopAnimation()
         {
             _animationTimer.Dispose();
             _animationTimer = null;
