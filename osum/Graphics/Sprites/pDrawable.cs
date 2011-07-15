@@ -125,7 +125,7 @@ namespace osum.Graphics.Sprites
         {
 
             pDrawable clone = (pDrawable)this.MemberwiseClone();
-            clone.Transformations = new pList<Transformation>();
+            clone.Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
             clone.readInitialTransformationsOnce = false;
 
             return clone;
