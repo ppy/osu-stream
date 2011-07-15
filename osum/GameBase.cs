@@ -172,6 +172,7 @@ namespace osum
         public virtual void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
 
             GL.Viewport(0, 0, NativeSize.Width, NativeSize.Height);
             GL.Ortho(0, NativeSize.Width, NativeSize.Height, 0, -1, 1);
