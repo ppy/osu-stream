@@ -103,11 +103,8 @@ namespace osum
                     break;
             }
 
-
             UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
             UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
-
-            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
 
             base.Initialize();
         }
@@ -137,6 +134,7 @@ namespace osum
             GL.MatrixMode(MatrixMode.Projection);
 
             GL.LoadIdentity();
+            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
             GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
 
             GL.MatrixMode(MatrixMode.Modelview);
