@@ -116,6 +116,8 @@ namespace osum.Graphics.Renderers
 
         // cache actual texel coordinates for x-axis since they are always the same
         private float sheetStart, sheetEnd;
+        
+        private pTexture trackTexture;
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.
@@ -145,6 +147,8 @@ namespace osum.Graphics.Renderers
             CalculateQuadMesh();
 
             am_initted_geom = true;
+
+            trackTexture = TextureManager.Load(OsuTexture.tracks);
         }
 
         /// <summary>
@@ -341,8 +345,7 @@ namespace osum.Graphics.Renderers
 
             GL.MatrixMode(MatrixMode.Modelview);
 
-            pTexture texture = TextureManager.Load(OsuTexture.tracks);
-            texture.TextureGl.Bind();
+            trackTexture.TextureGl.Bind();
 
             int count = lineList.Count;
             for (int x = 1; x < count; x++)
@@ -370,10 +373,7 @@ namespace osum.Graphics.Renderers
                                         0, 0, 1, 0,
                                         0, 0, 0, 1) * curr.WorldMatrix();
 
-            GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
-                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
-                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
-                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+            GL.LoadMatrix(ref matrix.Row0.X);
 
             glDrawQuad(ColourIndex);
 
@@ -418,11 +418,8 @@ namespace osum.Graphics.Renderers
                                     0, 0, 1, 0,
                                     0, 0, 0, 1) * curr.EndWorldMatrix();
 
-                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
-                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
-                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
-                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
-
+                GL.LoadMatrix(ref matrix.Row0.X);
+                
             }
             else
             {
@@ -431,10 +428,7 @@ namespace osum.Graphics.Renderers
                                     0, 0, 1, 0,
                                     0, 0, 0, 1) * curr.EndWorldMatrix();
 
-                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
-                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
-                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
-                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+                GL.LoadMatrix(ref matrix.Row0.X);
             }
 
             glDrawHalfCircle(end_triangles, ColourIndex);
@@ -456,10 +450,7 @@ namespace osum.Graphics.Renderers
                                     0, 0, 1, 0,
                                     0, 0, 0, 1) * curr.WorldMatrix();
 
-                GL.LoadMatrix(new float[]{matrix.M11, matrix.M12, matrix.M13, matrix.M14,
-                                    matrix.M21, matrix.M22, matrix.M23, matrix.M24,
-                                    matrix.M31, matrix.M32, matrix.M33, matrix.M34,
-                                    matrix.M41, matrix.M42, matrix.M43, matrix.M44});
+                GL.LoadMatrix(ref matrix.Row0.X);
 
                 glDrawHalfCircle(numPrimitives_cap, ColourIndex);
             }
