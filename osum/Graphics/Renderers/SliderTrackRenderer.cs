@@ -371,7 +371,7 @@ namespace osum.Graphics.Renderers
             Matrix4 matrix = new Matrix4(curr.rho, 0, 0, 0, // Scale-X
                                         0, globalRadius, 0, 0, // Scale-Y
                                         0, 0, 1, 0,
-                                        0, 0, 0, 1) * curr.WorldMatrix();
+                                        0, 0, 0, 1) * curr.WorldMatrix;
 
             GL.LoadMatrix(ref matrix.Row0.X);
 
@@ -416,7 +416,7 @@ namespace osum.Graphics.Renderers
                 matrix = new Matrix4(globalRadius, 0, 0, 0,
                                     0, -globalRadius, 0, 0,
                                     0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+                                    0, 0, 0, 1) * curr.EndWorldMatrix;
 
                 GL.LoadMatrix(ref matrix.Row0.X);
                 
@@ -426,7 +426,7 @@ namespace osum.Graphics.Renderers
                 matrix = new Matrix4(globalRadius, 0, 0, 0,
                                     0, globalRadius, 0, 0,
                                     0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.EndWorldMatrix();
+                                    0, 0, 0, 1) * curr.EndWorldMatrix;
 
                 GL.LoadMatrix(ref matrix.Row0.X);
             }
@@ -448,7 +448,7 @@ namespace osum.Graphics.Renderers
                 matrix = new Matrix4(-globalRadius, 0, 0, 0,
                                     0, -globalRadius, 0, 0,
                                     0, 0, 1, 0,
-                                    0, 0, 0, 1) * curr.WorldMatrix();
+                                    0, 0, 0, 1) * curr.WorldMatrix;
 
                 GL.LoadMatrix(ref matrix.Row0.X);
 

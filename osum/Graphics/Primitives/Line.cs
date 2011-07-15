@@ -72,6 +72,7 @@ namespace osum.Graphics.Primitives
             float rho = delta.Length;
             float theta = (float) Math.Atan2(delta.Y, delta.X);
             rhoTheta = new Vector2(rho, theta);
+            GetMatrices();
         }
 
 
@@ -102,26 +103,25 @@ namespace osum.Graphics.Primitives
             return pMathHelper.DistanceSquared(p, pB);
         }
 
+        internal Matrix4 WorldMatrix, EndWorldMatrix;
 
-        internal Matrix4 WorldMatrix()
+        private void GetMatrices()
         {
-            // todo: Optimize. There should be no trig here.
-            Matrix4 rotate = Matrix4.CreateRotationZ(theta);
-            Matrix4 translate = Matrix4.CreateTranslation(p1.X, p1.Y, 0);
-            return rotate * translate;
-        }
+            float r = rhoTheta.X;
+            Vector2 majorAxis = (p2 - p1) / r;
+            if (Single.IsNaN(majorAxis.X)) majorAxis = new Vector2(1, 0);
+            Vector2 minorAxis = new Vector2(-majorAxis.Y, majorAxis.X);
 
-        /// <summary>
-        /// It's the end of the world as we know it
-        /// </summary>
-        internal Matrix4 EndWorldMatrix()
-        {
-            // todo: ^
-            Matrix4 rotate = Matrix4.CreateRotationZ(theta);
-            Matrix4 translate = Matrix4.CreateTranslation(p2.X, p2.Y, 0);
-            return rotate * translate;
-        }
+            WorldMatrix = new Matrix4(majorAxis.X, majorAxis.Y, 0, 0,
+                                      minorAxis.X, minorAxis.Y, 0, 0,
+                                      0, 0, 1, 0,
+                                      p1.X, p1.Y, 0, 1);
 
+            EndWorldMatrix = new Matrix4(majorAxis.X, majorAxis.Y, 0, 0,
+                                         minorAxis.X, minorAxis.Y, 0, 0,
+                                         0, 0, 1, 0,
+                                         p2.X, p2.Y, 0, 1);
+        }
 
         internal Vector2 PositionAt(float p)
         {
