@@ -210,23 +210,16 @@ namespace osum.Graphics
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
-                         Box2? srcRect)
+                         Box2 drawRect)
         {
             if (Id < 0) return;
 
-            Box2 drawRect = srcRect == null ? new Box2(0, 0, TextureWidth, TextureHeight) : srcRect.Value;
-
-            float drawHeight = drawRect.Height * scaleVector.Y;
-            float drawWidth = drawRect.Width * scaleVector.X;
-
-            Vector2 originVector = Vector2.Multiply(origin, scaleVector);
-
             SpriteManager.SetColour(drawColour);
 
-            float left = (float)drawRect.Left / potWidth;
-            float right = (float)drawRect.Right / potWidth;
-            float top = (float)drawRect.Top / potHeight;
-            float bottom = (float)drawRect.Bottom / potHeight;
+            float left = drawRect.Left / potWidth;
+            float right = drawRect.Right / potWidth;
+            float top = drawRect.Top / potHeight;
+            float bottom = drawRect.Bottom / potHeight;
 
             coordinates[0] = left;
             coordinates[1] = top;
@@ -238,10 +231,10 @@ namespace osum.Graphics
             coordinates[7] = bottom;
 
             //first move everything so it is centered on (0,0)
-            float vLeft = -originVector.X;
-            float vTop = -originVector.Y;
-            float vRight = -originVector.X + drawWidth;
-            float vBottom = -originVector.Y + drawHeight;
+            float vLeft = -(origin.X * scaleVector.X);
+            float vTop = -(origin.Y * scaleVector.Y);
+            float vRight = vLeft + drawRect.Width * scaleVector.X;
+            float vBottom = vTop + drawRect.Height * scaleVector.Y;
 
             if (rotation != 0)
             {
