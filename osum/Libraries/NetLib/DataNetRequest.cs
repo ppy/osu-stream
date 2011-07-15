@@ -111,7 +111,8 @@ namespace osu_common.Libraries.NetLib
                     }
 
 #if !DIST
-                    Console.WriteLine("requst finished with error " + error);
+                    if (error != null)
+                        Console.WriteLine("requst finished with error " + error);
 #endif
 
                     //do one last update to full progress if we haven't yet.
