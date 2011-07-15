@@ -145,15 +145,15 @@ namespace osum
             float height = GameBase.NativeSize.Width;
 
             if (FlipView)
-                GL.PushMatrix(0, 1, 0, 0,
-                              -1, 0, 0, 0,
-                              0, 0, 1, 0,
-                              height, 0, 0, 1);
-            else
-                GL.PushMatrix(0, -1, 0, 0,
+                GL.LoadMatrix(new float[]{0, -1, 0, 0,
                               1, 0, 0, 0,
                               0, 0, 1, 0,
-                              0, width, 0, 1);
+                              0, height, 0, 1});
+            else
+                GL.LoadMatrix(new float[]{0, 1, 0, 0,
+                              -1, 0, 0, 0,
+                              0, 0, 1, 0,
+                              width, 0, 0, 1});
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()
