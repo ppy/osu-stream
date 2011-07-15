@@ -38,7 +38,12 @@ namespace osum.Audio
 
     internal static class AudioEngine
     {
-        static Dictionary<string, int> loadedSamples = new Dictionary<string, int>();
+        static Dictionary<OsuSamples, int>[] loadedSamples = new Dictionary<OsuSamples, int>[]
+        { 
+            new Dictionary<OsuSamples, int>(),
+            new Dictionary<OsuSamples, int>(),
+            new Dictionary<OsuSamples, int>()
+        };
 
         internal static SoundEffectPlayer Effect;
         internal static BackgroundAudioPlayer Music;
@@ -102,11 +107,7 @@ namespace osum.Audio
         internal static int LoadSample(OsuSamples sample, SampleSet set = SampleSet.Soft)
         {
             int buffer;
-
-            string filename = null;
-
-            string setName = set.ToString().ToLower();
-            string sampleName = sample.ToString().ToLower();
+            SampleSet ss = SampleSet.None;
 
             switch (sample)
             {
@@ -116,23 +117,23 @@ namespace osum.Audio
                 case OsuSamples.HitWhistle:
                 case OsuSamples.SliderTick:
                 case OsuSamples.SliderSlide:
-                    filename = setName + "-" + sampleName;
-                    break;
-                default:
-                    filename = sampleName;
+                    ss = set;
                     break;
             }
 
-            if (filename == null) return -1;
-
-            if (!loadedSamples.TryGetValue(filename, out buffer))
+            if (!loadedSamples[(int)ss].TryGetValue(sample, out buffer))
             {
+                string sampleName = sample.ToString().ToLower();
+                string setName = ss != SampleSet.None ? ss.ToString().ToLower() + "-" : string.Empty;
+                
                 bool oneShot = sample > OsuSamples.PRELOAD_END;
 
                 if (AudioEngine.Effect != null)
-                    buffer = AudioEngine.Effect.Load("Skins/Default/" + filename + ".wav");
+                    buffer = AudioEngine.Effect.Load("Skins/Default/" + setName + sampleName + ".wav");
                 if (!oneShot)
-                    loadedSamples.Add(filename, buffer);
+                    loadedSamples[(int)ss].Add(sample, buffer);
+
+                return buffer;
             }
 
             return buffer;
