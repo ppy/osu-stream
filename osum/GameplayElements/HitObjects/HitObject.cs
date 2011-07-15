@@ -16,27 +16,6 @@ namespace osum.GameplayElements
 {
     internal delegate void HitCircleDelegate(HitObject h);
 
-    [Flags]
-    public enum HitObjectType
-    {
-        Circle = 1,
-        Slider = 2,
-        NewCombo = 4,
-        NormalNewCombo = 5,
-        SliderNewCombo = 6,
-        Spinner = 8
-    }
-
-    [Flags]
-    public enum HitObjectSoundType
-    {
-        Normal = 0,
-        Whistle = 2,
-        Finish = 4,
-        WhistleFinish = 6,
-        Clap = 8
-    }
-
     internal class HitObjectDummy : HitObject
     {
         public HitObjectDummy(int time)
@@ -546,5 +525,26 @@ namespace osum.GameplayElements
         public virtual float HpMultiplier { get { return 1; } }
 
         public virtual Vector2 TrackingPosition { get { return Position; } }
+    }
+
+    [Flags]
+    public enum HitObjectType
+    {
+        Circle = 1,
+        Slider = 2,
+        NewCombo = 4,
+        NormalNewCombo = 5,
+        SliderNewCombo = 6,
+        Spinner = 8
+    }
+
+    [Flags]
+    public enum HitObjectSoundType
+    {
+        Normal = 0,
+        Whistle = 2,
+        Finish = 4,
+        WhistleFinish = 6,
+        Clap = 8
     }
 }
