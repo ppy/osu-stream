@@ -145,7 +145,8 @@ namespace osum.GameModes
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X;
 
-                fill.Update();
+                fill.UpdateFieldPosition();
+                fill.UpdateFieldScale();
             }
 
             float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
