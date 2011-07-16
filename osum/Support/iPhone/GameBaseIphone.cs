@@ -216,6 +216,12 @@ namespace osum
             t.Start();
             return t;
         }
+
+        public override void OpenUrl(string url)
+        {
+            using (NSUrl nsUrl = new NSUrl(url))
+                UIApplication.SharedApplication.OpenUrl(nsUrl);
+        }
     }
 }
 

@@ -55,7 +55,7 @@ namespace osum.GameModes.Options
 
             button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
-                Process.Start("http://www.osustream.com");
+                GameBase.Instance.OpenUrl("http://www.osustream.com/help/");
             });
             smd.Add(button);
 

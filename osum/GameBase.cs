@@ -17,6 +17,7 @@ using osum.UI;
 using osu_common.Helpers;
 using System.Threading;
 using osum.Resources;
+using System.Diagnostics;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -486,6 +487,11 @@ namespace osum
             t.IsBackground = true;
             t.Start();
             return t;
+        }
+
+        public virtual void OpenUrl(string url)
+        {
+            Process.Start(url);
         }
 
         public virtual string PathConfig { get { return string.Empty; } }
