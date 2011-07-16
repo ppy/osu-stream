@@ -181,6 +181,8 @@ namespace osum.Graphics.Sprites
             if (texture != null)
                 TextureManager.RegisterDisposable(texture);
 
+            Update();
+
             return texture;
         }
     }
