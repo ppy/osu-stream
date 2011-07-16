@@ -17,7 +17,7 @@ using osum.GameModes.SongSelect;
 
 namespace osum.GameModes.Store
 {
-    internal class PackPanel : pSpriteCollection
+    public class PackPanel : pSpriteCollection
     {
         internal pDrawable s_BackingPlate;
         internal pDrawable s_BackingPlate2;
@@ -43,8 +43,14 @@ namespace osum.GameModes.Store
         bool isPreviewing;
         DataNetRequest previewRequest;
 
-        public PackPanel(string packTitle, string price, EventHandler action)
+        public string PackId;
+        public bool IsFree;
+
+        public PackPanel(string packTitle, string packId, bool free)
         {
+            PackId = packId;
+            IsFree = free;
+
             Sprites.Add(s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
             {
                 DrawDepth = base_depth,
@@ -67,8 +73,6 @@ namespace osum.GameModes.Store
                 if (!isPreviewing)
                     songPreviewBacks[0].Click();
             };
-
-            if (action != null) s_BackingPlate.OnClick += action;
 
             s_BackingPlate.OnHover += delegate
             {
@@ -106,7 +110,7 @@ namespace osum.GameModes.Store
             });
             s_PriceBackground.OnClick += OnPurchase;
 
-            Sprites.Add(s_Price = new pText(price, 52, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            Sprites.Add(s_Price = new pText(packId, 52, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
             {
                 TextAlignment = TextAlignment.Left,
                 Origin = OriginTypes.TopCentre,
@@ -127,6 +131,11 @@ namespace osum.GameModes.Store
 
         void OnPurchase(object sender, EventArgs e)
         {
+            StoreMode.PurchaseInitiated(this);
+        }
+
+        public void Download()
+        {
             Downloading = true;
 
             if (isPreviewing)
@@ -146,8 +155,6 @@ namespace osum.GameModes.Store
                 b.Alpha = 0;
                 b.Colour = Color4.OrangeRed;
             });
-
-            StoreMode.PurchaseInitiated(this);
         }
 
         void startNextDownload()

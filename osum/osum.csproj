@@ -11,7 +11,7 @@
     <RootNamespace>osum</RootNamespace>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1350</BundleVersion>
+    <BundleVersion>1360</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
@@ -308,6 +308,7 @@
     <Compile Include="UI\SliderControl.cs" />
     <Compile Include="Localisation\LocalisationManager.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
+    <Compile Include="GameModes\Store\StoreModeIphone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

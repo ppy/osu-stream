@@ -3,29 +3,42 @@ using MonoTouch.StoreKit;
 using MonoTouch.Foundation;
 using System.Globalization;
 using System.Threading;
+using System.Collections.Generic;
 
 /// this is the first pass translation of the code used in the store kit from this tutorial http://troybrant.net/blog/2010/01/in-app-purchases-a-full-walkthrough/
 namespace osum.GameModes.Store
 {
-    public class InAppPurchaseManager : SKProductsRequestDelegate
+    public delegate void ProductResponseDelegate(SKProduct[] products);
+
+    public class InAppPurchaseManager : SKProductsRequestDelegate, IDisposable
     {
-        public static string InAppPurchaseManagerTransactionFailedNotification = "InAppPurchaseManagerTransactionFailedNotification";
-        public static string InAppPurchaseManagerTransactionSucceededNotification = "InAppPurchaseManagerTransactionSucceededNotification";
-        public static string InAppPurchaseManagerProductsFetchedNotification = "InAppPurchaseManagerProductsFetchedNotification";
-        public static string InAppPurchaseProUpgradeProductId = "TouhouPack1";
-        private MonoTouch.StoreKit.SKProduct proUpgradeProduct;
+        private MonoTouch.StoreKit.SKProduct product;
         private SKProductsRequest productsRequest;
-        private MySKPaymentObserver theObserver;
+        private MySKPaymentObserver observer;
 
         public InAppPurchaseManager()
         {
-            theObserver = new MySKPaymentObserver(this);
+            observer = new MySKPaymentObserver(this);
+            SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
         }
 
-        public void requestProductData(string productId)
+        public void Dispose()
         {
-            NSSet productIdentifiers = NSSet.MakeNSObjectSet<NSString>(new NSString[]{new NSString(InAppPurchaseProUpgradeProductId)});
-            productsRequest = new SKProductsRequest(productIdentifiers);
+            SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(observer);
+            observer = null;
+        }
+
+        ProductResponseDelegate responseDelegate;
+
+        public void RequestProductData(List<string> productIds, ProductResponseDelegate responseDelegate)
+        {
+            NSMutableSet setIds = new NSMutableSet();
+
+            foreach (string s in productIds)
+                setIds.Add(new NSString(s));
+            productsRequest = new SKProductsRequest(setIds);
+
+            this.responseDelegate = responseDelegate;
 
             productsRequest.Delegate = this;
             productsRequest.Start();
@@ -33,64 +46,44 @@ namespace osum.GameModes.Store
 
         public override void ReceivedResponse(SKProductsRequest request, SKProductsResponse response)
         {
-
-            SKProduct[] products = response.Products;
-            proUpgradeProduct = products.Length == 1 ? products[0] : null;
-            if (proUpgradeProduct != null)
+            foreach (SKProduct product in response.Products)
             {
-                proUpgradeProduct.LocalizedPrice();
-                Console.WriteLine("Product title: " + proUpgradeProduct.LocalizedTitle);
-                Console.WriteLine("Product description: " + proUpgradeProduct.LocalizedDescription);
-                Console.WriteLine("Product price: " + proUpgradeProduct.LocalizedPrice());
-                Console.WriteLine("Product id: " + proUpgradeProduct.ProductIdentifier);
+                Console.WriteLine("Localised price:" + product.LocalizedPrice());
+                Console.WriteLine("Product title: " + product.LocalizedTitle);
+                Console.WriteLine("Product description: " + product.LocalizedDescription);
+                Console.WriteLine("Product price: " + product.LocalizedPrice());
+                Console.WriteLine("Product id: " + product.ProductIdentifier);
             }
 
             foreach (string invalidProductId in response.InvalidProducts)
             {
+#if !DIST
                 Console.WriteLine("Invalid product id: " + invalidProductId);
+#endif
             }
 
-            // finally release the reqest we alloc/init’ed in requestProUpgradeProductData
+            if (responseDelegate != null)
+            {
+                responseDelegate(response.Products);
+                responseDelegate = null;
+            }
+
             productsRequest.Dispose();
-            NSNotificationCenter.DefaultCenter.PostNotificationName(InAppPurchaseManagerProductsFetchedNotification, this, null);
-
-
+            productsRequest = null;
         }
 
-        //
-        // call this method once on startup
-        //
-        public void LoadStore()
-        {
-            SKPaymentQueue.DefaultQueue.AddTransactionObserver(theObserver);
-            //this.requestProUpgradeProductData();
-        }
-        //
-        // call this before making a purchase
-        //
-        public bool canMakeProUpgrade()
+        public bool CanMakePurchases()
         {
             return SKPaymentQueue.CanMakePayments;   
         }
-        //
-        // kick off the upgrade transaction
-        //
-        public void PurchaseProUpgrade()
-        {
-            SKPayment payment = SKPayment.PaymentWithProduct(InAppPurchaseProUpgradeProductId);
-            SKPaymentQueue.DefaultQueue.AddPayment(payment);
-        }
 
-        //
-        // saves a record of the transaction by storing the receipt to disk
-        //
-        public void recordTransaction(SKPaymentTransaction transaction)
+        /// <summary>
+        /// Begin the purchase process.
+        /// </summary>
+        public void PurchaseItem(string productId)
         {
-            if (transaction.Payment.ProductIdentifier == InAppPurchaseProUpgradeProductId)
-            {
-                NSUserDefaults.StandardUserDefaults.SetNativeField("proUpgradeTransactionReceipt", transaction.TransactionReceipt);
-                NSUserDefaults.StandardUserDefaults.Synchronize();
-            }
+            SKPayment payment = SKPayment.PaymentWithProduct(productId);
+            SKPaymentQueue.DefaultQueue.AddPayment(payment);
         }
 
         //
@@ -100,66 +93,58 @@ namespace osum.GameModes.Store
         {
             // remove the transaction from the payment queue.
             SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
-            NSDictionary userInfo = NSDictionary.FromObjectsAndKeys(new NSObject[] {transaction}, new NSObject[] { new NSString("transaction")});
+
             if (wasSuccessful)
             {
-                // send out a notification that we’ve finished the transaction
-                NSNotificationCenter.DefaultCenter.PostNotificationName(InAppPurchaseManagerTransactionSucceededNotification, this, userInfo);
-            } else
+                Console.WriteLine("Successful purchase");
+            }
+            else
             {
-                // send out a notification for the failed transaction
-                NSNotificationCenter.DefaultCenter.PostNotificationName(InAppPurchaseManagerTransactionFailedNotification, this, userInfo);
+                Console.WriteLine("Failed purchase");
             }
         }
-        //
-        // called when the transaction was successful
-        //
-        public void completeTransaction(SKPaymentTransaction transaction)
+
+        /// <summary>
+        /// Callback from payment observer on successful completion.
+        /// </summary>
+        public void handleCompleteTransaction(SKPaymentTransaction transaction)
         {
-            this.recordTransaction(transaction);
-            //this.provideContent(transaction.Payment.ProductIdentifier);
-            this.finishTransaction(transaction, true);
+            finishTransaction(transaction, true);
         }
-        //
-        // called when a transaction has been restored and and successfully completed
-        //
-        public void restoreTransaction(SKPaymentTransaction transaction)
+
+        /// <summary>
+        /// Callback from payment observer on successful completion (previously purchased).
+        /// </summary>
+        public void handleRestoreTransaction(SKPaymentTransaction transaction)
         {
-            this.recordTransaction(transaction.OriginalTransaction);
-            //this.provideContent(transaction.OriginalTransaction.Payment.ProductIdentifier);
-            this.finishTransaction(transaction.OriginalTransaction, true);
+            finishTransaction(transaction.OriginalTransaction, true);
         }
-        //
-        // called when a transaction has failed
-        //
-        public void failedTransaction(SKPaymentTransaction transaction)
+
+        /// <summary>
+        /// Callback from payment observer on failure.
+        /// </summary>
+        public void handleFailedTransaction(SKPaymentTransaction transaction)
         {    
-            //SKErrorPaymentCancelled == 2
             if (transaction.Error.Code != 2)
             {
-                // error!
-                this.finishTransaction(transaction, false);
+                //there was an actual error during the purchase process.
+                finishTransaction(transaction, false);
             } else
             {
-                // this is fine, the user just cancelled, so don’t notify
+                //payment was cancelled by the user at the apple dialog.
                 SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);  
             }
         }
 
-
-
-        // Handles custom observer
         private class MySKPaymentObserver : SKPaymentTransactionObserver
         {
-            private InAppPurchaseManager theManager;
+            private InAppPurchaseManager manager;
 
             public MySKPaymentObserver(InAppPurchaseManager manager)
             {
-                theManager = manager;
+                this.manager = manager;
             }
-            //
-            // called when the transaction status is updated
-            //
+
             public override void UpdatedTransactions(SKPaymentQueue queue, SKPaymentTransaction[] transactions)
             {
                 foreach (SKPaymentTransaction transaction in transactions)
@@ -167,44 +152,33 @@ namespace osum.GameModes.Store
                     switch (transaction.TransactionState)
                     {
                         case SKPaymentTransactionState.Purchased:
-                            theManager.completeTransaction(transaction);
+                            manager.handleCompleteTransaction(transaction);
                             break;
                         case SKPaymentTransactionState.Failed:
-                            theManager.failedTransaction(transaction);
+                            manager.handleFailedTransaction(transaction);
                             break;
                         case SKPaymentTransactionState.Restored:
-                            theManager.restoreTransaction(transaction);
+                            manager.handleRestoreTransaction(transaction);
                             break;
                         default:
                             break;
                     }
                 }
-
             }
-
-        }    
+        }
     }
 
-    public static class SKProductExtender
+    static class extensions
     {
         public static string LocalizedPrice(this SKProduct product)
         {
-            Console.WriteLine("product.PriceLocale.LocaleIdentifier=" + product.PriceLocale.LocaleIdentifier);
-            // returns en_AU@currency=AUD for me
-            string localeIdString = product.PriceLocale.LocaleIdentifier;
-            string locale = localeIdString; // default
-            string currency = "USD";
-            if (localeIdString.IndexOf('@') > 0)
+            using (NSNumberFormatter numberFormatter = new NSNumberFormatter())
             {
-                locale = localeIdString.Substring(0, localeIdString.IndexOf('@'));
-                currency = localeIdString.Substring(localeIdString.IndexOf('=') + 1, 3);
+                numberFormatter.FormatterBehavior = NSNumberFormatterBehavior.Version_10_4;
+                numberFormatter.NumberStyle = NSNumberFormatterStyle.Currency;
+                numberFormatter.Locale = product.PriceLocale;
+                return numberFormatter.StringFromNumber(product.Price).ToString();
             }
-            Console.WriteLine("locale " + locale);
-            Console.WriteLine("currency " + currency);
-
-            Console.WriteLine("Price is: " + product.Price);
-
-            return product.Price.StringValue;
         }
     }
 }
