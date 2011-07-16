@@ -104,8 +104,6 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            base.Update();
-
             if (HasFinished) return;
 
             int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
@@ -116,7 +114,7 @@ namespace osum.GameModes.Play.Components
                 SetDisplay(countdown);
             }
 
-
+            base.Update();
         }
     }
 }
