@@ -82,7 +82,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            text = new pText("Audio", 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
             smd.Add(text);
 
             vPos += 60;

@@ -172,6 +172,7 @@ namespace osum.Resources
         GameCentreTapToLogin,
         Free,
         Congratulations,
-        UnlockedExpert
+        UnlockedExpert,
+        Audio
     }
 }
