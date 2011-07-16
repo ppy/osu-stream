@@ -80,7 +80,7 @@ namespace osum.GameModes.SongSelect
 
         const int hit_minimum_distance = 20;
         const int hit_pull_distance = 60;
-        const int pull_limit_distance = 110;
+        const int pull_limit_distance = 100;
         bool minimumHitPossible;
 
 
