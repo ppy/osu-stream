@@ -3,7 +3,6 @@ Todo stuff for osu!stream (initial release)
 -Packs
 |- Figure out which maps are complete.
 |- Mod them very strictly.
-|- Split them into packs.
 |- Decide pricing, pack thumbnails.
 |- Add pack based skinning of some kind?
 -Server
@@ -18,33 +17,17 @@ Todo stuff for osu!stream (initial release)
 |- Some kind of scroll progress bar/song count display? (see http://puu.sh/2OQI).
 |- Finish difficulty star display (better colours/positioning).
 |- Show ranks on song list and unlock status.
-|- Show correct price information.
-|- Finish IAP implementation.
 -Results
-|- Show unlocks.
 |- Feedback on score submission.
 |- Submit detailed score to osu! server (for future use).
--Libraries/General
-|- Revamp all sound effects.
--Tutorial
-|- Final tutorial map (basically map out part of mainmenu to include all practised elements.
 
 change unlock to require A rank?
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
-
 rerender icons
 disable itunes file sharing
 chagne osz2 key.
-
 push notifications fornew songs
-
 kiai check
-
 loop audio during song select preview
-
-check slider body 1:1/scale
-
-
-13:56 < Echo> http://puu.sh/3gIZ
-
 make dimming better
+make fail sound shorter
