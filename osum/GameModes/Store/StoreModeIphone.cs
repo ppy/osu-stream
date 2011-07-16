@@ -47,16 +47,21 @@ namespace osum.GameModes.Store
             if (pack.IsFree)
                 download(pack);
             else
+            {
+                GameBase.GloballyDisableInput = true;
                 iap.PurchaseItem(pack.PackId, purchaseCompleteResponse);
+            }
         }
 
         void purchaseCompleteResponse(SKPaymentTransaction transaction, bool wasSuccessful)
         {
+            GameBase.GloballyDisableInput = false;
+
             PackPanel pack = packs.Find(p => p.PackId == transaction.Payment.ProductIdentifier);
             if (pack == null) return;
 
             if (wasSuccessful)
-                pack.Download();
+                download(pack);
         }
 
         void productsResponse(SKProduct[] products)

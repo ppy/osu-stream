@@ -122,7 +122,7 @@ namespace osum
         {
             point.IncreaseValidity();
 
-            if (OnDown != null)
+            if (OnDown != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnDown(source, point);
@@ -137,7 +137,7 @@ namespace osum
             //tracking is no longer valid.
             point.DecreaseValidity();
 
-            if (OnUp != null)
+            if (OnUp != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnUp(source, point);
@@ -149,7 +149,7 @@ namespace osum
         static public event InputHandler OnMove;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
-            if (OnMove != null)
+            if (OnMove != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnMove(source, point);

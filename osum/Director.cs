@@ -148,7 +148,11 @@ namespace osum
                     mode = new Player();
                     break;
                 case OsuMode.Store:
+#if iOS
+                    mode = new StoreModeIphone();
+#else
                     mode = new StoreMode();
+#endif
                     break;
                 case OsuMode.Options:
                     mode = new Options();
@@ -211,6 +215,8 @@ namespace osum
             }
             else if (GameBase.ActiveNotification != null)
                 SpriteManager.UniversalDim = GameBase.ActiveNotification.Alpha * 0.7f;
+            else if (GameBase.GloballyDisableInput)
+                SpriteManager.UniversalDim = Math.Min(0.6f, SpriteManager.UniversalDim + 0.01f);
             else
                 SpriteManager.UniversalDim = 0;
 

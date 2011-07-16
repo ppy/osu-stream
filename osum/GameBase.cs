@@ -49,7 +49,6 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
-using osum.GameplayElements.Scoring;
 #endif
 
 
@@ -430,6 +429,8 @@ namespace osum
 
             MainSpriteManager.Draw();
         }
+
+        public static bool GloballyDisableInput;
 
         public static void TriggerLayoutChanged()
         {
