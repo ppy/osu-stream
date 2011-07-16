@@ -430,7 +430,7 @@ namespace osum.GameModes
                 InitializeBgm();
 
                 if (unlockedExpert)
-                    GameBase.Notify(new Notification("Congratulations!", "You have unlocked expert mode for this song. Good luck!", NotificationStyle.Okay, delegate { finishDisplaying(); }));
+                    GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate { finishDisplaying(); }));
                 else
                     finishDisplaying();
             }, time);

@@ -108,3 +108,5 @@ OnlineOptions=オンラインオプション
 GameCentreLoggedIn=ゲームセンターにログインします
 GameCentreTapToLogin=ここをタップすればゲームセンターにログインします
 Free=無料
+Congratulations=お疲れ様でした！
+UnlockedExpert=エキスパートが解禁されました。頑張ってください！

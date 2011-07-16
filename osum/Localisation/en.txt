@@ -121,3 +121,5 @@ OnlineOptions=Online
 GameCentreLoggedIn=Logged in to Game Center!
 GameCentreTapToLogin=Tap to login to Game Center!
 Free=Free
+Congratulations=Congratulations!
+UnlockedExpert=You have unlocked expert mode for this song. Good luck!

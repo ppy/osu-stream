@@ -170,6 +170,8 @@ namespace osum.Resources
         OnlineOptions,
         GameCentreLoggedIn,
         GameCentreTapToLogin,
-        Free
+        Free,
+        Congratulations,
+        UnlockedExpert
     }
 }
