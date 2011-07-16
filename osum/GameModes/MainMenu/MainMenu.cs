@@ -117,6 +117,11 @@ namespace osum.GameModes
             spriteManager.Add(additiveStream);
 
             osuLogoSmall = new pSprite(TextureManager.Load(OsuTexture.menu_logo), FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(5, 5), 0.9f, true, Color4.White);
+            osuLogoSmall.OnClick += delegate
+            {
+                if (State == MenuState.Select)
+                    Director.ChangeMode(OsuMode.MainMenu);
+            };
             osuLogoSmall.Alpha = 0;
             spriteManager.Add(osuLogoSmall);
 
