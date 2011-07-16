@@ -120,3 +120,4 @@ MusicVolume=Music Volume
 OnlineOptions=Online
 GameCentreLoggedIn=Logged in to Game Center!
 GameCentreTapToLogin=Tap to login to Game Center!
+Free=Free

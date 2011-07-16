@@ -9,6 +9,7 @@ using System.Collections.Generic;
 namespace osum.GameModes.Store
 {
     public delegate void ProductResponseDelegate(SKProduct[] products);
+    public delegate void PurchaseCompleteDelegate(SKPaymentTransaction transaction, bool wasSuccessful);
 
     public class InAppPurchaseManager : SKProductsRequestDelegate, IDisposable
     {
@@ -16,16 +17,15 @@ namespace osum.GameModes.Store
         private SKProductsRequest productsRequest;
         private MySKPaymentObserver observer;
 
-        public InAppPurchaseManager()
-        {
-            observer = new MySKPaymentObserver(this);
-            SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
-        }
-
         public void Dispose()
         {
+            Console.WriteLine("disposing iapm");
             SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(observer);
-            observer = null;
+            if (observer != null)
+            {
+                observer.Dispose();
+                observer = null;
+            }
         }
 
         ProductResponseDelegate responseDelegate;
@@ -46,6 +46,7 @@ namespace osum.GameModes.Store
 
         public override void ReceivedResponse(SKProductsRequest request, SKProductsResponse response)
         {
+#if !DIST
             foreach (SKProduct product in response.Products)
             {
                 Console.WriteLine("Localised price:" + product.LocalizedPrice());
@@ -56,11 +57,8 @@ namespace osum.GameModes.Store
             }
 
             foreach (string invalidProductId in response.InvalidProducts)
-            {
-#if !DIST
                 Console.WriteLine("Invalid product id: " + invalidProductId);
 #endif
-            }
 
             if (responseDelegate != null)
             {
@@ -77,13 +75,26 @@ namespace osum.GameModes.Store
             return SKPaymentQueue.CanMakePayments;   
         }
 
+        PurchaseCompleteDelegate purchaseCompleteDelegate;
+
         /// <summary>
         /// Begin the purchase process.
         /// </summary>
-        public void PurchaseItem(string productId)
+        public void PurchaseItem(string productId, PurchaseCompleteDelegate purchaseCompleteResponse)
         {
+            purchaseCompleteDelegate = purchaseCompleteResponse;
+
+            if (observer == null)
+            {
+                observer = new MySKPaymentObserver(this);
+                SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
+            }
+
+            Console.WriteLine("purchasing " + productId);
             SKPayment payment = SKPayment.PaymentWithProduct(productId);
             SKPaymentQueue.DefaultQueue.AddPayment(payment);
+
+
         }
 
         //
@@ -93,6 +104,12 @@ namespace osum.GameModes.Store
         {
             // remove the transaction from the payment queue.
             SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
+
+            if (purchaseCompleteDelegate != null)
+            {
+                purchaseCompleteDelegate(transaction, wasSuccessful);
+                purchaseCompleteDelegate = null;
+            }
 
             if (wasSuccessful)
             {
@@ -135,34 +152,35 @@ namespace osum.GameModes.Store
                 SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);  
             }
         }
+    }
 
-        private class MySKPaymentObserver : SKPaymentTransactionObserver
+    public class MySKPaymentObserver : SKPaymentTransactionObserver
+    {
+        private InAppPurchaseManager manager;
+
+        public MySKPaymentObserver(InAppPurchaseManager manager)
         {
-            private InAppPurchaseManager manager;
+            this.manager = manager;
+        }
 
-            public MySKPaymentObserver(InAppPurchaseManager manager)
+        public override void UpdatedTransactions(SKPaymentQueue queue, SKPaymentTransaction[] transactions)
+        {
+            Console.WriteLine("got here");
+            foreach (SKPaymentTransaction transaction in transactions)
             {
-                this.manager = manager;
-            }
-
-            public override void UpdatedTransactions(SKPaymentQueue queue, SKPaymentTransaction[] transactions)
-            {
-                foreach (SKPaymentTransaction transaction in transactions)
+                switch (transaction.TransactionState)
                 {
-                    switch (transaction.TransactionState)
-                    {
-                        case SKPaymentTransactionState.Purchased:
-                            manager.handleCompleteTransaction(transaction);
-                            break;
-                        case SKPaymentTransactionState.Failed:
-                            manager.handleFailedTransaction(transaction);
-                            break;
-                        case SKPaymentTransactionState.Restored:
-                            manager.handleRestoreTransaction(transaction);
-                            break;
-                        default:
-                            break;
-                    }
+                    case SKPaymentTransactionState.Purchased:
+                        manager.handleCompleteTransaction(transaction);
+                        break;
+                    case SKPaymentTransactionState.Failed:
+                        manager.handleFailedTransaction(transaction);
+                        break;
+                    case SKPaymentTransactionState.Restored:
+                        manager.handleRestoreTransaction(transaction);
+                        break;
+                    default:
+                        break;
                 }
             }
         }

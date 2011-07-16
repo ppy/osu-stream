@@ -142,7 +142,7 @@ namespace osum.GameModes.Store
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
         }
 
-        void AddPack (PackPanel pp)
+        void AddPack(PackPanel pp)
         {
             if (pp == null || pp.BeatmapCount == 0)
                 return;
@@ -202,6 +202,9 @@ namespace osum.GameModes.Store
             instance.purchase(packPanel);
         }
 
+        /// <summary>
+        /// Initiate the "purchase" procedure (which may not involve a purchase in the case of a free pack.
+        /// </summary>
         protected virtual void purchase(PackPanel pack)
         {
             if (pack.IsFree)
@@ -210,6 +213,9 @@ namespace osum.GameModes.Store
                 GameBase.Notify("Can't download paid packs from this build!",null);
         }
 
+        /// <summary>
+        /// Download the specified pack.
+        /// </summary>
         protected virtual void download(PackPanel pack)
         {
             pack.Download();

@@ -47,9 +47,16 @@ namespace osum.GameModes.Store
             if (pack.IsFree)
                 download(pack);
             else
-            {
-                iap.PurchaseItem(pack.PackId);
-            }
+                iap.PurchaseItem(pack.PackId, purchaseCompleteResponse);
+        }
+
+        void purchaseCompleteResponse(SKPaymentTransaction transaction, bool wasSuccessful)
+        {
+            PackPanel pack = packs.Find(p => p.PackId == transaction.Payment.ProductIdentifier);
+            if (pack == null) return;
+
+            if (wasSuccessful)
+                pack.Download();
         }
 
         void productsResponse(SKProduct[] products)
@@ -58,9 +65,8 @@ namespace osum.GameModes.Store
                 foreach (SKProduct p in products)
                 {
                     PackPanel associatedPack = packs.Find(pack => pack.PackId == p.ProductIdentifier);
-                    associatedPack.s_Price.Text = p.LocalizedPrice();
+                    associatedPack.SetPrice(p.LocalizedPrice());
                 }
-                //handle products. give packs prices, and stuff.
             });
         }
     }

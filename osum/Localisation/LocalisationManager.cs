@@ -169,6 +169,7 @@ namespace osum.Resources
         MusicVolume,
         OnlineOptions,
         GameCentreLoggedIn,
-        GameCentreTapToLogin
+        GameCentreTapToLogin,
+        Free
     }
 }
