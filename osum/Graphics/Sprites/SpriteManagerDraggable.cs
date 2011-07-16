@@ -45,7 +45,7 @@ namespace osum.Graphics.Sprites
         {
             base.HandleInputManagerOnMove(source, trackingPoint);
 
-            if (movedX > 10 && movedY < 30)
+            if (movedX > 10 && movedY < 20)
                 return;
 
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
