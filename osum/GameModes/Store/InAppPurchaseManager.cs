@@ -19,10 +19,9 @@ namespace osum.GameModes.Store
 
         public void Dispose()
         {
-            Console.WriteLine("disposing iapm");
-            SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(observer);
             if (observer != null)
             {
+                SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(observer);
                 observer.Dispose();
                 observer = null;
             }
@@ -90,7 +89,6 @@ namespace osum.GameModes.Store
                 SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
             }
 
-            Console.WriteLine("purchasing " + productId);
             SKPayment payment = SKPayment.PaymentWithProduct(productId);
             SKPaymentQueue.DefaultQueue.AddPayment(payment);
 
@@ -109,15 +107,6 @@ namespace osum.GameModes.Store
             {
                 purchaseCompleteDelegate(transaction, wasSuccessful);
                 purchaseCompleteDelegate = null;
-            }
-
-            if (wasSuccessful)
-            {
-                Console.WriteLine("Successful purchase");
-            }
-            else
-            {
-                Console.WriteLine("Failed purchase");
             }
         }
 
