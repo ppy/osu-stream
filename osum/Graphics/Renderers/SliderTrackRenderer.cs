@@ -158,8 +158,10 @@ namespace osum.Graphics.Renderers
         {
             vertices_cap = new float[(numVertices_cap) * 3];
             coordinates_cap = new float[COLOUR_COUNT][];
+#if !NO_PIN_SUPPORT
             coordinates_cap_handle = new GCHandle[COLOUR_COUNT];
             coordinates_cap_pointer = new IntPtr[COLOUR_COUNT];
+#endif
 
             float maxRes = (float)MAXRES;
             float step = MathHelper.Pi / maxRes;
@@ -208,12 +210,15 @@ namespace osum.Graphics.Renderers
 
                 coordinates_cap[x] = this_coordinates;
 
+#if !NO_PIN_SUPPORT
                 coordinates_cap_handle[x] = GCHandle.Alloc(coordinates_cap[x], GCHandleType.Pinned);
                 coordinates_cap_pointer[x] = coordinates_cap_handle[x].AddrOfPinnedObject();
+#endif
             }
-
+#if !NO_PIN_SUPPORT
             vertices_cap_handle = GCHandle.Alloc(vertices_cap, GCHandleType.Pinned);
             vertices_cap_pointer = vertices_cap_handle.AddrOfPinnedObject();
+#endif
 
         }
 
@@ -227,8 +232,10 @@ namespace osum.Graphics.Renderers
                             1 + QUAD_OVERLAP_FUDGE, 1, 0};
 
             coordinates_quad = new float[COLOUR_COUNT][];
+#if !NO_PIN_SUPPORT
             coordinates_quad_handle = new GCHandle[COLOUR_COUNT];
             coordinates_quad_pointer = new IntPtr[COLOUR_COUNT];
+#endif
 
             for (int x = 0; x < COLOUR_COUNT; x++)
             {
@@ -241,13 +248,16 @@ namespace osum.Graphics.Renderers
                                             sheetStart, y,
                                             sheetStart, y};
 
+#if !NO_PIN_SUPPORT
                 coordinates_quad_handle[x] = GCHandle.Alloc(coordinates_quad[x], GCHandleType.Pinned);
                 coordinates_quad_pointer[x] = coordinates_quad_handle[x].AddrOfPinnedObject();
+#endif
             }
 
-
+#if !NO_PIN_SUPPORT
             vertices_quad_handle = GCHandle.Alloc(vertices_quad, GCHandleType.Pinned);
             vertices_quad_pointer = vertices_quad_handle.AddrOfPinnedObject();
+#endif
         }
 
         /// <summary>
@@ -290,6 +300,7 @@ namespace osum.Graphics.Renderers
 
         public void Dispose()
         {
+#if !NO_PIN_SUPPORT
             for (int i = 0; i < COLOUR_COUNT; i++)
             {
                 coordinates_cap_handle[i].Free();
@@ -298,6 +309,7 @@ namespace osum.Graphics.Renderers
 
             vertices_cap_handle.Free();
             vertices_quad_handle.Free();
+#endif
 
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
         }
@@ -311,15 +323,25 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawQuad(int ColourIndex)
         {
+#if !NO_PIN_SUPPORT
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad_pointer);
+#else
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad[ColourIndex]);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad);
+#endif
             GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
         }
 
         protected void glDrawHalfCircle(int count, int ColourIndex)
         {
+#if !NO_PIN_SUPPORT
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap_pointer);
+#else
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap[ColourIndex]);
+            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap);
+#endif
 
             GL.DrawArrays(BeginMode.TriangleFan, 0, count + 2);
         }

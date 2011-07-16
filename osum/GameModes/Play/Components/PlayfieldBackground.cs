@@ -77,11 +77,13 @@ namespace osum.GameModes.Play.Components
             vertices = new float[(line_count + 1) * 4 * 2];
             colours = new float[(line_count + 1) * 4 * 4];
 
+#if !NO_PIN_SUPPORT
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+#endif
 
             initialize();
 
@@ -152,8 +154,10 @@ namespace osum.GameModes.Play.Components
 
         public override void Dispose()
         {
+#if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_colours.Free();
+#endif
 
             GameBase.OnScreenLayoutChanged -= initialize;
 
@@ -225,8 +229,13 @@ namespace osum.GameModes.Play.Components
 
             SpriteManager.AlphaBlend = false;
 
+#if !NO_PIN_SUPPORT
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
+#else
+            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+            GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+#endif
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
             SpriteManager.AlphaBlend = true;

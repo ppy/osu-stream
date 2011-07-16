@@ -60,13 +60,17 @@ namespace osum.Graphics.Drawables
             parts = GameBase.IsSlowDevice ? 36 : 48;
             vertices = new float[parts * 4 + 4];
 
+#if !NO_PIN_SUPPORT
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+#endif
         }
 
         public override void Dispose()
         {
+#if !NO_PIN_SUPPORT
             if (handle_vertices.IsAllocated) handle_vertices.Free();
+#endif
             
         }
 
@@ -120,7 +124,11 @@ namespace osum.Graphics.Drawables
                 SpriteManager.TexturesEnabled = false;
 
                 SpriteManager.SetColour(c);
+#if !NO_PIN_SUPPORT
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+#else
+                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+#endif
                 GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
 
                 return true;

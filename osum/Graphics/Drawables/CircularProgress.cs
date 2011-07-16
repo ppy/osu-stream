@@ -71,17 +71,21 @@ namespace osum.Graphics.Drawables
             vertices = new float[parts * 2 + 2];
             colours = new float[parts * 4 + 4];
 
+#if !NO_PIN_SUPPORT
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+#endif
         }
 
         public override void Dispose()
         {
+#if !NO_PIN_SUPPORT
             handle_colours.Free();
             handle_vertices.Free();
+#endif
         }
 
         public override bool Draw()
@@ -123,9 +127,13 @@ namespace osum.Graphics.Drawables
                 }
 
                 GL.EnableClientState(ArrayCap.ColorArray);
-
+#if !NO_PIN_SUPPORT
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
                 GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
+#else
+                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+                GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+#endif
                 GL.DrawArrays(BeginMode.TriangleFan, 0, parts + 1);
 
                 GL.DisableClientState(ArrayCap.ColorArray);

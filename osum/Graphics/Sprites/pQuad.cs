@@ -60,12 +60,13 @@ namespace osum.Graphics.Drawables
 
             vertices = new Vector2[4];
             colours = new Color4[4];
-
+#if !NO_PIN_SUPPORT
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+#endif
         }
 
         private float[] coordinates;
@@ -85,9 +86,11 @@ namespace osum.Graphics.Drawables
 
         public override void Dispose ()
         {
+#if !NO_PIN_SUPPORT
             if (coordinates != null) handle_coordinates.Free();
             handle_colours.Free();
             handle_vertices.Free();
+#endif
 
             base.Dispose();
         }
@@ -170,7 +173,11 @@ namespace osum.Graphics.Drawables
                     }
                     
                     GL.EnableClientState(ArrayCap.ColorArray);
+#if !NO_PIN_SUPPORT
                     GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
+#else
+                    GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+#endif
                 }
 
                 //first move everything so it is centered on (0,0)
@@ -226,15 +233,25 @@ namespace osum.Graphics.Drawables
                             (float)Texture.X / Texture.TextureGl.potWidth,
                             (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
 
+#if !NO_PIN_SUPPORT
                         handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
                         handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+#endif
                     }
+#if !NO_PIN_SUPPORT
                     GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
+#else
+                    GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+#endif
                 }
                 else
                     SpriteManager.TexturesEnabled = false;
 
+#if !NO_PIN_SUPPORT
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+#else
+                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+#endif
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
                 if (Colours != null)

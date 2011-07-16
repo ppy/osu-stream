@@ -89,12 +89,13 @@ namespace osum.Graphics
 
             coordinates = new float[8];
             vertices = new float[8];
-
+#if !NO_PIN_SUPPORT
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+#endif
         }
 
         #region IDisposable Members
@@ -131,8 +132,10 @@ namespace osum.Graphics
 
         protected virtual void Dispose(bool disposing)
         {
+#if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
+#endif
             Delete();
         }
 
@@ -268,10 +271,17 @@ namespace osum.Graphics
             }
 
             Bind();
-
+#if !NO_PIN_SUPPORT
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
+
+#else
+            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+
+#endif
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
+
         }
 
         public void SetData(int textureId)
