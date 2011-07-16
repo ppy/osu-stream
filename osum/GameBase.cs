@@ -319,6 +319,14 @@ namespace osum
 #endif
 
             //Load the main menu initially.
+
+            /*string path = SongSelectMode.BeatmapPath + "/Amane - Being Proof (James).osz2";
+            Console.WriteLine(path);
+
+            Player.Beatmap = new osum.GameplayElements.Beatmaps.Beatmap(path);
+            Player.Difficulty = osum.GameplayElements.Difficulty.Expert;
+            Player.Autoplay = true;*/
+
             Director.ChangeMode(OsuMode.MainMenu, null);
 
             {
