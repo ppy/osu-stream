@@ -161,6 +161,8 @@ namespace osu_common.Libraries.NetLib
 
         protected virtual void processFinishedRequest()
         {
+            if (AbortRequested) return;
+
             GameBase.Scheduler.Add(delegate
             {
                 if (onFinish != null)
