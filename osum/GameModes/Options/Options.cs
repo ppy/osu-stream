@@ -85,7 +85,7 @@ namespace osum.GameModes.Options
             text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
             smd.Add(text);
 
-            vPos += 60;
+            vPos += 80;
 
             soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos),
                 delegate(float v)
