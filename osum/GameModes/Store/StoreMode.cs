@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +26,7 @@ namespace osum.GameModes.Store
 
         List<PackPanel> packs = new List<PackPanel>();
 
-        //InAppPurchaseManager iap = new InAppPurchaseManager();
+        InAppPurchaseManager iap = new InAppPurchaseManager();
 
         StringNetRequest fetchRequest;
 
@@ -43,10 +43,6 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             spriteManager.Add(s_ButtonBack);
 
-            fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
-            fetchRequest.onFinish += netRequest_onFinish;
-            NetManager.AddRequest(fetchRequest);
-
             loading = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.OrangeRed)
             {
                 TextAlignment = TextAlignment.Centre,
@@ -60,50 +56,41 @@ namespace osum.GameModes.Store
 
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
 
-            //iap.requestProductData("");
+            if (fetchRequest != null) fetchRequest.Abort();
+            fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
+            fetchRequest.onFinish += fetchRequest_onFinish;
+            NetManager.AddRequest(fetchRequest);
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        public override void Dispose()
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
-                return;
+            if (iap != null) iap.Dispose();
 
-            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-            float bound = offsetBound;
-
-            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
-                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
-            scrollOffset = scrollOffset + change;
-            velocity = change;
+            if (fetchRequest != null) fetchRequest.Abort();
+            base.Dispose();
         }
 
-        void netRequest_onFinish(string _result, Exception e)
+        void fetchRequest_onFinish(string _result, Exception e)
         {
             if (fetchRequest.AbortRequested)
                 return;
 
             if (e != null || string.IsNullOrEmpty(_result))
             {
+                //error has occurred!
                 GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;
             }
 
-            int y = 0;
-
-
             PackPanel pp = null;
             bool newPack = true;
 
-            int i = 0;
-
+            int y = 0;
             foreach (string line in _result.Split('\n'))
             {
                 if (line.Length == 0)
                 {
                     newPack = true;
-#if DEBUG
-                    Console.WriteLine("Reading new pack");
-#endif
                     continue;
                 }
 
@@ -111,19 +98,16 @@ namespace osum.GameModes.Store
 
                 if (newPack)
                 {
-                    GameBase.Scheduler.Add(delegate
+                    if (pp != null && pp.BeatmapCount > 0)
                     {
-                        if (pp != null && pp.BeatmapCount > 0)
-                        {
-                            spriteManager.Add(pp);
-                            packs.Add(pp);
-                        }
+                        spriteManager.Add(pp);
+                        packs.Add(pp);
+                    }
 
 #if DEBUG
-                        Console.WriteLine("Adding pack: " + split[0]);
+                    Console.WriteLine("Adding pack: " + split[0]);
 #endif
-                        pp = new PackPanel(split[0], split[1], null);
-                    });
+                    pp = new PackPanel(split[0], split[1], null);
 
                     newPack = false;
                     continue;
@@ -146,46 +130,41 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                GameBase.Scheduler.Add(delegate
-                {
-                    pp.Add(filename);
-                });
+                pp.Add(filename);
 
                 y++;
             }
 
-            GameBase.Scheduler.Add(delegate
+            if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
+                return;
+
+            if (pp != null && pp.BeatmapCount > 0)
             {
-                if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
-                    return;
+                spriteManager.Add(pp);
+                packs.Add(pp);
+            }
 
-                if (pp != null && pp.BeatmapCount > 0)
-                {
-                    spriteManager.Add(pp);
-                    packs.Add(pp);
-                }
+            loading.FadeOut(200);
 
-                loading.FadeOut(200);
-
-                if (y == 0)
-                    GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
-            });
+            if (y == 0)
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
         }
 
-        public override void Dispose()
+        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (fetchRequest != null)
-                fetchRequest.Abort();
-            base.Dispose();
-        }
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
+                return;
 
-        public override bool Draw()
-        {
-            return base.Draw();
+            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+            float bound = offsetBound;
+
+            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
+                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
+            scrollOffset = scrollOffset + change;
+            velocity = change;
         }
 
         bool playingPreview;
-
 
         public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
         {
