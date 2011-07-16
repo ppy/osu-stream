@@ -104,14 +104,15 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            if (HasFinished) return;
-
-            int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
-
-            if (countdown != lastCountdownUpdate)
+            if (!HasFinished)
             {
-                lastCountdownUpdate = countdown;
-                SetDisplay(countdown);
+                int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
+    
+                if (countdown != lastCountdownUpdate)
+                {
+                    lastCountdownUpdate = countdown;
+                    SetDisplay(countdown);
+                }
             }
 
             base.Update();
