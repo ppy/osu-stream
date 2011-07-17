@@ -72,11 +72,13 @@ namespace osum.Graphics
         public int Id;
         public bool Loaded { get { return Id > 0; } }
 
+#if !NO_PIN_SUPPORT
         float[] coordinates;
         float[] vertices;
 
         GCHandle handle_vertices;
         GCHandle handle_coordinates;
+#endif
 
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
@@ -87,14 +89,18 @@ namespace osum.Graphics
             TextureWidth = width;
             TextureHeight = height;
 
+#if !NO_PIN_SUPPORT
             coordinates = new float[8];
             vertices = new float[8];
-#if !NO_PIN_SUPPORT
+
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
+            handle_coordinates_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
 #endif
         }
 
@@ -135,6 +141,9 @@ namespace osum.Graphics
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
+#else
+            Marshal.FreeHGlobal(handle_coordinates_pointer);
+            Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
             Delete();
         }
@@ -224,62 +233,65 @@ namespace osum.Graphics
             float top = drawRect.Top / potHeight;
             float bottom = drawRect.Bottom / potHeight;
 
-            coordinates[0] = left;
-            coordinates[1] = top;
-            coordinates[2] = right;
-            coordinates[3] = top;
-            coordinates[4] = right;
-            coordinates[5] = bottom;
-            coordinates[6] = left;
-            coordinates[7] = bottom;
-
-            //first move everything so it is centered on (0,0)
-            float vLeft = -(origin.X * scaleVector.X);
-            float vTop = -(origin.Y * scaleVector.Y);
-            float vRight = vLeft + drawRect.Width * scaleVector.X;
-            float vBottom = vTop + drawRect.Height * scaleVector.Y;
-
-            if (rotation != 0)
+            unsafe
             {
-                float cos = (float)Math.Cos(rotation);
-                float sin = (float)Math.Sin(rotation);
+#if NO_PIN_SUPPORT
+                float* coordinates = (float*)handle_coordinates_pointer;
+                float* vertices = (float*)handle_vertices_pointer;
+#endif
+                coordinates[0] = left;
+                coordinates[1] = top;
+                coordinates[2] = right;
+                coordinates[3] = top;
+                coordinates[4] = right;
+                coordinates[5] = bottom;
+                coordinates[6] = left;
+                coordinates[7] = bottom;
 
-                vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
-                vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
-                vertices[2] = vRight * cos - vTop * sin + currentPos.X;
-                vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
-                vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
-                vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
-                vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
-                vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
-            }
-            else
-            {
-                vLeft += currentPos.X;
-                vRight += currentPos.X;
-                vTop += currentPos.Y;
-                vBottom += currentPos.Y;
+                //first move everything so it is centered on (0,0)
+                float vLeft = -(origin.X * scaleVector.X);
+                float vTop = -(origin.Y * scaleVector.Y);
+                float vRight = vLeft + drawRect.Width * scaleVector.X;
+                float vBottom = vTop + drawRect.Height * scaleVector.Y;
 
-                vertices[0] = vLeft;
-                vertices[1] = vTop;
-                vertices[2] = vRight;
-                vertices[3] = vTop;
-                vertices[4] = vRight;
-                vertices[5] = vBottom;
-                vertices[6] = vLeft;
-                vertices[7] = vBottom;
+                if (rotation != 0)
+                {
+                    float cos = (float)Math.Cos(rotation);
+                    float sin = (float)Math.Sin(rotation);
+
+                    vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
+                    vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
+                    vertices[2] = vRight * cos - vTop * sin + currentPos.X;
+                    vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
+                    vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
+                    vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
+                    vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
+                    vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
+                }
+                else
+                {
+                    vLeft += currentPos.X;
+                    vRight += currentPos.X;
+                    vTop += currentPos.Y;
+                    vBottom += currentPos.Y;
+
+                    vertices[0] = vLeft;
+                    vertices[1] = vTop;
+                    vertices[2] = vRight;
+                    vertices[3] = vTop;
+                    vertices[4] = vRight;
+                    vertices[5] = vBottom;
+                    vertices[6] = vLeft;
+                    vertices[7] = vBottom;
+                }
             }
 
             Bind();
-#if !NO_PIN_SUPPORT
+
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
 
-#else
-            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
 
-#endif
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
         }

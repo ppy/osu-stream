@@ -53,13 +53,13 @@ namespace osum.GameModes.Play.Components
     class PlayfieldBackground : pDrawable
     {
         const int line_count = 5;
-
+#if !NO_PIN_SUPPORT
         float[] vertices;
         float[] colours;
 
         GCHandle handle_vertices;
         GCHandle handle_colours;
-
+#endif
         IntPtr handle_vertices_pointer;
         IntPtr handle_colours_pointer;
 
@@ -74,15 +74,19 @@ namespace osum.GameModes.Play.Components
         public PlayfieldBackground()
             : base()
         {
+#if !NO_PIN_SUPPORT
             vertices = new float[(line_count + 1) * 4 * 2];
             colours = new float[(line_count + 1) * 4 * 4];
 
-#if !NO_PIN_SUPPORT
+
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 2 * sizeof(float));
+            handle_colours_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 2 * sizeof(float));
 #endif
 
             initialize();
@@ -110,16 +114,22 @@ namespace osum.GameModes.Play.Components
             float bottom = GameBase.NativeSize.Height;
 
             int j = 0;
+            unsafe
+            {
+#if NO_PIN_SUPPORT
+                float* vertices = (float*)handle_vertices_pointer;
+#endif
 
-            //main background
-            vertices[j++] = left;
-            vertices[j++] = top;
-            vertices[j++] = right;
-            vertices[j++] = top;
-            vertices[j++] = right;
-            vertices[j++] = bottom;
-            vertices[j++] = left;
-            vertices[j++] = bottom;
+                //main background
+                vertices[j++] = left;
+                vertices[j++] = top;
+                vertices[j++] = right;
+                vertices[j++] = top;
+                vertices[j++] = right;
+                vertices[j++] = bottom;
+                vertices[j++] = left;
+                vertices[j++] = bottom;
+            }
 
             //diagonal lines
             
@@ -133,22 +143,28 @@ namespace osum.GameModes.Play.Components
             float diagonalY = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
             float diagonalX = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
 
-            for (int k = 0; k < line_count; k++)
+            unsafe
             {
-                vertices[j++] = diagonalX;
-                vertices[j++] = 0;
+#if NO_PIN_SUPPORT
+                float* vertices = (float*)handle_vertices_pointer;
+#endif
+                for (int k = 0; k < line_count; k++)
+                {
+                    vertices[j++] = diagonalX;
+                    vertices[j++] = 0;
 
-                vertices[j++] = diagonalX + lineWidth;
-                vertices[j++] = 0;
+                    vertices[j++] = diagonalX + lineWidth;
+                    vertices[j++] = 0;
 
-                vertices[j++] = 0;
-                vertices[j++] = diagonalY + lineWidth;
+                    vertices[j++] = 0;
+                    vertices[j++] = diagonalY + lineWidth;
 
-                vertices[j++] = 0;
-                vertices[j++] = diagonalY;
+                    vertices[j++] = 0;
+                    vertices[j++] = diagonalY;
 
-                diagonalY += lineWidth * 2;
-                diagonalX += lineWidth * 2;
+                    diagonalY += lineWidth * 2;
+                    diagonalX += lineWidth * 2;
+                }
             }
         }
 
@@ -157,8 +173,10 @@ namespace osum.GameModes.Play.Components
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_colours.Free();
+#else
+            Marshal.FreeHGlobal(handle_colours_pointer);
+            Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
-
             GameBase.OnScreenLayoutChanged -= initialize;
 
             base.Dispose();
@@ -195,26 +213,32 @@ namespace osum.GameModes.Play.Components
                 if (Math.Abs(Velocity) < 0.01f) Velocity = 0;
             }
 
-            Color4 col = Colour;
-            for (int i = 0; i < (line_count + 1) * 4; i++)
+            unsafe
             {
-                //change to the darker colour for bottom vertices and diagonals
-                if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
+#if NO_PIN_SUPPORT
+                float* colours = (float*)handle_colours_pointer;
+#endif
+                Color4 col = Colour;
+                for (int i = 0; i < (line_count + 1) * 4; i++)
+                {
+                    //change to the darker colour for bottom vertices and diagonals
+                    if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
 
-                if (SpriteManager.UniversalDim > 0)
-                {
-                    float mult = 1 - SpriteManager.UniversalDim;
-                    colours[i * 4] = col.R * mult;
-                    colours[i * 4 + 1] = col.G * mult;
-                    colours[i * 4 + 2] = col.B * mult;
-                    colours[i * 4 + 3] = col.A;
-                }
-                else
-                {
-                    colours[i * 4] = col.R;
-                    colours[i * 4 + 1] = col.G;
-                    colours[i * 4 + 2] = col.B;
-                    colours[i * 4 + 3] = col.A;
+                    if (SpriteManager.UniversalDim > 0)
+                    {
+                        float mult = 1 - SpriteManager.UniversalDim;
+                        colours[i * 4] = col.R * mult;
+                        colours[i * 4 + 1] = col.G * mult;
+                        colours[i * 4 + 2] = col.B * mult;
+                        colours[i * 4 + 3] = col.A;
+                    }
+                    else
+                    {
+                        colours[i * 4] = col.R;
+                        colours[i * 4 + 1] = col.G;
+                        colours[i * 4 + 2] = col.B;
+                        colours[i * 4 + 3] = col.A;
+                    }
                 }
             }
         }
@@ -229,13 +253,9 @@ namespace osum.GameModes.Play.Components
 
             SpriteManager.AlphaBlend = false;
 
-#if !NO_PIN_SUPPORT
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
-#else
-            GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-            GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
-#endif
+
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
             SpriteManager.AlphaBlend = true;

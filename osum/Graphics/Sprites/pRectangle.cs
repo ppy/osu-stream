@@ -54,23 +54,29 @@ namespace osum.Graphics.Drawables
             Field = FieldTypes.Standard;
             Scale = size;
 
+#if !NO_PIN_SUPPORT
             coordinates = new float[8];
             vertices = new float[8];
 
-#if !NO_PIN_SUPPORT
+
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
+            handle_coordinates_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
 #endif
         }
 
+#if !NO_PIN_SUPPORT
         float[] coordinates;
         float[] vertices;
 
         GCHandle handle_vertices;
         GCHandle handle_coordinates;
+#endif
 
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
@@ -80,6 +86,9 @@ namespace osum.Graphics.Drawables
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
+#else
+            Marshal.FreeHGlobal(handle_coordinates_pointer);
+            Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
             base.Dispose();
         }
@@ -102,46 +111,50 @@ namespace osum.Graphics.Drawables
                 float vRight = -origin.X + scale.X;
                 float vBottom = -origin.Y + scale.Y;
 
-                if (Rotation != 0)
+                unsafe
                 {
-                    float cos = (float)Math.Cos(Rotation);
-                    float sin = (float)Math.Sin(Rotation);
+#if NO_PIN_SUPPORT
+                    float* vertices = (float*)handle_vertices_pointer;
+#endif
 
-                    vertices[0] = vLeft * cos - vTop * sin + pos.X;
-                    vertices[1] = vLeft * sin + vTop * cos + pos.Y;
-                    vertices[2] = vRight * cos - vTop * sin + pos.X;
-                    vertices[3] = vRight * sin + vTop * cos + pos.Y;
-                    vertices[4] = vRight * cos - vBottom * sin + pos.X;
-                    vertices[5] = vRight * sin + vBottom * cos + pos.Y;
-                    vertices[6] = vLeft * cos - vBottom * sin + pos.X;
-                    vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
-                }
-                else
-                {
-                    vLeft += pos.X;
-                    vRight += pos.X;
-                    vTop += pos.Y;
-                    vBottom += pos.Y;
+                    if (Rotation != 0)
+                    {
+                        float cos = (float)Math.Cos(Rotation);
+                        float sin = (float)Math.Sin(Rotation);
 
-                    vertices[0] = vLeft;
-                    vertices[1] = vTop;
-                    vertices[2] = vRight;
-                    vertices[3] = vTop;
-                    vertices[4] = vRight;
-                    vertices[5] = vBottom;
-                    vertices[6] = vLeft;
-                    vertices[7] = vBottom;
+                        vertices[0] = vLeft * cos - vTop * sin + pos.X;
+                        vertices[1] = vLeft * sin + vTop * cos + pos.Y;
+                        vertices[2] = vRight * cos - vTop * sin + pos.X;
+                        vertices[3] = vRight * sin + vTop * cos + pos.Y;
+                        vertices[4] = vRight * cos - vBottom * sin + pos.X;
+                        vertices[5] = vRight * sin + vBottom * cos + pos.Y;
+                        vertices[6] = vLeft * cos - vBottom * sin + pos.X;
+                        vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
+                    }
+                    else
+                    {
+                        vLeft += pos.X;
+                        vRight += pos.X;
+                        vTop += pos.Y;
+                        vBottom += pos.Y;
+
+                        vertices[0] = vLeft;
+                        vertices[1] = vTop;
+                        vertices[2] = vRight;
+                        vertices[3] = vTop;
+                        vertices[4] = vRight;
+                        vertices[5] = vBottom;
+                        vertices[6] = vLeft;
+                        vertices[7] = vBottom;
+                    }
+
                 }
 
                 SpriteManager.TexturesEnabled = false;
 
-#if !NO_PIN_SUPPORT
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
-#else
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-                GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
-#endif
+
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
                 return true;

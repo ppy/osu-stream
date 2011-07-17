@@ -86,8 +86,10 @@ namespace osum.Graphics.Renderers
         protected int numVertices_quad;
         protected int numVertices_cap;
 
+#if !NO_PIN_SUPPORT
         protected float[][] coordinates_cap;
         protected float[] vertices_cap;
+#endif
 
         GCHandle[] coordinates_cap_handle;
         IntPtr[] coordinates_cap_pointer;
@@ -95,14 +97,16 @@ namespace osum.Graphics.Renderers
         GCHandle vertices_cap_handle;
         IntPtr vertices_cap_pointer;
 
+#if !NO_PIN_SUPPORT
         protected float[][] coordinates_quad;
-        protected float[] vertices_quad;
+#endif
+        static protected float[] vertices_quad;
 
         GCHandle[] coordinates_quad_handle;
         IntPtr[] coordinates_quad_pointer;
 
-        GCHandle vertices_quad_handle;
-        IntPtr vertices_quad_pointer;
+        static protected GCHandle vertices_quad_handle;
+        static protected IntPtr vertices_quad_pointer;
 
         // initialization
         protected bool am_initted_geom = false;
@@ -118,6 +122,32 @@ namespace osum.Graphics.Renderers
         private float sheetStart, sheetEnd;
         
         private pTexture trackTexture;
+
+
+        static SliderTrackRenderer()
+        {
+
+            vertices_quad = new[]{-QUAD_OVERLAP_FUDGE, -1, 0,
+                                   1 + QUAD_OVERLAP_FUDGE, -1, 0,
+                                   -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                                   1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                                   -QUAD_OVERLAP_FUDGE, 1, 0,
+                                   1 + QUAD_OVERLAP_FUDGE, 1, 0};
+
+#if !NO_PIN_SUPPORT
+            vertices_quad_handle = GCHandle.Alloc(vertices_quad, GCHandleType.Pinned);
+            vertices_quad_pointer = vertices_quad_handle.AddrOfPinnedObject();
+#else
+            vertices_quad_pointer = Marshal.AllocHGlobal(vertices_quad.Length *  sizeof(float));
+            unsafe
+            {
+                float* vertices_quad_p = (float*) vertices_quad_pointer.ToPointer();
+                for (int i = 0; i < vertices_quad.Length; i++)
+                    vertices_quad_p[i] = vertices_quad[i];
+            }
+#endif
+
+        }
 
         /// <summary>
         /// Performs all advanced computation needed to draw sliders in a particular beatmap.
@@ -156,64 +186,83 @@ namespace osum.Graphics.Renderers
         /// </summary>
         private void CalculateCapMesh()
         {
+#if !NO_PIN_SUPPORT
             vertices_cap = new float[(numVertices_cap) * 3];
             coordinates_cap = new float[COLOUR_COUNT][];
-#if !NO_PIN_SUPPORT
+
             coordinates_cap_handle = new GCHandle[COLOUR_COUNT];
-            coordinates_cap_pointer = new IntPtr[COLOUR_COUNT];
+#else
+            vertices_cap_pointer = Marshal.AllocHGlobal(numVertices_cap * 3 * sizeof(float));
 #endif
+            coordinates_cap_pointer = new IntPtr[COLOUR_COUNT];
+
 
             float maxRes = (float)MAXRES;
             float step = MathHelper.Pi / maxRes;
-
-            // the commented out lines are already set 0 from initialization.
-            // they are kept for completeness.
-            //vertices_cap[0] = 0.0f;
-            //vertices_cap[1] = 0.0f;
-            vertices_cap[2] = 1.0f;
-
-            //vertices_cap[3] = 0.0f;
-            vertices_cap[4] = -1.0f;
-            //vertices_cap[5] = 0.0f;
-
-            for (int z = 1; z < MAXRES; z++)
+            unsafe
             {
-                float angle = (float)z * step;
-                vertices_cap[z * 3 + 3] = (float)(Math.Sin(angle));
-                vertices_cap[z * 3 + 4] = -(float)(Math.Cos(angle));
-                //vertices_cap[z * 3 + 5] = 0.0f;
-            }
+#if NO_PIN_SUPPORT
 
-            //vertices_cap[MAXRES * 3 + 3] = 0.0f;
-            vertices_cap[MAXRES * 3 + 4] = 1.0f;
-            //vertices_cap[MAXRES * 3 + 5] = 0.0f;
+                float* vertices_cap = (float*)vertices_cap_pointer.ToPointer();
 
-            for (int x = 0; x < COLOUR_COUNT; x++)
-            {
-                float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
+                vertices_cap[0] = 0.0f;
+                vertices_cap[1] = 0.0f;
+                vertices_cap[3] = 0.0f;
+                vertices_cap[5] = 0.0f;
+#endif
+                vertices_cap[2] = 1.0f;                
+                vertices_cap[4] = -1.0f;
 
-                float[] this_coordinates = new float[(numVertices_cap) * 2];
-                this_coordinates[0] = sheetEnd;
-                this_coordinates[1] = y;
-
-                this_coordinates[2] = sheetStart;
-                this_coordinates[3] = y;
 
                 for (int z = 1; z < MAXRES; z++)
                 {
-                    this_coordinates[z * 2 + 2] = sheetStart;
-                    this_coordinates[z * 2 + 3] = y;
+                    float angle = (float)z * step;
+                    vertices_cap[z * 3 + 3] = (float)(Math.Sin(angle));
+                    vertices_cap[z * 3 + 4] = -(float)(Math.Cos(angle));
+#if NO_PIN_SUPPORT
+                    vertices_cap[z * 3 + 5] = 0.0f;
+#endif
                 }
+#if NO_PIN_SUPPORT
+                vertices_cap[MAXRES * 3 + 3] = 0.0f;
+                vertices_cap[MAXRES * 3 + 5] = 0.0f;
+#endif
+                vertices_cap[MAXRES * 3 + 4] = 1.0f;
+                
 
-                this_coordinates[MAXRES * 2 + 2] = sheetStart;
-                this_coordinates[MAXRES * 2 + 3] = y;
+                for (int x = 0; x < COLOUR_COUNT; x++)
+                {
+                    float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
 
-                coordinates_cap[x] = this_coordinates;
+#if NO_PIN_SUPPORT
+                    IntPtr this_coordinates_pointer = Marshal.AllocHGlobal(numVertices_cap * 2 * sizeof(float));
+                    float* this_coordinates = (float*)this_coordinates_pointer.ToPointer();
+#else
+                    float[] this_coordinates = new float[(numVertices_cap) * 2];
+#endif
+                    this_coordinates[0] = sheetEnd;
+                    this_coordinates[1] = y;
+
+                    this_coordinates[2] = sheetStart;
+                    this_coordinates[3] = y;
+
+                    for (int z = 1; z < MAXRES; z++)
+                    {
+                        this_coordinates[z * 2 + 2] = sheetStart;
+                        this_coordinates[z * 2 + 3] = y;
+                    }
+
+                    this_coordinates[MAXRES * 2 + 2] = sheetStart;
+                    this_coordinates[MAXRES * 2 + 3] = y;
 
 #if !NO_PIN_SUPPORT
-                coordinates_cap_handle[x] = GCHandle.Alloc(coordinates_cap[x], GCHandleType.Pinned);
-                coordinates_cap_pointer[x] = coordinates_cap_handle[x].AddrOfPinnedObject();
+                    coordinates_cap[x] = this_coordinates;
+                    coordinates_cap_handle[x] = GCHandle.Alloc(coordinates_cap[x], GCHandleType.Pinned);
+                    coordinates_cap_pointer[x] = coordinates_cap_handle[x].AddrOfPinnedObject();
+#else
+                    coordinates_cap_pointer[x] = this_coordinates_pointer;
 #endif
+                }
             }
 #if !NO_PIN_SUPPORT
             vertices_cap_handle = GCHandle.Alloc(vertices_cap, GCHandleType.Pinned);
@@ -224,23 +273,18 @@ namespace osum.Graphics.Renderers
 
         private void CalculateQuadMesh()
         {
-            vertices_quad = new[]{-QUAD_OVERLAP_FUDGE, -1, 0,
-                            1 + QUAD_OVERLAP_FUDGE, -1, 0,
-                            -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                            1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                            -QUAD_OVERLAP_FUDGE, 1, 0,
-                            1 + QUAD_OVERLAP_FUDGE, 1, 0};
+#if !NO_PIN_SUPPORT
 
             coordinates_quad = new float[COLOUR_COUNT][];
-#if !NO_PIN_SUPPORT
             coordinates_quad_handle = new GCHandle[COLOUR_COUNT];
-            coordinates_quad_pointer = new IntPtr[COLOUR_COUNT];
 #endif
+            coordinates_quad_pointer = new IntPtr[COLOUR_COUNT];
+
 
             for (int x = 0; x < COLOUR_COUNT; x++)
             {
                 float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
-
+#if !NO_PIN_SUPPORT
                 coordinates_quad[x] = new[]{sheetStart, y,
                                             sheetStart, y,
                                             sheetEnd, y,
@@ -248,16 +292,24 @@ namespace osum.Graphics.Renderers
                                             sheetStart, y,
                                             sheetStart, y};
 
-#if !NO_PIN_SUPPORT
+
                 coordinates_quad_handle[x] = GCHandle.Alloc(coordinates_quad[x], GCHandleType.Pinned);
                 coordinates_quad_pointer[x] = coordinates_quad_handle[x].AddrOfPinnedObject();
+#else
+                IntPtr coordinates_quad_p = Marshal.AllocHGlobal(numVertices_cap * 3 * sizeof(float));
+                coordinates_quad_pointer[x] = coordinates_quad_p;
+                unsafe
+                {
+                    float* coordinates_quad = (float*)coordinates_quad_p.ToPointer();
+                    coordinates_quad[0] = sheetStart;   coordinates_quad[1] = y;
+                    coordinates_quad[2] = sheetStart;   coordinates_quad[3] = y;
+                    coordinates_quad[4] = sheetEnd;     coordinates_quad[5] = y;
+                    coordinates_quad[6] = sheetEnd;     coordinates_quad[7] = y;
+                    coordinates_quad[8] = sheetStart;   coordinates_quad[9] = y;
+                    coordinates_quad[10]= sheetStart;   coordinates_quad[11] = y;
+                }
 #endif
             }
-
-#if !NO_PIN_SUPPORT
-            vertices_quad_handle = GCHandle.Alloc(vertices_quad, GCHandleType.Pinned);
-            vertices_quad_pointer = vertices_quad_handle.AddrOfPinnedObject();
-#endif
         }
 
         /// <summary>
@@ -308,7 +360,13 @@ namespace osum.Graphics.Renderers
             }
 
             vertices_cap_handle.Free();
-            vertices_quad_handle.Free();
+#else
+            for (int i = 0; i < COLOUR_COUNT; i++)
+            {
+                Marshal.FreeHGlobal(coordinates_cap_pointer[i]);
+                Marshal.FreeHGlobal(coordinates_quad_pointer[i]);
+            }
+            Marshal.FreeHGlobal(vertices_cap_pointer);
 #endif
 
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
@@ -323,25 +381,19 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawQuad(int ColourIndex)
         {
-#if !NO_PIN_SUPPORT
+
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad_pointer);
-#else
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad[ColourIndex]);
-            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad);
-#endif
+
             GL.DrawArrays(BeginMode.TriangleStrip, 0, 6);
         }
 
         protected void glDrawHalfCircle(int count, int ColourIndex)
         {
-#if !NO_PIN_SUPPORT
+
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap_pointer);
-#else
-            GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap[ColourIndex]);
-            GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap);
-#endif
+
 
             GL.DrawArrays(BeginMode.TriangleFan, 0, count + 2);
         }
