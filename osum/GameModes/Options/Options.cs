@@ -38,14 +38,18 @@ namespace osum.GameModes.Options
             if (MainMenu.InitializeBgm())
                 AudioEngine.Music.Play();
 
+            const int header_x_offset = 60;
+
+            int button_x_offset = GameBase.BaseSize.Width / 2;
+
             int vPos = 10;
 
-            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
+            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White ) { Bold = true };
             smd.Add(text);
 
             vPos += 90;
 
-            pButton button = new pButton(LocalisationManager.GetString(OsuString.Credits), new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            pButton button = new pButton(LocalisationManager.GetString(OsuString.Credits), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 Director.ChangeMode(OsuMode.Credits);
             });
@@ -53,7 +57,7 @@ namespace osum.GameModes.Options
 
             vPos += 70;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 GameBase.Instance.OpenUrl("http://www.osustream.com/help/");
             });
@@ -61,12 +65,12 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            text = new pText(LocalisationManager.GetString(OsuString.DifficultySettings), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.DifficultySettings), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
             vPos += 90;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            button = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 DisplayFingerGuideDialog();
             });
@@ -74,7 +78,7 @@ namespace osum.GameModes.Options
 
             vPos += 70;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(320, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            button = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 DisplayEasyModeDialog();
             });
@@ -82,12 +86,12 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
             vPos += 80;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset, vPos),
                 delegate(float v)
                 {
                     AudioEngine.Effect.Volume = v;
@@ -114,13 +118,13 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset, vPos),
                 delegate(float v) { AudioEngine.Music.MaxVolume = v; });
             smd.Add(soundEffectSlider);
 
             vPos += 50;
 
-            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(10, vPos), 1, true, Color4.YellowGreen) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
             vPos += 90;
