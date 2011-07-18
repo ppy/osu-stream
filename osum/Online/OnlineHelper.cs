@@ -22,6 +22,8 @@ namespace osum.Online
 
         public static bool Initialize(bool forceAuthentication = false)
         {
+            return false;
+
             hasInitialised = true;
 
             if (onlineServices == null)
@@ -66,6 +68,9 @@ namespace osum.Online
 
         public static bool ShowRanking(string id, VoidDelegate finished = null)
         {
+            GameBase.Notify(LocalisationManager.GetString(OsuString.NoticeOnlineRanking), null);
+            return false;
+
             if (!Initialize()) return false;
 
             onlineServices.ShowLeaderboard(id, finished);
@@ -74,6 +79,8 @@ namespace osum.Online
 
         public static bool SubmitScore(string id, int score, VoidDelegate finished = null)
         {
+            return false;
+
             if (!Initialize()) return false;
 
             onlineServices.SubmitScore(id, score, finished);

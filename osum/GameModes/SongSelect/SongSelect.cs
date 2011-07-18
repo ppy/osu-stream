@@ -113,7 +113,7 @@ namespace osum.GameModes
             }
             else
             {
-                spriteManager.FadeOut(800, 0.2f);
+                //spriteManager.FadeOut(800, 0.2f);
                 OnlineHelper.ShowRanking(Player.SubmitString, delegate
                 {
                     spriteManager.FadeIn(300, 1);

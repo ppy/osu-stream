@@ -173,6 +173,7 @@ namespace osum.Resources
         Free,
         Congratulations,
         UnlockedExpert,
-        Audio
+        Audio,
+        NoticeOnlineRanking
     }
 }

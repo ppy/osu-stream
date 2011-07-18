@@ -129,7 +129,15 @@ namespace osum.GameModes.Options
 
             vPos += 90;
 
-            gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
+            text = new pText(LocalisationManager.GetString(OsuString.NoticeOnlineRanking), 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, false)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
+            text.MeasureText();
+            smd.Add(text);
+
+            /*gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre
@@ -144,7 +152,7 @@ namespace osum.GameModes.Options
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre
             };
-            smd.Add(text);
+            smd.Add(text);*/
 
             vPos += 50;
         }
