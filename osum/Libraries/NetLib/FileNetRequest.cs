@@ -15,7 +15,7 @@ namespace osu_common.Libraries.NetLib
             this.path = path;
         }
 
-        protected override void processFinishedRequest()
+        public override void processFinishedRequest()
         {
             File.WriteAllBytes(path, data);
             base.processFinishedRequest();

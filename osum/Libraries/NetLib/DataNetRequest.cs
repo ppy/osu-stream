@@ -19,14 +19,21 @@ namespace osu_common.Libraries.NetLib
         public bool finished;
         public Exception error;
 
-        public override void ReceivedResponse (NSUrlConnection connection, NSUrlResponse response)
+        DataNetRequest nr;
+
+        public NRDelegate(DataNetRequest nr) : base()
+        {
+            this.nr = nr;
+        }
+
+        public override void ReceivedResponse(NSUrlConnection connection, NSUrlResponse response)
         {
             long length = response.ExpectedContentLength;
             if (length != -1)
                 result = new byte[length];
         }
 
-        public override void ReceivedData (NSUrlConnection connection, NSData data)
+        public override void ReceivedData(NSUrlConnection connection, NSData data)
         {
             if (written + data.Length > result.Length)
             {
@@ -37,18 +44,40 @@ namespace osu_common.Libraries.NetLib
             }
             else
                 Marshal.Copy(data.Bytes, result, written, (int)data.Length);
+
+            Console.WriteLine("received " + data.Length);
+
             written += (int)data.Length;
+
+            if (nr.AbortRequested)
+            {
+                connection.Cancel();
+                return;
+            }
+
+            nr.TriggerUpdate();
         }
 
-        public override void FinishedLoading (NSUrlConnection connection)
+        public override void FinishedLoading(NSUrlConnection connection)
         {
             finished = true;
+
+            nr.TriggerUpdate();
+
+            nr.data = result;
+            nr.error = error;
+
+            nr.processFinishedRequest();
         }
 
-        public override void FailedWithError (NSUrlConnection connection, NSError err)
+        public override void FailedWithError(NSUrlConnection connection, NSError err)
         {
             error = new Exception(err.ToString());
+            nr.error = error;
+
             finished = true;
+
+            nr.processFinishedRequest();
         }
     }
 #endif
@@ -67,11 +96,17 @@ namespace osu_common.Libraries.NetLib
         public event RequestUpdateHandler onUpdate;
         public event RequestCompleteHandler onFinish;
 
-        protected byte[] data;
-        protected Exception error;
+        public byte[] data;
+        public Exception error;
 
 #if iOS
         NRDelegate del;
+
+        public void TriggerUpdate()
+        {
+            if (onUpdate != null)
+                onUpdate(this, del.written, del.result.Length);
+        }
 #endif
 
         public override void Perform()
@@ -83,45 +118,15 @@ namespace osu_common.Libraries.NetLib
                     onStart();
 
 #if iOS
-                using (NSAutoreleasePool pool = new NSAutoreleasePool())
-                {
-                    del = new NRDelegate();
+                del = new NRDelegate(this);
 
-                    NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 15);
-                    NSUrlConnection conn = new NSUrlConnection(req, del, false);
-                    conn.Start();
-
-                    int progress = 0;
-                    while (!del.finished)
-                    {
-                        if (progress != del.written)
-                        {
-                            if (onUpdate != null)
-                                onUpdate(this, del.written, del.result.Length);
-                            progress = del.written;
-                        }
-
-                        NSRunLoop.Current.RunUntil(NSDate.FromTimeIntervalSinceNow(0.1));
-
-                        if (AbortRequested)
-                        {
-                            conn.Cancel();
-                            break;
-                        }
-                    }
+                NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 15);
+                NSUrlConnection conn = new NSUrlConnection(req, del, true);
 
 #if !DIST
-                    if (error != null)
-                        Console.WriteLine("requst finished with error " + error);
+                if (error != null)
+                    Console.WriteLine("requst finished with error " + error);
 #endif
-
-                    //do one last update to full progress if we haven't yet.
-                    if (progress != del.written && onUpdate != null)
-                        onUpdate(this, del.written, del.result.Length);
-
-                    data = del.result;
-                    error = del.error;
-                }
 #else
                 using (WebClient wc = new WebClient())
                 {
@@ -132,10 +137,9 @@ namespace osu_common.Libraries.NetLib
                     while (wc.IsBusy)
                         Thread.Sleep(500);
                 }
-#endif
 
                 processFinishedRequest();
-                
+#endif
             }
             catch (ThreadAbortException)
             { }
@@ -159,7 +163,7 @@ namespace osu_common.Libraries.NetLib
             return result.ToString();
         }
 
-        protected virtual void processFinishedRequest()
+        public virtual void processFinishedRequest()
         {
             if (AbortRequested) return;
 

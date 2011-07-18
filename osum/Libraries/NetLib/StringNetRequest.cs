@@ -20,7 +20,7 @@ namespace osu_common.Libraries.NetLib
 
         public new event RequestCompleteHandler onFinish;
 
-        protected override void processFinishedRequest()
+        public override void processFinishedRequest()
         {
             GameBase.Scheduler.Add(delegate
             {
