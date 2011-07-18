@@ -361,6 +361,13 @@ namespace osum
             Clock.Start();
         }
 
+        public virtual string DeviceIdentifier
+        {
+            get {
+                return "unknown";
+            }
+        }
+
         /// <summary>
         /// Initializes the sound effects engine.
         /// </summary>

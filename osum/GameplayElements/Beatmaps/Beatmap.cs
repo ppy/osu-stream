@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using osum.GameplayElements.Beatmaps;
 using osu_common.Libraries.Osz2;
 using System.Globalization;
+using osu_common.Helpers;
 namespace osum.GameplayElements.Beatmaps
 {
     public partial class Beatmap : IDisposable, IComparable<Beatmap>
@@ -32,8 +33,15 @@ namespace osum.GameplayElements.Beatmaps
 
                 try
                 {
-                    if (package == null && ContainerFilename.EndsWith("osz2"))
+                    if (package == null)
+#if iOS
+                        if (ContainerFilename.EndsWith("osf2"))
+                            package = new MapPackage(ContainerFilename);
+                        else
+                            package = new MapPackage(ContainerFilename, hash, false, false);
+#else
                         package = new MapPackage(ContainerFilename);
+#endif
                 }
                 catch
                 {
@@ -49,6 +57,14 @@ namespace osum.GameplayElements.Beatmaps
 
         public Beatmap()
         {
+        }
+
+        private byte[] hash {
+            get {
+                string deviceId = GameBase.Instance.DeviceIdentifier;
+                string str = 0x6f + ContainerFilename + 0x73 + deviceId.Substring(0,2)  + 0x75 + deviceId.Substring(2) + 0x6d;
+                return CryptoHelper.GetMd5ByteArrayString(str);
+            }
         }
 
         public Beatmap(string containerFilename)

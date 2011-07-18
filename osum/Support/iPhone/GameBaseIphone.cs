@@ -181,6 +181,12 @@ namespace osum
             }
         }
 
+        public override string DeviceIdentifier {
+            get {
+                return UIDevice.CurrentDevice.UniqueIdentifier;
+            }
+        }
+
         public override Thread RunInBackground(VoidDelegate task)
         {
             ParameterizedThreadStart pts = delegate {
