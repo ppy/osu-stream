@@ -23,11 +23,21 @@ namespace osu_common.Libraries.Osz2
         private const byte VERSION_EXPORT = 0;
         private static readonly MD5CryptoServiceProvider fHasher = new MD5CryptoServiceProvider();
 
+#if DIST
+        //free key is changed for dist builds
+        private byte[] KEY = new byte[]
+                                        {
+                                            185, 24, 168, 9, 27, 145, 191, 243, 17, 75, 95, 163, 168, 123, 198, 56,
+                                            105, 29, 68, 74, 214, 62, 2, 142, 146, 28, 90, 167, 243, 85, 17, 96
+                                        };
+#else
         private byte[] KEY = new byte[]
                                         {
                                             216, 98, 163, 48, 2, 109, 118, 89, 244, 247, 37, 194, 235, 70, 174, 52,
                                             13, 106, 97, 84, 242, 62, 186, 48, 25, 66, 72, 85, 242, 22, 15, 92
                                         };
+#endif
+
         private static readonly byte[] knownPlain = new byte[64];
 
         private readonly string fFilename;
