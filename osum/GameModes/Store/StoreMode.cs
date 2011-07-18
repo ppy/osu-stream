@@ -106,7 +106,7 @@ namespace osum.GameModes.Store
                     string packId = split[1];
                     bool isFree = true;
 
-                    pp = new PackPanel(packName, packId, false);
+                    pp = new PackPanel(packName, packId, isFree);
 
                     newPack = false;
                     continue;

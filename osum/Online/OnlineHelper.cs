@@ -21,9 +21,6 @@ namespace osum.Online
 
         public static bool Initialize(bool forceAuthentication = false)
         {
-            if (hasInitialised && !forceAuthentication)
-                return false;
-
             hasInitialised = true;
 
             if (onlineServices == null)
@@ -34,7 +31,11 @@ namespace osum.Online
             }
 
             if (onlineServices != null)
+            {
+                if (!forceAuthentication && GameBase.Config.GetValue<bool>("GamecentreFailureAnnounced", false))
+                    return false;
                 onlineServices.Authenticate(authFinished);
+            }
             else
                 authFinished();
 

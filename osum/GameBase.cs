@@ -358,6 +358,8 @@ namespace osum
             Director.ChangeMode(OsuMode.MainMenu, null);
 #endif
 
+            OnlineHelper.Initialize();
+
             Clock.Start();
         }
 

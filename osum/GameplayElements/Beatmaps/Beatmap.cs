@@ -34,7 +34,7 @@ namespace osum.GameplayElements.Beatmaps
                 try
                 {
                     if (package == null)
-#if iOS
+#if iOS && DIST
                         if (ContainerFilename.EndsWith("osf2"))
                             package = new MapPackage(ContainerFilename);
                         else

@@ -135,7 +135,7 @@ namespace osum.GameModes.Options
                 Origin = OriginTypes.Centre
             };
 
-            gameCentre.OnClick += delegate {  OnlineHelper.Initialize(); };
+            gameCentre.OnClick += delegate {  OnlineHelper.Initialize(true); };
             smd.Add(gameCentre);
 
             vPos += 60;

@@ -54,7 +54,7 @@ namespace osum.Support.iPhone
     {
         public override void SendEvent(UIEvent e)
         {
-            if (e.Type == UIEventType.Touches)
+            if (e.Type == UIEventType.Touches && !AppDelegate.UsingViewController)
             {
                 InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
                 source.HandleTouches(e.AllTouches);
@@ -175,29 +175,25 @@ namespace osum.Support.iPhone
             }
         }
 
-        public static bool Running { get { return active && !usingViewController; } }
+        public static UIViewController ViewController;
 
-        static bool usingViewController;
+        public static bool UsingViewController;
+        public static void SetUsingViewController(bool isusing)
+        {
+                if (isusing == UsingViewController) return;
+                UsingViewController = isusing;
 
-        public static bool UsingViewController {
-            get { return usingViewController; }
-            set
-            {
-                if (value == usingViewController)
-                    return;
-                usingViewController = value;
+                if (UsingViewController)
+                {
+                    if (ViewController == null)
+                        ViewController = new UIViewController();
+                    Instance.window.AddSubview(ViewController.View);
 
-                /*if (usingViewController)
-                    Instance.window.AddSubview(Instance.viewController.View);
+                    InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+                    source.ReleaseAllTouches();
+                }
                 else
-                    Instance.viewController.View.RemoveFromSuperview();*/
-            }
-        }
-
-        public static UIViewController ViewController {
-            get {
-                return null;//Instance.viewController;
-            }
+                    ViewController.View.RemoveFromSuperview();
         }
     }
 }

@@ -102,8 +102,6 @@ namespace osum.GameModes
 
             s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu);
             topmostSpriteManager.Add(s_ButtonBack);
-
-            OnlineHelper.Initialize();
         }
 
         private void footer_onClick(object sender, EventArgs e)

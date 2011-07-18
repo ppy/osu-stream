@@ -22,6 +22,7 @@ namespace osum
                 switch (u.Phase)
                 {
                     case UITouchPhase.Began:
+                        if (AppDelegate.UsingViewController) return;
                         point = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
                         trackingPoints.Add(point);
                         TriggerOnDown(point);
@@ -45,6 +46,13 @@ namespace osum
                         break;
                 }
             }
+        }
+
+        public void ReleaseAllTouches()
+        {
+            foreach (TrackingPoint t in trackingPoints)
+                TriggerOnUp(t);
+            trackingPoints.Clear();
         }
 	}
 }
