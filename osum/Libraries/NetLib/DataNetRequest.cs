@@ -72,8 +72,11 @@ namespace osu_common.Libraries.NetLib
 
         public override void FailedWithError(NSUrlConnection connection, NSError err)
         {
-            error = new Exception(err.ToString());
-            nr.error = error;
+            if (err != null)
+            {
+                error = new Exception(err.ToString());
+                nr.error = error;
+            }
 
             finished = true;
 
