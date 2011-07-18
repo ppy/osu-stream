@@ -21,7 +21,6 @@ Todo stuff for osu!stream (initial release)
 |- Feedback on score submission.
 |- Submit detailed score to osu! server (for future use).
 
-change unlock to require A rank?
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
 rerender icons
 disable itunes file sharing
@@ -31,3 +30,5 @@ kiai check
 loop audio during song select preview
 make dimming better
 make fail sound shorter
+
+make map packs load metadataOnly for song select.
