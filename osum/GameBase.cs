@@ -122,11 +122,16 @@ namespace osum
 
         public GameBase()
         {
-            //todo: remove before sapp submission.
+#if !DIST
             if (DateTime.Now > new DateTime(2011, 07, 30))
                 Environment.Exit(-1);
+#endif
 
             Instance = this;
+
+            //initialise config before everything, because it may be used in Initialize() override.
+            Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
+
             MainLoop();
         }
 
@@ -164,7 +169,6 @@ namespace osum
                 if (flipView == value) return;
 
                 flipView = value;
-                Config.SetValue<bool>("flip",flipView);
                 Instance.SetViewport();
             }
         }
@@ -284,9 +288,6 @@ namespace osum
         /// </summary>
         public virtual void Initialize()
         {
-            Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
-
-            flipView = Config.GetValue<bool>("flip",false);
             SetupScreen();
 
             Warmup();

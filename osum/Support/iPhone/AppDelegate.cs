@@ -52,7 +52,7 @@ namespace osum.Support.iPhone
     [MonoTouch.Foundation.Register("HaxApplication")]
     public class HaxApplication : UIApplication
     {
-        public override void SendEvent (UIEvent e)
+        public override void SendEvent(UIEvent e)
         {
             if (e.Type == UIEventType.Touches)
             {
@@ -74,18 +74,35 @@ namespace osum.Support.iPhone
         public static AppDelegate Instance;
 
         public static EAGLView glView;
-        public static GameBase game;
+        public static GameBaseIphone game;
         static IGraphicsContext context;
 
         UIWindow window;
 
-        public override bool FinishedLaunching (UIApplication application, NSDictionary launcOptions)
+        private void RotationChanged(NSNotification notification)
+        {
+            UIInterfaceOrientation interfaceOrientation;
+            Console.WriteLine("Received notification:"+UIDevice.CurrentDevice.Orientation);
+            switch (UIDevice.CurrentDevice.Orientation)
+            {
+                case UIDeviceOrientation.LandscapeLeft:
+                    interfaceOrientation = UIInterfaceOrientation.LandscapeRight;
+                    break;
+                case UIDeviceOrientation.LandscapeRight:
+                    interfaceOrientation = UIInterfaceOrientation.LandscapeLeft;
+                    break;
+                default:
+                    return;
+            }
+            game.HandleRotationChange(interfaceOrientation);
+        }
+
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
         {
             window = new UIWindow(UIScreen.MainScreen.Bounds);
             window.MakeKeyAndVisible();
 
             UIApplication.SharedApplication.StatusBarHidden = true;
-            UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight, false);
 
             Instance = this;
 
@@ -98,14 +115,19 @@ namespace osum.Support.iPhone
 
             window.AddSubview(glView);
 
+#if !DIST
             Console.WriteLine("scale factor " + GameBase.ScaleFactor);
             GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
                                         (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
             Console.WriteLine("native size " + GameBase.NativeSize);
+#endif
             GameBase.TriggerLayoutChanged();
 
             game.Initialize();
             glView.Run(game);
+
+            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
+            NSNotificationCenter.DefaultCenter.AddObserver(UIDevice.OrientationDidChangeNotification, RotationChanged);
 
             return true;
         }

@@ -103,30 +103,34 @@ namespace osum
                     break;
             }
 
-            UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
-            UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
-
+            initialOrientation = UIApplication.SharedApplication.StatusBarOrientation;
             base.Initialize();
         }
 
-        static float pi = (float)Math.PI;
+        const UIInterfaceOrientation DEFAULT_ORIENTATION = UIInterfaceOrientation.LandscapeRight;
+        UIInterfaceOrientation initialOrientation;
 
-        void HandleUIAccelerometerSharedAccelerometerAcceleration (object sender, UIAccelerometerEventArgs e)
+        public void HandleRotationChange(UIInterfaceOrientation orientation)
         {
             Player p = Director.CurrentMode as Player;
 
             if (p != null && !p.IsPaused)
                 return; //don't rotate during gameplay.
 
-            float angle = (float)(Math.Atan2(e.Acceleration.X, e.Acceleration.Y) * 180/pi);
-
-            if (Math.Abs(e.Acceleration.Z) < 0.6f)
+            switch (orientation)
             {
-                if (angle > 45 && angle < 135)
-                    FlipView = true;
-                else if (angle < -45 && angle > -135)
-                    FlipView = false;
+                case UIInterfaceOrientation.LandscapeLeft:
+                case UIInterfaceOrientation.LandscapeRight:
+                    break;
+                default:
+                    return;
             }
+
+            if (initialOrientation == UIInterfaceOrientation.Portrait || initialOrientation == UIInterfaceOrientation.PortraitUpsideDown)
+                initialOrientation = DEFAULT_ORIENTATION;
+
+            FlipView = orientation != initialOrientation;
+            UIApplication.SharedApplication.SetStatusBarOrientation(orientation, true);
         }
 
         public override void SetViewport()
