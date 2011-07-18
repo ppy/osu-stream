@@ -126,6 +126,9 @@ namespace osum
             CurrentOsuMode = newMode;
 
             GC.Collect(); //force a full collect before we start displaying the new mode.
+
+            GameBase.ThrottleExecution = false;
+            //reset this here just in case it got stuck.
         }
 
         private static void loadNewMode(OsuMode newMode)
@@ -216,7 +219,7 @@ namespace osum
             else if (GameBase.ActiveNotification != null)
                 SpriteManager.UniversalDim = GameBase.ActiveNotification.Alpha * 0.7f;
             else if (GameBase.GloballyDisableInput)
-                SpriteManager.UniversalDim = Math.Min(0.6f, SpriteManager.UniversalDim + 0.01f);
+                SpriteManager.UniversalDim = Math.Min(0.6f, SpriteManager.UniversalDim + 0.05f);
             else
                 SpriteManager.UniversalDim = 0;
 

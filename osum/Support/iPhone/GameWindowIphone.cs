@@ -70,15 +70,16 @@ namespace osum
         {
             if (timer != null) return;
 
-            timer = NSTimer.CreateRepeatingTimer(0.0001, DrawFrame);
+            timer = NSTimer.CreateRepeatingTimer(throttling ? 0.032 : 0.0001, DrawFrame);
             NSRunLoop.Main.AddTimer(timer, "NSDefaultRunLoopMode");
-
             //Thread t = new Thread(DrawFrame);
             //t.Start();
 
             //dl = UIScreen.MainScreen.CreateDisplayLink(this, new Selector("DrawFrame"));
             //dl.AddToRunLoop(NSRunLoop.Current, "NSDefaultRunLoopMode");
         }
+
+        bool throttling = false;
 
         public void StopAnimation()
         {
@@ -93,6 +94,15 @@ namespace osum
             {
                 //while (CFRunLoop.Current.RunInMode("NSDefaultRunLoopMode",0.003, false) == CFRunLoopExitReason.HandledSource)
                 //{}
+
+                bool shouldThrottle = GameBase.GloballyDisableInput || GameBase.ThrottleExecution;
+                if (GameBase.GloballyDisableInput || shouldThrottle != throttling)
+                {
+                    //limit animation speed while something is being some in the foreground.
+                    throttling = shouldThrottle;
+                    StopAnimation();
+                    StartAnimation();
+                }
 
                 game.Update();
                 game.Draw();

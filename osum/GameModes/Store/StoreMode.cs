@@ -58,6 +58,9 @@ namespace osum.GameModes.Store
             fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
             fetchRequest.onFinish += handlePackInfo;
             NetManager.AddRequest(fetchRequest);
+
+            if (GameBase.IsSlowDevice)
+                GameBase.ThrottleExecution = true;
         }
 
         public override void Dispose()

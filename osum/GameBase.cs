@@ -445,6 +445,7 @@ namespace osum
         }
 
         public static bool GloballyDisableInput;
+        public static bool ThrottleExecution;
 
         public static void TriggerLayoutChanged()
         {
