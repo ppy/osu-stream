@@ -319,38 +319,43 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
-            //Load the main menu initially.
+#if false
+            //benchmark
 
-            /*string path = SongSelectMode.BeatmapPath + "/Amane - Being Proof (James).osz2";
+            string path = SongSelectMode.BeatmapPath + "/Amane - Being Proof (James).osz2";
             Console.WriteLine(path);
 
             Player.Beatmap = new osum.GameplayElements.Beatmaps.Beatmap(path);
             Player.Difficulty = osum.GameplayElements.Difficulty.Expert;
-            Player.Autoplay = true;*/
+            Player.Autoplay = true;
 
-            Director.ChangeMode(OsuMode.MainMenu, null);
+            Director.ChangeMode(OsuMode.Play, null);
+#elif false
+            //results screen testing
 
+            Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+            Player.Difficulty = GameplayElements.Difficulty.Normal;
+
+
+            Results.RankableScore = new GameplayElements.Scoring.Score()
             {
-//                Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
-//                Player.Difficulty = GameplayElements.Difficulty.Normal;
-//
-//
-//                Results.RankableScore = new GameplayElements.Scoring.Score()
-//                {
-//                    count100 = 55,
-//                    count50 = 128,
-//                    count300 = 387,
-//                    countMiss = 0,
-//                    date = DateTime.Now,
-//                    spinnerBonusScore = 1500,
-//                    comboBonusScore = 578420,
-//                    accuracyBonusScore = 200000,
-//                    hitScore = 800000 - 578420,
-//                    maxCombo = 198
-//                };
-//
-//                Director.ChangeMode(OsuMode.Results, null);
-            }
+                count100 = 55,
+                count50 = 128,
+                count300 = 387,
+                countMiss = 0,
+                date = DateTime.Now,
+                spinnerBonusScore = 1500,
+                comboBonusScore = 578420,
+                accuracyBonusScore = 200000,
+                hitScore = 800000 - 578420,
+                maxCombo = 198
+            };
+
+            Director.ChangeMode(OsuMode.Results, null);
+#else
+            //Load the main menu initially.
+            Director.ChangeMode(OsuMode.MainMenu, null);
+#endif
 
             Clock.Start();
         }
