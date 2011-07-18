@@ -61,7 +61,15 @@ namespace osum.GameModes.Store
             if (pack == null) return;
 
             if (wasSuccessful)
+            {
+                Console.WriteLine("Receipt is: ");
+
+                foreach (byte b in transaction.TransactionReceipt)
+                    Console.Write(b.ToString());
+                Console.WriteLine();
+
                 download(pack);
+            }
         }
 
         void productsResponse(SKProduct[] products)

@@ -237,7 +237,9 @@ namespace osum.GameModes.Store
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
+            {
                 instance.s_ButtonBack.FadeIn(100);
+            }
         }
 
         public static void EnsureVisible(pDrawable sprite)

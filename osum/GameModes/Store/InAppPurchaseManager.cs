@@ -83,6 +83,10 @@ namespace osum.GameModes.Store
         {
             purchaseCompleteDelegate = purchaseCompleteResponse;
 
+#if !DIST
+            Console.WriteLine("Beginning purchase of " + productId);
+#endif
+
             if (observer == null)
             {
                 observer = new MySKPaymentObserver(this);
@@ -100,6 +104,10 @@ namespace osum.GameModes.Store
         //
         public void finishTransaction(SKPaymentTransaction transaction, bool wasSuccessful)
         {
+#if !DIST
+            Console.WriteLine("Purchase compete with " + (wasSuccessful ? "success" : "failure"));
+#endif
+
             // remove the transaction from the payment queue.
             SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
 
@@ -131,15 +139,19 @@ namespace osum.GameModes.Store
         /// </summary>
         public void handleFailedTransaction(SKPaymentTransaction transaction)
         {    
+#if !DIST
+            Console.WriteLine("Transaction failed with error code:" + transaction.Error.Code);
+#endif
             if (transaction.Error.Code != 2)
             {
                 //there was an actual error during the purchase process.
-                finishTransaction(transaction, false);
             } else
             {
                 //payment was cancelled by the user at the apple dialog.
                 SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);  
             }
+
+            finishTransaction(transaction, false);
         }
     }
 
@@ -154,7 +166,6 @@ namespace osum.GameModes.Store
 
         public override void UpdatedTransactions(SKPaymentQueue queue, SKPaymentTransaction[] transactions)
         {
-            Console.WriteLine("got here");
             foreach (SKPaymentTransaction transaction in transactions)
             {
                 switch (transaction.TransactionState)
