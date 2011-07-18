@@ -82,7 +82,6 @@ namespace osum.Support.iPhone
         private void RotationChanged(NSNotification notification)
         {
             UIInterfaceOrientation interfaceOrientation;
-            Console.WriteLine("Received notification:"+UIDevice.CurrentDevice.Orientation);
             switch (UIDevice.CurrentDevice.Orientation)
             {
                 case UIDeviceOrientation.LandscapeLeft:
