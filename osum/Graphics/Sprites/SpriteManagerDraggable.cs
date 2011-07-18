@@ -14,6 +14,7 @@ namespace osum.Graphics.Sprites
 
         internal bool ShowScrollbar = true;
         internal bool AutomaticHeight = true;
+        internal bool LockHorizontal = true;
 
         internal float EndStopLenience = 2;
 
@@ -45,7 +46,7 @@ namespace osum.Graphics.Sprites
         {
             base.HandleInputManagerOnMove(source, trackingPoint);
 
-            if (movedX > 10 && movedY < 20)
+            if (LockHorizontal && movedX > 10 && movedY < 20)
                 return;
 
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)

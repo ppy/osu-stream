@@ -29,6 +29,7 @@ namespace osum.GameModes
             AutomaticHeight = false;
             ShowScrollbar = false;
             ExactCoordinates = false;
+            LockHorizontal = false;
             CheckSpritesAreOnScreenBeforeRendering = false;
 
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
