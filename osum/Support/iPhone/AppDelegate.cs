@@ -93,7 +93,18 @@ namespace osum.Support.iPhone
                 default:
                     return;
             }
-            game.HandleRotationChange(interfaceOrientation);
+
+            if (ViewController == null)
+                game.HandleRotationChange(interfaceOrientation);
+
+            /*if (ViewController != null)
+            {
+                ViewController.DidRotate(interfaceOrientation);
+                ViewController.WillAnimateRotation(interfaceOrientation,0.5);
+                ViewController.WillAnimateFirstHalfOfRotation(interfaceOrientation, 0.2);
+                ViewController.WillAnimateSecondHalfOfRotation(interfaceOrientation, 0.2);
+                ViewController.WillRotate(interfaceOrientation,0.5);
+            }*/
         }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
@@ -178,22 +189,42 @@ namespace osum.Support.iPhone
         public static UIViewController ViewController;
 
         public static bool UsingViewController;
-        public static void SetUsingViewController(bool isusing)
+        public static void SetUsingViewController(bool isUsing)
         {
-                if (isusing == UsingViewController) return;
-                UsingViewController = isusing;
+                if (isUsing == UsingViewController) return;
+                UsingViewController = isUsing;
 
                 if (UsingViewController)
                 {
                     if (ViewController == null)
-                        ViewController = new UIViewController();
+                        ViewController = new GenericViewController();
                     Instance.window.AddSubview(ViewController.View);
 
                     InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
                     source.ReleaseAllTouches();
                 }
                 else
+                {
                     ViewController.View.RemoveFromSuperview();
+                    ViewController.Dispose();
+                    ViewController = null;
+                }
+        }
+    }
+
+    public class GenericViewController : UIViewController
+    {
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            switch (toInterfaceOrientation)
+            {
+                case UIInterfaceOrientation.LandscapeLeft:
+                case UIInterfaceOrientation.LandscapeRight:
+                    return toInterfaceOrientation == UIApplication.SharedApplication.StatusBarOrientation;
+                    //only allow rotation on initial display, else all hell breaks loose.
+                default:
+                    return false;
+            }
         }
     }
 }

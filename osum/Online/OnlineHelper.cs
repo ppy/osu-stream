@@ -2,6 +2,7 @@ using System;
 using osum.Helpers;
 using osum.UI;
 using osum.Resources;
+using osum.GameModes;
 
 namespace osum.Online
 {
@@ -45,8 +46,12 @@ namespace osum.Online
         static void authFinished()
         {
             if (onlineServices != null && onlineServices.IsAuthenticated)
+            {
                 //we succeeded, so reset the warning
                 GameBase.Config.SetValue<bool>("GamecentreFailureAnnounced", false);
+                if (Director.CurrentOsuMode == OsuMode.Options)
+                    Director.ChangeMode(OsuMode.Options);
+            }
             else
             {
                 if (!GameBase.Config.GetValue<bool>("GamecentreFailureAnnounced", false))
