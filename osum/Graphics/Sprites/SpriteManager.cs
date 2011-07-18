@@ -201,6 +201,12 @@ namespace osum.Graphics.Sprites
 
         internal pList<pDrawable> ForwardPlayList = new pList<pDrawable>() { UseBackwardsSearch = true };
 
+        internal void ResetFirstTransformations()
+        {
+            foreach (pDrawable p in Sprites)
+                p.ResetInitialTransformationRead();
+        }
+
         internal virtual void Add(pDrawable sprite)
         {
             if (ForwardPlayOptimisedAdd && sprite.Transformations.Count > 0)

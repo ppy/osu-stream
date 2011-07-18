@@ -365,6 +365,11 @@ namespace osum.Graphics.Sprites
 
         protected bool hasMovement;
 
+        internal void ResetInitialTransformationRead()
+        {
+            readInitialTransformationsOnce = false;
+        }
+
         bool readInitialTransformationsOnce;
 
         /// <summary>

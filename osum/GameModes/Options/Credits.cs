@@ -212,6 +212,7 @@ namespace osum.GameModes.Options
             incrementalSpeed = (-trackingPoint.WindowDelta.Y * 2) * 0.5f + incrementalSpeed * 0.5f;
 
             Clock.IncrementManual(incrementalSpeed);
+            if (incrementalSpeed < 0) spriteManager.ResetFirstTransformations();
         }
 
         protected override void initializeUIElements()
@@ -304,12 +305,10 @@ namespace osum.GameModes.Options
             {
                 incrementalSpeed = 0.2f + incrementalSpeed * 0.8f;
                 Clock.IncrementManual(incrementalSpeed);
+                if (incrementalSpeed < 0) spriteManager.ResetFirstTransformations();
             }
 
             playfieldBackground.Velocity = 0.4f * incrementalSpeed;
-            if (InputManager.IsPressed)
-                incrementalSpeed = 0;
-
             base.Update();
         }
     }
