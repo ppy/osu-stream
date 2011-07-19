@@ -1,12 +1,8 @@
 using System;
 using MonoTouch.UIKit;
-
-#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
-
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
@@ -26,23 +22,9 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#else
-using OpenTK.Input;
-using OpenTK.Graphics.OpenGL;
-using System.Drawing.Imaging;
-using osum.Input;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
-#endif
-
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 using osum.Audio;
-using System.Threading;
 using osum.GameModes;
 using OpenTK.Graphics;
 using OpenTK.Platform;
@@ -96,15 +78,6 @@ namespace osum.Support.iPhone
 
             if (ViewController == null)
                 game.HandleRotationChange(interfaceOrientation);
-
-            /*if (ViewController != null)
-            {
-                ViewController.DidRotate(interfaceOrientation);
-                ViewController.WillAnimateRotation(interfaceOrientation,0.5);
-                ViewController.WillAnimateFirstHalfOfRotation(interfaceOrientation, 0.2);
-                ViewController.WillAnimateSecondHalfOfRotation(interfaceOrientation, 0.2);
-                ViewController.WillRotate(interfaceOrientation,0.5);
-            }*/
         }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
@@ -125,10 +98,11 @@ namespace osum.Support.iPhone
 
             window.AddSubview(glView);
 
+            GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
+                                    (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+
 #if !DIST
             Console.WriteLine("scale factor " + GameBase.ScaleFactor);
-            GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
-                                        (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
             Console.WriteLine("native size " + GameBase.NativeSize);
 #endif
             GameBase.TriggerLayoutChanged();
@@ -142,7 +116,7 @@ namespace osum.Support.iPhone
             return true;
         }
 
-        public override void WillEnterForeground (UIApplication application)
+        public override void WillEnterForeground(UIApplication application)
         {
             if (Director.CurrentOsuMode == OsuMode.MainMenu)
                 Director.ChangeMode(OsuMode.MainMenu, null);
