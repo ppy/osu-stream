@@ -295,9 +295,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 scoringPoints.Add(progress);
 
+                Line l;
+
                 pSprite scoringDot =
                                     new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
-                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress),
+                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress, out l),
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new TransformationF(TransformationType.Fade, 0, 1,
@@ -931,27 +933,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         private double normalizeProgress(double progress)
         {
-            while (progress > 2)
-                progress -= 2;
-            if (progress > 1)
-                progress = 2 - progress;
-
+            if (progress > 2) progress -= (Math.Ceiling(progress / 2f) - 1) * 2;
+            if (progress > 1) progress = 2 - progress;
             return progress;
         }
 
-        protected virtual Line lineAtProgress(double progress)
-        {
-            double aimLength = PathLength * normalizeProgress(progress);
-
-            //index is the index of the line segment that exceeds the required length (so we need to cut it back)
-            int index = 0;
-            while (index < cumulativeLengths.Count && cumulativeLengths[index] < aimLength)
-                index++;
-
-            return drawableSegments[index];
-        }
-
-        protected virtual Vector2 positionAtProgress(double progress)
+        protected virtual Vector2 positionAtProgress(double progress, out Line line)
         {
             double aimLength = PathLength * normalizeProgress(progress);
 
@@ -961,10 +948,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                 index++;
 
             double lengthAtIndex = cumulativeLengths[index];
-            Line currentLine = drawableSegments[index];
+            line = drawableSegments[index];
 
             //cut back the line to required exact length
-            return currentLine.p1 + Vector2.Normalize(currentLine.p2 - currentLine.p1) * (float)(aimLength - (index > 0 ? cumulativeLengths[index - 1] : 0));
+            return line.p1 + Vector2.Normalize(line.p2 - line.p1) * (float)(aimLength - (index > 0 ? cumulativeLengths[index - 1] : 0));
         }
 
         bool isReversing { get { return progressCurrent % 2 >= 1; } }
@@ -980,14 +967,15 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBall.Reverse = isReversing;
 
+            Line line;
             //cut back the line to required exact length
-            trackingPosition = positionAtProgress(progressCurrent);
+            trackingPosition = positionAtProgress(progressCurrent, out line);
 
             if (IsVisible && ClockingNow > snakingBegin)
                 UpdatePathTexture();
 
             spriteFollowBall.Position = trackingPosition;
-            spriteFollowBall.Rotation = lineAtProgress(progressCurrent).theta;
+            spriteFollowBall.Rotation = line.theta;
 
             spriteFollowCircle.Position = trackingPosition;
 
@@ -1079,7 +1067,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
             }
 
-            Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength);
+            Line l;
+            Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength, out l);
             foreach (pDrawable p in spriteCollectionEnd)
                 p.Position = drawEndPosition;
 

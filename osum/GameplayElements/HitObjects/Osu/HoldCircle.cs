@@ -42,8 +42,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         }
 
 
-        protected override Vector2 positionAtProgress(double progress)
+        protected override Vector2 positionAtProgress(double progress, out Line line)
         {
+            line = null;
             return position;
         }
 
@@ -186,11 +187,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             set {
                 //don't pass this down.
             }
-        }
-
-        protected override Graphics.Primitives.Line lineAtProgress(double progress)
-        {
-            return new Line(position, position);
         }
 
         internal override void UpdatePathTexture()
