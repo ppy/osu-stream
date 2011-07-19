@@ -16,6 +16,7 @@ using osum.GameplayElements;
 using System.IO;
 using osum.Resources;
 using osum.UI;
+using osu_common.Libraries.NetLib;
 namespace osum.GameModes
 {
     public class Results : GameMode
@@ -284,14 +285,19 @@ namespace osum.GameModes
             topMostLayer.Add(s_Footer);
 
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            if (RankableScore.totalScore > bmi.HighScore.totalHits)
+            if (RankableScore.totalScore > bmi.HighScore.totalScore)
             {
-                if (RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
+                if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
                     unlockedExpert = true;
 
                 isPersonalBest = true;
                 bmi.HighScore = RankableScore;
             }
+
+            /*string url = "http://www.osustream.com/score/?id=";
+            StringNetRequest nr = new StringNetRequest(url);*/
+
+
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
             OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
