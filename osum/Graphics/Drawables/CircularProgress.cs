@@ -88,8 +88,11 @@ namespace osum.Graphics.Drawables
         public override void Dispose()
         {
 #if !NO_PIN_SUPPORT
-            handle_colours.Free();
-            handle_vertices.Free();
+            if (handle_colours.IsAllocated)
+            {
+                handle_colours.Free();
+                handle_vertices.Free();
+            }
 #else
             Marshal.FreeHGlobal(handle_vertices_pointer);
             Marshal.FreeHGlobal(handle_colours_pointer);
