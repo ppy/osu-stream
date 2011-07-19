@@ -4,6 +4,9 @@ using System.Drawing;
 using OpenTK;
 using osum.Helpers;
 using osum.Support;
+using osum.Graphics.Sprites;
+using osum.Audio;
+using osum.GameplayElements.Beatmaps;
 namespace osum
 {
     public static class InputManager
@@ -77,6 +80,11 @@ namespace osum
             MainPointerPosition = point.BasePosition;
             TrackingPoints.Add(point);
             TriggerOnDown(source, point);
+
+            /*pDrawable d = osum.Graphics.Sprites.pSprite.FullscreenWhitePixel;
+            d.FadeOutFromOne(200);
+            GameBase.MainSpriteManager.Add(d);
+            AudioEngine.PlaySample(OsuSamples.HitClap,SampleSet.Soft);*/
         }
 
         private static void ReceiveUp(InputSource source, TrackingPoint point)
