@@ -467,12 +467,13 @@ namespace osum.GameModes
                 if (comboMultiplier)
                 {
 
-                    int comboAmount = (int)Math.Max(0, (scoreChange / 5 * Math.Min(comboCounter.currentCombo - 4, 60) / 2 * DifficultyComboMultiplier));
+                    int comboAmount = (int)Math.Max(0, (scoreChange / 2 * Math.Min(comboCounter.currentCombo - 4, 60) * DifficultyComboMultiplier));
 
+                    int accRemainder = 1000000 - Score.ACCURACY_BONUS_AMOUNT;
                     //check we don't exceed 0.8mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
-                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 700000)
-                        comboAmount = Math.Max(0, 700000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
+                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > accRemainder)
+                        comboAmount = Math.Max(0, accRemainder - CurrentScore.hitScore - CurrentScore.comboBonusScore);
 
                     CurrentScore.comboBonusScore += comboAmount;
                 }

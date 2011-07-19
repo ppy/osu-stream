@@ -26,7 +26,7 @@ namespace osum.GameplayElements.Scoring
             get
             {
                 if (!UseAccuracyBonus) return 0;
-                return (int)Math.Round(Math.Max(0, accuracy - 0.75) / 0.25 * 300000);
+                return (int)Math.Round(Math.Max(0, accuracy - 0.75) / 0.25 * ACCURACY_BONUS_AMOUNT);
             }
         }
 
@@ -38,13 +38,15 @@ namespace osum.GameplayElements.Scoring
             get { return spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore; }
         }
 
+        public const int ACCURACY_BONUS_AMOUNT = 400000;
+
         public Rank Ranking
         {
             get
             {
                 if (accuracy == 1)
                     return Rank.SS;
-                if (totalScore > 900000)
+                if (totalScore > 900000 && countMiss == 0)
                     return Rank.S;
                 if (totalScore > 800000)
                     return Rank.A;
