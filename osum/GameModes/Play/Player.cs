@@ -444,6 +444,17 @@ namespace osum.GameModes
                     break;
             }
 
+#if !DIST
+            /*if (hitObject is HitCircle || Math.Abs(Clock.AudioTime - hitObject.StartTime) < 30)
+            {
+                pSpriteText st = new pSpriteText(Math.Abs(Clock.AudioTime - hitObject.StartTime).ToString(), "default", 0, FieldTypes.GamefieldSprites, OriginTypes.TopCentre,
+                    ClockTypes.Audio, hitObject.Position + new Vector2(0,60), 1, false, Clock.AudioTime > hitObject.StartTime ? Color.OrangeRed : Color4.YellowGreen);
+                st.FadeOutFromOne(900);
+                spriteManager.Add(st);
+            }*/
+#endif
+
+
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
 
@@ -455,12 +466,12 @@ namespace osum.GameModes
                 if (comboMultiplier)
                 {
 
-                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 60) * DifficultyComboMultiplier));
+                    int comboAmount = (int)Math.Max(0, (scoreChange / 5 * Math.Min(comboCounter.currentCombo - 4, 60) / 2 * DifficultyComboMultiplier));
 
                     //check we don't exceed 0.8mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
-                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 800000)
-                        comboAmount = Math.Max(0, 800000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
+                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 700000)
+                        comboAmount = Math.Max(0, 700000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
 
                     CurrentScore.comboBonusScore += comboAmount;
                 }
