@@ -472,9 +472,8 @@ namespace osum.GameplayElements
         {
             float radius = DifficultyManager.HitObjectRadiusSolidGamefieldHittable;
 
-            return (IsVisible &&
-                    StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
-                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime &&
+            return (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTimeInputAdjust &&
+                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTimeInputAdjust &&
                     !IsHit &&
                     pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
