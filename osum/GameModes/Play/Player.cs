@@ -106,7 +106,8 @@ namespace osum.GameModes
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
-            touchBurster = new TouchBurster(!Player.Autoplay);
+            if (!GameBase.IsSlowDevice)
+                touchBurster = new TouchBurster(!Player.Autoplay);
 
             loadBeatmap();
 
@@ -526,7 +527,7 @@ namespace osum.GameModes
 
             if (menu != null) menu.Draw();
 
-            touchBurster.Draw();
+            if (touchBurster != null) touchBurster.Draw();
 
             topMostSpriteManager.Draw();
 
@@ -571,7 +572,7 @@ namespace osum.GameModes
             if (scoreDisplay != null) scoreDisplay.Update();
             if (comboCounter != null) comboCounter.Update();
 
-            touchBurster.Update();
+            if (touchBurster != null) touchBurster.Update();
 
             if (countdown != null) countdown.Update();
 
