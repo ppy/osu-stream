@@ -265,10 +265,13 @@ namespace BeatmapCombinator
             string[] splitdir = dir.Split('\\');
             string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
-
+#if DIST
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
+            string audioFilename = Directory.GetFiles(dir, "*.m4a")[0];
+#else
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
-
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
+#endif
 
 
             //write the package initially so we can use it for score testing purposes.
@@ -378,7 +381,11 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
+#if DIST
+                package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
+#else
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
+#endif
 
                 string dir = Path.GetDirectoryName(audioFilename);
 
