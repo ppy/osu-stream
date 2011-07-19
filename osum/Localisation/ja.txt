@@ -111,4 +111,4 @@ Free=無料
 Congratulations=お疲れ様でした！
 UnlockedExpert=エキスパートが解禁されました。頑張ってください！
 Audio=オーディオ
-NoticeOnlineRanking=Due to unexpected limitations in the Game Centre leaderboard system, rankings will be added in a v1.1 release coming very soon. Sorry for the inconvenience!
+NoticeOnlineRanking=ゲームセンターのスコアボードのシステムの制限により、ランキングシステムの実装はごく近い内に出すver1.1からになります。すみませんがしばらくお待ちください!

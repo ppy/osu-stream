@@ -127,7 +127,7 @@ namespace osum.GameModes.Options
             text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
-            vPos += 90;
+            vPos += 100;
 
             text = new pText(LocalisationManager.GetString(OsuString.NoticeOnlineRanking), 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, false)
             {
