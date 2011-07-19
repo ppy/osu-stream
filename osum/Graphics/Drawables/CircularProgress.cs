@@ -103,10 +103,10 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
 
-                float startAngle = (float)(-Math.PI / 2);
+                float startAngle = (float)(-MathHelper.Pi / 2);
                 float cappedProgress = pMathHelper.ClampToOne(Progress);
 
-                float endAngle = (float)(cappedProgress * Math.PI * 2f + startAngle);
+                float endAngle = (float)(cappedProgress * MathHelper.Pi * 2f + startAngle);
 
                 float da = (endAngle - startAngle) / (parts - 1);
 

@@ -109,8 +109,8 @@ namespace osum.Graphics.Drawables
 
                         for (int v = 0; v < parts; v++)
                         {
-                            precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * Math.PI / parts);
-                            precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * Math.PI / parts);
+                            precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * MathHelper.Pi / parts);
+                            precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * MathHelper.Pi / parts);
                         }
 
                         precalculatedAngles[parts * 2] = vertices[0];

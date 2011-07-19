@@ -384,7 +384,7 @@ namespace osum.Graphics.Sprites
 
                 GL.Translate(GameBase.NativeSize.Width / 2f, GameBase.NativeSize.Height / 2f, 0);
                 if (Rotation != 0)
-                    GL.Rotate(Rotation / (float)Math.PI * 180, 0, 0, 1);
+                    GL.Rotate(Rotation / MathHelper.Pi * 180, 0, 0, 1);
                 if (ScaleScalar != 1)
                     GL.Scale(Scale.X, Scale.Y, 0);
                 GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);

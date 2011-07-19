@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,8 +79,8 @@ namespace osum.GameModes.Play.Components
             }
             else
             {
-                arrowSmall.Rotation = (float)Math.PI;
-                arrowLarge.Rotation = (float)Math.PI;
+                arrowSmall.Rotation = MathHelper.Pi;
+                arrowLarge.Rotation = MathHelper.Pi;
             }
 
 

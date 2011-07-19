@@ -292,7 +292,7 @@ namespace osum.Graphics.Sprites
             {
                 float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
 
-                float rawSine = (float)Math.Sin(Pulses * Math.PI * (progress - 0.5f / Pulses));
+                float rawSine = (float)Math.Sin(Pulses * MathHelper.Pi * (progress - 0.5f / Pulses));
 
                 float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress, 2));
 

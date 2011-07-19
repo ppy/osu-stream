@@ -251,10 +251,10 @@ namespace osum.GameplayElements
 
                     double angleDiff = newAngle - oldAngle;
 
-                    if (angleDiff < -Math.PI)
-                        angleDiff = (2 * Math.PI) + angleDiff;
-                    else if (oldAngle - newAngle < -Math.PI)
-                        angleDiff = (-2 * Math.PI) - angleDiff;
+                    if (angleDiff < -MathHelper.Pi)
+                        angleDiff = (2 * MathHelper.Pi) + angleDiff;
+                    else if (oldAngle - newAngle < -MathHelper.Pi)
+                        angleDiff = (-2 * MathHelper.Pi) - angleDiff;
 
                     velocityFromInputPerMillisecond = angleDiff / elapsed;
                 }
@@ -279,7 +279,7 @@ namespace osum.GameplayElements
 
                 spriteCircle.Rotation += (float)delta;
 
-                currentRotationCount += Math.Abs(delta) * sensitivity_modifier / (Math.PI * 2);
+                currentRotationCount += Math.Abs(delta) * sensitivity_modifier / (MathHelper.Pi * 2);
             }
 
             if (currentRotationCount >= rotationRequirement && !Cleared)
@@ -365,7 +365,7 @@ namespace osum.GameplayElements
             if (sourceSpinning != null)
                 sourceSpinning.Pitch = 0.5f + 0.5f * (float)(currentRotationCount / rotationRequirement);
 
-            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (Math.PI * 2);
+            Rpm = Rpm * 0.9 + 0.1 * (Math.Abs(velocityCurrent) * 60000) / (MathHelper.Pi * 2);
 
             SetScoreMeter((int)(currentRotationCount / rotationRequirement * 100));
 

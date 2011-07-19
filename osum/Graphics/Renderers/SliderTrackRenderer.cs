@@ -459,18 +459,18 @@ namespace osum.Graphics.Renderers
                 float theta = next.theta - curr.theta;
 
                 // keep on the +- pi/2 range.
-                if (theta > Math.PI) theta -= (float)(Math.PI * 2);
-                if (theta < -Math.PI) theta += (float)(Math.PI * 2);
+                if (theta > MathHelper.Pi) theta -= (float)(MathHelper.Pi * 2);
+                if (theta < -MathHelper.Pi) theta += (float)(MathHelper.Pi * 2);
 
                 if (theta < 0)
                 {
                     flip = true;
-                    end_triangles = (int)Math.Ceiling((-theta) * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                    end_triangles = (int)Math.Ceiling((-theta) * MAXRES / MathHelper.Pi + WEDGE_COUNT_FUDGE);
                 }
                 else if (theta > 0)
                 {
                     flip = false;
-                    end_triangles = (int)Math.Ceiling(theta * MAXRES / Math.PI + WEDGE_COUNT_FUDGE);
+                    end_triangles = (int)Math.Ceiling(theta * MAXRES / MathHelper.Pi + WEDGE_COUNT_FUDGE);
                 }
                 else
                 {

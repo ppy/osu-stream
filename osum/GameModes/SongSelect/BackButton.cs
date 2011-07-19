@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -74,7 +74,7 @@ namespace osum.GameModes.SongSelect
             arrow.Offset = new Vector2(-330, 190);
             sm.Add(arrow);
 
-            Rotation = -(float)Math.PI / 4;
+            Rotation = -MathHelper.Pi / 4;
 
         }
 
@@ -149,7 +149,7 @@ namespace osum.GameModes.SongSelect
                 else
                 {
                     float angle = (float)Math.Atan2(subd.X, subd.Y);
-                    RotateTo(defaultRotation + (-angle + (float)Math.PI * 0.854f) / 2, 50, EasingTypes.In);
+                    RotateTo(defaultRotation + (-angle + MathHelper.Pi * 0.854f) / 2, 50, EasingTypes.In);
                     MoveTo(visiblePosition + new Vector2(dist, dist), 200, EasingTypes.In);
                 }
             }
@@ -158,7 +158,7 @@ namespace osum.GameModes.SongSelect
         Vector2 downPoint;
         private TrackingPoint tp;
         private float dist;
-        private float defaultRotation = -(float)Math.PI / 4;
+        private float defaultRotation = -MathHelper.Pi / 4;
 
         protected override bool checkHover(Vector2 position)
         {

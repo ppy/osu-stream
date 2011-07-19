@@ -299,7 +299,7 @@ namespace osum.GameModes.Store
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
-                preview.Transform(new TransformationF(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
+                preview.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
                 StoreMode.EnsureVisible(s_BackingPlate);
