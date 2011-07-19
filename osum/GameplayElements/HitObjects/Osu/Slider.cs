@@ -605,7 +605,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        internal Vector2 trackingPosition;
+        internal Vector2 trackingPosition; //todo: make this based on input adjusted clocking.
         public override Vector2 TrackingPosition { get { return trackingPosition; } }
 
         /// <summary>
@@ -617,7 +617,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (!HitCircleStart.IsHit)
                 base.CheckScoring();
 
-            if (IsEndHit || ClockingNow < StartTime)
+            if (IsEndHit || Clock.AudioTimeInputAdjust < StartTime)
                 return ScoreChange.Ignore;
 
             int now = ClockingNow;

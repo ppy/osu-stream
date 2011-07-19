@@ -83,7 +83,7 @@ namespace osum.GameplayElements
 
         protected override ScoreChange HitActionInitial()
         {
-            int hitTime = ClockingNow;
+            int hitTime = Clock.AudioTimeInputAdjust;
             int accuracy = Math.Abs(hitTime - StartTime);
 
             if (accuracy < DifficultyManager.HitWindow300 || Player.Autoplay)

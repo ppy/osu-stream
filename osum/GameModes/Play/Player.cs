@@ -365,7 +365,7 @@ namespace osum.GameModes
 
             if (hitObject is HitCircle && change > 0)
             {
-                CurrentScore.hitOffsetMilliseconds += (Clock.AudioTime - hitObject.StartTime);
+                CurrentScore.hitOffsetMilliseconds += (Clock.AudioTimeInputAdjust - hitObject.StartTime);
                 CurrentScore.hitOffsetCount++;
             }
 

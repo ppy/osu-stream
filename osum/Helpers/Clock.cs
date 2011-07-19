@@ -14,6 +14,7 @@ namespace osum.Helpers
         Game,
         Mode,
         Audio,
+        AudioInputAdjusted,
         Manual
     }
 
@@ -26,11 +27,12 @@ namespace osum.Helpers
         //higher offset == notes appear earlier
         public const int UNIVERSAL_OFFSET_MP3 = 45;
         public const int UNIVERSAL_OFFSET_M4A = -10;
+        public const int UNIVERSAL_OFFSET_INPUT = 16 * 4; //roughly four frames
 #else
         public const int UNIVERSAL_OFFSET_MP3 = 60;
         public const int UNIVERSAL_OFFSET_M4A = -10;
+        public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
-        public const int UNIVERSAL_OFFSET_INPUT = -25;
 
         public static bool UseMp3Offset = true;
 
@@ -74,6 +76,11 @@ namespace osum.Helpers
         public static int AudioTime;
 
         /// <summary>
+        /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
+        /// </summary>
+        public static int AudioTimeInputAdjust;
+
+        /// <summary>
         /// Gets the current time for a specific clock type.
         /// </summary>
         /// <param name="clock">The clock type in question.</param>
@@ -82,6 +89,8 @@ namespace osum.Helpers
         {
             switch (clock)
             {
+                case ClockTypes.AudioInputAdjusted:
+                    return AudioTimeInputAdjust;
                 case ClockTypes.Audio:
                     return AudioTime;
                 default:
@@ -203,6 +212,7 @@ namespace osum.Helpers
                 audioCheckFrame = 0;
 
             AudioTime = (int)Math.Round(currentFrameAudioTime * 1000) + offset;
+            AudioTimeInputAdjust = AudioTime - UNIVERSAL_OFFSET_INPUT;
         }
 
         public static ITimeSource AudioTimeSource { get; set; }

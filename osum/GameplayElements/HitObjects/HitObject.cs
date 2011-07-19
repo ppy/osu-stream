@@ -164,7 +164,7 @@ namespace osum.GameplayElements
         /// </returns>
         internal ScoreChange Hit()
         {
-            if (ClockingNow < StartTime - DifficultyManager.HitWindow50 * 1.5f)
+            if (Clock.AudioTimeInputAdjust < StartTime - DifficultyManager.HitWindow50 * 1.5f)
             {
                 Shake();
                 return ScoreChange.Ignore;
@@ -191,7 +191,12 @@ namespace osum.GameplayElements
                 return ScoreChange.Ignore;
 
             //check for miss
-            if (ClockingNow > (Player.Autoplay ? StartTime : HittableEndTime))
+            if (Player.Autoplay)
+            {
+                if (ClockingNow > StartTime)
+                    return Hit(); //force a "hit" if we haven't yet. todo: check if we ever get here
+            }
+            else if (Clock.AudioTimeInputAdjust > HittableEndTime)
                 return Hit(); //force a "hit" if we haven't yet.
 
             return ScoreChange.Ignore;
