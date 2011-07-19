@@ -52,7 +52,18 @@ namespace osum.GameplayElements.Beatmaps
             }
 
         }
-        public string AudioFilename = "audio.mp3";
+
+#if DIST
+        public string AudioFilename = "audio.m4a";
+#else
+        public string AudioFilename
+        {
+            get {
+                return ContainerFilename.EndsWith(".osz2") ? "audio.mp3" : "audio.m4a";
+            }
+        }
+#endif
+
         public List<int> StreamSwitchPoints;
 
         public Beatmap()
