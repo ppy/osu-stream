@@ -117,7 +117,7 @@ namespace osum.GameModes
                 v_offset += 40;
 
                 //Spin Bonus
-                heading = new pText(LocalisationManager.GetString(OsuString.Hit), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Hit), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -136,7 +136,7 @@ namespace osum.GameModes
                 v_offset += 25;
 
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Combo), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Combo), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -154,7 +154,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -172,7 +172,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Spin), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Spin), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
