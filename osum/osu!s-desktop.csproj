@@ -32,6 +32,8 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>MONO OSUM DIST</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
