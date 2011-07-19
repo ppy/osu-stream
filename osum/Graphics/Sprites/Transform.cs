@@ -204,7 +204,7 @@ namespace osum.Graphics.Sprites
                 case EasingTypes.OutDouble:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 4));
                 case EasingTypes.InOut:
-                    return start -2 * (progress * progress * progress) + 3 * (progress * progress) * (end - start);
+                    return start + (-2 * (progress * progress * progress) + 3 * (progress * progress)) * (end - start);
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, progress);
