@@ -166,9 +166,7 @@ namespace osum.GameplayElements
         {
             get
             {
-                int clock = ClockingNow;
-                return clock >= StartTime - DifficultyManager.PreEmpt &&
-                     clock <= EndTime + DifficultyManager.FadeOut;
+                return SpriteHitCircle1.Alpha > 0;
             }
         }
 
