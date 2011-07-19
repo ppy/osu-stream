@@ -26,8 +26,8 @@ namespace osum.Helpers
 #if iOS
         //higher offset == notes appear earlier
         public const int UNIVERSAL_OFFSET_MP3 = 45;
-        public const int UNIVERSAL_OFFSET_M4A = -10;
-        public const int UNIVERSAL_OFFSET_INPUT = 16 * 4; //roughly four frames
+        public const int UNIVERSAL_OFFSET_M4A = -8;
+        public const int UNIVERSAL_OFFSET_INPUT = 16;//16 * 2; //roughly four frames
 #else
         public const int UNIVERSAL_OFFSET_MP3 = 60;
         public const int UNIVERSAL_OFFSET_M4A = -10;
