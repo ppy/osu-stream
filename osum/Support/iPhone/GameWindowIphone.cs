@@ -8,6 +8,9 @@ using MonoTouch.OpenGLES;
 using MonoTouch.UIKit;
 using System.Drawing;
 using OpenTK.Graphics;
+using System.Threading;
+using osum.Helpers;
+using MonoTouch.CoreFoundation;
 
 namespace osum
 {
@@ -19,7 +22,6 @@ namespace osum
         GameBase game;
         uint frameBuffer;
         uint renderbuffer;
-        private NSTimer timer;
 
         [Export("layerClass")]
         public static Class LayerClass()
@@ -64,51 +66,38 @@ namespace osum
             UserInteractionEnabled = true;
         }
 
-        //CADisplayLink dl;
+        CADisplayLink dl;
 
         public void StartAnimation()
         {
-            if (timer != null) return;
-
-            timer = NSTimer.CreateRepeatingTimer(throttling ? 0.032 : 0.0001, DrawFrame);
-            NSRunLoop.Main.AddTimer(timer, "NSDefaultRunLoopMode");
-            //Thread t = new Thread(DrawFrame);
-            //t.Start();
-
-            //dl = UIScreen.MainScreen.CreateDisplayLink(this, new Selector("DrawFrame"));
-            //dl.AddToRunLoop(NSRunLoop.Current, "NSDefaultRunLoopMode");
+            if (dl == null) dl = CADisplayLink.Create(DrawFrame);
+            dl.AddToRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
+            Console.WriteLine("display link with frame interval " + dl.FrameInterval);
         }
 
         bool throttling = false;
 
         public void StopAnimation()
         {
-            timer.Dispose();
-            timer = null;
+            dl.RemoveFromRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
         }
 
+        int updateCount;
+
+        [Export("DrawFrame")]
         private void DrawFrame()
         {
-            //using (NSAutoreleasePool pool = new NSAutoreleasePool())
-            //while (true)
+            bool shouldThrottle = GameBase.GloballyDisableInput || GameBase.ThrottleExecution;
+            if (GameBase.GloballyDisableInput || shouldThrottle != throttling)
             {
-                //while (CFRunLoop.Current.RunInMode("NSDefaultRunLoopMode",0.003, false) == CFRunLoopExitReason.HandledSource)
-                //{}
-
-                bool shouldThrottle = GameBase.GloballyDisableInput || GameBase.ThrottleExecution;
-                if (GameBase.GloballyDisableInput || shouldThrottle != throttling)
-                {
-                    //limit animation speed while something is being some in the foreground.
-                    throttling = shouldThrottle;
-                    StopAnimation();
-                    StartAnimation();
-                }
-
-                game.Update();
-                game.Draw();
-
-                context.EAGLContext.PresentRenderBuffer((int)All.RenderbufferOes);
+                throttling = shouldThrottle;
+                StopAnimation();
+                StartAnimation();
             }
+
+            game.Update();
+            game.Draw();
+            context.EAGLContext.PresentRenderBuffer((int)All.RenderbufferOes);
         }
 
         public void Run(GameBase game)
