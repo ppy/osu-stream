@@ -5,6 +5,7 @@ using System.Text;
 using osum.Support;
 using osum.Audio;
 using System.Diagnostics;
+using osum.GameModes;
 
 namespace osum.Helpers
 {
@@ -23,10 +24,13 @@ namespace osum.Helpers
 
 #if iOS
         //higher offset == notes appear earlier
-        public const int UNIVERSAL_OFFSET = 30;
+        public const int UNIVERSAL_OFFSET_MP3 = 45;
+        public const int UNIVERSAL_OFFSET_M4A = -10;
 #else
-        public const int UNIVERSAL_OFFSET = 60;
+        public const int UNIVERSAL_OFFSET_MP3 = 60;
+        public const int UNIVERSAL_OFFSET_M4A = -10;
 #endif
+        public const int UNIVERSAL_OFFSET_INPUT = -25;
 
         public static bool UseMp3Offset = true;
 
@@ -151,7 +155,7 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = UseMp3Offset ? UNIVERSAL_OFFSET : 0;
+            int offset = UseMp3Offset ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A;
 
             if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
             {
