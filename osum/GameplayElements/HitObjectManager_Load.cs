@@ -153,10 +153,10 @@ namespace osum.GameplayElements
                                 //todo: reimplement?
                                 switch (key)
                                 {
-                                    case "AudioFilename":
-                                        if (val.Length > 0)
-                                            beatmap.AudioFilename = val;
-                                        break;
+                                    //case "AudioFilename":
+                                        //if (val.Length > 0)
+                                            //beatmap.AudioFilename = val;
+                                        //break;
                                 }
                                 break;
                             case FileSection.Editor:
