@@ -194,17 +194,17 @@ namespace osum.Graphics.Sprites
                 case EasingTypes.InDouble:
                     return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 4));
                 case EasingTypes.In:
-                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 2));
+                    return pMathHelper.Lerp(end, start, (1 - progress) * (1 - progress));
                 case EasingTypes.InHalf:
                     return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 1.5));
                 case EasingTypes.Out:
-                    return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 2));
+                    return pMathHelper.Lerp(start, end, progress * progress);
                 case EasingTypes.OutHalf:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 1.5));
                 case EasingTypes.OutDouble:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 4));
                 case EasingTypes.InOut:
-                    return start + (float)(-2 * Math.Pow(progress, 3) + 3 * Math.Pow(progress, 2)) * (end - start);
+                    return start -2 * (progress * progress * progress) + 3 * (progress * progress) * (end - start);
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, progress);
