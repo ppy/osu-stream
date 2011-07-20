@@ -72,7 +72,6 @@ namespace osum
         {
             if (dl == null) dl = CADisplayLink.Create(DrawFrame);
             dl.AddToRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
-            Console.WriteLine("display link with frame interval " + dl.FrameInterval);
         }
 
         bool throttling = false;
@@ -88,12 +87,8 @@ namespace osum
         private void DrawFrame()
         {
             bool shouldThrottle = GameBase.GloballyDisableInput || GameBase.ThrottleExecution;
-            if (GameBase.GloballyDisableInput || shouldThrottle != throttling)
-            {
-                throttling = shouldThrottle;
-                StopAnimation();
-                StartAnimation();
-            }
+            if (shouldThrottle != throttling)
+                dl.FrameInterval = throttling ? 2 : 1;
 
             game.Update();
             game.Draw();
