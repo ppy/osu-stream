@@ -358,6 +358,9 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.DifficultySelect:
+                    if (!AudioEngine.Music.IsElapsing)
+                        playFromPreview();
+
                     if (tabController.SelectedTab == s_TabBarPlay)
                     {
                         if (InputManager.IsPressed && !inputStolen)

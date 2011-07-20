@@ -54,9 +54,7 @@ namespace osum.GameModes
         {
             if (State != SelectState.LoadingPreview) return;
 
-            AudioEngine.Music.DimmableVolume = 0;
-            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
-            AudioEngine.Music.Play();
+            playFromPreview();
 
             //do a second callback so we account for lost gametime due to the above audio load.
             GameBase.Scheduler.Add(delegate
@@ -97,6 +95,13 @@ namespace osum.GameModes
 
                 SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             }, true);
+        }
+
+        private void playFromPreview()
+        {
+            AudioEngine.Music.DimmableVolume = 0;
+            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
+            AudioEngine.Music.Play();
         }
 
         private void initializeTabOptions()
