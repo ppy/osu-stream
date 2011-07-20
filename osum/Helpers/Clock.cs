@@ -140,6 +140,7 @@ namespace osum.Helpers
             ModeTime = Time;
             currentFrameAudioTime += elapsed;
             AudioTime = (int)Math.Round(currentFrameAudioTime * 1000);
+            AudioTimeInputAdjust = AudioTime;
         }
 
         public static void Update(bool ignoreFrame)
