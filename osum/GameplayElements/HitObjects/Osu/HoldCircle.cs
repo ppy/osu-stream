@@ -154,7 +154,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void playRebound(int lastJudgedEndpoint)
         {
-            if (lastJudgedEndpoint - 1 == RepeatCount) base.playRebound(lastJudgedEndpoint);
+            if (lastJudgedEndpoint == RepeatCount) base.playRebound(lastJudgedEndpoint);
             else
                 PlaySound(HitObjectSoundType.Normal,
                           new SampleSetInfo
