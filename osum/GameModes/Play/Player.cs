@@ -347,7 +347,9 @@ namespace osum.GameModes
 
         private void comboPain(bool harsh)
         {
-            playfieldBackground.FlashColour(Color4.Red, 300);
+            if (Failed) return;
+
+            playfieldBackground.FlashColour(Color4.Red, 500).Offset(-250);
 
             if (harsh)
             {
@@ -665,7 +667,7 @@ namespace osum.GameModes
 #if DEBUG
                 DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
 #endif
-                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
+                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 200));
             }
 
         }

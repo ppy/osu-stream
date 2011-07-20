@@ -64,10 +64,11 @@ namespace osum.GameModes.Play.Components
         IntPtr handle_colours_pointer;
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
-        internal static Color4 COLOUR_EASY = new Color4(122, 172, 37, 255);
-        internal static Color4 COLOUR_STANDARD = new Color4(0, 78, 206, 255);
-        internal static Color4 COLOUR_HARD = new Color4(133, 25, 0, 255);
-        internal static Color4 COLOUR_EXPERT = new Color4(77, 0, 105, 255);
+        internal static Color4 COLOUR_EASY = new Color4(90, 135, 42, 255);
+        internal static Color4 COLOUR_STANDARD = new Color4(43, 80, 136, 255);
+        //internal static Color4 COLOUR_HARD = new Color4(150, 0, 95, 255);
+        internal static Color4 COLOUR_HARD = new Color4(135, 42, 101, 255);
+        internal static Color4 COLOUR_EXPERT = new Color4(111, 43, 136, 255);
         internal static Color4 COLOUR_WARNING = new Color4(174, 17, 17, 255);
         private Color4 currentColour;
 
@@ -277,9 +278,9 @@ namespace osum.GameModes.Play.Components
             if (difficulty != lastDifficulty && flash)
             {
                 if (difficulty > lastDifficulty)
-                    Velocity = 50;
+                    Velocity = 100;
                 else
-                    Velocity = -50;
+                    Velocity = -100;
             }
 
             lastDifficulty = difficulty;
@@ -299,6 +300,35 @@ namespace osum.GameModes.Play.Components
                     ChangeColour(COLOUR_EXPERT, flash);
                     return;
             }
+        }
+
+        internal void ChangeColour(Difficulty difficulty, float dimAmount)
+        {
+            Color4 colour;
+            switch (difficulty)
+            {
+                default:
+                case Difficulty.Easy:
+                    colour = COLOUR_EASY;
+                    break;
+                case Difficulty.Normal:
+                    colour = COLOUR_STANDARD;
+                    break;
+                case Difficulty.Hard:
+                    colour = COLOUR_HARD;
+                    break;
+                case Difficulty.Expert:
+                    colour = COLOUR_EXPERT;
+                    break;
+            }
+
+            colour = ColourHelper.Darken(colour, dimAmount * 0.5f);
+            if (currentColour == colour)
+                return;
+            currentColour = colour;
+
+            FadeColour(currentColour, 300);
+            
         }
 
         internal void ChangeColour(Color4 colour, bool flash = true)
