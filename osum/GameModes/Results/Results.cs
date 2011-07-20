@@ -549,12 +549,6 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            base.Update();
-
-            layer1.Update();
-            layer2.Update();
-            topMostLayer.Update();
-
             if (!AudioEngine.Music.IsElapsing)
                 InitializeBgm();
 
@@ -619,6 +613,11 @@ namespace osum.GameModes
                 count50.ShowInt(Math.Min(RankableScore.count50, count50.LastInt + increaseAmount), 0, false, 'x');
             else if (count0.LastInt < RankableScore.countMiss)
                 count0.ShowInt(Math.Min(RankableScore.countMiss, count0.LastInt + increaseAmount), 0, false, 'x');
+
+            base.Update();
+            layer1.Update();
+            layer2.Update();
+            topMostLayer.Update();
         }
     }
 }
