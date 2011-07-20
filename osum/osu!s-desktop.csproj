@@ -25,7 +25,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -33,7 +33,8 @@
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>MONO OSUM DIST</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;MONO OSUM DIST</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -342,6 +343,12 @@
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Skins\Default\Futura-CondensedExtraBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
