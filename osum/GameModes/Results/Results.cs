@@ -613,11 +613,11 @@ namespace osum.GameModes
             int increaseAmount = (int)Math.Max(1, Clock.ElapsedMilliseconds / 8);
             if (count300.LastInt < RankableScore.count300)
                 count300.ShowInt(Math.Min(RankableScore.count300, count300.LastInt + increaseAmount), 0, false, 'x');
-            if (count100.LastInt < RankableScore.count100)
+            else if (count100.LastInt < RankableScore.count100)
                 count100.ShowInt(Math.Min(RankableScore.count100, count100.LastInt + increaseAmount), 0, false, 'x');
-            if (count50.LastInt < RankableScore.count50)
+            else if (count50.LastInt < RankableScore.count50)
                 count50.ShowInt(Math.Min(RankableScore.count50, count50.LastInt + increaseAmount), 0, false, 'x');
-            if (count0.LastInt < RankableScore.countMiss)
+            else if (count0.LastInt < RankableScore.countMiss)
                 count0.ShowInt(Math.Min(RankableScore.countMiss, count0.LastInt + increaseAmount), 0, false, 'x');
         }
     }
