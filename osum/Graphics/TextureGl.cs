@@ -136,8 +136,12 @@ namespace osum.Graphics
             Id = -1;
         }
 
+        public bool IsDisposed { get; private set; }
+
         protected virtual void Dispose(bool disposing)
         {
+            if (IsDisposed)
+                return;
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
@@ -145,6 +149,8 @@ namespace osum.Graphics
             Marshal.FreeHGlobal(handle_coordinates_pointer);
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
+            IsDisposed = true;
+            
             Delete();
         }
 

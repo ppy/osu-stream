@@ -123,6 +123,7 @@ namespace osum.Graphics.Renderers
         
         private pTexture trackTexture;
 
+        public bool IsDisposed {get; private set;}
 
         static SliderTrackRenderer()
         {
@@ -352,6 +353,9 @@ namespace osum.Graphics.Renderers
 
         public void Dispose()
         {
+            if (IsDisposed)
+                return;
+
 #if !NO_PIN_SUPPORT
             for (int i = 0; i < COLOUR_COUNT; i++)
             {
@@ -368,7 +372,7 @@ namespace osum.Graphics.Renderers
             }
             Marshal.FreeHGlobal(vertices_cap_pointer);
 #endif
-
+            IsDisposed = true;
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
         }
 

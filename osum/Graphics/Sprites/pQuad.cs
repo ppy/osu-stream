@@ -88,10 +88,12 @@ namespace osum.Graphics.Drawables
 
 
         public Color4[] Colours;
-
+        public bool IsDisposed { get; private set; }
 
         public override void Dispose ()
         {
+            if (IsDisposed)
+                return;
 #if !NO_PIN_SUPPORT
             if (coordinates != null) handle_coordinates.Free();
             handle_colours.Free();
@@ -103,7 +105,7 @@ namespace osum.Graphics.Drawables
             Marshal.FreeHGlobal(handle_vertices_pointer);
             Marshal.FreeHGlobal(handle_colours_pointer);
 #endif
-
+            IsDisposed = true;
             base.Dispose();
         }
 

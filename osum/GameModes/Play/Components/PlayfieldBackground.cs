@@ -169,8 +169,12 @@ namespace osum.GameModes.Play.Components
             }
         }
 
+        public bool IsDisposed { get; private set; }
+
         public override void Dispose()
         {
+            if (IsDisposed)
+                return;
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_colours.Free();
@@ -180,6 +184,7 @@ namespace osum.GameModes.Play.Components
 #endif
             GameBase.OnScreenLayoutChanged -= initialize;
 
+            IsDisposed = true;
             base.Dispose();
         }
 

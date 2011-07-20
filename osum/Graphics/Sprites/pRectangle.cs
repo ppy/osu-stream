@@ -81,8 +81,13 @@ namespace osum.Graphics.Drawables
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
 
+        public bool IsDisposed { get; private set; }
+
         public override void Dispose()
         {
+            if (IsDisposed)
+                return;
+
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
@@ -90,6 +95,8 @@ namespace osum.Graphics.Drawables
             Marshal.FreeHGlobal(handle_coordinates_pointer);
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
+
+            IsDisposed = true;
             base.Dispose();
         }
 
