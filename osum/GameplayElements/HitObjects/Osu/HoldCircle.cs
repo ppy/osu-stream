@@ -94,7 +94,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation fadeInTrack = new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.HitWindow50);
 
-            activeOverlay =new pSprite(TextureManager.Load(OsuTexture.holdactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White);
+            activeOverlay = new pSprite(TextureManager.Load(OsuTexture.holdactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White);
             spriteCollectionStart.Add(activeOverlay);
 
             inactiveOverlay = new pSprite(TextureManager.Load(OsuTexture.holdinactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White);
@@ -154,8 +154,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected override void playRebound(int lastJudgedEndpoint)
         {
-            if (lastJudgedEndpoint == RepeatCount) base.playRebound(lastJudgedEndpoint);
-            else
+            if (lastJudgedEndpoint == RepeatCount)
+                base.playRebound(lastJudgedEndpoint);
+            else if (SoundTypeList != null)
                 PlaySound(SoundTypeList[lastJudgedEndpoint],
                           new SampleSetInfo
                           {
@@ -180,11 +181,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        internal override int ColourIndex {
-            get {
+        internal override int ColourIndex
+        {
+            get
+            {
                 return base.ColourIndex;
             }
-            set {
+            set
+            {
                 //don't pass this down.
             }
         }
@@ -266,8 +270,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        internal override Vector2 Position2 {
-            get {
+        internal override Vector2 Position2
+        {
+            get
+            {
                 return Position;
             }
         }
