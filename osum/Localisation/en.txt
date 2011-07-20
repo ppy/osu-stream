@@ -125,3 +125,4 @@ Congratulations=Congratulations!
 UnlockedExpert=You have unlocked expert mode for this song. Good luck!
 Audio=Audio
 NoticeOnlineRanking=Due to unexpected limitations in the Game Centre leaderboard system, rankings will be added in a v1.1 release coming very soon. Sorry for the inconvenience!
+PauseInfo=Restart Count: {0}\nSong Progress: {1]

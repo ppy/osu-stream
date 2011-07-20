@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
 using osum.Graphics.Renderers;
+using osum.Resources;
 
 namespace osum.GameModes.Play.Components
 {
@@ -43,7 +44,7 @@ namespace osum.GameModes.Play.Components
                     {
 #if DIST
                         //todo: localise
-                        menuText = new pText(string.Format("{0} restarts\n{1}% completed", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
 #else
                         menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
 #endif
