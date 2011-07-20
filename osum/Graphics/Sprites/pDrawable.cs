@@ -647,7 +647,7 @@ namespace osum.Graphics.Sprites
                                          ClockingNow + duration));
         }
 
-        internal void FlashColour(Color4 colour, int duration)
+        internal Transformation FlashColour(Color4 colour, int duration)
         {
             Color4 end = Colour;
 
@@ -663,6 +663,8 @@ namespace osum.Graphics.Sprites
                                    ClockingNow,
                                    ClockingNow + duration);
             Transform(flash);
+
+            return flash;
         }
 
         /// <summary>

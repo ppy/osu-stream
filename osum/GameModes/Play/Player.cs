@@ -646,8 +646,8 @@ namespace osum.GameModes
                             }, 1500);
                         }
                     }
-                    else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                    else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 2)
+                        playfieldBackground.ChangeColour(HitObjectManager.ActiveStream, 1 - (float)healthBar.CurrentHp / (HealthBar.HP_BAR_MAXIMUM / 2));
                     else
                         playfieldBackground.ChangeColour(HitObjectManager.ActiveStream, false);
                 }
