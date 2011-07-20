@@ -191,7 +191,7 @@ namespace osu_common.Libraries.NetLib
 
         void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
-            data = e.Result;
+            if (e.Error == null) data = e.Result;
             error = e.Error;
         }
 

@@ -70,6 +70,10 @@ namespace osum.GameModes.Store
 
                 download(pack);
             }
+            else
+            {
+                GameBase.Notify("Purchase failed with error:\n" + transaction.Error, null);
+            }
         }
 
         void productsResponse(SKProduct[] products)

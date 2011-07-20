@@ -278,7 +278,7 @@ namespace osum.GameModes.Store
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        if (ex != null)
+                        if (ex != null || data == null || data.Length < 10000)
                         {
                             StoreMode.ResetAllPreviews(true, false);
                             GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
