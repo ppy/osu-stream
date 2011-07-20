@@ -125,7 +125,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -144,7 +144,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -162,7 +162,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -180,7 +180,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
