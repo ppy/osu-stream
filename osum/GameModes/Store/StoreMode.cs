@@ -55,7 +55,7 @@ namespace osum.GameModes.Store
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
 
             if (fetchRequest != null) fetchRequest.Abort();
-            fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
+            fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list.php");
             fetchRequest.onFinish += handlePackInfo;
             NetManager.AddRequest(fetchRequest);
 
@@ -102,9 +102,9 @@ namespace osum.GameModes.Store
                     Console.WriteLine("Adding pack: " + split[0]);
 #endif
 
-                    string packName = split[0];
-                    string packId = split[1];
-                    bool isFree = true;
+                    string packId = split[0];
+                    string packName = split[1];
+                    bool isFree = packId.Contains("Free");
 
                     pp = new PackPanel(packName, packId, isFree);
 
