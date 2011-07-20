@@ -142,14 +142,14 @@ namespace osum.GameModes
         {
             availableMaps.Clear();
 
-            foreach (string s in Directory.GetFiles("Beatmaps/", "*.osf2"))
+            foreach (string s in Directory.GetFiles("Beatmaps/"))
             {
                 //bundled maps
                 Beatmap b = new Beatmap(s);
                 availableMaps.AddInPlace(b);
             }
 
-            foreach (string s in Directory.GetFiles(BeatmapPath, "*.osz2"))
+            foreach (string s in Directory.GetFiles(BeatmapPath))
             {
                 Beatmap b = new Beatmap(s);
                 availableMaps.AddInPlace(b);
