@@ -86,17 +86,17 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchMinimumOS>3.2</MtouchMinimumOS>
-    <MtouchDebug>True</MtouchDebug>
+    <MtouchDebug>False</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM RELEASE DIST</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
@@ -107,7 +107,6 @@
     <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
     <AssemblyName>osum</AssemblyName>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
