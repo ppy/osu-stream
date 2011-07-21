@@ -54,11 +54,11 @@ namespace osum.Graphics.Sprites
 
         internal bool CheckSpritesAreOnScreenBeforeRendering;
 
-        internal SpriteManager(IEnumerable<pDrawable> sprites)
+        internal SpriteManager(List<pDrawable> sprites)
         {
-            Sprites = new List<pDrawable>(sprites);
-            foreach (pSprite s in Sprites)
-                s.ContainingSpriteManager = this;
+            Sprites = new List<pDrawable>(sprites.Count);
+            foreach (pSprite s in sprites)
+                Add(s);
 
             InputManager.OnMove += HandleInputManagerOnMove;
             InputManager.OnDown += HandleInputManagerOnDown;

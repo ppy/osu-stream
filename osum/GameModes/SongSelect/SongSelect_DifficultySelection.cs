@@ -106,6 +106,7 @@ namespace osum.GameModes
 
         private void initializeTabOptions()
         {
+            return;
             //todo: clean this up
             List<pDrawable> sprites = new List<pDrawable>();
 
@@ -118,6 +119,8 @@ namespace osum.GameModes
 
         private void initializeTabRank()
         {
+            return;
+
             List<pDrawable> sprites = new List<pDrawable>();
 
             pSprite text = new pText("Online ranking goes here.", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
@@ -163,11 +166,12 @@ namespace osum.GameModes
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), 1, true, Color4.White) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
-            s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo = new pText(null, 24, new Vector2(40, 64), Vector2.Zero, 1, true, Color4.White, true);
             s_ScoreInfo.OnClick += Handle_ScoreInfoOnClick;
             sprites.Add(s_ScoreInfo);
 
-            s_ScoreRank = new pSprite(null, new Vector2(40,64));
+            s_ScoreRank = new pSprite(null, new Vector2(0, 72)) { DrawDepth = 0.95f };
+            s_ScoreRank.OnClick += Handle_ScoreInfoOnClick;
             sprites.Add(s_ScoreRank);
 
             s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
@@ -177,6 +181,8 @@ namespace osum.GameModes
         {
             if (bmi == null || bmi.HighScore.totalScore == 0)
                 return;
+
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
             Results.RankableScore = bmi.HighScore;
             Director.ChangeMode(OsuMode.Results);
         }
@@ -340,7 +346,7 @@ namespace osum.GameModes
                         s_ScoreInfo.Text += total.ToString().PadLeft(7, '0') + (total > 0 ? " (" + bmi.HighScore.Ranking + ")" : "");
                         s_ScoreRank.Texture = bmi.HighScore.RankingTextureSmall;
                         if (s_ScoreRank.Texture != null)
-                            s_ScoreRank.AdditiveFlash(1, 0.5f);
+                            s_ScoreRank.AdditiveFlash(500, 0.5f);
 
                     }
                 }, 100);
