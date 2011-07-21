@@ -42,6 +42,8 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using osum.UI;
+using osum.Resources;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -87,17 +89,17 @@ namespace osum.GameModes
             osuLogoGloss.Additive = true;
             menuBackgroundNew.Add(osuLogoGloss);
 
-            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-90 * 0.625f, -90 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(112, 58, 144, 255)) { Alpha = 0 };
+            pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-90 * 0.625f, -90 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(112, 58, 144, 255));
             explosion.ScaleScalar = sizeForExplosion(0);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(170 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(242, 25, 138, 255)) { Alpha = 0 };
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(170 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(242, 25, 138, 255));
             explosion.ScaleScalar = sizeForExplosion(1);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
-            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-130 * 0.625f, 88 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(254, 148, 4, 255)) { Alpha = 0 };
+            explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-130 * 0.625f, 88 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(254, 148, 4, 255));
             explosion.ScaleScalar = sizeForExplosion(2);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
@@ -162,8 +164,6 @@ namespace osum.GameModes
                     GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
                 }, true);
 
-            }
-            else
                 if (GameBase.Config.GetValue<bool>("firstrun",true))
                 {
                     Notification notification = new Notification(
@@ -184,6 +184,8 @@ namespace osum.GameModes
                     }, initial_display + 1500);
                 }
 
+            }
+            else
             {
                 if (Director.LastOsuMode == OsuMode.Tutorial)
                     AudioEngine.Music.SeekTo(0);
@@ -279,7 +281,7 @@ namespace osum.GameModes
 
                 tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Scale) as TransformationF;
 
-                float sCh = -(float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * Clock.ElapsedMilliseconds);
+                float sCh = (float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00003 * Clock.ElapsedMilliseconds);
                 if (tr != null)
                     tr.EndFloat += sCh;
                 else
