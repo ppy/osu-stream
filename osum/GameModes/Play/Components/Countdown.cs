@@ -39,7 +39,7 @@ namespace osum.GameModes.Play.Components
         {
             StartTime = start;
             BeatLength = beatLength;
-            spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Transformations.Clear(); });
+            spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); });
             HasFinished = false;
         }
 

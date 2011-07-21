@@ -177,6 +177,8 @@ namespace osum.Resources
         NoticeOnlineRanking,
         PauseInfo,
         FirstRunWelcome,
-        FirstRunTutorial
+        FirstRunTutorial,
+        MorePractice,
+        PutTogether
     }
 }

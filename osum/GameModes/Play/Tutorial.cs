@@ -322,7 +322,7 @@ namespace osum.GameModes.Play
                             if (Clock.ManualTime > 700 && !textShown)
                             {
                                 textShown = true;
-                                showText(LocalisationManager.GetString(OsuString.HitCircle4_1), 100).Colour = Color4.Yellow;
+                                showText(LocalisationManager.GetString(OsuString.HitCircle4_1)).Colour = Color4.GreenYellow;
                             }
 
                             if (Clock.ManualTime > 1300)
@@ -438,7 +438,7 @@ namespace osum.GameModes.Play
                         Player.Autoplay = true;
                         Clock.ResetManual();
 
-                        showText(LocalisationManager.GetString(OsuString.Hold1), -110);
+                        showText(LocalisationManager.GetString(OsuString.Hold1), -90);
 
                         showDemo();
                         if (HitObjectManager != null) HitObjectManager.Dispose();
@@ -564,7 +564,7 @@ namespace osum.GameModes.Play
 
                         currentSegmentDelegate = delegate
                         {
-                            if (Clock.ManualTime < 1500)
+                            if (Clock.ManualTime < 1550)
                                 Clock.IncrementManual(0.5f);
                             else
                                 showTouchToContinue();
@@ -1331,6 +1331,10 @@ namespace osum.GameModes.Play
                         showTouchToContinue();
                     }, 1500);
                     break;
+                case TutorialSegments.TutorialMap_Introduction:
+                    showText(LocalisationManager.GetString(OsuString.PutTogether));
+                    showTouchToContinue();
+                    break;
                 case TutorialSegments.TutorialMap_Interact:
                     if (HitObjectManager != null) HitObjectManager.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
@@ -1380,37 +1384,38 @@ namespace osum.GameModes.Play
                     HitObjectManager.PostProcessing();
                     HitObjectManager.SetActiveStream(Difficulty.Easy);
 
+                    bool done = false;
+
                     currentSegmentDelegate = delegate
                     {
-                        if (!touchToContinue && HitObjectManager.AllNotesHit)
-                            loadNextSegment();
+                        if (HitObjectManager.AllNotesHit && !done)
+                        {
+                            done = true;
+                            GameBase.Scheduler.Add(delegate
+                            {
+                                loadNextSegment();
+                            }, 1000);
+                        }
                     };
-
                     break;
                 case TutorialSegments.TutorialMap_Judge:
                     judge();
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 4)
+                        if (CurrentScore.countMiss > 10 || CurrentScore.count50 > 20)
                         {
                             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText("Looks like you need more practice!");
+                            showText(LocalisationManager.GetString(OsuString.MorePractice));
                             nextSegment = TutorialSegments.TutorialMap_Interact;
                         }
-                        else if (CurrentScore.count50 > 6)
+                        else if (CurrentScore.count100 > 5)
                         {
-                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
-                            showText("You're getting there.");
-                            nextSegment = TutorialSegments.TutorialMap_Interact;
-                        }
-                        else if (CurrentScore.count100 > 0)
-                        {
-                            showText("Good.");
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge3));
                         }
                         else
                         {
-                            showText("Excellent!");
+                            showText(LocalisationManager.GetString(OsuString.StackedJudge4));
                         }
 
                         showTouchToContinue();
@@ -1581,6 +1586,7 @@ namespace osum.GameModes.Play
             Score_2,
             Score_3,
             Score_4,
+            TutorialMap_Introduction,
             TutorialMap_Interact,
             TutorialMap_Judge,
             Outro,
