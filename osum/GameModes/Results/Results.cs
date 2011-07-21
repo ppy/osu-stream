@@ -295,19 +295,23 @@ namespace osum.GameModes
                 BeatmapDatabase.Write();
             }
 
-            /*string url = "http://www.osustream.com/score/?id=";
-            StringNetRequest nr = new StringNetRequest(url);*/
-
-
+            using (MemoryStream ms = new MemoryStream())
+            using (SerializationWriter sw = new SerializationWriter(ms))
+            {
+                bmi.WriteToStream(sw);
+                string url = "http://www.osustream.com/score/submit.php?id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray());
+                StringNetRequest nr = new StringNetRequest(url);
+                NetManager.AddRequest(nr);
+            }
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-            OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
+            /*OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
             {
                 if (finishedDisplaying)
                     showOnlineRanking();
                 else
                     submissionCompletePending = true;
-            });
+            });*/
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
