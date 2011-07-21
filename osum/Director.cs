@@ -219,7 +219,7 @@ namespace osum
             else if (GameBase.ActiveNotification != null)
                 SpriteManager.UniversalDim = GameBase.ActiveNotification.Alpha * 0.7f;
             else if (GameBase.GloballyDisableInput)
-                SpriteManager.UniversalDim = Math.Min(0.6f, SpriteManager.UniversalDim + 0.05f);
+                SpriteManager.UniversalDim = Math.Min(0.8f, SpriteManager.UniversalDim + 0.04f);
             else
                 SpriteManager.UniversalDim = 0;
 

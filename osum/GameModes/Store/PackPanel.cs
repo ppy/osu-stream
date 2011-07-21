@@ -51,6 +51,12 @@ namespace osum.GameModes.Store
 
         public void SetPrice(string price)
         {
+            if (s_LoadingPrice != null)
+            {
+                s_LoadingPrice.FadeOut(100);
+                s_LoadingPrice.AlwaysDraw = false;
+            }
+
             Ready = true;
             s_Price.Text = price;
         }
@@ -121,13 +127,22 @@ namespace osum.GameModes.Store
             });
             s_PriceBackground.OnClick += OnPurchase;
 
-            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : "...", 52, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 46, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
             {
-                TextAlignment = TextAlignment.Left,
                 Origin = OriginTypes.TopCentre,
                 Field = FieldTypes.StandardSnapRight,
                 Offset = new Vector2(80, 0)
             });
+
+            if (!free)
+            {
+                s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
+                {
+                    Offset = new Vector2(75,30)
+                };
+                s_LoadingPrice.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 2000) { Looping = true });
+                Sprites.Add(s_LoadingPrice);
+            }
 
             Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero)
             {
@@ -135,6 +150,8 @@ namespace osum.GameModes.Store
                 Offset = new Vector2(2, 2)
             });
         }
+
+        pSprite s_LoadingPrice;
 
         internal int BeatmapCount { get { return filenames.Count; } }
 

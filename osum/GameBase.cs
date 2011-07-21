@@ -454,7 +454,40 @@ namespace osum
             MainSpriteManager.Draw();
         }
 
-        public static bool GloballyDisableInput;
+        static pDrawable loadingText;
+        static bool globallyDisableInput;
+        public static bool GloballyDisableInput
+        {
+            get { return globallyDisableInput; }
+            set {
+                if (value == globallyDisableInput)
+                    return;
+
+                globallyDisableInput = value;
+
+                if (globallyDisableInput)
+                {
+                    loadingText = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.LightGray)
+                    {
+                        TextAlignment = TextAlignment.Centre,
+                        DimImmune = true,
+                        Origin = OriginTypes.Centre,
+                        Field = FieldTypes.StandardSnapCentre,
+                        Clocking = ClockTypes.Game,
+                        Bold = true
+                    };
+
+                    MainSpriteManager.Add(loadingText);
+                }
+                else
+                {
+                    loadingText.FadeOut(100);
+                    loadingText.AlwaysDraw = false;
+                }
+            }
+        }
+
+
         public static bool ThrottleExecution;
 
         public static void TriggerLayoutChanged()
@@ -483,11 +516,9 @@ namespace osum
         private void UpdateNotifications()
         {
             if (ActiveNotification != null && ActiveNotification.Dismissed)
-            {
                 ActiveNotification = null;
-            }
 
-            if (NotificationQueue.Count > 0 && ActiveNotification == null)
+            if (NotificationQueue.Count > 0 && ActiveNotification == null && !globallyDisableInput)
             {
                 ActiveNotification = NotificationQueue.Dequeue();
                 ActiveNotification.Display();
