@@ -134,7 +134,7 @@ namespace osum.GameModes.Store
                 y++;
             }
 
-            if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
+            if ((Director.IsTransitioning && Director.ActiveTransition.FadeInDone) || Director.CurrentOsuMode != OsuMode.Store)
                 return;
 
             AddPack(pp);
