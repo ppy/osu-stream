@@ -210,7 +210,10 @@ namespace osum.Helpers
                     audioCheckFrame++;
             }
             else
+            {
+                currentFrameAudioTime = AudioTimeSource.CurrentTime;
                 audioCheckFrame = 0;
+            }
 
             AudioTime = (int)Math.Round(currentFrameAudioTime * 1000) + offset;
             AudioTimeInputAdjust = AudioTime - UNIVERSAL_OFFSET_INPUT;
