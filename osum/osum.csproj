@@ -11,7 +11,7 @@
     <RootNamespace>osum</RootNamespace>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1410</BundleVersion>
+    <BundleVersion>1415</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
@@ -92,11 +92,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchMinimumOS>3.2</MtouchMinimumOS>
-    <MtouchDebug>False</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE DIST</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>

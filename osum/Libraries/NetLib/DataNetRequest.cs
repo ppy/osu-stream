@@ -38,8 +38,8 @@ namespace osu_common.Libraries.NetLib
             if (written + data.Length > result.Length)
             {
                 byte[] nb = new byte [result.Length + data.Length];
-                result.CopyTo (nb, 0);
-                Marshal.Copy (data.Bytes, nb, result.Length, (int) data.Length);
+                result.CopyTo(nb, 0);
+                Marshal.Copy(data.Bytes, nb, result.Length, (int) data.Length);
                 result = nb;
             }
             else
