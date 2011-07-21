@@ -47,6 +47,7 @@ namespace osum.GameModes.Store
         public string PackId;
         public bool IsFree;
         public bool Ready;
+        public byte[] Receipt;
 
         public void SetPrice(string price)
         {

@@ -1,6 +1,8 @@
 using System;
 using MonoTouch.StoreKit;
 using System.Collections.Generic;
+using MonoTouch.Foundation;
+using System.Runtime.InteropServices;
 
 namespace osum.GameModes.Store
 {
@@ -62,11 +64,20 @@ namespace osum.GameModes.Store
 
             if (wasSuccessful)
             {
+#if !DIST
                 Console.WriteLine("Receipt is: ");
 
                 foreach (byte b in transaction.TransactionReceipt)
                     Console.Write(b.ToString());
                 Console.WriteLine();
+#endif
+
+
+                NSData receiptRaw = transaction.TransactionReceipt;
+                byte[] dataBytes = new byte[receiptRaw.Length];
+                Marshal.Copy(receiptRaw.Bytes, dataBytes, 0, Convert.ToInt32(receiptRaw.Length));
+
+                pack.Receipt = dataBytes;
 
                 download(pack);
             }
