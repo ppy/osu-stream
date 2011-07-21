@@ -99,8 +99,6 @@ namespace osum.GameModes.Play.Components
 
         public override void Update()
         {
-            base.Update();
-
             if (HitObjectManager != null)
             {
                 HitObject nextObject = HitObjectManager.NextObject;
@@ -183,6 +181,8 @@ namespace osum.GameModes.Play.Components
             rightFinger2.Offset = rightFinger.Offset;
             rightFinger2.ScaleScalar = rightFinger.ScaleScalar;
             rightFinger2.Alpha = rightFinger.Alpha;
+
+            base.Update();
         }
 
         pDrawable lastFinger;
