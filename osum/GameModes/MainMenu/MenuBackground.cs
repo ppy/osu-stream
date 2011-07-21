@@ -42,7 +42,7 @@ namespace osum.GameModes
                     new Vector2(444 + 2, 172 - 2) - centre,
                     rectangleLineLeft.p2 + new Vector2(-2, 2),
                     new Vector2(528 + 3, 297 + 2) - centre,
-                    true, 0.4f, new Color4(13, 13, 13, 255));
+                    true, 0.4f, new Color4(21, 21, 22, 255));
                 rectBorder.AlphaBlend = false;
                 rectBorder.Field = FieldTypes.StandardSnapCentre;
                 rectBorder.Origin = OriginTypes.Centre;
@@ -59,10 +59,10 @@ namespace osum.GameModes
             rect.AlphaBlend = false;
             rect.Origin = OriginTypes.Centre;
             rect.Colours = new Color4[] {
-                new Color4(28,29,35,255),
-                new Color4(27,29,33,255),
-                new Color4(18,19,21,255),
-                new Color4(18,19,21,255)
+                new Color4(40,43,52,255),
+                new Color4(38,40,48,255),
+                new Color4(41,43,51,255),
+                new Color4(29,30,34,255)
             };
             Add(rect);
 

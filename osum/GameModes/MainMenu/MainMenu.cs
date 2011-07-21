@@ -84,8 +84,7 @@ namespace osum.GameModes
             menuBackgroundNew.Add(osuLogo);
 
             //gloss
-            osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_gloss), FieldTypes.StandardSnapCentre, OriginTypes.Custom, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, new Color4(255, 255, 255, 100));
-            osuLogoGloss.Offset = new Vector2(255, 248);
+            osuLogoGloss = new pSprite(TextureManager.Load(OsuTexture.menu_gloss), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, logo_stuff_v_offset), 0.91f, true, Color4.White);
             osuLogoGloss.Additive = true;
             menuBackgroundNew.Add(osuLogoGloss);
 
@@ -286,7 +285,7 @@ namespace osum.GameModes
 
                 tr = menuBackgroundNew.Transformations.Find(t => t.Type == TransformationType.Scale) as TransformationF;
 
-                float sCh = (float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00003 * Clock.ElapsedMilliseconds);
+                float sCh = (float)(Math.Cos((elapsedRotation + 500) / 4000f) * 0.00002 * Clock.ElapsedMilliseconds);
                 if (tr != null)
                     tr.EndFloat += sCh;
                 else
