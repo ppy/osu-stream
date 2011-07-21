@@ -292,6 +292,7 @@ namespace osum.GameModes
 
                 isPersonalBest = true;
                 bmi.HighScore = RankableScore;
+                BeatmapDatabase.Write();
             }
 
             /*string url = "http://www.osustream.com/score/?id=";
@@ -547,6 +548,8 @@ namespace osum.GameModes
             return true;
         }
 
+        int frameCount = 0;
+
         public override void Update()
         {
             if (!AudioEngine.Music.IsElapsing)
@@ -573,14 +576,14 @@ namespace osum.GameModes
                     layer2.ExactCoordinates = thisOffset == 0;
                 }
 
-                fallingSprites.RemoveAll(p => p.Alpha == 0);
+                fallingSprites.RemoveAll(p => p.Transformations.Count == 0);
                 foreach (pSprite p in fallingSprites)
                 {
                     p.Position.Y += p.TagNumeric * 0.003f * (float)Clock.ElapsedMilliseconds;
                     p.TagNumeric++;
                 }
 
-                if (fallingSprites.Count < 20)
+                if (fallingSprites.Count < 20 && frameCount++ % 5 == 0)
                 {
                     float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.Width;
 
