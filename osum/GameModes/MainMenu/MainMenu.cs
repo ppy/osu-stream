@@ -89,18 +89,23 @@ namespace osum.GameModes
             osuLogoGloss.Additive = true;
             menuBackgroundNew.Add(osuLogoGloss);
 
+            Transformation explosionFade = new TransformationF(TransformationType.Fade, 0, 1, initial_display + 500, initial_display + 700);
+
             pSprite explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-90 * 0.625f, -90 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(112, 58, 144, 255));
             explosion.ScaleScalar = sizeForExplosion(0);
+            explosion.Transform(explosionFade);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
             explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(170 * 0.625f, 10 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(242, 25, 138, 255));
             explosion.ScaleScalar = sizeForExplosion(1);
+            explosion.Transform(explosionFade);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 
             explosion = new pSprite(TextureManager.Load(OsuTexture.menu_circle), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-130 * 0.625f, 88 * 0.625f + logo_stuff_v_offset), 0.8f, true, new Color4(254, 148, 4, 255));
             explosion.ScaleScalar = sizeForExplosion(2);
+            explosion.Transform(explosionFade);
             explosions.Add(explosion);
             menuBackgroundNew.Add(explosion);
 

@@ -60,6 +60,11 @@ namespace osu_common.Libraries.NetLib
         {
             finished = true;
 
+#if !DIST
+            if (error != null)
+                Console.WriteLine("ERROR: " + error.ToString());
+#endif
+
             nr.TriggerUpdate();
 
             nr.data = result;
@@ -126,7 +131,7 @@ namespace osu_common.Libraries.NetLib
 #if iOS
                 del = new NRDelegate(this);
 
-                NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 15);
+                NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 30);
                 NSUrlConnection conn = new NSUrlConnection(req, del, true);
 
 #if !DIST
