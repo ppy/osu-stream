@@ -13,8 +13,8 @@ namespace osu_common.Libraries.NetLib
     /// </summary>
     public class StringNetRequest : DataNetRequest
     {
-        public StringNetRequest(string _url)
-            : base(_url)
+        public StringNetRequest(string _url, string method = "GET", string postData = null)
+            : base(_url, method, postData)
         {
         }
 

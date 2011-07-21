@@ -10,7 +10,7 @@ namespace osu_common.Libraries.NetLib
     {
         private string path;
 
-        public FileNetRequest(string path, string url) : base(url)
+        public FileNetRequest(string path, string url, string method = "GET", string postData = null) : base(url, method, postData)
         {
             this.path = path;
         }

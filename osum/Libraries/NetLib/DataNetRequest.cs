@@ -93,9 +93,14 @@ namespace osu_common.Libraries.NetLib
     /// </summary>
     public class DataNetRequest : NetRequest
     {
-        public DataNetRequest(string _url)
+        string method;
+        string postData;
+
+        public DataNetRequest(string _url, string method = "GET", string postData = null)
             : base(_url)
         {
+            this.method = method;
+            this.postData = postData;
         }
 
         public event RequestStartHandler onStart;
@@ -131,7 +136,13 @@ namespace osu_common.Libraries.NetLib
 #if iOS
                 del = new NRDelegate(this);
 
-                NSUrlRequest req = new NSUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 30);
+                NSMutableUrlRequest req = new NSMutableUrlRequest(new NSUrl(UrlEncode(m_url)), NSUrlRequestCachePolicy.ReloadIgnoringCacheData, 30);
+                req.HttpMethod = method;
+                if (method == "POST")
+                {
+                    req.Headers.SetValueForKey(new NSString("application/x-www-form-urlencoded"), new NSString("content-type"));
+                    req.Body = NSData.FromString(postData);
+                }
                 NSUrlConnection conn = new NSUrlConnection(req, del, true);
 
 #if !DIST
