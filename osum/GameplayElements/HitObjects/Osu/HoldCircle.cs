@@ -156,8 +156,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (lastJudgedEndpoint == RepeatCount)
                 base.playRebound(lastJudgedEndpoint);
-            else if (SoundTypeList != null)
-                PlaySound(SoundTypeList[lastJudgedEndpoint],
+            else
+                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                           new SampleSetInfo
                           {
                               SampleSet = Beatmaps.SampleSet.Soft,
