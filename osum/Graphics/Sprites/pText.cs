@@ -67,7 +67,7 @@ namespace osum.Graphics.Sprites
             {
                 if (Bypass) return false;
 
-                if (Alpha != 0 && Colour.A != 0 && (AlwaysDraw || Transformations.Count != 0) && IsOnScreen)
+                if (drawThisFrame)
                 {
                     pTexture texture = Texture;
                     if (texture == null || texture.TextureGl == null)
@@ -135,16 +135,9 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal override Vector2 FieldScale
+        internal override void UpdateFieldScale()
         {
-            get
-            {
-                switch (Field)
-                {
-                    default:
-                        return Scale;
-                }
-            }
+            FieldScale = Scale;
         }
 
         internal override void UpdateTextureSize()
@@ -187,6 +180,8 @@ namespace osum.Graphics.Sprites
 
             if (texture != null)
                 TextureManager.RegisterDisposable(texture);
+
+            Update();
 
             return texture;
         }

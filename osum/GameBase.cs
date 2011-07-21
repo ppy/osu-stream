@@ -17,6 +17,7 @@ using osum.UI;
 using osu_common.Helpers;
 using System.Threading;
 using osum.Resources;
+using System.Diagnostics;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -49,7 +50,6 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
-using osum.GameplayElements.Scoring;
 #endif
 
 
@@ -122,11 +122,16 @@ namespace osum
 
         public GameBase()
         {
-            //todo: remove before sapp submission.
+#if !DIST
             if (DateTime.Now > new DateTime(2011, 07, 30))
                 Environment.Exit(-1);
+#endif
 
             Instance = this;
+
+            //initialise config before everything, because it may be used in Initialize() override.
+            Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
+
             MainLoop();
         }
 
@@ -164,7 +169,6 @@ namespace osum
                 if (flipView == value) return;
 
                 flipView = value;
-                Config.SetValue<bool>("flip",flipView);
                 Instance.SetViewport();
             }
         }
@@ -234,7 +238,7 @@ namespace osum
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
 
-#if DEBUG
+#if !DIST
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
             Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
             Console.WriteLine("Sprite multiplier is " + SpriteToBaseRatio + " or aligned at " + SpriteToBaseRatioAligned);
@@ -284,9 +288,6 @@ namespace osum
         /// </summary>
         public virtual void Initialize()
         {
-            Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
-
-            flipView = Config.GetValue<bool>("flip",false);
             SetupScreen();
 
             Warmup();
@@ -319,32 +320,54 @@ namespace osum
             DebugOverlay.Update();
 #endif
 
+#if false
+            //benchmark
+
+            string path = SongSelectMode.BeatmapPath + "/Amane - Being Proof (James).osz2";
+            Console.WriteLine(path);
+
+            Player.Beatmap = new osum.GameplayElements.Beatmaps.Beatmap(path);
+            Player.Difficulty = osum.GameplayElements.Difficulty.Expert;
+            Player.Autoplay = true;
+
+            Director.ChangeMode(OsuMode.Play, null);
+#elif false
+            //results screen testing
+
+            Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+            Player.Difficulty = GameplayElements.Difficulty.Normal;
+
+
+            Results.RankableScore = new GameplayElements.Scoring.Score()
+            {
+                count100 = 55,
+                count50 = 128,
+                count300 = 387,
+                countMiss = 0,
+                date = DateTime.Now,
+                spinnerBonusScore = 1500,
+                comboBonusScore = 578420,
+                accuracyBonusScore = 200000,
+                hitScore = 800000 - 578420,
+                maxCombo = 198
+            };
+
+            Director.ChangeMode(OsuMode.Results, null);
+#else
             //Load the main menu initially.
             Director.ChangeMode(OsuMode.MainMenu, null);
+#endif
 
-            {
-//                Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
-//                Player.Difficulty = GameplayElements.Difficulty.Normal;
-//
-//
-//                Results.RankableScore = new GameplayElements.Scoring.Score()
-//                {
-//                    count100 = 55,
-//                    count50 = 128,
-//                    count300 = 387,
-//                    countMiss = 0,
-//                    date = DateTime.Now,
-//                    spinnerBonusScore = 1500,
-//                    comboBonusScore = 578420,
-//                    accuracyBonusScore = 200000,
-//                    hitScore = 800000 - 578420,
-//                    maxCombo = 198
-//                };
-//
-//                Director.ChangeMode(OsuMode.Results, null);
-            }
+            OnlineHelper.Initialize();
 
             Clock.Start();
+        }
+
+        public virtual string DeviceIdentifier
+        {
+            get {
+                return "unknown";
+            }
         }
 
         /// <summary>
@@ -431,6 +454,9 @@ namespace osum
             MainSpriteManager.Draw();
         }
 
+        public static bool GloballyDisableInput;
+        public static bool ThrottleExecution;
+
         public static void TriggerLayoutChanged()
         {
             if (OnScreenLayoutChanged != null)
@@ -477,6 +503,11 @@ namespace osum
             t.IsBackground = true;
             t.Start();
             return t;
+        }
+
+        public virtual void OpenUrl(string url)
+        {
+            Process.Start(url);
         }
 
         public virtual string PathConfig { get { return string.Empty; } }

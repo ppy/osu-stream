@@ -2,6 +2,7 @@ using System;
 using osum.Helpers;
 using osum.UI;
 using osum.Resources;
+using osum.GameModes;
 
 namespace osum.Online
 {
@@ -21,8 +22,7 @@ namespace osum.Online
 
         public static bool Initialize(bool forceAuthentication = false)
         {
-            if (hasInitialised && !forceAuthentication)
-                return false;
+            return false;
 
             hasInitialised = true;
 
@@ -34,7 +34,11 @@ namespace osum.Online
             }
 
             if (onlineServices != null)
+            {
+                if (!forceAuthentication && GameBase.Config.GetValue<bool>("GamecentreFailureAnnounced", false))
+                    return false;
                 onlineServices.Authenticate(authFinished);
+            }
             else
                 authFinished();
 
@@ -44,8 +48,12 @@ namespace osum.Online
         static void authFinished()
         {
             if (onlineServices != null && onlineServices.IsAuthenticated)
+            {
                 //we succeeded, so reset the warning
                 GameBase.Config.SetValue<bool>("GamecentreFailureAnnounced", false);
+                if (Director.CurrentOsuMode == OsuMode.Options)
+                    Director.ChangeMode(OsuMode.Options);
+            }
             else
             {
                 if (!GameBase.Config.GetValue<bool>("GamecentreFailureAnnounced", false))
@@ -60,6 +68,9 @@ namespace osum.Online
 
         public static bool ShowRanking(string id, VoidDelegate finished = null)
         {
+            GameBase.Notify(LocalisationManager.GetString(OsuString.NoticeOnlineRanking), null);
+            return false;
+
             if (!Initialize()) return false;
 
             onlineServices.ShowLeaderboard(id, finished);
@@ -68,6 +79,8 @@ namespace osum.Online
 
         public static bool SubmitScore(string id, int score, VoidDelegate finished = null)
         {
+            return false;
+
             if (!Initialize()) return false;
 
             onlineServices.SubmitScore(id, score, finished);

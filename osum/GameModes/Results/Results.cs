@@ -16,6 +16,7 @@ using osum.GameplayElements;
 using System.IO;
 using osum.Resources;
 using osum.UI;
+using osu_common.Libraries.NetLib;
 namespace osum.GameModes
 {
     public class Results : GameMode
@@ -116,7 +117,7 @@ namespace osum.GameModes
                 v_offset += 40;
 
                 //Spin Bonus
-                heading = new pText(LocalisationManager.GetString(OsuString.Hit), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Hit), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -124,7 +125,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -135,7 +136,7 @@ namespace osum.GameModes
                 v_offset += 25;
 
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Combo), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Combo), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -143,7 +144,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -153,7 +154,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Accuracy), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -161,7 +162,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -171,7 +172,7 @@ namespace osum.GameModes
 
                 v_offset += 25;
 
-                heading = new pText(LocalisationManager.GetString(OsuString.Spin), 20, new Vector2(240, v_offset + 2), 0.5f, true, Color4.Gray)
+                heading = new pText(LocalisationManager.GetString(OsuString.Spin), 20, new Vector2(240, v_offset), 0.5f, true, Color4.Gray)
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
@@ -179,7 +180,7 @@ namespace osum.GameModes
                 };
                 resultSprites.Add(heading);
 
-                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(330, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
+                count = new pSpriteText("000000", "score", 0, FieldTypes.StandardSnapCentreLeft, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(445, v_offset), 0.9f, true, new Color4(255, 166, 0, 255));
                 count.TextConstantSpacing = true;
                 count.ZeroAlpha = 0.5f;
                 count.ScaleScalar = 0.7f;
@@ -284,14 +285,19 @@ namespace osum.GameModes
             topMostLayer.Add(s_Footer);
 
             BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            if (RankableScore.totalScore > bmi.HighScore.totalHits)
+            if (RankableScore.totalScore > bmi.HighScore.totalScore)
             {
-                if (RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
+                if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
                     unlockedExpert = true;
 
                 isPersonalBest = true;
                 bmi.HighScore = RankableScore;
             }
+
+            /*string url = "http://www.osustream.com/score/?id=";
+            StringNetRequest nr = new StringNetRequest(url);*/
+
+
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
             OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
@@ -430,7 +436,7 @@ namespace osum.GameModes
                 InitializeBgm();
 
                 if (unlockedExpert)
-                    GameBase.Notify(new Notification("Congratulations!", "You have unlocked expert mode for this song. Good luck!", NotificationStyle.Okay, delegate { finishDisplaying(); }));
+                    GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate { finishDisplaying(); }));
                 else
                     finishDisplaying();
             }, time);
@@ -450,8 +456,8 @@ namespace osum.GameModes
             s_ButtonBack.FadeIn(500);
 
             s_Footer.Alpha = 1;
-            s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
         }
 
         private void showOnlineRanking()
@@ -543,12 +549,6 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            base.Update();
-
-            layer1.Update();
-            layer2.Update();
-            topMostLayer.Update();
-
             if (!AudioEngine.Music.IsElapsing)
                 InitializeBgm();
 
@@ -575,7 +575,10 @@ namespace osum.GameModes
 
                 fallingSprites.RemoveAll(p => p.Alpha == 0);
                 foreach (pSprite p in fallingSprites)
-                    p.Position.Y += (p.Position.Y - p.StartPosition.Y + 1) * 0.003f * (float)Clock.ElapsedMilliseconds;
+                {
+                    p.Position.Y += p.TagNumeric * 0.003f * (float)Clock.ElapsedMilliseconds;
+                    p.TagNumeric++;
+                }
 
                 if (fallingSprites.Count < 20)
                 {
@@ -593,8 +596,8 @@ namespace osum.GameModes
                     {
                         pSprite f = new pSprite(tex, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, new Vector2(pos, fillSprites[0].Scale.Y - 30), 0.3f, false, Color4.White);
                         f.ScaleScalar = 0.2f;
-                        f.Transform(new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
-                        f.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
+                        f.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + 150));
+                        f.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 250, Clock.ModeTime + 1000 + (int)(GameBase.Random.NextDouble() * 1000)));
                         fallingSprites.Add(f);
                         spriteManager.Add(f);
                     }
@@ -604,12 +607,17 @@ namespace osum.GameModes
             int increaseAmount = (int)Math.Max(1, Clock.ElapsedMilliseconds / 8);
             if (count300.LastInt < RankableScore.count300)
                 count300.ShowInt(Math.Min(RankableScore.count300, count300.LastInt + increaseAmount), 0, false, 'x');
-            if (count100.LastInt < RankableScore.count100)
+            else if (count100.LastInt < RankableScore.count100)
                 count100.ShowInt(Math.Min(RankableScore.count100, count100.LastInt + increaseAmount), 0, false, 'x');
-            if (count50.LastInt < RankableScore.count50)
+            else if (count50.LastInt < RankableScore.count50)
                 count50.ShowInt(Math.Min(RankableScore.count50, count50.LastInt + increaseAmount), 0, false, 'x');
-            if (count0.LastInt < RankableScore.countMiss)
+            else if (count0.LastInt < RankableScore.countMiss)
                 count0.ShowInt(Math.Min(RankableScore.countMiss, count0.LastInt + increaseAmount), 0, false, 'x');
+
+            base.Update();
+            layer1.Update();
+            layer2.Update();
+            topMostLayer.Update();
         }
     }
 }

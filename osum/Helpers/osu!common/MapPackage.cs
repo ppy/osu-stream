@@ -18,16 +18,26 @@ namespace osu_common.Libraries.Osz2
         private const string EXT_MAP = "osu";
 #endif
         private const string EXT_PACKAGE = "osz2";
-        private const string EXT_PACKAGE_OLD = "osz";
+
         private const int F_OFFSET_METADATA = 68;
         private const byte VERSION_EXPORT = 0;
         private static readonly MD5CryptoServiceProvider fHasher = new MD5CryptoServiceProvider();
 
+#if DIST_FINAL
+        //free key is changed for dist builds
+        private byte[] KEY = new byte[]
+                                        {
+                                            185, 24, 168, 9, 27, 145, 191, 243, 17, 75, 95, 163, 168, 123, 198, 56,
+                                            105, 29, 68, 74, 214, 62, 2, 142, 146, 28, 90, 167, 243, 85, 17, 96
+                                        };
+#else
         private byte[] KEY = new byte[]
                                         {
                                             216, 98, 163, 48, 2, 109, 118, 89, 244, 247, 37, 194, 235, 70, 174, 52,
                                             13, 106, 97, 84, 242, 62, 186, 48, 25, 66, 72, 85, 242, 22, 15, 92
                                         };
+#endif
+
         private static readonly byte[] knownPlain = new byte[64];
 
         private readonly string fFilename;
@@ -97,7 +107,7 @@ namespace osu_common.Libraries.Osz2
         /// <param name="filename">The path to the package file.</param>
         /// <param name="createIfNotFound">This has no effect if the specified file exists. If the file does not exist and this is true, the file will be created when Save() is called. Otherwise, an exception will be thrown.</param>
         /// </summary>
-        public MapPackage(string filename, bool createIfNotFound) : this(filename, null, createIfNotFound, false)
+        public MapPackage(string filename, bool createIfNotFound, bool metadataOnly = false) : this(filename, null, createIfNotFound, metadataOnly)
         {
         }
 
@@ -610,7 +620,7 @@ namespace osu_common.Libraries.Osz2
         public static bool IsMusicFile(string name)
         {
             string ext = Path.GetExtension(name).ToLower();
-            return (ext == ".mp3" || ext == ".ogg");
+            return (ext == ".mp3" || ext == ".ogg" || ext == ".m4a");
 
         }
 
@@ -622,7 +632,7 @@ namespace osu_common.Libraries.Osz2
 
         public static bool IsPackageFile(string name)
         {
-            return Path.GetExtension(name).ToLower() == "." + EXT_PACKAGE || Path.GetExtension(name).ToLower() == EXT_PACKAGE_OLD;
+            return Path.GetExtension(name).ToLower() == "." + EXT_PACKAGE;
         }
         public static bool IsVideoFile(string name)
         {
@@ -1594,5 +1604,6 @@ namespace osu_common.Libraries.Osz2
         ArtistUrl,
         Unknown = 9999,
         DifficultyRating,
+        PreviewPoint,
     }
 }

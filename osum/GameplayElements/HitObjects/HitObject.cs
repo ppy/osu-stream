@@ -16,63 +16,6 @@ namespace osum.GameplayElements
 {
     internal delegate void HitCircleDelegate(HitObject h);
 
-    [Flags]
-    public enum HitObjectType
-    {
-        Circle = 1,
-        Slider = 2,
-        NewCombo = 4,
-        NormalNewCombo = 5,
-        SliderNewCombo = 6,
-        Spinner = 8
-    }
-
-    [Flags]
-    public enum HitObjectSoundType
-    {
-        Normal = 0,
-        Whistle = 2,
-        Finish = 4,
-        WhistleFinish = 6,
-        Clap = 8
-    }
-
-    [Flags]
-    public enum ScoreChange
-    {
-        Ignore = 0,
-        MissMinor = 1 << 0,
-        Miss = 1 << 1,
-        MuAddition = 1 << 3,
-        KatuAddition = 1 << 4,
-        GekiAddition = 1 << 5,
-        SliderTick = 1 << 6,
-        SliderRepeat = 1 << 7,
-        SliderEnd = 1 << 8,
-        Hit50 = 1 << 9,
-        Hit100 = 1 << 10,
-        Hit300 = 1 << 11,
-        SpinnerSpinPoints = 1 << 12,
-        SpinnerBonus = 1 << 13,
-        Hit50m = Hit50 | MuAddition,
-        Hit100m = Hit100 | MuAddition,
-        Hit300m = Hit300 | MuAddition,
-        Hit100k = Hit100 | KatuAddition,
-        Hit300k = Hit300 | KatuAddition,
-        Hit300g = Hit300 | GekiAddition,
-        HitValuesOnly = Miss | Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
-        ComboAddition = MuAddition | KatuAddition | GekiAddition,
-    }
-
-    public enum Difficulty
-    {
-        None = -1,
-        Easy = 0,
-        Normal = 1,
-        Hard = 2,
-        Expert = 3
-    }
-
     internal class HitObjectDummy : HitObject
     {
         public HitObjectDummy(int time)
@@ -94,6 +37,8 @@ namespace osum.GameplayElements
     public abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
     {
         protected HitObjectManager m_HitObjectManager;
+
+        public const int DIMMABLE_TAG = 1293;
 
         protected HitObject()
         {
@@ -137,7 +82,7 @@ namespace osum.GameplayElements
         //todo: this is horribly memory inefficient.
         protected void UpdateDimming()
         {
-            bool shouldDim = Clock.AudioTime < StartTime && Math.Abs(StartTime - Clock.AudioTime) > m_HitObjectManager.FirstBeatLength;
+            bool shouldDim = StartTime - Clock.AudioTime > m_HitObjectManager.FirstBeatLength;
 
             if (shouldDim != isDimmed)
             {
@@ -145,13 +90,13 @@ namespace osum.GameplayElements
 
                 if (isDimmed)
                 {
-                    foreach (pDrawable p in SpriteCollectionDim)
-                        p.FadeColour(ColourHelper.Darken(p.Colour, 0.3f), 0);
+                    foreach (pDrawable p in Sprites)
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.Colour = ColourHelper.Darken(p.Colour, 0.3f);
                 }
                 else
                 {
-                    foreach (pDrawable p in SpriteCollectionDim)
-                        p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
+                    foreach (pDrawable p in Sprites)
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
                 }
             }
         }
@@ -219,7 +164,7 @@ namespace osum.GameplayElements
         /// </returns>
         internal ScoreChange Hit()
         {
-            if (ClockingNow < StartTime - DifficultyManager.HitWindow50 * 1.5f)
+            if (Clock.AudioTimeInputAdjust < StartTime - DifficultyManager.HitWindow50 * 1.5f)
             {
                 Shake();
                 return ScoreChange.Ignore;
@@ -246,7 +191,12 @@ namespace osum.GameplayElements
                 return ScoreChange.Ignore;
 
             //check for miss
-            if (ClockingNow > (Player.Autoplay ? StartTime : HittableEndTime))
+            if (Player.Autoplay)
+            {
+                if (ClockingNow > StartTime)
+                    return Hit(); //force a "hit" if we haven't yet. todo: check if we ever get here
+            }
+            else if (Clock.AudioTimeInputAdjust > HittableEndTime)
                 return Hit(); //force a "hit" if we haven't yet.
 
             return ScoreChange.Ignore;
@@ -322,20 +272,20 @@ namespace osum.GameplayElements
                 p.Transform(
                     new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.2f, 3));
                 p.Transform(
-                    new Transformation(TransformationType.Fade, 1, 0,
+                    new TransformationF(TransformationType.Fade, 1, 0,
                                        Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
             }
             else
             {
                 p.Transform(
-                            new Transformation(TransformationType.Scale, 2, 1, Clock.Time,
+                            new TransformationF(TransformationType.Scale, 2, 1, Clock.Time,
                                                Clock.Time + HitFadeIn));
                 p.Transform(
-                    new Transformation(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
+                    new TransformationF(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
                                        Clock.Time + HitFadeOutStart + HitFadeOutDuration));
 
                 p.Transform(
-                    new Transformation(TransformationType.Rotation, 0,
+                    new TransformationF(TransformationType.Rotation, 0,
                                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
                                        Clock.Time + HitFadeIn));
             }
@@ -365,11 +315,6 @@ namespace osum.GameplayElements
         #endregion
 
         #region Drawing
-
-        /// <summary>
-        /// Sprites which should be dimmed when not the active object.
-        /// </summary>
-        internal List<pDrawable> SpriteCollectionDim = new List<pDrawable>();
 
         protected Vector2 position;
         internal virtual Vector2 Position
@@ -532,15 +477,15 @@ namespace osum.GameplayElements
         {
             float radius = DifficultyManager.HitObjectRadiusSolidGamefieldHittable;
 
-            return (IsVisible &&
-                    StartTime - DifficultyManager.PreEmpt <= Clock.AudioTime &&
-                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTime &&
+            return (StartTime - DifficultyManager.PreEmpt <= Clock.AudioTimeInputAdjust &&
+                    StartTime + DifficultyManager.HitWindow50 >= Clock.AudioTimeInputAdjust &&
                     !IsHit &&
                     pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
         internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Soft, CustomSampleSet = CustomSampleSet.Default, Volume = 1 };
+
 
         internal virtual void Shake()
         {
@@ -561,7 +506,7 @@ namespace osum.GameplayElements
 
                     int e = i == shake_count - 1 ? 0 : -s;
 
-                    p.Transform(new Transformation(TransformationType.OffsetX, s, e, Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period));
+                    p.Transform(new TransformationF(TransformationType.OffsetX, s, e, Clock.AudioTime + i * shake_period, Clock.AudioTime + (i + 1) * shake_period));
                 }
             }
 
@@ -582,5 +527,26 @@ namespace osum.GameplayElements
         public virtual float HpMultiplier { get { return 1; } }
 
         public virtual Vector2 TrackingPosition { get { return Position; } }
+    }
+
+    [Flags]
+    public enum HitObjectType
+    {
+        Circle = 1,
+        Slider = 2,
+        NewCombo = 4,
+        NormalNewCombo = 5,
+        SliderNewCombo = 6,
+        Spinner = 8
+    }
+
+    [Flags]
+    public enum HitObjectSoundType
+    {
+        Normal = 0,
+        Whistle = 2,
+        Finish = 4,
+        WhistleFinish = 6,
+        Clap = 8
     }
 }

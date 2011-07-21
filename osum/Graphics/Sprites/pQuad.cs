@@ -1,5 +1,6 @@
 ﻿using System;
 using osum.Graphics.Sprites;
+using System.Runtime.InteropServices;
 using osum.Graphics.Drawables;
 using osum.Helpers;
 using OpenTK.Graphics;
@@ -56,35 +57,86 @@ namespace osum.Graphics.Drawables
             p2 = topRight;
             p3 = bottomLeft;
             p4 = bottomRight;
+
+#if !NO_PIN_SUPPORT
+            vertices = new Vector2[4];
+            colours = new Color4[4];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_colours = GCHandle.Alloc(colours, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_colours_pointer = handle_colours.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal(4 * 4 * sizeof(float));
+            handle_colours_pointer = Marshal.AllocHGlobal(4 * 4 * sizeof(float));
+#endif
+        }
+#if !NO_PIN_SUPPORT
+        private float[] coordinates;
+        private Vector2[] vertices;
+        private Color4[] colours;
+
+
+        GCHandle handle_vertices;
+        GCHandle handle_coordinates;
+        GCHandle handle_colours;
+#endif
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_coordinates_pointer;
+        IntPtr handle_colours_pointer;
+
+
+        public Color4[] Colours;
+        public bool IsDisposed { get; private set; }
+
+        public override void Dispose ()
+        {
+            if (IsDisposed)
+                return;
+#if !NO_PIN_SUPPORT
+            if (coordinates != null) handle_coordinates.Free();
+            handle_colours.Free();
+            handle_vertices.Free();
+#else
+            if (handle_coordinates_pointer != IntPtr.Zero)
+                Marshal.FreeHGlobal(handle_coordinates_pointer);
+
+            Marshal.FreeHGlobal(handle_vertices_pointer);
+            Marshal.FreeHGlobal(handle_colours_pointer);
+#endif
+            IsDisposed = true;
+            base.Dispose();
         }
 
-        float[] coordinates;
-        Vector2[] vertices = new Vector2[4];
-        public Color4[] Colours;
-        private Color4[] colours = new Color4[4];
 
         public pTexture Texture;
 
         protected override bool checkHover(Vector2 position)
         {
-            return PointInPolygon(position * GameBase.BaseToNativeRatio, vertices);
+            unsafe
+            {
+                return PointInPolygon(position * GameBase.BaseToNativeRatio,
+                    (Vector2*)handle_vertices_pointer.ToPointer(), 4);
+            }
+
         }
 
-        static bool PointInPolygon(Vector2 p, Vector2[] poly)
+        static unsafe bool PointInPolygon(Vector2 p, Vector2* poly, int length)
         {
             Vector2 p1, p2;
 
             bool inside = false;
 
-            if (poly.Length < 3)
+            if (length < 3)
             {
                 return inside;
             }
 
             Vector2 oldVector2 = new Vector2(
-            poly[poly.Length - 1].X, poly[poly.Length - 1].Y);
+            poly[length - 1].X, poly[length - 1].Y);
 
-            for (int i = 0; i < poly.Length; i++)
+            for (int i = 0; i < length; i++)
             {
                 Vector2 newVector2 = new Vector2(poly[i].X, poly[i].Y);
 
@@ -116,7 +168,6 @@ namespace osum.Graphics.Drawables
         {
             if (base.Draw())
             {
-
                 Color4 c = AlphaAppliedColour;
                 Vector2 pos = FieldPosition;
                 Vector2 scale = FieldScale;
@@ -126,22 +177,29 @@ namespace osum.Graphics.Drawables
                     SpriteManager.SetColour(c);
                 else
                 {
-                    for (int i = 0; i < Colours.Length; i++)
+                    unsafe
                     {
-                        Color4 col = Colours[i];
-
-                        if (SpriteManager.UniversalDim > 0)
+#if NO_PIN_SUPPORT
+                        Color4* colours = (Color4*)handle_colours_pointer.ToPointer();
+#endif
+                        for (int i = 0; i < Colours.Length; i++)
                         {
-                            float multi = 1 - SpriteManager.UniversalDim;
-                            colours[i] = new Color4(col.R * multi, col.G * multi, col.B * multi, c.A);
+                            Color4 col = Colours[i];
+
+                            if (SpriteManager.UniversalDim > 0)
+                            {
+                                float multi = 1 - SpriteManager.UniversalDim;
+                                colours[i] = new Color4(col.R * multi, col.G * multi, col.B * multi, c.A);
+                            }
+                            else
+                                colours[i] = new Color4(col.R, col.G, col.B, c.A);
+                            //todo: optimise
                         }
-                        else
-                            colours[i] = new Color4(col.R, col.G, col.B, c.A);
-                        //todo: optimise
                     }
                     
                     GL.EnableClientState(ArrayCap.ColorArray);
-                    GL.ColorPointer(4, ColorPointerType.Float, 0, colours);
+
+                    GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
                 }
 
                 //first move everything so it is centered on (0,0)
@@ -165,12 +223,15 @@ namespace osum.Graphics.Drawables
                     vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
                 }
                 else*/
+                unsafe
                 {
                     /*vLeft += pos.X;
                     vRight += pos.X;
                     vTop += pos.Y;
                     vBottom += pos.Y;*/
-
+#if NO_PIN_SUPPORT
+                    Vector2* vertices = (Vector2*)handle_vertices_pointer.ToPointer();
+#endif
                     vertices[0].X = pos.X + p1.X * scale.X - origin.X;
                     vertices[0].Y = pos.Y + p1.Y * scale.Y - origin.Y;
                     vertices[1].X = pos.X + p2.X * scale.X - origin.X;
@@ -185,22 +246,53 @@ namespace osum.Graphics.Drawables
                 {
                     SpriteManager.TexturesEnabled = true;
                     Texture.TextureGl.Bind();
+#if !NO_PIN_SUPPORT
                     if (coordinates == null)
+                    {
                         coordinates = new float[] {
-                            (float)Texture.X / Texture.TextureGl.potWidth,
-                            (float)Texture.Y / Texture.TextureGl.potHeight,
-                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                            (float)Texture.Y / Texture.TextureGl.potHeight,
-                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
-                            (float)Texture.X / Texture.TextureGl.potWidth,
-                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
-                    GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates);
+                        (float)Texture.X / Texture.TextureGl.potWidth,
+                        (float)Texture.Y / Texture.TextureGl.potHeight,
+                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                        (float)Texture.Y / Texture.TextureGl.potHeight,
+                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
+                        (float)Texture.X / Texture.TextureGl.potWidth,
+                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
+
+                        handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
+                        handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+                    }
+#else
+                    if(handle_coordinates_pointer == IntPtr.Zero)
+                    {
+                        unsafe
+                        {
+                            Color4* colours = (Color4*)handle_colours_pointer.ToPointer();
+                            handle_coordinates_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
+
+                            float* coordinates = (float*)handle_coordinates_pointer.ToPointer();
+
+                            coordinates[0] = (float)Texture.X / Texture.TextureGl.potWidth;
+                            coordinates[1] = (float)Texture.Y / Texture.TextureGl.potHeight;
+                            coordinates[2] = (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth;
+                            coordinates[3] = (float)Texture.Y / Texture.TextureGl.potHeight;
+                            coordinates[4] = (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth;
+                            coordinates[5] = (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight;
+                            coordinates[6] = (float)Texture.X / Texture.TextureGl.potWidth;
+                            coordinates[7] = (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight;
+                        }
+
+                    }
+#endif
+                    GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
+
+
                 }
                 else
                     SpriteManager.TexturesEnabled = false;
 
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
 
                 if (Colours != null)

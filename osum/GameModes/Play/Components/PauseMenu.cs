@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
 using osum.Graphics.Renderers;
+using osum.Resources;
 
 namespace osum.GameModes.Play.Components
 {
@@ -36,14 +37,14 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
-                    Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
-                    Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
                     if (menuText == null)
                     {
 #if DIST
                         //todo: localise
-                        menuText = new pText(string.Format("{0} restarts\n{1}% completed", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
 #else
                         menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
 #endif
@@ -72,8 +73,8 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
-                    Transformation move = new Transformation(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
-                    Transformation fade = new Transformation(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
 
                     if (menuText != null)
                     {
@@ -138,8 +139,8 @@ namespace osum.GameModes.Play.Components
                 pullnotice.Offset = new Vector2(0, 30);
                 spriteManager.Add(pullnotice);
 
-                Transformation move = new Transformation(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
-                Transformation fade = new Transformation(TransformationType.Fade, 1, 0.4f, 1000, 1500);
+                Transformation move = new TransformationF(TransformationType.MovementY, 0f, offscreen_y, 1000, 1500, EasingTypes.Out);
+                Transformation fade = new TransformationF(TransformationType.Fade, 1, 0.4f, 1000, 1500);
 
                 spriteManager.Sprites.ForEach(s =>
                 {

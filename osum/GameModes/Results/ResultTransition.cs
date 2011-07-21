@@ -18,14 +18,12 @@ namespace osum.GameModes
 {
     public class ResultTransition : Transition
     {
-        float count_height = 80;
         const float fill_height = 5;
         const int end_bouncing = 600;
         const int colour_change_length = 500;
         const int time_between_fills = 300;
 
         List<pDrawable> fillSprites = new List<pDrawable>();
-        List<pDrawable> countSprites = new List<pDrawable>();
 
         public override bool SkipScreenClear {
             get {
@@ -71,21 +69,11 @@ namespace osum.GameModes
             fill.Colour = new Color4(1, 0.63f, 0.01f, 1);
             fillSprites.Add(fill);
 
-            pSpriteText count = new pSpriteText(Results.RankableScore.count300.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
-            countSprites.Add(count);
-
-            count_height += 80;
-
             fill = pSprite.FullscreenWhitePixel;
             fill.Clocking = ClockTypes.Game;
             fill.Scale.X *= (float)Results.RankableScore.count100 / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(0.55f, 0.84f, 0, 1);
             fillSprites.Add(fill);
-
-            count = new pSpriteText(Results.RankableScore.count100.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
-            countSprites.Add(count);
-
-            count_height += 80;
 
             fill = pSprite.FullscreenWhitePixel;
             fill.Clocking = ClockTypes.Game;
@@ -93,35 +81,13 @@ namespace osum.GameModes
             fill.Colour = new Color4(0.50f, 0.29f, 0.635f, 1);
             fillSprites.Add(fill);
 
-            count = new pSpriteText(Results.RankableScore.count50.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
-            countSprites.Add(count);
-
-            count_height += 80;
-
             fill = pSprite.FullscreenWhitePixel;
             fill.Clocking = ClockTypes.Game;
             fill.Scale.X *= (float)Results.RankableScore.countMiss / Results.RankableScore.totalHits + 0.001f;
             fill.Colour = new Color4(0.10f, 0.10f, 0.10f, 1);
             fillSprites.Add(fill);
 
-            count = new pSpriteText(Results.RankableScore.countMiss.ToString(), "default", 0, FieldTypes.Standard, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(0, count_height), 1, false, Color4.White);
-            countSprites.Add(count);
-
             int i = 0;
-
-            foreach (pDrawable p in countSprites)
-            {
-                p.Alpha = 0;
-                p.AlwaysDraw = true;
-                p.Additive = true;
-
-                int offset = Clock.Time + i++ * time_between_fills;
-                //p.Transform(new Transformation(TransformationType.Fade, 0, 0.5f, offset - 50, offset + 200));
-                //p.Transform(new Transformation(TransformationType.Fade, 1, 0, offset + 100, offset + 800));
-            }
-
-
-            i = 0;
 
             foreach (pDrawable p in fillSprites)
             {
@@ -132,15 +98,14 @@ namespace osum.GameModes
 
                 int offset = Clock.Time + i++ * time_between_fills;
 
-                p.Transform(new Transformation(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
-                p.Transform(new Transformation(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
+                p.Transform(new TransformationC(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
+                p.Transform(new TransformationC(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
                 //force the initial colour to be an ambiguous gray.
 
                 p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));
             }
 
             spriteManager.Add(fillSprites);
-            spriteManager.Add(countSprites);
 
             base.Initialize();
         }
@@ -174,14 +139,14 @@ namespace osum.GameModes
             for (int i = 0; i < fillSprites.Count; i++)
             {
                 pDrawable fill = fillSprites[i];
-                pDrawable count = countSprites[i];
 
                 fill.Scale.Y = GameBase.BaseSizeFixedWidth.Height + 1;
 
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X;
 
-                count.Position.X = lastPos - 3;
+                fill.UpdateFieldPosition();
+                fill.UpdateFieldScale();
             }
 
             float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;

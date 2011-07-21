@@ -5,8 +5,6 @@ namespace osum
 {
     public class TrackingPoint : ICloneable
     {
-        public object Tag;
-        
         private PointF location;
         /// <summary>
         /// The raw screen location 
@@ -52,7 +50,6 @@ namespace osum
         {
             Location = location;
             WindowDelta = Vector2.Zero; //no delta on first ctor.
-            Tag = tag;
         }
 
         public Vector2 BasePosition;

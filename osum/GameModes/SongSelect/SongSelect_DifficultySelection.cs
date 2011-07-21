@@ -54,9 +54,7 @@ namespace osum.GameModes
         {
             if (State != SelectState.LoadingPreview) return;
 
-            AudioEngine.Music.DimmableVolume = 0;
-            AudioEngine.Music.SeekTo(30000);
-            AudioEngine.Music.Play();
+            playFromPreview();
 
             //do a second callback so we account for lost gametime due to the above audio load.
             GameBase.Scheduler.Add(delegate
@@ -85,18 +83,25 @@ namespace osum.GameModes
                 foreach (pDrawable s in SelectedPanel.Sprites)
                     s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
 
-                tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
-                tabController.Sprites.ForEach(s => s.Transform(new Transformation(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
+                tabController.Sprites.ForEach(s => s.Transform(new TransformationV(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
+                tabController.Sprites.ForEach(s => s.Transform(new TransformationV(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
 
-                s_Header.Transform(new Transformation(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new TransformationV(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                s_Footer.Transform(new Transformation(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Alpha = 1;
 
                 SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             }, true);
+        }
+
+        private void playFromPreview()
+        {
+            AudioEngine.Music.DimmableVolume = 0;
+            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
+            AudioEngine.Music.Play();
         }
 
         private void initializeTabOptions()
@@ -140,14 +145,14 @@ namespace osum.GameModes
 
             const float arrow_spread = 180;
 
-            s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-arrow_spread, yOffset), 0.45f, true, Color4.White) { HoverLenienceRadius = 20 };
+            s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-arrow_spread, yOffset), 0.45f, true, Color4.White);
             s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnClick += onSelectPreviousMode;
 
             sprites.Add(s_ModeArrowLeft);
 
-            s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(arrow_spread, yOffset), 0.45f, true, Color4.DarkGray) { HoverLenienceRadius = 20 };
+            s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(arrow_spread, yOffset), 0.45f, true, Color4.DarkGray);
             s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnClick += onSelectNextMode;
@@ -368,11 +373,11 @@ namespace osum.GameModes
 
                 if (tabController != null) tabController.Hide();
 
-                s_Header.Transform(new Transformation(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Header.Transform(new Transformation(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new TransformationV(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                s_Footer.Transform(new Transformation(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new Transformation(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 GameBase.Scheduler.Add(delegate { s_Footer.Alpha = 0; }, 500);
             }, true);
         }
@@ -408,7 +413,7 @@ namespace osum.GameModes
 
             activatedSprite.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 500, 1.2f, 0.4f, 1));
 
-            activatedSprite.AdditiveFlash(800, 0.8f).Transform(new Transformation(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
+            activatedSprite.AdditiveFlash(800, 0.8f).Transform(new TransformationF(TransformationType.Scale, 1, 1.5f, Clock.Time, Clock.Time + 800, EasingTypes.In));
 
             background.FlashColour(new Color4(200, 200, 200, 255), 800);
 

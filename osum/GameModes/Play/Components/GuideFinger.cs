@@ -72,8 +72,8 @@ namespace osum.GameModes.Play.Components
                 Additive = false
             };
 
-            leftFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(-100, 130), idleLeft, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
-            rightFinger.Transform(new Transformation(TransformationType.Movement, new Vector2(612, 130), idleRight, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
+            leftFinger.Transform(new TransformationV(new Vector2(-100, 130), idleLeft, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
+            rightFinger.Transform(new TransformationV(new Vector2(612, 130), idleRight, Clock.ModeTime, Clock.ModeTime + 800, EasingTypes.In));
 
             spriteManager.Add(leftFinger);
             spriteManager.Add(rightFinger);
@@ -122,7 +122,7 @@ namespace osum.GameModes.Play.Components
                         {
                             finger.Tag = null;
                             finger.FadeOut(800, 0.3f);
-                            finger.Transform(new Transformation(finger.Position, finger == leftFinger ? idleLeft : idleRight, Clock.ModeTime + 300, Clock.ModeTime + 1100, EasingTypes.InOut));
+                            finger.Transform(new TransformationV(finger.Position, finger == leftFinger ? idleLeft : idleRight, Clock.ModeTime + 300, Clock.ModeTime + 1100, EasingTypes.InOut));
                         }
                         else if (obj.IsActive)
                         {

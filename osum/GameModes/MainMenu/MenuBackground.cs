@@ -29,21 +29,25 @@ namespace osum.GameModes
             AutomaticHeight = false;
             ShowScrollbar = false;
             ExactCoordinates = false;
+            LockHorizontal = false;
             CheckSpritesAreOnScreenBeforeRendering = false;
 
             rectangleLineLeft = new Line(new Vector2(114, 55) - centre, new Vector2(169, 362) - centre);
             rectangleLineRight = new Line(new Vector2(-100, -855) - centre, new Vector2(1200, 250) - centre);
 
-            rectBorder = new pQuad(
-                rectangleLineLeft.p1 + new Vector2(-2, -2),
-                new Vector2(444 + 2, 172 - 2) - centre,
-                rectangleLineLeft.p2 + new Vector2(-2, 2),
-                new Vector2(528 + 3, 297 + 2) - centre,
-                true, 0.4f, new Color4(13, 13, 13, 255));
-            rectBorder.AlphaBlend = false;
-            rectBorder.Field = FieldTypes.StandardSnapCentre;
-            rectBorder.Origin = OriginTypes.Centre;
-            Add(rectBorder);
+            //if (!GameBase.IsSlowDevice)
+            {
+                rectBorder = new pQuad(
+                    rectangleLineLeft.p1 + new Vector2(-2, -2),
+                    new Vector2(444 + 2, 172 - 2) - centre,
+                    rectangleLineLeft.p2 + new Vector2(-2, 2),
+                    new Vector2(528 + 3, 297 + 2) - centre,
+                    true, 0.4f, new Color4(13, 13, 13, 255));
+                rectBorder.AlphaBlend = false;
+                rectBorder.Field = FieldTypes.StandardSnapCentre;
+                rectBorder.Origin = OriginTypes.Centre;
+                Add(rectBorder);
+            }
 
             rect = new pQuad(
                 rectangleLineLeft.p1,
@@ -235,7 +239,7 @@ namespace osum.GameModes
 
         int awesomeStartTime = -1;
         private Line rectangleLineLeft;
-        private Transformation awesomeTransformation;
+        private TransformationBounce awesomeTransformation;
         private Line rectangleLineRight;
         const int duration = 3000;
 
@@ -257,7 +261,7 @@ namespace osum.GameModes
 
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
-            //new Transformation(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
+            //new TransformationFloat(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
 
             textSprites.ForEach(s => s.FadeIn(500));
             

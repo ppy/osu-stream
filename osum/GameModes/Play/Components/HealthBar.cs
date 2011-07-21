@@ -37,7 +37,7 @@ namespace osum.GameplayElements.Scoring
         /// <summary>
         /// Rate of initial HP increase.
         /// </summary>
-        internal double InitialIncreaseRate = 0.02;
+        internal double InitialIncreaseRate = 0.04;
 
         /// <summary>
         /// The rate at which HP will naturally drop.
@@ -90,7 +90,7 @@ namespace osum.GameplayElements.Scoring
 
         }
 
-        internal virtual void SlideOut()
+        /*internal virtual void SlideOut()
         {
             s_barFill.FadeOut(500);
             s_barBg.FadeOut(500);
@@ -102,7 +102,7 @@ namespace osum.GameplayElements.Scoring
             s_barBg.MoveTo(s_barBg.StartPosition - off, 500);
 
             s_kiIcon.StartPosition = new Vector2(s_kiIcon.Position.X, s_kiIcon.StartPosition.Y);
-            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
+            s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1, 1.6f, Clock.Time, Clock.Time + 500));
         }
 
         internal virtual void SlideIn()
@@ -113,56 +113,61 @@ namespace osum.GameplayElements.Scoring
 
             s_barFill.MoveTo(s_barFill.StartPosition, 500);
             s_barBg.MoveTo(s_barBg.StartPosition, 500);
-            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
-        }
+            s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
+        }*/
+
+        Transformation initialAppearTransformation;
 
         public override void Update()
         {
             base.Update();
 
-            //HP Bar
-            if (DisplayHp < CurrentHp)
+            if (DisplayHp != CurrentHp)
             {
-                if (InitialIncrease)
+                if (DisplayHp < CurrentHp)
                 {
-                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * Clock.ElapsedMilliseconds);
-                    if (s_kiIcon.Transformations.Count == 0)
+                    if (InitialIncrease)
                     {
-                        s_kiIcon.Transform(
-                            new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
-                                               Clock.Time + 150));
+                        DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + InitialIncreaseRate * Clock.ElapsedMilliseconds);
+                        if (s_kiIcon.Transformations.Count == 0)
+                        {
+                            if (initialAppearTransformation == null)
+                                initialAppearTransformation = new TransformationF(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,Clock.Time + 150);
+                            else
+                            {
+                                initialAppearTransformation.StartTime = Clock.Time;
+                                initialAppearTransformation.EndTime = Clock.Time + 150;
+                            }
+
+                            s_kiIcon.Transform(initialAppearTransformation);
+                        }
                     }
+                    else
+                        DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + Math.Abs(CurrentHp - DisplayHp) / 4 * Clock.ElapsedMilliseconds * 0.03);
                 }
-                else
-                    DisplayHp = Math.Min(HP_BAR_MAXIMUM, DisplayHp + Math.Abs(CurrentHp - DisplayHp) / 4 * Clock.ElapsedMilliseconds * 0.03);
-            }
-            else if (DisplayHp > CurrentHp)
-            {
-                InitialIncrease = false;
-                DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 4 * Clock.ElapsedMilliseconds * 0.1);
-            }
+                else if (DisplayHp > CurrentHp)
+                {
+                    InitialIncrease = false;
+                    DisplayHp = Math.Max(0, DisplayHp - Math.Abs(DisplayHp - CurrentHp) / 4 * Clock.ElapsedMilliseconds * 0.1);
+                }
 
-            s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
+                s_barFill.DrawWidth = (int)Math.Min(s_barFill.TextureWidth, Math.Max(0, (s_barFill.TextureWidth * (DisplayHp / HP_BAR_MAXIMUM))));
 
-            //Sync Ki icon position with the end of the scorebar fill.
-            s_kiIcon.Position.X = CurrentXPosition;
-            s_kiExplode.Position = s_kiIcon.Position;
+                //Sync Ki icon position with the end of the scorebar fill.
+                s_kiIcon.Position.X = CurrentXPosition;
+                s_kiExplode.Position = s_kiIcon.Position;
+            }
         }
 
-        internal virtual void KiBulge()
-        {
-            s_kiIcon.Transformations.RemoveAll(
-                    t => t.Type == TransformationType.Scale);
-            s_kiIcon.Transform(new Transformation(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,
-                                                             Clock.Time + 150));
-        }
+        Transformation burstScale;
+        Transformation burstFade;
 
         internal virtual void KiExplode()
         {
             if (!visible) return;
 
-            s_kiExplode.Transform(new Transformation(TransformationType.Scale, 1, 2F, Clock.Time, Clock.Time + 180, EasingTypes.In));
-            s_kiExplode.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.Time, Clock.Time + 180, EasingTypes.None));
+            burstScale.StartTime = burstFade.StartTime = Clock.Time;
+            burstScale.EndTime = burstFade.EndTime = Clock.Time + 180;
         }
 
         internal virtual void SetCurrentHp(double amount, bool initial = false)
@@ -185,7 +190,6 @@ namespace osum.GameplayElements.Scoring
         {
             if (InitialIncrease) InitialIncrease = false;
 
-            //KiBulge();
             KiExplode();
 
             CurrentHpUncapped += amount;
@@ -209,7 +213,14 @@ namespace osum.GameplayElements.Scoring
                     new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
                                 Vector2.Zero, 1, true, Color4.White);
             s_kiExplode.Alpha = 0;
+            s_kiExplode.RemoveOldTransformations = false;
             s_kiExplode.Additive = true;
+
+            burstScale = new TransformationF(TransformationType.Scale, 1, 2F, 0, 0, EasingTypes.In);
+            burstFade = new TransformationF(TransformationType.Fade, 1, 0, 0, 0, EasingTypes.None);
+
+            s_kiExplode.Transform(burstScale);
+            s_kiExplode.Transform(burstFade);
 
             spriteManager.Add(s_barBg);
             spriteManager.Add(s_barFill);

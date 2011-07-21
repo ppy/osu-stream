@@ -44,7 +44,7 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(s_hitCombo_Incoming);
         }
 
-        internal virtual void SlideOut()
+        /*internal virtual void SlideOut()
         {
             s_hitCombo.FadeOut(1000);
             s_hitCombo.MoveTo(s_hitCombo.StartPosition - new Vector2(80, 0), 1000, EasingTypes.Out);
@@ -54,7 +54,7 @@ namespace osum.GameModes.Play.Components
         {
             s_hitCombo.FadeIn(1000);
             s_hitCombo.MoveTo(s_hitCombo.StartPosition, 1000, EasingTypes.In);
-        }
+        }*/
 
         internal virtual void EnsureVisible()
         {
@@ -116,10 +116,10 @@ namespace osum.GameModes.Play.Components
             s_hitCombo.TextArray = s_hitCombo_Incoming.TextArray;
 
             s_hitCombo.Transformations.RemoveAll(tr => tr.Type == TransformationType.Scale);
-            Transformation t1 = new Transformation(TransformationType.Scale, 1.28F, 1.4F, Clock.Time, Clock.Time + 50);
+            Transformation t1 = new TransformationF(TransformationType.Scale, 1.28F, 1.4F, Clock.Time, Clock.Time + 50);
             t1.Easing = EasingTypes.Out;
             s_hitCombo.Transformations.Add(t1);
-            t1 = new Transformation(TransformationType.Scale, 1.4f, 1.28F, Clock.Time + 50, Clock.Time + 100);
+            t1 = new TransformationF(TransformationType.Scale, 1.4f, 1.28F, Clock.Time + 50, Clock.Time + 100);
             t1.Easing = EasingTypes.In;
             s_hitCombo.Transformations.Add(t1);
         }
@@ -131,13 +131,11 @@ namespace osum.GameModes.Play.Components
             if (s_hitCombo.TagNumeric != s_hitCombo_Incoming.TagNumeric)
                 transferToMainCounter();
 
-            s_hitCombo_Incoming.Transformations.RemoveAll(tr => tr.Tag == 1);
+            s_hitCombo_Incoming.Transformations.Clear();
             Transformation t1 =
-                new Transformation(TransformationType.Scale, 2F, 1.28F, Clock.Time, Clock.Time + 300);
+                new TransformationF(TransformationType.Scale, 2F, 1.28F, Clock.Time, Clock.Time + 300);
             Transformation t2 =
-                new Transformation(TransformationType.Fade, 0.6F, 0, Clock.Time, Clock.Time + 300);
-            t1.Tag = 1;
-            t2.Tag = 1;
+                new TransformationF(TransformationType.Fade, 0.6F, 0, Clock.Time, Clock.Time + 300);
             s_hitCombo_Incoming.Transform(t1);
             s_hitCombo_Incoming.Transform(t2);
         }

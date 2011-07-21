@@ -4,6 +4,9 @@ using System.Drawing;
 using OpenTK;
 using osum.Helpers;
 using osum.Support;
+using osum.Graphics.Sprites;
+using osum.Audio;
+using osum.GameplayElements.Beatmaps;
 namespace osum
 {
     public static class InputManager
@@ -77,6 +80,11 @@ namespace osum
             MainPointerPosition = point.BasePosition;
             TrackingPoints.Add(point);
             TriggerOnDown(source, point);
+
+            /*pDrawable d = osum.Graphics.Sprites.pSprite.FullscreenWhitePixel;
+            d.FadeOutFromOne(200);
+            GameBase.MainSpriteManager.Add(d);
+            AudioEngine.PlaySample(OsuSamples.HitClap,SampleSet.Soft);*/
         }
 
         private static void ReceiveUp(InputSource source, TrackingPoint point)
@@ -122,7 +130,7 @@ namespace osum
         {
             point.IncreaseValidity();
 
-            if (OnDown != null)
+            if (OnDown != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnDown(source, point);
@@ -137,7 +145,7 @@ namespace osum
             //tracking is no longer valid.
             point.DecreaseValidity();
 
-            if (OnUp != null)
+            if (OnUp != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnUp(source, point);
@@ -149,7 +157,7 @@ namespace osum
         static public event InputHandler OnMove;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
-            if (OnMove != null)
+            if (OnMove != null && !GameBase.GloballyDisableInput)
             {
                 if (GameBase.ActiveNotification != null)
                     GameBase.ActiveNotification.HandleOnMove(source, point);

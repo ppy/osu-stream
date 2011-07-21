@@ -1,6 +1,7 @@
 using System;
 using osum.Graphics.Sprites;
 using osum.Graphics.Drawables;
+using System.Runtime.InteropServices;
 using osum.Helpers;
 using OpenTK.Graphics;
 using OpenTK;
@@ -45,27 +46,49 @@ namespace osum.Graphics.Drawables
         internal float Radius;
         internal float Width = 2 / 20f;
 
+        GCHandle handle_vertices;
+        IntPtr handle_vertices_pointer;
+
+        public bool IsDisposed { get; private set; }
+
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
             AlwaysDraw = alwaysDraw;
             DrawDepth = drawDepth;
             Field = FieldTypes.GamefieldExact;
-            StartPosition = position;
             Position = position;
             Radius = radius;
             Colour = colour;
-            parts = GameBase.IsSlowDevice ? 24 : 48;
+            parts = GameBase.IsSlowDevice ? 36 : 48;
+            
+
+#if !NO_PIN_SUPPORT
             vertices = new float[parts * 4 + 4];
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal((parts * 4 + 4) * sizeof(float));
+#endif
         }
 
         public override void Dispose()
         {
+            if (IsDisposed)
+                return;
+#if !NO_PIN_SUPPORT
+            if (handle_vertices.IsAllocated) handle_vertices.Free();
+#else
+            Marshal.FreeHGlobal(handle_vertices_pointer);
+#endif
+            IsDisposed = true;
         }
 
         int parts = 48;
 
         static float[] precalculatedAngles;
+#if !NO_PIN_SUPPORT
         float[] vertices;
+#endif
 
         public override bool Draw()
         {
@@ -79,40 +102,48 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
-                if (precalculatedAngles == null)
+                unsafe
                 {
-                    precalculatedAngles = new float[parts * 2 + 2];
+#if NO_PIN_SUPPORT
+                    float* vertices = (float*)handle_vertices_pointer.ToPointer();
+#endif
+                    if (precalculatedAngles == null)
+                    {
+                        precalculatedAngles = new float[parts * 2 + 2];
+
+                        for (int v = 0; v < parts; v++)
+                        {
+                            precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * MathHelper.Pi / parts);
+                            precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * MathHelper.Pi / parts);
+                        }
+
+                        precalculatedAngles[parts * 2] = vertices[0];
+                        precalculatedAngles[parts * 2 + 1] = vertices[1];
+                    }
 
                     for (int v = 0; v < parts; v++)
                     {
-                        precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * Math.PI / parts);
-                        precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * Math.PI / parts);
+                        float angle1 = precalculatedAngles[v * 2];
+                        float angle2 = precalculatedAngles[v * 2 + 1];
+
+                        vertices[v * 4] = pos.X + angle1 * rad1;
+                        vertices[v * 4 + 1] = pos.Y + angle2 * rad1;
+                        vertices[v * 4 + 2] = pos.X + angle1 * rad2;
+                        vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
                     }
 
-                    precalculatedAngles[parts * 2] = vertices[0];
-                    precalculatedAngles[parts * 2 + 1] = vertices[1];
+                    vertices[parts * 4] = vertices[0];
+                    vertices[parts * 4 + 1] = vertices[1];
+                    vertices[parts * 4 + 2] = vertices[2];
+                    vertices[parts * 4 + 3] = vertices[3];
                 }
-
-                for (int v = 0; v < parts; v++)
-                {
-                    float angle1 = precalculatedAngles[v * 2];
-                    float angle2 = precalculatedAngles[v * 2 + 1];
-
-                    vertices[v * 4] = pos.X + angle1 * rad1;
-                    vertices[v * 4 + 1] = pos.Y + angle2 * rad1;
-                    vertices[v * 4 + 2] = pos.X + angle1 * rad2;
-                    vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
-                }
-
-                vertices[parts * 4] = vertices[0];
-                vertices[parts * 4 + 1] = vertices[1];
-                vertices[parts * 4 + 2] = vertices[2];
-                vertices[parts * 4 + 3] = vertices[3];
 
                 SpriteManager.TexturesEnabled = false;
 
                 SpriteManager.SetColour(c);
-                GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
+
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+
                 GL.DrawArrays(BeginMode.TriangleStrip, 0, parts * 2 + 2);
 
                 return true;
@@ -121,6 +152,8 @@ namespace osum.Graphics.Drawables
             return false;
 
         }
+
+        
     }
 }
 

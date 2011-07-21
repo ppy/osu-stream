@@ -101,6 +101,8 @@ namespace BeatmapCombinator
 
             string Artist = string.Empty, Creator = string.Empty, Source = string.Empty, Title = string.Empty;
 
+            string previewPoint = "30000";
+
             foreach (string f in orderedDifficulties)
             {
                 if (f == null)
@@ -145,6 +147,9 @@ namespace BeatmapCombinator
                                 {
                                     case "AudioFilename":
                                         writeLine = "AudioFilename: audio.mp3";
+                                        break;
+                                    case "PreviewTime":
+                                        previewPoint = val;
                                         break;
                                 }
                                 break;
@@ -260,14 +265,17 @@ namespace BeatmapCombinator
             string[] splitdir = dir.Split('\\');
             string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
-
+#if DIST
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
+            string audioFilename = Directory.GetFiles(dir, "*.m4a")[0];
+#else
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
-
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
+#endif
 
 
             //write the package initially so we can use it for score testing purposes.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
 
             //scoring
 
@@ -308,11 +316,11 @@ namespace BeatmapCombinator
             Player.Beatmap.Dispose();
 
             //write the package a second time with new multiplier header data.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
         }
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered,
-            string Artist, string Creator, string Source, string Title)
+            string Artist, string Creator, string Source, string Title, string previewPoint)
         {
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
@@ -363,6 +371,7 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Creator, Creator);
                 package.AddMetadata(MapMetaType.Source, Source);
                 package.AddMetadata(MapMetaType.Title, Title);
+                package.AddMetadata(MapMetaType.PreviewPoint, previewPoint);
 
                 string versionsAvailable = "";
                 if (ordered[0] != null) versionsAvailable += "|Easy";
@@ -372,7 +381,11 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
+#if DIST
+                package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
+#else
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
+#endif
 
                 string dir = Path.GetDirectoryName(audioFilename);
 
@@ -447,7 +460,7 @@ namespace BeatmapCombinator
 
                 while (true)
                 {
-                    Clock.Update(0.01);
+                    Clock.UpdateCustom(0.01);
                     source.InternalTime += 0.01;
                     Clock.ElapsedMilliseconds = 10;
 
@@ -500,7 +513,7 @@ namespace BeatmapCombinator
 
                     while (true)
                     {
-                        Clock.Update(0.01);
+                        Clock.UpdateCustom(0.01);
                         source.InternalTime += 0.01;
 
                         p.Update();

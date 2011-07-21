@@ -177,7 +177,7 @@ namespace osum.Graphics.Sprites
 
         public override pDrawable Clone()
         {
-            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, StartPosition, DrawDepth, AlwaysDraw, Colour);
+            pAnimation clone = new pAnimation(TextureArray, Field, Origin, Clocking, Position, DrawDepth, AlwaysDraw, Colour);
             clone.FrameDelay = FrameDelay;
 
             foreach (Transformation t in Transformations)

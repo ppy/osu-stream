@@ -87,8 +87,8 @@ namespace osum.GameModes
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
-            s_Header.Transform(new Transformation(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
-            s_Header.Transform(new Transformation(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
+            s_Header.Transform(new TransformationV(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
+            s_Header.Transform(new TransformationF(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
             s_Header.OnClick += delegate { };
             spriteManager.Add(s_Header);
 
@@ -102,8 +102,6 @@ namespace osum.GameModes
 
             s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu);
             topmostSpriteManager.Add(s_ButtonBack);
-
-            OnlineHelper.Initialize();
         }
 
         private void footer_onClick(object sender, EventArgs e)
@@ -115,7 +113,7 @@ namespace osum.GameModes
             }
             else
             {
-                spriteManager.FadeOut(800, 0.2f);
+                //spriteManager.FadeOut(800, 0.2f);
                 OnlineHelper.ShowRanking(Player.SubmitString, delegate
                 {
                     spriteManager.FadeIn(300, 1);
@@ -144,7 +142,14 @@ namespace osum.GameModes
         {
             availableMaps.Clear();
 
-            foreach (string s in Directory.GetFiles(BeatmapPath, "*.osz2"))
+            foreach (string s in Directory.GetFiles("Beatmaps/"))
+            {
+                //bundled maps
+                Beatmap b = new Beatmap(s);
+                availableMaps.AddInPlace(b);
+            }
+
+            foreach (string s in Directory.GetFiles(BeatmapPath))
             {
                 Beatmap b = new Beatmap(s);
                 availableMaps.AddInPlace(b);
@@ -353,6 +358,9 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.DifficultySelect:
+                    if (!AudioEngine.Music.IsElapsing)
+                        playFromPreview();
+
                     if (tabController.SelectedTab == s_TabBarPlay)
                     {
                         if (InputManager.IsPressed && !inputStolen)

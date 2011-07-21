@@ -1,12 +1,8 @@
 using System;
 using MonoTouch.UIKit;
-
-#if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
-
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
@@ -26,31 +22,33 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#else
-using OpenTK.Input;
-using OpenTK.Graphics.OpenGL;
-using System.Drawing.Imaging;
-using osum.Input;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
-#endif
-
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
 using osum.Graphics.Skins;
 using osum.Audio;
-using System.Threading;
 using osum.GameModes;
 using OpenTK.Graphics;
 using OpenTK.Platform;
 
 namespace osum.Support.iPhone
 {
-    // The name AppDelegate is referenced in the MainWindow.xib file.
-    public partial class AppDelegate : UIApplicationDelegate
+    [MonoTouch.Foundation.Register("HaxApplication")]
+    public class HaxApplication : UIApplication
+    {
+        public override void SendEvent(UIEvent e)
+        {
+            if (e.Type == UIEventType.Touches && !AppDelegate.UsingViewController)
+            {
+                InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+                source.HandleTouches(e.AllTouches);
+                return;
+            }
+
+            base.SendEvent(e);
+        }
+    }
+
+    [MonoTouch.Foundation.Register("AppDelegate")]
+    public class AppDelegate : UIApplicationDelegate
     {
         static bool active;
         static bool firstActivation = true;
@@ -58,14 +56,36 @@ namespace osum.Support.iPhone
         public static AppDelegate Instance;
 
         public static EAGLView glView;
-        public static GameBase game;
+        public static GameBaseIphone game;
         static IGraphicsContext context;
 
-        // This method is invoked when the application has loaded its UI and is ready to run
-        public override void FinishedLaunching(UIApplication app)
-        {    
+        UIWindow window;
+
+        private void RotationChanged(NSNotification notification)
+        {
+            UIInterfaceOrientation interfaceOrientation;
+            switch (UIDevice.CurrentDevice.Orientation)
+            {
+                case UIDeviceOrientation.LandscapeLeft:
+                    interfaceOrientation = UIInterfaceOrientation.LandscapeRight;
+                    break;
+                case UIDeviceOrientation.LandscapeRight:
+                    interfaceOrientation = UIInterfaceOrientation.LandscapeLeft;
+                    break;
+                default:
+                    return;
+            }
+
+            if (ViewController == null)
+                game.HandleRotationChange(interfaceOrientation);
+        }
+
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
+        {
+            window = new UIWindow(UIScreen.MainScreen.Bounds);
+            window.MakeKeyAndVisible();
+
             UIApplication.SharedApplication.StatusBarHidden = true;
-            UIApplication.SharedApplication.SetStatusBarOrientation(UIInterfaceOrientation.LandscapeRight, false);
 
             Instance = this;
 
@@ -74,20 +94,29 @@ namespace osum.Support.iPhone
             context = Utilities.CreateGraphicsContext(EAGLRenderingAPI.OpenGLES1);
 
             glView = new EAGLView(window.Bounds);
-            glView.ContentScaleFactor = UIScreen.MainScreen.Scale;
+            GameBase.ScaleFactor = UIScreen.MainScreen.Scale;
+
             window.AddSubview(glView);
 
-            GameBase.ScaleFactor = glView.ContentScaleFactor;
-            Console.WriteLine("scale factor " + GameBase.ScaleFactor);
             GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
-                                        (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+                                    (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+
+#if !DIST
+            Console.WriteLine("scale factor " + GameBase.ScaleFactor);
+            Console.WriteLine("native size " + GameBase.NativeSize);
+#endif
             GameBase.TriggerLayoutChanged();
 
             game.Initialize();
             glView.Run(game);
+
+            UIDevice.CurrentDevice.BeginGeneratingDeviceOrientationNotifications();
+            NSNotificationCenter.DefaultCenter.AddObserver(UIDevice.OrientationDidChangeNotification, RotationChanged);
+
+            return true;
         }
 
-        public override void WillEnterForeground (UIApplication application)
+        public override void WillEnterForeground(UIApplication application)
         {
             if (Director.CurrentOsuMode == OsuMode.MainMenu)
                 Director.ChangeMode(OsuMode.MainMenu, null);
@@ -95,6 +124,7 @@ namespace osum.Support.iPhone
 
         public override void OnActivated(UIApplication app)
         {
+            glView.StartAnimation();
             active = true;
         }
 
@@ -109,6 +139,8 @@ namespace osum.Support.iPhone
                 p.Pause();
                 AudioEngine.Music.Stop(false);
             }
+
+            glView.StopAnimation();
         }
 
         public override void ReceiveMemoryWarning(UIApplication application)
@@ -128,28 +160,44 @@ namespace osum.Support.iPhone
             }
         }
 
-        public static bool Running { get { return active && !usingViewController; } }
+        public static UIViewController ViewController;
 
-        static bool usingViewController;
+        public static bool UsingViewController;
+        public static void SetUsingViewController(bool isUsing)
+        {
+                if (isUsing == UsingViewController) return;
+                UsingViewController = isUsing;
 
-        public static bool UsingViewController {
-            get { return usingViewController; }
-            set
-            {
-                if (value == usingViewController)
-                    return;
-                usingViewController = value;
+                if (UsingViewController)
+                {
+                    if (ViewController == null)
+                        ViewController = new GenericViewController();
+                    Instance.window.AddSubview(ViewController.View);
 
-                /*if (usingViewController)
-                    Instance.window.AddSubview(Instance.viewController.View);
+                    InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
+                    source.ReleaseAllTouches();
+                }
                 else
-                    Instance.viewController.View.RemoveFromSuperview();*/
-            }
+                {
+                    ViewController.View.RemoveFromSuperview();
+                    ViewController.Dispose();
+                    ViewController = null;
+                }
         }
+    }
 
-        public static UIViewController ViewController {
-            get {
-                return null;//Instance.viewController;
+    public class GenericViewController : UIViewController
+    {
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            switch (toInterfaceOrientation)
+            {
+                case UIInterfaceOrientation.LandscapeLeft:
+                case UIInterfaceOrientation.LandscapeRight:
+                    return toInterfaceOrientation == UIApplication.SharedApplication.StatusBarOrientation;
+                    //only allow rotation on initial display, else all hell breaks loose.
+                default:
+                    return false;
             }
         }
     }

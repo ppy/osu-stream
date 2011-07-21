@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,15 +18,13 @@ using osum.Resources;
 
 namespace osum.GameModes.Store
 {
-    class StoreMode : GameMode
+    public class StoreMode : GameMode
     {
         private pText loading;
         private pRectangle loadingRect;
         private BackButton s_ButtonBack;
 
-        List<PackPanel> packs = new List<PackPanel>();
-
-        //InAppPurchaseManager iap = new InAppPurchaseManager();
+        protected List<PackPanel> packs = new List<PackPanel>();
 
         StringNetRequest fetchRequest;
 
@@ -43,10 +41,6 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             spriteManager.Add(s_ButtonBack);
 
-            fetchRequest = new StringNetRequest("http://d.osu.ppy.sh/osum/getpacks.php");
-            fetchRequest.onFinish += netRequest_onFinish;
-            NetManager.AddRequest(fetchRequest);
-
             loading = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.OrangeRed)
             {
                 TextAlignment = TextAlignment.Centre,
@@ -60,50 +54,42 @@ namespace osum.GameModes.Store
 
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
 
-            //iap.requestProductData("");
+            if (fetchRequest != null) fetchRequest.Abort();
+            fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list.php");
+            fetchRequest.onFinish += handlePackInfo;
+            NetManager.AddRequest(fetchRequest);
+
+            if (GameBase.IsSlowDevice)
+                GameBase.ThrottleExecution = true;
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        public override void Dispose()
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
-                return;
-
-            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-            float bound = offsetBound;
-
-            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
-                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
-            scrollOffset = scrollOffset + change;
-            velocity = change;
+            if (fetchRequest != null) fetchRequest.Abort();
+            base.Dispose();
         }
 
-        void netRequest_onFinish(string _result, Exception e)
+        protected virtual void handlePackInfo(string result, Exception e)
         {
             if (fetchRequest.AbortRequested)
                 return;
 
-            if (e != null || string.IsNullOrEmpty(_result))
+            if (e != null || string.IsNullOrEmpty(result))
             {
+                //error has occurred!
                 GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;
             }
 
-            int y = 0;
-
-
             PackPanel pp = null;
             bool newPack = true;
 
-            int i = 0;
-
-            foreach (string line in _result.Split('\n'))
+            int y = 0;
+            foreach (string line in result.Split('\n'))
             {
                 if (line.Length == 0)
                 {
                     newPack = true;
-#if DEBUG
-                    Console.WriteLine("Reading new pack");
-#endif
                     continue;
                 }
 
@@ -111,19 +97,16 @@ namespace osum.GameModes.Store
 
                 if (newPack)
                 {
-                    GameBase.Scheduler.Add(delegate
-                    {
-                        if (pp != null && pp.BeatmapCount > 0)
-                        {
-                            spriteManager.Add(pp);
-                            packs.Add(pp);
-                        }
-
+                    AddPack(pp);
 #if DEBUG
-                        Console.WriteLine("Adding pack: " + split[0]);
+                    Console.WriteLine("Adding pack: " + split[0]);
 #endif
-                        pp = new PackPanel(split[0], split[1], null);
-                    });
+
+                    string packId = split[0];
+                    string packName = split[1];
+                    bool isFree = packId.Contains("Free");
+
+                    pp = new PackPanel(packName, packId, isFree);
 
                     newPack = false;
                     continue;
@@ -146,46 +129,45 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                GameBase.Scheduler.Add(delegate
-                {
-                    pp.Add(filename);
-                });
+                pp.Add(filename);
 
                 y++;
             }
 
-            GameBase.Scheduler.Add(delegate
-            {
-                if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
-                    return;
+            if (Director.IsTransitioning || Director.CurrentOsuMode != OsuMode.Store)
+                return;
 
-                if (pp != null && pp.BeatmapCount > 0)
-                {
-                    spriteManager.Add(pp);
-                    packs.Add(pp);
-                }
+            AddPack(pp);
 
-                loading.FadeOut(200);
+            loading.FadeOut(200);
 
-                if (y == 0)
-                    GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
-            });
+            if (packs.Count == 0)
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
         }
 
-        public override void Dispose()
+        void AddPack(PackPanel pp)
         {
-            if (fetchRequest != null)
-                fetchRequest.Abort();
-            base.Dispose();
+            if (pp == null || pp.BeatmapCount == 0)
+                return;
+            spriteManager.Add(pp);
+            packs.Add(pp);
         }
 
-        public override bool Draw()
+        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            return base.Draw();
+            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
+                return;
+
+            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+            float bound = offsetBound;
+
+            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
+                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
+            scrollOffset = scrollOffset + change;
+            velocity = change;
         }
 
         bool playingPreview;
-
 
         public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
         {
@@ -220,7 +202,27 @@ namespace osum.GameModes.Store
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            instance.s_ButtonBack.FadeOut(100);
+            instance.purchase(packPanel);
+        }
+
+        /// <summary>
+        /// Initiate the "purchase" procedure (which may not involve a purchase in the case of a free pack.
+        /// </summary>
+        protected virtual void purchase(PackPanel pack)
+        {
+            if (pack.IsFree)
+                download(pack);
+            else
+                GameBase.Notify("Can't download paid packs from this build!",null);
+        }
+
+        /// <summary>
+        /// Download the specified pack.
+        /// </summary>
+        protected virtual void download(PackPanel pack)
+        {
+            pack.Download();
+            s_ButtonBack.FadeOut(100);
         }
 
         public static void DownloadComplete(PackPanel pp)
@@ -235,7 +237,9 @@ namespace osum.GameModes.Store
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
+            {
                 instance.s_ButtonBack.FadeIn(100);
+            }
         }
 
         public static void EnsureVisible(pDrawable sprite)
@@ -260,10 +264,11 @@ namespace osum.GameModes.Store
                 return -totalHeight + GameBase.BaseSizeFixedWidth.Height - 80;
             }
         }
-        private float offset_max = 0;
-        float scrollOffset = 0;
+        private float offset_max;
+        float scrollOffset;
         private float velocity;
         private pSprite background;
+
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
@@ -278,9 +283,7 @@ namespace osum.GameModes.Store
         public override void Update()
         {
             if (playingPreview && !AudioEngine.Music.IsElapsing)
-            {
                 ResetAllPreviews(true, false);
-            }
 
             if (!InputManager.IsPressed)
             {

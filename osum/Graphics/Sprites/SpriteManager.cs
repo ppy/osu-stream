@@ -201,6 +201,12 @@ namespace osum.Graphics.Sprites
 
         internal pList<pDrawable> ForwardPlayList = new pList<pDrawable>() { UseBackwardsSearch = true };
 
+        internal void ResetFirstTransformations()
+        {
+            foreach (pDrawable p in Sprites)
+                p.ResetInitialTransformationRead();
+        }
+
         internal virtual void Add(pDrawable sprite)
         {
             if (ForwardPlayOptimisedAdd && sprite.Transformations.Count > 0)
@@ -370,7 +376,7 @@ namespace osum.Graphics.Sprites
 
             pTexture currentBatchTexture = null;
 
-            matrixOperations = Rotation != 0 || ScaleScalar != 1 || FieldPosition != Vector2.Zero;
+            matrixOperations = Rotation != 0 || ScaleScalar != 1 || Offset.Y != 0 || Position != Vector2.Zero;
 
             if (matrixOperations)
             {
@@ -378,13 +384,16 @@ namespace osum.Graphics.Sprites
 
                 GL.Translate(GameBase.NativeSize.Width / 2f, GameBase.NativeSize.Height / 2f, 0);
                 if (Rotation != 0)
-                    GL.Rotate(Rotation / (float)Math.PI * 180, 0, 0, 1);
+                    GL.Rotate(Rotation / MathHelper.Pi * 180, 0, 0, 1);
                 if (ScaleScalar != 1)
                     GL.Scale(Scale.X, Scale.Y, 0);
                 GL.Translate(-GameBase.NativeSize.Width / 2f, -GameBase.NativeSize.Height / 2f, 0);
 
-                if (FieldPosition != Vector2.Zero)
-                    GL.Translate(FieldPosition.X, FieldPosition.Y, 0);
+                if (Offset.Y != 0 || Position != Vector2.Zero)
+                {
+                    Vector2 field = FieldPosition;
+                    GL.Translate(field.X, field.Y, 0);
+                }
             }
 
             float tempAlpha = 0;
@@ -430,7 +439,7 @@ namespace osum.Graphics.Sprites
             if (matrixOperations)
                 GL.PopMatrix();
 
-            flushBatch();
+            //flushBatch();
 
             return true;
         }

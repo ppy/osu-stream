@@ -19,8 +19,9 @@ namespace osum
             get { return dimmableVolume; }
             set
             {
-                if (dimmableVolume == value) return;
-                dimmableVolume = pMathHelper.ClampToOne(value);
+                float clamped = pMathHelper.ClampToOne(value);
+                if (dimmableVolume == clamped) return;
+                dimmableVolume = clamped;
                 updateVolume();
             }
         }
@@ -31,8 +32,9 @@ namespace osum
             get { return maxVolume; }
             set
             {
-                if (maxVolume == value) return;
-                maxVolume = pMathHelper.ClampToOne(value);
+                float clamped = pMathHelper.ClampToOne(value);
+                if (maxVolume == clamped) return;
+                maxVolume = clamped;
                 updateVolume();
             }
         }
@@ -56,6 +58,10 @@ namespace osum
             if (identifier != null && lastLoaded == identifier) return false;
 
             lastLoaded = identifier;
+            Clock.UseMp3Offset = lastLoaded != null && lastLoaded.Contains(".mp3");
+#if !DIST
+            Console.WriteLine("Using MP3 offset:" + Clock.UseMp3Offset);
+#endif
             return true;
         }
 

@@ -9,15 +9,13 @@
     <ProjectTypeGuids>{E613F3A2-FE9C-494F-B74E-F63BCB86FEA6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>osum</RootNamespace>
-    <MainNibFile>MainWindow.nib</MainNibFile>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1314</BundleVersion>
+    <BundleVersion>1415</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
     <SupportedDevices>IPhoneAndIPad</SupportedDevices>
-    <MainNibFileIPad>MainWindow.xib</MainNibFileIPad>
     <BundleIconIPad>Icon-72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
@@ -66,11 +64,10 @@
     <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -86,6 +83,7 @@
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
     <AssemblyName>osum</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>full</DebugType>
@@ -98,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE DIST</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
@@ -191,9 +189,6 @@
     <Compile Include="GameplayElements\DifficultyManager.cs" />
     <Compile Include="Graphics\Color4.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Support\iPhone\MainWindow.xib.designer.cs">
-      <DependentUpon>..\..\iPhone\MainWindow.xib</DependentUpon>
-    </Compile>
     <Compile Include="Support\iPhone\GameBaseIphone.cs" />
     <Compile Include="Support\iPhone\GameWindowIphone.cs" />
     <Compile Include="GameModes\GameMode.cs" />
@@ -314,6 +309,7 @@
     <Compile Include="UI\SliderControl.cs" />
     <Compile Include="Localisation\LocalisationManager.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
+    <Compile Include="GameModes\Store\StoreModeIphone.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -336,9 +332,6 @@
     <Folder Include="Online\" />
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Support\iPhone\MainWindow.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -392,5 +385,7 @@
     <Content Include="Skins\Default\songselect.m4a" />
     <Content Include="Localisation\en.txt" />
     <Content Include="Localisation\ja.txt" />
+    <Content Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2" />
+    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
   </ItemGroup>
 </Project>

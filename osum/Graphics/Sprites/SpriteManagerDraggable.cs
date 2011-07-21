@@ -14,6 +14,7 @@ namespace osum.Graphics.Sprites
 
         internal bool ShowScrollbar = true;
         internal bool AutomaticHeight = true;
+        internal bool LockHorizontal = true;
 
         internal float EndStopLenience = 2;
 
@@ -31,7 +32,7 @@ namespace osum.Graphics.Sprites
         public SpriteManagerDraggable()
         {
             CheckSpritesAreOnScreenBeforeRendering = true;
-            scrollbar.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 800, Clock.ModeTime + 1400));
+            scrollbar.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 800, Clock.ModeTime + 1400));
             nonDraggableManager.Add(scrollbar);
         }
 
@@ -45,7 +46,7 @@ namespace osum.Graphics.Sprites
         {
             base.HandleInputManagerOnMove(source, trackingPoint);
 
-            if (movedX > 10 && movedY < 30)
+            if (LockHorizontal && movedX > 10 && movedY < 20)
                 return;
 
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
@@ -80,7 +81,7 @@ namespace osum.Graphics.Sprites
             movedY = 0;
 
             scrollbar.Transformations.Clear();
-            scrollbar.Transform(new Transformation(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
+            scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
 
             base.HandleInputManagerOnUp(source, trackingPoint);
         }
@@ -112,6 +113,7 @@ namespace osum.Graphics.Sprites
 
             if (AutomaticHeight)
             {
+                sprite.Update();
                 float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSizeFixedWidth.Height;
                 if (newOffset < offset_min)
                 {
@@ -132,10 +134,6 @@ namespace osum.Graphics.Sprites
         float lastFrameOffset;
         public override void Update()
         {
-            base.Update();
-
-            nonDraggableManager.Update();
-
             float bound = offsetBound;
 
             if (!InputManager.IsPressed)
@@ -160,6 +158,9 @@ namespace osum.Graphics.Sprites
                 Offset.Y = scaledBackOffset;
 
             scrollbar.Position.Y = Offset.Y / (offset_min - GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
+
+            base.Update();
+            nonDraggableManager.Update();
         }
     }
 }

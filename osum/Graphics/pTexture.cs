@@ -133,7 +133,7 @@ namespace osum.Graphics
 #endif
                 }
 
-                
+
 
                 TextureGl.Dispose();
                 TextureGl = null;
@@ -501,40 +501,6 @@ namespace osum.Graphics
         internal pTexture Clone()
         {
             return (pTexture)this.MemberwiseClone();
-        }
-    }
-
-    /// <summary>
-    /// BinaryWriter exposing protected MS function.
-    /// </summary>
-    internal class HaxBinaryReader : BinaryReader
-    {
-        public HaxBinaryReader(Stream input)
-            : base(input)
-        {
-        }
-
-        public HaxBinaryReader(Stream input, Encoding encoding)
-            : base(input, encoding)
-        {
-        }
-
-        public new int Read7BitEncodedInt()
-        {
-            byte num3;
-            int num = 0;
-            int num2 = 0;
-            do
-            {
-                if (num2 == 0x23)
-                {
-                    return -1;
-                }
-                num3 = ReadByte();
-                num |= (num3 & 0x7f) << num2;
-                num2 += 7;
-            } while ((num3 & 0x80) != 0);
-            return num;
         }
     }
 }

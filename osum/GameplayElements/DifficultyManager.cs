@@ -54,14 +54,13 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        adjustment = 1.4f;
-                        break;
+                        return 1400;
+                    default:
+                        return 1000;
                     case Difficulty.Expert:
-                        adjustment = 0.8f;
-                        break;
-                }
+                        return 800;
 
-                return (int)(1000 * adjustment);
+                }
             }
         }
 

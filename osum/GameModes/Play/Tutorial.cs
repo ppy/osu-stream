@@ -67,8 +67,8 @@ namespace osum.GameModes.Play
 
         private void showDemo()
         {
-            s_Demo.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 500) { Looping = true, LoopDelay = 500 });
-            s_Demo.Transform(new Transformation(TransformationType.Fade, 0.5f, 0.5f, Clock.ModeTime + 500, Clock.ModeTime + 1000) { Looping = true, LoopDelay = 500 });
+            s_Demo.Transform(new TransformationF(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 500) { Looping = true, LoopDelay = 500 });
+            s_Demo.Transform(new TransformationF(TransformationType.Fade, 0.5f, 0.5f, Clock.ModeTime + 500, Clock.ModeTime + 1000) { Looping = true, LoopDelay = 500 });
         }
 
         private void hideDemo()
@@ -93,8 +93,8 @@ namespace osum.GameModes.Play
             GameBase.Scheduler.Add(delegate
             {
                 touchToContinueText.Transformations.Clear();
-                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 600, EasingTypes.In) { LoopDelay = 800, Looping = true });
-                touchToContinueText.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 600, Clock.ModeTime + 1400, EasingTypes.In) { LoopDelay = 600, Looping = true });
+                touchToContinueText.Transform(new TransformationF(TransformationType.Fade, 1, 1, Clock.ModeTime, Clock.ModeTime + 600, EasingTypes.In) { LoopDelay = 800, Looping = true });
+                touchToContinueText.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 600, Clock.ModeTime + 1400, EasingTypes.In) { LoopDelay = 600, Looping = true });
             }, 400);
         }
 
@@ -517,7 +517,7 @@ namespace osum.GameModes.Play
                             {
                                 warned = true;
                                 pText t = showText(LocalisationManager.GetString(OsuString.Hold3));
-                                t.Transform(new Transformation(TransformationType.Fade, 1, 0, t.ClockingNow + music_beatlength * 4, t.ClockingNow + music_beatlength * 5));
+                                t.Transform(new TransformationF(TransformationType.Fade, 1, 0, t.ClockingNow + music_beatlength * 4, t.ClockingNow + music_beatlength * 5));
                             }
                         };
                     }

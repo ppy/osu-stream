@@ -228,7 +228,7 @@ namespace osum.GameplayElements
                             break;
                         }
 
-                        h.Sprites.ForEach(s => s.Bypass = true);
+                        h.Sprites.ForEach(s => { s.Transformations.Clear(); s.Alpha = 0; });
                         h.Dispose();
                     }
 
@@ -313,14 +313,21 @@ namespace osum.GameplayElements
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
             foreach (Transformation t in secondObject.Sprites[0].Transformations)
-                if (t.Type == TransformationType.Fade && t.EndFloat == 1)
+            {
+                TransformationF tf = t as TransformationF;
+                if (tf != null && tf.EndFloat == 1)
                     connectingLine.Transform(t);
+            }
+
             foreach (Transformation t in firstObject.Sprites[0].Transformations)
-                if (t.Type == TransformationType.Fade && t.EndFloat == 0)
+            {
+                TransformationF tf = t as TransformationF;
+                if (tf != null && tf.EndFloat == 0)
                     connectingLine.Transform(t);
+            }
 
             h2.Sprites.Add(connectingLine);
-            h2.SpriteCollectionDim.Add(connectingLine);
+            connectingLine.TagNumeric = HitObject.DIMMABLE_TAG;
 
             h1.connectedObject = h2;
             h2.connectedObject = h1;
@@ -354,8 +361,6 @@ namespace osum.GameplayElements
         public void Update()
         {
             AllowSpinnerOptimisation = false;
-
-            spriteManager.Update();
 
             List<HitObject> activeObjects = ActiveStreamObjects;
 
@@ -392,7 +397,7 @@ namespace osum.GameplayElements
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
-                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
+                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime - Clock.ElapsedMilliseconds / 2)
                         TriggerScoreChange(h.Hit(), h);
                     if (Clock.AudioTimeSource.IsElapsing || (Clock.AudioTime < 0 && Clock.AudioLeadingIn))
                         TriggerScoreChange(h.CheckScoring(), h);
@@ -424,6 +429,8 @@ namespace osum.GameplayElements
 
                 nextStreamChange = 0;
             }
+
+            spriteManager.Update();
         }
 
         #endregion
@@ -579,4 +586,40 @@ namespace osum.GameplayElements
         Variables,
         ScoringMultipliers
     } ;
+
+    [Flags]
+    public enum ScoreChange
+    {
+        Ignore = 0,
+        MissMinor = 1 << 0,
+        Miss = 1 << 1,
+        MuAddition = 1 << 3,
+        KatuAddition = 1 << 4,
+        GekiAddition = 1 << 5,
+        SliderTick = 1 << 6,
+        SliderRepeat = 1 << 7,
+        SliderEnd = 1 << 8,
+        Hit50 = 1 << 9,
+        Hit100 = 1 << 10,
+        Hit300 = 1 << 11,
+        SpinnerSpinPoints = 1 << 12,
+        SpinnerBonus = 1 << 13,
+        Hit50m = Hit50 | MuAddition,
+        Hit100m = Hit100 | MuAddition,
+        Hit300m = Hit300 | MuAddition,
+        Hit100k = Hit100 | KatuAddition,
+        Hit300k = Hit300 | KatuAddition,
+        Hit300g = Hit300 | GekiAddition,
+        HitValuesOnly = Miss | Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
+        ComboAddition = MuAddition | KatuAddition | GekiAddition,
+    }
+
+    public enum Difficulty
+    {
+        None = -1,
+        Easy = 0,
+        Normal = 1,
+        Hard = 2,
+        Expert = 3
+    }
 }

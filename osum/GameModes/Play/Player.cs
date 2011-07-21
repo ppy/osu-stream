@@ -95,6 +95,8 @@ namespace osum.GameModes
             : base()
         { }
 
+        int frameCount;
+
         public override void Initialize()
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
@@ -104,7 +106,8 @@ namespace osum.GameModes
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
-            touchBurster = new TouchBurster(!Player.Autoplay);
+            if (!GameBase.IsSlowDevice)
+                touchBurster = new TouchBurster(!Player.Autoplay);
 
             loadBeatmap();
 
@@ -267,6 +270,9 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
+#if !DIST && !MONO
+            Console.WriteLine("Player.cs produced " + frameCount + " frames.");
+#endif
             Clock.AbortLeadIn();
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
@@ -341,7 +347,9 @@ namespace osum.GameModes
 
         private void comboPain(bool harsh)
         {
-            playfieldBackground.FlashColour(Color4.Red, 300);
+            if (Failed) return;
+
+            playfieldBackground.FlashColour(Color4.Red, 500).Offset(-250);
 
             if (harsh)
             {
@@ -359,7 +367,7 @@ namespace osum.GameModes
 
             if (hitObject is HitCircle && change > 0)
             {
-                CurrentScore.hitOffsetMilliseconds += (Clock.AudioTime - hitObject.StartTime);
+                CurrentScore.hitOffsetMilliseconds += (Clock.AudioTimeInputAdjust - hitObject.StartTime);
                 CurrentScore.hitOffsetCount++;
             }
 
@@ -439,6 +447,17 @@ namespace osum.GameModes
                     break;
             }
 
+#if !DIST
+            /*if (hitObject is HitCircle || Math.Abs(Clock.AudioTime - hitObject.StartTime) < 30)
+            {
+                pSpriteText st = new pSpriteText(Math.Abs(Clock.AudioTime - hitObject.StartTime).ToString(), "default", 0, FieldTypes.GamefieldSprites, OriginTypes.TopCentre,
+                    ClockTypes.Audio, hitObject.Position + new Vector2(0,60), 1, false, Clock.AudioTime > hitObject.StartTime ? Color.OrangeRed : Color4.YellowGreen);
+                st.FadeOutFromOne(900);
+                spriteManager.Add(st);
+            }*/
+#endif
+
+
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
 
@@ -450,12 +469,13 @@ namespace osum.GameModes
                 if (comboMultiplier)
                 {
 
-                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 5, 60) * DifficultyComboMultiplier));
+                    int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 4, 60) / 2 * DifficultyComboMultiplier));
 
+                    int accRemainder = 1000000 - Score.ACCURACY_BONUS_AMOUNT;
                     //check we don't exceed 0.8mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
-                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > 800000)
-                        comboAmount = Math.Max(0, 800000 - CurrentScore.hitScore - CurrentScore.comboBonusScore);
+                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > accRemainder)
+                        comboAmount = Math.Max(0, accRemainder - CurrentScore.hitScore - CurrentScore.comboBonusScore);
 
                     CurrentScore.comboBonusScore += comboAmount;
                 }
@@ -490,6 +510,8 @@ namespace osum.GameModes
         {
             base.Draw();
 
+            frameCount++;
+
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
 
@@ -508,7 +530,7 @@ namespace osum.GameModes
 
             if (menu != null) menu.Draw();
 
-            touchBurster.Draw();
+            if (touchBurster != null) touchBurster.Draw();
 
             topMostSpriteManager.Draw();
 
@@ -553,7 +575,7 @@ namespace osum.GameModes
             if (scoreDisplay != null) scoreDisplay.Update();
             if (comboCounter != null) comboCounter.Update();
 
-            touchBurster.Update();
+            if (touchBurster != null) touchBurster.Update();
 
             if (countdown != null) countdown.Update();
 
@@ -626,8 +648,8 @@ namespace osum.GameModes
                             }, 1500);
                         }
                     }
-                    else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 3)
-                        playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                    else if (healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM / 2)
+                        playfieldBackground.ChangeColour(HitObjectManager.ActiveStream, 1 - (float)healthBar.CurrentHp / (HealthBar.HP_BAR_MAXIMUM / 2));
                     else
                         playfieldBackground.ChangeColour(HitObjectManager.ActiveStream, false);
                 }
@@ -645,7 +667,7 @@ namespace osum.GameModes
 #if DEBUG
                 DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
 #endif
-                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 400));
+                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 200));
             }
 
         }
@@ -692,15 +714,15 @@ namespace osum.GameModes
             pDrawable failGlow = failSprite.Clone();
 
             failSprite.FadeInFromZero(500);
-            failSprite.Transform(new Transformation(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
-            failSprite.Transform(new Transformation(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+            failSprite.Transform(new TransformationF(TransformationType.Scale, 1.8f, 1, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
+            failSprite.Transform(new TransformationF(TransformationType.Rotation, 0.1f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.Out));
 
             failGlow.DrawDepth = 0.51f;
             failGlow.AlwaysDraw = false;
             failGlow.ScaleScalar = 1.04f;
             failGlow.Additive = true;
-            failGlow.Transform(new Transformation(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
-            failGlow.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
+            failGlow.Transform(new TransformationF(TransformationType.Fade, 0, 0, Clock.ModeTime, Clock.ModeTime + 500));
+            failGlow.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 2000));
 
             topMostSpriteManager.Add(failSprite);
             topMostSpriteManager.Add(failGlow);

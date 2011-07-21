@@ -58,7 +58,7 @@ namespace osum
         override public void MainLoop()
         {
             AppDelegate.game = this;
-            MonoTouch.UIKit.UIApplication.Main(new string[]{});
+            MonoTouch.UIKit.UIApplication.Main(new string[]{},"HaxApplication","AppDelegate");
         }
 
         bool disableDimming = false;
@@ -103,49 +103,64 @@ namespace osum
                     break;
             }
 
-
-            UIAccelerometer.SharedAccelerometer.UpdateInterval = 1;
-            UIAccelerometer.SharedAccelerometer.Acceleration += HandleUIAccelerometerSharedAccelerometerAcceleration;
-
+            initialOrientation = UIApplication.SharedApplication.StatusBarOrientation;
             base.Initialize();
         }
 
-        static float pi = (float)Math.PI;
+        const UIInterfaceOrientation DEFAULT_ORIENTATION = UIInterfaceOrientation.LandscapeRight;
+        UIInterfaceOrientation initialOrientation;
 
-        void HandleUIAccelerometerSharedAccelerometerAcceleration (object sender, UIAccelerometerEventArgs e)
+        public void HandleRotationChange(UIInterfaceOrientation orientation)
         {
             Player p = Director.CurrentMode as Player;
 
             if (p != null && !p.IsPaused)
                 return; //don't rotate during gameplay.
 
-            float angle = (float)(Math.Atan2(e.Acceleration.X, e.Acceleration.Y) * 180/pi);
-
-            if (Math.Abs(e.Acceleration.Z) < 0.6f)
+            switch (orientation)
             {
-                if (angle > 45 && angle < 135)
-                    FlipView = true;
-                else if (angle < -45 && angle > -135)
-                    FlipView = false;
+                case UIInterfaceOrientation.LandscapeLeft:
+                case UIInterfaceOrientation.LandscapeRight:
+                    break;
+                default:
+                    return;
             }
+
+            if (initialOrientation == UIInterfaceOrientation.Portrait || initialOrientation == UIInterfaceOrientation.PortraitUpsideDown)
+                initialOrientation = DEFAULT_ORIENTATION;
+
+            FlipView = orientation != initialOrientation;
+            UIApplication.SharedApplication.SetStatusBarOrientation(orientation, true);
         }
 
         public override void SetViewport()
         {
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
 
-            GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
+            GL.LoadIdentity();
             GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
+            GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
             float width = GameBase.NativeSize.Height;
             float height = GameBase.NativeSize.Width;
-            GL.Translate(width / 2, height / 2, 0);
-            GL.Rotate(FlipView ? 270 : 90, 0, 0, 1);
-            GL.Translate(-height / 2, -width / 2, 0);
+
+            float[] matrix;
+
+            if (FlipView)
+                matrix = new float[]{0, -1, 0, 0,
+                              1, 0, 0, 0,
+                              0, 0, 1, 0,
+                              0, height, 0, 1};
+            else
+                matrix = new float[]{0, 1, 0, 0,
+                              -1, 0, 0, 0,
+                              0, 0, 1, 0,
+                              width, 0, 0, 1};
+
+            GL.LoadMatrix(ref matrix[0]);
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()
@@ -163,6 +178,12 @@ namespace osum
         public override string PathConfig {
             get {
                 return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/";
+            }
+        }
+
+        public override string DeviceIdentifier {
+            get {
+                return UIDevice.CurrentDevice.UniqueIdentifier;
             }
         }
 
@@ -204,6 +225,12 @@ namespace osum
             t.IsBackground = true;
             t.Start();
             return t;
+        }
+
+        public override void OpenUrl(string url)
+        {
+            using (NSUrl nsUrl = new NSUrl(url))
+                UIApplication.SharedApplication.OpenUrl(nsUrl);
         }
     }
 }

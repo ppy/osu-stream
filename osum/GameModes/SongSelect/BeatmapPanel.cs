@@ -37,7 +37,6 @@ namespace osum.GameModes.SongSelect
         {
             base_depth += 0.001f * index;
 
-            //s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, PANEL_HEIGHT), true, base_depth, colourNormal);
             s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
             {
                 DrawDepth = base_depth,

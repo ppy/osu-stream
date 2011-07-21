@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,8 +47,8 @@ namespace osum.GameModes.SongSelect
 
             if (showIntroAnimation)
             {
-                Transform(new Transformation(positionAtDistance(50), fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
-                Transform(new Transformation(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
+                Transform(new TransformationV(positionAtDistance(50), fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
+                Transform(new TransformationV(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
             }
             else
                 Position = hiddenPosition;
@@ -74,13 +74,13 @@ namespace osum.GameModes.SongSelect
             arrow.Offset = new Vector2(-330, 190);
             sm.Add(arrow);
 
-            Rotation = -(float)Math.PI / 4;
+            Rotation = -MathHelper.Pi / 4;
 
         }
 
         const int hit_minimum_distance = 20;
         const int hit_pull_distance = 60;
-        const int pull_limit_distance = 110;
+        const int pull_limit_distance = 100;
         bool minimumHitPossible;
 
 
@@ -98,8 +98,8 @@ namespace osum.GameModes.SongSelect
                 {
 
                     RotateTo(defaultRotation, 200, EasingTypes.In);
-                    Transform(new Transformation(Position, fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
-                    Transform(new Transformation(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
+                    Transform(new TransformationV(Position, fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
+                    Transform(new TransformationV(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));
 
                     FadeColour(Color4.White, 0);
                     AudioEngine.PlaySample(OsuSamples.MenuBack);
@@ -149,7 +149,7 @@ namespace osum.GameModes.SongSelect
                 else
                 {
                     float angle = (float)Math.Atan2(subd.X, subd.Y);
-                    RotateTo(defaultRotation + (-angle + (float)Math.PI * 0.854f) / 2, 50, EasingTypes.In);
+                    RotateTo(defaultRotation + (-angle + MathHelper.Pi * 0.854f) / 2, 50, EasingTypes.In);
                     MoveTo(visiblePosition + new Vector2(dist, dist), 200, EasingTypes.In);
                 }
             }
@@ -158,7 +158,7 @@ namespace osum.GameModes.SongSelect
         Vector2 downPoint;
         private TrackingPoint tp;
         private float dist;
-        private float defaultRotation = -(float)Math.PI / 4;
+        private float defaultRotation = -MathHelper.Pi / 4;
 
         protected override bool checkHover(Vector2 position)
         {

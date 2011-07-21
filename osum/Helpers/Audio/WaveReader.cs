@@ -42,6 +42,12 @@ namespace OpenTK.Audio
 
         internal WaveReader() { }
 
+        public override void Dispose()
+        {
+            reader.Close();
+            base.Dispose();
+        }
+
         internal WaveReader(Stream s)
         {
             if (s == null) throw new ArgumentNullException();

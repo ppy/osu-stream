@@ -96,7 +96,7 @@ namespace osum.GameModes.Play.Components
             if (didChangeTexture)
             {
                 pDrawable flash = text.AdditiveFlash(250, 0.5f);
-                flash.Transform(new Transformation(TransformationType.Scale, 1, 1.4f, Clock.Time, Clock.Time + 250));
+                flash.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, Clock.Time, Clock.Time + 250));
             }
         }
 
@@ -104,19 +104,18 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            base.Update();
-
-            if (HasFinished) return;
-
-            int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
-
-            if (countdown != lastCountdownUpdate)
+            if (!HasFinished)
             {
-                lastCountdownUpdate = countdown;
-                SetDisplay(countdown);
+                int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
+    
+                if (countdown != lastCountdownUpdate)
+                {
+                    lastCountdownUpdate = countdown;
+                    SetDisplay(countdown);
+                }
             }
 
-
+            base.Update();
         }
     }
 }

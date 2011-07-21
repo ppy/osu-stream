@@ -202,7 +202,7 @@ namespace osum.UI
         internal void Display()
         {
             Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
-            Transformation fadeIn = new Transformation(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
+            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
 
             Transform(bounce);
             Transform(fadeIn);

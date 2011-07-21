@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using osum.GameplayElements.Beatmaps;
 using osu_common.Libraries.Osz2;
 using System.Globalization;
+using osu_common.Helpers;
 namespace osum.GameplayElements.Beatmaps
 {
     public partial class Beatmap : IDisposable, IComparable<Beatmap>
@@ -32,8 +33,15 @@ namespace osum.GameplayElements.Beatmaps
 
                 try
                 {
-                    if (package == null && ContainerFilename.EndsWith("osz2"))
+                    if (package == null)
+#if iOS && DIST
+                        if (ContainerFilename.EndsWith("osf2"))
+                            package = new MapPackage(ContainerFilename);
+                        else
+                            package = new MapPackage(ContainerFilename, hash, false, false);
+#else
                         package = new MapPackage(ContainerFilename);
+#endif
                 }
                 catch
                 {
@@ -44,11 +52,30 @@ namespace osum.GameplayElements.Beatmaps
             }
 
         }
-        public string AudioFilename = "audio.mp3";
+
+#if DIST
+        public string AudioFilename = "audio.m4a";
+#else
+        public string AudioFilename
+        {
+            get {
+                return ContainerFilename.EndsWith(".osz2") ? "audio.mp3" : "audio.m4a";
+            }
+        }
+#endif
+
         public List<int> StreamSwitchPoints;
 
         public Beatmap()
         {
+        }
+
+        private byte[] hash {
+            get {
+                string deviceId = GameBase.Instance.DeviceIdentifier;
+                string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0,2)  + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
+                return CryptoHelper.GetMd5ByteArrayString(str);
+            }
         }
 
         public Beatmap(string containerFilename)
@@ -124,8 +151,9 @@ namespace osum.GameplayElements.Beatmaps
             }
         }
 
-        private int difficultyStars = -1;
         public double HpStreamAdjustmentMultiplier = 1;
+
+        private int difficultyStars = -1;
         public int DifficultyStars
         {
             get
@@ -139,6 +167,22 @@ namespace osum.GameplayElements.Beatmaps
                 return difficultyStars;
             }
         }
+
+        private int previewPoint = -1;
+        public int PreviewPoint
+        {
+            get
+            {
+                if (previewPoint == -1)
+                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewPoint), out previewPoint);
+
+                if (previewPoint < 10000)
+                    previewPoint = 30000;
+
+                return previewPoint;
+            }
+        }
+
 
         #region IComparable<Beatmap> Members
 

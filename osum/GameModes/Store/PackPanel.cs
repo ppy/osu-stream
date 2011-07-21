@@ -13,12 +13,15 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using osum.Audio;
 using osu_common.Libraries.NetLib;
+using osum.GameModes.SongSelect;
+using osum.Resources;
 
 namespace osum.GameModes.Store
 {
-    internal class PackPanel : pSpriteCollection
+    public class PackPanel : pSpriteCollection
     {
         internal pDrawable s_BackingPlate;
+        internal pDrawable s_BackingPlate2;
         internal pText s_Text;
         internal pText s_Price;
         internal pSprite s_PriceBackground;
@@ -34,65 +37,103 @@ namespace osum.GameModes.Store
 
         internal float Height = PANEL_HEIGHT + 4;
 
-        public PackPanel(string packTitle, string price, EventHandler action)
+        List<pDrawable> songPreviewBacks = new List<pDrawable>();
+        List<pSprite> songPreviewButtons = new List<pSprite>();
+        List<string> filenames = new List<string>();
+
+        bool isPreviewing;
+        DataNetRequest previewRequest;
+
+        public string PackId;
+        public bool IsFree;
+        public bool Ready;
+        public byte[] Receipt;
+
+        public void SetPrice(string price)
         {
-            //base_depth += 0.001f * index;
+            Ready = true;
+            s_Price.Text = price;
+        }
 
-            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, PANEL_HEIGHT), true, base_depth, colourNormal);
-            Sprites.Add(s_BackingPlate);
+        public PackPanel(string packTitle, string packId, bool free)
+        {
+            PackId = packId;
+            IsFree = free;
 
+            Ready = free;
+
+            Sprites.Add(s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
+            {
+                DrawDepth = base_depth,
+                Colour = new Color4(255, 255, 255, 170),
+                HandleClickOnUp = true
+            });
 
             s_BackingPlate.OnClick += delegate
             {
                 if (Downloading) return;
 
-                s_BackingPlate.FadeColour(colourHover2, 80);
                 s_BackingPlate.HandleInput = false;
 
                 s_PriceBackground.FadeIn(100);
                 s_Price.FadeColour(Color4.White, 100);
                 s_PriceBackground.HandleInput = true;
 
+                s_BackingPlate2.FadeColour(Color4.White, 0);
+
                 if (!isPreviewing)
                     songPreviewBacks[0].Click();
             };
-            s_BackingPlate.OnClick += action;
-
-            s_BackingPlate.HandleClickOnUp = true;
 
             s_BackingPlate.OnHover += delegate
             {
                 if (Downloading) return;
-                s_BackingPlate.FadeColour(colourHover2, 80);
+
+                s_BackingPlate.FadeOut(100, 0.01f);
+                s_BackingPlate2.FadeColour(BeatmapPanel.BACKGROUND_COLOUR, 80);
             };
+
             s_BackingPlate.OnHoverLost += delegate
             {
-                if (Downloading) return;
-                s_BackingPlate.FadeColour(colourNormal, 80);
+                if (Downloading || isPreviewing) return;
+
+                s_BackingPlate.FadeIn(60);
+                s_BackingPlate2.FadeColour(Color4.Transparent, 100);
+
             };
 
-            s_Text = new pText(packTitle, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
-            s_Text.Bold = true;
-            s_Text.Offset = new Vector2(100, 14);
-            if (s_Text.Texture != null)
-                Sprites.Add(s_Text);
+            Sprites.Add(s_BackingPlate2 = new pSprite(TextureManager.Load(OsuTexture.songselect_panel_selected), Vector2.Zero)
+            {
+                DrawDepth = base_depth + 0.01f,
+                Colour = new Color4(255, 255, 255, 0)
+            });
 
-            s_PriceBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_store_buy_background), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, Vector2.Zero, base_depth + 0.01f, true, Color4.White);
-            s_PriceBackground.Alpha = 0;
+            Sprites.Add(s_Text = new pText(packTitle, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false)
+            {
+                Bold = true,
+                Offset = new Vector2(100, 14)
+            });
+
+            Sprites.Add(s_PriceBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_store_buy_background), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, Vector2.Zero, base_depth + 0.02f, true, Color4.White)
+            {
+                Alpha = 0,
+                Offset = new Vector2(1, 1)
+            });
             s_PriceBackground.OnClick += OnPurchase;
-            s_PriceBackground.Offset = new Vector2(1, 1);
-            Sprites.Add(s_PriceBackground);
 
-            s_Price = new pText(price, 52, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, new Color4(255, 255, 255, 128), false);
-            s_Price.TextAlignment = TextAlignment.Left;
-            s_Price.Origin = OriginTypes.TopCentre;
-            s_Price.Field = FieldTypes.StandardSnapRight;
-            s_Price.Offset = new Vector2(80, 0);
-            Sprites.Add(s_Price);
+            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : "...", 52, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            {
+                TextAlignment = TextAlignment.Left,
+                Origin = OriginTypes.TopCentre,
+                Field = FieldTypes.StandardSnapRight,
+                Offset = new Vector2(80, 0)
+            });
 
-            s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero) { DrawDepth = base_depth + 0.02f };
-            s_Thumbnail.Offset = new Vector2(2, 2);
-            Sprites.Add(s_Thumbnail);
+            Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero)
+            {
+                DrawDepth = base_depth + 0.02f,
+                Offset = new Vector2(2, 2)
+            });
         }
 
         internal int BeatmapCount { get { return filenames.Count; } }
@@ -100,6 +141,11 @@ namespace osum.GameModes.Store
         int currentDownload = 0;
 
         void OnPurchase(object sender, EventArgs e)
+        {
+            StoreMode.PurchaseInitiated(this);
+        }
+
+        public void Download()
         {
             Downloading = true;
 
@@ -120,8 +166,6 @@ namespace osum.GameModes.Store
                 b.Alpha = 0;
                 b.Colour = Color4.OrangeRed;
             });
-
-            StoreMode.PurchaseInitiated(this);
         }
 
         void startNextDownload()
@@ -130,9 +174,13 @@ namespace osum.GameModes.Store
 
             string filename = filenames[currentDownload];
             string path = SongSelectMode.BeatmapPath + "/" + filename;
-            string downloadPath = "http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename;
 
+            string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
+
+            string downloadPath = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+#if !DIST
             Console.WriteLine("Downloading " + downloadPath);
+#endif
 
             FileNetRequest fnr = new FileNetRequest(path, downloadPath);
             fnr.onFinish += delegate
@@ -150,16 +198,17 @@ namespace osum.GameModes.Store
 
             pDrawable back = songPreviewBacks[currentDownload];
 
-            back.Transform(new Transformation(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
+            back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
 
             fnr.onUpdate += delegate(object sender, long current, long total)
             {
                 if (back.Alpha != 1)
                 {
-                    GameBase.Scheduler.Add(delegate {
+                    GameBase.Scheduler.Add(delegate
+                    {
                         back.Transformations.Clear();
                         back.Alpha = 1;
-                    },true);
+                    }, true);
                 }
 
                 back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
@@ -168,21 +217,10 @@ namespace osum.GameModes.Store
             NetManager.AddRequest(fnr);
         }
 
-        List<pDrawable> songPreviewBacks = new List<pDrawable>();
-        List<pSprite> songPreviewButtons = new List<pSprite>();
-        List<string> filenames = new List<string>();
-
-        bool isPreviewing;
-
-        DataNetRequest previewRequest;
-
         internal void ResetPreviews(bool deselectPack)
         {
             if (previewRequest != null)
-            {
                 previewRequest.Abort();
-                previewRequest = null;
-            }
 
             isPreviewing = false;
 
@@ -203,8 +241,9 @@ namespace osum.GameModes.Store
 
             if (deselectPack)
             {
-                s_BackingPlate.FadeColour(colourNormal, 200);
                 s_BackingPlate.HandleInput = true;
+                s_BackingPlate.FadeIn(100);
+                s_BackingPlate2.FadeColour(Color4.Transparent, 100);
 
                 s_PriceBackground.FadeOut(100);
                 s_Price.FadeColour(new Color4(255, 255, 255, 128), 100);
@@ -223,7 +262,7 @@ namespace osum.GameModes.Store
             back.HandleClickOnUp = true;
 
             back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
-            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40,40,40,0), 200); };
+            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 0), 200); };
 
             back.OnClick += delegate(object sender, EventArgs e)
             {
@@ -238,15 +277,19 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
+                if (previewRequest != null) previewRequest.Abort();
                 previewRequest = new DataNetRequest("http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename + ".mp3");
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
+                    if (previewRequest.AbortRequested) return;
+
                     GameBase.Scheduler.Add(delegate
                     {
-                        if (ex != null)
+                        if (ex != null || data == null || data.Length < 10000)
                         {
                             StoreMode.ResetAllPreviews(true, false);
                             GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
+                            return;
                         }
 
                         preview.Transformations.Clear();
@@ -258,12 +301,12 @@ namespace osum.GameModes.Store
                 };
                 NetManager.AddRequest(previewRequest);
 
-                back.FadeColour(colourHover, 0);
-                back.Transform(new Transformation(TransformationType.VectorScale, new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In));
+                back.FadeColour(colourHover, 0, false);
+                back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
-                preview.Transform(new Transformation(TransformationType.Rotation, 0, (float)Math.PI * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
+                preview.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
                 StoreMode.EnsureVisible(s_BackingPlate);

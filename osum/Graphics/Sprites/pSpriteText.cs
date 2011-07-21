@@ -151,45 +151,42 @@ namespace osum.Graphics.Sprites
             return lastMeasure;
         }
 
-        internal override Vector2 OriginVector
+        internal override void UpdateOriginVector()
         {
-            get
+            Vector2 origin = Vector2.Zero;
+
+            switch (Origin)
             {
-                Vector2 origin = Vector2.Zero;
-
-                switch (Origin)
-                {
-                    case OriginTypes.Centre:
-                        origin = lastMeasure * 0.5F;
-                        break;
-                    case OriginTypes.TopCentre:
-                        origin.X = lastMeasure.X * 0.5F;
-                        break;
-                    case OriginTypes.TopRight:
-                        origin.X = lastMeasure.X;
-                        break;
-                    case OriginTypes.CentreRight:
-                        origin = new Vector2(lastMeasure.X, lastMeasure.Y * 0.5f);
-                        break;
-                    case OriginTypes.BottomCentre:
-                        origin = new Vector2(lastMeasure.X / 2, lastMeasure.Y);
-                        break;
-                    case OriginTypes.BottomRight:
-                        origin = lastMeasure;
-                        break;
-                    case OriginTypes.BottomLeft:
-                        origin.Y = lastMeasure.Y;
-                        break;
-                }
-
-                if (!exactCoordinatesOverride)
-                {
-                    if (origin.X % 2 != 0) origin.X--;
-                    if (origin.Y % 2 != 0) origin.Y--;
-                }
-
-                return origin;
+                case OriginTypes.Centre:
+                    origin = lastMeasure * 0.5F;
+                    break;
+                case OriginTypes.TopCentre:
+                    origin.X = lastMeasure.X * 0.5F;
+                    break;
+                case OriginTypes.TopRight:
+                    origin.X = lastMeasure.X;
+                    break;
+                case OriginTypes.CentreRight:
+                    origin = new Vector2(lastMeasure.X, lastMeasure.Y * 0.5f);
+                    break;
+                case OriginTypes.BottomCentre:
+                    origin = new Vector2(lastMeasure.X / 2, lastMeasure.Y);
+                    break;
+                case OriginTypes.BottomRight:
+                    origin = lastMeasure;
+                    break;
+                case OriginTypes.BottomLeft:
+                    origin.Y = lastMeasure.Y;
+                    break;
             }
+
+            if (!exactCoordinatesOverride)
+            {
+                if (origin.X % 2 != 0) origin.X--;
+                if (origin.Y % 2 != 0) origin.Y--;
+            }
+
+            OriginVector = origin;
         }
 
         public override pDrawable Clone()
@@ -350,9 +347,10 @@ namespace osum.Graphics.Sprites
                 bool isPaddedZero = true;
 
                 int i = 0;
+                float coordScale = Scale.X * GameBase.SpriteToNativeRatio;
                 foreach (pTexture tex in renderTextures)
                 {
-                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * Scale.X * GameBase.SpriteToNativeRatio, pos.Y);
+                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * coordScale, pos.Y);
                     // note: no srcRect calculation
                     if (ZeroAlpha == 1)
                         tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));

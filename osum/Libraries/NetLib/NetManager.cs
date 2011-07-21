@@ -17,6 +17,10 @@ namespace osu_common.Libraries.NetLib
         /// <returns>true if the request can be added</returns>
         public static bool AddRequest(NetRequest request)
         {
+#if iOS
+            if (request.AbortRequested) return false;
+            request.Perform();
+#else
             Console.WriteLine("added new request");
             request.thread = GameBase.Instance.RunInBackground(delegate {
                 try
@@ -32,6 +36,7 @@ namespace osu_common.Libraries.NetLib
                     request.OnException(ex);
                 }
             });
+#endif
 
             return true;
         }

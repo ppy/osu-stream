@@ -37,55 +37,37 @@ namespace osum.Graphics.Sprites
         OffsetX
     }
 
-    internal class Transformation : IComparable<Transformation>
+    internal static class TransformStore
     {
-        internal int Tag;
-        public bool Looping;
-        public int LoopDelay;
+        static Queue<Transformation> transformations = new Queue<Transformation>();
 
-        internal EasingTypes Easing { get; set; }
+        public static void Initialize()
+        {
+            for (int i = 0; i < 1000; i++)
+                transformations.Enqueue(new Transformation());
+        }
 
-        internal Vector2 StartVector;
+        public static Transformation Make()
+        {
+            return transformations.Dequeue();
+        }
+    }
+
+    internal class TransformationC : Transformation
+    {
         internal Color4 StartColour;
-        internal float StartFloat;
-
-        internal Vector2 EndVector;
         internal Color4 EndColour;
-        internal float EndFloat;
 
-        internal int StartTime;
-        internal int EndTime;
-        internal TransformationType Type;
-
-        internal int Duration
+        internal TransformationC(Color4 source, Color4 destination, int start, int end, EasingTypes easing = EasingTypes.None)
         {
-            get { return EndTime - StartTime; }
+            Type = TransformationType.Colour;
+            StartColour = source;
+            EndColour = destination;
+            StartTime = start;
+            EndTime = end;
+            Easing = easing;
         }
 
-        internal bool Initiated;
-        internal bool Terminated;
-
-        internal bool Is(TransformationType type)
-        {
-            return (Type & type) > 0;
-        }
-
-        internal Vector2 CurrentVector
-        {
-            get
-            {
-                if (!Initiated)
-                    return StartVector;
-
-                if (Terminated)
-                    return EndVector;
-
-                return new Vector2(
-                    CalculateCurrent(StartVector.X, EndVector.X),
-                    CalculateCurrent(StartVector.Y, EndVector.Y)
-                );
-            }
-        }
 
         internal Color4 CurrentColour
         {
@@ -105,6 +87,63 @@ namespace osum.Graphics.Sprites
                 );
             }
         }
+    }
+
+    internal class TransformationV : Transformation
+    {
+        internal Vector2 StartVector;
+        internal Vector2 EndVector;
+
+        internal TransformationV(Vector2 source, Vector2 destination, int start, int end, EasingTypes easing = EasingTypes.None)
+        {
+            Type = TransformationType.Movement;
+            StartVector = source;
+            EndVector = destination;
+            StartTime = start;
+            EndTime = end;
+            Easing = easing;
+        }
+
+        public TransformationV()
+        {
+        }
+
+        internal Vector2 CurrentVector
+        {
+            get
+            {
+                if (!Initiated)
+                    return StartVector;
+
+                if (Terminated)
+                    return EndVector;
+
+                return new Vector2(
+                    CalculateCurrent(StartVector.X, EndVector.X),
+                    CalculateCurrent(StartVector.Y, EndVector.Y)
+                );
+            }
+        }
+    }
+
+    internal class TransformationF : Transformation
+    {
+        internal float StartFloat;
+        internal float EndFloat;
+
+        internal TransformationF(TransformationType type, float source, float destination, int start, int end, EasingTypes easing = EasingTypes.None)
+        {
+            Type = type;
+            StartFloat = source;
+            EndFloat = destination;
+            StartTime = start;
+            EndTime = end;
+            Easing = easing;
+        }
+
+        public TransformationF()
+        {
+        }
 
         internal virtual float CurrentFloat
         {
@@ -119,6 +158,32 @@ namespace osum.Graphics.Sprites
                 return CalculateCurrent(StartFloat, EndFloat);
             }
         }
+    }
+
+    internal class Transformation : IComparable<Transformation>
+    {
+        public bool Looping;
+        public ushort LoopDelay;
+
+        internal EasingTypes Easing;
+
+
+        internal int StartTime;
+        internal int EndTime;
+        internal TransformationType Type;
+
+        internal bool Initiated;
+        internal bool Terminated;
+
+        /// <summary>
+        /// Current time for transformation. Updated by running Update().
+        /// </summary>
+        protected int now;
+
+        internal int Duration
+        {
+            get { return EndTime - StartTime; }
+        }
 
         protected virtual float CalculateCurrent(float start, float end)
         {
@@ -129,81 +194,21 @@ namespace osum.Graphics.Sprites
                 case EasingTypes.InDouble:
                     return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 4));
                 case EasingTypes.In:
-                    return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 2));
+                    return pMathHelper.Lerp(end, start, (1 - progress) * (1 - progress));
                 case EasingTypes.InHalf:
                     return pMathHelper.Lerp(end, start, (float)Math.Pow(1 - progress, 1.5));
                 case EasingTypes.Out:
-                    return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 2));
+                    return pMathHelper.Lerp(start, end, progress * progress);
                 case EasingTypes.OutHalf:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 1.5));
                 case EasingTypes.OutDouble:
                     return pMathHelper.Lerp(start, end, (float)Math.Pow(progress, 4));
                 case EasingTypes.InOut:
-                    return start + (float)(-2 * Math.Pow(progress, 3) + 3 * Math.Pow(progress, 2)) * (end - start);
+                    return start + (-2 * (progress * progress * progress) + 3 * (progress * progress)) * (end - start);
                 default:
                 case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, progress);
             }
-        }
-
-        internal Transformation(Vector2 source, Vector2 destination, int start, int end)
-            : this(TransformationType.Movement, source, destination, start, end, EasingTypes.None)
-        {
-        }
-
-        internal Transformation(Vector2 source, Vector2 destination, int start, int end, EasingTypes easing)
-            : this(TransformationType.Movement, source, destination, start, end, easing)
-        {
-        }
-
-        internal Transformation(TransformationType type, Vector2 source, Vector2 destination, int start, int end)
-            : this(type, source, destination, start, end, EasingTypes.None)
-        {
-        }
-
-        internal Transformation(TransformationType type, Vector2 source, Vector2 destination, int start, int end, EasingTypes easing)
-        {
-            Type = type;
-            StartVector = source;
-            EndVector = destination;
-            StartTime = start;
-            EndTime = end;
-            Easing = easing;
-        }
-
-        internal Transformation(Color4 source, Color4 destination, int start, int end)
-            : this(source, destination, start, end, EasingTypes.None)
-        {
-        }
-
-        internal Transformation(Color4 source, Color4 destination, int start, int end, EasingTypes easing)
-        {
-            Type = TransformationType.Colour;
-            StartColour = source;
-            EndColour = destination;
-            StartTime = start;
-            EndTime = end;
-            Easing = easing;
-        }
-
-        internal Transformation(TransformationType type, float source, float destination, int start, int end)
-            : this(type, source, destination, start, end, EasingTypes.None)
-        {
-        }
-
-        protected Transformation(TransformationType type)
-        {
-            Type = type;
-        }
-
-        internal Transformation(TransformationType type, float source, float destination, int start, int end, EasingTypes easing)
-        {
-            Type = type;
-            StartFloat = source;
-            EndFloat = destination;
-            StartTime = start;
-            EndTime = end;
-            Easing = easing;
         }
 
         public Transformation()
@@ -232,35 +237,6 @@ namespace osum.Graphics.Sprites
             return (Transformation)MemberwiseClone();
         }
 
-        internal Transformation CloneReverse()
-        {
-            Transformation t = new Transformation();
-            t.StartFloat = EndFloat;
-            t.StartColour = EndColour;
-            t.StartVector = EndVector;
-            t.EndFloat = StartFloat;
-            t.EndColour = StartColour;
-            t.EndVector = StartVector;
-            t.StartTime = StartTime;
-            t.EndTime = EndTime;
-            t.Type = Type;
-
-            switch (Easing)
-            {
-                case EasingTypes.In:
-                    t.Easing = EasingTypes.Out;
-                    break;
-                case EasingTypes.Out:
-                    t.Easing = EasingTypes.In;
-                    break;
-                default:
-                    t.Easing = EasingTypes.None;
-                    break;
-            }
-
-            return t;
-        }
-
         /// <summary>
         /// Offsets the transformation by the specified amount.
         /// </summary>
@@ -273,14 +249,8 @@ namespace osum.Graphics.Sprites
 
         public override string ToString()
         {
-            return string.Format("{4} {0}-{1} {2} to {3}",
-                StartTime, EndTime, StartFloat, EndFloat, Type);
+            return string.Format("{4} {0}-{1}", StartTime, EndTime, Type);
         }
-
-        /// <summary>
-        /// Current time for transformation. Updated by running Update().
-        /// </summary>
-        protected int now;
 
         internal void Update(int time)
         {
@@ -300,7 +270,7 @@ namespace osum.Graphics.Sprites
         }
     }
 
-    internal class TransformationBounce : Transformation
+    internal class TransformationBounce : TransformationF
     {
         private float Magnitude;
         private float Pulses;
@@ -322,7 +292,7 @@ namespace osum.Graphics.Sprites
             {
                 float progress = pMathHelper.ClampToOne((float)(now - StartTime) / Duration);
 
-                float rawSine = (float)Math.Sin(Pulses * Math.PI * (progress - 0.5f / Pulses));
+                float rawSine = (float)Math.Sin(Pulses * MathHelper.Pi * (progress - 0.5f / Pulses));
 
                 float diminishingMagnitude = (float)(Magnitude * Math.Pow(1 - progress, 2));
 
@@ -337,8 +307,9 @@ namespace osum.Graphics.Sprites
     internal class NullTransform : Transformation
     {
         public NullTransform(int startTime, int endTime)
-            : base(TransformationType.None, 0, 0, startTime, endTime)
         {
+            this.StartTime = startTime;
+            this.EndTime = endTime;
         }
     }
 

@@ -122,7 +122,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += header_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += header_spacing;
                 }
                 else if (drawString.StartsWith("OsuTexture."))
@@ -139,7 +139,7 @@ namespace osum.GameModes.Options
                     if (i > 0)
                         time += image_spacing - spacing;
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(0, -100), time, time + speed));
                     time += image_spacing;
 
                 }
@@ -179,11 +179,11 @@ namespace osum.GameModes.Options
                             Alpha = 1
                         };
 
-                        text2.Transform(new Transformation(new Vector2(text2.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text2.Position.X, -100), time, time + speed));
+                        text2.Transform(new TransformationV(new Vector2(text2.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text2.Position.X, -100), time, time + speed));
                         spriteManager.Add(text2);
                     }
 
-                    text.Transform(new Transformation(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text.Position.X, -100), time, time + speed));
+                    text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Height + height_extra), new Vector2(text.Position.X, -100), time, time + speed));
                     time += spacing;
                 }
 
@@ -212,6 +212,7 @@ namespace osum.GameModes.Options
             incrementalSpeed = (-trackingPoint.WindowDelta.Y * 2) * 0.5f + incrementalSpeed * 0.5f;
 
             Clock.IncrementManual(incrementalSpeed);
+            if (incrementalSpeed < 0) spriteManager.ResetFirstTransformations();
         }
 
         protected override void initializeUIElements()
@@ -304,12 +305,10 @@ namespace osum.GameModes.Options
             {
                 incrementalSpeed = 0.2f + incrementalSpeed * 0.8f;
                 Clock.IncrementManual(incrementalSpeed);
+                if (incrementalSpeed < 0) spriteManager.ResetFirstTransformations();
             }
 
             playfieldBackground.Velocity = 0.4f * incrementalSpeed;
-            if (InputManager.IsPressed)
-                incrementalSpeed = 0;
-
             base.Update();
         }
     }

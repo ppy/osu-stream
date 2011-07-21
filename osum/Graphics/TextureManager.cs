@@ -46,20 +46,7 @@ namespace osum.Graphics.Skins
 {
     internal partial class SpriteSheetTexture
     {
-        private string sheetName;
-        internal string SheetName
-        {
-            get
-            {
-                return sheetName + "_" + GameBase.SpriteSheetResolution;
-            }
-            set
-            {
-                sheetName = value;
-            }
-
-        }
-
+        internal string SheetName;
         internal int X;
         internal int Y;
         internal int Width;
@@ -68,7 +55,7 @@ namespace osum.Graphics.Skins
 
         public SpriteSheetTexture(string name, int x, int y, int width, int height)
         {
-            this.SheetName = name;
+            this.SheetName = name + "_" + GameBase.SpriteSheetResolution;
             this.X = x;
             this.Y = y;
             this.Width = width;

@@ -49,19 +49,10 @@ namespace osum.Graphics.Sprites
         internal ClockTypes Clocking;
 
         internal Color4 Colour = Color4.White;
-        /*protected Color4 colour;
-        internal Color4 Colour
-        {
-            get { return colour; }
-            set { colour = value; StartColour = value; }
-        }
         
-        internal Color4 StartColour;*/
-
         internal bool Disposable;
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
-        internal Vector2 StartPosition;
         internal Vector2 Offset;
         public object Tag;
         public int TagNumeric;
@@ -70,34 +61,42 @@ namespace osum.Graphics.Sprites
 
         int StartTime;
 
-        internal virtual Vector2 OriginVector
-        {
-            get
-            {
-                Vector2 scale = AlignToSprites ? new Vector2(Scale.X, Scale.Y * 960f / GameBase.SpriteResolution) : Scale;
+        internal Vector2 OriginVector;
 
-                switch (Origin)
-                {
-                    default:
-                    case OriginTypes.TopLeft:
-                        return Vector2.Zero;
-                    case OriginTypes.TopCentre:
-                        return new Vector2(scale.X / 2, 0);
-                    case OriginTypes.TopRight:
-                        return new Vector2(scale.X, 0);
-                    case OriginTypes.CentreLeft:
-                        return new Vector2(0, scale.Y / 2);
-                    case OriginTypes.Centre:
-                        return new Vector2(scale.X / 2, scale.Y / 2);
-                    case OriginTypes.CentreRight:
-                        return new Vector2(scale.X, scale.Y / 2);
-                    case OriginTypes.BottomLeft:
-                        return new Vector2(0, scale.Y);
-                    case OriginTypes.BottomCentre:
-                        return new Vector2(scale.X / 2, scale.Y);
-                    case OriginTypes.BottomRight:
-                        return new Vector2(scale.X, scale.Y);
-                }
+        internal virtual void UpdateOriginVector()
+        {
+            Vector2 scale = AlignToSprites ? new Vector2(Scale.X, Scale.Y * 960f / GameBase.SpriteResolution) : Scale;
+
+            switch (Origin)
+            {
+                default:
+                case OriginTypes.TopLeft:
+                    OriginVector = Vector2.Zero;
+                    break;
+                case OriginTypes.TopCentre:
+                    OriginVector = new Vector2(scale.X / 2, 0);
+                    break;
+                case OriginTypes.TopRight:
+                    OriginVector = new Vector2(scale.X, 0);
+                    break;
+                case OriginTypes.CentreLeft:
+                    OriginVector = new Vector2(0, scale.Y / 2);
+                    break;
+                case OriginTypes.Centre:
+                    OriginVector = new Vector2(scale.X / 2, scale.Y / 2);
+                    break;
+                case OriginTypes.CentreRight:
+                    OriginVector = new Vector2(scale.X, scale.Y / 2);
+                    break;
+                case OriginTypes.BottomLeft:
+                    OriginVector = new Vector2(0, scale.Y);
+                    break;
+                case OriginTypes.BottomCentre:
+                    OriginVector = new Vector2(scale.X / 2, scale.Y);
+                    break;
+                case OriginTypes.BottomRight:
+                    OriginVector = new Vector2(scale.X, scale.Y);
+                    break;
             }
         }
 
@@ -134,7 +133,7 @@ namespace osum.Graphics.Sprites
         {
 
             pDrawable clone = (pDrawable)this.MemberwiseClone();
-            clone.Transformations = new pList<Transformation>();
+            clone.Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
             clone.readInitialTransformationsOnce = false;
 
             return clone;
@@ -157,10 +156,7 @@ namespace osum.Graphics.Sprites
             get { return !AlwaysDraw && noTransformationsLeft; }
         }
 
-        internal virtual bool UsesTextures
-        {
-            get { return false; }
-        }
+        internal bool UsesTextures;
 
         internal float ScaleScalar
         {
@@ -195,78 +191,78 @@ namespace osum.Graphics.Sprites
             }
         }
 
+        internal Vector2 FieldPosition;
+        internal Vector2 FieldScale;
 
-        internal virtual Vector2 FieldPosition
+        internal virtual void UpdateFieldPosition()
         {
-            get
+            Vector2 pos = Position;
+
+            if (Origin != OriginTypes.Custom && Offset != Vector2.Zero)
+                pos += Offset;
+
+            switch (Field)
             {
-                Vector2 pos = Position;
-
-                if (Origin != OriginTypes.Custom && Offset != Vector2.Zero)
-                    pos += Offset;
-
-                switch (Field)
-                {
-                    default:
-                        pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
-                        break;
-                    case FieldTypes.GamefieldStandardScale:
-                    case FieldTypes.GamefieldSprites:
-                    case FieldTypes.GamefieldExact:
-                        break;
-                    case FieldTypes.NativeScaled:
-                        return pos;
-                }
-
-                switch (Field)
-                {
-                    case FieldTypes.StandardSnapCentre:
-                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                    GameBase.NativeSize.Height / 2 + pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapBottomCentre:
-                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                    GameBase.NativeSize.Height - pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapTopCentre:
-                        pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                    pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapCentreRight:
-                        pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapCentreLeft:
-                        pos = new Vector2(pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapRight:
-                        pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapBottomLeft:
-                        pos = new Vector2(pos.X, GameBase.NativeSize.Height - pos.Y);
-                        break;
-                    case FieldTypes.StandardSnapBottomRight:
-                        pos = new Vector2(GameBase.NativeSize.Width - pos.X,
-                                                    GameBase.NativeSize.Height - pos.Y);
-                        break;
-                    case FieldTypes.GamefieldStandardScale:
-                    case FieldTypes.GamefieldSprites:
-                    case FieldTypes.GamefieldExact:
-                        pos += GameBase.GamefieldOffsetVector1;
-                        pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
-                        break;
-                    case FieldTypes.Native:
-                    default:
-                        break;
-                }
-
-                if (ExactCoordinates)
-                {
-                    pos.X = (int)Math.Round(pos.X);
-                    pos.Y = (int)Math.Round(pos.Y);
-                }
-
-                return pos;
+                default:
+                    pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
+                    break;
+                case FieldTypes.GamefieldStandardScale:
+                case FieldTypes.GamefieldSprites:
+                case FieldTypes.GamefieldExact:
+                    break;
+                case FieldTypes.NativeScaled:
+                    FieldPosition = pos;
+                    return;
             }
+
+            switch (Field)
+            {
+                case FieldTypes.StandardSnapCentre:
+                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                GameBase.NativeSize.Height / 2 + pos.Y);
+                    break;
+                case FieldTypes.StandardSnapBottomCentre:
+                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                GameBase.NativeSize.Height - pos.Y);
+                    break;
+                case FieldTypes.StandardSnapTopCentre:
+                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
+                                                pos.Y);
+                    break;
+                case FieldTypes.StandardSnapCentreRight:
+                    pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                    break;
+                case FieldTypes.StandardSnapCentreLeft:
+                    pos = new Vector2(pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                    break;
+                case FieldTypes.StandardSnapRight:
+                    pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
+                    break;
+                case FieldTypes.StandardSnapBottomLeft:
+                    pos = new Vector2(pos.X, GameBase.NativeSize.Height - pos.Y);
+                    break;
+                case FieldTypes.StandardSnapBottomRight:
+                    pos = new Vector2(GameBase.NativeSize.Width - pos.X,
+                                                GameBase.NativeSize.Height - pos.Y);
+                    break;
+                case FieldTypes.GamefieldStandardScale:
+                case FieldTypes.GamefieldSprites:
+                case FieldTypes.GamefieldExact:
+                    pos += GameBase.GamefieldOffsetVector1;
+                    pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
+                    break;
+                case FieldTypes.Native:
+                default:
+                    break;
+            }
+
+            if (ExactCoordinates)
+            {
+                pos.X = (int)(pos.X + 0.5f);
+                pos.Y = (int)(pos.Y + 0.5f);
+            }
+
+            FieldPosition = pos;
         }
 
         /// <summary>
@@ -277,35 +273,43 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal bool AlignToSprites = true;
 
-        internal virtual Vector2 FieldScale
+        internal virtual void UpdateFieldScale()
         {
-            get
+            switch (Field)
             {
-                switch (Field)
-                {
-                    case FieldTypes.GamefieldExact:
-                        return Scale * DifficultyManager.HitObjectRadius;
-                    case FieldTypes.GamefieldSprites:
-                        return Scale * (DifficultyManager.HitObjectSizeModifier * GameBase.SpriteToNativeRatio);
-                    case FieldTypes.Native:
-                    case FieldTypes.NativeScaled:
-                        return Scale;
-                    default:
-                        if (UsesTextures)
-                            return Scale * GameBase.SpriteToNativeRatio;
+                case FieldTypes.GamefieldExact:
+                    FieldScale = Scale * DifficultyManager.HitObjectRadius;
+                    break;
+                case FieldTypes.GamefieldSprites:
+                    FieldScale = Scale * (DifficultyManager.HitObjectSizeModifier * GameBase.SpriteToNativeRatio);
+                    break;
+                case FieldTypes.Native:
+                case FieldTypes.NativeScaled:
+                    FieldScale = Scale;
+                    break;
+                default:
+                    if (UsesTextures)
+                    {
+                        FieldScale = Scale * GameBase.SpriteToNativeRatio;
+                        return;
+                    }
 
-                        if (AlignToSprites)
+
+                    if (AlignToSprites)
+                    {
+                        if (Scale.X != GameBase.BaseSizeFixedWidth.Width)
                         {
-                            if (Scale.X != GameBase.BaseSizeFixedWidth.Width)
-                                return Scale * GameBase.BaseToNativeRatioAligned;
-
-                            //special case for drawables which take up the full screen width.
-                            return new Vector2(Scale.X * GameBase.BaseToNativeRatio, Scale.Y * GameBase.BaseToNativeRatioAligned);
+                            FieldScale = Scale * GameBase.BaseToNativeRatioAligned;
+                            return;
                         }
 
-                        return Scale * GameBase.BaseToNativeRatio;
+                        //special case for drawables which take up the full screen width.
+                        FieldScale = new Vector2(Scale.X * GameBase.BaseToNativeRatio, Scale.Y * GameBase.BaseToNativeRatioAligned);
+                        return;
+                    }
 
-                }
+                    FieldScale = Scale * GameBase.BaseToNativeRatio;
+                    break;
             }
         }
 
@@ -361,6 +365,11 @@ namespace osum.Graphics.Sprites
 
         protected bool hasMovement;
 
+        internal void ResetInitialTransformationRead()
+        {
+            readInitialTransformationsOnce = false;
+        }
+
         bool readInitialTransformationsOnce;
 
         /// <summary>
@@ -389,35 +398,35 @@ namespace osum.Graphics.Sprites
                         switch (t.Type)
                         {
                             case TransformationType.Colour:
-                                Colour = t.StartColour;
+                                Colour = ((TransformationC)t).StartColour;
                                 break;
 
                             case TransformationType.Fade:
-                                Alpha = t.StartFloat;
+                                Alpha = ((TransformationF)t).StartFloat;
                                 break;
     
                             case TransformationType.Movement:
-                                Position = t.StartVector;
+                                Position = ((TransformationV)t).StartVector;
                                 break;
     
                             case TransformationType.MovementX:
-                                Position.X = t.StartFloat;
+                                Position.X = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.MovementY:
-                                Position.Y = t.StartFloat;
+                                Position.Y = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.Rotation:
-                                Rotation = t.StartFloat;
+                                Rotation = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.Scale:
-                                Scale = new Vector2(t.StartFloat, t.StartFloat);
+                                ScaleScalar = ((TransformationF)t).StartFloat;
                                 break;
 
                             case TransformationType.VectorScale:
-                                Scale = t.StartVector;
+                                Scale = ((TransformationV)t).StartVector;
                                 break;
                         }
                     }
@@ -439,39 +448,39 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            Colour = t.EndColour;
+                            Colour = ((TransformationC)t).EndColour;
                             break;
 
                         case TransformationType.Fade:
-                            Alpha = t.EndFloat;
+                            Alpha = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Movement:
-                            Position = t.EndVector;
+                            Position = ((TransformationV)t).EndVector;
                             break;
 
                         case TransformationType.MovementX:
-                            Position.X = t.EndFloat;
+                            Position.X = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.MovementY:
-                            Position.Y = t.EndFloat;
+                            Position.Y = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.OffsetX:
-                            Offset.X = t.EndFloat;
+                            Offset.X = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Rotation:
-                            Rotation = t.EndFloat;
+                            Rotation = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.Scale:
-                            Scale = new Vector2(t.EndFloat, t.EndFloat);
+                            ScaleScalar =((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.VectorScale:
-                            Scale = t.EndVector;
+                            Scale = ((TransformationV)t).EndVector;
                             break;
                     }
 
@@ -487,43 +496,43 @@ namespace osum.Graphics.Sprites
                     switch (t.Type)
                     {
                         case TransformationType.Colour:
-                            Colour = t.CurrentColour;
+                            Colour = ((TransformationC)t).CurrentColour;
                             break;
 
                         case TransformationType.Fade:
-                            Alpha = t.CurrentFloat;
+                            Alpha = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.Movement:
-                            Position = t.CurrentVector;
+                            Position = ((TransformationV)t).CurrentVector;
                             hasMovement = true;
                             break;
 
                         case TransformationType.MovementX:
-                            Position.X = t.CurrentFloat;
+                            Position.X = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.MovementY:
-                            Position.Y = t.CurrentFloat;
+                            Position.Y = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.OffsetX:
-                            Offset.X = t.CurrentFloat;
+                            Offset.X = ((TransformationF)t).CurrentFloat;
                             hasMovement = true;
                             break;
 
                         case TransformationType.Rotation:
-                            Rotation = t.CurrentFloat;
+                            Rotation = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.Scale:
-                            Scale = new Vector2(t.CurrentFloat, t.CurrentFloat);
+                            ScaleScalar = ((TransformationF)t).CurrentFloat;
                             break;
 
                         case TransformationType.VectorScale:
-                            Scale = t.CurrentVector;
+                            Scale = ((TransformationV)t).CurrentVector;
                             break;
                     }
                 }
@@ -542,7 +551,7 @@ namespace osum.Graphics.Sprites
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && ((TransformationF)t).EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
@@ -552,7 +561,7 @@ namespace osum.Graphics.Sprites
                 return;
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeInFromZero(int duration)
@@ -560,7 +569,7 @@ namespace osum.Graphics.Sprites
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade,
+            Transform(new TransformationF(TransformationType.Fade,
                                          0, (Colour.A != 0 ? Colour.A : 1),
                                          now, now + duration));
         }
@@ -572,7 +581,7 @@ namespace osum.Graphics.Sprites
             if (count == 1)
             {
                 Transformation t = Transformations[0];
-                if (t.Type == TransformationType.Fade && t.EndFloat == finalAlpha && t.Duration == duration)
+                if (t.Type == TransformationType.Fade && ((TransformationF)t).EndFloat == finalAlpha && t.Duration == duration)
                     return;
             }
 
@@ -582,7 +591,7 @@ namespace osum.Graphics.Sprites
                 return;
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
 
         internal void FadeOutFromOne(int duration)
@@ -590,7 +599,7 @@ namespace osum.Graphics.Sprites
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             int now = ClockingNow;
-            Transform(new Transformation(TransformationType.Fade, 1, 0, now, now + duration));
+            Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + duration));
         }
 
         internal SpriteManager ContainingSpriteManager;
@@ -633,16 +642,16 @@ namespace osum.Graphics.Sprites
             }
 
             Transform(
-                      new Transformation(Colour, colour,
+                      new TransformationC(Colour, colour,
                                          ClockingNow - (int)Clock.ElapsedMilliseconds,
                                          ClockingNow + duration));
         }
 
-        internal void FlashColour(Color4 colour, int duration)
+        internal Transformation FlashColour(Color4 colour, int duration)
         {
             Color4 end = Colour;
 
-            Transformation last = Transformations.FindLast(t => t.Type == TransformationType.Colour);
+            TransformationC last = Transformations.FindLast(t => t is TransformationC) as TransformationC;
 
             if (last != null)
             {
@@ -650,10 +659,12 @@ namespace osum.Graphics.Sprites
                 Transformations.RemoveAll(t => t.Type == TransformationType.Colour);
             }
 
-            Transformation flash = new Transformation(colour, end,
+            Transformation flash = new TransformationC(colour, end,
                                    ClockingNow,
                                    ClockingNow + duration);
             Transform(flash);
+
+            return flash;
         }
 
         /// <summary>
@@ -677,7 +688,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(Position, destination, now, now + duration, easing));
+            Transform(new TransformationV(Position, destination, now, now + duration, easing));
         }
 
         /// <summary>
@@ -698,7 +709,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
+            Transform(new TransformationF(TransformationType.Scale, ScaleScalar, target, now, now + duration, easing));
 
             return this;
         }
@@ -721,7 +732,7 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
 
-            Transform(new Transformation(TransformationType.Rotation, Rotation, target, now, now + duration, easing));
+            Transform(new TransformationF(TransformationType.Rotation, Rotation, target, now, now + duration, easing));
 
             return this;
         }
@@ -732,8 +743,7 @@ namespace osum.Graphics.Sprites
         {
             if (Bypass) return false;
 
-            if (Alpha != 0 && //Colour.A != 0 &&
-                (AlwaysDraw || !noTransformationsLeft) && ((ContainingSpriteManager == null || !ContainingSpriteManager.CheckSpritesAreOnScreenBeforeRendering) || IsOnScreen))
+            if (Alpha != 0 && (AlwaysDraw || !noTransformationsLeft) && ((ContainingSpriteManager == null || !ContainingSpriteManager.CheckSpritesAreOnScreenBeforeRendering) || IsOnScreen))
             {
                 return true;
             }
@@ -745,11 +755,28 @@ namespace osum.Graphics.Sprites
 
         #region IUpdateable Members
 
+        protected bool drawThisFrame;
+
         public virtual void Update()
         {
-            if (Bypass) return;
+            if (Bypass)
+            {
+                drawThisFrame = false;
+                return;
+            }
+
+            bool onScreenFailed = !(ContainingSpriteManager == null || !ContainingSpriteManager.CheckSpritesAreOnScreenBeforeRendering || IsOnScreen);
 
             UpdateTransformations();
+
+            drawThisFrame = (Alpha != 0 && (AlwaysDraw || !noTransformationsLeft) && !onScreenFailed);
+
+            if (drawThisFrame || onScreenFailed)
+            {
+                UpdateFieldPosition();
+                UpdateFieldScale();
+                UpdateOriginVector();
+            }
         }
 
         #endregion

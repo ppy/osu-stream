@@ -53,7 +53,7 @@ namespace osum.Online
         /// </param>
         public void ShowLeaderboard(string category = null, VoidDelegate finished = null)
         {
-            AppDelegate.UsingViewController = true;
+            AppDelegate.SetUsingViewController(true);
             GKLeaderboardViewController vc = new GKLeaderboardViewController();
             vc.Category = category;
             vc.Delegate = this;
@@ -69,7 +69,7 @@ namespace osum.Online
             //if we want to animate, we need to delay the removal of the view, else it gets stuck.
             //for now let's just not animate!
 
-            AppDelegate.UsingViewController = false;
+            AppDelegate.SetUsingViewController(false);
         }
 
         public void SubmitScore(string id, int score, VoidDelegate finished = null)

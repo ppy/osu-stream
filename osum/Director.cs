@@ -19,14 +19,14 @@ namespace osum
         /// <summary>
         /// The active game mode, which is being drawn to screen.
         /// </summary>
-        internal static GameMode CurrentMode { get; private set; }
-        internal static OsuMode CurrentOsuMode { get; private set; }
-        internal static OsuMode LastOsuMode { get; private set; }
+        internal static GameMode CurrentMode;
+        internal static OsuMode CurrentOsuMode;
+        internal static OsuMode LastOsuMode;
 
         /// <summary>
         /// The next game mode to be displayed (after a possible transition). OsuMode.Unknown when no mode is pending
         /// </summary>
-        internal static OsuMode PendingOsuMode { get; private set; }
+        internal static OsuMode PendingOsuMode;
 
         /// <summary>
         /// The transition being used to introduce a pending mode.
@@ -126,6 +126,9 @@ namespace osum
             CurrentOsuMode = newMode;
 
             GC.Collect(); //force a full collect before we start displaying the new mode.
+
+            GameBase.ThrottleExecution = false;
+            //reset this here just in case it got stuck.
         }
 
         private static void loadNewMode(OsuMode newMode)
@@ -148,7 +151,11 @@ namespace osum
                     mode = new Player();
                     break;
                 case OsuMode.Store:
+#if iOS
+                    mode = new StoreModeIphone();
+#else
                     mode = new StoreMode();
+#endif
                     break;
                 case OsuMode.Options:
                     mode = new Options();
@@ -211,6 +218,8 @@ namespace osum
             }
             else if (GameBase.ActiveNotification != null)
                 SpriteManager.UniversalDim = GameBase.ActiveNotification.Alpha * 0.7f;
+            else if (GameBase.GloballyDisableInput)
+                SpriteManager.UniversalDim = Math.Min(0.6f, SpriteManager.UniversalDim + 0.05f);
             else
                 SpriteManager.UniversalDim = 0;
 
