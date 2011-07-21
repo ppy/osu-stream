@@ -39,13 +39,11 @@ namespace osu_common.Libraries.NetLib
             {
                 byte[] nb = new byte [result.Length + data.Length];
                 result.CopyTo(nb, 0);
-                Marshal.Copy(data.Bytes, nb, result.Length, (int) data.Length);
+                Marshal.Copy(data.Bytes, nb, result.Length, (int)data.Length);
                 result = nb;
             }
             else
                 Marshal.Copy(data.Bytes, result, written, (int)data.Length);
-
-            Console.WriteLine("received " + data.Length);
 
             written += (int)data.Length;
 
@@ -107,8 +105,13 @@ namespace osu_common.Libraries.NetLib
 
         public void TriggerUpdate()
         {
+            if (del.result == null) return;
+
+            int len = del.result.Length;
+            if (len == 0) return;
+
             if (onUpdate != null)
-                onUpdate(this, del.written, del.result.Length);
+                onUpdate(this, del.written, len);
         }
 #endif
 

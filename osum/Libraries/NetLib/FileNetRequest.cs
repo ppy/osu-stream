@@ -17,7 +17,7 @@ namespace osu_common.Libraries.NetLib
 
         public override void processFinishedRequest()
         {
-            if (data != null && error == null)
+            if (data != null && error == null && data.Length > 0)
                 File.WriteAllBytes(path, data);
             base.processFinishedRequest();
         }
