@@ -164,6 +164,26 @@ namespace osum.GameModes
 
             }
             else
+                if (GameBase.Config.GetValue<bool>("firstrun",true))
+                {
+                    Notification notification = new Notification(
+                        LocalisationManager.GetString(OsuString.FirstRunWelcome),
+                        LocalisationManager.GetString(OsuString.FirstRunTutorial),
+                        NotificationStyle.YesNo,
+                        delegate(bool answer) {
+                            if (answer)
+                            {
+                                AudioEngine.PlaySample(OsuSamples.MenuHit);
+                                Director.ChangeMode(OsuMode.Tutorial);
+                            }
+                            GameBase.Config.SetValue<bool>("firstrun",false);
+                        });
+
+                    GameBase.Scheduler.Add(delegate {
+                    GameBase.Notify(notification);
+                    }, initial_display + 1500);
+                }
+
             {
                 if (Director.LastOsuMode == OsuMode.Tutorial)
                     AudioEngine.Music.SeekTo(0);

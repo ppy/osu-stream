@@ -175,6 +175,8 @@ namespace osum.Resources
         UnlockedExpert,
         Audio,
         NoticeOnlineRanking,
-        PauseInfo
+        PauseInfo,
+        FirstRunWelcome,
+        FirstRunTutorial
     }
 }
