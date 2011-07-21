@@ -20,8 +20,6 @@ namespace osum.GameModes.Store
 {
     public class StoreMode : GameMode
     {
-        private pText loading;
-        private pRectangle loadingRect;
         private BackButton s_ButtonBack;
 
         protected List<PackPanel> packs = new List<PackPanel>();
@@ -41,18 +39,9 @@ namespace osum.GameModes.Store
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             spriteManager.Add(s_ButtonBack);
 
-            loading = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.OrangeRed)
-            {
-                TextAlignment = TextAlignment.Centre,
-                Origin = OriginTypes.Centre,
-                Field = FieldTypes.StandardSnapCentre,
-                Clocking = ClockTypes.Game,
-                Bold = true
-            };
-
-            spriteManager.Add(loading);
-
             InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
+
+            GameBase.ShowLoadingOverlay = true;
 
             if (fetchRequest != null) fetchRequest.Abort();
             fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list.php");
@@ -65,6 +54,8 @@ namespace osum.GameModes.Store
 
         public override void Dispose()
         {
+            GameBase.ShowLoadingOverlay = false;
+
             if (fetchRequest != null) fetchRequest.Abort();
             base.Dispose();
         }
@@ -139,7 +130,7 @@ namespace osum.GameModes.Store
 
             AddPack(pp);
 
-            loading.FadeOut(200);
+            GameBase.ShowLoadingOverlay = false;
 
             if (packs.Count == 0)
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });

@@ -181,6 +181,7 @@ namespace osum.GameModes
                                 Director.ChangeMode(OsuMode.Tutorial);
                             }
                             GameBase.Config.SetValue<bool>("firstrun",false);
+                            GameBase.Config.SaveConfig();
                         });
 
                     GameBase.Scheduler.Add(delegate {
@@ -217,8 +218,8 @@ namespace osum.GameModes
             osuLogo.Transform(new TransformationF(TransformationType.Rotation, osuLogo.Rotation, 0.35f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
 
             osuLogoGloss.Transformations.Clear();
-            osuLogoGloss.FadeOut(100);
-            osuLogoGloss.Transform(new TransformationF(TransformationType.Scale, 1, 4f, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+            osuLogoGloss.FadeOut(200);
+            osuLogoGloss.Transform(new TransformationF(TransformationType.Scale, osuLogoGloss.ScaleScalar, osuLogoGloss.ScaleScalar * 2.4f, Clock.ModeTime, Clock.ModeTime + 1300, EasingTypes.InDouble));
             stream.FadeOut(150);
             additiveStream.FadeOut(150);
 

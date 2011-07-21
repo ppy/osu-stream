@@ -138,7 +138,8 @@ namespace osum.GameModes.Store
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
-                    Offset = new Vector2(75,30)
+                    Offset = new Vector2(75,30),
+                    ExactCoordinates = false
                 };
                 s_LoadingPrice.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 2000) { Looping = true });
                 Sprites.Add(s_LoadingPrice);
@@ -194,12 +195,13 @@ namespace osum.GameModes.Store
 
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
-            string downloadPath = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+            string downloadPath = "http://www.osustream.com/dl/download.php";
+            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
 #if !DIST
             Console.WriteLine("Downloading " + downloadPath);
 #endif
 
-            FileNetRequest fnr = new FileNetRequest(path, downloadPath);
+            FileNetRequest fnr = new FileNetRequest(path, downloadPath, "POST", param);
             fnr.onFinish += delegate
             {
                 currentDownload++;
@@ -243,6 +245,7 @@ namespace osum.GameModes.Store
 
             foreach (pSprite p in songPreviewButtons)
             {
+                p.ExactCoordinates = true;
                 p.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
                 p.Transformations.Clear();
                 p.Rotation = 0;
@@ -271,7 +274,7 @@ namespace osum.GameModes.Store
         internal void Add(string filename)
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-            preview.Offset = new Vector2(68, Height + 20);
+            preview.Offset = new Vector2(38, Height + 20);
             Sprites.Add(preview);
             songPreviewButtons.Add(preview);
 
@@ -313,6 +316,7 @@ namespace osum.GameModes.Store
                         preview.Rotation = 0;
 
                         StoreMode.PlayPreview(data);
+                        preview.ExactCoordinates = true;
                         preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_pause);
                     });
                 };
@@ -323,6 +327,7 @@ namespace osum.GameModes.Store
                 back.TagNumeric = 1;
 
                 preview.Texture = TextureManager.Load(OsuTexture.songselect_audio_preview);
+                preview.ExactCoordinates = false;
                 preview.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
 
@@ -344,12 +349,12 @@ namespace osum.GameModes.Store
 
             pText artist = new pText(m.Groups[1].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;
-            artist.Offset = new Vector2(110, Height + 4);
+            artist.Offset = new Vector2(80, Height + 4);
             Sprites.Add(artist);
 
             pText title = new pText(m.Groups[2].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
 
-            title.Offset = new Vector2(120 + artist.MeasureText().X / GameBase.BaseToNativeRatio, Height + 4);
+            title.Offset = new Vector2(95 + artist.MeasureText().X / GameBase.BaseToNativeRatio, Height + 4);
             Sprites.Add(title);
 
 

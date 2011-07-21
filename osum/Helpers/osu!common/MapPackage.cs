@@ -23,7 +23,7 @@ namespace osu_common.Libraries.Osz2
         private const byte VERSION_EXPORT = 0;
         private static readonly MD5CryptoServiceProvider fHasher = new MD5CryptoServiceProvider();
 
-#if DIST_FINAL
+#if DIST
         //free key is changed for dist builds
         private byte[] KEY = new byte[]
                                         {

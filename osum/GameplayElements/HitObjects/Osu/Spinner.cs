@@ -102,7 +102,7 @@ namespace osum.GameplayElements
             spriteCircle =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_circle),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white);
+                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white) { ExactCoordinates = false };
             Sprites.Add(spriteCircle);
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.

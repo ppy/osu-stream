@@ -124,18 +124,18 @@ namespace osum.GameModes.Options
 
             vPos += 50;
 
-            /*text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
-            vPos += 100;
+            vPos += 80;
 
-            text = new pText(LocalisationManager.GetString(OsuString.NoticeOnlineRanking), 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, false)
+            text = new pText("Coming soon!", 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, false)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre
             };
             text.MeasureText();
-            smd.Add(text);*/
+            smd.Add(text);
 
             /*gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
             {

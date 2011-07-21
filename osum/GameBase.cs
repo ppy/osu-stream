@@ -162,10 +162,12 @@ namespace osum
         public static event VoidDelegate OnScreenLayoutChanged;
 
         private bool flipView;
-        public bool FlipView {
+        public bool FlipView
+        {
             get { return flipView; }
 
-            set {
+            set
+            {
                 if (flipView == value) return;
 
                 flipView = value;
@@ -365,7 +367,8 @@ namespace osum
 
         public virtual string DeviceIdentifier
         {
-            get {
+            get
+            {
                 return "unknown";
             }
         }
@@ -429,7 +432,7 @@ namespace osum
 
             if (Director.Update())
 
-            InputManager.Update();
+                InputManager.Update();
 
             Components.ForEach(c => c.Update());
 
@@ -455,21 +458,21 @@ namespace osum
         }
 
         static pDrawable loadingText;
-        static bool globallyDisableInput;
-        public static bool GloballyDisableInput
+        static pDrawable loadingCircle;
+
+        static bool showLoadingOverlay;
+        public static bool ShowLoadingOverlay
         {
-            get { return globallyDisableInput; }
-            set {
-                if (value == globallyDisableInput)
-                    return;
+            get { return showLoadingOverlay; }
+            set
+            {
+                if (value == showLoadingOverlay) return;
+                showLoadingOverlay = value;
 
-                globallyDisableInput = value;
-
-                if (globallyDisableInput)
+                if (showLoadingOverlay)
                 {
-                    loadingText = new pText(LocalisationManager.GetString(OsuString.Loading), 36, Vector2.Zero, 1, true, Color4.LightGray)
+                    loadingText = new pText(LocalisationManager.GetString(OsuString.Loading), 30, new Vector2(0, -25), 1, true, Color4.LightGray)
                     {
-                        TextAlignment = TextAlignment.Centre,
                         DimImmune = true,
                         Origin = OriginTypes.Centre,
                         Field = FieldTypes.StandardSnapCentre,
@@ -478,12 +481,41 @@ namespace osum
                     };
 
                     MainSpriteManager.Add(loadingText);
+                    loadingText.FadeInFromZero(300);
+
+                    loadingCircle = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, new Vector2(0, 25), 1, true, Color4.White)
+                    {
+                        ExactCoordinates = false,
+                        DimImmune = true
+                    };
+                    loadingCircle.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
+                    MainSpriteManager.Add(loadingCircle);
+                    loadingCircle.FadeInFromZero(300);
                 }
                 else
                 {
                     loadingText.FadeOut(100);
                     loadingText.AlwaysDraw = false;
+
+                    loadingCircle.Transformations.Clear();
+                    loadingCircle.FadeOut(100);
+                    loadingCircle.AlwaysDraw = false;
                 }
+            }
+        }
+
+
+        static bool globallyDisableInput;
+        public static bool GloballyDisableInput
+        {
+            get { return globallyDisableInput; }
+            set
+            {
+                if (value == globallyDisableInput)
+                    return;
+
+                globallyDisableInput = value;
+                ShowLoadingOverlay = globallyDisableInput;
             }
         }
 

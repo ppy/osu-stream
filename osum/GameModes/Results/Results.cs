@@ -299,8 +299,7 @@ namespace osum.GameModes
             using (SerializationWriter sw = new SerializationWriter(ms))
             {
                 bmi.WriteToStream(sw);
-                string url = "http://www.osustream.com/score/submit.php?id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray());
-                StringNetRequest nr = new StringNetRequest(url);
+                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", "id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray()));
                 NetManager.AddRequest(nr);
             }
 
