@@ -218,7 +218,11 @@ namespace osu_common.Libraries.Osz2
                 else
                 {
                     //no key is given, we'll generate it from the metadata.
+#if DIST
+                    string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
+#else
                     string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
+#endif
                     KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
                 }
 
@@ -864,18 +868,22 @@ namespace osu_common.Libraries.Osz2
             fMetadataChanged = true;
             switch (type)
             {
-                case MapMetaType.Creator:
-                case MapMetaType.BeatmapSetID:
-                    string creator;
-                    string beatmapSetID;
+                case MapMetaType.Artist:
+                case MapMetaType.Title:
+                    string artist;
+                    string title;
 
-                    fMetadata.TryGetValue(MapMetaType.Creator, out creator);
-                    fMetadata.TryGetValue(MapMetaType.BeatmapSetID, out beatmapSetID);
-                    if (creator == null || beatmapSetID == null)
+                    fMetadata.TryGetValue(MapMetaType.Artist, out artist);
+                    fMetadata.TryGetValue(MapMetaType.Title, out title);
+                    if (artist == null || title == null)
                         return;
-
-                    string seed = creator + "yhxyfjo5" + beatmapSetID;
+#if DIST
+                    string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
+#else
+                    string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
+#endif
                     KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
+
                     break;
             }
         }
