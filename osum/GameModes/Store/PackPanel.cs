@@ -175,7 +175,9 @@ namespace osum.GameModes.Store
             string filename = filenames[currentDownload];
             string path = SongSelectMode.BeatmapPath + "/" + filename;
 
-            string downloadPath = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier;
+            string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
+
+            string downloadPath = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
 #if !DIST
             Console.WriteLine("Downloading " + downloadPath);
 #endif
