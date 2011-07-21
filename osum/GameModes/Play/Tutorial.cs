@@ -52,7 +52,7 @@ namespace osum.GameModes.Play
             Beatmap = new Beatmap();
             Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
 
-            s_Demo = new pSprite(TextureManager.Load(OsuTexture.demo), new Vector2(0,50)) { Alpha = 0, Field = FieldTypes.StandardSnapTopCentre, Origin = OriginTypes.Centre };
+            s_Demo = new pSprite(TextureManager.Load(OsuTexture.demo), new Vector2(0, 50)) { Alpha = 0, Field = FieldTypes.StandardSnapTopCentre, Origin = OriginTypes.Centre };
             spriteManager.Add(s_Demo);
 
             loadNextSegment();
@@ -168,14 +168,14 @@ namespace osum.GameModes.Play
 
         protected override void resetScore()
         {
-//#if DEBUG
-//            if (GuideFingers == null)
-//            {
-//                //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
-//                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
-//                ShowGuideFingers = true;
-//            }
-//#endif
+            //#if DEBUG
+            //            if (GuideFingers == null)
+            //            {
+            //                //this is just for debugging so guidefingers will be loaded if we start from not the introduction.
+            //                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, MovementSpeed = 0.5f };
+            //                ShowGuideFingers = true;
+            //            }
+            //#endif
 
             base.resetScore();
         }
@@ -1325,12 +1325,16 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Score_4:
                     comboCounter.SetCombo(0);
                     showText(LocalisationManager.GetString(OsuString.Score4));
-                    GameBase.Scheduler.Add(delegate {
+                    GameBase.Scheduler.Add(delegate
+                    {
                         backButton.FadeOut(500);
                         showTouchToContinue();
                     }, 1500);
                     break;
                 case TutorialSegments.TutorialMap_Interact:
+                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager = new HitObjectManager(Beatmap);
+
                     prepareInteract();
 
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(56, 72), music_offset + 60000, true, 0, HitObjectSoundType.Normal), Difficulty);
@@ -1388,7 +1392,27 @@ namespace osum.GameModes.Play
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        showText("hax skillz");
+                        if (CurrentScore.countMiss > 3 || CurrentScore.count50 > 4)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("Looks like you need more practice!");
+                            nextSegment = TutorialSegments.TutorialMap_Interact;
+                        }
+                        else if (CurrentScore.count50 > 6)
+                        {
+                            playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_WARNING, false);
+                            showText("You're getting there.");
+                            nextSegment = TutorialSegments.TutorialMap_Interact;
+                        }
+                        else if (CurrentScore.count100 > 0)
+                        {
+                            showText("Good.");
+                        }
+                        else
+                        {
+                            showText("Excellent!");
+                        }
+
                         showTouchToContinue();
                     }, 500);
 

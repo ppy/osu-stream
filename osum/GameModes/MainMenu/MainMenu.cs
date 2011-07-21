@@ -14,6 +14,8 @@ using osum.Support;
 using osum.Graphics;
 using System.IO;
 using osum.Graphics.Drawables;
+using osum.UI;
+using osum.Resources;
 #if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
@@ -42,8 +44,6 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using osum.UI;
-using osum.Resources;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
