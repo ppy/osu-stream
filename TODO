@@ -22,21 +22,12 @@ Todo stuff for osu!stream (initial release)
 |- Submit detailed score to osu! server (for future use).
 
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
-rerender icons
 disable itunes file sharing
-chagne osz2 key.
 push notifications fornew songs
 kiai check
-loop audio during song select preview
 make dimming better
 make fail sound shorter
-
 make map packs load metadataOnly for song select.
-
 tutorial end isn't finished
-background colour of hard/fail
-
 countdown displaying when paused
-
-make title screen rect more visible?
-notes aren't falling on results screen.
+lazy load tutorial strings
