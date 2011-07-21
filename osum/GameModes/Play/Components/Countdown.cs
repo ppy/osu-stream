@@ -39,7 +39,7 @@ namespace osum.GameModes.Play.Components
         {
             StartTime = start;
             BeatLength = beatLength;
-            spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); });
+            spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); s.Update(); });
             HasFinished = false;
         }
 
@@ -104,10 +104,18 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            if (!HasFinished)
+            if (HasFinished)
+            {
+                if (StartTime > 0 && background.Alpha == 0 && Clock.AudioTime > StartTime)
+                {
+                    StartTime = -1;
+                    spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); s.Update(); });
+                }
+            }
+            else
             {
                 int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
-    
+
                 if (countdown != lastCountdownUpdate)
                 {
                     lastCountdownUpdate = countdown;

@@ -41,7 +41,7 @@ namespace osum.GameModes.Play.Components
             if (showScore)
             {
                 s_Score =
-                    new pSpriteText("0000000", "score", 1,
+                    new pSpriteText("000000", "score", 1,
                         alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
                         new Vector2(hOffset, 0), 0.95F, true, Color4.White);
                 s_Score.TextConstantSpacing = true;
@@ -91,7 +91,7 @@ namespace osum.GameModes.Play.Components
                     if (change == 0) change = currentScore - displayScore;
 
                     displayScore += change;
-                    s_Score.ShowInt(displayScore, 7);
+                    s_Score.ShowInt(displayScore, 6);
                 }
             }
 

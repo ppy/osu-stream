@@ -31,3 +31,7 @@ make map packs load metadataOnly for song select.
 tutorial end isn't finished
 countdown displaying when paused
 lazy load tutorial strings
+
+check spinner cheatability by passing scoring point.
+
+remove countdown on continue altogether, it's stupid

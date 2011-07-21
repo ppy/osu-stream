@@ -1,4 +1,3 @@
-
 //  Play.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
@@ -583,7 +582,7 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Update();
 
-            if (menu != null) menu.Update();
+            if (menu != null && (!Completed || Failed)) menu.Update();
 
             base.Update();
         }

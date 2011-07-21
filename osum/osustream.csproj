@@ -82,7 +82,7 @@
     <MtouchUseThumb>false</MtouchUseThumb>
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
-    <AssemblyName>osum</AssemblyName>
+    <AssemblyName>osustream</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -106,7 +106,7 @@
     <MtouchUseSGen>false</MtouchUseSGen>
     <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
-    <AssemblyName>osum</AssemblyName>
+    <AssemblyName>osustream</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
@@ -137,7 +137,7 @@
       </CustomCommands>
     </CustomCommands>
     <MtouchLink>Full</MtouchLink>
-    <AssemblyName>osum</AssemblyName>
+    <AssemblyName>osustream</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>

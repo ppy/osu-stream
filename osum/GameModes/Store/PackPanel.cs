@@ -298,7 +298,10 @@ namespace osum.GameModes.Store
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
                 if (previewRequest != null) previewRequest.Abort();
-                previewRequest = new DataNetRequest("http://d.osu.ppy.sh/osum/" + s_Text.Text + "/" + filename + ".mp3");
+
+                string downloadPath = "http://www.osustream.com/dl/preview.php";
+                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename;
+                previewRequest = new DataNetRequest(downloadPath,"POST",param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
                     if (previewRequest.AbortRequested) return;

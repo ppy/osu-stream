@@ -316,10 +316,8 @@ namespace osum.GameModes
             InputManager.OnMove += HandleInputManagerOnMove;
 
             if (Director.LastOsuMode == OsuMode.SongSelect)
-            {
                 cameFromSongSelect = true;
-                InitializeBgm();
-            }
+            InitializeBgm();
         }
 
         bool cameFromSongSelect = false;

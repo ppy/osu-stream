@@ -309,7 +309,7 @@ namespace osum.GameModes.Play
                     break;
                 case TutorialSegments.HitCircle_4:
                     {
-                        showText(LocalisationManager.GetString(OsuString.HitCircle4), -100);
+                        showText(LocalisationManager.GetString(OsuString.HitCircle4), -70);
 
                         HitCircle c = sampleHitObject as HitCircle;
 
@@ -322,7 +322,7 @@ namespace osum.GameModes.Play
                             if (Clock.ManualTime > 700 && !textShown)
                             {
                                 textShown = true;
-                                showText(LocalisationManager.GetString(OsuString.HitCircle4_1)).Colour = Color4.GreenYellow;
+                                showText(LocalisationManager.GetString(OsuString.HitCircle4_1), 20).Colour = Color4.GreenYellow;
                             }
 
                             if (Clock.ManualTime > 1300)
@@ -534,7 +534,7 @@ namespace osum.GameModes.Play
                             showText(LocalisationManager.GetString(OsuString.HoldJudge1));
                             nextSegment = TutorialSegments.Hold_1;
                         }
-                        else if (CurrentScore.count100 > 0)
+                        else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 1)
                         {
                             showText(LocalisationManager.GetString(OsuString.HoldJudge2));
                         }
@@ -683,7 +683,7 @@ namespace osum.GameModes.Play
                             showText(LocalisationManager.GetString(OsuString.SliderJudge2));
                             nextSegment = TutorialSegments.Slider_Interact;
                         }
-                        else if (CurrentScore.count100 > 0)
+                        else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 2)
                         {
                             showText(LocalisationManager.GetString(OsuString.SliderJudge3));
                         }
@@ -883,7 +883,7 @@ namespace osum.GameModes.Play
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 184 * music_beatlength, false, 0, HitObjectSoundType.Finish), Difficulty);
 
-                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
+                        HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, true, 0, HitObjectSoundType.Normal), Difficulty);
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x15, y1), music_offset + 192 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
                         HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, false, 0, HitObjectSoundType.Normal), Difficulty);
 
@@ -919,7 +919,7 @@ namespace osum.GameModes.Play
                             showText(LocalisationManager.GetString(OsuString.MultitouchJudge1));
                             nextSegment = TutorialSegments.Multitouch_Interact;
                         }
-                        else if (CurrentScore.count100 > 2)
+                        else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 2)
                         {
                             showText(LocalisationManager.GetString(OsuString.MultitouchJudge2));
                         }
@@ -1040,7 +1040,7 @@ namespace osum.GameModes.Play
                             showText(LocalisationManager.GetString(OsuString.StackedJudge2));
                             nextSegment = TutorialSegments.Slider_Interact;
                         }
-                        else if (CurrentScore.count100 > 0)
+                        else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 0)
                         {
                             showText(LocalisationManager.GetString(OsuString.StackedJudge3));
                         }
@@ -1158,7 +1158,7 @@ namespace osum.GameModes.Play
                     loadNextSegment();
                     break;
                 case TutorialSegments.Healthbar_1:
-                    showText(LocalisationManager.GetString(OsuString.Healthbar1), -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar1), -90);
                     healthBar = new HealthBar();
                     {
                         pDrawable lastFlash = null;
@@ -1173,11 +1173,11 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Healthbar_2:
-                    showText(LocalisationManager.GetString(OsuString.Healthbar2), -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar2), -90);
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Healthbar_3:
-                    showText(LocalisationManager.GetString(OsuString.Healthbar3), -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar3), -80);
 
                     playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_STANDARD, false);
 
@@ -1213,7 +1213,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Healthbar_4:
-                    showText(LocalisationManager.GetString(OsuString.Healthbar4), -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar4), -90);
                     {
                         float increaseRate = 0;
                         currentSegmentDelegate = delegate
@@ -1246,7 +1246,7 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Healthbar_5:
-                    showText(LocalisationManager.GetString(OsuString.Healthbar5), -120);
+                    showText(LocalisationManager.GetString(OsuString.Healthbar5), -80);
 
                     HitObjectManager.ActiveStream = Difficulty.Easy;
                     playfieldBackground.ChangeColour(Difficulty.Easy, true);
@@ -1332,6 +1332,7 @@ namespace osum.GameModes.Play
                     }, 1500);
                     break;
                 case TutorialSegments.TutorialMap_Introduction:
+                    hideDemo();
                     showText(LocalisationManager.GetString(OsuString.PutTogether));
                     showTouchToContinue();
                     break;
@@ -1390,15 +1391,14 @@ namespace osum.GameModes.Play
                     {
                         if (HitObjectManager.AllNotesHit && !done)
                         {
-                            done = true;
-                            GameBase.Scheduler.Add(delegate
-                            {
-                                loadNextSegment();
-                            }, 1000);
+                            loadNextSegment();
                         }
                     };
                     break;
                 case TutorialSegments.TutorialMap_Judge:
+                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager = null;
+
                     judge();
 
                     GameBase.Scheduler.Add(delegate
@@ -1409,7 +1409,7 @@ namespace osum.GameModes.Play
                             showText(LocalisationManager.GetString(OsuString.MorePractice));
                             nextSegment = TutorialSegments.TutorialMap_Interact;
                         }
-                        else if (CurrentScore.count100 > 5)
+                        else if (CurrentScore.count100 + CurrentScore.count50 + CurrentScore.countMiss > 5)
                         {
                             showText(LocalisationManager.GetString(OsuString.StackedJudge3));
                         }

@@ -18,6 +18,7 @@ namespace osum.GameModes.Play.Components
         pText menuText;
 
         private bool menuDisplayed;
+        bool isPaused;
         internal bool MenuDisplayed
         {
             get
@@ -43,7 +44,6 @@ namespace osum.GameModes.Play.Components
                     if (menuText == null)
                     {
 #if DIST
-                        //todo: localise
                         menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
 #else
                         menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
@@ -67,7 +67,11 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    if (p != null) p.Pause();
+                    if (p != null)
+                    {
+                        p.Pause();
+                        isPaused = true;
+                    }
                 }
                 else
                 {
@@ -90,7 +94,11 @@ namespace osum.GameModes.Play.Components
                         s.Transform(fade);
                     });
 
-                    if (p != null) p.Resume(Clock.AudioTime, 8);
+                    if (p != null && isPaused)
+                    {
+                        p.Resume(Clock.AudioTime, 8);
+                        isPaused = false;
+                    }
                 }
             }
         }
@@ -261,7 +269,11 @@ namespace osum.GameModes.Play.Components
                     });
 
                     if (pulledAmount > valid_pull)
-                        if (AudioEngine.Music != null) AudioEngine.Music.Pause();
+                        if (AudioEngine.Music != null)
+                        {
+                            AudioEngine.Music.Pause();
+                            isPaused = true;
+                        }
                 }
                 else
                 {

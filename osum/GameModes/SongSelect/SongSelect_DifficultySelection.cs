@@ -166,7 +166,7 @@ namespace osum.GameModes
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), 1, true, Color4.White) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             sprites.Add(s_ModeDescriptionText);
 
-            s_ScoreInfo = new pText(null, 24, new Vector2(40, 64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
             s_ScoreInfo.OnClick += Handle_ScoreInfoOnClick;
             sprites.Add(s_ScoreInfo);
 
@@ -342,12 +342,16 @@ namespace osum.GameModes
                         bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
                         s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " ";
-                        int total = bmi.HighScore.totalScore;
-                        s_ScoreInfo.Text += total.ToString().PadLeft(7, '0') + (total > 0 ? " (" + bmi.HighScore.Ranking + ")" : "");
+                        s_ScoreInfo.Text += bmi.HighScore.totalScore.ToString().PadLeft(6, '0');
                         s_ScoreRank.Texture = bmi.HighScore.RankingTextureSmall;
-                        if (s_ScoreRank.Texture != null)
-                            s_ScoreRank.AdditiveFlash(500, 0.5f);
 
+                        if (s_ScoreRank.Texture != null)
+                        {
+                            s_ScoreRank.AdditiveFlash(500, 0.5f);
+                            s_ScoreInfo.MoveTo(new Vector2(40,64), 200, EasingTypes.In);
+                        }
+                        else
+                            s_ScoreInfo.MoveTo(new Vector2(0,64), 200, EasingTypes.In);
                     }
                 }, 100);
             }
