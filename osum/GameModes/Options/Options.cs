@@ -124,7 +124,7 @@ namespace osum.GameModes.Options
 
             vPos += 50;
 
-            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            /*text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
             vPos += 100;
@@ -135,7 +135,7 @@ namespace osum.GameModes.Options
                 Origin = OriginTypes.Centre
             };
             text.MeasureText();
-            smd.Add(text);
+            smd.Add(text);*/
 
             /*gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
             {
