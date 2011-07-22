@@ -392,7 +392,7 @@ namespace osum.GameplayElements
 
                 FirstBeatLength = beatmap.beatLengthAt(0);
 
-                float StackOffset = DifficultyManager.HitObjectRadiusGamefield / 12;
+                float StackOffset = 4.0f;
 
                 pTexture fptexture = TextureManager.Load(OsuTexture.followpoint);
 
