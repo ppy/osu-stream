@@ -494,7 +494,7 @@ namespace osum.Graphics.Renderers
             bool hasStartCap = false;
 
             if (prev == null) hasStartCap = true;
-            else if (curr.p1 != prev.p2) hasStartCap = true;
+            //else if (curr.p1 != prev.p2) hasStartCap = true; // this causes issues with missing zbuffers so remove for now
 
             //todo: this makes stuff look bad... need to look into it.
             if (hasStartCap)
