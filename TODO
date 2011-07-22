@@ -22,18 +22,16 @@ Todo stuff for osu!stream (initial release)
 |- Submit detailed score to osu! server (for future use).
 
 during stream switch to normal, top left diagonal segment flashes (iphone retina visible during tutorial).
-disable itunes file sharing
 push notifications fornew songs
 kiai check
 make dimming better
 make fail sound shorter
 make map packs load metadataOnly for song select.
-tutorial end isn't finished
-countdown displaying when paused
 lazy load tutorial strings
-
 check spinner cheatability by passing scoring point.
-
 remove countdown on continue altogether, it's stupid
-
 secure packs
+
+Submission Checklist:
+* Make sure DIST compile-time definition is set.
+* Make sure iTunes file sharing is disabled.
