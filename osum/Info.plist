@@ -3,7 +3,7 @@
 <plist version="1.0">
   <dict>
     <key>UIFileSharingEnabled</key>
-    <string>NO</string>
+    <string>YES</string>
     <key>UILaunchImageFile</key>
     <string>Support/iPhone/loading</string>
     <key>UIPrerenderedIcon</key>
