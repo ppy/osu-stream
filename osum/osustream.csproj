@@ -169,6 +169,8 @@
     <None Include="Icon.png" />
     <None Include="Icon%402x.png" />
     <None Include="Icon-72.png" />
+    <None Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2" />
+    <None Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
@@ -384,7 +386,5 @@
     <Content Include="Skins\Default\songselect.m4a" />
     <Content Include="Localisation\en.txt" />
     <Content Include="Localisation\ja.txt" />
-    <Content Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2" />
-    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
   </ItemGroup>
 </Project>
