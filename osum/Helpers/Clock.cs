@@ -103,26 +103,6 @@ namespace osum.Helpers
             }
         }
 
-        public static bool AudioLeadingIn;
-        public static bool AudioLeadingInRunning;
-
-        public static void BeginLeadIn(int leadInStartTime)
-        {
-            currentFrameAudioTime = leadInStartTime / 1000d;
-            AudioLeadingIn = true;
-            AudioLeadingInRunning = true;
-        }
-
-        public static void AbortLeadIn()
-        {
-            if (AudioLeadingIn)
-            {
-                AudioLeadingIn = false;
-                AudioLeadingInRunning = false;
-                currentFrameAudioTime = AudioTime = 0;
-            }
-        }
-
         public static Stopwatch sw = new Stopwatch();
         static double swLast;
         static double swLastUpdate;
@@ -166,18 +146,6 @@ namespace osum.Helpers
             ModeTime = (int)Math.Round(modeTime * 1000);
 
             int offset = UseMp3Offset ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A;
-
-            if (AudioLeadingIn && AudioLeadingInRunning && elapsed < 0.1)
-            {
-                currentFrameAudioTime += elapsed;
-
-                if (currentFrameAudioTime + offset / 1000f >= AudioTimeSource.CurrentTime)
-                {
-                    if (AudioEngine.Music != null)
-                        AudioEngine.Music.Play();
-                    AudioLeadingIn = false;
-                }
-            }
 
             if (AudioTimeSource.IsElapsing)
             {

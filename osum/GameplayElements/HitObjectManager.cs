@@ -399,7 +399,7 @@ namespace osum.GameplayElements
 
                     if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime - Clock.ElapsedMilliseconds / 2)
                         TriggerScoreChange(h.Hit(), h);
-                    if (Clock.AudioTimeSource.IsElapsing || (Clock.AudioTime < 0 && Clock.AudioLeadingIn))
+                    if (Clock.AudioTimeSource.IsElapsing)
                         TriggerScoreChange(h.CheckScoring(), h);
 
                     if (lowestActiveObject < 0)

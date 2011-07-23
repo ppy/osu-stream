@@ -143,7 +143,7 @@ namespace osum.GameModes
                     return;
                 }
 
-                //countdown and lead-in time
+                //countdown
                 int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
 
                 if ((AudioEngine.Music != null) && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
@@ -242,26 +242,8 @@ namespace osum.GameModes
                 countdownStartTime = startTime - (int)(beatLength * beats);
             }
 
-            //if (firstCountdown)
-            //{
-            //    if (Clock.AudioTime > countdown.StartTime && !Autoplay)
-            //        firstCountdown = false;
-            //    else
-            //    {
-            //        countdown.SetStartTime(startTime, beatLength);
-            //        if (Clock.AudioLeadingIn)
-            //            Clock.BeginLeadIn(countdownStartTime);
-            //        else if (AudioEngine.Music != null)
-            //            AudioEngine.Music.Play();
-            //        return;
-            //    }
-            //}
-
-            if (countdownStartTime < Clock.AudioTime && (forceCountdown || !Autoplay))
-                Clock.BeginLeadIn(countdownStartTime);
-            else
-                if (AudioEngine.Music != null)
-                    AudioEngine.Music.Play();
+            if (AudioEngine.Music != null)
+                AudioEngine.Music.Play();
         }
 
         //static pSprite fpsTotalCount;
@@ -272,7 +254,6 @@ namespace osum.GameModes
 #if !DIST && !MONO
             Console.WriteLine("Player.cs produced " + frameCount + " frames.");
 #endif
-            Clock.AbortLeadIn();
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
             if (Beatmap != null)
@@ -735,7 +716,6 @@ namespace osum.GameModes
         internal void Pause()
         {
             if (!Failed) AudioEngine.Music.Pause();
-            if (Clock.AudioLeadingIn) Clock.AudioLeadingInRunning = false;
 
             if (HitObjectManager != null)
                 HitObjectManager.StopAllSounds();
