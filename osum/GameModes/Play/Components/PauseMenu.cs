@@ -96,7 +96,8 @@ namespace osum.GameModes.Play.Components
 
                     if (p != null && isPaused)
                     {
-                        p.Resume(Clock.AudioTime, 8);
+                        if (AudioEngine.Music != null)
+                            AudioEngine.Music.Play();
                         isPaused = false;
                     }
                 }
