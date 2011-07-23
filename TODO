@@ -29,8 +29,7 @@ make fail sound shorter
 make map packs load metadataOnly for song select.
 lazy load tutorial strings
 check spinner cheatability by passing scoring point.
-remove countdown on continue altogether, it's stupid
-secure packs
+credits offset is off.
 
 Submission Checklist:
 * Make sure DIST compile-time definition is set.

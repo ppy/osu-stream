@@ -52,6 +52,9 @@ namespace BeatmapCombinator
             if (args.Length > 0)
             {
                 ProcessBeatmap(args[0]);
+#if !DEBUG
+                Console.ReadLine();
+#endif
                 return;
             }
             else
