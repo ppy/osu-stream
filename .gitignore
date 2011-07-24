@@ -27,3 +27,4 @@ osu!m-desktop.sln.docstates
 osum/Resources/Tutorial*.resources
 Sounds/*
 *.ipa
+*.pidb
