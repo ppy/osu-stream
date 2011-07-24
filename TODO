@@ -31,6 +31,8 @@ lazy load tutorial strings
 check spinner cheatability by passing scoring point.
 credits offset is off.
 
+fix score discrepancy
+
 Submission Checklist:
 * Make sure DIST compile-time definition is set.
 * Make sure iTunes file sharing is disabled.
