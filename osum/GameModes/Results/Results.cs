@@ -54,7 +54,7 @@ namespace osum.GameModes
         {
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56,56,56,255));
+                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
 
             background.AlphaBlend = false;
             spriteManager.Add(background);
@@ -258,7 +258,11 @@ namespace osum.GameModes
                 resultSprites.Add(count0);
             }
 
+            if (Director.LastOsuMode == OsuMode.SongSelect)
+                cameFromSongSelect = true;
+
             //Average Timing
+            if (!cameFromSongSelect)
             {
                 float avg = (float)Math.Abs(RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount));
                 pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
@@ -284,23 +288,31 @@ namespace osum.GameModes
             };
             topMostLayer.Add(s_Footer);
 
-            BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
-            if (RankableScore.totalScore > bmi.HighScore.totalScore)
+            if (!cameFromSongSelect)
             {
-                if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
-                    unlockedExpert = true;
+                //this is a bit of cheating to ensure that getting 100% will always result in 1mil. there are some race conditions with multitouch that may allow
+                //for ever-so-slightly lower max scores, but this would piss people off.
+                if (RankableScore.accuracy == 1 && RankableScore.totalScore - RankableScore.spinnerBonusScore != Score.MAX_SCORE)
+                    RankableScore.comboBonusScore = Score.MAX_SCORE - RankableScore.accuracyBonusScore - RankableScore.hitScore;
 
-                isPersonalBest = true;
-                bmi.HighScore = RankableScore;
-                BeatmapDatabase.Write();
-            }
+                BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                if (RankableScore.totalScore > bmi.HighScore.totalScore)
+                {
+                    if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
+                        unlockedExpert = true;
 
-            using (MemoryStream ms = new MemoryStream())
-            using (SerializationWriter sw = new SerializationWriter(ms))
-            {
-                bmi.WriteToStream(sw);
-                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", "id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray()));
-                NetManager.AddRequest(nr);
+                    isPersonalBest = true;
+                    bmi.HighScore = RankableScore;
+                    BeatmapDatabase.Write();
+                }
+
+                using (MemoryStream ms = new MemoryStream())
+                using (SerializationWriter sw = new SerializationWriter(ms))
+                {
+                    bmi.WriteToStream(sw);
+                    StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", "id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray()));
+                    NetManager.AddRequest(nr);
+                }
             }
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
@@ -314,9 +326,6 @@ namespace osum.GameModes
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
-
-            if (Director.LastOsuMode == OsuMode.SongSelect)
-                cameFromSongSelect = true;
             InitializeBgm();
         }
 
@@ -370,7 +379,7 @@ namespace osum.GameModes
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6, false);
                 pDrawable flash = countScoreCombo.AdditiveFlash(500, 1);
-                
+
 
                 addedScore += RankableScore.comboBonusScore;
                 countTotalScore.ShowInt(addedScore, 6, true);

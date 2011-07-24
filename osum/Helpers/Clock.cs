@@ -110,15 +110,18 @@ namespace osum.Helpers
         static int audioCheckFrame;
         const int CHECK_AUDIO_FRAME_COUNT = 20;
 
+        /// <summary>
+        /// Update from a non-game loop. elapsed is elapsed game time. Hook your own audioTimeSource.
+        /// </summary>
+        /// <param name="elapsed"></param>
         public static void UpdateCustom(double elapsed)
         {
             ElapsedMilliseconds = elapsed * 1000;
 
             time += elapsed;
-            
             Time = (int)Math.Round(time * 1000);
             ModeTime = Time;
-            currentFrameAudioTime += elapsed;
+            currentFrameAudioTime = AudioTimeSource.CurrentTime;
             AudioTime = (int)Math.Round(currentFrameAudioTime * 1000);
             AudioTimeInputAdjust = AudioTime;
         }

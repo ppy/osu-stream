@@ -127,7 +127,7 @@ namespace osum.GameplayElements
         {
             Difficulty oldActiveStream = ActiveStream;
 
-            if (ActiveStream == newDifficulty || Clock.AudioTime < nextStreamChange)
+            if (ActiveStream == newDifficulty || (Clock.AudioTime > 0 && Clock.AudioTime < nextStreamChange))
                 return -1; //already switching stream
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
@@ -397,7 +397,7 @@ namespace osum.GameplayElements
                     if (!AllowSpinnerOptimisation)
                         AllowSpinnerOptimisation |= h is Spinner && h.Sprites[0].Alpha == 1;
 
-                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime - Clock.ElapsedMilliseconds / 2)
+                    if (Player.Autoplay && !h.IsHit && hitObjectNow >= h.StartTime)
                         TriggerScoreChange(h.Hit(), h);
                     if (Clock.AudioTimeSource.IsElapsing)
                         TriggerScoreChange(h.CheckScoring(), h);
