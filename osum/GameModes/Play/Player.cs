@@ -100,6 +100,10 @@ namespace osum.GameModes
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
+#if SCORE_TESTING
+            File.WriteAllText("score.txt","");
+#endif
+
             InputManager.OnDown += InputManager_OnDown;
 
             if (GameBase.Instance != null)
@@ -437,6 +441,9 @@ namespace osum.GameModes
             }*/
 #endif
 
+#if SCORE_TESTING
+            File.AppentAllText("score.txt",change + "\t" + CurrentScore.totalScore + "\t" + CurrentScore.comboBonusScore + "\n");
+#endif
 
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
