@@ -139,7 +139,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
-            if (Math.Abs(lastUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
+            if (Math.Abs(lastVisibleUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
 
             if (matrixOperations) mapToCoordinates(ref trackingPoint);
 
@@ -152,7 +152,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
-            if (Math.Abs(lastUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
+            if (Math.Abs(lastVisibleUpdate - Clock.Time) > 50 || Director.IsTransitioning) return;
 
             if (Sprites == null) return;
 
@@ -164,7 +164,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
-            if (Math.Abs(lastUpdate - Clock.Time) > 50) return;
+            if (Math.Abs(lastVisibleUpdate - Clock.Time) > 50) return;
 
             if (Sprites == null) return;
 
@@ -270,7 +270,7 @@ namespace osum.Graphics.Sprites
         List<int> removableSprites = new List<int>();
 
 
-        int lastUpdate;
+        int lastVisibleUpdate;
 
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
@@ -279,7 +279,10 @@ namespace osum.Graphics.Sprites
         {
             base.Update();
 
-            lastUpdate = Clock.Time;
+            if (Alpha == 0)
+                return;
+
+            lastVisibleUpdate = Clock.Time;
 
             if (SpriteQueue != null)
             {
@@ -571,6 +574,17 @@ namespace osum.Graphics.Sprites
             InputManager.OnMove -= HandleInputManagerOnMove;
             InputManager.OnDown -= HandleInputManagerOnDown;
             InputManager.OnUp -= HandleInputManagerOnUp;
+        }
+
+        internal void Clear()
+        {
+            if (Sprites != null)
+            {
+                foreach (pDrawable p in Sprites)
+                    p.Dispose();
+            }
+
+            Sprites.Clear();
         }
     }
 }
