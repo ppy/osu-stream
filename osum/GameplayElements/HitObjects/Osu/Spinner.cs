@@ -390,9 +390,8 @@ namespace osum.GameplayElements
             if (AudioEngine.Effect != null)
             {
                 if (sourceSpinning == null || sourceSpinning.BufferId == 0)
-                    sourceSpinning = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
-                else
-                    sourceSpinning.Play();
+                    sourceSpinning = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
+                sourceSpinning.Play();
             }
         }
 

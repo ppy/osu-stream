@@ -22,8 +22,12 @@ namespace osum.GameModes
         private pQuad blue;
         private pQuad pink;
 
+        Source whoosh;
+
         public MenuBackground()
         {
+            whoosh = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.MenuWhoosh), 1, false, true);
+            
             EndStopLenience = 0.5f;
             EndBufferZone = 0;
             AutomaticHeight = false;
@@ -210,6 +214,17 @@ namespace osum.GameModes
             //d.FadeColour(ColourHelper.Lighten(d.Colour, 0.5f),50);
         }
 
+        public override void Dispose()
+        {
+            if (whoosh != null)
+            {
+                whoosh.Reserved = false;
+                whoosh.Disposable = true;
+                whoosh = null;
+            }
+            base.Dispose();
+        }
+
         void Option_OnClick(object sender, EventArgs e)
         {
             if (!IsAwesome)
@@ -250,7 +265,7 @@ namespace osum.GameModes
         {
             GameBase.Scheduler.Add(delegate
             {
-                AudioEngine.PlaySample(OsuSamples.menuwhoosh);
+                whoosh.Play();
                 ScaleTo(scale_offset, duration / 2, EasingTypes.InOut);
                 MoveTo(new Vector2(75, -44), duration / 2, EasingTypes.InOut);
                 RotateTo(rotation_offset, duration / 2, EasingTypes.InOut);

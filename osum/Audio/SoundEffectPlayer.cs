@@ -103,8 +103,6 @@ namespace osum
         {
             foreach (Source s in sourceInfo)
                 s.DeleteBuffer();
-
-
         }
 
         internal float Volume = 1;
@@ -114,7 +112,7 @@ namespace osum
         /// </summary>
         /// <param name="buffer">The bufferId.</param>
         /// <returns></returns>
-        public Source PlayBuffer(int buffer, float volume, bool loop = false, bool reserve = false)
+        public Source LoadBuffer(int buffer, float volume, bool loop = false, bool reserve = false)
         {
             int freeSource = -1;
 
@@ -146,8 +144,6 @@ namespace osum
             info.Volume = volume * Volume;
             info.Looping = loop;
             info.Pitch = 1;
-
-            info.Play();
 
             return info;
         }

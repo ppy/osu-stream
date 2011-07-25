@@ -834,9 +834,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (AudioEngine.Effect != null)
             {
                 if (sourceSliding == null || sourceSliding.BufferId == 0)
-                    sourceSliding = AudioEngine.Effect.PlayBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.SampleSet), SampleSet.Volume * 0.8f, true, true);
-                else
-                    sourceSliding.Play();
+                    sourceSliding = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.SampleSet), SampleSet.Volume * 0.8f, true, true);
+                sourceSliding.Play();
             }
 
             //Begin tracking.
