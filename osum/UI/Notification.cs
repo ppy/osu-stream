@@ -10,6 +10,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.Graphics.Renderers;
 using osum.Resources;
+using osum.Audio;
 
 namespace osum.UI
 {
@@ -186,6 +187,8 @@ namespace osum.UI
 
         private void dismiss(bool completed)
         {
+            AudioEngine.PlaySample(OsuSamples.ButtonTap);
+
             GameBase.Scheduler.Add(delegate
             {
                 if (Action != null) Action(completed);
@@ -203,6 +206,8 @@ namespace osum.UI
         {
             Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
             Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
+
+            AudioEngine.PlaySample(OsuSamples.Notify);
 
             Transform(bounce);
             Transform(fadeIn);
