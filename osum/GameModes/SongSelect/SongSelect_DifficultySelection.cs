@@ -352,7 +352,10 @@ namespace osum.GameModes
 
         void onSelectPreviousMode(object sender, EventArgs e)
         {
+            
             if (State == SelectState.Starting) return;
+
+            AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
             switch (Player.Difficulty)
             {
@@ -368,6 +371,8 @@ namespace osum.GameModes
         void onSelectNextMode(object sender, EventArgs e)
         {
             if (State == SelectState.Starting) return;
+
+            AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
             switch (Player.Difficulty)
             {
