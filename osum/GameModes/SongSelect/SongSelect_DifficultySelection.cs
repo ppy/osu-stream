@@ -55,7 +55,8 @@ namespace osum.GameModes
         {
             if (State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
 
-            playFromPreview();
+            if (!AudioEngine.Music.IsElapsing)
+                playFromPreview();
 
             //do a second callback so we account for lost gametime due to the above audio load.
             //todo: can probably remove this.
