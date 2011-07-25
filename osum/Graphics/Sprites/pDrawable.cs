@@ -616,7 +616,6 @@ namespace osum.Graphics.Sprites
                 clone.Transformations.AddRange(Transformations);
 
             clone.Alpha *= brightness;
-            clone.Clocking = ClockTypes.Game;
             clone.DrawDepth = Math.Min(1, DrawDepth + 0.001f);
             clone.Additive = true;
             clone.FadeOut(duration);
