@@ -357,7 +357,11 @@ namespace osum
             Director.ChangeMode(OsuMode.Results, null);
 #else
             //Load the main menu initially.
+            #if MONO && DEBUG
+            Director.ChangeMode(OsuMode.SongSelect, null);
+            #else
             Director.ChangeMode(OsuMode.MainMenu, null);
+            #endif
 #endif
 
             OnlineHelper.Initialize();
