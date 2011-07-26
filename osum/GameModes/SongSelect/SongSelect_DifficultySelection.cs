@@ -328,7 +328,7 @@ namespace osum.GameModes
                     else
                     {
                         isNewDifficulty = false;
-                        GameBase.Notify("This difficulty has not yet been mapped!", delegate { pendingModeChange = false; });
+                        pendingModeChange = false;
                     }
                 }
                 else if (newDifficulty == Difficulty.Expert && mapRequiresUnlock)

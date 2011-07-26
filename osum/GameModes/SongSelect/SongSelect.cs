@@ -159,7 +159,16 @@ namespace osum.GameModes
             }
 #endif
 
-            foreach (string s in Directory.GetFiles(BeatmapPath))
+#if MONO
+            foreach (string subdir in Directory.GetDirectories(BeatmapPath))
+            foreach (string s in Directory.GetFiles(subdir,"*.osz2"))
+            {
+                Beatmap b = new Beatmap(s);
+                availableMaps.AddInPlace(b);
+            }
+#endif
+
+            foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
             {
                 Beatmap b = new Beatmap(s);
                 availableMaps.AddInPlace(b);
