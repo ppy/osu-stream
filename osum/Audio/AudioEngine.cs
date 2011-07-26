@@ -95,6 +95,9 @@ namespace osum.Audio
             lastPlayedTimes[buffer] = Clock.Time;
 
             Source src = AudioEngine.Effect.LoadBuffer(buffer, volume);
+            
+            if (src == null) return null;
+
             src.Play();
 
             if (sample > OsuSamples.PRELOAD_END)
