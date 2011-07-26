@@ -495,8 +495,8 @@ namespace osum.GameplayElements
 
                 HitObject last = null;
 
-                int currentComboNumber = 1;
-                int colourIndex = 0;
+                int currentComboNumber = 0;
+                int colourIndex = -1;
 
                 for (int i = 0; i < objects.Count; i++)
                 {
@@ -509,23 +509,21 @@ namespace osum.GameplayElements
                     bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
                     bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && (last is Slider && !(last is HoldCircle)) && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
 
-                    if (last != null)
+                    if (currHitObject.NewCombo)
                     {
-                        if (currHitObject.NewCombo)
+                        currentComboNumber = 0;
+                        if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
                         {
-                            currentComboNumber = 0;
-                            if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
-                            {
-                                colourIndex += currHitObject.ComboOffset;
-                                if ((currHitObject.Type & HitObjectType.Spinner) == 0) colourIndex++;
-                                colourIndex %= TextureManager.DefaultColours.Length;
-                            }
+                            colourIndex += currHitObject.ComboOffset;
+                            if ((currHitObject.Type & HitObjectType.Spinner) == 0) colourIndex++;
+                            colourIndex %= TextureManager.DefaultColours.Length;
                         }
+                    }
+                    else if (last == null) colourIndex = 0;
 
-                        if (currHitObject.IncrementCombo)
-                        {
-                            if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;
-                        }
+                    if (currHitObject.IncrementCombo)
+                    {
+                        if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;
                     }
 
                     currHitObject.ComboNumber = currentComboNumber;
