@@ -161,6 +161,7 @@ namespace osum.Helpers
                     if (sourceTime == 0)
                     {
                         AudioTime = 0;
+                        AudioTimeInputAdjust = 0;
                         return;
                     }
                     else
