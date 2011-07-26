@@ -411,6 +411,9 @@ namespace BeatmapCombinator
                                 case "ArtistUrl":
                                     package.AddMetadata(MapMetaType.ArtistUrl, val);
                                     break;
+                                case "ArtistFullName":
+                                    package.AddMetadata(MapMetaType.ArtistFullName, val);
+                                    break;
                                 case "Difficulty":
                                     package.AddMetadata(MapMetaType.DifficultyRating, val);
                                     break;
