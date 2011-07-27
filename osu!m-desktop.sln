@@ -18,6 +18,9 @@ Global
 		ReleaseLocal|Any CPU = ReleaseLocal|Any CPU
 		ReleaseLocal|Mixed Platforms = ReleaseLocal|Mixed Platforms
 		ReleaseLocal|x86 = ReleaseLocal|x86
+		ReleaseNoEncryption|Any CPU = ReleaseNoEncryption|Any CPU
+		ReleaseNoEncryption|Mixed Platforms = ReleaseNoEncryption|Mixed Platforms
+		ReleaseNoEncryption|x86 = ReleaseNoEncryption|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.Debug|Any CPU.ActiveCfg = Debug|x86
@@ -31,10 +34,15 @@ Global
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.Release|x86.ActiveCfg = Release|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.Release|x86.Build.0 = Release|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Any CPU.ActiveCfg = Release|x86
-		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|x86
-		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Mixed Platforms.Build.0 = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Mixed Platforms.ActiveCfg = ReleaseNoEncryption|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|Mixed Platforms.Build.0 = ReleaseNoEncryption|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|x86.ActiveCfg = Release|x86
 		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseLocal|x86.Build.0 = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseNoEncryption|Any CPU.ActiveCfg = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseNoEncryption|Mixed Platforms.Build.0 = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseNoEncryption|x86.ActiveCfg = Release|x86
+		{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}.ReleaseNoEncryption|x86.Build.0 = Release|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -46,10 +54,15 @@ Global
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|x86.ActiveCfg = Release|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.Release|x86.Build.0 = Release|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Any CPU.ActiveCfg = Release|x86
-		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|x86
-		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.ActiveCfg = ReleaseNoEncryption|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|Mixed Platforms.Build.0 = ReleaseNoEncryption|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|x86.ActiveCfg = Release|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseLocal|x86.Build.0 = Release|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|Any CPU.ActiveCfg = ReleaseNoEncryption|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = ReleaseNoEncryption|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|Mixed Platforms.Build.0 = ReleaseNoEncryption|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|x86.ActiveCfg = ReleaseNoEncryption|x86
+		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|x86.Build.0 = ReleaseNoEncryption|x86
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -65,6 +78,9 @@ Global
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|Mixed Platforms.Build.0 = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|x86.ActiveCfg = Release|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
