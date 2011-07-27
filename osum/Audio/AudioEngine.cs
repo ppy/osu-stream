@@ -16,8 +16,11 @@ namespace osum.Audio
         HitFinish,
         MenuHit,
         MenuClick,
+        MenuBling,
         SliderTick,
         SliderSlide,
+        ButtonTap,
+        Notify,
         MenuBack,
         SpinnerBonus,
         SpinnerSpin,
@@ -30,7 +33,7 @@ namespace osum.Audio
         miss,
         PRELOAD_END,
         fail,
-        menuwhoosh,
+        MenuWhoosh,
         MainMenu_Intro,
         RankingBam,
         RankingBam2
@@ -91,7 +94,11 @@ namespace osum.Audio
                     return null;
             lastPlayedTimes[buffer] = Clock.Time;
 
-            Source src = AudioEngine.Effect.PlayBuffer(buffer, volume);
+            Source src = AudioEngine.Effect.LoadBuffer(buffer, volume);
+            
+            if (src == null) return null;
+
+            src.Play();
 
             if (sample > OsuSamples.PRELOAD_END)
                 src.Disposable = true;

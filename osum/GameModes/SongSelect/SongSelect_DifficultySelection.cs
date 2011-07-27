@@ -18,6 +18,7 @@ using osum.Graphics.Renderers;
 using osu_common.Libraries.Osz2;
 using osum.Resources;
 using osum.GameplayElements.Scoring;
+using osum.Graphics;
 
 namespace osum.GameModes
 {
@@ -52,30 +53,21 @@ namespace osum.GameModes
 
         private void showDifficultySelection()
         {
-            if (State != SelectState.LoadingPreview) return;
+            if (State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
 
-            playFromPreview();
+            if (!AudioEngine.Music.IsElapsing)
+                playFromPreview();
 
             //do a second callback so we account for lost gametime due to the above audio load.
+            //todo: can probably remove this.
             GameBase.Scheduler.Add(delegate
             {
-
-                if (State != SelectState.LoadingPreview) return;
+                if (State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
 
                 if (s_ModeButtonStream == null)
-                {
-
-                    tabController = new pTabController();
-
-                    initializeTabPlay();
-                    //initializeTabRank();
-                    //initializeTabOptions();
-                }
-
-                tabController.Show();
+                    initializeDifficultySelection();
 
                 s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
-
 
                 //preview has finished loading.
                 State = SelectState.DifficultySelect;
@@ -83,15 +75,18 @@ namespace osum.GameModes
                 foreach (pDrawable s in SelectedPanel.Sprites)
                     s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
 
-                tabController.Sprites.ForEach(s => s.Transform(new TransformationV(new Vector2(0, -100), new Vector2(0, -100), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In)));
-                tabController.Sprites.ForEach(s => s.Transform(new TransformationV(new Vector2(0, 0), new Vector2(0, BeatmapPanel.PANEL_HEIGHT), Clock.ModeTime + 400, Clock.ModeTime + 1000, EasingTypes.In)));
-
-                s_Header.Transform(new TransformationV(Vector2.Zero, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Header.Transform(new TransformationV(s_Header.Position, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationV(s_Footer.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Footer.Alpha = 1;
+
+                s_SongInfo.Transform(new TransformationF(TransformationType.Fade, s_SongInfo.Alpha, 1, Clock.ModeTime + 500, Clock.ModeTime + 750));
+
+                spriteManagerDifficultySelect.ScaleScalar = 1;
+                spriteManagerDifficultySelect.Transformations.Clear();
+                spriteManagerDifficultySelect.FadeInFromZero(250);
 
                 SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             }, true);
@@ -104,47 +99,26 @@ namespace osum.GameModes
             AudioEngine.Music.Play();
         }
 
-        private void initializeTabOptions()
-        {
-            return;
-            //todo: clean this up
-            List<pDrawable> sprites = new List<pDrawable>();
-
-            pSprite text = new pText("Local record goes here.", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
-            sprites.Add(text);
-
-
-            s_TabBarOther = tabController.Add(OsuTexture.songselect_tab_bar_other, sprites);
-        }
-
-        private void initializeTabRank()
-        {
-            return;
-
-            List<pDrawable> sprites = new List<pDrawable>();
-
-            pSprite text = new pText("Online ranking goes here.", 30, new Vector2(0, 0), new Vector2(GameBase.BaseSizeFixedWidth.Width, 96), 1, true, Color4.White, true) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
-            sprites.Add(text);
-
-            s_TabBarRank = tabController.Add(OsuTexture.songselect_tab_bar_rank, sprites);
-        }
-
-        private void initializeTabPlay()
+        private void initializeDifficultySelection()
         {
             const float yOffset = 0;
-            List<pDrawable> sprites = new List<pDrawable>();
 
             s_ModeButtonStream = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_stream), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(0, yOffset), HandleClickOnUp = true };
             s_ModeButtonStream.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonStream);
+            spriteManagerDifficultySelect.Add(s_ModeButtonStream);
+
+            s_SongInfo = new pSprite(TextureManager.Load(OsuTexture.songselect_songinfo), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(0, 0), 0.95f, true, Color4.White);
+            s_SongInfo.Alpha = 0;
+            s_SongInfo.OnClick += new EventHandler(onSongInfoClick);
+            spriteManager.Add(s_SongInfo);
 
             s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
             s_ModeButtonEasy.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonEasy);
+            spriteManagerDifficultySelect.Add(s_ModeButtonEasy);
 
             s_ModeButtonExpert = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_expert), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(mode_button_width, yOffset), HandleClickOnUp = true };
             s_ModeButtonExpert.OnClick += onModeButtonClick;
-            sprites.Add(s_ModeButtonExpert);
+            spriteManagerDifficultySelect.Add(s_ModeButtonExpert);
 
             const float arrow_spread = 180;
 
@@ -153,7 +127,7 @@ namespace osum.GameModes
             s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnClick += onSelectPreviousMode;
 
-            sprites.Add(s_ModeArrowLeft);
+            spriteManagerDifficultySelect.Add(s_ModeArrowLeft);
 
             s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(arrow_spread, yOffset), 0.45f, true, Color4.DarkGray);
             s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
@@ -161,20 +135,146 @@ namespace osum.GameModes
             s_ModeArrowRight.OnClick += onSelectNextMode;
 
             s_ModeArrowRight.Rotation = 1;
-            sprites.Add(s_ModeArrowRight);
+            spriteManagerDifficultySelect.Add(s_ModeArrowRight);
 
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), 1, true, Color4.White) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
-            sprites.Add(s_ModeDescriptionText);
+            spriteManagerDifficultySelect.Add(s_ModeDescriptionText);
 
             s_ScoreInfo = new pText(null, 24, new Vector2(0, 64), Vector2.Zero, 1, true, Color4.White, true);
             s_ScoreInfo.OnClick += Handle_ScoreInfoOnClick;
-            sprites.Add(s_ScoreInfo);
+            spriteManagerDifficultySelect.Add(s_ScoreInfo);
 
             s_ScoreRank = new pSprite(null, new Vector2(0, 72)) { DrawDepth = 0.95f };
             s_ScoreRank.OnClick += Handle_ScoreInfoOnClick;
-            sprites.Add(s_ScoreRank);
+            spriteManagerDifficultySelect.Add(s_ScoreRank);
+        }
 
-            s_TabBarPlay = tabController.Add(OsuTexture.songselect_tab_bar_play, sprites);
+        void onSongInfoClick(object sender, EventArgs e)
+        {
+            s_SongInfo.AdditiveFlash(1000, 0.8f);
+            AudioEngine.PlaySample(OsuSamples.MenuBling);
+
+            if (State != SelectState.DifficultySelect)
+                return;
+
+            showSongInfo();
+        }
+
+        private void showSongInfo()
+        {
+            spriteManagerDifficultySelect.ScaleTo(0.5f, 300, EasingTypes.Out);
+            spriteManagerDifficultySelect.FadeOut(300);
+            background.FadeOut(300);
+
+            SelectedPanel.Sprites.ForEach(s => s.MoveTo(new Vector2(0, -100), 400));
+
+            spriteManagerSongInfo.Clear();
+
+            spriteManagerSongInfo.Alpha = 0;
+            spriteManagerSongInfo.Position = Vector2.Zero;
+            spriteManagerSongInfo.Transformations.Clear();
+            spriteManagerSongInfo.Transform(new TransformationBounce(Clock.Time + 200, Clock.Time + 700, 1, 0.5f, 2));
+            spriteManagerSongInfo.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
+
+            Beatmap beatmap = SelectedPanel.Beatmap;
+            
+            //256x172
+            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
+
+            pSprite thumbSprite = new pSpriteDynamic() {
+                LoadDelegate = delegate {
+                    pTexture thumb = null;
+                    byte[] bytes = beatmap.GetFileBytes("thumb-256.jpg");
+                    if (bytes != null)
+                        thumb = pTexture.FromBytes(bytes);
+                    return thumb;
+                },
+                DrawDepth = 0.49f,
+                Field = FieldTypes.StandardSnapCentre,
+                Origin = OriginTypes.Centre,
+                ScaleScalar = aspectAdjust,
+                Alpha = 0.3f
+            };
+            spriteManagerSongInfo.Add(thumbSprite);
+
+
+
+            float vPos = 90;
+
+            string unicodeTitle = beatmap.Package.GetMetadata(MapMetaType.TitleUnicode);
+
+            if (unicodeTitle != null)
+            {
+                pText titleUnicode = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.White)
+                {
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    Origin = OriginTypes.Centre
+                };
+                spriteManagerSongInfo.Add(titleUnicode);
+                vPos += 40;
+            }
+
+            pText title = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
+            spriteManagerSongInfo.Add(title);
+
+            vPos += 40;
+
+            pText artist = new pText("by " + beatmap.Artist, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
+            spriteManagerSongInfo.Add(artist);
+
+            vPos += 40;
+
+            pText mapper = new pText("Mapped by " + beatmap.Creator, 18, new Vector2(0, vPos), 1, true, Color4.White)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
+            spriteManagerSongInfo.Add(mapper);
+
+            vPos += 50;
+
+            pText info = new pText(
+                beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode) + "\n" +
+                beatmap.Package.GetMetadata(MapMetaType.ArtistUrl) + "\n" +
+                beatmap.Package.GetMetadata(MapMetaType.Source) + "\n"
+                , 24, new Vector2(0, vPos), 1, true, Color4.White)
+            {
+                Field = FieldTypes.StandardSnapTopCentre,
+                Origin = OriginTypes.Centre
+            };
+            spriteManagerSongInfo.Add(info);
+            
+
+            
+            
+
+            State = SelectState.SongInfo;
+
+            footerHide();
+        }
+
+        private void hideSongInfo()
+        {
+            background.FadeIn(300);
+            spriteManagerSongInfo.Transformations.Clear();
+            spriteManagerSongInfo.FadeOut(400);
+            spriteManagerSongInfo.MoveTo(new Vector2(0, 600), 1500, EasingTypes.Out);
+        }
+
+        private void footerHide()
+        {
+            s_Footer.Transformations.Clear();
+            s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 500));
         }
 
         void Handle_ScoreInfoOnClick(object sender, EventArgs e)
@@ -228,7 +328,7 @@ namespace osum.GameModes
                     else
                     {
                         isNewDifficulty = false;
-                        GameBase.Notify("This difficulty has not yet been mapped!", delegate { pendingModeChange = false; });
+                        pendingModeChange = false;
                     }
                 }
                 else if (newDifficulty == Difficulty.Expert && mapRequiresUnlock)
@@ -253,7 +353,10 @@ namespace osum.GameModes
 
         void onSelectPreviousMode(object sender, EventArgs e)
         {
+            
             if (State == SelectState.Starting) return;
+
+            AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
             switch (Player.Difficulty)
             {
@@ -270,6 +373,8 @@ namespace osum.GameModes
         {
             if (State == SelectState.Starting) return;
 
+            AudioEngine.PlaySample(OsuSamples.ButtonTap);
+
             switch (Player.Difficulty)
             {
                 case Difficulty.Easy:
@@ -282,12 +387,9 @@ namespace osum.GameModes
         }
 
         const float mode_button_width = 300;
-        private pTabController tabController;
-        private pDrawable s_TabBarPlay;
-        private pDrawable s_TabBarRank;
-        private pDrawable s_TabBarOther;
         private pText s_ScoreInfo;
         private pSprite s_ScoreRank;
+        private pSprite s_SongInfo;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
@@ -329,15 +431,19 @@ namespace osum.GameModes
 
             if (isNewDifficulty)
             {
-                s_ModeDescriptionText.FadeOut(100);
+                if (s_ModeDescriptionText.Text != text)
+                    s_ModeDescriptionText.FadeOut(100);
 
                 GameBase.Scheduler.Add(delegate
                 {
                     //could have hit the back button really fast.
                     if (State == SelectState.DifficultySelect)
                     {
-                        s_ModeDescriptionText.Text = text;
-                        s_ModeDescriptionText.FadeInFromZero(300);
+                        if (s_ModeDescriptionText.Text != text)
+                        {
+                            s_ModeDescriptionText.Text = text;
+                            s_ModeDescriptionText.FadeInFromZero(300);
+                        }
 
                         bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
@@ -381,14 +487,14 @@ namespace osum.GameModes
                         d.FadeIn(500);
                 }
 
-                if (tabController != null) tabController.Hide();
+                spriteManagerDifficultySelect.FadeOut(250);
 
                 s_Header.Transform(new TransformationV(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                GameBase.Scheduler.Add(delegate { s_Footer.Alpha = 0; }, 500);
+                s_SongInfo.FadeOut(250);
+
+                footerHide();
             }, true);
         }
 

@@ -20,7 +20,6 @@ namespace osum.GameModes.Options
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
             "*Graphics",
-            "OsuTexture.kokoban",
             "Koko Ban - Concept artwork, Interface mockups, colours!",
             "LuigiHann - Gameplay element contributions, rank letters",
             "peppy - Interface, gameplay elements, animation and flow",

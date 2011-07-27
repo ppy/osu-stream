@@ -198,7 +198,7 @@ namespace BeatmapCombinator
                                 break;
                             case "HitObjects":
                                 {
-                                    HitObjectType type = (HitObjectType)(Int32.Parse(split[3]) & 15);
+                                    HitObjectType type = (HitObjectType)Int32.Parse(split[3]) & ~HitObjectType.ColourHax;
                                     bool slider = (type & HitObjectType.Slider) > 0;
                                     int time = (int)Decimal.Parse(split[2]);
                                     int endTime = time;
@@ -211,10 +211,21 @@ namespace BeatmapCombinator
                                     string stringRep = MakeSampleset(cp) + "," + line;
 
                                     //add addition difficulty-specific information
-                                    if ((type & HitObjectType.Slider) > 0)
+                                    if (slider)
                                     {
-                                        if (split.Length < 9) stringRep += ",";
                                         int repeatCount = Convert.ToInt32(split[6]);
+
+                                        bool hadEndpointSamples = split.Length >= 9;
+
+                                        if (!hadEndpointSamples)
+                                        {
+                                            stringRep += "," + split[4];
+                                            for (int repeatNo = 1; repeatNo <= repeatCount; repeatNo++)
+                                            {
+                                                stringRep += "|" + split[4];
+                                            }
+                                        }
+
                                         double length = Convert.ToDouble(split[7]);
                                         double velocity = bd.VelocityAt(time);
 
@@ -231,6 +242,16 @@ namespace BeatmapCombinator
                                             currTime += ReboundTime;
                                             cp = bd.controlPointAt(currTime + 5);
                                             stringRep += ":" + MakeSampleset(cp);
+                                        }
+
+                                        if ((repeatCount > 1 && length < 50) ||
+                                            (repeatCount > 4 && length < 100) ||
+                                            (hadEndpointSamples && split[4] == "4") //force finish to be hold
+                                            )
+                                        {
+                                            string[] temp = stringRep.Split(',');
+                                            temp[4] = ((int)(((HitObjectType)Int32.Parse(split[4]) & ~HitObjectType.Slider) | HitObjectType.Hold)).ToString();
+                                            stringRep = string.Join(",", temp);
                                         }
                                     }
 
@@ -410,6 +431,9 @@ namespace BeatmapCombinator
                             {
                                 case "ArtistUrl":
                                     package.AddMetadata(MapMetaType.ArtistUrl, val);
+                                    break;
+                                case "ArtistFullName":
+                                    package.AddMetadata(MapMetaType.ArtistFullName, val);
                                     break;
                                 case "Difficulty":
                                     package.AddMetadata(MapMetaType.DifficultyRating, val);

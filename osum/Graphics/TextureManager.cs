@@ -529,7 +529,8 @@ namespace osum.Graphics.Skins
         backbutton_arrows1,
         backbutton_arrows2,
         tracks,
-        demo
+        demo,
+        songselect_songinfo
 
     }
 }

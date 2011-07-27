@@ -537,7 +537,9 @@ namespace osum.GameplayElements
         NewCombo = 4,
         NormalNewCombo = 5,
         SliderNewCombo = 6,
-        Spinner = 8
+        Spinner = 8,
+        ColourHax = 112,
+        Hold = 128
     }
 
     [Flags]

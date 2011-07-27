@@ -100,6 +100,10 @@ namespace osum.GameModes
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
+#if SCORE_TESTING
+            File.WriteAllText("score.txt","");
+#endif
+
             InputManager.OnDown += InputManager_OnDown;
 
             if (GameBase.Instance != null)
@@ -437,7 +441,6 @@ namespace osum.GameModes
             }*/
 #endif
 
-
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
 
@@ -448,18 +451,31 @@ namespace osum.GameModes
 
                 if (comboMultiplier)
                 {
-
                     int comboAmount = (int)Math.Max(0, (scoreChange / 10 * Math.Min(comboCounter.currentCombo - 4, 60) / 2 * DifficultyComboMultiplier));
 
-                    int accRemainder = 1000000 - Score.ACCURACY_BONUS_AMOUNT;
-                    //check we don't exceed 0.8mil total (before accuracy bonus).
-                    //null check makes sure we aren't doing score calculations via combinator.
-                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore + comboAmount > accRemainder)
-                        comboAmount = Math.Max(0, accRemainder - CurrentScore.hitScore - CurrentScore.comboBonusScore);
-
                     CurrentScore.comboBonusScore += comboAmount;
+
+                    //check we don't exceed 0.6mil total (before accuracy bonus).
+                    //null check makes sure we aren't doing score calculations via combinator.
+                    if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore > Score.HIT_PLUS_COMBO_BONUS_AMOUNT)
+                    {
+                        if (CurrentScore.comboBonusScore + CurrentScore.hitScore > Score.HIT_PLUS_COMBO_BONUS_AMOUNT)
+                        {
+#if !DIST
+                            Console.WriteLine("WARNING: Score exceeded limits at " + CurrentScore.totalScore);
+#if SCORE_TESTING
+                            File.AppendAllText("score.txt", "WARNING: Score exceeded limits at " + CurrentScore.totalScore + "\n");
+#endif
+#endif
+                            CurrentScore.comboBonusScore = Math.Min(Score.HIT_PLUS_COMBO_BONUS_AMOUNT - CurrentScore.hitScore, CurrentScore.comboBonusScore);
+                        }
+                    }
                 }
             }
+
+#if SCORE_TESTING
+            File.AppendAllText("score.txt", "at " + Clock.AudioTime + " : " + change + "\t" + CurrentScore.hitScore + "\t" + CurrentScore.comboBonusScore + "\n");
+#endif
 
             if (healthBar != null)
             {

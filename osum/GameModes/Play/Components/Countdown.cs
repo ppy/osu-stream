@@ -96,7 +96,7 @@ namespace osum.GameModes.Play.Components
             if (didChangeTexture)
             {
                 pDrawable flash = text.AdditiveFlash(250, 0.5f);
-                flash.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, Clock.Time, Clock.Time + 250));
+                flash.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 250));
             }
         }
 

@@ -245,7 +245,7 @@ namespace osum.GameplayElements
                                 int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int time = (int)Decimal.Parse(split[offset++], GameBase.nfi);
-                                HitObjectType type = (HitObjectType)(Int32.Parse(split[offset], GameBase.nfi) & 15);
+                                HitObjectType type = (HitObjectType)Int32.Parse(split[offset], GameBase.nfi) & ~HitObjectType.ColourHax;
                                 int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
 
@@ -257,12 +257,12 @@ namespace osum.GameplayElements
 
                                 //used for new combo forcing after a spinner.
                                 lastAddedSpinner = h is Spinner;
-
+                                
                                 if ((type & HitObjectType.Circle) > 0)
                                 {
                                     h = hitFactory.CreateHitCircle(pos, time, newCombo, soundType, newCombo ? comboOffset : 0);
                                 }
-                                else if ((type & HitObjectType.Slider) > 0)
+                                else if ((type & (HitObjectType.Slider | HitObjectType.Hold)) > 0)
                                 {
                                     CurveTypes curveType = CurveTypes.Bezier;
                                     int repeatCount = 0;
@@ -332,7 +332,9 @@ namespace osum.GameplayElements
                                         }
                                     }
 
-                                    if ((repeatCount > 1 && length < 50) || (repeatCount > 4 && length < 100))
+                                    if ((repeatCount > 1 && length < 50) ||
+                                        (repeatCount > 4 && length < 100) || 
+                                        (type & HitObjectType.Hold) > 0)
                                     {
                                         h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi), listSampleSets);
                                     }
@@ -495,8 +497,8 @@ namespace osum.GameplayElements
 
                 HitObject last = null;
 
-                int currentComboNumber = 1;
-                int colourIndex = 0;
+                int currentComboNumber = 0;
+                int colourIndex = -1;
 
                 for (int i = 0; i < objects.Count; i++)
                 {
@@ -509,23 +511,21 @@ namespace osum.GameplayElements
                     bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
                     bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && (last is Slider && !(last is HoldCircle)) && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
 
-                    if (last != null)
+                    if (currHitObject.NewCombo)
                     {
-                        if (currHitObject.NewCombo)
+                        currentComboNumber = 0;
+                        if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
                         {
-                            currentComboNumber = 0;
-                            if (!sameTimeAsLastAdded) //don't change colour if this is a connceted note
-                            {
-                                colourIndex += currHitObject.ComboOffset;
-                                if ((currHitObject.Type & HitObjectType.Spinner) == 0) colourIndex++;
-                                colourIndex %= TextureManager.DefaultColours.Length;
-                            }
+                            colourIndex += currHitObject.ComboOffset;
+                            if ((currHitObject.Type & HitObjectType.Spinner) == 0) colourIndex++;
+                            colourIndex %= TextureManager.DefaultColours.Length;
                         }
+                    }
+                    else if (last == null) colourIndex = 0;
 
-                        if (currHitObject.IncrementCombo)
-                        {
-                            if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;
-                        }
+                    if (currHitObject.IncrementCombo)
+                    {
+                        if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;
                     }
 
                     currHitObject.ComboNumber = currentComboNumber;

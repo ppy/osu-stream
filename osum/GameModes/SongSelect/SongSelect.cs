@@ -33,6 +33,8 @@ namespace osum.GameModes
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
         SpriteManager topmostSpriteManager = new SpriteManager();
+        SpriteManager spriteManagerDifficultySelect = new SpriteManager();
+        SpriteManager spriteManagerSongInfo = new SpriteManager();
 
         SelectState State;
 
@@ -94,6 +96,8 @@ namespace osum.GameModes
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
             s_Footer.Alpha = 0;
+            s_Footer.Rotation = 0.04f;
+            s_Footer.Position = new Vector2(-60, -85);
             s_Footer.OnClick += footer_onClick;
             spriteManager.Add(s_Footer);
 
@@ -135,6 +139,10 @@ namespace osum.GameModes
                 case SelectState.LoadingPreview:
                     leaveDifficultySelection(sender, args);
                     break;
+                case SelectState.SongInfo:
+                    hideSongInfo();
+                    showDifficultySelection();
+                    break;
             }
         }
 
@@ -142,7 +150,7 @@ namespace osum.GameModes
         {
             availableMaps.Clear();
 
-#if DIST
+#if DIST && iOS
             foreach (string s in Directory.GetFiles("Beatmaps/"))
             {
                 //bundled maps
@@ -151,7 +159,16 @@ namespace osum.GameModes
             }
 #endif
 
-            foreach (string s in Directory.GetFiles(BeatmapPath))
+#if MONO
+            foreach (string subdir in Directory.GetDirectories(BeatmapPath))
+            foreach (string s in Directory.GetFiles(subdir,"*.osz2"))
+            {
+                Beatmap b = new Beatmap(s);
+                availableMaps.AddInPlace(b);
+            }
+#endif
+
+            foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
             {
                 Beatmap b = new Beatmap(s);
                 availableMaps.AddInPlace(b);
@@ -277,14 +294,14 @@ namespace osum.GameModes
             base.Dispose();
 
             topmostSpriteManager.Dispose();
+            spriteManagerDifficultySelect.Dispose();
+            spriteManagerSongInfo.Dispose();
 
             foreach (Beatmap b in availableMaps)
                 b.Dispose();
 
             if (State == SelectState.Exiting)
                 Player.Beatmap = null;
-
-            if (tabController != null) tabController.Dispose();
 
             InputManager.OnMove -= InputManager_OnMove;
         }
@@ -328,11 +345,9 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
-            if (tabController != null) tabController.Draw();
+            spriteManagerDifficultySelect.Draw();
+            spriteManagerSongInfo.Draw();
             topmostSpriteManager.Draw();
-
-
-
             return true;
         }
 
@@ -350,9 +365,9 @@ namespace osum.GameModes
         {
             base.Update();
 
-            if (tabController != null) tabController.Update();
+            spriteManagerDifficultySelect.Update();
+            spriteManagerSongInfo.Update();
             topmostSpriteManager.Update();
-
 
             inputStolen = InputManager.PrimaryTrackingPoint != null && InputManager.PrimaryTrackingPoint.HoveringObject == s_ButtonBack;
 
@@ -363,38 +378,35 @@ namespace osum.GameModes
                     if (!AudioEngine.Music.IsElapsing)
                         playFromPreview();
 
-                    if (tabController.SelectedTab == s_TabBarPlay)
+                    if (InputManager.IsPressed && !inputStolen)
+                        pendingModeChange = true;
+                    else if (pendingModeChange)
                     {
-                        if (InputManager.IsPressed && !inputStolen)
-                            pendingModeChange = true;
-                        else if (pendingModeChange)
+                        difficultySelectOffset += velocity;
+
+                        if (difficultySelectOffset > mode_button_width / 2)
+                            SetDifficulty(Difficulty.Easy);
+                        else if (difficultySelectOffset < -mode_button_width / 2)
+                            SetDifficulty(Difficulty.Expert);
+                        else
+                            SetDifficulty(Difficulty.Normal);
+
+                        pendingModeChange = false;
+                    }
+
+                    if (Director.PendingOsuMode == OsuMode.Unknown)
+                    {
+                        Vector2 pos = new Vector2(difficultySelectOffset, 0);
+                        if (Math.Abs(pos.X - s_ModeButtonEasy.Position.X) > 10)
                         {
-                            difficultySelectOffset += velocity;
-
-                            if (difficultySelectOffset > mode_button_width / 2)
-                                SetDifficulty(Difficulty.Easy);
-                            else if (difficultySelectOffset < -mode_button_width / 2)
-                                SetDifficulty(Difficulty.Expert);
-                            else
-                                SetDifficulty(Difficulty.Normal);
-
-                            pendingModeChange = false;
+                            s_ModeButtonEasy.MoveTo(pos, 300, EasingTypes.In);
+                            s_ModeButtonStream.MoveTo(pos, 300, EasingTypes.In);
+                            s_ModeButtonExpert.MoveTo(pos, 300, EasingTypes.In);
                         }
 
-                        if (Director.PendingOsuMode == OsuMode.Unknown)
-                        {
-                            Vector2 pos = new Vector2(difficultySelectOffset, 0);
-                            if (Math.Abs(pos.X - s_ModeButtonEasy.Position.X) > 10)
-                            {
-                                s_ModeButtonEasy.MoveTo(pos, 300, EasingTypes.In);
-                                s_ModeButtonStream.MoveTo(pos, 300, EasingTypes.In);
-                                s_ModeButtonExpert.MoveTo(pos, 300, EasingTypes.In);
-                            }
-
-                            s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
-                            s_ModeButtonStream.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonStream.Offset.X + s_ModeButtonStream.Position.X));
-                            s_ModeButtonExpert.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonExpert.Offset.X + s_ModeButtonExpert.Position.X));
-                        }
+                        s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
+                        s_ModeButtonStream.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonStream.Offset.X + s_ModeButtonStream.Position.X));
+                        s_ModeButtonExpert.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonExpert.Offset.X + s_ModeButtonExpert.Position.X));
                     }
 
                     break;
@@ -471,6 +483,7 @@ namespace osum.GameModes
         LoadingPreview,
         RankingDisplay,
         Starting,
-        Exiting
+        Exiting,
+        SongInfo
     }
 }
