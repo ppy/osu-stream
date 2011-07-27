@@ -152,9 +152,19 @@ namespace osu_common.Libraries.NetLib
 #else
                 using (WebClient wc = new WebClient())
                 {
-                    wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                     wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                    wc.DownloadDataAsync(new Uri(m_url));
+
+                    if (postData != null)
+                    {
+                        wc.UploadDataCompleted += wc_UploadDataCompleted;
+                        wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
+                        wc.UploadDataAsync(new Uri(m_url), method, UTF8Encoding.UTF8.GetBytes(postData));
+                    }
+                    else
+                    {
+                        wc.DownloadDataCompleted += wc_DownloadDataCompleted;
+                        wc.DownloadDataAsync(new Uri(m_url));
+                    }
 
                     while (wc.IsBusy)
                         Thread.Sleep(500);
@@ -209,6 +219,12 @@ namespace osu_common.Libraries.NetLib
         }
 
         void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (e.Error == null) data = e.Result;
+            error = e.Error;
+        }
+
+        void wc_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
         {
             if (e.Error == null) data = e.Result;
             error = e.Error;
