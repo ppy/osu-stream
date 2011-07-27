@@ -193,7 +193,7 @@ namespace osum.GameModes
                 Field = FieldTypes.StandardSnapCentre,
                 Origin = OriginTypes.Centre,
                 ScaleScalar = aspectAdjust,
-                Alpha = 0.1f
+                Alpha = 0.3f
             };
             spriteManagerSongInfo.Add(thumbSprite);
 
