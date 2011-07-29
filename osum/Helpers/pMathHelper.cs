@@ -65,7 +65,7 @@ namespace osum.Helpers
             }
         }
 
-        private const int MAX_LENGTH = 12;
+        private const float MAX_LENGTH = 12.0f;
         private const float MAX_LENGTH_SQUARED = 144.0f; // square of maximum distance permitted between segments
         private const float MIN_LENGTH_SQUARED = 4.0f; // square of distance at which subdivision should stop anyway
         private const float MAX_ANGLE_TAN = 0.01f; // tan of maximum angle permitted between segments
@@ -79,10 +79,12 @@ namespace osum.Helpers
                 Vector2 p0 = input[0];
                 Vector2 p1 = input[1];
                 output.Add(p0);
-                float r = (input[1] - input[0]).Length;
-                for (float x = 0; x < r; x += MAX_LENGTH)
+
+                int count = (int)(1.0f + (input[1] - input[0]).Length / MAX_LENGTH);
+
+                for (int x = 1; x < count; x++)
                 {
-                    output.Add(Vector2.Lerp(p0, p1, x / r));
+                    output.Add(Vector2.Lerp(p0, p1, (float)x / (float)count));
                 }
                 output.Add(p1);
                 return output;
