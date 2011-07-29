@@ -68,7 +68,7 @@ namespace osum.Helpers
         private const int MAX_LENGTH = 12;
         private const float MAX_LENGTH_SQUARED = 144.0f; // square of maximum distance permitted between segments
         private const float MIN_LENGTH_SQUARED = 4.0f; // square of distance at which subdivision should stop anyway
-        private const float MAX_ANGLE_TAN = 0.01f; // tan of maximum angle permitted between segments
+        private const float MAX_ANGLE_SIN = 0.02f; // sine of maximum angle permitted between segments
 
         internal static List<Vector2> CreateBezier(List<Vector2> input)
         {
@@ -103,11 +103,12 @@ namespace osum.Helpers
                         Vector2 p1 = points.Values[x + 1];
                         Vector2 p2 = points.Values[x + 2];
 
-                        angle1 = (p1.X * p2.Y - p1.Y * p2.X) / (p1.X * p2.Y + p1.Y * p2.X);
+                        // find angle between using cross product since sin(x) has more accuracy near 0 than cos(x).
+                        angle1 = Math.Abs((p1.X * p2.Y - p1.Y * p2.X) / MathHelper.InverseSqrtFast(p0.LengthSquared * p1.LengthSquared));
                         float r = (p1 - p0).LengthSquared;
 
                         // todo: the dependency on angle should be a weighted function of length instead of all/nothing
-                        if (r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_TAN || angle1 > MAX_ANGLE_TAN || r > MAX_LENGTH_SQUARED))
+                        if (r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_SIN || angle1 > MAX_ANGLE_SIN || r > MAX_LENGTH_SQUARED))
                         {
                             float t = (points.Keys[x] + points.Keys[x + 1]) * 0.5f;
                             if (!addedPoints.ContainsKey(t))
@@ -120,7 +121,7 @@ namespace osum.Helpers
                     Vector2 _p0 = points.Values[points.Count - 2];
                     Vector2 _p1 = points.Values[points.Count - 1];
                     float _r = (_p1 - _p0).LengthSquared;
-                    if (_r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_TAN || _r > MAX_LENGTH_SQUARED))
+                    if (_r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_SIN || _r > MAX_LENGTH_SQUARED))
                     {
                         float t = (points.Keys[points.Count - 2] + 1.0f) * 0.5f;
                         if (!addedPoints.ContainsKey(t))
