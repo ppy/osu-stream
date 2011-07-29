@@ -342,7 +342,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                         {
                             List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
 
-                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1, ((float)thisLength.Count / count * PathLength) / 10)));
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength));
 
                             if (multipartSegment) i++;
                             //Need to skip one point since we consumed an extra.
