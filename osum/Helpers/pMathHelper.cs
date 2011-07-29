@@ -65,7 +65,7 @@ namespace osum.Helpers
             }
         }
 
-        private const float MAX_LENGTH = 12.0f;
+        private const int MAX_LENGTH = 12;
         private const float MAX_LENGTH_SQUARED = 144.0f; // square of maximum distance permitted between segments
         private const float MIN_LENGTH_SQUARED = 4.0f; // square of distance at which subdivision should stop anyway
         private const float MAX_ANGLE_TAN = 0.01f; // tan of maximum angle permitted between segments
@@ -76,17 +76,8 @@ namespace osum.Helpers
             // linear formula
             if (input.Count == 2)
             {
-                Vector2 p0 = input[0];
-                Vector2 p1 = input[1];
-                output.Add(p0);
-
-                int count = (int)(1.0f + (input[1] - input[0]).Length / MAX_LENGTH);
-
-                for (int x = 1; x < count; x++)
-                {
-                    output.Add(Vector2.Lerp(p0, p1, (float)x / (float)count));
-                }
-                output.Add(p1);
+                LinearPart(output, input[0], input[1], MAX_LENGTH);
+                output.Add(input[1]);
                 return output;
             }
 
@@ -195,14 +186,18 @@ namespace osum.Helpers
             List<Vector2> output = new List<Vector2>();
 
             for (int i = 1; i < controlPoints.Count; i++)
-            {
-                Line l = new Line(controlPoints[i - 1], controlPoints[i]);
-                int segments = (int)(l.rho / detailLevel);
-                for (int j = 0; j < segments; j++)
-                    output.Add(l.p1 + (l.p2 - l.p1) * ((float)j / segments));
-            }
+                LinearPart(output, controlPoints[i - 1], controlPoints[i], detailLevel);
+
+            output.Add(controlPoints[controlPoints.Count - 1]);
 
             return output;
+        }
+
+        private static void LinearPart(List<Vector2> output, Vector2 p0, Vector2 p1, int detailLevel)
+        {
+            int segments = (int)((p1 - p0).Length / detailLevel);
+            for (int j = 0; j < segments; j++)
+                output.Add(p0 + (p1 - p0) * ((float)j / segments));
         }
 
         internal static float ClampToOne(float p)
