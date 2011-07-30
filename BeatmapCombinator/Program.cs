@@ -250,7 +250,7 @@ namespace BeatmapCombinator
                                             )
                                         {
                                             string[] temp = stringRep.Split(',');
-                                            temp[4] = ((int)(((HitObjectType)Int32.Parse(split[4]) & ~HitObjectType.Slider) | HitObjectType.Hold)).ToString();
+                                            temp[4] = ((int)(((HitObjectType)Int32.Parse(split[3]) & ~HitObjectType.Slider) | HitObjectType.Hold)).ToString();
                                             stringRep = string.Join(",", temp);
                                         }
                                     }
@@ -291,9 +291,13 @@ namespace BeatmapCombinator
 
 #if DIST
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
-            string audioFilename = Directory.GetFiles(dir, "*.m4a")[0];
 #else
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
+#endif
+
+#if M4A
+            string audioFilename = Directory.GetFiles(dir, "*.m4a")[0];
+#else
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 #endif
 
@@ -405,7 +409,7 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
-#if DIST
+#if M4A
                 package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
 #else
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);

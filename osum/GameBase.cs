@@ -123,7 +123,7 @@ namespace osum
         public GameBase()
         {
 #if !DIST
-            if (DateTime.Now > new DateTime(2011, 07, 30))
+            if (DateTime.Now > new DateTime(2011, 08, 30))
                 Environment.Exit(-1);
 #endif
 

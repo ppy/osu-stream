@@ -28,3 +28,4 @@ osum/Resources/Tutorial*.resources
 Sounds/*
 *.ipa
 *.pidb
+*.sublime-project

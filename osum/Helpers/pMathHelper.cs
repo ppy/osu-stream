@@ -45,24 +45,96 @@ namespace osum.Helpers
             return new Vector2(point.X, point.Y);
         }
 
-        internal static List<Vector2> CreateBezier(List<Vector2> input, int segments)
+        private static List<Vector2> working = new List<Vector2>();
+
+        internal static Vector2 BezierPoint(ref List<Vector2> input, float t)
         {
             int count = input.Count;
 
-            Vector2[] working = new Vector2[count];
-            List<Vector2> output = new List<Vector2>();
-
-            for (int i = 0; i <= segments; i++)
+            lock (working)
             {
-                for (int j = 0; j < count; j++)
-                    working[j] = input[j];
+                working.Clear();
+                foreach (Vector2 v in input)
+                    working.Add(v);
 
                 for (int level = 0; level < count; level++)
                     for (int j = 0; j < count - level - 1; j++)
-                        Vector2.Lerp(ref working[j], ref working[j + 1], (float)i / segments, out working[j]);
-                output.Add(working[0]);
+                        working[j] = Vector2.Lerp(working[j], working[j + 1], t);
+
+                return working[0];
+            }
+        }
+
+        private const int MAX_LENGTH = 12;
+        private const float MAX_LENGTH_SQUARED = 144.0f; // square of maximum distance permitted between segments
+        private const float MIN_LENGTH_SQUARED = 4.0f; // square of distance at which subdivision should stop anyway
+        private const float MAX_ANGLE_SIN = 0.02f; // sine of maximum angle permitted between segments
+
+        internal static List<Vector2> CreateBezier(List<Vector2> input)
+        {
+            List<Vector2> output = new List<Vector2>();
+            // linear formula
+            if (input.Count == 2)
+            {
+                LinearPart(output, input[0], input[1], MAX_LENGTH);
+                output.Add(input[1]);
+                return output;
             }
 
+            SortedList<float, Vector2> points = new SortedList<float, Vector2>();
+            
+            points.Add(0.0f, input[0]);
+            points.Add(1.0f, input[input.Count - 1]);
+
+            SortedList<float, Vector2> addedPoints = new SortedList<float, Vector2>();
+
+            do
+            {
+                addedPoints.Clear();
+
+                float angle0 = 0.0f, angle1;
+                if (points.Count < 3)
+                    addedPoints.Add(0.5f, BezierPoint(ref input, 0.5f));
+                else
+                {
+                    for (int x = 0; x < points.Count - 2; x++)
+                    {
+                        Vector2 p0 = points.Values[x];
+                        Vector2 p1 = points.Values[x + 1];
+                        Vector2 p2 = points.Values[x + 2];
+
+                        // find angle between using cross product since sin(x) has more accuracy near 0 than cos(x).
+                        angle1 = Math.Abs((p1.X * p2.Y - p1.Y * p2.X) / MathHelper.InverseSqrtFast(p0.LengthSquared * p1.LengthSquared));
+                        float r = (p1 - p0).LengthSquared;
+
+                        // todo: the dependency on angle should be a weighted function of length instead of all/nothing
+                        if (r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_SIN || angle1 > MAX_ANGLE_SIN || r > MAX_LENGTH_SQUARED))
+                        {
+                            float t = (points.Keys[x] + points.Keys[x + 1]) * 0.5f;
+                            if (!addedPoints.ContainsKey(t))
+                                addedPoints.Add(t, BezierPoint(ref input, t));
+                        }
+
+                        angle0 = angle1;
+                    }
+
+                    Vector2 _p0 = points.Values[points.Count - 2];
+                    Vector2 _p1 = points.Values[points.Count - 1];
+                    float _r = (_p1 - _p0).LengthSquared;
+                    if (_r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_SIN || _r > MAX_LENGTH_SQUARED))
+                    {
+                        float t = (points.Keys[points.Count - 2] + 1.0f) * 0.5f;
+                        if (!addedPoints.ContainsKey(t))
+                            addedPoints.Add(t, BezierPoint(ref input, t));
+                    }
+                }
+
+                foreach (KeyValuePair<float, Vector2> k in addedPoints)
+                    points.Add(k.Key, k.Value);
+
+            } while (addedPoints.Count > 0);
+
+            output.AddRange(points.Values);
             return output;
         }
 
@@ -115,14 +187,18 @@ namespace osum.Helpers
             List<Vector2> output = new List<Vector2>();
 
             for (int i = 1; i < controlPoints.Count; i++)
-            {
-                Line l = new Line(controlPoints[i - 1], controlPoints[i]);
-                int segments = (int)(l.rho / detailLevel);
-                for (int j = 0; j < segments; j++)
-                    output.Add(l.p1 + (l.p2 - l.p1) * ((float)j / segments));
-            }
+                LinearPart(output, controlPoints[i - 1], controlPoints[i], detailLevel);
+
+            output.Add(controlPoints[controlPoints.Count - 1]);
 
             return output;
+        }
+
+        private static void LinearPart(List<Vector2> output, Vector2 p0, Vector2 p1, int detailLevel)
+        {
+            int segments = (int)((p1 - p0).Length / detailLevel);
+            for (int j = 0; j < segments; j++)
+                output.Add(p0 + (p1 - p0) * ((float)j / segments));
         }
 
         internal static float ClampToOne(float p)

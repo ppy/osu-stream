@@ -157,6 +157,12 @@ namespace osum.GameModes.Store
         internal int BeatmapCount { get { return filenames.Count; } }
 
         int currentDownload = 0;
+        
+#if iOS
+        const string PREFERRED_FORMAT = "m4a";
+#else
+        const string PREFERRED_FORMAT = "mp3";
+#endif
 
         void OnPurchase(object sender, EventArgs e)
         {
@@ -199,6 +205,7 @@ namespace osum.GameModes.Store
             string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
 #if !DIST
             Console.WriteLine("Downloading " + downloadPath);
+            Console.WriteLine("param " + param);
 #endif
 
             FileNetRequest fnr = new FileNetRequest(path, downloadPath, "POST", param);
@@ -300,7 +307,7 @@ namespace osum.GameModes.Store
                 if (previewRequest != null) previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
-                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename;
+                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&format=" + PREFERRED_FORMAT;
                 previewRequest = new DataNetRequest(downloadPath,"POST",param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {

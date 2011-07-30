@@ -342,7 +342,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                         {
                             List<Vector2> thisLength = controlPoints.GetRange(lastIndex, i - lastIndex + 1);
 
-                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength, (int)Math.Max(1, ((float)thisLength.Count / count * PathLength) / 10)));
+                            // remove the last point of the previous curve since it's the same as the first point of this curve
+                            if (smoothPoints.Count > 0) smoothPoints.RemoveAt(smoothPoints.Count - 1);
+
+                            smoothPoints.AddRange(pMathHelper.CreateBezier(thisLength));
 
                             if (multipartSegment) i++;
                             //Need to skip one point since we consumed an extra.
