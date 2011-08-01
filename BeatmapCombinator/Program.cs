@@ -104,8 +104,6 @@ namespace BeatmapCombinator
 
             string Artist = string.Empty, Creator = string.Empty, Source = string.Empty, Title = string.Empty;
 
-            string previewPoint = "30000";
-
             foreach (string f in orderedDifficulties)
             {
                 if (f == null)
@@ -150,10 +148,6 @@ namespace BeatmapCombinator
                                 {
                                     case "AudioFilename":
                                         writeLine = "AudioFilename: audio.mp3";
-                                        break;
-                                    case "PreviewTime":
-                                        if (previewPoint == "30000")
-                                            previewPoint = val;
                                         break;
                                 }
                                 break;

@@ -175,7 +175,7 @@ namespace osum.GameplayElements.Beatmaps
             get
             {
                 if (previewPoint == -1)
-                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewPoint), out previewPoint);
+                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewTime), out previewPoint);
 
                 if (previewPoint < 10000)
                     previewPoint = 30000;

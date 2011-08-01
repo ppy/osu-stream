@@ -1618,10 +1618,9 @@ namespace osu_common.Libraries.Osz2
         ArtistUrl,
         Unknown = 9999,
         Difficulty,
-        PreviewPoint,
+        PreviewTime,
         ArtistFullName,
         ArtistTwitter,
         SourceUnicode,
-        PreviewTime
     }
 }
