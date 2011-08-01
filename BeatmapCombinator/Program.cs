@@ -224,9 +224,7 @@ namespace BeatmapCombinator
 
                                         if ((repeatCount > 1 && length < 50)
                                             || (repeatCount > 4 && length < 100)
-#if DIST || !M4A //todo 1.1: remove this completely
                                             || (hadEndpointSamples && split[4] == "4") //force finish to be hold
-#endif
                                             )
                                         {
                                             string[] temp = stringRep.Split(',');
@@ -272,7 +270,7 @@ namespace BeatmapCombinator
 #if DIST
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
 #elif M4A
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".m4a.osz2";
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
 #else
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
 #endif

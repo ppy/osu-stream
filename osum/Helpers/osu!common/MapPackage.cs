@@ -1615,12 +1615,12 @@ namespace osu_common.Libraries.Osz2
         Language,
         TitleUnicode,
         ArtistUnicode,
-        ArtistUrl,
         Unknown = 9999,
         Difficulty,
         PreviewTime,
         ArtistFullName,
         ArtistTwitter,
         SourceUnicode,
+        ArtistUrl
     }
 }
