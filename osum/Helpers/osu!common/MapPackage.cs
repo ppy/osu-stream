@@ -870,16 +870,22 @@ namespace osu_common.Libraries.Osz2
             {
                 case MapMetaType.Artist:
                 case MapMetaType.Title:
+                case MapMetaType.Creator:
+                case MapMetaType.BeatmapSetID:
                     string artist;
                     string title;
 
+#if DIST
                     fMetadata.TryGetValue(MapMetaType.Artist, out artist);
                     fMetadata.TryGetValue(MapMetaType.Title, out title);
                     if (artist == null || title == null)
                         return;
-#if DIST
                     string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
 #else
+                    fMetadata.TryGetValue(MapMetaType.Creator, out artist);
+                    fMetadata.TryGetValue(MapMetaType.BeatmapSetID, out title);
+                    if (artist == null || title == null)
+                        return;
                     string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
 #endif
                     KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
@@ -1611,8 +1617,11 @@ namespace osu_common.Libraries.Osz2
         ArtistUnicode,
         ArtistUrl,
         Unknown = 9999,
-        DifficultyRating,
+        Difficulty,
         PreviewPoint,
         ArtistFullName,
+        ArtistTwitter,
+        SourceUnicode,
+        PreviewTime
     }
 }

@@ -152,24 +152,8 @@ namespace BeatmapCombinator
                                         writeLine = "AudioFilename: audio.mp3";
                                         break;
                                     case "PreviewTime":
-                                        previewPoint = val;
-                                        break;
-                                }
-                                break;
-                            case "Metadata":
-                                switch (key)
-                                {
-                                    case "Artist":
-                                        Artist = val;
-                                        break;
-                                    case "Creator":
-                                        Creator = val;
-                                        break;
-                                    case "Title":
-                                        Title = val;
-                                        break;
-                                    case "Source":
-                                        Source = val;
+                                        if (previewPoint == "30000")
+                                            previewPoint = val;
                                         break;
                                 }
                                 break;
@@ -244,9 +228,11 @@ namespace BeatmapCombinator
                                             stringRep += ":" + MakeSampleset(cp);
                                         }
 
-                                        if ((repeatCount > 1 && length < 50) ||
-                                            (repeatCount > 4 && length < 100) ||
-                                            (hadEndpointSamples && split[4] == "4") //force finish to be hold
+                                        if ((repeatCount > 1 && length < 50)
+                                            || (repeatCount > 4 && length < 100)
+#if DIST || !M4A //todo 1.1: remove this completely
+                                            || (hadEndpointSamples && split[4] == "4") //force finish to be hold
+#endif
                                             )
                                         {
                                             string[] temp = stringRep.Split(',');
@@ -291,6 +277,8 @@ namespace BeatmapCombinator
 
 #if DIST
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
+#elif M4A
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".m4a.osz2";
 #else
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
 #endif
@@ -301,9 +289,10 @@ namespace BeatmapCombinator
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 #endif
 
+            File.Delete(osz2Filename);
 
             //write the package initially so we can use it for score testing purposes.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
 
             //scoring
 
@@ -344,11 +333,10 @@ namespace BeatmapCombinator
             Player.Beatmap.Dispose();
 
             //write the package a second time with new multiplier header data.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Creator, Source, Title, previewPoint);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
         }
 
-        private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered,
-            string Artist, string Creator, string Source, string Title, string previewPoint)
+        private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)
         {
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
@@ -395,11 +383,6 @@ namespace BeatmapCombinator
             using (MapPackage package = new MapPackage(osz2Filename, true))
             {
                 package.AddMetadata(MapMetaType.BeatmapSetID, "0");
-                package.AddMetadata(MapMetaType.Artist, Artist);
-                package.AddMetadata(MapMetaType.Creator, Creator);
-                package.AddMetadata(MapMetaType.Source, Source);
-                package.AddMetadata(MapMetaType.Title, Title);
-                package.AddMetadata(MapMetaType.PreviewPoint, previewPoint);
 
                 string versionsAvailable = "";
                 if (ordered[0] != null) versionsAvailable += "|Easy";
@@ -422,6 +405,8 @@ namespace BeatmapCombinator
                 {
                     foreach (string line in File.ReadAllLines(metadata))
                     {
+                        if (line.Length == 0) continue;
+
                         string[] split = line.Split(',');
                         string[] var = line.Split(':');
                         string key = string.Empty;
@@ -431,18 +416,8 @@ namespace BeatmapCombinator
                             key = var[0].Trim();
                             val = var[1].Trim();
 
-                            switch (key)
-                            {
-                                case "ArtistUrl":
-                                    package.AddMetadata(MapMetaType.ArtistUrl, val);
-                                    break;
-                                case "ArtistFullName":
-                                    package.AddMetadata(MapMetaType.ArtistFullName, val);
-                                    break;
-                                case "Difficulty":
-                                    package.AddMetadata(MapMetaType.DifficultyRating, val);
-                                    break;
-                            }
+                            MapMetaType t = (MapMetaType)Enum.Parse(typeof(MapMetaType), key, true);
+                            package.AddMetadata(t, val);
                         }
                     }
                 }
@@ -474,7 +449,7 @@ namespace BeatmapCombinator
             {
                 p.Initialize();
 
-                
+
                 HitObject switchHpObject = null;
                 if (difficulty == Difficulty.Normal && Player.Beatmap.StreamSwitchPoints != null && Player.Beatmap.StreamSwitchPoints.Count > 0)
                 {
