@@ -236,7 +236,7 @@ namespace BeatmapCombinator
                                             )
                                         {
                                             string[] temp = stringRep.Split(',');
-                                            temp[4] = ((int)(((HitObjectType)Int32.Parse(split[3]) & ~HitObjectType.Slider) | HitObjectType.Hold)).ToString();
+                                            temp[4] = ((int)((HitObjectType)Int32.Parse(split[3]) | HitObjectType.Hold)).ToString();
                                             stringRep = string.Join(",", temp);
                                         }
                                     }
