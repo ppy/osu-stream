@@ -162,6 +162,8 @@ namespace osum.GameModes.SongSelect
 
         protected override bool checkHover(Vector2 position)
         {
+            if (Alpha == 0) return false;
+
             return position.X < 100 && position.Y > GameBase.BaseSizeFixedWidth.Height - 100 || tp != null;
         }
 
