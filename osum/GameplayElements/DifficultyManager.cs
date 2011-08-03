@@ -83,11 +83,11 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 240;
+                        return 300;
                     default:
-                        return 160;
+                        return 200;
                     case Difficulty.Expert:
-                        return 96;
+                        return 120;
                 }
             }
         }
@@ -99,11 +99,11 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 150;
+                        return 187;
                     default:
-                        return 100;
+                        return 125;
                     case Difficulty.Expert:
-                        return 60;
+                        return 75;
                 }
             }
         }
@@ -115,11 +115,11 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 60;
+                        return 75;
                     default:
-                        return 40;
+                        return 50;
                     case Difficulty.Expert:
-                        return 24;
+                        return 30;
                 }
             }
         }
