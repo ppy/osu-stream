@@ -551,20 +551,20 @@ namespace osum.GameplayElements.HitObjects.Osu
                 switch (startCircleChange)
                 {
                     case ScoreChange.Hit300:
-                        scoringEndpointsHit += 3;
+                        totalScoreValue += 3;
                         break;
                     case ScoreChange.Hit100:
-                        scoringEndpointsHit += 2;
+                        totalScoreValue += 2;
                         break;
                     case ScoreChange.Hit50:
-                        scoringEndpointsHit += 1;
+                        totalScoreValue += 1;
                         break;
 
                 }
 
                 HitCircleStart.HitAnimation(startCircleChange, true);
 
-                scoringEndpointsHit++;
+                totalScoreValue++;
                 return ScoreChange.SliderEnd;
             }
 
@@ -589,7 +589,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <summary>
         /// Number of successfully hit end-points. Includes the start circle.
         /// </summary>
-        int scoringEndpointsHit;
+        int totalScoreValue;
 
         /// <summary>
         /// Index of the last end-point to be judged. Used to keep track of judging calculations.
@@ -683,7 +683,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     playRebound(lastJudgedEndpoint);
                     if (!finished)
                         burstEndpoint();
-                    scoringEndpointsHit++;
+                    totalScoreValue++;
                 }
 
                 if (finished)
@@ -693,12 +693,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     IsEndHit = true;
 
-                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 4);
+                    //Start is worth 1 for a hit .
+                    //Start is worth 1-3 depending on hit accuracy (50/100/300).
+                    //Repeat endpoints are worth 1.
+                    //Ticks are worth 1.
+
+                    float amountHit = (float)totalScoreValue / (lastJudgedEndpoint + 4 + scoringPoints.Count);
                     ScoreChange amount;
 
                     if (amountHit == 1)
                         amount = ScoreChange.Hit300;
-                    else if (amountHit > 0.8)
+                    else if (amountHit > 0.7)
                         amount = ScoreChange.Hit100;
                     else if (amountHit > 0)
                         amount = ScoreChange.Hit50;
@@ -735,6 +740,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     if (isTracking)
                     {
+                        totalScoreValue++;
                         playTick();
 
                         pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
