@@ -242,8 +242,8 @@ namespace osum.GameModes
             vPos += 50;
 
             pText info = new pText(
-                beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode) + "\n" +
-                beatmap.Package.GetMetadata(MapMetaType.ArtistUrl) + "\n" +
+                beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode) + "\n[" +
+                beatmap.Package.GetMetadata(MapMetaType.ArtistUrl) + "]\n" +
                 beatmap.Package.GetMetadata(MapMetaType.Source) + "\n"
                 , 24, new Vector2(0, vPos), 1, true, Color4.White)
             {
