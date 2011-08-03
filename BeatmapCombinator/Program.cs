@@ -399,14 +399,13 @@ namespace BeatmapCombinator
                     {
                         if (line.Length == 0) continue;
 
-                        string[] split = line.Split(',');
                         string[] var = line.Split(':');
                         string key = string.Empty;
                         string val = string.Empty;
                         if (var.Length > 1)
                         {
-                            key = var[0].Trim();
-                            val = var[1].Trim();
+                            key = line.Substring(0,line.IndexOf(':'));
+                            val = line.Substring(line.IndexOf(':')+1).Trim();
 
                             MapMetaType t = (MapMetaType)Enum.Parse(typeof(MapMetaType), key, true);
                             package.AddMetadata(t, val);
