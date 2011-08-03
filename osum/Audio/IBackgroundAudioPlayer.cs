@@ -99,7 +99,11 @@ namespace osum
         /// <summary>
         /// Seek to specified location.
         /// </summary>
-        public abstract bool SeekTo(int milliseconds);
+        public virtual bool SeekTo(int milliseconds)
+        {
+            Clock.SkipOccurred();
+            return true;
+        }
 
         #region IUpdateable Members
 

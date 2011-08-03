@@ -150,7 +150,7 @@ namespace osum
                 player.PrepareToPlay();
             }
 
-			return true;
+			return base.SeekTo(milliseconds);
 		}
 	}
 }
