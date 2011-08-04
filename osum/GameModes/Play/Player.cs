@@ -21,6 +21,7 @@ using osum.Graphics;
 using osum.Support;
 using System.IO;
 using osu_common.Helpers;
+using osum.GameplayElements.HitObjects.Osu;
 
 namespace osum.GameModes
 {
@@ -319,6 +320,24 @@ namespace osum.GameModes
                 //pass on the event to hitObjectManager for handling.
                 if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
                     return;
+            }
+
+            
+
+            //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
+            if (hitObjectManager != null)
+            {
+                Slider s = hitObjectManager.ActiveObject as Slider;
+                if (s != null && s.IsTracking)
+                    return;
+
+                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+                for (int i = hitObjectManager.ProcessFrom; i <= hitObjectManager.ProcessTo; i++)
+                {
+                    HitObject h = objects[i];
+                    if (h.Position.Y < 50 || h.Position2.Y < 50)
+                        return;
+                }
             }
 
             if (menu != null)

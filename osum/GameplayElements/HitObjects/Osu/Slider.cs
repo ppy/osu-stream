@@ -582,7 +582,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <value>
         ///     <c>true</c> if this instance is tracking; otherwise, <c>false</c>.
         /// </value>
-        bool isTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
+        public bool IsTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
 
         bool wasTracking;
 
@@ -653,11 +653,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //Check is the state of tracking changed.
-            if (isTracking != wasTracking)
+            if (IsTracking != wasTracking)
             {
-                wasTracking = isTracking;
+                wasTracking = IsTracking;
 
-                if (!isTracking)
+                if (!IsTracking)
                 {
                     //End tracking.
                     endTracking();
@@ -678,7 +678,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 bool finished = RepeatCount - lastJudgedEndpoint == 0;
 
-                if (isTracking)
+                if (IsTracking)
                 {
                     playRebound(lastJudgedEndpoint);
                     if (!finished)
@@ -715,7 +715,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 lastJudgedScoringPoint = -1;
 
-                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
+                return IsTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
             }
             else
             {
@@ -738,7 +738,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     lastJudgedScoringPoint++;
 
-                    if (isTracking)
+                    if (IsTracking)
                     {
                         totalScoreValue++;
                         playTick();
@@ -811,7 +811,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transformations.Clear();
 
-            if (spriteFollowCircle.Alpha > 0 && isTracking)
+            if (spriteFollowCircle.Alpha > 0 && IsTracking)
             {
                 int now = ClockingNow;
                 spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));

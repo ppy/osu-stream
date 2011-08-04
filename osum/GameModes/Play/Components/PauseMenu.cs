@@ -239,8 +239,7 @@ namespace osum.GameModes.Play.Components
         {
             if (validPoint != null || MenuDisplayed) return;
 
-
-            if (trackingPoint.BasePosition.Y < (GameBase.IsHandheld ? 50 : 30))
+            if (trackingPoint.BasePosition.Y < (GameBase.IsHandheld ? 40 : 25))
             {
                 validPoint = trackingPoint;
                 validPointOffset = validPoint.BasePosition.Y;

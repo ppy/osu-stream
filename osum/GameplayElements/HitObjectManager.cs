@@ -39,7 +39,8 @@ namespace osum.GameplayElements
         internal pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
 
-        private int processFrom;
+        internal int ProcessFrom;
+        internal int ProcessTo;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
@@ -173,7 +174,7 @@ namespace osum.GameplayElements
 
 
                     //find a good point to stream switch. this will be mapper set later.
-                    for (int i = processFrom; i < oldStreamObjects.Count; i++)
+                    for (int i = ProcessFrom; i < oldStreamObjects.Count; i++)
                         if (oldStreamObjects[i].NewCombo && oldStreamObjects[i].StartTime > switchTime)
                         {
                             removeBeforeObjectIndex = i;
@@ -212,10 +213,10 @@ namespace osum.GameplayElements
                 pList<HitObject> newStreamObjects = ActiveStreamObjects;
                 SpriteManager newSpriteManager = ActiveStreamSpriteManager;
 
-                for (int i = processFrom; i < removeBeforeObjectIndex; i++)
+                for (int i = ProcessFrom; i < removeBeforeObjectIndex; i++)
                     newSpriteManager.Add(oldStreamObjects[i]);
 
-                if (removeBeforeObjectIndex - processFrom > 0)
+                if (removeBeforeObjectIndex - ProcessFrom > 0)
                 {
                     int removeBeforeIndex = 0;
                     for (int i = 0; i < newStreamObjects.Count; i++)
@@ -233,11 +234,11 @@ namespace osum.GameplayElements
                     }
 
                     newStreamObjects.RemoveRange(0, removeBeforeIndex);
-                    newStreamObjects.InsertRange(0, oldStreamObjects.GetRange(processFrom, removeBeforeObjectIndex - processFrom));
+                    newStreamObjects.InsertRange(0, oldStreamObjects.GetRange(ProcessFrom, removeBeforeObjectIndex - ProcessFrom));
                 }
             }
 
-            processFrom = 0;
+            ProcessFrom = 0;
 
             nextStreamChange = switchTime;
             return switchTime;
@@ -354,8 +355,6 @@ namespace osum.GameplayElements
 
         #region IUpdateable Members
 
-        int processedTo;
-
         public bool AllowSpinnerOptimisation;
 
         public void Update()
@@ -370,13 +369,13 @@ namespace osum.GameplayElements
 
             int lowestActiveObject = -1;
 
-            processedTo = activeObjects.Count - 1;
+            ProcessTo = activeObjects.Count - 1;
             //initialise to the last object. if we don't find an earlier one below, this wil be used.
 
             ActiveObject = null;
             NextObject = null;
 
-            for (int i = processFrom; i < activeObjects.Count; i++)
+            for (int i = ProcessFrom; i < activeObjects.Count; i++)
             {
                 HitObject h = activeObjects[i];
 
@@ -414,13 +413,13 @@ namespace osum.GameplayElements
 
                 if (h.StartTime > hitObjectNow + 4000 && !h.IsVisible)
                 {
-                    processedTo = i;
+                    ProcessTo = i;
                     break; //stop processing after a decent amount of leeway...
                 }
             }
 
             if (lowestActiveObject >= 0)
-                processFrom = lowestActiveObject;
+                ProcessFrom = lowestActiveObject;
 
             if (nextStreamChange > 0 && nextStreamChange <= Clock.AudioTime)
             {
@@ -461,7 +460,7 @@ namespace osum.GameplayElements
 
             if (objects == null) return null;
 
-            for (int i = processFrom; i < processedTo + 1; i++)
+            for (int i = ProcessFrom; i <= ProcessTo; i++)
             {
                 HitObject h = objects[i];
                 if (h.HitTestInitial(tracking))
