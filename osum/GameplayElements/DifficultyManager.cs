@@ -65,16 +65,28 @@ namespace osum.GameplayElements
         }
 
         // at what time does the snaking animation of a LONG slider begin?
-        public static int SnakeStart { get { return PreEmpt * 9 / 10; } }
+        public static int SnakeStart { get { return PreEmpt * 8 / 10; } }
 
         // at what time does the snaking animation of a SHORT slider end?
-        public static int SnakeEndDesired { get { return PreEmpt / 2; } }
+        public static int SnakeEndDesired { get { return PreEmpt * 5 / 10; } }
 
         // at what time does the snaking animation of a LONG slider end?
         public static int SnakeEndLimit { get { return PreEmpt * 3 / 10; } }
 
         // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
-        public static double SnakeSpeedInverse { get { return 3.0d; } }
+        public static double SnakeSpeedInverse { get
+        {
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    return 3.2d;
+                default:
+                    return 2.8d;
+                case Difficulty.Expert:
+                    return 2.4d;
+
+            }
+        } }
 
         const int HIT_EXPERT = 25;
         const int HIT_STREAM = 44;
