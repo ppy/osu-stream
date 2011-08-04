@@ -78,8 +78,9 @@ namespace osum.GameModes.SongSelect
             {
                 colour = value;
 
-                colourNormal = ColourHelper.Darken(colour, 0.2f);
-                colourHover = colour;
+                //colourNormal = ColourHelper.Darken(colour, 0.2f);
+                //colourHover = colour;
+                colourNormal = colour;
 
                 if (s_BackingPlate != null)
                     s_BackingPlate.Colour = colourNormal;
