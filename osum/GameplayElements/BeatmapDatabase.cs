@@ -54,12 +54,19 @@ namespace osum.GameplayElements
             Initialize();
 
 #if !MONO
-            using (FileStream fs = File.Create(fullPath))
+            string filename = fullPath;
+            string tempFilename = fullPath + "_";
+
+            //write to a new file and then move, just in case something bad was to happen when writing.
+            using (FileStream fs = File.Create(tempFilename))
             using (SerializationWriter writer = new SerializationWriter(fs))
             {
                 writer.Write(Version);
                 writer.Write(BeatmapInfo);
             }
+
+            File.Delete(filename);
+            File.Move(tempFilename, filename);
 #endif
         }
 
