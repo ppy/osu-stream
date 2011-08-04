@@ -33,18 +33,15 @@ credits offset is off.
 
 volume on ranking screen
 
+
 Submission Checklist:
 * Make sure DIST compile-time definition is set.
 * Make sure iTunes file sharing is disabled.
 
-autoplay inrements count
-
 fix app store song select screenshot
 
 @osustream ストリームモードのチュートリアルのスピンを回すところでしたの。
-
 @osustream もう一度やってみようとしてたのに、サクルをタッチしたらタイトルに戻って来ちゃった。多分見えないバックボタンを押しちゃったかも。見えないときにはタッチできないようになったらいいな
-
 
 07:25 < mm201> tick: 1, rebound/end: 2, start: 4-6
 07:25 <@peppy> fouuuuuuuuuur?
@@ -52,7 +49,3 @@ fix app store song select screenshot
 07:25 <@peppy> too much weighting imo
 07:25 < mm201> okay
 07:25 < mm201> 2-4 would work as well too
-
-arist
-
-change category to music game?
