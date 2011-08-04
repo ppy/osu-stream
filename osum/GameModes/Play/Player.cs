@@ -273,7 +273,10 @@ namespace osum.GameModes
             if (Beatmap != null)
             {
                 if (Clock.AudioTime > 5000 && !Autoplay)
+                {
                     BeatmapDatabase.GetBeatmapInfo(Beatmap, Difficulty).Playcount++;
+                    BeatmapDatabase.Write();
+                }
             }
 
             InputManager.OnDown -= InputManager_OnDown;
