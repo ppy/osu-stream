@@ -158,12 +158,13 @@ namespace osum.GameModes.Store
         internal int BeatmapCount { get { return filenames.Count; } }
 
         int currentDownload = 0;
+
+        public string UpdateChecksum;
         
 #if iOS
         const string PREFERRED_FORMAT = "m4a";
 #else
         const string PREFERRED_FORMAT = "mp3";
-        public string UpdateChecksum;
 #endif
 
         void OnPurchase(object sender, EventArgs e)
