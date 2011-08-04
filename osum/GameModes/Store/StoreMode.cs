@@ -15,6 +15,8 @@ using osum.Audio;
 using osum.Helpers;
 using osum.Graphics.Skins;
 using osum.Resources;
+using osum.GameplayElements.Beatmaps;
+using osu_common.Libraries.Osz2;
 
 namespace osum.GameModes.Store
 {
@@ -105,13 +107,27 @@ namespace osum.GameModes.Store
 
                 string filename = split[0];
                 string checksum = split[1];
+                string revision = split.Length > 3 ? split[3] : "1.0";
+                string title = split.Length > 2 ? split[2] : null;
 
                 string path = SongSelectMode.BeatmapPath + "/" + filename;
 
                 if (File.Exists(path))
                 {
-                    string checksumLocal = CryptoHelper.GetMd5(path);
-                    if (checksumLocal == checksum) continue;
+                    using (Beatmap b = new Beatmap(path))
+                    {
+                        if (b.Package != null)
+                        {
+                            string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
+
+                            if (localRev == revision)
+                                continue;
+
+                            pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
+
+                            pp.UpdateChecksum = CryptoHelper.GetMd5(GameBase.Instance.DeviceIdentifier + 0x90 + filename + "-update");
+                        }
+                    }
                 }
 
                 int thisY = y;
@@ -120,7 +136,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.Add(filename);
+                pp.Add(filename, title);
 
                 y++;
             }

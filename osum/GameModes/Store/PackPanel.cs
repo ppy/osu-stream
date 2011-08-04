@@ -49,7 +49,7 @@ namespace osum.GameModes.Store
         public bool Ready;
         public byte[] Receipt;
 
-        public void SetPrice(string price)
+        public void SetPrice(string price, bool isFree = false)
         {
             if (s_LoadingPrice != null)
             {
@@ -59,6 +59,7 @@ namespace osum.GameModes.Store
 
             Ready = true;
             s_Price.Text = price;
+            IsFree = isFree;
         }
 
         public PackPanel(string packTitle, string packId, bool free)
@@ -162,6 +163,7 @@ namespace osum.GameModes.Store
         const string PREFERRED_FORMAT = "m4a";
 #else
         const string PREFERRED_FORMAT = "mp3";
+        public string UpdateChecksum;
 #endif
 
         void OnPurchase(object sender, EventArgs e)
@@ -203,6 +205,8 @@ namespace osum.GameModes.Store
 
             string downloadPath = "http://www.osustream.com/dl/download.php";
             string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+            if (UpdateChecksum != null)
+                param += "&update=" + UpdateChecksum;
 #if !DIST
             Console.WriteLine("Downloading " + downloadPath);
             Console.WriteLine("param " + param);
@@ -278,7 +282,7 @@ namespace osum.GameModes.Store
             }
         }
 
-        internal void Add(string filename)
+        internal void Add(string filename, string serverTitle)
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
             preview.Offset = new Vector2(38, Height + 20);
@@ -354,15 +358,29 @@ namespace osum.GameModes.Store
 
             filenames.Add(filename);
 
-            Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
-            Match m = r.Match(Path.GetFileNameWithoutExtension(filename));
+            string artistString;
+            string titleString;
 
-            pText artist = new pText(m.Groups[1].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
+            if (serverTitle == null)
+            {
+                Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
+                Match m = r.Match(Path.GetFileNameWithoutExtension(filename));
+
+                artistString = m.Groups[1].Value;
+                titleString = m.Groups[2].Value;
+            }
+            else
+            {
+                artistString = serverTitle.Substring(0, serverTitle.IndexOf('-')).Trim();
+                titleString = serverTitle.Substring(serverTitle.IndexOf('-') + 1).Trim();
+            }
+
+            pText artist = new pText(artistString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;
             artist.Offset = new Vector2(80, Height + 4);
             Sprites.Add(artist);
 
-            pText title = new pText(m.Groups[2].Value, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
+            pText title = new pText(titleString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
 
             title.Offset = new Vector2(95 + artist.MeasureText().X / GameBase.BaseToNativeRatio, Height + 4);
             Sprites.Add(title);

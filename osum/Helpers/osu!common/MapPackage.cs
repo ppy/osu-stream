@@ -1621,6 +1621,7 @@ namespace osu_common.Libraries.Osz2
         ArtistFullName,
         ArtistTwitter,
         SourceUnicode,
-        ArtistUrl
+        ArtistUrl,
+        Revision
     }
 }
