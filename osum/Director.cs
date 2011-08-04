@@ -126,6 +126,7 @@ namespace osum
             CurrentOsuMode = newMode;
 
             GC.Collect(); //force a full collect before we start displaying the new mode.
+            GC.WaitForPendingFinalizers();
 
             GameBase.ThrottleExecution = false;
             //reset this here just in case it got stuck.
