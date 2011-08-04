@@ -76,19 +76,29 @@ namespace osum.GameplayElements
         // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
         public static double SnakeSpeedInverse { get { return 3.0d; } }
 
+        const int HIT_EXPERT = 25;
+        const int HIT_STREAM = 45;
+        const int HIT_EASY = 70;
+
         public static int HitWindow50
         {
             get
             {
+                int window = 0;
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 300;
+                        window = HIT_EASY;
+                        break;
                     default:
-                        return 200;
+                        window = HIT_STREAM;
+                        break;
                     case Difficulty.Expert:
-                        return 120;
+                        window = HIT_EXPERT;
+                        break;
                 }
+
+                return (window * 5);
             }
         }
 
@@ -96,15 +106,21 @@ namespace osum.GameplayElements
         {
             get
             {
+                int window = 0;
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 187;
+                        window = HIT_EASY;
+                        break;
                     default:
-                        return 125;
+                        window = HIT_STREAM;
+                        break;
                     case Difficulty.Expert:
-                        return 75;
+                        window = HIT_EXPERT;
+                        break;
                 }
+
+                return (window * 5)/2;
             }
         }
 
@@ -115,11 +131,11 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        return 75;
+                        return HIT_EASY;
                     default:
-                        return 50;
+                        return HIT_STREAM;
                     case Difficulty.Expert:
-                        return 30;
+                        return HIT_EXPERT;
                 }
             }
         }
