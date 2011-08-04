@@ -77,7 +77,7 @@ namespace osum.GameplayElements
         public static double SnakeSpeedInverse { get { return 3.0d; } }
 
         const int HIT_EXPERT = 25;
-        const int HIT_STREAM = 45;
+        const int HIT_STREAM = 44;
         const int HIT_EASY = 70;
 
         public static int HitWindow50
