@@ -43,6 +43,9 @@ namespace osum.GameModes
 
         internal ComboCounter comboCounter;
 
+        private int firstObjectTime;
+        private int lastObjectTime;
+
         /// <summary>
         /// Score which is being played (or watched?)
         /// </summary>
@@ -157,6 +160,11 @@ namespace osum.GameModes
                     AudioEngine.Music.Stop(true);
 
                 Resume(firstObjectTime, 8, true);
+
+                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+
+                firstObjectTime = objects[0].StartTime;
+                lastObjectTime = objects[objects.Count - 1].EndTime;
             }
 
             resetScore();
@@ -192,6 +200,7 @@ namespace osum.GameModes
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
             menu = new PauseMenu();
+            progressDisplay = new ProgressDisplay();
         }
 
         protected virtual void resetScore()
@@ -281,6 +290,8 @@ namespace osum.GameModes
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
+
+            if (progressDisplay != null) progressDisplay.Dispose();
 
             if (Director.PendingOsuMode != OsuMode.Play)
             {
@@ -510,6 +521,7 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
+            if (progressDisplay != null) progressDisplay.Draw();
 
             if (comboCounter != null) comboCounter.Draw();
 
@@ -580,6 +592,12 @@ namespace osum.GameModes
             if (streamSwitchDisplay != null) streamSwitchDisplay.Update();
 
             if (menu != null && (!Completed || Failed)) menu.Update();
+
+            if (progressDisplay != null)
+            {
+                progressDisplay.SetProgress(Progress);
+                progressDisplay.Update();
+            }
 
             base.Update();
         }
@@ -767,18 +785,12 @@ namespace osum.GameModes
         {
             get
             {
-                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
-                int first = objects[0].StartTime;
-                if (Clock.AudioTime < first)
-                    return 0;
-
-                int last = objects[objects.Count - 1].EndTime;
-
-                return pMathHelper.ClampToOne((float)(Clock.AudioTime - first) / (last - first));
+                return pMathHelper.ClampToOne((float)Clock.AudioTime / lastObjectTime);
             }
         }
 
         protected bool ShowGuideFingers;
+        private ProgressDisplay progressDisplay;
     }
 }
 
