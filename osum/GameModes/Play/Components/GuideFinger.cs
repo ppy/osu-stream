@@ -172,6 +172,9 @@ namespace osum.GameModes.Play.Components
                 }
             }
 
+            leftFinger.Update();
+            rightFinger.Update();
+
             leftFinger2.Position = leftFinger.Position;
             leftFinger2.Offset = leftFinger.Offset;
             leftFinger2.ScaleScalar = leftFinger.ScaleScalar;
