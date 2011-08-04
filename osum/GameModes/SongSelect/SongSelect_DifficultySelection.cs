@@ -242,7 +242,7 @@ namespace osum.GameModes
 
             if (artistWeb != null)
             {
-                pText info = new pText(artistWeb, 16, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
+                pText info = new pText(artistWeb, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
                 {
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre
@@ -253,12 +253,12 @@ namespace osum.GameModes
                     GameBase.Instance.OpenUrl(artistWeb);
                 };
                 spriteManagerSongInfo.Add(info);
-                vPos += 30;
+                vPos += 40;
             }
 
             if (artistTwitter != null)
             {
-                pText info = new pText(artistTwitter, 16, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
+                pText info = new pText(artistTwitter, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
                 {
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre
@@ -269,7 +269,7 @@ namespace osum.GameModes
                     GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"http://twitter.com/"));
                 };
                 spriteManagerSongInfo.Add(info);
-                vPos += 30;
+                vPos += 40;
             }
 
             string unicodeSource = beatmap.Package.GetMetadata(MapMetaType.SourceUnicode);
