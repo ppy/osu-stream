@@ -35,7 +35,12 @@ namespace osu_common.Libraries.NetLib
 
         public override void ReceivedData(NSUrlConnection connection, NSData data)
         {
-            if (written + data.Length > result.Length)
+            if (result == null)
+            {
+                result = new byte[data.Length];
+                Marshal.Copy(data.Bytes, result, 0, (int)data.Length);
+            }
+            else if (written + data.Length > result.Length)
             {
                 byte[] nb = new byte [result.Length + data.Length];
                 result.CopyTo(nb, 0);
