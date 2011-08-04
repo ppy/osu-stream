@@ -197,13 +197,12 @@ namespace osum.GameModes
             };
             spriteManagerSongInfo.Add(thumbSprite);
 
-
-
             float vPos = 90;
 
             string unicodeTitle = beatmap.Package.GetMetadata(MapMetaType.TitleUnicode);
+            string normalTitle = beatmap.Title;
 
-            if (unicodeTitle != null)
+            if (unicodeTitle != normalTitle)
             {
                 pText titleUnicode = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.White)
                 {
@@ -214,7 +213,7 @@ namespace osum.GameModes
                 vPos += 40;
             }
 
-            pText title = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            pText title = new pText(normalTitle, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre
@@ -240,6 +239,9 @@ namespace osum.GameModes
             spriteManagerSongInfo.Add(mapper);
 
             vPos += 50;
+
+            string unicodeSource = beatmap.Package.GetMetadata(MapMetaType.SourceUnicode);
+            string normalSource = beatmap.Package.GetMetadata(MapMetaType.Source);
 
             pText info = new pText(
                 beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode) + "\n[" +
