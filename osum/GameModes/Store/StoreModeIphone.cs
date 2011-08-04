@@ -72,7 +72,6 @@ namespace osum.GameModes.Store
                 Console.WriteLine();
 #endif
 
-
                 NSData receiptRaw = transaction.TransactionReceipt;
                 byte[] dataBytes = new byte[receiptRaw.Length];
                 Marshal.Copy(receiptRaw.Bytes, dataBytes, 0, Convert.ToInt32(receiptRaw.Length));
@@ -83,7 +82,8 @@ namespace osum.GameModes.Store
             }
             else
             {
-                GameBase.Notify("Purchase failed with error:\n" + transaction.Error, null);
+                if (transaction.Error.Code != 2)
+                GameBase.Notify(transaction.Error.ToString(), null);
             }
         }
 
@@ -93,7 +93,8 @@ namespace osum.GameModes.Store
                 foreach (SKProduct p in products)
                 {
                     PackPanel associatedPack = packs.Find(pack => pack.PackId == p.ProductIdentifier);
-                    associatedPack.SetPrice(p.LocalizedPrice());
+                    if (associatedPack != null)
+                        associatedPack.SetPrice(p.LocalizedPrice());
                 }
             });
         }
