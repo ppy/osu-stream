@@ -698,7 +698,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                     //Repeat endpoints are worth 1.
                     //Ticks are worth 1.
 
-                    float amountHit = (float)totalScoreValue / (lastJudgedEndpoint + 4 + scoringPoints.Count);
+                    float amountHit = (float)totalScoreValue / (lastJudgedEndpoint + 4 + scoringPoints.Count * RepeatCount);
                     ScoreChange amount;
 
                     if (amountHit == 1)
