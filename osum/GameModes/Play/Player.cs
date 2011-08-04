@@ -325,7 +325,7 @@ namespace osum.GameModes
             
 
             //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
-            if (hitObjectManager != null)
+            if (hitObjectManager != null && !Autoplay)
             {
                 Slider s = hitObjectManager.ActiveObject as Slider;
                 if (s != null && s.IsTracking)
@@ -335,7 +335,7 @@ namespace osum.GameModes
                 for (int i = hitObjectManager.ProcessFrom; i <= hitObjectManager.ProcessTo; i++)
                 {
                     HitObject h = objects[i];
-                    if (h.Position.Y < 50 || h.Position2.Y < 50)
+                    if (h.IsVisible && h.TrackingPosition.Y < 50)
                         return;
                 }
             }
