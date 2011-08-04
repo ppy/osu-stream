@@ -16,12 +16,12 @@ namespace osum.GameModes.Play.Components
         pRectangle progressRectBg;
         public ProgressDisplay()
         {
-            progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, HEIGHT), true, 1, new Color4(3, 50, 255, 100));
+            progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, HEIGHT), true, 0.99f, new Color4(3, 50, 255, 100));
             progressRectBg.Field = FieldTypes.StandardSnapBottomLeft;
             progressRectBg.Origin = OriginTypes.BottomLeft;
             this.Add(progressRectBg);
 
-            progressRect = new pRectangle(Vector2.Zero, new Vector2(0, HEIGHT), true, 1, new Color4(3, 205, 255, 80));
+            progressRect = new pRectangle(Vector2.Zero, new Vector2(0, HEIGHT), true, 1, Color4.SkyBlue);
             progressRect.Field = FieldTypes.StandardSnapBottomLeft;
             progressRect.Origin = OriginTypes.BottomLeft;
             progressRect.Additive = true;
