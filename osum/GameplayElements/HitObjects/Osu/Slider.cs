@@ -941,25 +941,41 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         private double normalizeProgress(double progress)
         {
-            if (progress > 2) progress -= (Math.Ceiling(progress / 2f) - 1) * 2;
+            if (progress > 2) progress -= (Math.Ceiling(progress / 2d) - 1) * 2;
             if (progress > 1) progress = 2 - progress;
             return progress;
         }
 
-        protected virtual Vector2 positionAtProgress(double progress, out Line line)
+        protected Vector2 positionAtProgress(double progress, int hint, out Line line)
         {
             double aimLength = PathLength * normalizeProgress(progress);
 
             //index is the index of the line segment that exceeds the required length (so we need to cut it back)
+            int count = cumulativeLengths.Count;
             int index = 0;
-            while (index < cumulativeLengths.Count && cumulativeLengths[index] < aimLength)
-                index++;
+            if (hint >= 0)
+            {
+                while (hint < count && cumulativeLengths[hint] < aimLength)
+                    hint++;
+
+                index = Math.Min(hint, count - 1);
+            }
+            else
+            {
+                index = cumulativeLengths.BinarySearch(aimLength);
+                if (index < 0) index = (~index);
+            }
 
             double lengthAtIndex = cumulativeLengths[index];
             line = drawableSegments[index];
 
             //cut back the line to required exact length
             return line.p1 + Vector2.Normalize(line.p2 - line.p1) * (float)(aimLength - (index > 0 ? cumulativeLengths[index - 1] : 0));
+        }
+
+        protected virtual Vector2 positionAtProgress(double progress, out Line line)
+        {
+            return positionAtProgress(progress, -1, out line);
         }
 
         bool isReversing { get { return progressCurrent % 2 >= 1; } }
@@ -1073,10 +1089,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 lengthDrawn = PathLength;
                 lastDrawnSegmentIndex = drawableSegments.Count - 1;
+                drawProgress = 1.0d;
             }
 
             Line l;
-            Vector2 drawEndPosition = positionAtProgress(lengthDrawn / PathLength, out l);
+            Vector2 drawEndPosition = positionAtProgress(drawProgress, lastDrawnSegmentIndex + 1, out l);
             foreach (pDrawable p in spriteCollectionEnd)
                 p.Position = drawEndPosition;
 
