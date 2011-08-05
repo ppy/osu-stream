@@ -179,6 +179,7 @@ namespace osum.Resources
         FirstRunWelcome,
         FirstRunTutorial,
         MorePractice,
-        PutTogether
+        PutTogether,
+        Update
     }
 }

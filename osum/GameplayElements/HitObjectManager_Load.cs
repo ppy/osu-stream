@@ -523,6 +523,9 @@ namespace osum.GameplayElements
                     }
                     else if (last == null) colourIndex = 0;
 
+                    if (colourIndex < 0)
+                        colourIndex = 0;
+
                     if (currHitObject.IncrementCombo)
                     {
                         if (!sameTimeAsLastAdded || currentComboNumber == 0) currentComboNumber++;

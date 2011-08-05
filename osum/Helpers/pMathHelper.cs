@@ -68,7 +68,7 @@ namespace osum.Helpers
         private const int MAX_LENGTH = 12;
         private const float MAX_LENGTH_SQUARED = 144.0f; // square of maximum distance permitted between segments
         private const float MIN_LENGTH_SQUARED = 4.0f; // square of distance at which subdivision should stop anyway
-        private const float MAX_ANGLE_SIN = 0.02f; // sine of maximum angle permitted between segments
+        private const float MAX_ANGLE_SIN = 0.1305261922f; // sine of maximum angle permitted between segments
 
         internal static List<Vector2> CreateBezier(List<Vector2> input)
         {
@@ -102,10 +102,12 @@ namespace osum.Helpers
                         Vector2 p0 = points.Values[x];
                         Vector2 p1 = points.Values[x + 1];
                         Vector2 p2 = points.Values[x + 2];
+                        Vector2 v0 = p1 - p0;
+                        Vector2 v1 = p2 - p1;
 
                         // find angle between using cross product since sin(x) has more accuracy near 0 than cos(x).
-                        angle1 = Math.Abs((p1.X * p2.Y - p1.Y * p2.X) / MathHelper.InverseSqrtFast(p0.LengthSquared * p1.LengthSquared));
-                        float r = (p1 - p0).LengthSquared;
+                        float r = v0.LengthSquared;
+                        angle1 = Math.Abs(v0.X * v1.Y - v0.Y * v1.X) * MathHelper.InverseSqrtFast(r * v1.LengthSquared);
 
                         // todo: the dependency on angle should be a weighted function of length instead of all/nothing
                         if (r > MIN_LENGTH_SQUARED && (angle0 > MAX_ANGLE_SIN || angle1 > MAX_ANGLE_SIN || r > MAX_LENGTH_SQUARED))

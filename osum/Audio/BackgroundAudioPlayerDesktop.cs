@@ -110,7 +110,7 @@ namespace osum.Audio
             if (audioStream == 0) return false;
 
             Bass.BASS_ChannelSetPosition(audioStream, milliseconds / 1000d);
-            return true;
+            return base.SeekTo(milliseconds);
 
         }
 

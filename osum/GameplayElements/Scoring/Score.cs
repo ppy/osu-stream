@@ -50,11 +50,11 @@ namespace osum.GameplayElements.Scoring
                     return Rank.SS;
                 if (totalScore > 900000 && countMiss == 0)
                     return Rank.S;
-                if (totalScore > 800000)
+                if (totalScore > 750000)
                     return Rank.A;
-                if (totalScore > 650000)
+                if (totalScore > 600000)
                     return Rank.B;
-                if (totalScore > 500000)
+                if (totalScore > 450000)
                     return Rank.C;
                 if (totalScore > 0)
                     return Rank.D;

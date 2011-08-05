@@ -202,5 +202,10 @@ namespace osum.Helpers
         {
             ManualTime = 0;
         }
+
+        internal static void SkipOccurred()
+        {
+            audioCheckFrame = 0;
+        }
     }
 }

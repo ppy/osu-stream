@@ -53,12 +53,13 @@ namespace osum.GameplayElements.Beatmaps
 
         }
 
-#if DIST
+#if DIST || M4A
         public string AudioFilename = "audio.m4a";
 #else
         public string AudioFilename
         {
             get {
+                if (ContainerFilename.EndsWith(".m4a.osz2")) return "audio.m4a";
                 return ContainerFilename.EndsWith(".osz2") ? "audio.mp3" : "audio.m4a";
             }
         }
@@ -73,7 +74,7 @@ namespace osum.GameplayElements.Beatmaps
         private byte[] hash {
             get {
                 string deviceId = GameBase.Instance.DeviceIdentifier;
-                string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0,2)  + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
+                string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0,2) + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
                 return CryptoHelper.GetMd5ByteArrayString(str);
             }
         }
@@ -160,7 +161,7 @@ namespace osum.GameplayElements.Beatmaps
             {
                 try {
                 if (difficultyStars == -1)
-                    Int32.TryParse(Package.GetMetadata(MapMetaType.DifficultyRating), out difficultyStars);
+                    Int32.TryParse(Package.GetMetadata(MapMetaType.Difficulty), out difficultyStars);
                 }
                 catch { difficultyStars = 0; }
 
@@ -174,7 +175,7 @@ namespace osum.GameplayElements.Beatmaps
             get
             {
                 if (previewPoint == -1)
-                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewPoint), out previewPoint);
+                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewTime), out previewPoint);
 
                 if (previewPoint < 10000)
                     previewPoint = 30000;

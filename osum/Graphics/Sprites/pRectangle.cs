@@ -55,18 +55,14 @@ namespace osum.Graphics.Drawables
             Scale = size;
 
 #if !NO_PIN_SUPPORT
-            coordinates = new float[8];
             vertices = new float[8];
 
 
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
-            handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
 
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
-            handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
 #else
             handle_vertices_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
-            handle_coordinates_pointer = Marshal.AllocHGlobal(8 * sizeof(float));
 #endif
         }
 
@@ -75,11 +71,9 @@ namespace osum.Graphics.Drawables
         float[] vertices;
 
         GCHandle handle_vertices;
-        GCHandle handle_coordinates;
 #endif
 
         IntPtr handle_vertices_pointer;
-        IntPtr handle_coordinates_pointer;
 
         public bool IsDisposed { get; private set; }
 
@@ -90,9 +84,7 @@ namespace osum.Graphics.Drawables
 
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
-            handle_coordinates.Free();
 #else
-            Marshal.FreeHGlobal(handle_coordinates_pointer);
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
 
@@ -104,7 +96,6 @@ namespace osum.Graphics.Drawables
         {
             if (base.Draw())
             {
-
                 Color4 c = AlphaAppliedColour;
                 Vector2 pos = FieldPosition;
                 Vector2 scale = FieldScale;
@@ -158,12 +149,8 @@ namespace osum.Graphics.Drawables
                 }
 
                 SpriteManager.TexturesEnabled = false;
-
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
-                GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
-
                 GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
-
                 return true;
             }
 

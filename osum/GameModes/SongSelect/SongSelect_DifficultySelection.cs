@@ -177,12 +177,14 @@ namespace osum.GameModes
             spriteManagerSongInfo.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
 
             Beatmap beatmap = SelectedPanel.Beatmap;
-            
+
             //256x172
             float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
 
-            pSprite thumbSprite = new pSpriteDynamic() {
-                LoadDelegate = delegate {
+            pSprite thumbSprite = new pSpriteDynamic()
+            {
+                LoadDelegate = delegate
+                {
                     pTexture thumb = null;
                     byte[] bytes = beatmap.GetFileBytes("thumb-256.jpg");
                     if (bytes != null)
@@ -197,15 +199,14 @@ namespace osum.GameModes
             };
             spriteManagerSongInfo.Add(thumbSprite);
 
-
-
-            float vPos = 90;
+            float vPos = 60;
 
             string unicodeTitle = beatmap.Package.GetMetadata(MapMetaType.TitleUnicode);
+            string normalTitle = beatmap.Title;
 
-            if (unicodeTitle != null)
+            if (unicodeTitle != normalTitle)
             {
-                pText titleUnicode = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.White)
+                pText titleUnicode = new pText(unicodeTitle, 30, new Vector2(0, vPos), 1, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre
@@ -214,47 +215,106 @@ namespace osum.GameModes
                 vPos += 40;
             }
 
-            pText title = new pText(beatmap.Title, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            pText title = new pText(normalTitle, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
+                Origin = OriginTypes.Centre,
+                TextShadow = true
             };
             spriteManagerSongInfo.Add(title);
 
             vPos += 40;
 
-            pText artist = new pText("by " + beatmap.Artist, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            string unicodeArtist = beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode);
+
+            pText artist = new pText("by " + beatmap.Package.GetMetadata(MapMetaType.ArtistFullName), 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
+                Origin = OriginTypes.Centre,
+                TextShadow = true
             };
             spriteManagerSongInfo.Add(artist);
 
             vPos += 40;
 
-            pText mapper = new pText("Mapped by " + beatmap.Creator, 18, new Vector2(0, vPos), 1, true, Color4.White)
+            string artistTwitter = beatmap.Package.GetMetadata(MapMetaType.ArtistTwitter);
+            string artistWeb = beatmap.Package.GetMetadata(MapMetaType.ArtistUrl);
+
+            if (artistWeb != null)
             {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
+                pText info = new pText(artistWeb, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
+                {
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    Origin = OriginTypes.Centre
+                };
+
+                info.OnClick += delegate
+                {
+                    GameBase.Instance.OpenUrl(artistWeb);
+                };
+                spriteManagerSongInfo.Add(info);
+                vPos += 40;
+            }
+
+            if (artistTwitter != null)
+            {
+                pText info = new pText(artistTwitter, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
+                {
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    Origin = OriginTypes.Centre
+                };
+
+                info.OnClick += delegate
+                {
+                    GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"http://twitter.com/"));
+                };
+                spriteManagerSongInfo.Add(info);
+                vPos += 40;
+            }
+
+            string unicodeSource = beatmap.Package.GetMetadata(MapMetaType.SourceUnicode);
+            string normalSource = beatmap.Package.GetMetadata(MapMetaType.Source);
+
+            
+
+            if (normalSource != null)
+            {
+                vPos += 40;
+                pText source = new pText(normalSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+                {
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    Origin = OriginTypes.Centre,
+                    TextShadow = true
+                };
+                spriteManagerSongInfo.Add(source);
+            }
+
+            if (normalSource != unicodeSource)
+            {
+                vPos += 40;
+                pText source = new pText(unicodeSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+                {
+                    Field = FieldTypes.StandardSnapTopCentre,
+                    Origin = OriginTypes.Centre,
+                    TextShadow = true
+                };
+                spriteManagerSongInfo.Add(source);
+            }
+
+            pText mapper = new pText("Level design by " + beatmap.Creator, 18, new Vector2(0, 0), 1, true, Color4.White)
+            {
+                Field = FieldTypes.StandardSnapBottomCentre,
+                Origin = OriginTypes.BottomCentre
             };
             spriteManagerSongInfo.Add(mapper);
 
-            vPos += 50;
-
-            pText info = new pText(
-                beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode) + "\n" +
-                beatmap.Package.GetMetadata(MapMetaType.ArtistUrl) + "\n" +
-                beatmap.Package.GetMetadata(MapMetaType.Source) + "\n"
-                , 24, new Vector2(0, vPos), 1, true, Color4.White)
-            {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
-            };
-            spriteManagerSongInfo.Add(info);
             
 
-            
-            
+
+
+
+
+
 
             State = SelectState.SongInfo;
 
@@ -290,7 +350,7 @@ namespace osum.GameModes
         void onModeButtonClick(object sender, EventArgs e)
         {
             if (State == SelectState.Starting) return;
-            
+
             pDrawable d = sender as pDrawable;
             if (d == null) return;
 
@@ -353,7 +413,7 @@ namespace osum.GameModes
 
         void onSelectPreviousMode(object sender, EventArgs e)
         {
-            
+
             if (State == SelectState.Starting) return;
 
             AudioEngine.PlaySample(OsuSamples.ButtonTap);
@@ -454,10 +514,10 @@ namespace osum.GameModes
                         if (s_ScoreRank.Texture != null)
                         {
                             s_ScoreRank.AdditiveFlash(500, 0.5f);
-                            s_ScoreInfo.MoveTo(new Vector2(40,64), 200, EasingTypes.In);
+                            s_ScoreInfo.MoveTo(new Vector2(40, 64), 200, EasingTypes.In);
                         }
                         else
-                            s_ScoreInfo.MoveTo(new Vector2(0,64), 200, EasingTypes.In);
+                            s_ScoreInfo.MoveTo(new Vector2(0, 64), 200, EasingTypes.In);
                     }
                 }, 100);
             }

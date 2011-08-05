@@ -21,6 +21,7 @@ using osum.Graphics;
 using osum.Support;
 using System.IO;
 using osu_common.Helpers;
+using osum.GameplayElements.HitObjects.Osu;
 
 namespace osum.GameModes
 {
@@ -42,6 +43,9 @@ namespace osum.GameModes
         internal ScoreDisplay scoreDisplay;
 
         internal ComboCounter comboCounter;
+
+        private int firstObjectTime;
+        private int lastObjectTime;
 
         /// <summary>
         /// Score which is being played (or watched?)
@@ -157,6 +161,11 @@ namespace osum.GameModes
                     AudioEngine.Music.Stop(true);
 
                 Resume(firstObjectTime, 8, true);
+
+                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+
+                firstObjectTime = objects[0].StartTime;
+                lastObjectTime = objects[objects.Count - 1].EndTime;
             }
 
             resetScore();
@@ -192,6 +201,7 @@ namespace osum.GameModes
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
             menu = new PauseMenu();
+            progressDisplay = new ProgressDisplay();
         }
 
         protected virtual void resetScore()
@@ -262,8 +272,11 @@ namespace osum.GameModes
 
             if (Beatmap != null)
             {
-                if (Clock.AudioTime > 5000)
+                if (Clock.AudioTime > 5000 && !Autoplay)
+                {
                     BeatmapDatabase.GetBeatmapInfo(Beatmap, Difficulty).Playcount++;
+                    BeatmapDatabase.Write();
+                }
             }
 
             InputManager.OnDown -= InputManager_OnDown;
@@ -281,6 +294,8 @@ namespace osum.GameModes
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
 
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
+
+            if (progressDisplay != null) progressDisplay.Dispose();
 
             if (Director.PendingOsuMode != OsuMode.Play)
             {
@@ -308,6 +323,24 @@ namespace osum.GameModes
                 //pass on the event to hitObjectManager for handling.
                 if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
                     return;
+            }
+
+            
+
+            //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
+            if (hitObjectManager != null && !Autoplay)
+            {
+                Slider s = hitObjectManager.ActiveObject as Slider;
+                if (s != null && s.IsTracking)
+                    return;
+
+                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+                for (int i = hitObjectManager.ProcessFrom; i <= hitObjectManager.ProcessTo; i++)
+                {
+                    HitObject h = objects[i];
+                    if (h.IsVisible && h.TrackingPosition.Y < 50)
+                        return;
+                }
             }
 
             if (menu != null)
@@ -510,6 +543,7 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
+            if (progressDisplay != null) progressDisplay.Draw();
 
             if (comboCounter != null) comboCounter.Draw();
 
@@ -580,6 +614,12 @@ namespace osum.GameModes
             if (streamSwitchDisplay != null) streamSwitchDisplay.Update();
 
             if (menu != null && (!Completed || Failed)) menu.Update();
+
+            if (progressDisplay != null)
+            {
+                progressDisplay.SetProgress(Progress);
+                progressDisplay.Update();
+            }
 
             base.Update();
         }
@@ -767,18 +807,12 @@ namespace osum.GameModes
         {
             get
             {
-                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
-                int first = objects[0].StartTime;
-                if (Clock.AudioTime < first)
-                    return 0;
-
-                int last = objects[objects.Count - 1].EndTime;
-
-                return pMathHelper.ClampToOne((float)(Clock.AudioTime - first) / (last - first));
+                return pMathHelper.ClampToOne((float)Clock.AudioTime / lastObjectTime);
             }
         }
 
         protected bool ShowGuideFingers;
+        private ProgressDisplay progressDisplay;
     }
 }
 

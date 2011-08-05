@@ -44,7 +44,7 @@ namespace osum.GameModes.Options
 
             int vPos = 10;
 
-            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White ) { Bold = true };
+            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
             smd.Add(text);
 
             vPos += 90;
@@ -61,6 +61,7 @@ namespace osum.GameModes.Options
             {
                 GameBase.Instance.OpenUrl("http://www.osustream.com/help/");
             });
+
             smd.Add(button);
 
             vPos += 60;
@@ -70,19 +71,19 @@ namespace osum.GameModes.Options
 
             vPos += 90;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            buttonFingerGuides = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 DisplayFingerGuideDialog();
             });
-            smd.Add(button);
+            smd.Add(buttonFingerGuides);
 
             vPos += 70;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+            buttonEasyMode = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
                 DisplayEasyModeDialog();
             });
-            smd.Add(button);
+            smd.Add(buttonEasyMode);
 
             vPos += 60;
 
@@ -129,7 +130,7 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            text = new pText("Coming soon!", 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f,0), 1, true, Color4.White, false)
+            text = new pText("Coming soon!", 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f, 0), 1, true, Color4.White, false)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre
@@ -154,24 +155,46 @@ namespace osum.GameModes.Options
             };
             smd.Add(text);*/
 
+            UpdateButtons();
+
             vPos += 50;
         }
 
         int lastEffectSound;
+        private pButton buttonFingerGuides;
+        private pButton buttonEasyMode;
 
         internal static void DisplayFingerGuideDialog()
         {
             Notification notification = new Notification(LocalisationManager.GetString(OsuString.UseFingerGuides), LocalisationManager.GetString(OsuString.UseGuideFingers_Explanation),
                         NotificationStyle.YesNo,
-                        delegate(bool yes) { GameBase.Config.SetValue<bool>(@"GuideFingers", yes); });
+                        delegate(bool yes)
+                        {
+                            GameBase.Config.SetValue<bool>(@"GuideFingers", yes);
+
+                            Options o = Director.CurrentMode as Options;
+                            if (o != null) o.UpdateButtons();
+                        });
             GameBase.Notify(notification);
+        }
+
+        private void UpdateButtons()
+        {
+            buttonEasyMode.Colour = GameBase.Config.GetValue<bool>(@"EasyMode", false) ? Color4.White : new Color4(255, 100, 100, 255);
+            buttonFingerGuides.Colour = GameBase.Config.GetValue<bool>(@"GuideFingers", false) ? Color4.White : new Color4(255, 100, 100, 255);
         }
 
         internal static void DisplayEasyModeDialog()
         {
             Notification notification = new Notification(LocalisationManager.GetString(OsuString.DefaultToEasyMode), LocalisationManager.GetString(OsuString.DefaultToEasyMode_Explanation),
                         NotificationStyle.YesNo,
-                        delegate(bool yes) { GameBase.Config.SetValue<bool>(@"EasyMode", yes); });
+                        delegate(bool yes)
+                        {
+                            GameBase.Config.SetValue<bool>(@"EasyMode", yes);
+
+                            Options o = Director.CurrentMode as Options;
+                            if (o != null) o.UpdateButtons();
+                        });
             GameBase.Notify(notification);
         }
 
@@ -180,7 +203,7 @@ namespace osum.GameModes.Options
             GameBase.Config.SetValue<int>("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
             GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
             GameBase.Config.SaveConfig();
-            
+
             smd.Dispose();
             base.Dispose();
         }

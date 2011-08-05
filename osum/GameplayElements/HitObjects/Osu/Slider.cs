@@ -551,20 +551,20 @@ namespace osum.GameplayElements.HitObjects.Osu
                 switch (startCircleChange)
                 {
                     case ScoreChange.Hit300:
-                        scoringEndpointsHit += 3;
+                        totalScoreValue += 3;
                         break;
                     case ScoreChange.Hit100:
-                        scoringEndpointsHit += 2;
+                        totalScoreValue += 2;
                         break;
                     case ScoreChange.Hit50:
-                        scoringEndpointsHit += 1;
+                        totalScoreValue += 1;
                         break;
 
                 }
 
                 HitCircleStart.HitAnimation(startCircleChange, true);
 
-                scoringEndpointsHit++;
+                totalScoreValue++;
                 return ScoreChange.SliderEnd;
             }
 
@@ -582,14 +582,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// <value>
         ///     <c>true</c> if this instance is tracking; otherwise, <c>false</c>.
         /// </value>
-        bool isTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
+        public bool IsTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
 
         bool wasTracking;
 
         /// <summary>
         /// Number of successfully hit end-points. Includes the start circle.
         /// </summary>
-        int scoringEndpointsHit;
+        int totalScoreValue;
 
         /// <summary>
         /// Index of the last end-point to be judged. Used to keep track of judging calculations.
@@ -653,11 +653,11 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
 
             //Check is the state of tracking changed.
-            if (isTracking != wasTracking)
+            if (IsTracking != wasTracking)
             {
-                wasTracking = isTracking;
+                wasTracking = IsTracking;
 
-                if (!isTracking)
+                if (!IsTracking)
                 {
                     //End tracking.
                     endTracking();
@@ -678,12 +678,12 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 bool finished = RepeatCount - lastJudgedEndpoint == 0;
 
-                if (isTracking)
+                if (IsTracking)
                 {
                     playRebound(lastJudgedEndpoint);
                     if (!finished)
                         burstEndpoint();
-                    scoringEndpointsHit++;
+                    totalScoreValue++;
                 }
 
                 if (finished)
@@ -693,12 +693,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     IsEndHit = true;
 
-                    float amountHit = (float)scoringEndpointsHit / (lastJudgedEndpoint + 4);
+                    //Start is worth 1 for a hit .
+                    //Start is worth 1-3 depending on hit accuracy (50/100/300).
+                    //Repeat endpoints are worth 1.
+                    //Ticks are worth 1.
+
+                    float amountHit = (float)totalScoreValue / (lastJudgedEndpoint + 4 + scoringPoints.Count * RepeatCount);
                     ScoreChange amount;
 
                     if (amountHit == 1)
                         amount = ScoreChange.Hit300;
-                    else if (amountHit > 0.8)
+                    else if (amountHit > 0.7)
                         amount = ScoreChange.Hit100;
                     else if (amountHit > 0)
                         amount = ScoreChange.Hit50;
@@ -710,7 +715,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                 lastJudgedScoringPoint = -1;
 
-                return isTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
+                return IsTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
             }
             else
             {
@@ -733,8 +738,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     lastJudgedScoringPoint++;
 
-                    if (isTracking)
+                    if (IsTracking)
                     {
+                        totalScoreValue++;
                         playTick();
 
                         pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
@@ -805,7 +811,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transformations.Clear();
 
-            if (spriteFollowCircle.Alpha > 0 && isTracking)
+            if (spriteFollowCircle.Alpha > 0 && IsTracking)
             {
                 int now = ClockingNow;
                 spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));

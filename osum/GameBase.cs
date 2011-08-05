@@ -475,7 +475,7 @@ namespace osum
 
                 if (showLoadingOverlay)
                 {
-                    loadingText = new pText(LocalisationManager.GetString(OsuString.Loading), 30, new Vector2(0, -25), 1, true, Color4.LightGray)
+                    loadingText = new pText(LocalisationManager.GetString(OsuString.Loading), 30, new Vector2(0, -25), 0.999f, true, Color4.LightGray)
                     {
                         DimImmune = true,
                         Origin = OriginTypes.Centre,
@@ -487,7 +487,7 @@ namespace osum
                     MainSpriteManager.Add(loadingText);
                     loadingText.FadeInFromZero(300);
 
-                    loadingCircle = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, new Vector2(0, 25), 1, true, Color4.White)
+                    loadingCircle = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, new Vector2(0, 25), 0.999f, true, Color4.White)
                     {
                         ExactCoordinates = false,
                         DimImmune = true
