@@ -11,7 +11,7 @@
     <RootNamespace>osum</RootNamespace>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osumapper</BundleIdentifier>
-    <BundleVersion>1505</BundleVersion>
+    <BundleVersion>1550</BundleVersion>
     <BundleDisplayName>osu!mapper</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
@@ -311,6 +311,7 @@
     <Compile Include="Localisation\LocalisationManager.cs" />
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="GameModes\Store\StoreModeIphone.cs" />
+    <Compile Include="GameModes\Play\Components\ProgressDisplay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
