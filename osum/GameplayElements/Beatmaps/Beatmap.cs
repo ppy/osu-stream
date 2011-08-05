@@ -74,7 +74,7 @@ namespace osum.GameplayElements.Beatmaps
         private byte[] hash {
             get {
                 string deviceId = GameBase.Instance.DeviceIdentifier;
-                string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0,2)  + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
+                string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0,2) + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
                 return CryptoHelper.GetMd5ByteArrayString(str);
             }
         }

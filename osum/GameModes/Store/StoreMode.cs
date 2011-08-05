@@ -109,6 +109,7 @@ namespace osum.GameModes.Store
                 string checksum = split[1];
                 string revision = split.Length > 3 ? split[3] : "1.0";
                 string title = split.Length > 2 ? split[2] : null;
+                string updateChecksum = null;
 
                 string path = SongSelectMode.BeatmapPath + "/" + filename;
 
@@ -119,13 +120,14 @@ namespace osum.GameModes.Store
                         if (b.Package != null)
                         {
                             string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
+                            if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
+                                continue;
 
                             if (localRev == revision)
                                 continue;
 
                             pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
-
-                            pp.UpdateChecksum = CryptoHelper.GetMd5(GameBase.Instance.DeviceIdentifier + 0x90 + filename + "-update");
+                            updateChecksum = CryptoHelper.GetMd5String(GameBase.Instance.DeviceIdentifier + (char)0x77 + filename + "-update");
                         }
                     }
                 }
@@ -136,7 +138,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.Add(filename, title);
+                pp.Add(new PackItem(filename, title, updateChecksum));
 
                 y++;
             }
