@@ -162,6 +162,9 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private List<double> scoringPoints = new List<double>();
 
+        /// <summary>
+        /// cuz snackin' iz chestin'
+        /// </summary>
         const bool NO_SNAKING = false;
         const bool PRERENDER_ALL = false;
 
@@ -1053,7 +1056,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         internal virtual void UpdatePathTexture()
         {
-            if (lengthDrawn == PathLength || IsHit) return; //finished drawing already.
+            if (lengthDrawn >= PathLength || IsHit) return; //finished drawing already.
 
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
@@ -1082,7 +1085,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             lengthDrawn = PathLength * drawProgress;
 
             // this is probably faster than a binary search since it runs so few times and the result is very close
-            while (lastDrawnSegmentIndex < cumulativeLengths.Count - 1 && cumulativeLengths[lastDrawnSegmentIndex + 1] < lengthDrawn)
+            while (lastDrawnSegmentIndex < cumulativeLengths.Count - 1 && cumulativeLengths[lastDrawnSegmentIndex + 1] <= lengthDrawn)
                 lastDrawnSegmentIndex++;
 
             if (lastDrawnSegmentIndex >= cumulativeLengths.Count - 1 || NO_SNAKING)
