@@ -39,7 +39,7 @@ namespace osum.GameModes.Store
 
         List<pDrawable> songPreviewBacks = new List<pDrawable>();
         List<pSprite> songPreviewButtons = new List<pSprite>();
-        List<string> filenames = new List<string>();
+        List<PackItem> packItems = new List<PackItem>();
 
         bool isPreviewing;
         DataNetRequest previewRequest;
@@ -155,11 +155,9 @@ namespace osum.GameModes.Store
 
         pSprite s_LoadingPrice;
 
-        internal int BeatmapCount { get { return filenames.Count; } }
+        internal int BeatmapCount { get { return packItems.Count; } }
 
         int currentDownload = 0;
-
-        public string UpdateChecksum;
         
 #if iOS
         const string PREFERRED_FORMAT = "m4a";
@@ -199,15 +197,16 @@ namespace osum.GameModes.Store
         {
             Downloading = true;
 
-            string filename = filenames[currentDownload];
-            string path = SongSelectMode.BeatmapPath + "/" + filename;
+            PackItem item = packItems[currentDownload];
+
+            string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
 
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
-            string downloadPath = "http://www.osustream.com/dl/download.php";
-            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
-            if (UpdateChecksum != null)
-                param += "&update=" + UpdateChecksum;
+            string downloadPath = "http://www.osustream.com/dl/download2.php";
+            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+            if (item.UpdateChecksum != null)
+                param += "&update=" + item.UpdateChecksum;
 #if !DIST
             Console.WriteLine("Downloading " + downloadPath);
             Console.WriteLine("param " + param);
@@ -217,7 +216,7 @@ namespace osum.GameModes.Store
             fnr.onFinish += delegate
             {
                 currentDownload++;
-                if (currentDownload < filenames.Count)
+                if (currentDownload < packItems.Count)
                     startNextDownload();
                 else
                 {
@@ -283,7 +282,7 @@ namespace osum.GameModes.Store
             }
         }
 
-        internal void Add(string filename, string serverTitle)
+        internal void Add(PackItem item)
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
             preview.Offset = new Vector2(38, Height + 20);
@@ -312,7 +311,7 @@ namespace osum.GameModes.Store
                 if (previewRequest != null) previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
-                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + filename + "&format=" + PREFERRED_FORMAT;
+                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&format=" + PREFERRED_FORMAT;
                 previewRequest = new DataNetRequest(downloadPath,"POST",param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
@@ -357,23 +356,23 @@ namespace osum.GameModes.Store
             back.Offset = new Vector2(0, Height + 20);
             Sprites.Add(back);
 
-            filenames.Add(filename);
+            packItems.Add(item);
 
             string artistString;
             string titleString;
 
-            if (serverTitle == null)
+            if (item.Title == null)
             {
                 Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
-                Match m = r.Match(Path.GetFileNameWithoutExtension(filename));
+                Match m = r.Match(Path.GetFileNameWithoutExtension(item.Filename));
 
                 artistString = m.Groups[1].Value;
                 titleString = m.Groups[2].Value;
             }
             else
             {
-                artistString = serverTitle.Substring(0, serverTitle.IndexOf('-')).Trim();
-                titleString = serverTitle.Substring(serverTitle.IndexOf('-') + 1).Trim();
+                artistString = item.Title.Substring(0, item.Title.IndexOf('-')).Trim();
+                titleString = item.Title.Substring(item.Title.IndexOf('-') + 1).Trim();
             }
 
             pText artist = new pText(artistString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
@@ -391,5 +390,20 @@ namespace osum.GameModes.Store
         }
 
         public bool Downloading { get; private set; }
+    }
+
+    public class PackItem
+    {
+        public string Filename;
+        public string UpdateChecksum;
+        public string Title;
+
+        public PackItem(string filename, string title, string updateChecksum = null)
+        {
+            Filename = filename;
+            UpdateChecksum = updateChecksum;
+            Title = title;
+
+        }
     }
 }
