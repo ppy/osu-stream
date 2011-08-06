@@ -1077,6 +1077,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             if (sliderBodyTexture.fboId < 0)
             {
+                waitingForPathTextureClear = true;
+
                 lastDrawnSegmentIndex = -1;
                 FirstSegmentIndex = 0;
             }
