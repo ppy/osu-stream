@@ -281,7 +281,6 @@
     <Compile Include="Online\OnlineHelper.cs" />
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineServicesIOS.cs" />
-    <Compile Include="Support\iPhone\OverlayViewController.cs" />
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="Support\iPhone\HardwareDetection.cs" />

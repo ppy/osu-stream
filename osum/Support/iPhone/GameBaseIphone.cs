@@ -227,10 +227,62 @@ namespace osum
             return t;
         }
 
+        public override void ShowWebView(string url)
+        {
+            WebViewController webViewController = new WebViewController(url);
+            UINavigationController nav = new UINavigationController(webViewController);
+            nav.NavigationBar.TintColor = UIColor.DarkGray;
+
+            AppDelegate.SetUsingViewController(true);
+            AppDelegate.ViewController.PresentModalViewController(nav, true);
+        }
+
         public override void OpenUrl(string url)
         {
             using (NSUrl nsUrl = new NSUrl(url))
                 UIApplication.SharedApplication.OpenUrl(nsUrl);
+        }
+    }
+
+    class WebViewController : UIViewController
+    {
+        string Url;
+
+        UIWebView webView;
+
+        public WebViewController(string url)
+        {
+            Url = url;
+        }
+
+        public override void LoadView()
+        {
+            base.LoadView();
+
+            webView = new UIWebView();
+            webView.BackgroundColor = UIColor.Black;
+            webView.ScalesPageToFit = true;
+            webView.Opaque = false;
+            webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl(Url)));
+            View = webView;
+
+            NavigationItem.Title = "Latest News";
+            NavigationItem.RightBarButtonItem = new UIBarButtonItem("Close", UIBarButtonItemStyle.Done, delegate
+            {
+                DismissModalViewControllerAnimated(true);
+                AppDelegate.SetUsingViewController(false);
+            });
+        }
+
+        public override void ViewDidAppear (bool animated)
+        {
+            base.ViewDidAppear(animated);
+        }
+
+        public override void ViewDidUnload()
+        {
+            webView.Dispose();
+            base.ViewDidUnload();
         }
     }
 }
