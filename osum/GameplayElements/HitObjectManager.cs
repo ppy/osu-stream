@@ -365,8 +365,6 @@ namespace osum.GameplayElements
 
             if (activeObjects == null) return;
 
-            streamSpriteManagers[(int)(ActiveStream)].Update();
-
             int lowestActiveObject = -1;
 
             ProcessTo = activeObjects.Count - 1;
@@ -428,6 +426,8 @@ namespace osum.GameplayElements
 
                 nextStreamChange = 0;
             }
+
+            streamSpriteManagers[(int)(ActiveStream)].Update();
 
             spriteManager.Update();
         }
