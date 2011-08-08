@@ -11,7 +11,7 @@
     <RootNamespace>osum</RootNamespace>
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
     <BundleIdentifier>sh.ppy.osumapper</BundleIdentifier>
-    <BundleVersion>1550</BundleVersion>
+    <BundleVersion>1560</BundleVersion>
     <BundleDisplayName>osu!mapper</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <BundleIconHigh>Icon@2x.png</BundleIconHigh>
