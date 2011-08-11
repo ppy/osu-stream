@@ -530,7 +530,7 @@ namespace osum.Graphics.Skins
         backbutton_arrows2,
         tracks,
         demo,
-        songselect_songinfo
-
+        songselect_songinfo,
+        sliderballoverlay
     }
 }

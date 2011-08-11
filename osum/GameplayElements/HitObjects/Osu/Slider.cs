@@ -69,6 +69,11 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal pSprite spriteFollowCircle;
 
         /// <summary>
+        /// Sliderball's glossy layer
+        /// </summary>
+        internal pSprite spriteFollowBallOverlay;
+
+        /// <summary>
         /// Sprite for slider body (path).
         /// </summary>
         internal pSprite spriteSliderBody;
@@ -226,7 +231,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.99f, false, Color.White){ ExactCoordinates = false };
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White){ ExactCoordinates = false };
 
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
@@ -256,9 +261,17 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
 
+            spriteFollowBallOverlay =
+new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.GamefieldSprites,
+       OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59/64), 0.99f, false, Color.White) { ExactCoordinates = false };
+
+            spriteFollowBallOverlay.Transform(fadeIn);
+            spriteFollowBallOverlay.Transform(fadeOutInstant);
+
             Sprites.Add(spriteSliderBody);
             Sprites.Add(spriteFollowBall);
             Sprites.Add(spriteFollowCircle);
+            Sprites.Add(spriteFollowBallOverlay);
 
             spriteSliderBody.TagNumeric = HitObject.DIMMABLE_TAG;
 
@@ -1005,6 +1018,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowBall.Rotation = line.theta;
 
             spriteFollowCircle.Position = trackingPosition;
+            spriteFollowBallOverlay.Position = trackingPosition + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59 / 64);
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
