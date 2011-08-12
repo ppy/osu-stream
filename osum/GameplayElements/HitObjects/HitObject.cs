@@ -420,7 +420,7 @@ namespace osum.GameplayElements
             if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, ssi.Volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, ssi.Volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.NormalSampleSet, ssi.Volume);
         }
 
         protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }

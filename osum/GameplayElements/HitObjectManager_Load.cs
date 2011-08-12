@@ -147,7 +147,8 @@ namespace osum.GameplayElements
                                                              : CustomSampleSet.Default,
                                                          Int32.Parse(split[5]),
                                                          split.Length > 6 ? split[6][0] == '1' : true,
-                                                         split.Length > 7 ? split[7][0] == '1' : false));
+                                                         split.Length > 7 ? split[7][0] == '1' : false,
+                                                         split.Length > 8 ? (SampleSet)Int32.Parse(split[8]) : SampleSet.None));
                                 break;
                             case FileSection.General:
                                 //todo: reimplement?
@@ -374,12 +375,17 @@ namespace osum.GameplayElements
             string[] split = sample.Split('|');
 
             SampleSet sampleSet = (SampleSet)Convert.ToInt32(split[0]);
+            SampleSet normalSampleSet = SampleSet.None;
             float volume = 1;
 
             if (split.Length > 1)
                 volume = Int32.Parse(split[1]) / 100f;
+            if (split.Length > 2 && split[2].Length > 0)
+                normalSampleSet = (SampleSet)Convert.ToInt32(split[2]);
 
-            return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume };
+            if (normalSampleSet == SampleSet.None) normalSampleSet = sampleSet;
+
+            return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume, NormalSampleSet = normalSampleSet };
         }
 
         internal virtual void PostProcessing()

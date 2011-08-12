@@ -50,7 +50,7 @@ namespace osum.GameModes.Play
             topMostSpriteManager.Add(touchToContinueText);
 
             Beatmap = new Beatmap();
-            Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false));
+            Beatmap.ControlPoints.Add(new ControlPoint(music_offset, music_beatlength, TimeSignatures.SimpleQuadruple, SampleSet.Normal, CustomSampleSet.Default, 100, true, false, SampleSet.Normal));
 
             s_Demo = new pSprite(TextureManager.Load(OsuTexture.demo), new Vector2(0, 50)) { Alpha = 0, Field = FieldTypes.StandardSnapTopCentre, Origin = OriginTypes.Centre };
             spriteManager.Add(s_Demo);

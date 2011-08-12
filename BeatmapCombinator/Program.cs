@@ -292,7 +292,8 @@ namespace BeatmapCombinator
                                                                      : CustomSampleSet.Default,
                                                                  Int32.Parse(split[5]),
                                                                  split.Length > 6 ? split[6][0] == '1' : true,
-                                                                 split.Length > 7 ? split[7][0] == '1' : false);
+                                                                 split.Length > 7 ? split[7][0] == '1' : false,
+                                                                 split.Length > 8 ? (SampleSet)Int32.Parse(split[8]) : (SampleSet)Int32.Parse(split[3]));
                                     bd.ControlPoints.Add(cp);
                                     break;
                                 }
@@ -470,7 +471,19 @@ namespace BeatmapCombinator
 
         private static string MakeSampleset(ControlPoint cp)
         {
-            return (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume.ToString() : "");
+            string result = ((int)cp.sampleSet).ToString();
+            bool b1 = cp.volume != 100;
+            bool b2 = cp.normalSampleSet != SampleSet.None && cp.normalSampleSet != cp.sampleSet;
+
+            if (b1 || b2)
+            {
+                result += "|" + cp.volume.ToString();
+                if (b2)
+                {
+                    result += "|" + ((int)cp.normalSampleSet).ToString();
+                }
+            }
+            return result;
         }
 
         private static string MakeSoundAdditions(string rep)

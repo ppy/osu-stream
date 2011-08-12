@@ -153,7 +153,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.NormalSampleSet, volume);
         }
 
         protected override void playRebound(int lastJudgedEndpoint)
@@ -161,13 +161,17 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lastJudgedEndpoint == RepeatCount)
                 base.playRebound(lastJudgedEndpoint);
             else
+            {
+                SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
                 PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                           new SampleSetInfo
                           {
-                              SampleSet = Beatmaps.SampleSet.Soft,
+                              SampleSet = ss.SampleSet,
                               CustomSampleSet = CustomSampleSet.Default,
-                              Volume = (SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet).Volume
+                              Volume = ss.Volume,
+                              NormalSampleSet = Beatmaps.SampleSet.Soft,
                           });
+            }
         }
 
 
