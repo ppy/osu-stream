@@ -545,31 +545,58 @@ namespace osum.GameplayElements
                         int time1 = last.EndTime;
                         int time2 = currHitObject.StartTime;
 
-                        if (time1 < time2)
+                        if ((time1 < time2) && !(last is Spinner) && !(currHitObject is Spinner) && (last.connectedObject != currHitObject))
                         {
+                            // followpoint code
+                            int time3 = time1 - DifficultyManager.PreEmpt;
+                            // only allow followpoints to start their trek once their starting slider has finished snaking
+                            if (last.Type == HitObjectType.Slider)
+                                time3 = ((Slider)last).snakingEnd;
+
+                            float hitRadius = DifficultyManager.HitObjectRadiusSolid / 2;
+
                             Vector2 pos1 = last.EndPosition;
                             Vector2 pos2 = currHitObject.Position;
-
-                            //Draw follow lines
-                            int distance = (int)pMathHelper.Distance(pos1, pos2);
-                            Vector2 distanceVector = pos2 - pos1;
                             int length = time2 - time1;
 
-                            int buffer_size = (int)(DifficultyManager.FollowLineDistance * 1.5);
+                            float distance = pMathHelper.Distance(pos1, pos2);
+                            distance -= hitRadius * 2;
 
-                            if (distance >= DifficultyManager.FollowLineDistance * 4 && last.connectedObject != currHitObject)
+                            Vector2 distanceVector = pos2 - pos1;
+                            Vector2 unitVector = distanceVector;
+                            unitVector.Normalize();
+                            unitVector *= (hitRadius * 0.75f); // this 0.75 lets the followpoints get closer to their circles, for a better looking effect.
+
+                            // these two now represent the very edges of the two circles to be joined.
+                            pos1 += unitVector;
+                            pos2 -= unitVector;
+
+                            // number of spaces between followpoints, including the spaces between
+                            // the first and last followpoints and their joining circles
+                            int count = (int)(distance / DifficultyManager.FollowLineDistance + 0.5f);
+
+                            if (count > 1)
                             {
-                                //find out how many points we can place (evenly)
-                                int count = (int)Math.Round((double)(distance - buffer_size * 2) / DifficultyManager.FollowLineDistance);
+                                float countf = (float)count;
 
-                                float usableDistance = (distance - buffer_size * 2) / (count);
+                                // the first followpoint appears moments before the destination object appears.
+                                float expandStart = Math.Max(time3, time2 - DifficultyManager.PreEmpt - DifficultyManager.FollowLinePreEmptStart);
+                                // it should reach its target just in time for that circle to appear
+                                float expandEnd = time2 - DifficultyManager.PreEmpt;
 
-                                for (int j = 0; j < count + 1; j++)
+                                // begin contracting followpoints as soon as the first object is done
+                                float contractStart = time1;
+                                // try to contract at the same speed but always finish just as the later object needs to be hit
+                                float contractEnd = Math.Min(time2, time1 + DifficultyManager.FollowLinePreEmptEnd);
+
+                                // exclude j=0 and j=count, since they represent the two circles
+                                for (int j = 1; j < count; j++)
                                 {
-                                    float fraction = (buffer_size + usableDistance * j) / distance;
-                                    Vector2 pos = pos1 + fraction * distanceVector;
-                                    int fadein = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt;
-                                    int fadeout = (int)(time1 + fraction * length) - DifficultyManager.FollowLinePreEmpt / 2;
+                                    float progress = j / countf;
+                                    Vector2 pos = Vector2.Lerp(pos1, pos2, progress);
+
+                                    int fadein = (int)pMathHelper.Lerp(expandStart, expandEnd, progress);
+                                    int fadeout = (int)pMathHelper.Lerp(contractStart, contractEnd, progress);
 
                                     pSprite dot =
                                         new pSprite(fptexture,
@@ -581,7 +608,7 @@ namespace osum.GameplayElements
                                     dot.Transform(
                                         new TransformationF(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
                                     dot.Transform(
-                                        new TransformationF(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeIn));
+                                        new TransformationF(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeOut));
                                     diffSpriteManager.Add(dot);
                                     currHitObject.Sprites.Add(dot);
                                 }

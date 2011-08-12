@@ -20,11 +20,15 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance, sampleSets)
         {
+            snakingBegin = StartTime - DifficultyManager.PreEmpt;
+            snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance)
         {
+            snakingBegin = StartTime - DifficultyManager.PreEmpt;
+            snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
         public override bool IncrementCombo
