@@ -551,7 +551,7 @@ namespace osum.GameplayElements
                             int time3 = time1 - DifficultyManager.PreEmpt;
                             // only allow followpoints to start their trek once their starting slider has finished snaking
                             if (last.Type == HitObjectType.Slider)
-                                time3 = ((Slider)last).snakingEnd;
+                                time3 = Math.Max(time3, ((Slider)last).snakingEnd);
 
                             float hitRadius = DifficultyManager.HitObjectRadiusSolid / 2;
 
@@ -585,9 +585,9 @@ namespace osum.GameplayElements
                                 float expandEnd = time2 - DifficultyManager.PreEmpt;
 
                                 // begin contracting followpoints as soon as the first object is done
-                                float contractStart = time1;
+                                float contractStart = Math.Max(time1, expandStart + DifficultyManager.FollowPointScreenTime);
                                 // try to contract at the same speed but always finish just as the later object needs to be hit
-                                float contractEnd = Math.Min(time2, time1 + DifficultyManager.FollowLinePreEmptEnd);
+                                float contractEnd = Math.Max(Math.Min(time2, time1 + DifficultyManager.FollowLinePreEmptEnd), expandEnd + DifficultyManager.FollowPointScreenTime);
 
                                 // exclude j=0 and j=count, since they represent the two circles
                                 for (int j = 1; j < count; j++)

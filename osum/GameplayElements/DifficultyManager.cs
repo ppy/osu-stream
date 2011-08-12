@@ -200,6 +200,11 @@ namespace osum.GameplayElements
         /// </summary>
         public static int FollowLinePreEmptEnd = 300;
 
+        /// <summary>
+        /// Shortest time a followpoint can spend onscreen.
+        /// </summary>
+        public static int FollowPointScreenTime = 100;
+
         public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
     }
 }
