@@ -178,62 +178,106 @@ namespace BeatmapCombinator
                                 {
                                     HitObjectType type = (HitObjectType)Int32.Parse(split[3]) & ~HitObjectType.ColourHax;
                                     bool slider = (type & HitObjectType.Slider) > 0;
+                                    bool spinner = (type & HitObjectType.Spinner) > 0;
                                     int time = (int)Decimal.Parse(split[2]);
-                                    int endTime = time;
+                                    int endTime = spinner ? endTime = (int)Decimal.Parse(split[5]) : time;
 
-                                    if ((type & HitObjectType.Spinner) > 0) endTime = (int)Decimal.Parse(split[5]);
+                                    int repeatCount = 0; double length = 0; bool hadEndpointSamples = false;
+                                    bool hold = false;
+                                    if (slider)
+                                    {
+                                        repeatCount = Convert.ToInt32(split[6]);
+                                        length = Convert.ToDouble(split[7]);
+                                        hadEndpointSamples = split.Length >= 9;
+
+                                        hold = (repeatCount > 1 && length < 50) ||
+                                               (repeatCount > 4 && length < 100) ||
+                                               (hadEndpointSamples && split[4] == "4");
+                                    }
 
                                     // take the slider's slide sampleset from 20ms after the head in case the head has a different sampleset
                                     ControlPoint cp = bd.controlPointAt(slider ? time + 20 : endTime + 5);
 
-                                    string stringRep = MakeSampleset(cp) + "," + line;
+                                    StringBuilder builder = new StringBuilder();
+                                    builder.Append(MakeSampleset(cp));
+
+                                    // Object commons
+                                    builder.Append(',');
+                                    builder.Append(split[0]); // X
+
+                                    builder.Append(',');
+                                    builder.Append(split[1]); // Y
+
+                                    builder.Append(',');
+                                    builder.Append(time.ToString(nfi)); // time
+
+                                    HitObjectType type2 = (HitObjectType)Int32.Parse(split[3]);
+                                    builder.Append(',');
+                                    builder.Append(hold ? (int)(type2 | HitObjectType.Hold) : (int)type2); // object type
+
+                                    string soundAdditions = MakeSoundAdditions(split[4]);
+                                    builder.Append(',');
+                                    builder.Append(soundAdditions); // sound additions
 
                                     //add addition difficulty-specific information
                                     if (slider)
                                     {
-                                        int repeatCount = Convert.ToInt32(split[6]);
+                                        builder.Append(',');
+                                        builder.Append(split[5]); // curve type, all control points
 
-                                        bool hadEndpointSamples = split.Length >= 9;
+                                        builder.Append(',');
+                                        builder.Append(repeatCount.ToString(nfi)); // repeat count
 
-                                        if (!hadEndpointSamples)
+                                        builder.Append(',');
+                                        builder.Append(length.ToString(nfi)); // curve length
+
+                                        string[] additions;
+                                        if (hadEndpointSamples) additions = split[8].Split('|');
+                                        else additions = new string[0];
+
+                                        // nodal hitsamples
+                                        builder.Append(',');
+                                        for (int repeatNo = 0; repeatNo <= repeatCount; repeatNo++)
                                         {
-                                            stringRep += "," + split[4];
-                                            for (int repeatNo = 1; repeatNo <= repeatCount; repeatNo++)
-                                            {
-                                                stringRep += "|" + split[4];
-                                            }
+                                            if (repeatNo > 0) builder.Append('|');
+                                            if (repeatNo < additions.Length) builder.Append(MakeSoundAdditions(additions[repeatNo]));
+                                            else builder.Append(soundAdditions);
                                         }
 
-                                        double length = Convert.ToDouble(split[7]);
                                         double velocity = bd.VelocityAt(time);
 
                                         //velocity and scoring distance.
-                                        stringRep += "," + velocity.ToString(nfi) + "," + bd.ScoringDistanceAt(time).ToString(nfi);
+                                        builder.Append(',');
+                                        builder.Append(velocity.ToString(nfi));
+
+                                        builder.Append(',');
+                                        builder.Append(bd.ScoringDistanceAt(time).ToString(nfi));
+
                                         double ReboundTime = 1000 * length / velocity;
 
                                         double currTime = time;
                                         cp = bd.controlPointAt(currTime + 5);
 
-                                        stringRep += "," + MakeSampleset(cp);
+                                        // nodal samplesets
+                                        builder.Append(',');
+                                        builder.Append(MakeSampleset(cp));
+
                                         for (int repeatNo = 0; repeatNo < repeatCount; repeatNo++)
                                         {
                                             currTime += ReboundTime;
                                             cp = bd.controlPointAt(currTime + 5);
-                                            stringRep += ":" + MakeSampleset(cp);
-                                        }
-
-                                        if ((repeatCount > 1 && length < 50)
-                                            || (repeatCount > 4 && length < 100)
-                                            || (hadEndpointSamples && split[4] == "4") //force finish to be hold
-                                            )
-                                        {
-                                            string[] temp = stringRep.Split(',');
-                                            temp[4] = ((int)((HitObjectType)Int32.Parse(split[3]) | HitObjectType.Hold)).ToString();
-                                            stringRep = string.Join(",", temp);
+                                            builder.Append(':');
+                                            builder.Append(MakeSampleset(cp));
                                         }
                                     }
 
-                                    bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = stringRep, Time = Int32.Parse(line.Split(',')[2]) });
+                                    if (spinner)
+                                    {
+                                        builder.Append(',');
+                                        builder.Append(split[5]); // end time
+                                    }
+
+                                    bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = builder.ToString(), Time = Int32.Parse(line.Split(',')[2]) });
                                     continue; //skip direct output
                                 }
                             case "TimingPoints":
@@ -426,7 +470,14 @@ namespace BeatmapCombinator
 
         private static string MakeSampleset(ControlPoint cp)
         {
-            return (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume : "");
+            return (int)cp.sampleSet + (cp.volume != 100 ? "|" + cp.volume.ToString() : "");
+        }
+
+        private static string MakeSoundAdditions(string rep)
+        {
+            HitObjectSoundType sounds = (HitObjectSoundType)Convert.ToInt32(rep);
+            sounds |= HitObjectSoundType.Normal;
+            return ((int)sounds).ToString(nfi);
         }
 
         private static double calculateMultiplier(Difficulty difficulty)

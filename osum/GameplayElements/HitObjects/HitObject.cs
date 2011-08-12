@@ -545,7 +545,8 @@ namespace osum.GameplayElements
     [Flags]
     public enum HitObjectSoundType
     {
-        Normal = 0,
+        None = 0,
+        Normal = 1,
         Whistle = 2,
         Finish = 4,
         WhistleFinish = 6,

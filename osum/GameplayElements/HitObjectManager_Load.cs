@@ -370,11 +370,14 @@ namespace osum.GameplayElements
         internal SampleSetInfo parseSampleSet(string sample)
         {
             //most optimal way. need to rewrite if there are ever more samplesets :p.
-            SampleSet sampleSet = sample[0] == '2' ? SampleSet.Soft : SampleSet.Normal;
+            //like there are now. >_<
+            string[] split = sample.Split('|');
+
+            SampleSet sampleSet = (SampleSet)Convert.ToInt32(split[0]);
             float volume = 1;
 
-            if (sample.Length > 1)
-                volume = Int32.Parse(sample.Substring(2)) / 100f;
+            if (split.Length > 1)
+                volume = Int32.Parse(split[1]) / 100f;
 
             return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume };
         }
