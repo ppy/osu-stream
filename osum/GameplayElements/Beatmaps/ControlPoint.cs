@@ -14,9 +14,10 @@ namespace osum.GameplayElements.Beatmaps
 
     public enum SampleSet
     {
-        None,
-        Normal,
-        Soft
+        None = 0,
+        Normal = 1,
+        Soft = 2,
+        Drum = 3
     } ;
 
     public enum TimeSignatures
