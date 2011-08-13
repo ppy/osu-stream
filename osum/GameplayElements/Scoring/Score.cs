@@ -26,7 +26,7 @@ namespace osum.GameplayElements.Scoring
             get
             {
                 if (!UseAccuracyBonus) return 0;
-                return (int)Math.Round(Math.Max(0, accuracy - 0.70) / 0.3 * ACCURACY_BONUS_AMOUNT);
+                return (int)Math.Round(Math.Max(0, accuracy - 0.60) / 0.4 * ACCURACY_BONUS_AMOUNT);
             }
         }
 
