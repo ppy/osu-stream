@@ -11,6 +11,7 @@ using System.Diagnostics;
 using osum.Audio;
 using osum.UI;
 using osum.Resources;
+using osu_common.Libraries.NetLib;
 
 namespace osum.GameModes.Options
 {
@@ -130,30 +131,60 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            text = new pText("Coming soon!", 24, new Vector2(0, vPos), new Vector2(GameBase.BaseSize.Width * 0.9f, 0), 1, true, Color4.White, false)
+            if (GameBase.Config.GetValue<string>("hash",null) == null)
             {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
-            };
-            text.MeasureText();
-            smd.Add(text);
+                button = new pButton("Link to Twitter", new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                {
+                    GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
+                    "Login with Twitter",
+                    delegate (string url)
+                    {
+                        if (url.StartsWith("finished://"))
+                        {
+                            string[] split = url.Replace("finished://","").Split('/');
 
-            /*gameCentre = new pSprite(TextureManager.Load(OsuTexture.gamecentre), new Vector2(0, vPos))
+                            GameBase.Config.SetValue<string>("username",split[0]);
+                            GameBase.Config.SetValue<string>("hash",split[1]);
+                            GameBase.Config.SetValue<string>("twitterId",split[2]);
+                            GameBase.Config.SaveConfig();
+
+                            Director.ChangeMode(Director.CurrentOsuMode);
+                            return true;
+                        }
+                        return false;
+                    });
+                });
+                smd.Add(button);
+            }
+            else
             {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
-            };
+                button = new pButton("Unlink '" + GameBase.Config.GetValue<string>("username",null) + "'", new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                {
+                    StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
+                        + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash",null));
+                    nr.onFinish += delegate(string _result, Exception e) {
+                            GameBase.GloballyDisableInput = false;
 
-            gameCentre.OnClick += delegate {  OnlineHelper.Initialize(true); };
-            smd.Add(gameCentre);
+                            if (e != null || _result != "success")
+                                GameBase.Notify("An error occurred during unlinking. Please check your internet connection and try again");
+                            else
+                            {
+                                GameBase.Config.SetValue<string>("username",null);
+                                GameBase.Config.SetValue<string>("hash",null);
+                                GameBase.Config.SetValue<string>("twitterId",null);
+                                GameBase.Config.SaveConfig();
 
-            vPos += 60;
-            text = new pText(LocalisationManager.GetString(OnlineHelper.Available ? OsuString.GameCentreLoggedIn : OsuString.GameCentreTapToLogin), 24, new Vector2(0, vPos), 1, true, Color4.White)
-            {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre
-            };
-            smd.Add(text);*/
+                                Director.ChangeMode(Director.CurrentOsuMode);
+                            }
+                    };
+
+                    GameBase.GloballyDisableInput = true;
+
+                    NetManager.AddRequest(nr);
+                });
+
+                smd.Add(button);
+            }
 
             UpdateButtons();
 

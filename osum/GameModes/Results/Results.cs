@@ -306,13 +306,53 @@ namespace osum.GameModes
                     BeatmapDatabase.Write();
                 }
 
-                using (MemoryStream ms = new MemoryStream())
-                using (SerializationWriter sw = new SerializationWriter(ms))
-                {
-                    bmi.WriteToStream(sw);
-                    StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", "id=" + GameBase.Instance.DeviceIdentifier + "&info=" + Convert.ToBase64String(ms.ToArray()));
-                    NetManager.AddRequest(nr);
-                }
+                string check = CryptoHelper.GetMd5String("moocow" +
+                    GameBase.Instance.DeviceIdentifier +
+                    RankableScore.count100 +
+                    RankableScore.count300 +
+                    RankableScore.count50 +
+                    RankableScore.countMiss +
+                    RankableScore.maxCombo +
+                    RankableScore.spinnerBonusScore +
+                    RankableScore.comboBonusScore +
+                    RankableScore.accuracyBonusScore +
+                    RankableScore.Ranking +
+                    bmi.filename +
+                    RankableScore.hitScore);
+
+                Console.WriteLine("moocow" +
+                    GameBase.Instance.DeviceIdentifier +
+                    RankableScore.count100 +
+                    RankableScore.count300 +
+                    RankableScore.count50 +
+                    RankableScore.countMiss +
+                    RankableScore.maxCombo +
+                    RankableScore.spinnerBonusScore +
+                    RankableScore.comboBonusScore +
+                    RankableScore.accuracyBonusScore +
+                    RankableScore.Ranking +
+                    bmi.filename +
+                    RankableScore.hitScore);
+
+                string postString =
+                    "udid="               + GameBase.Instance.DeviceIdentifier +
+                    "&count300="        + RankableScore.count300 +
+                    "&count100="        + RankableScore.count100 +
+                    "&count50="         + RankableScore.count50 +
+                    "&countMiss="       + RankableScore.countMiss +
+                    "&maxCombo="        + RankableScore.maxCombo +
+                    "&spinnerBonus="    + RankableScore.spinnerBonusScore +
+                    "&comboBonus="      + RankableScore.comboBonusScore +
+                    "&accuracyBonus="      + RankableScore.accuracyBonusScore +
+                    "&hitScore="        + RankableScore.hitScore +
+                    "&rank="             + RankableScore.Ranking +
+                    "&filename="        + bmi.filename +
+                    "&cc=" + GameBase.Config.GetValue<string>("hash",string.Empty) +
+                    "&c=" + check;
+
+                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST",postString);
+                Console.WriteLine("Request: " + postString);
+                NetManager.AddRequest(nr);
             }
 
             //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
