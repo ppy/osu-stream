@@ -96,13 +96,13 @@ namespace osum.GameplayElements
             SpriteBackground =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_background),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
-                            new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(StartTime + 2), false, white);
+                            new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(2), false, white);
             Sprites.Add(SpriteBackground);
 
             spriteCircle =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_circle),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 3), false, white) { ExactCoordinates = false };
+                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(3), false, white) { ExactCoordinates = false };
             Sprites.Add(spriteCircle);
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.
@@ -117,7 +117,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteScoreMetreBackground);
 
             spriteScoreMetreForeground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), false, SpriteManager.drawOrderFwdLowPrio(StartTime + 1), Color4.OrangeRed)
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), false, SpriteManager.drawOrderFwdLowPrio(1), Color4.OrangeRed)
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -126,7 +126,7 @@ namespace osum.GameplayElements
 
             Sprites.Add(spriteScoreMetreForeground);
 
-            ApproachCircle = new ApproachCircle(SpinnerCentreFromBottom, 1, false, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), new Color4(77 / 255f, 139 / 255f, 217 / 255f, 1));
+            ApproachCircle = new ApproachCircle(SpinnerCentreFromBottom, 1, false, SpriteManager.drawOrderFwdLowPrio(5), new Color4(77 / 255f, 139 / 255f, 217 / 255f, 1));
             ApproachCircle.Width = 8;
             ApproachCircle.Clocking = ClockTypes.Audio;
             ApproachCircle.Field = FieldTypes.StandardSnapBottomCentre;
@@ -134,7 +134,7 @@ namespace osum.GameplayElements
 
             spriteBonus = new pSpriteText("", "score", -5, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
                                           FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                                          SpinnerCentreFromBottom - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
+                                          SpinnerCentreFromBottom - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
             spriteBonus.Additive = true;
             Sprites.Add(spriteBonus);
 
@@ -148,7 +148,7 @@ namespace osum.GameplayElements
             SpriteSpin =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_spin),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(StartTime + 5), false, white);
+                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(5), false, white);
             SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             Sprites.Add(SpriteSpin);
@@ -158,7 +158,7 @@ namespace osum.GameplayElements
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
                             FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(StartTime + 6), false, white);
+                            SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
             SpriteClear.Transform(new TransformationF(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
 
