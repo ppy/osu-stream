@@ -389,5 +389,11 @@
     <Content Include="Skins\Default\buttontap.wav" />
     <Content Include="Skins\Default\menubling.wav" />
     <Content Include="Skins\Default\notify.wav" />
+    <Content Include="Skins\Default\drum-hitclap.wav" />
+    <Content Include="Skins\Default\drum-hitfinish.wav" />
+    <Content Include="Skins\Default\drum-hitnormal.wav" />
+    <Content Include="Skins\Default\drum-hitwhistle.wav" />
+    <Content Include="Skins\Default\drum-sliderslide.wav" />
+    <Content Include="Skins\Default\drum-slidertick.wav" />
   </ItemGroup>
 </Project>
