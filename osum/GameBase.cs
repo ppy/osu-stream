@@ -571,7 +571,7 @@ namespace osum
             return t;
         }
 
-        public virtual void ShowWebView(string url)
+        public virtual void ShowWebView(string url, string title = null, StringBoolDelegate checkFinished = null)
         {
             OpenUrl(url);
         }
