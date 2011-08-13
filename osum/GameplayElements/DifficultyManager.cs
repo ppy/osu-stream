@@ -191,8 +191,19 @@ namespace osum.GameplayElements
 
         /// <summary>
         /// Number of milliseconds to preempt the follow line.  Higher will make the line appear earlier.
+        /// This stacks on top of regular PreEmpt to make follow lines begin appearing just before the object they connect to.
         /// </summary>
-        public static int FollowLinePreEmpt = 800;
+        public static int FollowLinePreEmptStart = 500;
+
+        /// <summary>
+        /// Number of milliseconds after the follow line's starting object got hit before they've finished disappearing.
+        /// </summary>
+        public static int FollowLinePreEmptEnd = 300;
+
+        /// <summary>
+        /// Shortest time a followpoint can spend onscreen.
+        /// </summary>
+        public static int FollowPointScreenTime = 100;
 
         public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
     }

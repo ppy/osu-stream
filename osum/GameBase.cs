@@ -572,6 +572,11 @@ namespace osum
             return t;
         }
 
+        public virtual void ShowWebView(string url)
+        {
+            OpenUrl(url);
+        }
+
         public virtual void OpenUrl(string url)
         {
             Process.Start(url);

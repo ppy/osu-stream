@@ -20,11 +20,15 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance, sampleSets)
         {
+            snakingBegin = StartTime - DifficultyManager.PreEmpt;
+            snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance)
         {
+            snakingBegin = StartTime - DifficultyManager.PreEmpt;
+            snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
         public override bool IncrementCombo
@@ -149,7 +153,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.NormalSampleSet, volume);
         }
 
         protected override void playRebound(int lastJudgedEndpoint)
@@ -157,13 +161,17 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (lastJudgedEndpoint == RepeatCount)
                 base.playRebound(lastJudgedEndpoint);
             else
+            {
+                SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
                 PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                           new SampleSetInfo
                           {
-                              SampleSet = Beatmaps.SampleSet.Soft,
+                              SampleSet = ss.SampleSet,
                               CustomSampleSet = CustomSampleSet.Default,
-                              Volume = (SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet).Volume
+                              Volume = ss.Volume,
+                              NormalSampleSet = Beatmaps.SampleSet.Soft,
                           });
+            }
         }
 
 

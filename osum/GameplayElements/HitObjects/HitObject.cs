@@ -420,7 +420,7 @@ namespace osum.GameplayElements
             if ((type & HitObjectSoundType.Clap) > 0)
                 AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, ssi.Volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, ssi.Volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.NormalSampleSet, ssi.Volume);
         }
 
         protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }
@@ -545,7 +545,8 @@ namespace osum.GameplayElements
     [Flags]
     public enum HitObjectSoundType
     {
-        Normal = 0,
+        None = 0,
+        Normal = 1,
         Whistle = 2,
         Finish = 4,
         WhistleFinish = 6,

@@ -50,9 +50,6 @@ namespace osum.Support.iPhone
     [MonoTouch.Foundation.Register("AppDelegate")]
     public class AppDelegate : UIApplicationDelegate
     {
-        static bool active;
-        static bool firstActivation = true;
-
         public static AppDelegate Instance;
 
         public static EAGLView glView;
@@ -125,15 +122,11 @@ namespace osum.Support.iPhone
         public override void OnActivated(UIApplication app)
         {
             glView.StartAnimation();
-            active = true;
         }
 
         public override void OnResignActivation(UIApplication app)
         {
-            active = false;
-
             Player p = Director.CurrentMode as Player;
-
             if (p != null)
             {
                 p.Pause();
@@ -172,16 +165,21 @@ namespace osum.Support.iPhone
                 {
                     if (ViewController == null)
                         ViewController = new GenericViewController();
+
                     Instance.window.AddSubview(ViewController.View);
 
                     InputSourceIphone source = InputManager.RegisteredSources[0] as InputSourceIphone;
                     source.ReleaseAllTouches();
+
+                    glView.StopAnimation();
                 }
                 else
                 {
                     ViewController.View.RemoveFromSuperview();
                     ViewController.Dispose();
                     ViewController = null;
+
+                    glView.StartAnimation();
                 }
         }
     }

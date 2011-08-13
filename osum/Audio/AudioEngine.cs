@@ -43,9 +43,10 @@ namespace osum.Audio
     {
         static Dictionary<OsuSamples, int>[] loadedSamples = new Dictionary<OsuSamples, int>[]
         { 
-            new Dictionary<OsuSamples, int>(),
-            new Dictionary<OsuSamples, int>(),
-            new Dictionary<OsuSamples, int>()
+            new Dictionary<OsuSamples, int>(), // none
+            new Dictionary<OsuSamples, int>(), // normal
+            new Dictionary<OsuSamples, int>(), // soft
+            new Dictionary<OsuSamples, int>()  // drum
         };
 
         internal static SoundEffectPlayer Effect;
