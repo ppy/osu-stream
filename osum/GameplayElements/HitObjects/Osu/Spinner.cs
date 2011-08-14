@@ -107,7 +107,7 @@ namespace osum.GameplayElements
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.
             spriteScoreMetreBackground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(StartTime), new Color4(20, 20, 20, 255))
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(0), new Color4(20, 20, 20, 255))
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
