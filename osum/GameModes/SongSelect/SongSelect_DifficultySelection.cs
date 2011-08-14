@@ -72,6 +72,7 @@ namespace osum.GameModes
                 //preview has finished loading.
                 State = SelectState.DifficultySelect;
 
+                SelectedPanel.HideRankings();
                 foreach (pDrawable s in SelectedPanel.Sprites)
                     s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
 
@@ -544,8 +545,12 @@ namespace osum.GameModes
             {
                 background.FadeColour(new Color4(56, 56, 56, 255), 200);
 
+
                 if (SelectedPanel != null)
+                {
+                    SelectedPanel.ShowRankings();
                     SelectedPanel.s_BackingPlate2.FadeColour(Color4.Transparent, 150);
+                }
 
                 foreach (BeatmapPanel p in panels)
                 {
