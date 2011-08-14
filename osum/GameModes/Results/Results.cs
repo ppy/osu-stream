@@ -296,7 +296,7 @@ namespace osum.GameModes
                     RankableScore.comboBonusScore = Score.MAX_SCORE - RankableScore.accuracyBonusScore - RankableScore.hitScore;
 
                 DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Player.Difficulty);
-                if (RankableScore.totalScore > bmi.HighScore.totalScore)
+                if (bmi.HighScore == null || RankableScore.totalScore > bmi.HighScore.totalScore)
                 {
                     if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
                         unlockedExpert = true;
