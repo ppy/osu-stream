@@ -554,7 +554,7 @@ namespace osum.GameplayElements
                         if ((time1 < time2) && !(last is Spinner) && !(currHitObject is Spinner) && (last.connectedObject != currHitObject))
                         {
                             // followpoint code
-                            int time3 = time1 - DifficultyManager.PreEmpt;
+                            int time3 = last.StartTime - DifficultyManager.PreEmpt;
                             // only allow followpoints to start their trek once their starting slider has finished snaking
                             if (last.Type == HitObjectType.Slider)
                                 time3 = Math.Max(time3, ((Slider)last).snakingEnd);
@@ -563,7 +563,6 @@ namespace osum.GameplayElements
 
                             Vector2 pos1 = last.EndPosition;
                             Vector2 pos2 = currHitObject.Position;
-                            int length = time2 - time1;
 
                             float distance = pMathHelper.Distance(pos1, pos2);
                             distance -= hitRadius * 2;
