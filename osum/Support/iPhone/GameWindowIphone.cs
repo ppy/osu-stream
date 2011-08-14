@@ -78,7 +78,8 @@ namespace osum
 
         public void StopAnimation()
         {
-            dl.RemoveFromRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
+            if (dl != null)
+                dl.RemoveFromRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
         }
 
         int updateCount;

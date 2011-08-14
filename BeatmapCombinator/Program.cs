@@ -11,6 +11,7 @@ using osum.GameModes;
 using osum.Helpers;
 using osum.GameplayElements.Scoring;
 using osum;
+using System.Threading;
 
 namespace BeatmapCombinator
 {
@@ -49,27 +50,44 @@ namespace BeatmapCombinator
         /// <param name="args">Directory containing many .osu files</param>
         static void Main(string[] args)
         {
-            if (args.Length > 0)
+            try
             {
-                ProcessBeatmap(args[0]);
+                if (args.Length > 0)
+                {
+                    ProcessBeatmap(args[0]);
 #if !DEBUG
                 Console.ReadLine();
 #endif
-                return;
+
+                    Console.WriteLine();
+                    Console.WriteLine("All done :)");
+                    Thread.Sleep(2000);
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Please drag a beatmap folder onto this app's icon!");
+                    Console.WriteLine("Note that it must contain at least one of the following difficulties:");
+                    Console.WriteLine();
+                    Console.WriteLine("Easy | Normal | Hard | Expert");
+                    Console.WriteLine("All other difficulty names will be ignored!");
+                    Console.ReadLine();
+                }
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine("Please drag a beatmap folder onto this app's icon!");
-                Console.WriteLine("Note that it must contain at least one of the following difficulties:");
-                Console.WriteLine();
-                Console.WriteLine("Easy | Normal | Hard | Expert");
-                Console.WriteLine("All other difficulty names will be ignored!");
+                Console.Write("An error occurred during combination:\n" + e.ToString() + "\n");
                 Console.ReadLine();
             }
         }
 
         private static void ProcessBeatmap(string dir)
         {
+            Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            
             if (dir.Length < 1)
             {
                 Console.WriteLine("No path specified!");
@@ -98,7 +116,10 @@ namespace BeatmapCombinator
             if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
 
             Console.WriteLine("Files found:");
-            Console.WriteLine(string.Join("\n", orderedDifficulties.ToArray()));
+            foreach (string s in orderedDifficulties)
+                Console.WriteLine("    * " + Path.GetFileName(s));
+            Console.WriteLine();
+            Console.WriteLine();
 
             List<BeatmapDifficulty> difficulties = new List<BeatmapDifficulty>();
 
@@ -495,6 +516,8 @@ namespace BeatmapCombinator
 
         private static double calculateMultiplier(Difficulty difficulty)
         {
+            Console.Write("Processing " + difficulty);
+
             double comboMultiplier = 1;
 
             Player.Difficulty = difficulty;
@@ -504,6 +527,11 @@ namespace BeatmapCombinator
             {
                 p.Initialize();
 
+                if (p.HitObjectManager.ActiveStreamObjects == null || p.HitObjectManager.ActiveStreamObjects.Count == 0)
+                {
+                    Console.WriteLine(" Failed!");
+                    return 0;
+                }
 
                 HitObject switchHpObject = null;
                 if (difficulty == Difficulty.Normal && Player.Beatmap.StreamSwitchPoints != null && Player.Beatmap.StreamSwitchPoints.Count > 0)
@@ -511,8 +539,9 @@ namespace BeatmapCombinator
                     //stream mode specific. make sure we have enough hp to hit the first stream switch
                     int testStreamSwitch = Player.Beatmap.StreamSwitchPoints[0] - DifficultyManager.PreEmpt;
                     int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; });
+                    if (index == 0)
+                        throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
                     switchHpObject = p.HitObjectManager.ActiveStreamObjects[index - 1];
-
                 }
 
 
@@ -521,21 +550,24 @@ namespace BeatmapCombinator
 
                 while (true)
                 {
+                    if (source.InternalTime % 10 < 0.01)
+                        Console.Write(".");
+
                     Clock.UpdateCustom(0.01);
                     source.InternalTime += 0.01;
                     Clock.ElapsedMilliseconds = 10;
 
                     p.Update();
-
+                    
                     if (switchHpObject != null && switchHpObject.IsHit)
                     {
                         double currentHp = p.healthBar.CurrentHp;
-                        Console.WriteLine("HP at required stream switch point (" + switchHpObject.EndTime + ") is " + currentHp);
+                        //Console.WriteLine("HP at required stream switch point (" + switchHpObject.EndTime + ") is " + currentHp);
 
                         if (currentHp < HealthBar.HP_BAR_MAXIMUM)
                         {
                             healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL) / (currentHp - HealthBar.HP_BAR_INITIAL);
-                            Console.WriteLine("Need a multiplier of " + healthMultiplier);
+                            //Console.WriteLine("Need a multiplier of " + healthMultiplier);
                         }
                         switchHpObject = null;
                     }
@@ -559,6 +591,8 @@ namespace BeatmapCombinator
 
             while (finalScore < 1000000)
             {
+                Console.Write(".");
+
                 Player.Difficulty = difficulty;
                 Player.Autoplay = true;
 
@@ -593,9 +627,10 @@ namespace BeatmapCombinator
                             }
                             else
                             {
-                                Console.WriteLine("Processed difficulty: " + difficulty);
+                                Console.WriteLine(" Done");
                                 Console.WriteLine();
-                                Console.WriteLine("Using multiplier: " + comboMultiplier);
+                                Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
+                                Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
                                 Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
                                 Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
                                 Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);

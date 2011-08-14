@@ -336,7 +336,7 @@ namespace osum
 #elif false
             //results screen testing
 
-            Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (James).osz2");
+            Player.Beatmap = new GameplayElements.Beatmaps.Beatmap("Beatmaps/Lix - Phantom Ensemble -Ark Trance mix- (Dyaems).osf2");
             Player.Difficulty = GameplayElements.Difficulty.Normal;
 
 
@@ -349,7 +349,6 @@ namespace osum
                 date = DateTime.Now,
                 spinnerBonusScore = 1500,
                 comboBonusScore = 578420,
-                accuracyBonusScore = 200000,
                 hitScore = 800000 - 578420,
                 maxCombo = 198
             };
@@ -373,7 +372,7 @@ namespace osum
         {
             get
             {
-                return "unknown";
+                return "1234567890123456789012345678901234567890";
             }
         }
 
@@ -572,7 +571,7 @@ namespace osum
             return t;
         }
 
-        public virtual void ShowWebView(string url)
+        public virtual void ShowWebView(string url, string title = null, StringBoolDelegate checkFinished = null)
         {
             OpenUrl(url);
         }

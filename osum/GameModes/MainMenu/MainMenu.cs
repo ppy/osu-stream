@@ -197,6 +197,13 @@ namespace osum.GameModes
                 AudioEngine.Music.Play();
             }
 
+            string username = GameBase.Config.GetValue<string>("username",null);
+            if (username != null)
+            {
+                pText usernameText = new pText(username, 20, new Vector2(40,0), 1, true, Color4.White);
+                spriteManager.Add(usernameText);
+            }
+
             firstDisplay = false;
         }
 

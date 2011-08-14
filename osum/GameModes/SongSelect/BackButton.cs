@@ -141,12 +141,14 @@ namespace osum.GameModes.SongSelect
                 if (dist > hit_minimum_distance)
                     minimumHitPossible = false;
 
-                if (dist > pull_limit_distance)
+                dist = Math.Min(pull_limit_distance, dist);
+
+                /*if (dist > pull_limit_distance)
                 {
                     RotateTo(defaultRotation, 100, EasingTypes.In);
                     MoveTo(hiddenPosition, 100, EasingTypes.In);
                 }
-                else
+                else*/
                 {
                     float angle = (float)Math.Atan2(subd.X, subd.Y);
                     RotateTo(defaultRotation + (-angle + MathHelper.Pi * 0.854f) / 2, 50, EasingTypes.In);

@@ -215,11 +215,9 @@ namespace osum.GameModes.Play
                     GameBase.Scheduler.Add(delegate
                     {
                         backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, true);
-                        backButton.Alpha = 0;
-                        backButton.FadeIn(100);
+                        backButton.FadeInFromZero(500);
                         topMostSpriteManager.Add(backButton);
                     }, 500);
-
 
                     showTouchToContinue();
                     break;

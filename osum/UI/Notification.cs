@@ -48,6 +48,7 @@ namespace osum.UI
             };
 
             Alpha = 0;
+            DrawDepth = 1;
 
             Action = action;
 

@@ -183,7 +183,11 @@ namespace osum
 
         public override string DeviceIdentifier {
             get {
+#if SIMULATOR
+                return base.DeviceIdentifier;
+#else
                 return UIDevice.CurrentDevice.UniqueIdentifier;
+#endif
             }
         }
 
@@ -227,9 +231,10 @@ namespace osum
             return t;
         }
 
-        public override void ShowWebView(string url)
+        public override void ShowWebView(string url, string title = null, StringBoolDelegate checkFinished = null)
         {
-            WebViewController webViewController = new WebViewController(url);
+            WebViewController webViewController = new WebViewController(url, title);
+            if (checkFinished != null) webViewController.ShouldClose += checkFinished;
             UINavigationController nav = new UINavigationController(webViewController);
             nav.NavigationBar.TintColor = UIColor.DarkGray;
 
@@ -247,12 +252,16 @@ namespace osum
     class WebViewController : UIViewController
     {
         string Url;
+        string Title;
 
         UIWebView webView;
 
-        public WebViewController(string url)
+        public event StringBoolDelegate ShouldClose;
+
+        public WebViewController(string url, string title)
         {
             Url = url;
+            Title = title;
         }
 
         public override void LoadView()
@@ -260,21 +269,39 @@ namespace osum
             base.LoadView();
 
             webView = new UIWebView();
+            webView.Delegate = new FinishableWebViewDelegate(finished);
             webView.BackgroundColor = UIColor.Black;
             webView.ScalesPageToFit = true;
             webView.Opaque = false;
             webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl(Url)));
             View = webView;
 
-            NavigationItem.Title = "Latest News";
+            NavigationItem.Title = Title;
             NavigationItem.RightBarButtonItem = new UIBarButtonItem("Close", UIBarButtonItemStyle.Done, delegate
             {
-                DismissModalViewControllerAnimated(true);
-                AppDelegate.SetUsingViewController(false);
+                Close();
             });
         }
 
-        public override void ViewDidAppear (bool animated)
+        bool finished(string url)
+        {
+            Url = url;
+            if (ShouldClose != null && ShouldClose(Url))
+            {
+                Close();
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Close()
+        {
+            DismissModalViewControllerAnimated(true);
+            AppDelegate.SetUsingViewController(false);
+        }
+
+        public override void ViewDidAppear(bool animated)
         {
             base.ViewDidAppear(animated);
         }
@@ -283,6 +310,21 @@ namespace osum
         {
             webView.Dispose();
             base.ViewDidUnload();
+        }
+    }
+
+    class FinishableWebViewDelegate : UIWebViewDelegate
+    {
+        StringBoolDelegate finishedDelegate;
+
+        public FinishableWebViewDelegate(StringBoolDelegate finished)
+        {
+            finishedDelegate = finished;
+        }
+
+        public override bool ShouldStartLoad(UIWebView webView, NSUrlRequest request, UIWebViewNavigationType navigationType)
+        {
+            return !finishedDelegate(request.Url.AbsoluteString);
         }
     }
 }
