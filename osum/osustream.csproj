@@ -96,7 +96,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE MAPPER</DefineConstants>
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
@@ -112,7 +112,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Testflight</OutputPath>
-    <DefineConstants>iOS OSUM RELEASE</DefineConstants>
+    <DefineConstants>iOS OSUM RELEASE MAPPER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
