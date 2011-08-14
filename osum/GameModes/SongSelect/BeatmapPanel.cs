@@ -12,6 +12,7 @@ using osum.Graphics.Skins;
 using osum.Audio;
 using osum.Graphics;
 using osum.GameplayElements;
+using System.Collections.Generic;
 namespace osum.GameModes.SongSelect
 {
     internal class BeatmapPanel : pSpriteCollection
@@ -75,7 +76,7 @@ namespace osum.GameModes.SongSelect
             s_TextArtist.Offset = new Vector2(100, 29);
             Sprites.Add(s_TextArtist);
 
-#if !DIST
+#if !DIST && !iOS
             s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
             s_TextCreator.Origin = OriginTypes.TopRight;
             s_TextCreator.Field = FieldTypes.StandardSnapRight;
@@ -162,13 +163,13 @@ namespace osum.GameModes.SongSelect
                         switch (diffInfo.difficulty)
                         {
                             case Difficulty.Easy:
-                                offset = 70;
+                                offset = 150;
                                 break;
                             case Difficulty.Normal:
-                                offset = 40;
+                                offset = 90;
                                 break;
                             case Difficulty.Expert:
-                                offset = 10;
+                                offset = 30;
                                 break;
                         }
 
@@ -180,10 +181,13 @@ namespace osum.GameModes.SongSelect
                             Offset = new Vector2(offset, PANEL_HEIGHT / 2)
                         };
                         Sprites.Add(rankingSprite);
+                        rankSprites.Add(rankingSprite);
                     }
                 }
             }
         }
+
+        List<pDrawable> rankSprites = new List<pDrawable>();
 
         private pTexture GetThumbnail()
         {
@@ -192,6 +196,18 @@ namespace osum.GameModes.SongSelect
             if (bytes != null)
                 thumb = pTexture.FromBytes(bytes);
             return thumb;
+        }
+
+        internal void HideRankings()
+        {
+            foreach (pDrawable p in rankSprites)
+                p.FadeOut(300);
+        }
+
+        internal void ShowRankings()
+        {
+            foreach (pDrawable p in rankSprites)
+                p.FadeIn(200);
         }
     }
 }
