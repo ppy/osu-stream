@@ -150,12 +150,14 @@ namespace osum.GameModes
         {
             availableMaps.Clear();
 
+#if !MAPPER
             if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                     availableMaps.Add(bmi.GetBeatmap());
             }
             else
+#endif
             {
 
 #if DIST && iOS
