@@ -11,6 +11,7 @@ using osum.Graphics.Renderers;
 using osum.Graphics.Skins;
 using osum.Audio;
 using osum.Graphics;
+using osum.GameplayElements;
 namespace osum.GameModes.SongSelect
 {
     internal class BeatmapPanel : pSpriteCollection
@@ -129,25 +130,58 @@ namespace osum.GameModes.SongSelect
 
             Sprites.Add(s_BackingPlate2);
 
-            
 
-            Color4 col = Color4.YellowGreen;
-            if (starCount > 4)
-                col = Color4.Red;
-            else if (starCount > 2)
-                col = Color4.BlueViolet;
-
-            for (int i = 0; i < starCount; i++)
+            if (beatmap != null)
             {
-                s_Star = new pSprite(TextureManager.Load(OsuTexture.songselect_star), Vector2.Zero)
+                Color4 col = Color4.YellowGreen;
+                if (starCount > 4)
+                    col = Color4.Red;
+                else if (starCount > 2)
+                    col = Color4.BlueViolet;
+
+                for (int i = 0; i < starCount; i++)
                 {
-                    Origin = OriginTypes.BottomCentre,
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    DrawDepth = base_depth + 0.06f,
-                    Colour = col,
-                    Offset = new Vector2(-(15 * starCount/2f) + i * 15, PANEL_HEIGHT)
-                };
-                Sprites.Add(s_Star);
+                    s_Star = new pSprite(TextureManager.Load(OsuTexture.songselect_star), Vector2.Zero)
+                    {
+                        Origin = OriginTypes.BottomCentre,
+                        Field = FieldTypes.StandardSnapTopCentre,
+                        DrawDepth = base_depth + 0.06f,
+                        Colour = col,
+                        Offset = new Vector2(-(15 * starCount / 2f) + i * 15, PANEL_HEIGHT)
+                    };
+                    Sprites.Add(s_Star);
+                }
+
+                BeatmapInfo info = Beatmap.BeatmapInfo;
+
+                foreach (DifficultyScoreInfo diffInfo in info.DifficultyScores.Values)
+                {
+                    if (diffInfo.HighScore != null)
+                    {
+                        int offset = 0;
+                        switch (diffInfo.difficulty)
+                        {
+                            case Difficulty.Easy:
+                                offset = 70;
+                                break;
+                            case Difficulty.Normal:
+                                offset = 40;
+                                break;
+                            case Difficulty.Expert:
+                                offset = 10;
+                                break;
+                        }
+
+                        pSprite rankingSprite = new pSprite(diffInfo.HighScore.RankingTextureSmall, Vector2.Zero)
+                        {
+                            Origin = OriginTypes.Centre,
+                            Field = FieldTypes.StandardSnapRight,
+                            DrawDepth = base_depth + 0.06f,
+                            Offset = new Vector2(offset, PANEL_HEIGHT / 2)
+                        };
+                        Sprites.Add(rankingSprite);
+                    }
+                }
             }
         }
 
