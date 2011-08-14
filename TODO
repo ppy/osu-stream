@@ -49,3 +49,77 @@ fix app store song select screenshot
 07:25 <@peppy> too much weighting imo
 07:25 < mm201> okay
 07:25 < mm201> 2-4 would work as well too
+
+
+
+
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Unhandled Exception: System.ArgumentOutOfRangeException: Argument is out of range.
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Parameter name: index
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at System.Collections.Generic.List`1[osum.GameplayElements.HitObject].get_Item (Int32 index) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameplayElements.HitObjectManager.FindObjectAt (osum.TrackingPoint tracking) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameplayElements.HitObjectManager.HandlePressAt (osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameModes.Player.InputManager_OnDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputManager.TriggerOnDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputManager.ReceiveDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSource.TriggerOnDown (osum.TrackingPoint trackingPoint) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSourceIphone.handleUITouch (MonoTouch.UIKit.UITouch u) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSourceIphone.HandleTouches (MonoTouch.Foundation.NSSet touches) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.Support.iPhone.HaxApplication.SendEvent (MonoTouch.UIKit.UIEvent e) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at MonoTouch.UIKit.UIApplication.Main (System.String[] args, System.String principalClassName, System.String delegateClassName) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBaseIphone.MainLoop () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBase..ctor () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBaseIphone..ctor () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.Application.Main (System.String[] args) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: [ERROR] FATAL UNHANDLED EXCEPTION: System.ArgumentOutOfRangeException: Argument is out of range.
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Parameter name: index
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at System.Collections.Generic.List`1[osum.GameplayElements.HitObject].get_Item (Int32 index) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameplayElements.HitObjectManager.FindObjectAt (osum.TrackingPoint tracking) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameplayElements.HitObjectManager.HandlePressAt (osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameModes.Player.InputManager_OnDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at (wrapper delegate-invoke) <Module>:invoke_void__this___InputSource_TrackingPoint (osum.InputSource,osum.TrackingPoint)
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputManager.TriggerOnDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputManager.ReceiveDown (osum.InputSource source, osum.TrackingPoint point) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSource.TriggerOnDown (osum.TrackingPoint trackingPoint) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSourceIphone.handleUITouch (MonoTouch.UIKit.UITouch u) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.InputSourceIphone.HandleTouches (MonoTouch.Foundation.NSSet touches) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.Support.iPhone.HaxApplication.SendEvent (MonoTouch.UIKit.UIEvent e) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at MonoTouch.UIKit.UIApplication.Main (System.String[] args, System.String principalClassName, System.String delegateClassName) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBaseIphone.MainLoop () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBase..ctor () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.GameBaseIphone..ctor () [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>:   at osum.Application.Main (System.String[] args) [0x00000] in <filename unknown>:0 
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Terminating runtime due to unhandled exception
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Stacktrace:
+Aug 11 21:18:15 unknown UIKitApplication:sh.ppy.osumapper[0xa4d][3846] <Notice>: Native stacktrace:
+
+
+add metadata field for pack
