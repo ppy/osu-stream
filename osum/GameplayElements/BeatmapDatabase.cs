@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 4;
+        const int DATABASE_VERSION = 5;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -98,7 +98,8 @@ namespace osum.GameplayElements
 
         public void ReadFromStream(SerializationReader sr)
         {
-            difficulty = (Difficulty)sr.ReadByte();
+            if (BeatmapDatabase.Version < 5)
+                sr.ReadByte();
 
             if (sr.ReadBoolean()) //has score
             {
@@ -111,7 +112,6 @@ namespace osum.GameplayElements
 
         public void WriteToStream(SerializationWriter sw)
         {
-            sw.Write((byte)difficulty);
             sw.Write(HighScore != null);
             if (HighScore != null)
                 HighScore.WriteToStream(sw);
@@ -128,9 +128,9 @@ namespace osum.GameplayElements
 
         public BeatmapInfo()
         {
-            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo();
-            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo();
-            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo();
+            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
+            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
+            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
         }
 
         #region bSerializable Members
