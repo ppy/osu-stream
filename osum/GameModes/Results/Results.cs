@@ -298,7 +298,7 @@ namespace osum.GameModes
                 DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Player.Difficulty);
                 if (bmi.HighScore == null || RankableScore.totalScore > bmi.HighScore.totalScore)
                 {
-                    if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
+                    if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && (bmi.HighScore == null || bmi.HighScore.Ranking < Rank.A))
                         unlockedExpert = true;
 
                     isPersonalBest = true;
