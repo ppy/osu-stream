@@ -508,8 +508,16 @@ namespace osum.GameModes
                         bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
                         s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " ";
-                        s_ScoreInfo.Text += bmi.HighScore.totalScore.ToString().PadLeft(6, '0');
-                        s_ScoreRank.Texture = bmi.HighScore.RankingTextureSmall;
+                        if (bmi.HighScore == null)
+                        {
+                            s_ScoreInfo.Text += @"000000";
+                            s_ScoreRank.Texture = null;
+                        }
+                        else
+                        {
+                            s_ScoreInfo.Text += bmi.HighScore.totalScore.ToString().PadLeft(6, '0');
+                            s_ScoreRank.Texture = bmi.HighScore.RankingTextureSmall;
+                        }
 
                         if (s_ScoreRank.Texture != null)
                         {
