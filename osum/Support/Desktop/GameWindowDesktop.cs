@@ -12,6 +12,7 @@ using osum.Audio;
 using osum.Helpers;
 using osum.Graphics.Skins;
 using osum.GameplayElements;
+using osum.GameplayElements.Scoring;
 
 namespace osum
 {
@@ -65,9 +66,10 @@ namespace osum
                 case 'e':
                     DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Difficulty.Normal);
                     if (bmi == null) break;
-                    if (bmi.HighScore.totalScore == 0)
+                    if (bmi.HighScore == null)
                     {
                         GameBase.Notify("Unlocked expert");
+                        bmi.HighScore = new Score();
                         bmi.HighScore.comboBonusScore = 1000000;
                     }
                     break;
