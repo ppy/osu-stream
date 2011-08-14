@@ -250,7 +250,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
-                                   ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0 : SpriteManager.drawOrderBwd(EndTime + 14),
+                                   ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0.01f : SpriteManager.drawOrderBwd(EndTime + 14),
                                    false, Color.White);
 
             spriteSliderBody.Transform(fadeInTrack);

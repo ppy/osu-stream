@@ -606,7 +606,7 @@ namespace osum.GameplayElements
                                     pSprite dot =
                                         new pSprite(fptexture,
                                                        FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                                       0.01f, false, Color4.White);
+                                                       0.005f, false, Color4.White);
 
                                     dot.Transform(
                                         new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
