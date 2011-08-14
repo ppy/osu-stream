@@ -295,7 +295,7 @@ namespace osum.GameModes
                 if (RankableScore.accuracy == 1 && RankableScore.totalScore - RankableScore.spinnerBonusScore != Score.MAX_SCORE)
                     RankableScore.comboBonusScore = Score.MAX_SCORE - RankableScore.accuracyBonusScore - RankableScore.hitScore;
 
-                BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Player.Difficulty);
                 if (RankableScore.totalScore > bmi.HighScore.totalScore)
                 {
                     if (bmi.difficulty == Difficulty.Normal && RankableScore.Ranking >= Rank.A && bmi.HighScore.Ranking < Rank.A)
@@ -317,21 +317,7 @@ namespace osum.GameModes
                     RankableScore.comboBonusScore +
                     RankableScore.accuracyBonusScore +
                     RankableScore.Ranking +
-                    bmi.filename +
-                    RankableScore.hitScore);
-
-                Console.WriteLine("moocow" +
-                    GameBase.Instance.DeviceIdentifier +
-                    RankableScore.count100 +
-                    RankableScore.count300 +
-                    RankableScore.count50 +
-                    RankableScore.countMiss +
-                    RankableScore.maxCombo +
-                    RankableScore.spinnerBonusScore +
-                    RankableScore.comboBonusScore +
-                    RankableScore.accuracyBonusScore +
-                    RankableScore.Ranking +
-                    bmi.filename +
+                    Path.GetFileName(Player.Beatmap.ContainerFilename) +
                     RankableScore.hitScore);
 
                 string postString =
@@ -346,7 +332,7 @@ namespace osum.GameModes
                     "&accuracyBonus="      + RankableScore.accuracyBonusScore +
                     "&hitScore="        + RankableScore.hitScore +
                     "&rank="             + RankableScore.Ranking +
-                    "&filename="        + bmi.filename +
+                    "&filename=" + Path.GetFileName(Player.Beatmap.ContainerFilename) +
                     "&cc=" + GameBase.Config.GetValue<string>("hash",string.Empty) +
                     "&c=" + check;
 

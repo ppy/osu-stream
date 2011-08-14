@@ -32,7 +32,7 @@ namespace osum.GameModes
         private pSprite s_ModeButtonExpert;
         private pText s_ModeDescriptionText;
 
-        private BeatmapInfo bmi;
+        private DifficultyScoreInfo bmi;
 
         /// <summary>
         /// True when expert mode is not yet unlocked for the current map.
@@ -505,7 +505,7 @@ namespace osum.GameModes
                             s_ModeDescriptionText.FadeInFromZero(300);
                         }
 
-                        bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Player.Difficulty);
+                        bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Player.Difficulty);
                         s_ScoreInfo.Transform(new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 200, 1, 0.05f, 2));
                         s_ScoreInfo.Text = LocalisationManager.GetString(OsuString.PlayCount) + " " + bmi.Playcount.ToString().PadLeft(3, '0') + '\n' + LocalisationManager.GetString(OsuString.HighScore) + " ";
                         s_ScoreInfo.Text += bmi.HighScore.totalScore.ToString().PadLeft(6, '0');

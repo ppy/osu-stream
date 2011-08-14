@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 3;
+        const int DATABASE_VERSION = 4;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -40,7 +40,7 @@ namespace osum.GameplayElements
                 using (SerializationReader reader = new SerializationReader(fs))
                 {
                     Version = reader.ReadInt32();
-                    if (Version > 2)
+                    if (Version > 3)
                         BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                 }
             }
@@ -53,7 +53,6 @@ namespace osum.GameplayElements
         {
             Initialize();
 
-#if !MONO
             string filename = fullPath;
             string tempFilename = fullPath + "_";
 
@@ -67,20 +66,23 @@ namespace osum.GameplayElements
 
             File.Delete(filename);
             File.Move(tempFilename, filename);
-#endif
         }
 
-        internal static BeatmapInfo GetBeatmapInfo(Beatmap b, Difficulty d)
+        internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)
         {
             if (b == null) return null;
 
-            string filename = Path.GetFileName(b.ContainerFilename);
+            BeatmapInfo i = PopulateBeatmap(b);
+            return i.DifficultyScores[d];
+        }
 
-            BeatmapInfo i = BeatmapInfo.Find(bmi => { return bmi.filename == filename && bmi.difficulty == d; });
+        internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
+        {
+            BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.FullPath == beatmap.ContainerFilename);
 
             if (i == null)
             {
-                i = new BeatmapInfo() { filename = filename, difficulty = d, HighScore = new Score() };
+                i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = Path.GetFileName(beatmap.ContainerFilename) };
                 BeatmapInfo.Add(i);
             }
 
@@ -88,34 +90,74 @@ namespace osum.GameplayElements
         }
     }
 
-    internal class BeatmapInfo : bSerializable
+    public class DifficultyScoreInfo : bSerializable
     {
-        public string filename;
         public Difficulty difficulty;
         public Score HighScore;
         public ushort Playcount;
 
-        #region bSerializable Members
-
         public void ReadFromStream(SerializationReader sr)
         {
-            filename = sr.ReadString();
             difficulty = (Difficulty)sr.ReadByte();
 
-            HighScore = new Score();
-            HighScore.ReadFromStream(sr);
+            if (sr.ReadBoolean()) //has score
+            {
+                HighScore = new Score();
+                HighScore.ReadFromStream(sr);
+            }
 
             Playcount = sr.ReadUInt16();
         }
 
         public void WriteToStream(SerializationWriter sw)
         {
-            sw.Write(filename);
             sw.Write((byte)difficulty);
-
-            HighScore.WriteToStream(sw);
-
+            sw.Write(HighScore != null);
+            if (HighScore != null)
+                HighScore.WriteToStream(sw);
             sw.Write(Playcount);
+        }
+    }
+
+    public class BeatmapInfo : bSerializable
+    {
+        public string Filename;
+        public string FullPath;
+
+        public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
+
+        public BeatmapInfo()
+        {
+            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo();
+            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo();
+            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo();
+        }
+
+        #region bSerializable Members
+
+        public void ReadFromStream(SerializationReader sr)
+        {
+            FullPath = sr.ReadString();
+            Filename = Path.GetFileName(FullPath);
+            
+
+            DifficultyScores[Difficulty.Easy].ReadFromStream(sr);
+            DifficultyScores[Difficulty.Normal].ReadFromStream(sr);
+            DifficultyScores[Difficulty.Expert].ReadFromStream(sr);
+        }
+
+        public void WriteToStream(SerializationWriter sw)
+        {
+            sw.Write(FullPath);
+
+            DifficultyScores[Difficulty.Easy].WriteToStream(sw);
+            DifficultyScores[Difficulty.Normal].WriteToStream(sw);
+            DifficultyScores[Difficulty.Expert].WriteToStream(sw);
+        }
+
+        public Beatmap GetBeatmap()
+        {
+            return new Beatmap(FullPath) { BeatmapInfo = this };
         }
 
         #endregion

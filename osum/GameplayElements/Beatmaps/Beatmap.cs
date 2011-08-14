@@ -126,6 +126,21 @@ namespace osum.GameplayElements.Beatmaps
 
         #endregion
 
+        BeatmapInfo beatmapInfo;
+        public BeatmapInfo BeatmapInfo
+        {
+            get
+            {
+                if (beatmapInfo == null)
+                    beatmapInfo = BeatmapDatabase.PopulateBeatmap(this);
+                return beatmapInfo;
+            }
+            set
+            {
+                beatmapInfo = value;
+            }
+        }
+
         public string Artist
         {
             get

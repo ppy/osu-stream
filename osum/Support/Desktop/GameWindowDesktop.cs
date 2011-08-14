@@ -63,7 +63,7 @@ namespace osum
                     Director.ChangeMode(OsuMode.Options);
                     break;
                 case 'e':
-                    BeatmapInfo bmi = BeatmapDatabase.GetBeatmapInfo(Player.Beatmap, Difficulty.Normal);
+                    DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Difficulty.Normal);
                     if (bmi == null) break;
                     if (bmi.HighScore.totalScore == 0)
                     {

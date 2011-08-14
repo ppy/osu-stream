@@ -15,6 +15,8 @@ using osum.Audio;
 using osu_common.Libraries.NetLib;
 using osum.GameModes.SongSelect;
 using osum.Resources;
+using osum.GameplayElements;
+using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameModes.Store
 {
@@ -215,6 +217,8 @@ namespace osum.GameModes.Store
             FileNetRequest fnr = new FileNetRequest(path, downloadPath, "POST", param);
             fnr.onFinish += delegate
             {
+                BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
+
                 currentDownload++;
                 if (currentDownload < packItems.Count)
                     startNextDownload();

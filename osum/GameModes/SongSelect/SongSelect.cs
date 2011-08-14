@@ -150,28 +150,42 @@ namespace osum.GameModes
         {
             availableMaps.Clear();
 
-#if DIST && iOS
-            foreach (string s in Directory.GetFiles("Beatmaps/"))
+            if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
-                //bundled maps
-                Beatmap b = new Beatmap(s);
-                availableMaps.AddInPlace(b);
+                foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
+                    availableMaps.Add(bmi.GetBeatmap());
             }
+            else
+            {
+
+#if DIST && iOS
+                foreach (string s in Directory.GetFiles("Beatmaps/"))
+                {
+                    //bundled maps
+                    Beatmap b = new Beatmap(s);
+                    BeatmapDatabase.GetBeatmapInfo(b);
+                    availableMaps.AddInPlace(b);
+                }
 #endif
 
 #if MONO
-            foreach (string subdir in Directory.GetDirectories(BeatmapPath))
-            foreach (string s in Directory.GetFiles(subdir,"*.osz2"))
-            {
-                Beatmap b = new Beatmap(s);
-                availableMaps.AddInPlace(b);
-            }
+                foreach (string subdir in Directory.GetDirectories(BeatmapPath))
+                    foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
+                    {
+                        Beatmap b = new Beatmap(s);
+                        BeatmapDatabase.PopulateBeatmap(b);
+                        availableMaps.AddInPlace(b);
+                    }
 #endif
 
-            foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
-            {
-                Beatmap b = new Beatmap(s);
-                availableMaps.AddInPlace(b);
+                foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
+                {
+                    Beatmap b = new Beatmap(s);
+                    BeatmapDatabase.PopulateBeatmap(b);
+                    availableMaps.AddInPlace(b);
+                }
+
+                BeatmapDatabase.Write();
             }
 
             int index = 0;
