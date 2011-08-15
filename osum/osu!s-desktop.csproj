@@ -87,6 +87,7 @@
     <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
     <Compile Include="GameModes\SongSelect\pTabController.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect_DifficultySelection.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect_SongInfo.cs" />
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Store\StoreMode.cs" />
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />

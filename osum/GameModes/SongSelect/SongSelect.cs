@@ -29,21 +29,44 @@ namespace osum.GameModes
         public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
 
-        private static pList<Beatmap> availableMaps = new pList<Beatmap>();
+        private pList<Beatmap> maps = new pList<Beatmap>();
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
         SpriteManager topmostSpriteManager = new SpriteManager();
         SpriteManager spriteManagerDifficultySelect = new SpriteManager();
         SpriteManager spriteManagerSongInfo = new SpriteManager();
 
+        private pSprite s_Header;
+        private pSprite s_Footer;
+        private BeatmapPanel SelectedPanel;
+
+        private pDrawable s_ButtonBack;
+
         SelectState State;
 
+        bool pendingModeChange;
+        bool isBound;
+        private BeatmapPanel panelDownloadMore;
+        private pSprite background;
+
+        /// <summary>
+        /// Input is being handled by back button.
+        /// </summary>
+        private bool inputStolen;
+
+        float lastIntOffset;
         private float songSelectOffset;
+
         private float difficultySelectOffset;
 
         private float offset_min { get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Height - s_Header.DrawHeight - 80; } }
         private float offset_max = 0;
         private float velocity;
+
+        /// <summary>
+        /// True after the first touch on the song select screen. Changes the way the panels move.
+        /// </summary>
+        bool touchingBegun;
 
         /// <summary>
         /// Offset bound to visible limits.
@@ -55,12 +78,6 @@ namespace osum.GameModes
                 return Math.Min(offset_max, Math.Max(offset_min, songSelectOffset));
             }
         }
-
-        private pSprite s_Header;
-        private pSprite s_Footer;
-        private BeatmapPanel SelectedPanel;
-
-        private pDrawable s_ButtonBack;
 
         public override void Initialize()
         {
@@ -89,39 +106,36 @@ namespace osum.GameModes
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
-            s_Header.Transform(new TransformationV(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
-            s_Header.Transform(new TransformationF(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
             s_Header.OnClick += delegate { };
             spriteManager.Add(s_Header);
 
-            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
-            s_Footer.Alpha = 0;
-            s_Footer.Rotation = 0.04f;
-            s_Footer.Position = new Vector2(-60, -85);
+            s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White)
+            {
+                Alpha = 0,
+                Rotation = 0.04f,
+                Position = new Vector2(-60, -85)
+            };
+
             s_Footer.OnClick += footer_onClick;
+
             spriteManager.Add(s_Footer);
 
-            //s_Footer.OnHover += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
-            //s_Footer.OnHoverLost += delegate { s_Footer.FadeColour(new Color4(255, 255, 255, 255), 100); };
+            topmostSpriteManager.Add(s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu));
 
-            s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu);
-            topmostSpriteManager.Add(s_ButtonBack);
-        }
-
-        private void footer_onClick(object sender, EventArgs e)
-        {
-            if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 2)
-            {
-                Player.Autoplay = true;
-                onStartButtonPressed(null, null);
-            }
+            if (Player.Beatmap != null)
+                showDifficultySelection(panels.Find(p => p.Beatmap.ContainerFilename == Player.Beatmap.ContainerFilename), true);
             else
             {
-                //spriteManager.FadeOut(800, 0.2f);
-                OnlineHelper.ShowRanking(Player.SubmitString, delegate
+                s_Header.Transform(new TransformationV(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
+                s_Header.Transform(new TransformationF(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
+
+                Vector2 pos = new Vector2(400, 0);
+                foreach (BeatmapPanel p in panels)
                 {
-                    spriteManager.FadeIn(300, 1);
-                });
+                    p.MoveTo(pos, 0);
+                    pos.Y += BeatmapPanel.PANEL_HEIGHT + 10;
+                    pos.X += 300;
+                }
             }
         }
 
@@ -140,16 +154,17 @@ namespace osum.GameModes
                     leaveDifficultySelection(sender, args);
                     break;
                 case SelectState.SongInfo:
-                    hideSongInfo();
-                    showDifficultySelection();
+                    SongInfo_Hide();
+                    showDifficultySelection(SelectedPanel);
                     break;
             }
         }
 
+        /// <summary>
+        /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
+        /// </summary>
         private void InitializeBeatmaps()
         {
-            availableMaps.Clear();
-
 #if !MAPPER
             if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
@@ -165,7 +180,7 @@ namespace osum.GameModes
                 {
                     //bundled maps
                     Beatmap b = new Beatmap(s);
-                    BeatmapDatabase.GetBeatmapInfo(b);
+                    BeatmapDatabase.PopulateBeatmap(b);
                     availableMaps.AddInPlace(b);
                 }
 #endif
@@ -176,7 +191,7 @@ namespace osum.GameModes
                     {
                         Beatmap b = new Beatmap(s);
                         BeatmapDatabase.PopulateBeatmap(b);
-                        availableMaps.AddInPlace(b);
+                        maps.AddInPlace(b);
                     }
 #endif
 
@@ -184,7 +199,7 @@ namespace osum.GameModes
                 {
                     Beatmap b = new Beatmap(s);
                     BeatmapDatabase.PopulateBeatmap(b);
-                    availableMaps.AddInPlace(b);
+                    maps.AddInPlace(b);
                 }
 
                 BeatmapDatabase.Write();
@@ -192,53 +207,35 @@ namespace osum.GameModes
 
             int index = 0;
 
-            foreach (Beatmap b in availableMaps)
+            foreach (Beatmap b in maps)
             {
-                BeatmapPanel panel = new BeatmapPanel(b, this, index++);
+                BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
                 spriteManager.Add(panel);
                 panels.Add(panel);
             }
 
-            panelDownloadMore = new BeatmapPanel(null, this, index++);
+            panelDownloadMore = new BeatmapPanel(null, delegate { AudioEngine.PlaySample(OsuSamples.MenuHit); Director.ChangeMode(OsuMode.Store); }, index++);
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
             spriteManager.Add(panelDownloadMore);
+        }
 
-            GameBase.Scheduler.Add(delegate
+        void panelSelected(object sender, EventArgs args)
+        {
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
+
+            BeatmapPanel panel = ((pDrawable)sender).Tag as BeatmapPanel;
+
+            if (panel == null || State != SelectState.SongSelect) return;
+
+            if (panel == panelDownloadMore)
             {
-                Vector2 pos = new Vector2(400, 0);
-                foreach (BeatmapPanel p in panels)
-                {
-                    p.MoveTo(pos, 0);
-                    pos.Y += BeatmapPanel.PANEL_HEIGHT + 10;
-                    pos.X += 300;
-                }
-            }, true);
+                Director.ChangeMode(OsuMode.Store);
+                return;
+            }
 
-            /*if (panels.Count > 1)
-            {
-                onSongSelected(panels[panels.Count - 2], null);
-                Ranking.RankableScore = new Score()
-                {
-                    count100 = 80,
-                    count300 = 20,
-                    count50 = 35,
-                    countGeki = 4,
-                    countKatu = 8,
-                    countMiss = 12,
-                    date = DateTime.Now,
-                    maxCombo = 60,
-                    totalScore = 1,
-                };
-    
-    
-                GameBase.Scheduler.Add(delegate
-                {
-                    Director.ChangeMode(OsuMode.Ranking);
-                }, 500);
-            }*/
-
+            showDifficultySelection(panel);
         }
 
         /// <summary>
@@ -255,56 +252,6 @@ namespace osum.GameModes
             AudioEngine.Music.Play();
         }
 
-        /// <summary>
-        /// Called when a panel has been selected.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        internal void onSongSelected(object sender, EventArgs args)
-        {
-            AudioEngine.PlaySample(OsuSamples.MenuHit);
-
-            BeatmapPanel panel = sender as BeatmapPanel;
-            if (panel == null || State != SelectState.SongSelect) return;
-
-            if (panel == panelDownloadMore)
-            {
-                Director.ChangeMode(OsuMode.Store);
-                return;
-            }
-
-            Player.Beatmap = panel.Beatmap;
-
-            SelectedPanel = panel;
-            State = SelectState.LoadingPreview;
-
-            foreach (BeatmapPanel p in panels)
-            {
-                p.s_BackingPlate.HandleInput = false;
-
-                if (p == panel) continue;
-
-                foreach (pDrawable s in p.Sprites)
-                {
-                    s.FadeOut(400);
-                    s.MoveTo(new Vector2(200, s.Position.Y), 500, EasingTypes.In);
-                }
-            }
-
-            panel.s_BackingPlate2.Alpha = 1;
-            panel.s_BackingPlate2.AdditiveFlash(400, 1, true);
-            panel.s_BackingPlate2.FadeColour(Color4.White, 0);
-
-            GameBase.Scheduler.Add(delegate
-            {
-                if (State != SelectState.LoadingPreview) return;
-
-                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.AudioFilename);
-
-                GameBase.Scheduler.Add(showDifficultySelection, true);
-            }, 400);
-        }
-
         public override void Dispose()
         {
             base.Dispose();
@@ -313,7 +260,7 @@ namespace osum.GameModes
             spriteManagerDifficultySelect.Dispose();
             spriteManagerSongInfo.Dispose();
 
-            foreach (Beatmap b in availableMaps)
+            foreach (Beatmap b in maps)
                 b.Dispose();
 
             if (State == SelectState.Exiting)
@@ -322,7 +269,14 @@ namespace osum.GameModes
             InputManager.OnMove -= InputManager_OnMove;
         }
 
-        bool touchingBegun;
+        private void footerHide()
+        {
+            s_Footer.Transformations.Clear();
+            s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 500));
+        }
+
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || inputStolen) return;
@@ -367,16 +321,6 @@ namespace osum.GameModes
             return true;
         }
 
-        float lastIntOffset;
-        bool pendingModeChange;
-        bool isBound;
-        private BeatmapPanel panelDownloadMore;
-        private pSprite background;
-
-        /// <summary>
-        /// Input is being handled by back button.
-        /// </summary>
-        private bool inputStolen;
         public override void Update()
         {
             base.Update();
@@ -423,6 +367,10 @@ namespace osum.GameModes
                         s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
                         s_ModeButtonStream.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonStream.Offset.X + s_ModeButtonStream.Position.X));
                         s_ModeButtonExpert.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonExpert.Offset.X + s_ModeButtonExpert.Position.X));
+
+                        s_ModeButtonEasy.Update();
+                        s_ModeButtonStream.Update();
+                        s_ModeButtonExpert.Update();
                     }
 
                     break;

@@ -19,6 +19,7 @@ using osu_common.Libraries.Osz2;
 using osum.Resources;
 using osum.GameplayElements.Scoring;
 using osum.Graphics;
+using osum.Online;
 
 namespace osum.GameModes
 {
@@ -42,7 +43,7 @@ namespace osum.GameModes
             get
             {
 #if !DIST
-                
+
                 return false;
 #else
                 DifficultyScoreInfo sc = Player.Beatmap.BeatmapInfo.DifficultyScores[Difficulty.Normal];
@@ -51,46 +52,85 @@ namespace osum.GameModes
             }
         }
 
-        private void showDifficultySelection()
+        private void showDifficultySelection(BeatmapPanel panel, bool instant = false)
         {
-            if (State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
+            if (!instant && State != SelectState.SongSelect && State != SelectState.SongInfo) return;
+
+            SelectedPanel = panel;
+            Player.Beatmap = panel.Beatmap;
+
+            panel.s_BackingPlate2.Alpha = 1;
+            panel.s_BackingPlate2.AdditiveFlash(400, 1, true);
+            panel.s_BackingPlate2.FadeColour(Color4.White, 0);
+
+            foreach (BeatmapPanel p in panels)
+            {
+                p.s_BackingPlate.HandleInput = false;
+
+                if (p == panel) continue;
+
+                foreach (pDrawable s in p.Sprites)
+                {
+                    s.FadeOut(instant ? 0 : 400);
+                    s.MoveTo(new Vector2(200, s.Position.Y), instant ? 0 : 500, EasingTypes.In);
+                }
+            }
+
+            if (instant)
+            {
+                showDifficultySelection2(true);
+            }
+            else
+            {
+                State = SelectState.LoadingPreview;
+
+                GameBase.Scheduler.Add(delegate
+                {
+                    if (State != SelectState.LoadingPreview) return;
+
+                    AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.AudioFilename);
+
+                    GameBase.Scheduler.Add(delegate { showDifficultySelection2(false); }, true);
+                }, 400);
+            }
+        }
+
+        private void showDifficultySelection2(bool instant = false)
+        {
+            if (!instant && State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
+
+            //preview has finished loading.
+            State = SelectState.DifficultySelect;
 
             if (!AudioEngine.Music.IsElapsing)
                 playFromPreview();
 
-            //do a second callback so we account for lost gametime due to the above audio load.
-            //todo: can probably remove this.
-            GameBase.Scheduler.Add(delegate
-            {
-                if (State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
+            if (s_ModeButtonStream == null)
+                initializeDifficultySelection();
 
-                if (s_ModeButtonStream == null)
-                    initializeDifficultySelection();
+            s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
 
-                s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
+            int animationTime = instant ? 0 : 500;
 
-                //preview has finished loading.
-                State = SelectState.DifficultySelect;
+            SelectedPanel.HideRankings(instant);
 
-                SelectedPanel.HideRankings();
-                foreach (pDrawable s in SelectedPanel.Sprites)
-                    s.MoveTo(new Vector2(0, 0), 500, EasingTypes.InDouble);
+            foreach (pDrawable s in SelectedPanel.Sprites)
+                s.MoveTo(new Vector2(0, 0), animationTime, EasingTypes.InDouble);
 
-                s_Header.Transform(new TransformationV(s_Header.Position, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            s_Header.Transform(new TransformationV(s_Header.Position, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
+            s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
 
-                s_Footer.Transform(new TransformationV(s_Footer.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-                s_Footer.Alpha = 1;
+            s_Footer.Transform(new TransformationV(s_Footer.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
+            s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
+            s_Footer.Alpha = 1;
 
-                s_SongInfo.Transform(new TransformationF(TransformationType.Fade, s_SongInfo.Alpha, 1, Clock.ModeTime + 500, Clock.ModeTime + 750));
+            s_SongInfo.Transform(new TransformationF(TransformationType.Fade, s_SongInfo.Alpha, 1, Clock.ModeTime + animationTime, Clock.ModeTime + (animationTime * 3) / 2));
 
-                spriteManagerDifficultySelect.ScaleScalar = 1;
-                spriteManagerDifficultySelect.Transformations.Clear();
-                spriteManagerDifficultySelect.FadeInFromZero(250);
+            spriteManagerDifficultySelect.ScaleScalar = 1;
+            spriteManagerDifficultySelect.Transformations.Clear();
+            spriteManagerDifficultySelect.FadeInFromZero(animationTime / 2);
 
-                SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
-            }, true);
+            SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
         }
 
         private void playFromPreview()
@@ -158,184 +198,23 @@ namespace osum.GameModes
             if (State != SelectState.DifficultySelect)
                 return;
 
-            showSongInfo();
+            SongInfo_Show();
         }
 
-        private void showSongInfo()
+        private void footer_onClick(object sender, EventArgs e)
         {
-            spriteManagerDifficultySelect.ScaleTo(0.5f, 300, EasingTypes.Out);
-            spriteManagerDifficultySelect.FadeOut(300);
-            background.FadeOut(300);
-
-            SelectedPanel.Sprites.ForEach(s => s.MoveTo(new Vector2(0, -100), 400));
-
-            spriteManagerSongInfo.Clear();
-
-            spriteManagerSongInfo.Alpha = 0;
-            spriteManagerSongInfo.Position = Vector2.Zero;
-            spriteManagerSongInfo.Transformations.Clear();
-            spriteManagerSongInfo.Transform(new TransformationBounce(Clock.Time + 200, Clock.Time + 700, 1, 0.5f, 2));
-            spriteManagerSongInfo.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
-
-            Beatmap beatmap = SelectedPanel.Beatmap;
-
-            //256x172
-            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
-
-            pSprite thumbSprite = new pSpriteDynamic()
+            if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 2)
             {
-                LoadDelegate = delegate
-                {
-                    pTexture thumb = null;
-                    byte[] bytes = beatmap.GetFileBytes("thumb-256.jpg");
-                    if (bytes != null)
-                        thumb = pTexture.FromBytes(bytes);
-                    return thumb;
-                },
-                DrawDepth = 0.49f,
-                Field = FieldTypes.StandardSnapCentre,
-                Origin = OriginTypes.Centre,
-                ScaleScalar = aspectAdjust,
-                Alpha = 0.3f
-            };
-            spriteManagerSongInfo.Add(thumbSprite);
-
-            float vPos = 60;
-
-            string unicodeTitle = beatmap.Package.GetMetadata(MapMetaType.TitleUnicode);
-            string normalTitle = beatmap.Title;
-
-            if (unicodeTitle != normalTitle)
-            {
-                pText titleUnicode = new pText(unicodeTitle, 30, new Vector2(0, vPos), 1, true, Color4.White)
-                {
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    Origin = OriginTypes.Centre
-                };
-                spriteManagerSongInfo.Add(titleUnicode);
-                vPos += 40;
+                Player.Autoplay = true;
+                onStartButtonPressed(null, null);
             }
-
-            pText title = new pText(normalTitle, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            else
             {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre,
-                TextShadow = true
-            };
-            spriteManagerSongInfo.Add(title);
-
-            vPos += 40;
-
-            string unicodeArtist = beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode);
-
-            pText artist = new pText("by " + beatmap.Package.GetMetadata(MapMetaType.ArtistFullName), 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
-            {
-                Field = FieldTypes.StandardSnapTopCentre,
-                Origin = OriginTypes.Centre,
-                TextShadow = true
-            };
-            spriteManagerSongInfo.Add(artist);
-
-            vPos += 40;
-
-            string artistTwitter = beatmap.Package.GetMetadata(MapMetaType.ArtistTwitter);
-            string artistWeb = beatmap.Package.GetMetadata(MapMetaType.ArtistUrl);
-
-            if (artistWeb != null)
-            {
-                pText info = new pText(artistWeb, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
+                OnlineHelper.ShowRanking(Player.SubmitString, delegate
                 {
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    Origin = OriginTypes.Centre
-                };
-
-                info.OnClick += delegate
-                {
-                    GameBase.Instance.OpenUrl(artistWeb);
-                };
-                spriteManagerSongInfo.Add(info);
-                vPos += 40;
+                    spriteManager.FadeIn(300, 1);
+                });
             }
-
-            if (artistTwitter != null)
-            {
-                pText info = new pText(artistTwitter, 20, new Vector2(0, vPos), 1, true, Color4.SkyBlue)
-                {
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    Origin = OriginTypes.Centre
-                };
-
-                info.OnClick += delegate
-                {
-                    GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"http://twitter.com/"));
-                };
-                spriteManagerSongInfo.Add(info);
-                vPos += 40;
-            }
-
-            string unicodeSource = beatmap.Package.GetMetadata(MapMetaType.SourceUnicode);
-            string normalSource = beatmap.Package.GetMetadata(MapMetaType.Source);
-
-            
-
-            if (normalSource != null)
-            {
-                vPos += 40;
-                pText source = new pText(normalSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
-                {
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    Origin = OriginTypes.Centre,
-                    TextShadow = true
-                };
-                spriteManagerSongInfo.Add(source);
-            }
-
-            if (normalSource != unicodeSource)
-            {
-                vPos += 40;
-                pText source = new pText(unicodeSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
-                {
-                    Field = FieldTypes.StandardSnapTopCentre,
-                    Origin = OriginTypes.Centre,
-                    TextShadow = true
-                };
-                spriteManagerSongInfo.Add(source);
-            }
-
-            pText mapper = new pText("Level design by " + beatmap.Creator, 18, new Vector2(0, 0), 1, true, Color4.White)
-            {
-                Field = FieldTypes.StandardSnapBottomCentre,
-                Origin = OriginTypes.BottomCentre
-            };
-            spriteManagerSongInfo.Add(mapper);
-
-            
-
-
-
-
-
-
-
-            State = SelectState.SongInfo;
-
-            footerHide();
-        }
-
-        private void hideSongInfo()
-        {
-            background.FadeIn(300);
-            spriteManagerSongInfo.Transformations.Clear();
-            spriteManagerSongInfo.FadeOut(400);
-            spriteManagerSongInfo.MoveTo(new Vector2(0, 600), 1500, EasingTypes.Out);
-        }
-
-        private void footerHide()
-        {
-            s_Footer.Transformations.Clear();
-            s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 500));
         }
 
         void Handle_ScoreInfoOnClick(object sender, EventArgs e)
@@ -534,6 +413,8 @@ namespace osum.GameModes
 
         private void leaveDifficultySelection(object sender, EventArgs args)
         {
+            Player.Beatmap = null;
+
             touchingBegun = false;
             velocity = 0;
 
