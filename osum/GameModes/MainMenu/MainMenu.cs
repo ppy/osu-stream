@@ -200,8 +200,12 @@ namespace osum.GameModes
             string username = GameBase.Config.GetValue<string>("username",null);
             if (username != null)
             {
-                pText usernameText = new pText(username, 20, new Vector2(40,0), 1, true, Color4.White);
+                pText usernameText = new pText(username, 20, new Vector2(30,0), 1, true, Color4.White);
                 spriteManager.Add(usernameText);
+
+                pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
+                spriteManager.Add(avatar);
+
             }
 
             firstDisplay = false;

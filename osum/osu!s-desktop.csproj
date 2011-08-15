@@ -110,6 +110,7 @@
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteWeb.cs" />
     <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
     <Compile Include="Graphics\TextureManager_Load.cs" />
     <Compile Include="Graphics\TouchBurster.cs" />

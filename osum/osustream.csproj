@@ -309,6 +309,7 @@
     <Compile Include="Helpers\Audio\AudioReader.cs" />
     <Compile Include="GameModes\Store\StoreModeIphone.cs" />
     <Compile Include="GameModes\Play\Components\ProgressDisplay.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteWeb.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
