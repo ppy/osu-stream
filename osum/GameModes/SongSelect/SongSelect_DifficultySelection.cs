@@ -97,7 +97,7 @@ namespace osum.GameModes
 
         private void showDifficultySelection2(bool instant = false)
         {
-            if (!instant && State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
+            if (!instant && State != SelectState.LoadingPreview && State != SelectState.SongInfo && State != SelectState.RankingDisplay) return;
 
             if (!AudioEngine.Music.IsElapsing)
                 playFromPreview();
@@ -130,7 +130,7 @@ namespace osum.GameModes
             if (State == SelectState.LoadingPreview && !instant)
                 SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             else
-                SetDifficulty(Player.Difficulty);
+                SetDifficulty(Player.Difficulty, true);
 
             //preview has finished loading.
             State = SelectState.DifficultySelect;
