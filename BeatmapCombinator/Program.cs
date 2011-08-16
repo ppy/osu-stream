@@ -200,8 +200,8 @@ namespace BeatmapCombinator
                                     HitObjectType type = (HitObjectType)Int32.Parse(split[3]) & ~HitObjectType.ColourHax;
                                     bool slider = (type & HitObjectType.Slider) > 0;
                                     bool spinner = (type & HitObjectType.Spinner) > 0;
-                                    int time = (int)Decimal.Parse(split[2]);
-                                    int endTime = spinner ? endTime = (int)Decimal.Parse(split[5]) : time;
+                                    int time = (int)Decimal.Parse(split[2], nfi);
+                                    int endTime = spinner ? endTime = (int)Decimal.Parse(split[5], nfi) : time;
 
                                     int repeatCount = 0; double length = 0; bool hadEndpointSamples = false;
                                     bool hold = false;
