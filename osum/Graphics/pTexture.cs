@@ -284,7 +284,7 @@ namespace osum.Graphics
         }
 
 #if iOS
-        public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname)
+        public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname, bool requireClear = false)
         {
             if (textureImage == null)
                 return null;
@@ -292,28 +292,24 @@ namespace osum.Graphics
             int width = (int)textureImage.Size.Width;
             int height = (int)textureImage.Size.Height;
 
-            IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
-            
-            
-#if SIMULATOR
-            //on the simulator we get texture corruption without this.
-            byte[] bytes = new byte[width * height * 4];
-            Marshal.Copy(bytes, 0, pTextureData,bytes.Length);
-#endif
-            
-            
-            using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
-                        width, height, 8, width * 4,
-                        textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-                textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-            
-            pTexture tex = FromRawBytes(pTextureData, width, height);
-            tex.Premultiplied = true;
-            
-            Marshal.FreeHGlobal(pTextureData);
-            
-            tex.assetName = assetname;
-            return tex;
+            byte[] buffer = new byte[width * height * 4];
+            fixed (byte* p = buffer)
+            {
+                IntPtr pTextureData = (IntPtr)p;
+
+                using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+                            width, height, 8, width * 4,
+                            textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+                {
+                    textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
+                }
+                
+                pTexture tex = FromRawBytes(pTextureData, width, height);
+                tex.Premultiplied = true;
+                
+                tex.assetName = assetname;
+                return tex;
+            }
         }
 #endif
 
