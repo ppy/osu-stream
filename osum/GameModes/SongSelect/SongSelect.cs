@@ -153,7 +153,7 @@ namespace osum.GameModes
                     break;
                 case SelectState.SongInfo:
                     SongInfo_Hide();
-                    showDifficultySelection(SelectedPanel);
+                    showDifficultySelection2();
                     break;
             }
         }
@@ -167,7 +167,7 @@ namespace osum.GameModes
             if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
-                    availableMaps.Add(bmi.GetBeatmap());
+                    maps.Add(bmi.GetBeatmap());
             }
             else
 #endif
@@ -179,7 +179,7 @@ namespace osum.GameModes
                     //bundled maps
                     Beatmap b = new Beatmap(s);
                     BeatmapDatabase.PopulateBeatmap(b);
-                    availableMaps.AddInPlace(b);
+                    maps.AddInPlace(b);
                 }
 #endif
 
