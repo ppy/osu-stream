@@ -538,8 +538,10 @@ namespace BeatmapCombinator
                 {
                     //stream mode specific. make sure we have enough hp to hit the first stream switch
                     int testStreamSwitch = Player.Beatmap.StreamSwitchPoints[0] - DifficultyManager.PreEmpt;
-                    int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; });
-                    if (index == 0)
+                    int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; }) - 1;
+                    //take one from the index. we need to be at max HP *before* the preempt-take-switch.
+
+                    if (index <= 0)
                         throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
                     switchHpObject = p.HitObjectManager.ActiveStreamObjects[index - 1];
                 }
