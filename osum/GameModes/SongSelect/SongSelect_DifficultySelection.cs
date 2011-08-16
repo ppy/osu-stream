@@ -99,9 +99,6 @@ namespace osum.GameModes
         {
             if (!instant && State != SelectState.LoadingPreview && State != SelectState.SongInfo) return;
 
-            //preview has finished loading.
-            State = SelectState.DifficultySelect;
-
             if (!AudioEngine.Music.IsElapsing)
                 playFromPreview();
 
@@ -130,7 +127,13 @@ namespace osum.GameModes
             spriteManagerDifficultySelect.Transformations.Clear();
             spriteManagerDifficultySelect.FadeInFromZero(animationTime / 2);
 
-            SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
+            if (State == SelectState.LoadingPreview && !instant)
+                SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
+            else
+                SetDifficulty(Player.Difficulty);
+
+            //preview has finished loading.
+            State = SelectState.DifficultySelect;
         }
 
         private void playFromPreview()

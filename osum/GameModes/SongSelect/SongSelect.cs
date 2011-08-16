@@ -91,8 +91,6 @@ namespace osum.GameModes
 
             GameBase.Config.SaveConfig();
 
-            Player.Difficulty = Difficulty.Normal;
-
             InputManager.OnMove += InputManager_OnMove;
 
             InitializeBgm();
