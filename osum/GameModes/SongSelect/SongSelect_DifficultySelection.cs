@@ -213,10 +213,7 @@ namespace osum.GameModes
             }
             else
             {
-                OnlineHelper.ShowRanking(Player.SubmitString, delegate
-                {
-                    spriteManager.FadeIn(300, 1);
-                });
+                Ranking_Show();
             }
         }
 
