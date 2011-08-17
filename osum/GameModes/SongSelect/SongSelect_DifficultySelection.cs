@@ -219,7 +219,7 @@ namespace osum.GameModes
 
         void Handle_ScoreInfoOnClick(object sender, EventArgs e)
         {
-            if (bmi == null || bmi.HighScore.totalScore == 0)
+            if (bmi.HighScore == null || bmi.HighScore.totalScore == 0)
                 return;
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
