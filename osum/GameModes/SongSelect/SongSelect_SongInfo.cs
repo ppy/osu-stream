@@ -32,13 +32,13 @@ namespace osum.GameModes
 
             SelectedPanel.Sprites.ForEach(s => s.MoveTo(new Vector2(0, -100), 400));
 
-            spriteManagerSongInfo.Clear();
+            songInfoSpriteManager.Clear();
 
-            spriteManagerSongInfo.Alpha = 0;
-            spriteManagerSongInfo.Position = Vector2.Zero;
-            spriteManagerSongInfo.Transformations.Clear();
-            spriteManagerSongInfo.Transform(new TransformationBounce(Clock.Time + 200, Clock.Time + 700, 1, 0.5f, 2));
-            spriteManagerSongInfo.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
+            songInfoSpriteManager.Alpha = 0;
+            songInfoSpriteManager.Position = Vector2.Zero;
+            songInfoSpriteManager.Transformations.Clear();
+            songInfoSpriteManager.Transform(new TransformationBounce(Clock.Time + 200, Clock.Time + 700, 1, 0.5f, 2));
+            songInfoSpriteManager.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
 
             Beatmap beatmap = SelectedPanel.Beatmap;
 
@@ -61,7 +61,7 @@ namespace osum.GameModes
                 ScaleScalar = aspectAdjust,
                 Alpha = 0.3f
             };
-            spriteManagerSongInfo.Add(thumbSprite);
+            songInfoSpriteManager.Add(thumbSprite);
 
             float vPos = 60;
 
@@ -75,7 +75,7 @@ namespace osum.GameModes
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre
                 };
-                spriteManagerSongInfo.Add(titleUnicode);
+                songInfoSpriteManager.Add(titleUnicode);
                 vPos += 40;
             }
 
@@ -85,7 +85,7 @@ namespace osum.GameModes
                 Origin = OriginTypes.Centre,
                 TextShadow = true
             };
-            spriteManagerSongInfo.Add(title);
+            songInfoSpriteManager.Add(title);
 
             vPos += 40;
 
@@ -97,7 +97,7 @@ namespace osum.GameModes
                 Origin = OriginTypes.Centre,
                 TextShadow = true
             };
-            spriteManagerSongInfo.Add(artist);
+            songInfoSpriteManager.Add(artist);
 
             vPos += 40;
 
@@ -116,7 +116,7 @@ namespace osum.GameModes
                 {
                     GameBase.Instance.OpenUrl(artistWeb);
                 };
-                spriteManagerSongInfo.Add(info);
+                songInfoSpriteManager.Add(info);
                 vPos += 40;
             }
 
@@ -132,7 +132,7 @@ namespace osum.GameModes
                 {
                     GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"http://twitter.com/"));
                 };
-                spriteManagerSongInfo.Add(info);
+                songInfoSpriteManager.Add(info);
                 vPos += 40;
             }
 
@@ -150,7 +150,7 @@ namespace osum.GameModes
                     Origin = OriginTypes.Centre,
                     TextShadow = true
                 };
-                spriteManagerSongInfo.Add(source);
+                songInfoSpriteManager.Add(source);
             }
 
             if (normalSource != unicodeSource)
@@ -162,7 +162,7 @@ namespace osum.GameModes
                     Origin = OriginTypes.Centre,
                     TextShadow = true
                 };
-                spriteManagerSongInfo.Add(source);
+                songInfoSpriteManager.Add(source);
             }
 
             pText mapper = new pText("Level design by " + beatmap.Creator, 18, new Vector2(0, 0), 1, true, Color4.White)
@@ -170,7 +170,7 @@ namespace osum.GameModes
                 Field = FieldTypes.StandardSnapBottomCentre,
                 Origin = OriginTypes.BottomCentre
             };
-            spriteManagerSongInfo.Add(mapper);
+            songInfoSpriteManager.Add(mapper);
 
             State = SelectState.SongInfo;
 
@@ -180,9 +180,9 @@ namespace osum.GameModes
         private void SongInfo_Hide()
         {
             background.FadeIn(300);
-            spriteManagerSongInfo.Transformations.Clear();
-            spriteManagerSongInfo.FadeOut(400);
-            spriteManagerSongInfo.MoveTo(new Vector2(0, 600), 1500, EasingTypes.Out);
+            songInfoSpriteManager.Transformations.Clear();
+            songInfoSpriteManager.FadeOut(400);
+            songInfoSpriteManager.MoveTo(new Vector2(0, 600), 1500, EasingTypes.Out);
         }
     }
 }

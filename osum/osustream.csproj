@@ -312,6 +312,7 @@
     <Compile Include="GameModes\Play\Components\ProgressDisplay.cs" />
     <Compile Include="Graphics\Sprites\pSpriteWeb.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect_Ranking.cs" />
+    <Compile Include="GameModes\SongSelect\ScorePanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

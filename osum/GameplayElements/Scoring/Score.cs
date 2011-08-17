@@ -11,6 +11,9 @@ namespace osum.GameplayElements.Scoring
 {
     public class Score : bSerializable
     {
+        public string Username;
+        public int Id;
+
         public ushort count100;
         public ushort count300;
         public ushort count50;

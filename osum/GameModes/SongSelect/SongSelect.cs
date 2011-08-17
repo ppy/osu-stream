@@ -34,7 +34,7 @@ namespace osum.GameModes
 
         SpriteManager topmostSpriteManager = new SpriteManager();
         SpriteManager spriteManagerDifficultySelect = new SpriteManager();
-        SpriteManager spriteManagerSongInfo = new SpriteManager();
+        SpriteManager songInfoSpriteManager = new SpriteManager();
 
         private pSprite s_Header;
         private pSprite s_Footer;
@@ -212,7 +212,7 @@ namespace osum.GameModes
             foreach (Beatmap b in maps)
             {
                 BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
-                spriteManager.Add(panel);
+                topmostSpriteManager.Add(panel);
                 panels.Add(panel);
             }
 
@@ -220,7 +220,7 @@ namespace osum.GameModes
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
-            spriteManager.Add(panelDownloadMore);
+            topmostSpriteManager.Add(panelDownloadMore);
         }
 
         void panelSelected(object sender, EventArgs args)
@@ -260,7 +260,8 @@ namespace osum.GameModes
 
             topmostSpriteManager.Dispose();
             spriteManagerDifficultySelect.Dispose();
-            spriteManagerSongInfo.Dispose();
+            songInfoSpriteManager.Dispose();
+            if (rankingSpriteManager != null) rankingSpriteManager.Dispose();
 
             foreach (Beatmap b in maps)
                 b.Dispose();
@@ -317,8 +318,11 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
+            
+            if (rankingSpriteManager != null) rankingSpriteManager.Draw();
+
             spriteManagerDifficultySelect.Draw();
-            spriteManagerSongInfo.Draw();
+            if (songInfoSpriteManager != null) songInfoSpriteManager.Draw();
             topmostSpriteManager.Draw();
             return true;
         }
@@ -328,7 +332,8 @@ namespace osum.GameModes
             base.Update();
 
             spriteManagerDifficultySelect.Update();
-            spriteManagerSongInfo.Update();
+            if (songInfoSpriteManager != null) songInfoSpriteManager.Update();
+            if (rankingSpriteManager != null) rankingSpriteManager.Update();
             topmostSpriteManager.Update();
 
             inputStolen = InputManager.PrimaryTrackingPoint != null && InputManager.PrimaryTrackingPoint.HoveringObject == s_ButtonBack;

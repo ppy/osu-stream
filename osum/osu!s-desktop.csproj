@@ -82,6 +82,7 @@
     <Compile Include="GameModes\PositioningTest.cs" />
     <Compile Include="GameModes\Results\Results.cs" />
     <Compile Include="GameModes\Results\ResultTransition.cs" />
+    <Compile Include="GameModes\SongSelect\ScorePanel.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect_Ranking.cs" />
     <Compile Include="GameModes\SongSelect\SongSelect.cs" />
     <Compile Include="GameModes\SongSelect\BackButton.cs" />
