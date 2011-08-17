@@ -60,7 +60,7 @@ namespace osum.GameModes.Options
 
             button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
-                GameBase.Instance.OpenUrl("http://www.osustream.com/help/");
+                GameBase.Instance.ShowWebView("http://www.osustream.com/help/","Online Help");
             });
 
             smd.Add(button);
