@@ -60,6 +60,7 @@ namespace osum.Graphics.Sprites
             if (movedY < 10)
                 return;
 
+            scrollbar.Transformations.Clear();
             if (scrollbar.Alpha != 1)
                 scrollbar.FadeIn(200);
 
@@ -80,7 +81,6 @@ namespace osum.Graphics.Sprites
             movedX = 0;
             movedY = 0;
 
-            scrollbar.Transformations.Clear();
             scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
 
             base.HandleInputManagerOnUp(source, trackingPoint);
