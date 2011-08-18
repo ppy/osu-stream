@@ -105,7 +105,7 @@ namespace osum.GameModes
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.songselect_header), new Vector2(0, 0));
             s_Header.OnClick += delegate { };
-            spriteManager.Add(s_Header);
+            topmostSpriteManager.Add(s_Header);
 
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.songselect_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White)
             {
