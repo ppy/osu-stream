@@ -6,17 +6,9 @@
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}</ProjectGuid>
-    <ProjectTypeGuids>{E613F3A2-FE9C-494F-B74E-F63BCB86FEA6};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>osum</RootNamespace>
-    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
-    <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
-    <BundleVersion>1.01</BundleVersion>
-    <BundleDisplayName>osu!</BundleDisplayName>
-    <BundleIcon>Icon.png</BundleIcon>
-    <BundleIconHigh>Icon@2x.png</BundleIconHigh>
-    <SupportedDevices>IPhoneAndIPad</SupportedDevices>
-    <BundleIconIPad>Icon-72.png</BundleIconIPad>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -26,19 +18,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchI18n>cjk</MtouchI18n>
-    <MtouchDebug>True</MtouchDebug>
+    <MtouchDebug>true</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
     <MtouchSdkVersion>4.3</MtouchSdkVersion>
-    <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchUseThumb>false</MtouchUseThumb>
-    <MtouchUseSGen>false</MtouchUseSGen>
     <DebugSymbols>true</DebugSymbols>
-    <MtouchArch>ARMv6</MtouchArch>
     <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -47,20 +34,15 @@
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
-    <MtouchMinimumOS>3.0</MtouchMinimumOS>
-    <MtouchDebug>True</MtouchDebug>
+    <MtouchDebug>true</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchI18n />
     <MtouchSdkVersion>3.0</MtouchSdkVersion>
     <DefineConstants>iOS DEBUG SIMULATOR</DefineConstants>
-    <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchUseThumb>false</MtouchUseThumb>
-    <MtouchUseSGen>false</MtouchUseSGen>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchArch>ARMv6</MtouchArch>
     <AssemblyName>osum</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -71,17 +53,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
-    <MtouchDebug>True</MtouchDebug>
+    <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
     <Externalconsole>true</Externalconsole>
-    <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchUseThumb>false</MtouchUseThumb>
-    <MtouchUseSGen>false</MtouchUseSGen>
-    <MtouchArch>ARMv6</MtouchArch>
     <AssemblyName>osustream</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -91,8 +68,6 @@
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
-    <MtouchDebug>False</MtouchDebug>
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -100,11 +75,7 @@
     <MtouchI18n>
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchUseLlvm>false</MtouchUseLlvm>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchUseThumb>false</MtouchUseThumb>
-    <MtouchUseSGen>false</MtouchUseSGen>
-    <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
     <AssemblyName>osustream</AssemblyName>
   </PropertyGroup>
@@ -117,16 +88,11 @@
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchI18n />
-    <MtouchDebug>False</MtouchDebug>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <ConsolePause>false</ConsolePause>
-    <MtouchUseSGen>false</MtouchUseSGen>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
-    <MtouchArch>ARMv6</MtouchArch>
-    <MtouchUseThumb>false</MtouchUseThumb>
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="cp -r ${ProjectDir}/bin/${ProjectConfigPlat}/${ProjectConfigName}/${ProjectName}.app ${SolutionDir}/Output/Payload/${ProjectName}.app" workingdir="" />
@@ -146,18 +112,27 @@
     <DefineConstants>iOS OSUM DIST RELEASE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
-    <MtouchDebug>False</MtouchDebug>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchMinimumOS>3.2</MtouchMinimumOS>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <AssemblyName>osustream</AssemblyName>
-    <MtouchArch>ARMv6</MtouchArch>
     <MtouchLink>Full</MtouchLink>
-    <MtouchUseSGen>false</MtouchUseSGen>
-    <MtouchUseThumb>false</MtouchUseThumb>
     <CodesignProvision>FB1023E2-3C5E-41CD-819D-8FDF88B365E8</CodesignProvision>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Testflight</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AssemblyName>osustream</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Distribution</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AssemblyName>osustream</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
