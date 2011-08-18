@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG MONO OSUM FULL_DEBUG MAPPER</DefineConstants>
+    <DefineConstants>DEBUG MONO OSUM MAPPER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
