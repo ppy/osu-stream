@@ -21,8 +21,6 @@ namespace osum.GameModes.SongSelect
         EventHandler Action;
         const float offset = 0;
 
-        private double elapsedRotation;
-
         SpriteManager sm = new SpriteManager();
 
         static Vector2 hiddenPosition = new Vector2(-80, -218);
@@ -207,24 +205,12 @@ namespace osum.GameModes.SongSelect
         {
             base.Update();
 
-            elapsedRotation += Clock.ElapsedMilliseconds;
-
-            //arrow.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * Clock.ElapsedMilliseconds);
-
-            //if (Transformations.Count == 0 && !IsHovering)
-            //{
-            //    colourIndex = (colourIndex + 1) % TextureManager.DefaultColours.Length;
-            //    FadeColour(TextureManager.DefaultColours[colourIndex],10000);
-            //}
-
-            arrow.Alpha = this.Alpha;
+            arrow.Alpha = Alpha;
             arrow.Position = Position;
             arrow.Rotation = Rotation;
             arrow.Colour = Colour;
 
             sm.Update();
-
-            //Rotation += (float)Clock.ElapsedMilliseconds * 0.0005f;
         }
     }
 }
