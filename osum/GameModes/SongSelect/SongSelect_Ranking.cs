@@ -52,7 +52,13 @@ namespace osum.GameModes
 
             s_SongInfo.FadeOut(100);
 
-            rankingNetRequest = new StringNetRequest(@"http://osustream.com/score/retrieve.php", "POST", "udid=" + GameBase.Instance.DeviceIdentifier);
+            int period = 0;
+
+            rankingNetRequest = new StringNetRequest(@"http://osustream.com/score/retrieve.php", "POST", 
+                "udid=" + GameBase.Instance.DeviceIdentifier + 
+                "&filename=" + Path.GetFileName(Player.Beatmap.ContainerFilename) +
+                "&period=" + period);
+
             rankingNetRequest.onFinish += rankingReceived;
 
             NetManager.AddRequest(rankingNetRequest);
