@@ -336,8 +336,23 @@ namespace osum.GameModes
                     "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
                     "&c=" + check;
 
+                spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
+                {
+                    ExactCoordinates = false,
+                    DimImmune = true,
+                    ScaleScalar = 0.7f
+                };
+
+                spriteSubmitting.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
+                GameBase.MainSpriteManager.Add(spriteSubmitting);
+                spriteSubmitting.FadeInFromZero(300);
+
                 StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
-                Console.WriteLine("Request: " + postString);
+                nr.onFinish += delegate(string result, Exception e)
+                {
+                    spriteSubmitting.AlwaysDraw = false;
+                    spriteSubmitting.FadeOut(100);
+                };
                 NetManager.AddRequest(nr);
             }
             else
@@ -491,11 +506,14 @@ namespace osum.GameModes
 
         private void showNavigation()
         {
-            s_ButtonBack.FadeIn(500);
+            if (s_Footer.Alpha != 1)
+            {
+                s_ButtonBack.FadeIn(500);
 
-            s_Footer.Alpha = 1;
-            s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Alpha = 1;
+                s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            }
         }
 
         private void showOnlineRanking()
@@ -586,6 +604,7 @@ namespace osum.GameModes
         }
 
         int frameCount = 0;
+        private pSprite spriteSubmitting;
 
         public override void Update()
         {
