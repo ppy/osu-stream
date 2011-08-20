@@ -46,7 +46,7 @@ namespace osum.Graphics.Sprites
         internal float Alpha;
 
         internal bool AlwaysDraw;
-        internal ClockTypes Clocking;
+        internal ClockTypes Clocking = ClockTypes.Mode;
 
         internal Color4 Colour = Color4.White;
         
