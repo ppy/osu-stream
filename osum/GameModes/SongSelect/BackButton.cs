@@ -88,7 +88,7 @@ namespace osum.GameModes.SongSelect
 
             if (tp != null)
             {
-                bool success = (minimumHitPossible && dist < hit_minimum_distance) || (dist > hit_pull_distance && dist < pull_limit_distance);
+                bool success = (minimumHitPossible && dist < hit_minimum_distance) || (dist > hit_pull_distance);
 
                 Transformations.Clear();
 
