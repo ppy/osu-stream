@@ -131,12 +131,14 @@ namespace osum.GameModes
             osuLogoSmall.Alpha = 0;
             spriteManager.Add(osuLogoSmall);
 
-            menuBackgroundNew.Transform(fadeIn);
+            NewsButton = new NewsButton();
+            spriteManager.Add(NewsButton);
+            NewsButton.OnClick += new EventHandler(newsButton_OnClick);
+            if (GameBase.Config.GetValue<int>("NewsLastRead", 0) == 0)
+                NewsButton.HasNews = true;
+            NewsButton.Alpha = 0;
 
-            //#if !iOS
-            //            pText notice = new pText("now that we are getting close to release, please let me state once again (as per the README) that this version is strictly for mapping, and i would greatly appreciate it if none of the files on this dropbox share are distributed beyond those with access. thanks :)", 14, Vector2.Zero, 1, true, Color4.White) { Field = FieldTypes.StandardSnapBottomCentre, Origin = OriginTypes.BottomCentre, TextAlignment = Graphics.Renderers.TextAlignment.Centre, TextShadow = true };
-            //            spriteManager.Add(notice);
-            //#endif
+            menuBackgroundNew.Transform(fadeIn);
 
             osuLogo.Transform(fadeIn);
 
@@ -168,24 +170,26 @@ namespace osum.GameModes
                     GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
                 }, true);
 
-                if (GameBase.Config.GetValue<bool>("firstrun",true))
+                if (GameBase.Config.GetValue<bool>("firstrun", true))
                 {
                     Notification notification = new Notification(
                         LocalisationManager.GetString(OsuString.FirstRunWelcome),
                         LocalisationManager.GetString(OsuString.FirstRunTutorial),
                         NotificationStyle.YesNo,
-                        delegate(bool answer) {
+                        delegate(bool answer)
+                        {
                             if (answer)
                             {
                                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                                 Director.ChangeMode(OsuMode.Tutorial);
                             }
-                            GameBase.Config.SetValue<bool>("firstrun",false);
+                            GameBase.Config.SetValue<bool>("firstrun", false);
                             GameBase.Config.SaveConfig();
                         });
 
-                    GameBase.Scheduler.Add(delegate {
-                    GameBase.Notify(notification);
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        GameBase.Notify(notification);
                     }, initial_display + 1500);
                 }
 
@@ -197,10 +201,10 @@ namespace osum.GameModes
                 AudioEngine.Music.Play();
             }
 
-            string username = GameBase.Config.GetValue<string>("username",null);
+            string username = GameBase.Config.GetValue<string>("username", null);
             if (username != null)
             {
-                pText usernameText = new pText(username, 20, new Vector2(35,0), 1, true, Color4.White);
+                pText usernameText = new pText(username, 20, new Vector2(35, 0), 1, true, Color4.White);
                 usernameText.TextShadow = true;
                 spriteManager.Add(usernameText);
 
@@ -210,6 +214,16 @@ namespace osum.GameModes
             }
 
             firstDisplay = false;
+        }
+
+        void newsButton_OnClick(object sender, EventArgs e)
+        {
+            int time = UnixTimestamp.FromDateTime(DateTime.Now);
+
+            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news");
+            GameBase.Config.SetValue<int>("NewsLastRead", time);
+
+            NewsButton.HasNews = false;
         }
 
         void osuLogo_OnClick(object sender, EventArgs e)
@@ -223,7 +237,12 @@ namespace osum.GameModes
 
             menuBackgroundNew.BeAwesome();
 
-            osuLogoSmall.Transform(new TransformationF(TransformationType.Fade, 0, 0.98f, Clock.ModeTime + 1300, Clock.ModeTime + 1700));
+            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 0.98f, Clock.ModeTime + 1300, Clock.ModeTime + 1700);
+            osuLogoSmall.Transform(fadeIn);
+
+            Transformation move = new TransformationV(new Vector2(0, 50), Vector2.Zero, Clock.ModeTime + 1300, Clock.ModeTime + 1700, EasingTypes.In);
+            NewsButton.Transform(fadeIn);
+            NewsButton.Transform(move);
 
             osuLogo.Transformations.Clear();
             osuLogo.Transform(new TransformationF(TransformationType.Scale, osuLogo.ScaleScalar, osuLogo.ScaleScalar * 2.4f, Clock.ModeTime, Clock.ModeTime + 1300, EasingTypes.InDouble));
@@ -278,6 +297,7 @@ namespace osum.GameModes
         private pDrawable additiveStream;
         private MenuBackground menuBackgroundNew;
         private pSprite osuLogoSmall;
+        public NewsButton NewsButton;
 
         public override void Update()
         {

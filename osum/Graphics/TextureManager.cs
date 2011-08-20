@@ -531,6 +531,8 @@ namespace osum.Graphics.Skins
         tracks,
         demo,
         songselect_songinfo,
-        sliderballoverlay
+        sliderballoverlay,
+        news_light,
+        news_button
     }
 }

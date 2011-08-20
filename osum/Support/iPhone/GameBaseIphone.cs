@@ -231,7 +231,7 @@ namespace osum
             return t;
         }
 
-        public override void ShowWebView(string url, string title = null, StringBoolDelegate checkFinished = null)
+        public override void ShowWebView(string url, string title = "", StringBoolDelegate checkFinished = null)
         {
             WebViewController webViewController = new WebViewController(url, title);
             if (checkFinished != null) webViewController.ShouldClose += checkFinished;
