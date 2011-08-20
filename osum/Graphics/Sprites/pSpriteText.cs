@@ -420,7 +420,13 @@ namespace osum.Graphics.Sprites
                     {
                         Vector2 thisDrawPos = new Vector2(drawPos.X + renderCoordinates[i] * coordScale, drawPos.Y);
 
-                        tex.TextureGl.DrawTo(coordinates, vertices, i, thisDrawPos, OriginVector, drawScale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        unsafe
+                        {
+                            float* coordinatesP = (float*)handle_coordinates_pointer;
+                            float* verticesP = (float*)handle_vertices_pointer;
+                            tex.TextureGl.DrawTo(coordinatesP, verticesP, i, thisDrawPos, OriginVector, drawScale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        }
+ 
                         i++;
                         // note: no srcRect calculation
                         /*if (ZeroAlpha == 1)

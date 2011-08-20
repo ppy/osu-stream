@@ -224,8 +224,8 @@ namespace osum.Graphics
             }
         }
 
-        public void DrawTo(float[] coordinates, float[] vertices, int startIndex, Vector2 currentPos, Vector2 origin, Vector2 scaleVector, float rotation,
-                         Box2 drawRect)
+        public unsafe void DrawTo(float* coordinates, float* vertices, int startIndex, Vector2 currentPos, Vector2 origin, Vector2 scaleVector, float rotation,
+                                    Box2 drawRect) 
         {
             float left = drawRect.Left / potWidth;
             float right = drawRect.Right / potWidth;
