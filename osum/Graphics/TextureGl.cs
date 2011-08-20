@@ -136,8 +136,7 @@ namespace osum.Graphics
             Id = -1;
         }
 
-        public bool IsDisposed { get; private set; }
-
+        private bool IsDisposed;
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed)

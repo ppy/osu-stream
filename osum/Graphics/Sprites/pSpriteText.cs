@@ -159,8 +159,11 @@ namespace osum.Graphics.Sprites
 #endif
         }
 
+        private bool isDisposed;
         public override void Dispose()
         {
+            if (isDisposed) return;
+
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
@@ -170,6 +173,7 @@ namespace osum.Graphics.Sprites
 #endif
 
             base.Dispose();
+            isDisposed = true;
         }
 
         internal Vector2 MeasureText()
