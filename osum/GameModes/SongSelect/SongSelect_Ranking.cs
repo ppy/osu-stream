@@ -97,7 +97,7 @@ namespace osum.GameModes
                     count50 = UInt16.Parse(split[i++]),
                     countMiss = UInt16.Parse(split[i++]),
                     maxCombo = UInt16.Parse(split[i++]),
-                    date = ConvertFromUnixTimestamp(Int32.Parse(split[i++]))
+                    date = UnixTimestamp.Parse(Int32.Parse(split[i++]))
                 };
 
                 rankingScores.Add(score);
@@ -126,12 +126,6 @@ namespace osum.GameModes
             Director.ChangeMode(OsuMode.Results);
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
-        }
-
-        static DateTime ConvertFromUnixTimestamp(int timestamp)
-        {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return origin.AddSeconds(timestamp);
         }
 
         void Ranking_Hide()
