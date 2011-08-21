@@ -68,7 +68,7 @@ namespace osum.GameModes
         {
             rankingNetRequest = null;
 
-            if (e != null)
+            if (e != null || _result == null)
             {
                 //error
                 Ranking_Hide();
