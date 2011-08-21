@@ -44,6 +44,8 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
+        static readonly internal bool SUPPORTS_DRAWTEXTURE_EXT;
+
         internal int potHeight;
         internal int potWidth;
 
@@ -82,6 +84,13 @@ namespace osum.Graphics
 
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
+
+        static TextureGl()
+        {
+            SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(StringName.Extensions).Contains("OES_draw_texture");
+
+        }
+
 
         public TextureGl(int width, int height)
         {
@@ -311,6 +320,16 @@ namespace osum.Graphics
             float top = drawRect.Top / potHeight;
             float bottom = drawRect.Bottom / potHeight;
 
+
+            if (rotation == 0 && SUPPORTS_DRAWTEXTURE_EXT)
+            {
+                Bind();
+#if IOS || ANDROID
+                GL.Oes.DrawTex(left, top, 0, (right - left) * scaleVector.X, (bottom - top) * scaleVector.Y);
+#endif
+                return;
+            }
+
             unsafe
             {
 #if NO_PIN_SUPPORT
@@ -368,8 +387,8 @@ namespace osum.Graphics
 
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
-
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
+            
         }
 
         public void SetData(int textureId)
