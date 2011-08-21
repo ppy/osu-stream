@@ -220,7 +220,7 @@ namespace osum.GameModes
         {
             int time = UnixTimestamp.FromDateTime(DateTime.Now);
 
-            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news");
+            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news", "News");
             GameBase.Config.SetValue<int>("NewsLastRead", time);
 
             NewsButton.HasNews = false;
