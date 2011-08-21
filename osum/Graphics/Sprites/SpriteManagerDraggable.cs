@@ -162,6 +162,11 @@ namespace osum.Graphics.Sprites
             base.Update();
             nonDraggableManager.Update();
         }
+
+        internal void ScrollTo(pDrawable sprite)
+        {
+            verticalDragOffset = Math.Min(0,-(sprite.Position.Y - 20));
+        }
     }
 }
 
