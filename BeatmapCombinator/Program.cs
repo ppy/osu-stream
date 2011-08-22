@@ -205,6 +205,9 @@ namespace BeatmapCombinator
 
                                     int repeatCount = 0; double length = 0; bool hadEndpointSamples = false;
                                     bool hold = false;
+                                    SampleSet ss = SampleSet.None, ssa = SampleSet.None;
+                                    string[] samplestring = null;
+
                                     if (slider)
                                     {
                                         repeatCount = Convert.ToInt32(split[6]);
@@ -214,13 +217,39 @@ namespace BeatmapCombinator
                                         hold = (repeatCount > 1 && length < 50) ||
                                                (repeatCount > 4 && length < 100) ||
                                                (hadEndpointSamples && split[4] == "4");
+
+                                        if (split.Length >= 9)
+                                        {
+                                            samplestring = split[10].Split(':');
+                                        }
+                                    }
+                                    else if (spinner)
+                                    {
+                                        if (split.Length >= 5)
+                                        {
+                                            samplestring = split[6].Split(':');
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (split.Length >= 4)
+                                        {
+                                            samplestring = split[5].Split(':');
+                                        }
+                                    }
+
+                                    if (samplestring != null)
+                                    {
+                                        ss = (SampleSet)Convert.ToInt32(samplestring[0]);
+                                        if (samplestring.Length > 0)
+                                            ssa = (SampleSet)Convert.ToInt32(samplestring[1]);
                                     }
 
                                     // take the slider's slide sampleset from 20ms after the head in case the head has a different sampleset
                                     ControlPoint cp = bd.controlPointAt(slider ? time + 20 : endTime + 5);
 
                                     StringBuilder builder = new StringBuilder();
-                                    builder.Append(MakeSampleset(cp));
+                                    builder.Append(MakeSampleset(cp, ss, ssa));
 
                                     // Object commons
                                     builder.Append(',');
@@ -279,16 +308,34 @@ namespace BeatmapCombinator
                                         double currTime = time;
                                         cp = bd.controlPointAt(currTime + 5);
 
-                                        // nodal samplesets
-                                        builder.Append(',');
-                                        builder.Append(MakeSampleset(cp));
-
-                                        for (int repeatNo = 0; repeatNo < repeatCount; repeatNo++)
+                                        string[] node_samples;
+                                        if (split.Length >= 8)
                                         {
-                                            currTime += ReboundTime;
+                                            // osu!'s separator is different
+                                            node_samples = split[9].Split('|');
+                                        }
+                                        else
+                                        {
+                                            node_samples = new string[0];
+                                        }
+                                        // nodal samplesets
+                                        for (int repeatNo = 0; repeatNo <= repeatCount; repeatNo++)
+                                        {
+                                            SampleSet node_ss = ss;
+                                            SampleSet node_ssa = ssa;
+
+                                            if (repeatNo < node_samples.Length)
+                                            {
+                                                string[] pair = node_samples[repeatNo].Split(':');
+                                                node_ss = (SampleSet)Convert.ToInt32(pair[0]);
+                                                if (pair.Length > 0)
+                                                    node_ssa = (SampleSet)Convert.ToInt32(pair[1]);
+                                            }
+
                                             cp = bd.controlPointAt(currTime + 5);
-                                            builder.Append(':');
-                                            builder.Append(MakeSampleset(cp));
+                                            builder.Append(repeatNo == 0 ? ',' : ':');
+                                            builder.Append(MakeSampleset(cp, node_ss, node_ssa));
+                                            currTime += ReboundTime;
                                         }
                                     }
 
@@ -313,8 +360,7 @@ namespace BeatmapCombinator
                                                                      : CustomSampleSet.Default,
                                                                  Int32.Parse(split[5]),
                                                                  split.Length > 6 ? split[6][0] == '1' : true,
-                                                                 split.Length > 7 ? split[7][0] == '1' : false,
-                                                                 split.Length > 8 ? (SampleSet)Int32.Parse(split[8]) : (SampleSet)Int32.Parse(split[3]));
+                                                                 split.Length > 7 ? split[7][0] == '1' : false);
                                     bd.ControlPoints.Add(cp);
                                     break;
                                 }
@@ -490,18 +536,21 @@ namespace BeatmapCombinator
             }
         }
 
-        private static string MakeSampleset(ControlPoint cp)
+        private static string MakeSampleset(ControlPoint cp, SampleSet ss, SampleSet ssa)
         {
-            string result = ((int)cp.sampleSet).ToString();
+            SampleSet _ss = ss == SampleSet.None ? cp.sampleSet : ss;
+            SampleSet _ssa = ssa == SampleSet.None ? ss : ssa;
+
+            string result = ((int)_ss).ToString();
             bool b1 = cp.volume != 100;
-            bool b2 = cp.normalSampleSet != SampleSet.None && cp.normalSampleSet != cp.sampleSet;
+            bool b2 = _ssa != SampleSet.None && _ssa != _ss;
 
             if (b1 || b2)
             {
                 result += "|" + cp.volume.ToString();
                 if (b2)
                 {
-                    result += "|" + ((int)cp.normalSampleSet).ToString();
+                    result += "|" + ((int)_ssa).ToString();
                 }
             }
             return result;

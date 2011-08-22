@@ -85,11 +85,13 @@ namespace osum.Graphics
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
 
+#if IPHONE
         static TextureGl()
         {
             SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(All.Extensions).Contains("OES_draw_texture");
 
         }
+#endif
 
 
         public TextureGl(int width, int height)
