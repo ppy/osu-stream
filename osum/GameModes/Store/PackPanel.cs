@@ -85,6 +85,9 @@ namespace osum.GameModes.Store
                 s_BackingPlate.HandleInput = false;
 
                 s_PriceBackground.FadeIn(100);
+                s_PriceBackground.Transform(new TransformationF(TransformationType.Fade, 1, 0.6f, 100, 1500, EasingTypes.Out) { Looping = true, LoopDelay = 300 });
+                s_PriceBackground.Transform(new TransformationF(TransformationType.Fade, 0.6f, 1, 1500, 1800, EasingTypes.In) { Looping = true, LoopDelay = 1400 });
+
                 s_Price.FadeColour(Color4.White, 100);
                 s_PriceBackground.HandleInput = true;
 
@@ -181,6 +184,7 @@ namespace osum.GameModes.Store
 
             startNextDownload();
 
+            s_PriceBackground.Transformations.Clear();
             s_PriceBackground.FadeOut(100);
             s_Price.FadeOut(100);
 
@@ -280,7 +284,9 @@ namespace osum.GameModes.Store
                 s_BackingPlate.FadeIn(100);
                 s_BackingPlate2.FadeColour(Color4.Transparent, 100);
 
+                s_PriceBackground.Transformations.Clear();
                 s_PriceBackground.FadeOut(100);
+
                 s_Price.FadeColour(new Color4(255, 255, 255, 128), 100);
                 s_PriceBackground.HandleInput = false;
             }
