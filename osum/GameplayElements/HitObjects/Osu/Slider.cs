@@ -388,7 +388,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 float lineLength = l.rho;
 
-                if (lineLength + currentLength > PathLength)
+                if (lineLength + currentLength > PathLength || i + 1 == smoothPoints.Count)
                 {
                     l.p2 = l.p1 + Vector2.Normalize(l.p2 - l.p1) * (float)(PathLength - currentLength);
                     l.Recalc();
@@ -402,7 +402,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 cumulativeLengths.Add(currentLength);
             }
 
-            PathLength = currentLength;
             EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
         }
 
@@ -980,6 +979,8 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             {
                 index = cumulativeLengths.BinarySearch(aimLength);
                 if (index < 0) index = (~index);
+
+                index = Math.Min(index, count - 1);
             }
 
             double lengthAtIndex = cumulativeLengths[index];
