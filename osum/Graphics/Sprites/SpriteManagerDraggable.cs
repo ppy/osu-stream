@@ -12,7 +12,7 @@ namespace osum.Graphics.Sprites
     {
         SpriteManager nonDraggableManager = new SpriteManager();
 
-        internal bool ShowScrollbar = true;
+        internal bool Scrollbar = true;
         internal bool AutomaticHeight = true;
         internal bool LockHorizontal = true;
 
@@ -60,9 +60,7 @@ namespace osum.Graphics.Sprites
             if (movedY < 10)
                 return;
 
-            scrollbar.Transformations.Clear();
-            if (scrollbar.Alpha != 1)
-                scrollbar.FadeIn(200);
+            ShowScrollbar();
 
             verticalDragOffset += change;
             velocity = change;
@@ -81,9 +79,23 @@ namespace osum.Graphics.Sprites
             movedX = 0;
             movedY = 0;
 
-            scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
+            HideScrollbar();
 
             base.HandleInputManagerOnUp(source, trackingPoint);
+        }
+
+        internal void ShowScrollbar(bool pulse = false)
+        {
+            scrollbar.Transformations.Clear();
+            if (scrollbar.Alpha != 1)
+                scrollbar.FadeIn(200);
+            if (pulse)
+                HideScrollbar();
+        }
+
+        internal void HideScrollbar()
+        {
+            scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
         }
 
         private float verticalDragOffset;
@@ -166,6 +178,7 @@ namespace osum.Graphics.Sprites
         internal void ScrollTo(pDrawable sprite)
         {
             verticalDragOffset = Math.Min(0,-(sprite.Position.Y - 20));
+            ShowScrollbar(true); //pulse scrollbar display.
         }
     }
 }

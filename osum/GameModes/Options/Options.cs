@@ -21,7 +21,7 @@ namespace osum.GameModes.Options
         pSprite gameCentre;
         SpriteManagerDraggable smd = new SpriteManagerDraggable()
         {
-            ShowScrollbar = true
+            Scrollbar = true
         };
         private SliderControl soundEffectSlider;
 

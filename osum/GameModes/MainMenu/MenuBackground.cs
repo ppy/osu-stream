@@ -31,7 +31,7 @@ namespace osum.GameModes
             EndStopLenience = 0.5f;
             EndBufferZone = 0;
             AutomaticHeight = false;
-            ShowScrollbar = false;
+            Scrollbar = false;
             ExactCoordinates = false;
             LockHorizontal = false;
             CheckSpritesAreOnScreenBeforeRendering = false;
