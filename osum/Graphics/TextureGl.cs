@@ -87,7 +87,7 @@ namespace osum.Graphics
 
         static TextureGl()
         {
-            SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(StringName.Extensions).Contains("OES_draw_texture");
+            SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(All.Extensions).Contains("OES_draw_texture");
 
         }
 
@@ -321,14 +321,14 @@ namespace osum.Graphics
             float bottom = drawRect.Bottom / potHeight;
 
 
+#if ANDROID
             if (rotation == 0 && SUPPORTS_DRAWTEXTURE_EXT)
             {
                 Bind();
-#if IOS || ANDROID
                 GL.Oes.DrawTex(left, top, 0, (right - left) * scaleVector.X, (bottom - top) * scaleVector.Y);
-#endif
                 return;
             }
+#endif
 
             unsafe
             {
