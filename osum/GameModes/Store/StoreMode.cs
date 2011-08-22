@@ -180,6 +180,25 @@ namespace osum.GameModes.Store
             packs.Add(pp);
         }
 
+        void RemovePack(PackPanel pp)
+        {
+            if (pp == null)
+                return;
+
+            if (!packs.Remove(pp))
+                return;
+
+            pp.Sprites.ForEach(s => s.FadeOut(100));
+
+            //recalculate all heights
+            totalHeight = 0;
+            foreach (PackPanel p in packs)
+            {
+                p.MoveTo(new Vector2(0, totalHeight),350);
+                totalHeight += p.Height;
+            }
+        }
+
         bool playingPreview;
 
         public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
@@ -243,8 +262,7 @@ namespace osum.GameModes.Store
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            pp.Sprites.ForEach(s => s.FadeOut(100));
-            instance.packs.Remove(pp);
+            instance.RemovePack(pp);
 
             if (instance.packs.Count == 0)
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
