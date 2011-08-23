@@ -126,13 +126,20 @@ namespace osum.Graphics.Sprites
             if (AutomaticHeight)
             {
                 sprite.Update();
-                float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSizeFixedWidth.Height;
-                if (newOffset < offset_min)
+                float newOffset = sprite.DisplayRectangle.Bottom;
+                if (offset_min == 0 || -newOffset + +GameBase.BaseSizeFixedWidth.Height < offset_min)
                 {
-                    offset_min = newOffset;
-                    scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
+                    SetMaxHeight(newOffset);
                 }
             }
+        }
+
+        internal void SetMaxHeight(float newOffset)
+        {
+            newOffset = -newOffset + GameBase.BaseSizeFixedWidth.Height;
+
+            offset_min = newOffset;
+            scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
         }
 
         public override bool Draw()
@@ -184,9 +191,9 @@ namespace osum.Graphics.Sprites
         }
 
         float? aimOffset;
-        internal void ScrollTo(pDrawable sprite)
+        internal void ScrollTo(pDrawable sprite, float padding = 0)
         {
-            aimOffset = Math.Min(0,-(sprite.Position.Y - 30));
+            aimOffset = Math.Max(offset_min,Math.Min(0,-(sprite.Position.Y - 50 - padding)));
             ShowScrollbar(true); //pulse scrollbar display.
         }
     }

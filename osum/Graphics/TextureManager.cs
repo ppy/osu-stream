@@ -533,6 +533,7 @@ namespace osum.Graphics.Skins
         songselect_songinfo,
         sliderballoverlay,
         news_light,
-        news_button
+        news_button,
+        store_header
     }
 }

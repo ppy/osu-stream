@@ -25,11 +25,17 @@ namespace osum.GameModes.Store
         SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
         SpriteManager topMostSpriteManager = new SpriteManager();
 
+        bool playingPreview;
+        private pSprite s_Header;
+
         private BackButton s_ButtonBack;
 
         protected List<PackPanel> packs = new List<PackPanel>();
 
         StringNetRequest fetchRequest;
+
+        const int HEADER_PADDING = 60;
+        float totalHeight = HEADER_PADDING;
 
         public override void Initialize()
         {
@@ -40,6 +46,10 @@ namespace osum.GameModes.Store
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
+
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.store_header), new Vector2(0, 0));
+            s_Header.OnClick += delegate { };
+            topMostSpriteManager.Add(s_Header);
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
             topMostSpriteManager.Add(s_ButtonBack);
@@ -71,7 +81,7 @@ namespace osum.GameModes.Store
             base.Draw();
             scrollableSpriteManager.Draw();
             topMostSpriteManager.Draw();
-            
+
             return true;
         }
 
@@ -153,7 +163,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.Add(new PackItem(filename, title, updateChecksum));
+                pp.AddItem(new PackItem(filename, title, updateChecksum));
 
                 y++;
             }
@@ -169,13 +179,15 @@ namespace osum.GameModes.Store
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
         }
 
-        float totalHeight = 0;
         void AddPack(PackPanel pp)
         {
             if (pp == null || pp.BeatmapCount == 0)
                 return;
+
             pp.Sprites.ForEach(s => s.Position.Y += totalHeight);
-            totalHeight += pp.Height;
+            pp.PackItemSprites.ForEach(s => s.FadeOut(0));
+            totalHeight += pp.CondensedHeight;
+
             scrollableSpriteManager.Add(pp);
             packs.Add(pp);
         }
@@ -190,24 +202,29 @@ namespace osum.GameModes.Store
 
             pp.Sprites.ForEach(s => s.FadeOut(100));
 
-            //recalculate all heights
-            totalHeight = 0;
-            foreach (PackPanel p in packs)
-            {
-                p.MoveTo(new Vector2(0, totalHeight),350);
-                totalHeight += p.Height;
-            }
+            recalculateHeights();
         }
 
-        bool playingPreview;
+        private void recalculateHeights()
+        {
+            //recalculate all heights
+            totalHeight = HEADER_PADDING;
+            foreach (PackPanel p in packs)
+            {
+                p.MoveTo(new Vector2(0, totalHeight), 350);
+                totalHeight += p.Height;
+            }
 
-        public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
+            scrollableSpriteManager.SetMaxHeight(totalHeight);
+        }
+
+        public static void ResetAllPreviews(bool isPausing)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
             foreach (PackPanel p in instance.packs)
-                p.ResetPreviews(isUserDeselect || !isPausing);
+                p.ResetPreviews();
 
             instance.playingPreview = false;
 
@@ -245,7 +262,7 @@ namespace osum.GameModes.Store
             if (pack.IsFree)
                 download(pack);
             else
-                GameBase.Notify("Can't download paid packs from this build!",null);
+                GameBase.Notify("Can't download paid packs from this build!", null);
         }
 
         /// <summary>
@@ -271,33 +288,24 @@ namespace osum.GameModes.Store
                 instance.s_ButtonBack.FadeIn(100);
         }
 
-        public static void EnsureVisible(pDrawable sprite)
+        public static void ShowPack(PackPanel pack)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            instance.scrollableSpriteManager.ScrollTo(sprite);
-        }
+            foreach (PackPanel p in instance.packs)
+                p.Expanded = p == pack;
 
-        private float offset_min
-        {
-            get
-            {
-                if (packs.Count == 0)
-                    return 0;
+            pack.StartPreviewing();
 
-                float totalHeight = 0;
-                foreach (PackPanel p in packs)
-                    totalHeight += p.Height;
-
-                return -totalHeight + GameBase.BaseSizeFixedWidth.Height - 80;
-            }
+            instance.recalculateHeights();
+            instance.scrollableSpriteManager.ScrollTo(pack.s_BackingPlate, HEADER_PADDING);
         }
 
         public override void Update()
         {
             if (playingPreview && !AudioEngine.Music.IsElapsing)
-                ResetAllPreviews(true, false);
+                ResetAllPreviews(true);
 
             scrollableSpriteManager.Update();
             topMostSpriteManager.Update();
