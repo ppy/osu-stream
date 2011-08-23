@@ -309,7 +309,7 @@ namespace BeatmapCombinator
                                         cp = bd.controlPointAt(currTime + 5);
 
                                         string[] node_samples;
-                                        if (split.Length >= 8)
+                                        if (split.Length > 9)
                                         {
                                             // osu!'s separator is different
                                             node_samples = split[9].Split('|');
