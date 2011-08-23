@@ -82,6 +82,9 @@ namespace osum.GameModes.Store
             {
                 if (Downloading) return;
 
+                if (s_PriceBackground.Alpha == 0)
+                    StoreMode.EnsureVisible(s_BackingPlate);
+
                 s_BackingPlate.HandleInput = false;
 
                 s_PriceBackground.FadeIn(100);
@@ -144,7 +147,7 @@ namespace osum.GameModes.Store
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
-                    Offset = new Vector2(75,30),
+                    Offset = new Vector2(75, 30),
                     ExactCoordinates = false
                 };
                 s_LoadingPrice.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 2000) { Looping = true });
@@ -163,7 +166,7 @@ namespace osum.GameModes.Store
         internal int BeatmapCount { get { return packItems.Count; } }
 
         int currentDownload = 0;
-        
+
 #if iOS
         const string PREFERRED_FORMAT = "m4a";
 #else
@@ -322,7 +325,7 @@ namespace osum.GameModes.Store
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
                 string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&format=" + PREFERRED_FORMAT;
-                previewRequest = new DataNetRequest(downloadPath,"POST",param);
+                previewRequest = new DataNetRequest(downloadPath, "POST", param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
                     if (previewRequest.AbortRequested) return;
@@ -354,8 +357,6 @@ namespace osum.GameModes.Store
                 preview.ExactCoordinates = false;
                 preview.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 1000) { Looping = true });
                 isPreviewing = true;
-
-                StoreMode.EnsureVisible(s_BackingPlate);
 
                 s_BackingPlate.Click(false);
             };

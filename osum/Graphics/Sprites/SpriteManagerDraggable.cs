@@ -148,6 +148,14 @@ namespace osum.Graphics.Sprites
         {
             float bound = offsetBound;
 
+            if (aimOffset != null)
+            {
+                if (Math.Abs(aimOffset.Value - verticalDragOffset) < 2)
+                    aimOffset = null;
+                else
+                    verticalDragOffset = verticalDragOffset * 0.8f + aimOffset.Value * 0.2f;
+            }
+
             if (!InputManager.IsPressed)
             {
                 verticalDragOffset = verticalDragOffset * 0.8f + bound * 0.2f + velocity;
@@ -175,9 +183,10 @@ namespace osum.Graphics.Sprites
             nonDraggableManager.Update();
         }
 
+        float? aimOffset;
         internal void ScrollTo(pDrawable sprite)
         {
-            verticalDragOffset = Math.Min(0,-(sprite.Position.Y - 20));
+            aimOffset = Math.Min(0,-(sprite.Position.Y - 30));
             ShowScrollbar(true); //pulse scrollbar display.
         }
     }
