@@ -13,7 +13,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osumapper</string>
 	<key>CFBundleVersion</key>
-	<string>1.01</string>
+	<string>1630</string>
 	<key>MinimumOSVersion</key>
 	<string>3.2</string>
 	<key>UIDeviceFamily</key>
