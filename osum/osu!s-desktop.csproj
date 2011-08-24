@@ -220,12 +220,19 @@
     <Content Include="bass_fx.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Localisation\da.txt" />
     <Content Include="Localisation\en.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Localisation\fr.txt" />
+    <Content Include="Localisation\it.txt" />
     <Content Include="Localisation\ja.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Localisation\ko.txt" />
+    <Content Include="Localisation\th.txt" />
+    <Content Include="Localisation\zh-cn.txt" />
+    <Content Include="Localisation\zh-tw.txt" />
     <Content Include="Skins\Default\buttontap.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
