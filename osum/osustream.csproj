@@ -376,5 +376,12 @@
     <Content Include="Skins\Default\drum-hitwhistle.wav" />
     <Content Include="Skins\Default\drum-sliderslide.wav" />
     <Content Include="Skins\Default\drum-slidertick.wav" />
+    <Content Include="Localisation\da.txt" />
+    <Content Include="Localisation\fr.txt" />
+    <Content Include="Localisation\it.txt" />
+    <Content Include="Localisation\ko.txt" />
+    <Content Include="Localisation\th.txt" />
+    <Content Include="Localisation\zh-cn.txt" />
+    <Content Include="Localisation\zh-tw.txt" />
   </ItemGroup>
 </Project>
