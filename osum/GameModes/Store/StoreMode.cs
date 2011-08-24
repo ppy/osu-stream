@@ -22,31 +22,42 @@ namespace osum.GameModes.Store
 {
     public class StoreMode : GameMode
     {
+        SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
+        SpriteManager topMostSpriteManager = new SpriteManager();
+
+        bool playingPreview;
+        private pSprite s_Header;
+
         private BackButton s_ButtonBack;
 
         protected List<PackPanel> packs = new List<PackPanel>();
 
         StringNetRequest fetchRequest;
 
+        const int HEADER_PADDING = 60;
+        float totalHeight = HEADER_PADDING;
+
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
 
-            background =
+            pSprite background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
-            spriteManager.Add(s_ButtonBack);
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.store_header), new Vector2(0, 0));
+            s_Header.OnClick += delegate { };
+            topMostSpriteManager.Add(s_Header);
 
-            InputManager.OnMove += new Helpers.InputHandler(InputManager_OnMove);
+            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
+            topMostSpriteManager.Add(s_ButtonBack);
 
             GameBase.ShowLoadingOverlay = true;
 
             if (fetchRequest != null) fetchRequest.Abort();
-            fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list.php");
+            fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list2.php");
             fetchRequest.onFinish += handlePackInfo;
             NetManager.AddRequest(fetchRequest);
 
@@ -58,8 +69,20 @@ namespace osum.GameModes.Store
         {
             GameBase.ShowLoadingOverlay = false;
 
+            scrollableSpriteManager.Dispose();
+            topMostSpriteManager.Dispose();
+
             if (fetchRequest != null) fetchRequest.Abort();
             base.Dispose();
+        }
+
+        public override bool Draw()
+        {
+            base.Draw();
+            scrollableSpriteManager.Draw();
+            topMostSpriteManager.Draw();
+
+            return true;
         }
 
         protected virtual void handlePackInfo(string result, Exception e)
@@ -76,6 +99,8 @@ namespace osum.GameModes.Store
 
             PackPanel pp = null;
             bool newPack = true;
+
+            float yOffset = 0;
 
             int y = 0;
             foreach (string line in result.Split('\n'))
@@ -105,10 +130,15 @@ namespace osum.GameModes.Store
                     continue;
                 }
 
+                int length = split.Length;
+
+                if (length == 0) continue;
+
                 string filename = split[0];
                 string checksum = split[1];
-                string revision = split.Length > 3 ? split[3] : "1.0";
-                string title = split.Length > 2 ? split[2] : null;
+                string revision = length > 3 ? split[3] : "1.0";
+                string title = length > 2 ? split[2] : null;
+                string youtubeId = length > 4 ? split[4] : null;
                 string updateChecksum = null;
 
                 string path = SongSelectMode.BeatmapPath + "/" + filename;
@@ -138,7 +168,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.Add(new PackItem(filename, title, updateChecksum));
+                pp.AddItem(new PackItem(filename, title, updateChecksum) { YoutubeId = youtubeId });
 
                 y++;
             }
@@ -158,33 +188,48 @@ namespace osum.GameModes.Store
         {
             if (pp == null || pp.BeatmapCount == 0)
                 return;
-            spriteManager.Add(pp);
+
+            pp.Sprites.ForEach(s => s.Position.Y += totalHeight);
+            pp.PackItemSprites.ForEach(s => s.FadeOut(0));
+            totalHeight += pp.CondensedHeight;
+
+            scrollableSpriteManager.Add(pp);
             packs.Add(pp);
         }
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        void RemovePack(PackPanel pp)
         {
-            if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
+            if (pp == null)
                 return;
 
-            float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-            float bound = offsetBound;
+            if (!packs.Remove(pp))
+                return;
 
-            if ((scrollOffset - bound < 0 && change < 0) || (scrollOffset - bound > 0 && change > 0))
-                change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(scrollOffset - bound)));
-            scrollOffset = scrollOffset + change;
-            velocity = change;
+            pp.Sprites.ForEach(s => s.FadeOut(100));
+
+            recalculateHeights();
         }
 
-        bool playingPreview;
+        private void recalculateHeights()
+        {
+            //recalculate all heights
+            totalHeight = HEADER_PADDING;
+            foreach (PackPanel p in packs)
+            {
+                p.MoveTo(new Vector2(0, totalHeight), 350);
+                totalHeight += p.Height;
+            }
 
-        public static void ResetAllPreviews(bool isPausing, bool isUserDeselect)
+            scrollableSpriteManager.SetMaxHeight(totalHeight);
+        }
+
+        public static void ResetAllPreviews(bool isPausing)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
             foreach (PackPanel p in instance.packs)
-                p.ResetPreviews(isUserDeselect || !isPausing);
+                p.ResetPreviews();
 
             instance.playingPreview = false;
 
@@ -222,7 +267,7 @@ namespace osum.GameModes.Store
             if (pack.IsFree)
                 download(pack);
             else
-                GameBase.Notify("Can't download paid packs from this build!",null);
+                GameBase.Notify("Can't download paid packs from this build!", null);
         }
 
         /// <summary>
@@ -239,84 +284,37 @@ namespace osum.GameModes.Store
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            pp.Sprites.ForEach(s => s.FadeOut(100));
-            instance.packs.Remove(pp);
+            instance.RemovePack(pp);
 
             if (instance.packs.Count == 0)
                 GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
-            {
                 instance.s_ButtonBack.FadeIn(100);
-            }
         }
 
-        public static void EnsureVisible(pDrawable sprite)
+        public static void ShowPack(PackPanel pack)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
-            instance.scrollOffset = Math.Min(0, Math.Max(instance.offset_min, instance.scrollOffset - sprite.Position.Y + 40));
-        }
+            foreach (PackPanel p in instance.packs)
+                p.Expanded = p == pack;
 
-        private float offset_min
-        {
-            get
-            {
-                if (packs.Count == 0)
-                    return 0;
+            pack.StartPreviewing();
 
-                float totalHeight = 0;
-                foreach (PackPanel p in packs)
-                    totalHeight += p.Height;
-
-                return -totalHeight + GameBase.BaseSizeFixedWidth.Height - 80;
-            }
-        }
-        private float offset_max;
-        float scrollOffset;
-        private float velocity;
-        private pSprite background;
-
-        /// <summary>
-        /// Offset bound to visible limits.
-        /// </summary>
-        private float offsetBound
-        {
-            get
-            {
-                return Math.Min(offset_max, Math.Max(offset_min, scrollOffset));
-            }
+            instance.recalculateHeights();
+            instance.scrollableSpriteManager.ScrollTo(pack.s_BackingPlate, HEADER_PADDING);
         }
 
         public override void Update()
         {
             if (playingPreview && !AudioEngine.Music.IsElapsing)
-                ResetAllPreviews(true, false);
+                ResetAllPreviews(true);
 
-            if (!InputManager.IsPressed)
-            {
-                float bound = offsetBound;
-
-                scrollOffset = scrollOffset * 0.8f + bound * 0.2f + velocity;
-
-                if (scrollOffset != bound)
-                    velocity *= 0.7f;
-                else
-                    velocity *= 0.94f;
-            }
-
+            scrollableSpriteManager.Update();
+            topMostSpriteManager.Update();
             base.Update();
-
-            if (Director.PendingOsuMode == OsuMode.Unknown)
-            {
-                Vector2 pos = new Vector2(0, scrollOffset);
-                foreach (PackPanel p in packs)
-                {
-                    p.MoveTo(pos, 40);
-                    pos.Y += p.Height;
-                }
-            }
         }
     }
 }

@@ -250,7 +250,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
-                                   ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0 : SpriteManager.drawOrderBwd(EndTime + 14),
+                                   ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0.01f : SpriteManager.drawOrderBwd(EndTime + 14),
                                    false, Color.White);
 
             spriteSliderBody.Transform(fadeInTrack);
@@ -388,7 +388,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 float lineLength = l.rho;
 
-                if (lineLength + currentLength > PathLength)
+                if (lineLength + currentLength > PathLength || i + 1 == smoothPoints.Count)
                 {
                     l.p2 = l.p1 + Vector2.Normalize(l.p2 - l.p1) * (float)(PathLength - currentLength);
                     l.Recalc();
@@ -402,7 +402,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 cumulativeLengths.Add(currentLength);
             }
 
-            PathLength = currentLength;
             EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
         }
 
@@ -795,7 +794,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         protected virtual void playTick()
         {
-            AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.NormalSampleSet, SampleSet.Volume);
+            AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
         }
 
         protected virtual void playRebound(int lastJudgedEndpoint)
@@ -859,7 +858,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             if (AudioEngine.Effect != null)
             {
                 if (sourceSliding == null || sourceSliding.BufferId == 0)
-                    sourceSliding = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.NormalSampleSet), SampleSet.Volume * 0.8f, true, true);
+                    sourceSliding = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.SampleSet), SampleSet.Volume * 0.8f, true, true);
                 sourceSliding.Play();
             }
 
@@ -980,6 +979,8 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             {
                 index = cumulativeLengths.BinarySearch(aimLength);
                 if (index < 0) index = (~index);
+
+                index = Math.Min(index, count - 1);
             }
 
             double lengthAtIndex = cumulativeLengths[index];

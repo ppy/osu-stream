@@ -147,8 +147,7 @@ namespace osum.GameplayElements
                                                              : CustomSampleSet.Default,
                                                          Int32.Parse(split[5]),
                                                          split.Length > 6 ? split[6][0] == '1' : true,
-                                                         split.Length > 7 ? split[7][0] == '1' : false,
-                                                         split.Length > 8 ? (SampleSet)Int32.Parse(split[8]) : SampleSet.None));
+                                                         split.Length > 7 ? split[7][0] == '1' : false));
                                 break;
                             case FileSection.General:
                                 //todo: reimplement?
@@ -385,7 +384,7 @@ namespace osum.GameplayElements
 
             if (normalSampleSet == SampleSet.None) normalSampleSet = sampleSet;
 
-            return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume, NormalSampleSet = normalSampleSet };
+            return new SampleSetInfo { SampleSet = sampleSet, CustomSampleSet = CustomSampleSet.Default, Volume = volume, AdditionSampleSet = normalSampleSet };
         }
 
         internal virtual void PostProcessing()
@@ -606,7 +605,7 @@ namespace osum.GameplayElements
                                     pSprite dot =
                                         new pSprite(fptexture,
                                                        FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                                       0.01f, false, Color4.White);
+                                                       0.005f, false, Color4.White);
 
                                     dot.Transform(
                                         new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));

@@ -44,6 +44,8 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
+        static readonly internal bool SUPPORTS_DRAWTEXTURE_EXT;
+
         internal int potHeight;
         internal int potWidth;
 
@@ -82,6 +84,15 @@ namespace osum.Graphics
 
         IntPtr handle_vertices_pointer;
         IntPtr handle_coordinates_pointer;
+
+#if IPHONE
+        static TextureGl()
+        {
+            SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(All.Extensions).Contains("OES_draw_texture");
+
+        }
+#endif
+
 
         public TextureGl(int width, int height)
         {
@@ -136,8 +147,7 @@ namespace osum.Graphics
             Id = -1;
         }
 
-        public bool IsDisposed { get; private set; }
-
+        private bool IsDisposed;
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed)
@@ -224,6 +234,79 @@ namespace osum.Graphics
             }
         }
 
+        public unsafe void DrawTo(float* coordinates, float* vertices, int startIndex, Vector2 currentPos, Vector2 origin, Vector2 scaleVector, float rotation,
+                                    Box2 drawRect) 
+        {
+            float left = drawRect.Left / potWidth;
+            float right = drawRect.Right / potWidth;
+            float top = drawRect.Top / potHeight;
+            float bottom = drawRect.Bottom / potHeight;
+
+            startIndex *= 12;
+
+            unsafe
+            {
+                coordinates[startIndex + 0] = left;
+                coordinates[startIndex + 1] = top;
+                coordinates[startIndex + 2] = right;
+                coordinates[startIndex + 3] = top;
+                coordinates[startIndex + 4] = right;
+                coordinates[startIndex + 5] = bottom;
+
+                coordinates[startIndex + 6] = right;
+                coordinates[startIndex + 7] = bottom;
+                coordinates[startIndex + 8] = left;
+                coordinates[startIndex + 9] = bottom;
+                coordinates[startIndex + 10] = left;
+                coordinates[startIndex + 11] = top;
+
+                //first move everything so it is centered on (0,0)
+                float vLeft = -(origin.X * scaleVector.X);
+                float vTop = -(origin.Y * scaleVector.Y);
+                float vRight = vLeft + drawRect.Width * scaleVector.X;
+                float vBottom = vTop + drawRect.Height * scaleVector.Y;
+
+                if (rotation != 0)
+                {
+                    //only being used for spritetext atm, which doesn't need rotation.
+                    //todo: implement if necessary
+
+                    /*float cos = (float)Math.Cos(rotation);
+                    float sin = (float)Math.Sin(rotation);
+
+                    vertices[startIndex + 0] = vLeft * cos - vTop * sin + currentPos.X;
+                    vertices[startIndex + 1] = vLeft * sin + vTop * cos + currentPos.Y;
+                    vertices[startIndex + 2] = vRight * cos - vTop * sin + currentPos.X;
+                    vertices[startIndex + 3] = vRight * sin + vTop * cos + currentPos.Y;
+                    vertices[startIndex + 4] = vRight * cos - vBottom * sin + currentPos.X;
+                    vertices[startIndex + 5] = vRight * sin + vBottom * cos + currentPos.Y;
+                    vertices[startIndex + 6] = vLeft * cos - vBottom * sin + currentPos.X;
+                    vertices[startIndex + 7] = vLeft * sin + vBottom * cos + currentPos.Y;*/
+                }
+                else
+                {
+                    vLeft += currentPos.X;
+                    vRight += currentPos.X;
+                    vTop += currentPos.Y;
+                    vBottom += currentPos.Y;
+
+                    vertices[startIndex + 0] = vLeft;
+                    vertices[startIndex + 1] = vTop;
+                    vertices[startIndex + 2] = vRight;
+                    vertices[startIndex + 3] = vTop;
+                    vertices[startIndex + 4] = vRight;
+                    vertices[startIndex + 5] = vBottom;
+
+                    vertices[startIndex + 6] = vRight;
+                    vertices[startIndex + 7] = vBottom;
+                    vertices[startIndex + 8] = vLeft;
+                    vertices[startIndex + 9] = vBottom;
+                    vertices[startIndex + 10] = vLeft;
+                    vertices[startIndex + 11] = vTop;
+                }
+            }
+        }
+
         /// <summary>
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
@@ -238,6 +321,16 @@ namespace osum.Graphics
             float right = drawRect.Right / potWidth;
             float top = drawRect.Top / potHeight;
             float bottom = drawRect.Bottom / potHeight;
+
+
+#if ANDROID
+            if (rotation == 0 && SUPPORTS_DRAWTEXTURE_EXT)
+            {
+                Bind();
+                GL.Oes.DrawTex(left, top, 0, (right - left) * scaleVector.X, (bottom - top) * scaleVector.Y);
+                return;
+            }
+#endif
 
             unsafe
             {
@@ -296,10 +389,8 @@ namespace osum.Graphics
 
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
-
-
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
-
+            
         }
 
         public void SetData(int textureId)

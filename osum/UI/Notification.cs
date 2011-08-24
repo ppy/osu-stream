@@ -205,13 +205,13 @@ namespace osum.UI
 
         internal void Display()
         {
-            Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
-            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 200);
+            Transformation bounce = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 800, 1, 0.1f, 8);
+            Transform(bounce);
+
+            FadeIn(200);
 
             AudioEngine.PlaySample(OsuSamples.Notify);
 
-            Transform(bounce);
-            Transform(fadeIn);
         }
     }
 

@@ -198,7 +198,7 @@ namespace osum.Helpers
 
         private static void LinearPart(List<Vector2> output, Vector2 p0, Vector2 p1, int detailLevel)
         {
-            int segments = (int)((p1 - p0).Length / detailLevel);
+            int segments = (int)((p1 - p0).Length / detailLevel + 1);
             for (int j = 0; j < segments; j++)
                 output.Add(p0 + (p1 - p0) * ((float)j / segments));
         }

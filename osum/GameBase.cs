@@ -18,6 +18,7 @@ using osu_common.Helpers;
 using System.Threading;
 using osum.Resources;
 using System.Diagnostics;
+using osu_common.Libraries.NetLib;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -362,10 +363,25 @@ namespace osum
             Director.ChangeMode(OsuMode.MainMenu, null);
             #endif
 #endif
-
             OnlineHelper.Initialize();
 
+            int lastReadNews = GameBase.Config.GetValue<int>("NewsLastRead", 0);
+            StringNetRequest nr = new StringNetRequest(@"http://osustream.com/p/news?check=" + lastReadNews);
+            nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
+            NetManager.AddRequest(nr);
+
             Clock.Start();
+        }
+
+        void newsCheck_onFinish(string _result, Exception e)
+        {
+            if (true)
+            {
+                GameBase.Config.SetValue<int>("NewsLastRead", 0);
+                MainMenu m = Director.CurrentMode as MainMenu;
+                if (m != null)
+                    m.NewsButton.HasNews = true;
+            }
         }
 
         public virtual string DeviceIdentifier
@@ -571,7 +587,7 @@ namespace osum
             return t;
         }
 
-        public virtual void ShowWebView(string url, string title = null, StringBoolDelegate checkFinished = null)
+        public virtual void ShowWebView(string url, string title = "", StringBoolDelegate checkFinished = null)
         {
             OpenUrl(url);
         }

@@ -516,7 +516,23 @@ namespace osum.GameModes
                 {
                     //then handle the hp addition
                     if (healthChange < 0)
+                    {
+                        Difficulty streamDifficulty = hitObjectManager.ActiveStream;
+                        float streamMultiplier = 1;
+
+                        switch (streamDifficulty)
+                        {
+                            case Difficulty.Hard:
+                                streamMultiplier = 1.3f;
+                                break;
+                            case Difficulty.Normal:
+                                streamMultiplier = 1.1f;
+                                break;
+                        }
+
+
                         healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                    }
                     else
                         healthBar.IncreaseCurrentHp(healthChange * Beatmap.HpStreamAdjustmentMultiplier);
                 }

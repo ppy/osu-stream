@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using osum.Graphics.Skins;
 using osum.Graphics;
 using osum.Helpers;
-
+using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics;
 
@@ -118,6 +118,8 @@ namespace osum.Graphics.Sprites
         private Vector2 lastMeasure;
         private OsuTexture osuTextureFont;
 
+        const int MAX_LENGTH = 9; // 100.00% (7) 1,000,000 (9)
+
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(null, fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
@@ -128,7 +130,7 @@ namespace osum.Graphics.Sprites
             {
                 osuTextureFont = (OsuTexture)Enum.Parse(typeof(OsuTexture), TextFont + "_0");
 
-                TextureManager.Load(osuTextureFont);
+                Texture = TextureManager.Load(osuTextureFont);
                 //preload
             }
             catch
@@ -139,6 +141,39 @@ namespace osum.Graphics.Sprites
 
             //this will trigger a render call here
             Text = text;
+
+            const int coordinates_per_char = 12;
+
+#if !NO_PIN_SUPPORT
+            coordinates = new float[MAX_LENGTH * coordinates_per_char]; 
+            vertices = new float[MAX_LENGTH * coordinates_per_char];
+
+            handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
+            handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
+
+            handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
+            handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
+#else
+            handle_vertices_pointer = Marshal.AllocHGlobal(MAX_LENGTH * coordinates_per_char * sizeof(float));
+            handle_coordinates_pointer = Marshal.AllocHGlobal(MAX_LENGTH * coordinates_per_char * sizeof(float));
+#endif
+        }
+
+        private bool isDisposed;
+        public override void Dispose()
+        {
+            if (isDisposed) return;
+
+#if !NO_PIN_SUPPORT
+            handle_vertices.Free();
+            handle_coordinates.Free();
+#else
+            Marshal.FreeHGlobal(handle_coordinates_pointer);
+            Marshal.FreeHGlobal(handle_vertices_pointer);
+#endif
+
+            base.Dispose();
+            isDisposed = true;
         }
 
         internal Vector2 MeasureText()
@@ -247,6 +282,7 @@ namespace osum.Graphics.Sprites
         private void refreshTexture()
         {
             textChanged = false;
+            updateDrawCache = true;
 
             renderTextures.Clear();
             renderCoordinates.Clear();
@@ -331,42 +367,97 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
+#if !NO_PIN_SUPPORT
+        float[] coordinates;
+        float[] vertices;
+
+        GCHandle handle_vertices;
+        GCHandle handle_coordinates;
+#endif
+
+        IntPtr handle_vertices_pointer;
+        IntPtr handle_coordinates_pointer;
+
         Color4 colZeroCached;
+
+        bool updateDrawCache;
+        private Vector2 drawPos;
+        private Vector2 drawScale;
+        private Color4 drawCol;
+
         public override bool Draw()
         {
-            if (Alpha > 0 && (AlwaysDraw || !noTransformationsLeft))
+            if (Alpha > 0 && (AlwaysDraw || !noTransformationsLeft) && textArray.Length > 0)
             {
                 if (textChanged) MeasureText();
 
-                Vector2 pos = FieldPosition;
-                Vector2 scale = FieldScale;
-                Color4 col = AlphaAppliedColour;
-                if (ZeroAlpha < 1)
-                    colZeroCached = new Color4(col.R * ZeroAlpha, col.G * ZeroAlpha, col.B * ZeroAlpha, col.A * ZeroAlpha);
-
-                bool isPaddedZero = true;
-
-                int i = 0;
-                float coordScale = Scale.X * GameBase.SpriteToNativeRatio;
-                foreach (pTexture tex in renderTextures)
+                if (FieldPosition != drawPos)
                 {
-                    Vector2 drawPos = new Vector2(pos.X + renderCoordinates[i] * coordScale, pos.Y);
-                    // note: no srcRect calculation
-                    if (ZeroAlpha == 1)
-                        tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
-                    else
-                    {
-                        if (textArray[i] != '0')
-                            isPaddedZero = false;
+                    drawPos = FieldPosition;
+                    updateDrawCache = true;
+                }
 
-                        if (isPaddedZero)
-                            tex.TextureGl.Draw(drawPos, OriginVector, colZeroCached, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
-                        else
+                if (drawScale != FieldScale)
+                {
+                    drawScale = FieldScale;
+                    updateDrawCache = true;
+                }
+
+                Color4 col = AlphaAppliedColour;
+                if (drawCol != col)
+                {
+                    drawCol = col;
+                    updateDrawCache = true;
+                }
+
+                if (updateDrawCache)
+                {
+                    if (ZeroAlpha < 1)
+                        colZeroCached = new Color4(drawCol.R * ZeroAlpha, drawCol.G * ZeroAlpha, drawCol.B * ZeroAlpha, drawCol.A * ZeroAlpha);
+
+                    bool isPaddedZero = true;
+
+                    int i = 0;
+                    float coordScale = Scale.X * GameBase.SpriteToNativeRatio;
+
+                    foreach (pTexture tex in renderTextures)
+                    {
+                        Vector2 thisDrawPos = new Vector2(drawPos.X + renderCoordinates[i] * coordScale, drawPos.Y);
+
+                        unsafe
+                        {
+                            float* coordinatesP = (float*)handle_coordinates_pointer;
+                            float* verticesP = (float*)handle_vertices_pointer;
+                            tex.TextureGl.DrawTo(coordinatesP, verticesP, i, thisDrawPos, OriginVector, drawScale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        }
+ 
+                        i++;
+                        // note: no srcRect calculation
+                        /*if (ZeroAlpha == 1)
                             tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        else
+                        {
+                            if (textArray[i] != '0')
+                                isPaddedZero = false;
+
+                            if (isPaddedZero)
+                                tex.TextureGl.Draw(drawPos, OriginVector, colZeroCached, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                            else
+                                tex.TextureGl.Draw(drawPos, OriginVector, col, scale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
+                        }*/
                     }
 
-                    i++;
+                    updateDrawCache = false;
                 }
+
+                Texture.TextureGl.Bind();
+
+                SpriteManager.SetColour(drawCol);
+
+                GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
+                GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
+
+                GL.DrawArrays(BeginMode.Triangles, 0, renderTextures.Count * 6);
 
                 return true;
             }

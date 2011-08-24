@@ -78,7 +78,7 @@ namespace osum.Graphics.Sprites
         {
             t = (TrackingPoint)t.Clone();
 
-            t.UpdatePositions();
+            //t.UpdatePositions();
 
             Vector2 pos = t.BasePosition;
             Vector2 origPos = pos;

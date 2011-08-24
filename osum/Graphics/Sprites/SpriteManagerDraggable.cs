@@ -12,7 +12,7 @@ namespace osum.Graphics.Sprites
     {
         SpriteManager nonDraggableManager = new SpriteManager();
 
-        internal bool ShowScrollbar = true;
+        internal bool Scrollbar = true;
         internal bool AutomaticHeight = true;
         internal bool LockHorizontal = true;
 
@@ -57,11 +57,7 @@ namespace osum.Graphics.Sprites
             movedY += Math.Abs(change);
             movedX += Math.Abs(trackingPoint.WindowDelta.X);
 
-            if (movedY < 10)
-                return;
-
-            if (scrollbar.Alpha != 1)
-                scrollbar.FadeIn(200);
+            ShowScrollbar();
 
             verticalDragOffset += change;
             velocity = change;
@@ -80,10 +76,23 @@ namespace osum.Graphics.Sprites
             movedX = 0;
             movedY = 0;
 
-            scrollbar.Transformations.Clear();
-            scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
+            HideScrollbar();
 
             base.HandleInputManagerOnUp(source, trackingPoint);
+        }
+
+        internal void ShowScrollbar(bool pulse = false)
+        {
+            scrollbar.Transformations.Clear();
+            if (scrollbar.Alpha != 1)
+                scrollbar.FadeIn(200);
+            if (pulse)
+                HideScrollbar();
+        }
+
+        internal void HideScrollbar()
+        {
+            scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
         }
 
         private float verticalDragOffset;
@@ -114,13 +123,20 @@ namespace osum.Graphics.Sprites
             if (AutomaticHeight)
             {
                 sprite.Update();
-                float newOffset = -sprite.DisplayRectangle.Bottom + GameBase.BaseSizeFixedWidth.Height;
-                if (newOffset < offset_min)
+                float newOffset = sprite.DisplayRectangle.Bottom;
+                if (offset_min == 0 || -newOffset + +GameBase.BaseSizeFixedWidth.Height < offset_min)
                 {
-                    offset_min = newOffset;
-                    scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
+                    SetMaxHeight(newOffset);
                 }
             }
+        }
+
+        internal void SetMaxHeight(float newOffset)
+        {
+            newOffset = Math.Min(0,-newOffset + GameBase.BaseSizeFixedWidth.Height);
+
+            offset_min = newOffset;
+            scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
         }
 
         public override bool Draw()
@@ -135,6 +151,14 @@ namespace osum.Graphics.Sprites
         public override void Update()
         {
             float bound = offsetBound;
+
+            if (aimOffset != null)
+            {
+                if (Math.Abs(aimOffset.Value - verticalDragOffset) < 2)
+                    aimOffset = null;
+                else
+                    verticalDragOffset = verticalDragOffset * 0.8f + aimOffset.Value * 0.2f;
+            }
 
             if (!InputManager.IsPressed)
             {
@@ -161,6 +185,13 @@ namespace osum.Graphics.Sprites
 
             base.Update();
             nonDraggableManager.Update();
+        }
+
+        float? aimOffset;
+        internal void ScrollTo(pDrawable sprite, float padding = 0)
+        {
+            aimOffset = Math.Max(offset_min,Math.Min(0,-(sprite.Position.Y - 50 - padding)));
+            ShowScrollbar(true); //pulse scrollbar display.
         }
     }
 }

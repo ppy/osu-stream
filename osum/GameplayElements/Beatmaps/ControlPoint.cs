@@ -31,7 +31,7 @@ namespace osum.GameplayElements.Beatmaps
         public SampleSet SampleSet;
         public CustomSampleSet CustomSampleSet;
         public float Volume;
-        public SampleSet NormalSampleSet;
+        public SampleSet AdditionSampleSet;
     }
 
     public class ControlPoint : IComparable<ControlPoint>, ICloneable//, bSerializable
@@ -40,7 +40,6 @@ namespace osum.GameplayElements.Beatmaps
         public CustomSampleSet customSamples;
         public double offset;
         public SampleSet sampleSet;
-        public SampleSet normalSampleSet;
         public TimeSignatures timeSignature;
         public int volume;
 
@@ -69,7 +68,7 @@ namespace osum.GameplayElements.Beatmaps
         }
 
         public ControlPoint(double offset, double beatLength, TimeSignatures timeSignature, SampleSet sampleSet,
-                             CustomSampleSet customSamples, int volume, bool timingChange, bool kiaiMode, SampleSet normalSampleSet)
+                             CustomSampleSet customSamples, int volume, bool timingChange, bool kiaiMode)
         {
             this.offset = offset;
             this.beatLength = beatLength;
@@ -79,7 +78,6 @@ namespace osum.GameplayElements.Beatmaps
             this.volume = volume;
             this.TimingChange = timingChange;
             this.kiaiMode = kiaiMode;
-            this.normalSampleSet = normalSampleSet;
         }
 
         public double bpm
@@ -91,7 +89,7 @@ namespace osum.GameplayElements.Beatmaps
 
         public object Clone()
         {
-            return new ControlPoint(offset, beatLength, timeSignature, sampleSet, customSamples, volume, TimingChange, kiaiMode, normalSampleSet);
+            return new ControlPoint(offset, beatLength, timeSignature, sampleSet, customSamples, volume, TimingChange, kiaiMode);
         }
 
         #endregion

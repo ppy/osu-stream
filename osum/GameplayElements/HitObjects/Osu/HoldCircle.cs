@@ -145,15 +145,15 @@ namespace osum.GameplayElements.HitObjects.Osu
             float volume = ssi.Volume * (0.5f + 0.5f * circularProgress.Progress);
 
             if ((type & HitObjectSoundType.Finish) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitFinish, ssi.SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitFinish, ssi.AdditionSampleSet, volume);
 
             if ((type & HitObjectSoundType.Whistle) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitWhistle, ssi.SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitWhistle, ssi.AdditionSampleSet, volume);
 
             if ((type & HitObjectSoundType.Clap) > 0)
-                AudioEngine.PlaySample(OsuSamples.HitClap, ssi.SampleSet, volume);
+                AudioEngine.PlaySample(OsuSamples.HitClap, ssi.AdditionSampleSet, volume);
 
-            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.NormalSampleSet, volume);
+            AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
         }
 
         protected override void playRebound(int lastJudgedEndpoint)
@@ -166,10 +166,10 @@ namespace osum.GameplayElements.HitObjects.Osu
                 PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                           new SampleSetInfo
                           {
-                              SampleSet = ss.SampleSet,
+                              SampleSet = Beatmaps.SampleSet.Soft,
                               CustomSampleSet = CustomSampleSet.Default,
                               Volume = ss.Volume,
-                              NormalSampleSet = Beatmaps.SampleSet.Soft,
+                              AdditionSampleSet = ss.SampleSet
                           });
             }
         }

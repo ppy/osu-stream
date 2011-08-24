@@ -35,21 +35,23 @@ namespace osum.GameModes.SongSelect
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
         private pSprite s_Star;
 
-        internal BeatmapPanel(Beatmap beatmap, SongSelectMode select, int index)
+        internal BeatmapPanel(Beatmap beatmap, EventHandler action, int index)
         {
             base_depth += 0.001f * index;
 
             s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
             {
                 DrawDepth = base_depth,
-                Colour = new Color4(255, 255, 255, 170)
+                Colour = new Color4(255, 255, 255, 170),
+                Tag = this
             };
 
             Sprites.Add(s_BackingPlate);
 
             Beatmap = beatmap;
 
-            s_BackingPlate.OnClick += delegate { select.onSongSelected(this, null); };
+            if (action != null)
+                s_BackingPlate.OnClick += action;
 
             s_BackingPlate.HandleClickOnUp = true;
 
@@ -70,9 +72,6 @@ namespace osum.GameModes.SongSelect
             Sprites.Add(s_Text);
 
             s_TextArtist = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, 0.51f, true, Color4.OrangeRed, false);
-            //s_TextArtist.TextAlignment = TextAlignment.Right;
-            //s_TextArtist.Origin = OriginTypes.TopRight;
-            //s_TextArtist.Field = FieldTypes.StandardSnapRight;
             s_TextArtist.Offset = new Vector2(100, 29);
             Sprites.Add(s_TextArtist);
 
@@ -89,14 +88,6 @@ namespace osum.GameModes.SongSelect
 
             if (beatmap != null)
             {
-                //string filename = Path.GetFileNameWithoutExtension(beatmap.ContainerFilename);
-
-                //Regex r = new Regex(@"(.*) - (.*) \((.*)\)");
-                //Match m = r.Match(filename);
-                //s_Text.Text = m.Groups[2].Value;
-                //s_TextArtist.Text = m.Groups[1].Value;
-                //s_TextCreator.Text = m.Groups[3].Value;
-
                 try
                 {
                     s_Text.Text = beatmap.Title;
@@ -198,10 +189,10 @@ namespace osum.GameModes.SongSelect
             return thumb;
         }
 
-        internal void HideRankings()
+        internal void HideRankings(bool instant)
         {
             foreach (pDrawable p in rankSprites)
-                p.FadeOut(300);
+                p.FadeOut(instant ? 0 : 300);
         }
 
         internal void ShowRankings()

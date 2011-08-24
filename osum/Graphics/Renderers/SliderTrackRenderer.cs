@@ -297,7 +297,7 @@ namespace osum.Graphics.Renderers
                 coordinates_quad_handle[x] = GCHandle.Alloc(coordinates_quad[x], GCHandleType.Pinned);
                 coordinates_quad_pointer[x] = coordinates_quad_handle[x].AddrOfPinnedObject();
 #else
-                IntPtr coordinates_quad_p = Marshal.AllocHGlobal(numVertices_cap * 3 * sizeof(float));
+                IntPtr coordinates_quad_p = Marshal.AllocHGlobal(12 * sizeof(float));
                 coordinates_quad_pointer[x] = coordinates_quad_p;
                 unsafe
                 {

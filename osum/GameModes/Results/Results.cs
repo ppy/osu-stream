@@ -321,42 +321,53 @@ namespace osum.GameModes
                     RankableScore.hitScore);
 
                 string postString =
-                    "udid="               + GameBase.Instance.DeviceIdentifier +
-                    "&count300="        + RankableScore.count300 +
-                    "&count100="        + RankableScore.count100 +
-                    "&count50="         + RankableScore.count50 +
-                    "&countMiss="       + RankableScore.countMiss +
-                    "&maxCombo="        + RankableScore.maxCombo +
-                    "&spinnerBonus="    + RankableScore.spinnerBonusScore +
-                    "&comboBonus="      + RankableScore.comboBonusScore +
-                    "&accuracyBonus="      + RankableScore.accuracyBonusScore +
-                    "&hitScore="        + RankableScore.hitScore +
-                    "&rank="             + RankableScore.Ranking +
+                    "udid=" + GameBase.Instance.DeviceIdentifier +
+                    "&count300=" + RankableScore.count300 +
+                    "&count100=" + RankableScore.count100 +
+                    "&count50=" + RankableScore.count50 +
+                    "&countMiss=" + RankableScore.countMiss +
+                    "&maxCombo=" + RankableScore.maxCombo +
+                    "&spinnerBonus=" + RankableScore.spinnerBonusScore +
+                    "&comboBonus=" + RankableScore.comboBonusScore +
+                    "&accuracyBonus=" + RankableScore.accuracyBonusScore +
+                    "&hitScore=" + RankableScore.hitScore +
+                    "&rank=" + RankableScore.Ranking +
                     "&filename=" + Path.GetFileName(Player.Beatmap.ContainerFilename) +
-                    "&cc=" + GameBase.Config.GetValue<string>("hash",string.Empty) +
+                    "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
                     "&c=" + check;
 
-                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST",postString);
-                Console.WriteLine("Request: " + postString);
+                spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
+                {
+                    ExactCoordinates = false,
+                    DimImmune = true,
+                    ScaleScalar = 0.7f
+                };
+
+                spriteSubmitting.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
+                GameBase.MainSpriteManager.Add(spriteSubmitting);
+                spriteSubmitting.FadeInFromZero(300);
+
+                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
+                nr.onFinish += delegate(string result, Exception e)
+                {
+                    spriteSubmitting.AlwaysDraw = false;
+                    spriteSubmitting.FadeOut(100);
+                };
                 NetManager.AddRequest(nr);
             }
-
-            //we should move this to happen earlier but delay the ranking dialog from displaying until after animations are done.
-            /*OnlineHelper.SubmitScore(Player.SubmitString, RankableScore.totalScore, delegate
+            else
             {
-                if (finishedDisplaying)
-                    showOnlineRanking();
-                else
-                    submissionCompletePending = true;
-            });*/
+                //displaying a previous high score (or online high score)
+                finishDisplaying();
+            }
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
             InitializeBgm();
         }
 
-        bool cameFromSongSelect = false;
-        bool unlockedExpert = false;
+        bool cameFromSongSelect;
+        bool unlockedExpert;
 
         /// <summary>
         /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
@@ -385,7 +396,8 @@ namespace osum.GameModes
         {
             //hit -> combo -> accuracy -> spin
 
-            int time = 500;
+            int time = cameFromSongSelect ? 0 : 500;
+            int increment = cameFromSongSelect ? 0 : 500;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -398,7 +410,7 @@ namespace osum.GameModes
                 countTotalScore.FlashColour(Color4.White, 1000);
             }, time);
 
-            time += 500;
+            time += increment;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -412,7 +424,7 @@ namespace osum.GameModes
                 countTotalScore.FlashColour(Color4.White, 1000);
             }, time);
 
-            time += 500;
+            time += increment;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -425,7 +437,7 @@ namespace osum.GameModes
                 countTotalScore.FlashColour(Color4.White, 1000);
             }, time);
 
-            time += 500;
+            time += increment;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -438,7 +450,7 @@ namespace osum.GameModes
                 countTotalScore.FlashColour(Color4.White, 1000);
             }, time);
 
-            time += 500;
+            time += increment;
 
             GameBase.Scheduler.Add(delegate
             {
@@ -447,7 +459,7 @@ namespace osum.GameModes
                 rankGraphic.AdditiveFlash(1500, 1);
             }, time);
 
-            time += 500;
+            time += increment;
 
             if (isPersonalBest)
             {
@@ -466,21 +478,25 @@ namespace osum.GameModes
                 }, time);
             }
 
-            time += 500;
+            time += increment;
 
-            GameBase.Scheduler.Add(delegate
-            {
-                InitializeBgm();
-
-                if (unlockedExpert)
-                    GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate { finishDisplaying(); }));
-                else
-                    finishDisplaying();
-            }, time);
+            if (!cameFromSongSelect)
+                GameBase.Scheduler.Add(finishDisplaying, time);
         }
 
         private void finishDisplaying()
         {
+            InitializeBgm();
+
+            if (unlockedExpert)
+            {
+                GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate
+                {
+                    unlockedExpert = false; //reset and run again.
+                    finishDisplaying();
+                }));
+            }
+
             finishedDisplaying = true;
             if (submissionCompletePending)
                 showOnlineRanking();
@@ -490,11 +506,14 @@ namespace osum.GameModes
 
         private void showNavigation()
         {
-            s_ButtonBack.FadeIn(500);
+            if (s_Footer.Alpha != 1)
+            {
+                s_ButtonBack.FadeIn(500);
 
-            s_Footer.Alpha = 1;
-            s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
-            s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Alpha = 1;
+                s_Footer.Transform(new TransformationV(new Vector2(-60, -85), Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+                s_Footer.Transform(new TransformationF(TransformationType.Rotation, 0.04f, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
+            }
         }
 
         private void showOnlineRanking()
@@ -585,6 +604,7 @@ namespace osum.GameModes
         }
 
         int frameCount = 0;
+        private pSprite spriteSubmitting;
 
         public override void Update()
         {

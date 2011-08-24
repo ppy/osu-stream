@@ -5,12 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osustream", "osum\osustream
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x86 = Debug|x86
 		Debug|iPhone = Debug|iPhone
 		Release|iPhone = Release|iPhone
 		Testflight|iPhone = Testflight|iPhone
 		Distribution|iPhone = Distribution|iPhone
-		Release|x86 = Release|x86
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
 		Release|iPhoneSimulator = Release|iPhoneSimulator
 	EndGlobalSection
@@ -19,16 +17,12 @@ Global
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhone.Build.0 = Debug|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|x86.ActiveCfg = Debug|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|x86.Build.0 = Debug|iPhoneSimulator
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Distribution|iPhone.ActiveCfg = Distribution|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Distribution|iPhone.Build.0 = Distribution|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhone.ActiveCfg = Release|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhone.Build.0 = Release|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|x86.ActiveCfg = Release|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|x86.Build.0 = Release|iPhoneSimulator
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testflight|iPhone.ActiveCfg = Testflight|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testflight|iPhone.Build.0 = Testflight|iPhone
 	EndGlobalSection
