@@ -57,9 +57,6 @@ namespace osum.Graphics.Sprites
             movedY += Math.Abs(change);
             movedX += Math.Abs(trackingPoint.WindowDelta.X);
 
-            if (movedY < 10)
-                return;
-
             ShowScrollbar();
 
             verticalDragOffset += change;
@@ -136,7 +133,7 @@ namespace osum.Graphics.Sprites
 
         internal void SetMaxHeight(float newOffset)
         {
-            newOffset = -newOffset + GameBase.BaseSizeFixedWidth.Height;
+            newOffset = Math.Min(0,-newOffset + GameBase.BaseSizeFixedWidth.Height);
 
             offset_min = newOffset;
             scrollbar.Scale.Y = (float)GameBase.BaseSizeFixedWidth.Height / (-offset_min + GameBase.BaseSizeFixedWidth.Height) * GameBase.BaseSizeFixedWidth.Height;
