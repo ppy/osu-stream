@@ -29,3 +29,5 @@ Sounds/*
 *.ipa
 *.pidb
 *.sublime-project
+*._*
+Music/*
