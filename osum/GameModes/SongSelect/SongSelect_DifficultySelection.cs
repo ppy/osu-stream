@@ -154,7 +154,7 @@ namespace osum.GameModes
             s_SongInfo = new pSprite(TextureManager.Load(OsuTexture.songselect_songinfo), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(0, 0), 0.95f, true, Color4.White);
             s_SongInfo.Alpha = 0;
             s_SongInfo.OnClick += new EventHandler(onSongInfoClick);
-            spriteManager.Add(s_SongInfo);
+            topmostSpriteManager.Add(s_SongInfo);
 
             s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
             s_ModeButtonEasy.OnClick += onModeButtonClick;

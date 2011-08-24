@@ -37,8 +37,8 @@ namespace osum.GameModes
             songInfoSpriteManager.Alpha = 0;
             songInfoSpriteManager.Position = Vector2.Zero;
             songInfoSpriteManager.Transformations.Clear();
-            songInfoSpriteManager.Transform(new TransformationBounce(Clock.Time + 200, Clock.Time + 700, 1, 0.5f, 2));
-            songInfoSpriteManager.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time + 200, Clock.Time + 500));
+            songInfoSpriteManager.Transform(new TransformationBounce(Clock.ModeTime + 200, Clock.ModeTime + 700, 1, 0.5f, 2));
+            songInfoSpriteManager.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.ModeTime + 200, Clock.ModeTime + 500));
 
             Beatmap beatmap = SelectedPanel.Beatmap;
 
@@ -97,6 +97,7 @@ namespace osum.GameModes
                 Origin = OriginTypes.Centre,
                 TextShadow = true
             };
+
             songInfoSpriteManager.Add(artist);
 
             vPos += 40;
@@ -138,8 +139,6 @@ namespace osum.GameModes
 
             string unicodeSource = beatmap.Package.GetMetadata(MapMetaType.SourceUnicode);
             string normalSource = beatmap.Package.GetMetadata(MapMetaType.Source);
-
-
 
             if (normalSource != null)
             {
