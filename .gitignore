@@ -31,3 +31,5 @@ Sounds/*
 *.sublime-project
 *._*
 Music/*
+
+*.sublime-workspace
