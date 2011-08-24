@@ -98,11 +98,11 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp -r ${ProjectDir}/bin/${ProjectConfigPlat}/${ProjectConfigName}/${ProjectName}.app ${SolutionDir}/Output/Payload/${ProjectName}.app" workingdir="" />
-        <Command type="AfterBuild" command="zip -r ../${ProjectName}.ipa ." workingdir="${SolutionDir}/Output/" />
-        <Command type="BeforeBuild" command="rm -rf ${SolutionDir}/Output/Payload/${ProjectName}.app/" />
-        <Command type="BeforeBuild" command="rm -rf ${SolutionDir}/${ProjectName}.ipa" />
-        <Command type="AfterBuild" command="curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" />
+        <Command type="AfterBuild" command="/bin/cp -r ${ProjectDir}/bin/${ProjectConfigPlat}/${ProjectConfigName}/${ProjectName}.app ${SolutionDir}/Output/Payload/${ProjectName}.app" workingdir="" />
+        <Command type="AfterBuild" command="/usr/bin/zip -r ../${ProjectName}.ipa ." workingdir="${SolutionDir}/Output/" />
+        <Command type="BeforeBuild" command="/bin/rm -rf ${SolutionDir}/Output/Payload/${ProjectName}.app/" />
+        <Command type="BeforeBuild" command="/bin/rm -rf ${SolutionDir}/${ProjectName}.ipa" />
+        <Command type="AfterBuild" command="/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" externalConsole="true" />
       </CustomCommands>
     </CustomCommands>
     <MtouchLink>Full</MtouchLink>
