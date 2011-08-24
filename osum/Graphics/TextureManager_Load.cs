@@ -126,6 +126,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.songselect_audio_pause, new SpriteSheetTexture("menu", 1708, 0, 54, 54));
             textureLocations.Add(OsuTexture.songselect_audio_play, new SpriteSheetTexture("menu", 1764, 0, 54, 54));
             textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("menu", 1820, 0, 54, 54));
+            textureLocations.Add(OsuTexture.songselect_video, new SpriteSheetTexture("menu", 1876, 0, 54, 54));
             textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("menu", 1616, 66, 38, 44));
             textureLocations.Add(OsuTexture.songselect_star, new SpriteSheetTexture("menu", 1494, 102, 18, 18));
             textureLocations.Add(OsuTexture.menu_item_background, new SpriteSheetTexture("menu", 2034, 0, 4, 400));

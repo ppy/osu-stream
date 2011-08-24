@@ -304,10 +304,16 @@ namespace osum.GameModes.Store
 
             foreach (pSprite p in songPreviewButtons)
             {
-                p.ExactCoordinates = true;
-                p.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
-                p.Transformations.RemoveAll(t => t.Looping);
-                p.Rotation = 0;
+                switch (p.Texture.OsuTextureInfo)
+                {
+                    case OsuTexture.songselect_audio_pause:
+                    case OsuTexture.songselect_audio_preview:
+                        p.ExactCoordinates = true;
+                        p.Texture = TextureManager.Load(OsuTexture.songselect_audio_play);
+                        p.Transformations.RemoveAll(t => t.Looping);
+                        p.Rotation = 0;
+                        break;
+                }
             }
 
             if (Downloading) return;
@@ -323,7 +329,7 @@ namespace osum.GameModes.Store
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
             preview.Offset = new Vector2(38, ExpandedHeight + 20);
-            
+
             Sprites.Add(preview);
             PackItemSprites.Add(preview);
             songPreviewButtons.Add(preview);
@@ -395,6 +401,7 @@ namespace osum.GameModes.Store
 
             string artistString;
             string titleString;
+            float textOffset = 80;
 
             if (item.Title == null)
             {
@@ -411,15 +418,42 @@ namespace osum.GameModes.Store
                 titleString = item.Title.Substring(item.Title.IndexOf('-') + 1).Trim();
             }
 
+            if (item.YoutubeId != null)
+            {
+                textOffset += 40;
+                pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
+                videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
+                videoPreview.OnClick += delegate
+                {
+                    StoreMode.ResetAllPreviews(true);
+
+                    GameBase.Instance.ShowWebView(@"http://www.youtube.com/watch?v=" + item.YoutubeId, artistString + " - " + titleString,
+                        delegate
+                        {
+                            //reset stuff after returning from the webView.
+                            StoreMode.ResetAllPreviews(true);
+                            return true;
+                        });
+
+                    back.FadeColour(colourHover, 0, false);
+                    back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
+                    back.TagNumeric = 1;
+                };
+
+                Sprites.Add(videoPreview);
+                PackItemSprites.Add(videoPreview);
+                songPreviewButtons.Add(videoPreview);
+            }
+
             pText artist = new pText(artistString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;
-            artist.Offset = new Vector2(80, ExpandedHeight + 4);
+            artist.Offset = new Vector2(textOffset, ExpandedHeight + 4);
             PackItemSprites.Add(artist);
             Sprites.Add(artist);
 
             pText title = new pText(titleString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
 
-            title.Offset = new Vector2(95 + artist.MeasureText().X / GameBase.BaseToNativeRatio, ExpandedHeight + 4);
+            title.Offset = new Vector2(textOffset + 15 + artist.MeasureText().X / GameBase.BaseToNativeRatio, ExpandedHeight + 4);
             PackItemSprites.Add(title);
             Sprites.Add(title);
 
@@ -441,6 +475,7 @@ namespace osum.GameModes.Store
         public string Filename;
         public string UpdateChecksum;
         public string Title;
+        public string YoutubeId;
 
         public PackItem(string filename, string title, string updateChecksum = null)
         {

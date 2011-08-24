@@ -130,10 +130,15 @@ namespace osum.GameModes.Store
                     continue;
                 }
 
+                int length = split.Length;
+
+                if (length == 0) continue;
+
                 string filename = split[0];
                 string checksum = split[1];
-                string revision = split.Length > 3 ? split[3] : "1.0";
-                string title = split.Length > 2 ? split[2] : null;
+                string revision = length > 3 ? split[3] : "1.0";
+                string title = length > 2 ? split[2] : null;
+                string youtubeId = length > 4 ? split[4] : null;
                 string updateChecksum = null;
 
                 string path = SongSelectMode.BeatmapPath + "/" + filename;
@@ -163,7 +168,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.AddItem(new PackItem(filename, title, updateChecksum));
+                pp.AddItem(new PackItem(filename, title, updateChecksum) { YoutubeId = youtubeId });
 
                 y++;
             }

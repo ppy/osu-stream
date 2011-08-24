@@ -534,6 +534,7 @@ namespace osum.Graphics.Skins
         sliderballoverlay,
         news_light,
         news_button,
-        store_header
+        store_header,
+        songselect_video
     }
 }
