@@ -381,7 +381,7 @@
     <Content Include="Localisation\it.txt" />
     <Content Include="Localisation\ko.txt" />
     <Content Include="Localisation\th.txt" />
-    <Content Include="Localisation\zh-cn.txt" />
-    <Content Include="Localisation\zh-tw.txt" />
+    <Content Include="Localisation\zh-CHS.txt" />
+    <Content Include="Localisation\zh-CHT.txt" />
   </ItemGroup>
 </Project>
