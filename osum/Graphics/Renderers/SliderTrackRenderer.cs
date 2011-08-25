@@ -305,13 +305,27 @@ namespace osum.Graphics.Renderers
 
                 if (!flip_start)
                 {
-                    dest[0] -= (ratiox <= 0.99609375f)
-                               ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                               : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[0] -= prev.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[0] -= (ratiox <= 0.99609375f)
+                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                   : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    }
 
-                    dest[1] += (ratioy <= 0.99609375f)
-                               ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                               : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[1] += prev.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[1] += (ratioy <= 0.99609375f)
+                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                   : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    }
 
                     dest[12] += cur.unitAngle.Y * radius;
                     dest[13] -= cur.unitAngle.X * radius;
@@ -321,13 +335,27 @@ namespace osum.Graphics.Renderers
                     dest[0] -= cur.unitAngle.Y * radius;
                     dest[1] += cur.unitAngle.X * radius;
 
-                    dest[12] += (ratiox <= 0.99609375f)
-                                ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[12] += prev.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[12] += (ratiox <= 0.99609375f)
+                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                    : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    }
 
-                    dest[13] -= (ratioy <= 0.99609375f)
-                                ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[13] -= prev.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[13] -= (ratioy <= 0.99609375f)
+                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                    : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    }
                 }
             }
 
@@ -352,13 +380,27 @@ namespace osum.Graphics.Renderers
 
                 if (!flip_end)
                 {
-                    dest[3] -= (ratiox <= 0.99609375f)
-                               ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                               : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[3] -= cur.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[3] -= (ratiox <= 0.99609375f)
+                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                   : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    }
 
-                    dest[4] += (ratioy <= 0.99609375f)
-                               ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                               : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[4] += cur.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[4] += (ratioy <= 0.99609375f)
+                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                   : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    }
 
                     dest[15] += cur.unitAngle.Y * radius;
                     dest[16] -= cur.unitAngle.X * radius;
@@ -368,13 +410,27 @@ namespace osum.Graphics.Renderers
                     dest[3] -= cur.unitAngle.Y * radius;
                     dest[4] += cur.unitAngle.X * radius;
 
-                    dest[15] += (ratiox <= 0.99609375f)
-                                ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[15] += cur.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[15] += (ratiox <= 0.99609375f)
+                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                    : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    }
 
-                    dest[16] -= (ratioy <= 0.99609375f)
-                                ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[16] -= cur.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[16] -= (ratioy <= 0.99609375f)
+                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                    : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    }
                 }
             }
         }
