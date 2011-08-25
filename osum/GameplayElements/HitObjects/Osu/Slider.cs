@@ -1118,6 +1118,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 p.Position = drawEndPosition;
 
             Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
+            Line next = lastDrawnSegmentIndex + 1 < drawableSegments.Count ? drawableSegments[lastDrawnSegmentIndex + 1] : null;
 
             if (lastDrawnSegmentIndex >= FirstSegmentIndex || FirstSegmentIndex == 0)
             {
@@ -1126,20 +1127,20 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 if (oldFboId < 0)
                     GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
-                DrawPath(partialDrawable, prev, waitingForPathTextureClear);
+                DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);
 #else
                 if (sliderBodyTexture.fboId >= 0)
                 {
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
 
-                    DrawPath(partialDrawable, prev, waitingForPathTextureClear);
+                    DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
 
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }
                 else
                 {
-                    DrawPath(partialDrawable, prev, waitingForPathTextureClear);
+                    DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
 
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potWidth, 0);
@@ -1154,7 +1155,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        private void DrawPath(List<Line> partialDrawable, Line prev, bool clear)
+        private void DrawPath(List<Line> partialDrawable, Line prev, Line next, bool clear)
         {
             GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
             GL.MatrixMode(MatrixMode.Projection);
@@ -1173,7 +1174,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
 
             m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                        DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev);
+                                                        DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev, next);
 
         }
 
