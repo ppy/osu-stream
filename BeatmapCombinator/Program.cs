@@ -218,21 +218,21 @@ namespace BeatmapCombinator
                                                (repeatCount > 4 && length < 100) ||
                                                (hadEndpointSamples && split[4] == "4");
 
-                                        if (split.Length >= 9)
+                                        if (split.Length > 10)
                                         {
                                             samplestring = split[10].Split(':');
                                         }
                                     }
                                     else if (spinner)
                                     {
-                                        if (split.Length >= 5)
+                                        if (split.Length > 6)
                                         {
                                             samplestring = split[6].Split(':');
                                         }
                                     }
                                     else
                                     {
-                                        if (split.Length >= 4)
+                                        if (split.Length > 5)
                                         {
                                             samplestring = split[5].Split(':');
                                         }
