@@ -224,6 +224,7 @@ namespace osum.GameplayElements
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
+#if !VIDEO
                                 switch (Player.Difficulty)
                                 {
                                     case Difficulty.Easy:
@@ -239,6 +240,7 @@ namespace osum.GameplayElements
                                             continue;
                                         break;
                                 }
+#endif
 
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
