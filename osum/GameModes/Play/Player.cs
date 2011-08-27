@@ -191,7 +191,13 @@ namespace osum.GameModes
             spriteManager.Add(s_streamSwitchWarningArrow);
 
             topMostSpriteManager = new SpriteManager();
+
+            t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 96, new Vector2(20, 20), 1, true, Color4.White);
+            t_currentStream.TextShadow = true;
+            topMostSpriteManager.Add(t_currentStream);
         }
+
+        pText t_currentStream;
 
         protected virtual void initializeUIElements()
         {
@@ -809,6 +815,8 @@ namespace osum.GameModes
                 return false;
 
             streamSwitchDisplay.BeginSwitch(increase);
+
+            t_currentStream.Text = HitObjectManager.ActiveStream.ToString();
 
             queuedStreamSwitchTime = switchTime;
             return true;
