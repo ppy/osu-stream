@@ -167,7 +167,7 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
-#if !MAPPER
+#if COCKS
             if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)

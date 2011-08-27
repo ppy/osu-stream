@@ -231,8 +231,8 @@ namespace osum.GameplayElements
                                             continue;
                                         break;
                                     case Difficulty.Normal:
-                                        if (difficulty == Difficulty.Expert)
-                                            continue;
+                                        //if (difficulty == Difficulty.Expert)
+                                        //    continue;
                                         break;
                                     case Difficulty.Expert:
                                         if (difficulty != Difficulty.Expert)

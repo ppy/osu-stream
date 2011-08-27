@@ -561,8 +561,8 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
-        public bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
+        public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy; } }
+        public bool IsHighestStream { get { return ActiveStream == Difficulty.Expert; } } //todo: support easy mode
 
         internal void StopAllSounds()
         {
