@@ -20,6 +20,7 @@ using osum.Resources;
 using osum.GameplayElements.Scoring;
 using osum.Graphics;
 using osum.Online;
+using osum.Support;
 
 namespace osum.GameModes
 {
@@ -98,6 +99,17 @@ namespace osum.GameModes
         private void showDifficultySelection2(bool instant = false)
         {
             if (!instant && State != SelectState.LoadingPreview && State != SelectState.SongInfo && State != SelectState.RankingDisplay) return;
+
+#if VIDEO
+            Director.ChangeMode(OsuMode.Empty, new FadeTransition(0, 0));
+            GameBase.Scheduler.Add(
+            delegate
+            {
+                Director.ChangeMode(OsuMode.VideoPreview, new FadeTransition(0, 2000));
+            }, 2000);
+
+            return;
+#endif
 
             if (!AudioEngine.Music.IsElapsing)
                 playFromPreview();

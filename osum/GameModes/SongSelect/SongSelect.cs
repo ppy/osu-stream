@@ -167,7 +167,7 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
-#if COCKS
+#if !VIDEO
             if (BeatmapDatabase.BeatmapInfo.Count > 0)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
@@ -238,6 +238,7 @@ namespace osum.GameModes
             }
 
             showDifficultySelection(panel);
+
         }
 
         /// <summary>
@@ -245,6 +246,10 @@ namespace osum.GameModes
         /// </summary>
         internal static void InitializeBgm()
         {
+#if VIDEO
+            return;
+#endif
+
             //Start playing song select BGM.
 #if iOS
             AudioEngine.Music.Load("Skins/Default/songselect.m4a", true);

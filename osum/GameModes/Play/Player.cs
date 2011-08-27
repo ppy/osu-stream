@@ -192,21 +192,35 @@ namespace osum.GameModes
 
             topMostSpriteManager = new SpriteManager();
 
-            t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 96, new Vector2(20, 20), 1, true, Color4.White);
+#if VIDEO
+            t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 64, new Vector2(20, 20), 1, true, Color4.White);
+            t_currentStream.Field = FieldTypes.StandardSnapBottomRight;
+            t_currentStream.Origin = OriginTypes.BottomRight;
             t_currentStream.TextShadow = true;
-            topMostSpriteManager.Add(t_currentStream);
+            spriteManager.Add(t_currentStream);
+#endif
         }
 
+#if VIDEO
         pText t_currentStream;
+#endif
 
         protected virtual void initializeUIElements()
         {
+#if VIDEO
+            healthBar = new HealthBar();
+            healthBar.SetCurrentHp(200);
+#else
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
+#endif
+
             scoreDisplay = new ScoreDisplay();
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
+#if !VIDEO
             menu = new PauseMenu();
+#endif
             progressDisplay = new ProgressDisplay();
         }
 
@@ -359,6 +373,10 @@ namespace osum.GameModes
             healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
+
+#if VIDEO
+            t_currentStream.Text = HitObjectManager.ActiveStream.ToString();
+#endif
 
             queuedStreamSwitchTime = 0;
         }
@@ -576,7 +594,9 @@ namespace osum.GameModes
 
             if (scoreDisplay != null) scoreDisplay.Draw();
 
+#if !VIDEO
             if (healthBar != null) healthBar.Draw();
+#endif
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
@@ -652,10 +672,10 @@ namespace osum.GameModes
             {
                 Completed = true;
 
-#if iOS
+#if iOS || true
                 if (Player.Autoplay)
                 {
-                    Director.ChangeMode(OsuMode.SongSelect,new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    Director.ChangeMode(OsuMode.Empty,new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                 }
                 else
 #endif
@@ -676,9 +696,11 @@ namespace osum.GameModes
 
         protected virtual void UpdateStream()
         {
+#if !VIDEO
             if (Difficulty == Difficulty.Easy || HitObjectManager == null)
                 //easy can't fail, nor switch streams.
                 return;
+#endif
 
             if (HitObjectManager != null && !HitObjectManager.StreamChanging)
             {
@@ -815,8 +837,6 @@ namespace osum.GameModes
                 return false;
 
             streamSwitchDisplay.BeginSwitch(increase);
-
-            t_currentStream.Text = HitObjectManager.ActiveStream.ToString();
 
             queuedStreamSwitchTime = switchTime;
             return true;

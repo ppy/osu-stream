@@ -166,6 +166,12 @@ namespace osum
                 case OsuMode.Credits:
                     mode = new Credits();
                     break;
+                case OsuMode.VideoPreview:
+                    mode = new VideoPreview();
+                    break;
+                case OsuMode.Empty:
+                    mode = new Empty();
+                    break;
 #if MONO
                 case OsuMode.PositioningTest:
                     mode = new PositioningTest();
@@ -201,7 +207,7 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                AudioEngine.Music.DimmableVolume = 0.3f + Director.ActiveTransition.CurrentValue * 0.7f;
+                AudioEngine.Music.DimmableVolume = Director.ActiveTransition.CurrentValue;
 
                 if (ActiveTransition.FadeOutDone)
                 {
