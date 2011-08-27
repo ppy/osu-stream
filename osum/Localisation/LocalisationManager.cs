@@ -24,9 +24,14 @@ namespace osum.Resources
             initialised = true;
 
             readResources("en");
-            string regionalSetting = System.Threading.Thread.CurrentThread.CurrentUICulture.ToString().Substring(0, 2);
-            if (regionalSetting != "en")
-                readResources(regionalSetting);
+            string regionalSetting = System.Threading.Thread.CurrentThread.CurrentUICulture.ToString();
+
+            if (regionalSetting == "en") return;
+
+            if (!regionalSetting.StartsWith("zh")) //chinese has sub-localisations for traditional/simplified.
+                regionalSetting = regionalSetting.Substring(0, 2);
+
+            readResources(regionalSetting);
         }
 
         private static void readResources(string p)

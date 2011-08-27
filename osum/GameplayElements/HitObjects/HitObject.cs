@@ -484,7 +484,7 @@ namespace osum.GameplayElements
         }
 
         const int TAG_SHAKE_TRANSFORMATION = 54327;
-        internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Soft, CustomSampleSet = CustomSampleSet.Default, Volume = 1 };
+        internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Normal, CustomSampleSet = CustomSampleSet.Default, Volume = 1, AdditionSampleSet = osum.GameplayElements.Beatmaps.SampleSet.Normal };
 
 
         internal virtual void Shake()

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapCombinator", "Beatma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sspack", "sspack\sspack.csproj", "{1AC0A15F-98D2-477D-A620-A8F7B79935F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalisationUpdater", "LocalisationUpdater\LocalisationUpdater.csproj", "{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,26 @@ Global
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|x86.ActiveCfg = Release|Any CPU
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|x86.ActiveCfg = Debug|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|x86.Build.0 = Debug|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Release|Any CPU.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Release|x86.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Release|x86.Build.0 = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseLocal|Any CPU.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseLocal|Mixed Platforms.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseLocal|Mixed Platforms.Build.0 = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseLocal|x86.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseLocal|x86.Build.0 = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseNoEncryption|Any CPU.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseNoEncryption|Mixed Platforms.Build.0 = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseNoEncryption|x86.ActiveCfg = Release|x86
+		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.ReleaseNoEncryption|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

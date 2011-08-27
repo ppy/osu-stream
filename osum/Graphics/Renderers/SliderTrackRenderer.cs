@@ -101,6 +101,7 @@ namespace osum.Graphics.Renderers
         protected float[][] coordinates_quad;
 #endif
         static protected float[] vertices_quad;
+        static protected object vertices_lock = new object();
 
         GCHandle[] coordinates_quad_handle;
         IntPtr[] coordinates_quad_pointer;
@@ -272,6 +273,168 @@ namespace osum.Graphics.Renderers
 
         }
 
+        private unsafe void CalculateQuadMesh(float* dest, float radius, Line prev, Line cur, Line next, bool flip_start, bool flip_end)
+        {
+            if (prev != null) prev.Recalc();
+            if (cur != null) cur.Recalc();
+            if (next != null) next.Recalc();
+            Vector2 p = cur.unitAngle * radius;
+            dest[6] = cur.p1.X;
+            dest[7] = cur.p1.Y;
+            dest[9] = cur.p2.X;
+            dest[10] = cur.p2.Y;
+
+            if (prev == null)
+            {
+                dest[0] = cur.p1.X - cur.unitAngle.Y * radius;
+                dest[1] = cur.p1.Y + cur.unitAngle.X * radius;
+                dest[12] = cur.p1.X + cur.unitAngle.Y * radius;
+                dest[13] = cur.p1.Y - cur.unitAngle.X * radius;
+            }
+            else
+            {
+                Vector2 p0 = -(prev.unitAngle) * radius;
+                Vector2 p1 = p;
+                float ratiox = p1.X / p0.X;
+                float ratioy = p1.Y / p0.Y;
+
+                dest[0] = cur.p1.X;
+                dest[1] = cur.p1.Y;
+                dest[12] = cur.p1.X;
+                dest[13] = cur.p1.Y;
+
+                if (!flip_start)
+                {
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[0] -= prev.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[0] -= (ratiox <= 0.99609375f)
+                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                   : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    }
+
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[1] += prev.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[1] += (ratioy <= 0.99609375f)
+                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                   : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    }
+
+                    dest[12] += cur.unitAngle.Y * radius;
+                    dest[13] -= cur.unitAngle.X * radius;
+                }
+                else
+                {
+                    dest[0] -= cur.unitAngle.Y * radius;
+                    dest[1] += cur.unitAngle.X * radius;
+
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[12] += prev.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[12] += (ratiox <= 0.99609375f)
+                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                    : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                    }
+
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[13] -= prev.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[13] -= (ratioy <= 0.99609375f)
+                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                    : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                    }
+                }
+            }
+
+            if (next == null)
+            {
+                dest[3] = cur.p2.X - cur.unitAngle.Y * radius;
+                dest[4] = cur.p2.Y + cur.unitAngle.X * radius;
+                dest[15] = cur.p2.X + cur.unitAngle.Y * radius;
+                dest[16] = cur.p2.Y - cur.unitAngle.X * radius;
+            }
+            else
+            {
+                Vector2 p0 = -p;
+                Vector2 p1 = next.unitAngle * radius;
+                float ratiox = p1.X / p0.X;
+                float ratioy = p1.Y / p0.Y;
+
+                dest[3] = cur.p2.X;
+                dest[4] = cur.p2.Y;
+                dest[15] = cur.p2.X;
+                dest[16] = cur.p2.Y;
+
+                if (!flip_end)
+                {
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[3] -= cur.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[3] -= (ratiox <= 0.99609375f)
+                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                   : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    }
+
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[4] += cur.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[4] += (ratioy <= 0.99609375f)
+                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                   : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    }
+
+                    dest[15] += cur.unitAngle.Y * radius;
+                    dest[16] -= cur.unitAngle.X * radius;
+                }
+                else
+                {
+                    dest[3] -= cur.unitAngle.Y * radius;
+                    dest[4] += cur.unitAngle.X * radius;
+
+                    if (p0.X < 0.00390625f)
+                    {
+                        dest[15] += cur.unitAngle.Y * radius;
+                    }
+                    else
+                    {
+                        dest[15] += (ratiox <= 0.99609375f)
+                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                                    : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                    }
+
+                    if (p0.Y < 0.00390625f)
+                    {
+                        dest[16] -= cur.unitAngle.X * radius;
+                    }
+                    else
+                    {
+                        dest[16] -= (ratioy <= 0.99609375f)
+                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                                    : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                    }
+                }
+            }
+        }
+
         private void CalculateQuadMesh()
         {
 #if !NO_PIN_SUPPORT
@@ -320,7 +483,7 @@ namespace osum.Graphics.Renderers
         /// <param name="radius">Width of the slider</param>
         /// <param name="ColourIndex">Current combo colour index between 0 and 4; -1 for grey; -2 for Tag Multi override.</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
-        internal void Draw(List<Line> lineList, float radius, int ColourIndex, Line prev)
+        internal void Draw(List<Line> lineList, float radius, int ColourIndex, Line prev, Line next)
         {
             GL.Color4((byte)255, (byte)255, (byte)255, (byte)255);
 
@@ -333,7 +496,7 @@ namespace osum.Graphics.Renderers
                     DrawOGL(lineList, radius, multi_ogl, prev);
                     break;*/
                 default:
-                    DrawOGL(lineList, radius, prev, true, ColourIndex);
+                    DrawOGL(lineList, radius, prev, next, true, ColourIndex);
                     break;
             }
         }
@@ -409,7 +572,7 @@ namespace osum.Graphics.Renderers
         /// <param name="globalRadius">Width of the slider</param>
         /// <param name="texture">Texture used for the track</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
-        protected void DrawOGL(List<Line> lineList, float globalRadius, Line prev, bool renderingToTexture, int ColourIndex)
+        protected void DrawOGL(List<Line> lineList, float globalRadius, Line prev, Line next, bool renderingToTexture, int ColourIndex)
         {
             if (renderingToTexture)
             {
@@ -426,14 +589,30 @@ namespace osum.Graphics.Renderers
             trackTexture.TextureGl.Bind();
 
             int count = lineList.Count;
+            bool flip;
+            if (count == 0 || prev == null)
+            {
+                flip = false;
+            }
+            else
+            {
+                // this is the first segment this frame so we need to recover the previous flip value
+                float theta = lineList[0].theta - prev.theta;
+
+                // keep on the +- pi/2 range.
+                if (theta > MathHelper.Pi) theta -= (float)(MathHelper.Pi * 2);
+                if (theta < -MathHelper.Pi) theta += (float)(MathHelper.Pi * 2);
+                flip = theta < 0;
+            }
+
             for (int x = 1; x < count; x++)
             {
-                DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius, ColourIndex);
+                DrawLineOGL(prev, lineList[x - 1], lineList[x], globalRadius, ColourIndex, ref flip);
                 prev = lineList[x - 1];
             }
 
             if (count > 0)
-                DrawLineOGL(prev, lineList[count - 1], null, globalRadius, ColourIndex);
+                DrawLineOGL(prev, lineList[count - 1], next, globalRadius, ColourIndex, ref flip);
 
             if (renderingToTexture)
             {
@@ -443,16 +622,11 @@ namespace osum.Graphics.Renderers
             }
         }
 
-        protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius, int ColourIndex)
+        protected void DrawLineOGL(Line prev, Line curr, Line next, float globalRadius, int ColourIndex, ref bool flip)
         {
-            // Quad
-            Matrix4 matrix = curr.QuadMatrix(globalRadius);
-            GL.LoadMatrix(ref matrix.Row0.X);
-
-            glDrawQuad(ColourIndex);
-
+            // find our orientation before anything else since we now need it for quad behaviour.
             int end_triangles;
-            bool flip;
+            bool prev_flip = flip;
             if (next == null)
             {
                 flip = false; // totally irrelevant
@@ -484,8 +658,19 @@ namespace osum.Graphics.Renderers
             }
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
+            // Quad
+            lock (vertices_lock)
+            {
+                unsafe
+                {
+                    CalculateQuadMesh((float*)vertices_quad_pointer, globalRadius, prev, curr, next, prev_flip, flip);
+                }
+                GL.LoadIdentity();
+                glDrawQuad(ColourIndex);
+            }
+
             // Cap on end
-            matrix = curr.EndCapMatrix(globalRadius, flip);
+            Matrix4 matrix = curr.EndCapMatrix(globalRadius, flip);
             GL.LoadMatrix(ref matrix.Row0.X);
 
             glDrawHalfCircle(end_triangles, ColourIndex);

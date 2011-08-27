@@ -78,9 +78,31 @@ namespace osum
             string culture = "en-US";
             switch (NSLocale.PreferredLanguages[0])
             {
+                case "zh-Hans":
+                    culture = "zh-CHS";
+                    break;
+                case "zh-Hant":
+                    culture = "zh-CHT";
+                    break;
+                case "da":
+                    culture = "da";
+                    break;
+                case "fr":
+                    culture = "fr-FR";
+                    break;
+                case "it":
+                    culture = "it-IT";
+                    break;
                 case "ja":
                     culture = "ja-JP";
                     break;
+                case "ko":
+                    culture = "ko-KR";
+                    break;
+                case "th":
+                    culture = "th-TH";
+                    break;
+                    
             }
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
