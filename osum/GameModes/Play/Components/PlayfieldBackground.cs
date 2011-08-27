@@ -190,7 +190,7 @@ namespace osum.GameModes.Play.Components
 
         internal void Move(float amount)
         {
-            curentXOffset += amount * 0.7f;
+            curentXOffset += amount * 0.7f * Clock.ElapsedRatioToSixty;
 
             float nativeX = curentXOffset * GameBase.BaseToNativeRatio;
 
@@ -215,7 +215,7 @@ namespace osum.GameModes.Play.Components
             if (Velocity != 0)
             {
                 Move(Velocity);
-                Velocity *= 0.9f;
+                Velocity *= 1 - (0.1f * Clock.ElapsedRatioToSixty);
                 if (Math.Abs(Velocity) < 0.01f) Velocity = 0;
             }
 

@@ -66,7 +66,8 @@ namespace osum.Helpers
             get { return (time * 1000); }
         }
 
-        public static double ElapsedMilliseconds = 1000 / 60f;
+        public static double ElapsedMilliseconds = ELAPSED_AT_SIXTY_FRAMES;
+        public static float ElapsedRatioToSixty = 1;
 
         static double currentFrameAudioTime;
 
@@ -109,6 +110,7 @@ namespace osum.Helpers
 
         static int audioCheckFrame;
         const int CHECK_AUDIO_FRAME_COUNT = 20;
+        public const double ELAPSED_AT_SIXTY_FRAMES = 1000d/60;
 
         /// <summary>
         /// Update from a non-game loop. elapsed is elapsed game time. Hook your own audioTimeSource.
@@ -139,6 +141,7 @@ namespace osum.Helpers
                 if (elapsedSinceUpdate > 0.1) elapsedSinceUpdate = 1d/60;
 
                 ElapsedMilliseconds = elapsedSinceUpdate * 1000;
+                ElapsedRatioToSixty = (float)(ElapsedMilliseconds / ELAPSED_AT_SIXTY_FRAMES);
                 swLastUpdate = swTime;
 
                 modeTime += elapsedSinceUpdate;
