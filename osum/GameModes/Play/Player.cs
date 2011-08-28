@@ -212,12 +212,13 @@ namespace osum.GameModes
             healthBar.SetCurrentHp(200);
 #else
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
+            scoreDisplay = new ScoreDisplay();
 #endif
 
-            scoreDisplay = new ScoreDisplay();
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
+
 #if !VIDEO
             menu = new PauseMenu();
 #endif
@@ -256,6 +257,10 @@ namespace osum.GameModes
 
             if (Beatmap.ContainerFilename != null)
                 HitObjectManager.LoadFile();
+#if VIDEO
+            Player.Difficulty = Difficulty.Easy;
+            //force back to stream difficulty, as it may be modified during load to get correct AR etc. variables.
+#endif
         }
 
         /// <summary>

@@ -224,7 +224,9 @@ namespace osum.GameplayElements
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
-#if !VIDEO
+#if VIDEO
+                                Player.Difficulty = difficulty == Difficulty.Expert ? Difficulty.Expert : Difficulty.Normal;
+#else
                                 switch (Player.Difficulty)
                                 {
                                     case Difficulty.Easy:
@@ -232,8 +234,8 @@ namespace osum.GameplayElements
                                             continue;
                                         break;
                                     case Difficulty.Normal:
-                                        //if (difficulty == Difficulty.Expert)
-                                        //    continue;
+                                        if (difficulty == Difficulty.Expert)
+                                            continue;
                                         break;
                                     case Difficulty.Expert:
                                         if (difficulty != Difficulty.Expert)
