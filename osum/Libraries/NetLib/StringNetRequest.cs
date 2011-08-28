@@ -16,6 +16,9 @@ namespace osu_common.Libraries.NetLib
         public StringNetRequest(string _url, string method = "GET", string postData = null)
             : base(_url, method, postData)
         {
+#if DEBUG
+            Console.WriteLine("URL: " + _url + "\nPOST: " + postData);
+#endif
         }
 
         public new event RequestCompleteHandler onFinish;
