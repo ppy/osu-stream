@@ -159,6 +159,11 @@ namespace osum.GameplayElements
                         for (int i = 0; i < c; i++)
                             if (beatmap.StreamSwitchPoints[i] > switchTime)
                             {
+#if VIDEO
+                                if (i < 2 * (int)ActiveStream + 1)
+                                    continue;
+#endif
+
                                 switchTime = beatmap.StreamSwitchPoints[i];
                                 foundPoint = true;
                                 break;
