@@ -306,6 +306,11 @@ namespace osum.GameModes
                     BeatmapDatabase.Write();
                 }
 
+                int deviceType = 0;
+#if iOS
+                deviceType = (int)osum.Support.iPhone.HardwareDetection.Version;
+#endif
+
                 string check = CryptoHelper.GetMd5String("moocow" +
                     GameBase.Instance.DeviceIdentifier +
                     RankableScore.count100 +
@@ -318,6 +323,7 @@ namespace osum.GameModes
                     RankableScore.accuracyBonusScore +
                     RankableScore.Ranking +
                     Path.GetFileName(Player.Beatmap.ContainerFilename) +
+                    deviceType +
                     RankableScore.hitScore);
 
                 string postString =
@@ -334,7 +340,8 @@ namespace osum.GameModes
                     "&rank=" + RankableScore.Ranking +
                     "&filename=" + Path.GetFileName(Player.Beatmap.ContainerFilename) +
                     "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
-                    "&c=" + check;
+                    "&c=" + check +
+                    "&dt=" + deviceType;
 
                 spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
                 {
