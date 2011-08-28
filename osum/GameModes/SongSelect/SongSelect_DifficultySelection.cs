@@ -105,7 +105,7 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(
             delegate
             {
-                Director.ChangeMode(OsuMode.VideoPreview, new FadeTransition(0, 2000));
+                Director.ChangeMode(OsuMode.VideoPreview, new FadeTransition(0, 500));
             }, 2000);
 
             return;
