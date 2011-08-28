@@ -44,6 +44,8 @@ namespace osum.Graphics.Sprites
 
         internal override void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
+            if (Alpha == 0) return;
+
             base.HandleInputManagerOnMove(source, trackingPoint);
 
             if (LockHorizontal && movedX > 10 && movedY < 20)
@@ -68,11 +70,15 @@ namespace osum.Graphics.Sprites
 
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            if (Alpha == 0) return;
+
             base.HandleInputManagerOnDown(source, trackingPoint);
         }
 
         internal override void HandleInputManagerOnUp(InputSource source, TrackingPoint trackingPoint)
         {
+            if (Alpha == 0) return;
+
             movedX = 0;
             movedY = 0;
 
