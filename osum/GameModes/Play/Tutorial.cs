@@ -103,7 +103,7 @@ namespace osum.GameModes.Play
             if (point.HoveringObject is BackButton)
                 return;
 
-            if (touchToContinue && backButton != null && !backButton.IsHovering)
+            if (touchToContinue && (backButton == null || !backButton.IsHovering))
             {
                 if (touchToContinueText.Transformations.Count > 0)
                     loadNextSegment();

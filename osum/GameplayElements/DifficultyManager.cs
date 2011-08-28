@@ -168,16 +168,16 @@ namespace osum.GameplayElements
 
         public static int FadeIn { get { return 400; } }
         public static int FadeOut { get { return 300; } }
-        public static int SpinnerRotationRatio
+        public static float SpinnerRotationRatio
         {
             get
             {
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Expert:
-                        return 3;
+                        return 2.2f;
                     default:
-                        return 2;
+                        return 1.5f;
                 }
             }
         }

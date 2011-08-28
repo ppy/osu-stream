@@ -93,8 +93,6 @@ namespace osum.GameModes
 
             InputManager.OnMove += InputManager_OnMove;
 
-            InitializeBgm();
-
             InitializeBeatmaps();
 
             background =
@@ -124,6 +122,8 @@ namespace osum.GameModes
                 showDifficultySelection(panels.Find(p => p.Beatmap.ContainerFilename == Player.Beatmap.ContainerFilename), true);
             else
             {
+                InitializeBgm();
+
                 s_Header.Transform(new TransformationV(new Vector2(0, -15), Vector2.Zero, 0, 800, EasingTypes.In));
                 s_Header.Transform(new TransformationF(TransformationType.Rotation, -0.06f, 0, 0, 800, EasingTypes.In));
 
