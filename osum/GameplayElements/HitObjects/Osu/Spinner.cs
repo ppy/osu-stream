@@ -324,6 +324,10 @@ namespace osum.GameplayElements
 
                         lastSamplePlayedRotationCount += sensitivity_modifier;
                     }
+                    else
+                    {
+                        hpMultiplier *= 10;
+                    }
 
                     BonusScore += hpMultiplier;
                 }

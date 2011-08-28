@@ -1085,9 +1085,9 @@ namespace osum.GameModes.Play
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(hpos, vpos), 1500, false, 0, HitObjectSoundType.Normal) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
 
                     HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(hpos, vpos), 1550, false, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
-                            2, 300, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
+                            2, 100, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Normal);
                     HitObjectManager.Add(new Slider(HitObjectManager, new Vector2(hpos, vpos), 1550, false, 0, HitObjectSoundType.Normal, CurveTypes.Bezier,
-                            2, 300, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
+                            2, 100, new List<Vector2>() { new Vector2(hpos + 100, vpos) }, null, 200, 300f / 8) { Clocking = ClockTypes.Manual }, Difficulty.Hard);
 
                     hpos += 180;
 

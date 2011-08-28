@@ -430,7 +430,7 @@ namespace osum.GameModes
                     comboMultiplier = false;
                     addHitScore = false;
                     CurrentScore.spinnerBonusScore += (int)hitObject.HpMultiplier;
-                    healthChange = hitObject.HpMultiplier * 0.04f;
+                    healthChange = hitObject.HpMultiplier * 0.003f;
                     break;
                 case ScoreChange.SpinnerSpinPoints:
                     scoreChange = 10;
