@@ -584,7 +584,7 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            bool isElapsing = AudioEngine.Music.IsElapsing;
+            bool isElapsing = AudioEngine.Music == null || AudioEngine.Music.IsElapsing;
 
             if (Failed)
             {
