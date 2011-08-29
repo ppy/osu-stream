@@ -297,7 +297,10 @@ namespace osum.GameModes.Store
         internal void ResetPreviews()
         {
             if (previewRequest != null)
+            {
                 previewRequest.Abort();
+                previewRequest = null;
+            }
 
             if (!isPreviewing) return;
             isPreviewing = false;
@@ -353,7 +356,8 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
-                if (previewRequest != null) previewRequest.Abort();
+                if (previewRequest != null)
+                    previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
                 string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&format=" + PREFERRED_FORMAT;
