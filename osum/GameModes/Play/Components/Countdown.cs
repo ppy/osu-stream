@@ -104,9 +104,11 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
+            if (StartTime < 0) return;
+
             if (HasFinished)
             {
-                if (StartTime > 0 && background.Alpha == 0 && Clock.AudioTime > StartTime)
+                if (background.Alpha == 0 && Clock.AudioTime > StartTime)
                 {
                     StartTime = -1;
                     spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); s.Update(); });

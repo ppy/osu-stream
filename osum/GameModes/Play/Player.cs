@@ -152,10 +152,7 @@ namespace osum.GameModes
                     return;
                 }
 
-                //countdown
-                int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
-
-                if ((AudioEngine.Music != null) && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
+                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
                     AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
 
                 if (AudioEngine.Music != null)
@@ -627,7 +624,7 @@ namespace osum.GameModes
 
             if (touchBurster != null) touchBurster.Update();
 
-            if (countdown != null && isElapsing) countdown.Update();
+            if (countdown != null) countdown.Update();
 
             topMostSpriteManager.Update();
 
