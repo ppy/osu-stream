@@ -203,13 +203,20 @@ namespace osum
             }
         }
 
+        string udidCached;
         public override string DeviceIdentifier {
             get {
+
+                if (udidCached == null)
+                {
 #if SIMULATOR
-                return base.DeviceIdentifier;
+                    udidCached = base.DeviceIdentifier;
 #else
-                return UIDevice.CurrentDevice.UniqueIdentifier;
+                    udidCached = UIDevice.CurrentDevice.UniqueIdentifier;
 #endif
+                }
+
+                return udidCached;
             }
         }
 
