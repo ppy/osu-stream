@@ -1211,7 +1211,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
-            spriteSliderBody.Update();
 
             waitingForPathTextureClear = true;
         }

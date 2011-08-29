@@ -534,7 +534,7 @@ namespace osum.GameModes
                         healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
                     }
                     else
-                        healthBar.IncreaseCurrentHp(healthChange * Beatmap.HpStreamAdjustmentMultiplier);
+                        healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
                 }
             }
 

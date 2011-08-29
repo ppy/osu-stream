@@ -210,8 +210,8 @@ namespace BeatmapCombinator
 
                                     if (slider)
                                     {
-                                        repeatCount = Convert.ToInt32(split[6]);
-                                        length = Convert.ToDouble(split[7]);
+                                        repeatCount = Int32.Parse(split[6],nfi);
+                                        length = double.Parse(split[7],nfi);
                                         hadEndpointSamples = split.Length >= 9;
 
                                         hold = (repeatCount > 1 && length < 50) ||
