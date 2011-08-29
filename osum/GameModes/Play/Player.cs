@@ -22,6 +22,7 @@ using osum.Support;
 using System.IO;
 using osu_common.Helpers;
 using osum.GameplayElements.HitObjects.Osu;
+using osum.UI;
 
 namespace osum.GameModes
 {
@@ -159,8 +160,8 @@ namespace osum.GameModes
 
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
-
-                Resume(firstObjectTime, 8, true);
+                
+                Clock.ModeTimeReset();
 
                 List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
 
@@ -359,6 +360,7 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
+            Resume(firstObjectTime, 8, true);
         }
 
 
@@ -585,12 +587,14 @@ namespace osum.GameModes
 
         public override void Update()
         {
+            bool isElapsing = AudioEngine.Music.IsElapsing;
+
             if (Failed)
             {
                 if (AudioEngine.Music != null)
                 {
                     float vol = AudioEngine.Music.DimmableVolume;
-                    if (vol == 0 && AudioEngine.Music.IsElapsing)
+                    if (vol == 0 && isElapsing)
                         AudioEngine.Music.Pause();
                     else
                         AudioEngine.Music.DimmableVolume -= (float)(Clock.ElapsedMilliseconds) * 0.001f;
@@ -623,7 +627,7 @@ namespace osum.GameModes
 
             if (touchBurster != null) touchBurster.Update();
 
-            if (countdown != null) countdown.Update();
+            if (countdown != null && isElapsing) countdown.Update();
 
             topMostSpriteManager.Update();
 
