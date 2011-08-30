@@ -49,7 +49,7 @@ namespace osum.GameModes.Store
             get { return expanded; }
             set
             {
-                if (value == expanded) return;
+                if (value == expanded || Downloading) return;
 
                 expanded = value;
 
