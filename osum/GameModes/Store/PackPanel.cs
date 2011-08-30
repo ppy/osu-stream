@@ -431,13 +431,7 @@ namespace osum.GameModes.Store
                 {
                     StoreMode.ResetAllPreviews(true);
 
-                    GameBase.Instance.ShowWebView(@"http://www.youtube.com/watch?v=" + item.YoutubeId, artistString + " - " + titleString,
-                        delegate
-                        {
-                            //reset stuff after returning from the webView.
-                            StoreMode.ResetAllPreviews(true);
-                            return true;
-                        });
+                    GameBase.Instance.ShowWebView(@"http://www.osustream.com/dl/youtube.php?v=" + item.YoutubeId, artistString + " - " + titleString, null);
 
                     back.FadeColour(colourHover, 0, false);
                     back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
