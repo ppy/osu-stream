@@ -357,9 +357,9 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-            Resume(firstObjectTime, 8, true);
+            if (firstObjectTime > 0)
+                Resume(firstObjectTime, 8, true);
         }
-
 
         private void comboPain(bool harsh)
         {
