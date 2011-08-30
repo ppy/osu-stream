@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading;
 
 namespace osu_common.Libraries.NetLib
@@ -12,7 +13,7 @@ namespace osu_common.Libraries.NetLib
         }
 
     }
-    
+
     /// <summary>
     /// base type for all net requests. Pass this object to a Netmanager
     /// which calls Perform in its thread pool.
@@ -64,5 +65,32 @@ namespace osu_common.Libraries.NetLib
         public delegate void RequestUpdateHandler(object sender, long current, long total);
 
         #endregion
+
+        public static string UrlEncode(string s)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (byte i in System.Text.Encoding.UTF8.GetBytes(s))
+            {
+                if ((i >= 'A' && i <= 'Z') ||
+                                (i >= 'a' && i <= 'z') ||
+                                (i >= '0' && i <= '9') ||
+                                i == '-' || i == '_')
+                {
+                    sb.Append((char)i);
+                }
+                else if (i == ' ')
+                {
+                    sb.Append('+');
+                }
+                else
+                {
+                    sb.Append('%');
+                    sb.Append(i.ToString("X2"));
+                }
+            }
+
+            return sb.ToString();
+        }
     }
 }
