@@ -189,10 +189,10 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_LoadingPrice);
             }
 
-            Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero)
+            Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
             {
                 DrawDepth = base_depth + 0.02f,
-                Offset = new Vector2(2, 2)
+                Offset = new Vector2(8.5f, 3.8f)
             });
         }
 
