@@ -49,6 +49,8 @@ namespace osum.Helpers
             modeTime = 0;
             ModeTime = 0;
             audioCheckFrame = 0;
+
+            Update(true); //do an update now.
         }
 
         public static int ManualTime;

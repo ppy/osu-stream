@@ -367,8 +367,6 @@
     <Content Include="Skins\Default\songselect.m4a" />
     <Content Include="Localisation\en.txt" />
     <Content Include="Localisation\ja.txt" />
-    <Content Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2" />
-    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
     <Content Include="Skins\Default\buttontap.wav" />
     <Content Include="Skins\Default\menubling.wav" />
     <Content Include="Skins\Default\notify.wav" />

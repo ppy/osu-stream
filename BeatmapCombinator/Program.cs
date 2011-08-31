@@ -210,8 +210,8 @@ namespace BeatmapCombinator
 
                                     if (slider)
                                     {
-                                        repeatCount = Convert.ToInt32(split[6]);
-                                        length = Convert.ToDouble(split[7]);
+                                        repeatCount = Int32.Parse(split[6],nfi);
+                                        length = double.Parse(split[7],nfi);
                                         hadEndpointSamples = split.Length >= 9;
 
                                         hold = (repeatCount > 1 && length < 50) ||
@@ -615,10 +615,10 @@ namespace BeatmapCombinator
                         double currentHp = p.healthBar.CurrentHp;
                         //Console.WriteLine("HP at required stream switch point (" + switchHpObject.EndTime + ") is " + currentHp);
 
-                        if (currentHp < HealthBar.HP_BAR_MAXIMUM)
+                        if (currentHp < HealthBar.HP_BAR_MAXIMUM) //use uncapped?
                         {
-                            healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL) / (currentHp - HealthBar.HP_BAR_INITIAL);
-                            //Console.WriteLine("Need a multiplier of " + healthMultiplier);
+                            //4.5 is the difference between 300 and 100 hit increase (5 - 0.5)
+                            healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
                         }
                         switchHpObject = null;
                     }

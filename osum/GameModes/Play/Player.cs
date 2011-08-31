@@ -22,6 +22,7 @@ using osum.Support;
 using System.IO;
 using osu_common.Helpers;
 using osum.GameplayElements.HitObjects.Osu;
+using osum.UI;
 
 namespace osum.GameModes
 {
@@ -151,16 +152,13 @@ namespace osum.GameModes
                     return;
                 }
 
-                //countdown
-                int firstObjectTime = HitObjectManager.ActiveStreamObjects[0].StartTime;
-
-                if ((AudioEngine.Music != null) && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
+                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
                     AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
 
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
-
-                Resume(firstObjectTime, 8, true);
+                
+                Clock.ModeTimeReset();
 
                 List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
 
@@ -388,8 +386,9 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
+            if (firstObjectTime > 0)
+                Resume(firstObjectTime, 8, true);
         }
-
 
         private void comboPain(bool harsh)
         {
@@ -563,7 +562,7 @@ namespace osum.GameModes
                         healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
                     }
                     else
-                        healthBar.IncreaseCurrentHp(healthChange * Beatmap.HpStreamAdjustmentMultiplier);
+                        healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
                 }
             }
 
@@ -616,12 +615,14 @@ namespace osum.GameModes
 
         public override void Update()
         {
+            bool isElapsing = AudioEngine.Music == null || AudioEngine.Music.IsElapsing;
+
             if (Failed)
             {
                 if (AudioEngine.Music != null)
                 {
                     float vol = AudioEngine.Music.DimmableVolume;
-                    if (vol == 0 && AudioEngine.Music.IsElapsing)
+                    if (vol == 0 && isElapsing)
                         AudioEngine.Music.Pause();
                     else
                         AudioEngine.Music.DimmableVolume -= (float)(Clock.ElapsedMilliseconds) * 0.001f;

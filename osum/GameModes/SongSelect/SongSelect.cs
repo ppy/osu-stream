@@ -188,6 +188,7 @@ namespace osum.GameModes
 #endif
 
 #if MONO
+                //desktop/mapper builds.
                 foreach (string subdir in Directory.GetDirectories(BeatmapPath))
                     foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
                     {
@@ -200,6 +201,9 @@ namespace osum.GameModes
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {
                     Beatmap b = new Beatmap(s);
+                    if (b.Package == null)
+                        continue;
+
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
