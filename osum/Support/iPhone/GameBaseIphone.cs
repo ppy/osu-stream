@@ -293,6 +293,11 @@ namespace osum
             Title = title;
         }
 
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            return true;
+        }
+
         public override void LoadView()
         {
             base.LoadView();
