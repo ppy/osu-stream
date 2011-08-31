@@ -384,5 +384,6 @@
     <Content Include="Localisation\th.txt" />
     <Content Include="Localisation\zh-CHS.txt" />
     <Content Include="Localisation\zh-CHT.txt" />
+    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
   </ItemGroup>
 </Project>
