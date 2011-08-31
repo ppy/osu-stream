@@ -157,7 +157,7 @@ namespace osum.GameModes
 
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
-                
+
                 Clock.ModeTimeReset();
 
                 List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
@@ -195,10 +195,13 @@ namespace osum.GameModes
         {
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
             scoreDisplay = new ScoreDisplay();
+
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
+
             menu = new PauseMenu();
+
             progressDisplay = new ProgressDisplay();
         }
 
@@ -219,7 +222,7 @@ namespace osum.GameModes
             CurrentScore = new Score() { UseAccuracyBonus = false };
         }
 
-        protected void loadBeatmap()
+        protected virtual void loadBeatmap()
         {
             if (Beatmap == null)
                 return;
@@ -323,7 +326,7 @@ namespace osum.GameModes
                     return;
             }
 
-            
+
 
             //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
             if (hitObjectManager != null && !Autoplay)
@@ -345,7 +348,7 @@ namespace osum.GameModes
                 menu.handleInput(source, point);
         }
 
-        void hitObjectManager_OnStreamChanged(Difficulty newStream)
+        protected virtual void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
             healthBar.SetCurrentHp(DifficultyManager.InitialHp);
@@ -647,13 +650,11 @@ namespace osum.GameModes
             {
                 Completed = true;
 
-#if iOS
                 if (Player.Autoplay)
                 {
-                    Director.ChangeMode(OsuMode.SongSelect,new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                 }
                 else
-#endif
                 {
                     Results.RankableScore = CurrentScore;
                     Results.RankableScore.UseAccuracyBonus = true;
@@ -671,11 +672,7 @@ namespace osum.GameModes
 
         protected virtual void UpdateStream()
         {
-            if (Difficulty == Difficulty.Easy || HitObjectManager == null)
-                //easy can't fail, nor switch streams.
-                return;
-
-            if (HitObjectManager != null && !HitObjectManager.StreamChanging)
+            if (HitObjectManager != null && healthBar != null && !HitObjectManager.StreamChanging)
             {
                 if (HitObjectManager.IsLowestStream &&
                     CurrentScore.totalHits > 0 &&
@@ -829,7 +826,7 @@ namespace osum.GameModes
         }
 
         protected bool ShowGuideFingers;
-        private ProgressDisplay progressDisplay;
+        protected ProgressDisplay progressDisplay;
     }
 }
 

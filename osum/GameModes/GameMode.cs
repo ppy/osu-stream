@@ -18,7 +18,9 @@ namespace osum.GameModes
         Options,
         Tutorial,
         Credits,
-        PositioningTest
+        PositioningTest,
+        Empty,
+        VideoPreview
     }
 
     /// <summary>

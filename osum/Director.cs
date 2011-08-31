@@ -166,6 +166,12 @@ namespace osum
                 case OsuMode.Credits:
                     mode = new Credits();
                     break;
+                case OsuMode.VideoPreview:
+                    mode = new VideoPreview();
+                    break;
+                case OsuMode.Empty:
+                    mode = new Empty();
+                    break;
 #if MONO
                 case OsuMode.PositioningTest:
                     mode = new PositioningTest();

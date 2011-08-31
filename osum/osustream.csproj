@@ -290,6 +290,8 @@
     <Compile Include="GameModes\SongSelect\ScorePanel.cs" />
     <Compile Include="GameModes\MainMenu\NewsButton.cs" />
     <Compile Include="Helpers\UnixTimestamp.cs" />
+    <Compile Include="GameModes\Empty.cs" />
+    <Compile Include="GameModes\VideoPreview.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
