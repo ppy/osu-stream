@@ -157,17 +157,20 @@ namespace osu_common.Libraries.NetLib
 #else
                 using (WebClient wc = new WebClient())
                 {
-                    wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+                    
 
                     if (postData != null)
                     {
                         wc.UploadDataCompleted += wc_UploadDataCompleted;
+                        wc.UploadProgressChanged += wc_UploadProgressChanged;
                         wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
                         wc.UploadDataAsync(new Uri(m_url), method, UTF8Encoding.UTF8.GetBytes(postData));
+                        
                     }
                     else
                     {
                         wc.DownloadDataCompleted += wc_DownloadDataCompleted;
+                        wc.DownloadProgressChanged += wc_DownloadProgressChanged;
                         wc.DownloadDataAsync(new Uri(m_url));
                     }
 
@@ -211,15 +214,21 @@ namespace osu_common.Libraries.NetLib
             });
         }
 
-        long totalBytesReceived = 0;
-
-        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        void wc_UploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
         {
-            totalBytesReceived += e.BytesReceived;
             GameBase.Scheduler.Add(delegate
             {
                 if (onUpdate != null)
-                    onUpdate(this, totalBytesReceived, e.TotalBytesToReceive);
+                    onUpdate(this, e.BytesReceived, e.TotalBytesToReceive);
+            });
+        }
+        
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            GameBase.Scheduler.Add(delegate
+            {
+                if (onUpdate != null)
+                    onUpdate(this, e.BytesReceived, e.TotalBytesToReceive);
             });
         }
 
