@@ -12,6 +12,8 @@ using osum.GameplayElements.Beatmaps;
 using osum.Graphics;
 using osum.Audio;
 using osum.Support;
+using osu_common.Libraries.NetLib;
+using System.IO;
 
 namespace osum.GameModes
 {
@@ -22,6 +24,9 @@ namespace osum.GameModes
         private pSprite osuLogoGloss;
 
         SpriteManager songInfoSpriteManager = new SpriteManager();
+
+        public static string DownloadLink;
+        private bool DownloadComplete;
 
         public override void Initialize()
         {
@@ -39,7 +44,39 @@ namespace osum.GameModes
             osuLogoGloss.ScaleScalar = 0.7f;
             mb.Add(osuLogoGloss);
 
+            if (DownloadLink != null)
+            {
+                DataNetRequest dnr = new DataNetRequest(DownloadLink);
+                dnr.onUpdate += dnr_onUpdate;
+                dnr.onFinish += dnr_onFinish;
 
+                NetManager.AddRequest(dnr);
+            }
+            else
+                ShowMetadata();
+        }
+
+        void dnr_onFinish(byte[] data, Exception e)
+        {
+            Player.Beatmap = new Beatmap();
+            Player.Beatmap.Package = new MapPackage(new MemoryStream(data));
+            DownloadComplete = true;
+            ShowMetadata();
+        }
+
+        void dnr_onUpdate(object sender, long current, long total)
+        {
+            
+        }
+
+        public override void Dispose()
+        {
+            DownloadLink = null;
+            base.Dispose();
+        }
+
+        private void ShowMetadata()
+        {
             AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
             AudioEngine.Music.Play();
             AudioEngine.Music.DimmableVolume = 0;
@@ -47,7 +84,7 @@ namespace osum.GameModes
             //song info
 
             songInfoSpriteManager.Position = new Vector2(20, 0);
-            
+
             Beatmap beatmap = Player.Beatmap;
 
             //256x172
@@ -170,7 +207,7 @@ namespace osum.GameModes
             base.Update();
             songInfoSpriteManager.Update();
 
-            if (Clock.ModeTime > 4000 && !Director.IsTransitioning)
+            if (Clock.ModeTime > 4000 && !Director.IsTransitioning && DownloadComplete)
             {
                 Player.Autoplay = true;
                 Director.ChangeMode(OsuMode.Play, new FadeTransition(2000,500));

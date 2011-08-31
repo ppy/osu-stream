@@ -424,26 +424,19 @@ namespace osum.GameModes.Store
                 titleString = item.Title.Substring(item.Title.IndexOf('-') + 1).Trim();
             }
 
-            if (item.YoutubeId != null)
+            textOffset += 40;
+            pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
+            videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
+            videoPreview.OnClick += delegate
             {
-                textOffset += 40;
-                pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-                videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
-                videoPreview.OnClick += delegate
-                {
-                    StoreMode.ResetAllPreviews(true);
+                StoreMode.ResetAllPreviews(true);
+                VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
+                Director.ChangeMode(OsuMode.VideoPreview);
+            };
 
-                    GameBase.Instance.ShowWebView(@"http://www.osustream.com/dl/youtube.php?v=" + item.YoutubeId, artistString + " - " + titleString, null);
-
-                    back.FadeColour(colourHover, 0, false);
-                    back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
-                    back.TagNumeric = 1;
-                };
-
-                Sprites.Add(videoPreview);
-                PackItemSprites.Add(videoPreview);
-                songPreviewButtons.Add(videoPreview);
-            }
+            Sprites.Add(videoPreview);
+            PackItemSprites.Add(videoPreview);
+            songPreviewButtons.Add(videoPreview);
 
             pText artist = new pText(artistString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;
