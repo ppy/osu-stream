@@ -9,7 +9,7 @@ using OpenTK;
 
 namespace osum.GameModes.Play.Components
 {
-    class ProgressDisplay : SpriteManager
+    public class ProgressDisplay : SpriteManager
     {
         const int HEIGHT = 5;
         pRectangle progressRect;

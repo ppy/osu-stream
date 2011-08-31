@@ -224,25 +224,9 @@ namespace osum.GameplayElements
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
-#if VIDEO
-                                Player.Difficulty = difficulty == Difficulty.Expert ? Difficulty.Expert : Difficulty.Normal;
-#else
-                                switch (Player.Difficulty)
-                                {
-                                    case Difficulty.Easy:
-                                        if (difficulty != Difficulty.Easy)
-                                            continue;
-                                        break;
-                                    case Difficulty.Normal:
-                                        if (difficulty == Difficulty.Expert)
-                                            continue;
-                                        break;
-                                    case Difficulty.Expert:
-                                        if (difficulty != Difficulty.Expert)
-                                            continue;
-                                        break;
-                                }
-#endif
+
+                                if (!shouldLoadDifficulty(difficulty))
+                                    continue;
 
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
@@ -369,6 +353,27 @@ namespace osum.GameplayElements
             }
 
             PostProcessing();
+        }
+
+        protected virtual bool shouldLoadDifficulty(Difficulty difficulty)
+        {
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    if (difficulty != Difficulty.Easy)
+                        return false;
+                    break;
+                case Difficulty.Normal:
+                    if (difficulty == Difficulty.Expert)
+                        return false;
+                    break;
+                case Difficulty.Expert:
+                    if (difficulty != Difficulty.Expert)
+                        return false;
+                    break;
+            }
+
+            return true;
         }
 
         internal SampleSetInfo parseSampleSet(string sample)

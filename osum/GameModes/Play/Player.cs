@@ -157,7 +157,7 @@ namespace osum.GameModes
 
                 if (AudioEngine.Music != null)
                     AudioEngine.Music.Stop(true);
-                
+
                 Clock.ModeTimeReset();
 
                 List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
@@ -189,37 +189,19 @@ namespace osum.GameModes
             spriteManager.Add(s_streamSwitchWarningArrow);
 
             topMostSpriteManager = new SpriteManager();
-
-#if VIDEO
-            t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 64, new Vector2(20, 20), 1, true, Color4.White);
-            t_currentStream.Field = FieldTypes.StandardSnapBottomRight;
-            t_currentStream.Origin = OriginTypes.BottomRight;
-            t_currentStream.TextShadow = true;
-            spriteManager.Add(t_currentStream);
-#endif
         }
-
-#if VIDEO
-        pText t_currentStream;
-#endif
 
         protected virtual void initializeUIElements()
         {
-#if VIDEO
-            healthBar = new HealthBar();
-            healthBar.SetCurrentHp(200);
-#else
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
             scoreDisplay = new ScoreDisplay();
-#endif
 
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
 
-#if !VIDEO
             menu = new PauseMenu();
-#endif
+
             progressDisplay = new ProgressDisplay();
         }
 
@@ -240,7 +222,7 @@ namespace osum.GameModes
             CurrentScore = new Score() { UseAccuracyBonus = false };
         }
 
-        protected void loadBeatmap()
+        protected virtual void loadBeatmap()
         {
             if (Beatmap == null)
                 return;
@@ -255,10 +237,6 @@ namespace osum.GameModes
 
             if (Beatmap.ContainerFilename != null)
                 HitObjectManager.LoadFile();
-#if VIDEO
-            Player.Difficulty = Difficulty.Easy;
-            //force back to stream difficulty, as it may be modified during load to get correct AR etc. variables.
-#endif
         }
 
         /// <summary>
@@ -348,7 +326,7 @@ namespace osum.GameModes
                     return;
             }
 
-            
+
 
             //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
             if (hitObjectManager != null && !Autoplay)
@@ -370,16 +348,12 @@ namespace osum.GameModes
                 menu.handleInput(source, point);
         }
 
-        void hitObjectManager_OnStreamChanged(Difficulty newStream)
+        protected virtual void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
             healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
-
-#if VIDEO
-            t_currentStream.Text = HitObjectManager.ActiveStream.ToString();
-#endif
 
             queuedStreamSwitchTime = 0;
         }
@@ -598,9 +572,7 @@ namespace osum.GameModes
 
             if (scoreDisplay != null) scoreDisplay.Draw();
 
-#if !VIDEO
             if (healthBar != null) healthBar.Draw();
-#endif
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
@@ -678,13 +650,11 @@ namespace osum.GameModes
             {
                 Completed = true;
 
-#if iOS || true
                 if (Player.Autoplay)
                 {
-                    Director.ChangeMode(OsuMode.Empty,new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                 }
                 else
-#endif
                 {
                     Results.RankableScore = CurrentScore;
                     Results.RankableScore.UseAccuracyBonus = true;
@@ -702,13 +672,7 @@ namespace osum.GameModes
 
         protected virtual void UpdateStream()
         {
-#if !VIDEO
-            if (Difficulty == Difficulty.Easy || HitObjectManager == null)
-                //easy can't fail, nor switch streams.
-                return;
-#endif
-
-            if (HitObjectManager != null && !HitObjectManager.StreamChanging)
+            if (HitObjectManager != null && healthBar != null && !HitObjectManager.StreamChanging)
             {
                 if (HitObjectManager.IsLowestStream &&
                     CurrentScore.totalHits > 0 &&
@@ -862,7 +826,7 @@ namespace osum.GameModes
         }
 
         protected bool ShowGuideFingers;
-        private ProgressDisplay progressDisplay;
+        protected ProgressDisplay progressDisplay;
     }
 }
 
