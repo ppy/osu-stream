@@ -68,8 +68,11 @@ namespace osum.Graphics.Drawables
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
 #else
-            handle_vertices_pointer = Marshal.AllocHGlobal(4 * 4 * sizeof(float));
-            handle_colours_pointer = Marshal.AllocHGlobal(4 * 4 * sizeof(float));
+            unsafe
+            {
+                handle_vertices_pointer = Marshal.AllocHGlobal(4 * sizeof(Vector2));
+                handle_colours_pointer = Marshal.AllocHGlobal(4 * sizeof(Color4));
+            }
 #endif
         }
 #if !NO_PIN_SUPPORT
