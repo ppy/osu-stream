@@ -235,8 +235,7 @@ namespace osum.GameModes
             HitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
             HitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
 
-            if (Beatmap.ContainerFilename != null)
-                HitObjectManager.LoadFile();
+            HitObjectManager.LoadFile();
         }
 
         /// <summary>

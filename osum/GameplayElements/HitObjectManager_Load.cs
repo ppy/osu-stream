@@ -71,7 +71,7 @@ namespace osum.GameplayElements
                 }
 
                 //using (TextReader reader = (fn == 0 ? (TextReader)new StreamReader(BeatmapManager.Current.GetFileStream(readableFiles[fn])) : new StringReader(osqEngine.Encode())))
-                using (TextReader reader = (TextReader)new StreamReader(beatmap.GetFileStream(readableFiles[fn])))
+                TextReader reader = (TextReader)new StreamReader(beatmap.GetFileStream(readableFiles[fn]));
                 {
                     linenumber = 0;
 

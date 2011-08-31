@@ -25,6 +25,12 @@ namespace osum.GameModes.Play
             spriteManager.Add(t_currentStream);
         }
 
+        public override void Dispose ()
+        {
+            Player.Beatmap = null;
+            base.Dispose();
+        }
+
         protected override void initializeUIElements()
         {
             healthBar = new HealthBar();
