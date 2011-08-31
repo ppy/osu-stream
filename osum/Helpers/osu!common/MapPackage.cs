@@ -115,7 +115,7 @@ namespace osu_common.Libraries.Osz2
             fNotOnDisk = !File.Exists(filename);
             if (fNotOnDisk && !createIfNotFound)
             {
-                throw new IOException("File does not exist.");
+                throw new IOException("File does not exist ("+filename+").");
             }
 
             fFilename = filename;
@@ -156,7 +156,8 @@ namespace osu_common.Libraries.Osz2
             }
 
             // read data and perform integrity checks
-            using (BinaryReader br = new BinaryReader(fHandle))
+            BinaryReader br = new BinaryReader(fHandle);
+
             {
                 // check magic number
                 byte[] magic = br.ReadBytes(3);
@@ -815,13 +816,13 @@ namespace osu_common.Libraries.Osz2
 
             if (fFiles.ContainsKey(filename))
             {
-                if (!raw)
-                {
-                    MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
+                //if (!raw)
+                //{
+                    MapStream ms = new MapStream(fHandle, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
                     fMapStreamsOpen.Add(ms);
                     ms.OnStreamClosed += MapStream_OnStreamClosed;
                     stream = ms;
-                }
+                /*}
                 else
                 {
                     byte[] file = new byte[fFiles[filename].Length - 4];
@@ -829,7 +830,7 @@ namespace osu_common.Libraries.Osz2
                     fs.Seek(fOffsetData + fFiles[filename].Offset + 4, SeekOrigin.Begin);
                     fs.Read(file, 0, file.Length);
                     stream = new MemoryStream(file, false);
-                }
+                }*/
 
                 
             }

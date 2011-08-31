@@ -22,9 +22,9 @@ namespace osu_common.Libraries.Osz2
         private readonly Aes fAes;
         private readonly CryptoStream fStream;
 #elif NO_ENCRYPTION
-        private FileStream internalStream;
+        private Stream internalStream;
 #else
-        private FileStream internalStream;
+        private Stream internalStream;
         //private byte[] internalBuffer;
         private byte[] decryptedBuffer;
         private byte[] skipBuffer = new byte[64];
@@ -33,13 +33,13 @@ namespace osu_common.Libraries.Osz2
         private int fOffset;
         private long fPosition;
         
-        public MapStream(string filename, int offset, int length, byte[] iv, byte[] key)
+        public MapStream(Stream str, int offset, int length, byte[] iv, byte[] key)
         {
-            FileStream file = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            internalStream = str;
+
             byte[] data = new byte[4];
-            file.Seek(offset, SeekOrigin.Begin);
-            file.Read(data, 0, 4);
-            internalStream = file;
+            internalStream.Seek(offset, SeekOrigin.Begin);
+            internalStream.Read(data, 0, 4);
             internalStream.Position = fOffset = offset + 4;
 
 #if STRONG_ENCRYPTION
@@ -93,8 +93,11 @@ namespace osu_common.Libraries.Osz2
 #endif
 
 #endif
-            
+        }
 
+        public MapStream(string filename, int offset, int length, byte[] iv, byte[] key)
+            : this(File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read), offset, length, iv, key)
+        {
         }
 
         ~MapStream()
