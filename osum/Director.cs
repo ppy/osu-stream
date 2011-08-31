@@ -148,7 +148,10 @@ namespace osum
                     mode = new Results();
                     break;
                 case OsuMode.Play:
-                    mode = new Player();
+                    if (CurrentOsuMode == OsuMode.VideoPreview)
+                        mode = new PreviewPlayer();
+                    else
+                        mode = new Player();
                     break;
                 case OsuMode.Store:
 #if iOS
@@ -165,6 +168,12 @@ namespace osum
                     break;
                 case OsuMode.Credits:
                     mode = new Credits();
+                    break;
+                case OsuMode.VideoPreview:
+                    mode = new VideoPreview();
+                    break;
+                case OsuMode.Empty:
+                    mode = new Empty();
                     break;
 #if MONO
                 case OsuMode.PositioningTest:

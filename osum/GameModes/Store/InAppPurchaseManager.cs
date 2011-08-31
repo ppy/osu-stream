@@ -25,6 +25,8 @@ namespace osum.GameModes.Store
                 observer.Dispose();
                 observer = null;
             }
+
+            responseDelegate = null;
         }
 
         ProductResponseDelegate responseDelegate;

@@ -71,7 +71,7 @@ namespace osum.GameplayElements
                 }
 
                 //using (TextReader reader = (fn == 0 ? (TextReader)new StreamReader(BeatmapManager.Current.GetFileStream(readableFiles[fn])) : new StringReader(osqEngine.Encode())))
-                using (TextReader reader = (TextReader)new StreamReader(beatmap.GetFileStream(readableFiles[fn])))
+                TextReader reader = (TextReader)new StreamReader(beatmap.GetFileStream(readableFiles[fn]));
                 {
                     linenumber = 0;
 
@@ -224,21 +224,9 @@ namespace osum.GameplayElements
 
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
-                                switch (Player.Difficulty)
-                                {
-                                    case Difficulty.Easy:
-                                        if (difficulty != Difficulty.Easy)
-                                            continue;
-                                        break;
-                                    case Difficulty.Normal:
-                                        if (difficulty == Difficulty.Expert)
-                                            continue;
-                                        break;
-                                    case Difficulty.Expert:
-                                        if (difficulty != Difficulty.Expert)
-                                            continue;
-                                        break;
-                                }
+
+                                if (!shouldLoadDifficulty(difficulty))
+                                    continue;
 
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
@@ -365,6 +353,27 @@ namespace osum.GameplayElements
             }
 
             PostProcessing();
+        }
+
+        protected virtual bool shouldLoadDifficulty(Difficulty difficulty)
+        {
+            switch (Player.Difficulty)
+            {
+                case Difficulty.Easy:
+                    if (difficulty != Difficulty.Easy)
+                        return false;
+                    break;
+                case Difficulty.Normal:
+                    if (difficulty == Difficulty.Expert)
+                        return false;
+                    break;
+                case Difficulty.Expert:
+                    if (difficulty != Difficulty.Expert)
+                        return false;
+                    break;
+            }
+
+            return true;
         }
 
         internal SampleSetInfo parseSampleSet(string sample)

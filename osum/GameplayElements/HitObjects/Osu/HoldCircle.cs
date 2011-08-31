@@ -98,14 +98,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             Transformation fadeInTrack = new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.HitWindow50);
 
-            activeOverlay = new pSprite(TextureManager.Load(OsuTexture.holdactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White);
+            activeOverlay = new pSprite(TextureManager.Load(OsuTexture.holdactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime - 18), false, Color.White);
             spriteCollectionStart.Add(activeOverlay);
 
-            inactiveOverlay = new pSprite(TextureManager.Load(OsuTexture.holdinactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White);
+            inactiveOverlay = new pSprite(TextureManager.Load(OsuTexture.holdinactive), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime - 19), false, Color.White);
             inactiveOverlay.Transform(new NullTransform(StartTime, EndTime));
             spriteCollectionStart.Add(inactiveOverlay);
 
-            border = new pSprite(TextureManager.Load(OsuTexture.holdoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White);
+            border = new pSprite(TextureManager.Load(OsuTexture.holdoverlay), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime - 20), false, Color.White);
             border.Transform(fadeInTrack);
             border.Transform(fadeOut);
             Sprites.Add(border);

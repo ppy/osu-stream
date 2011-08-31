@@ -339,7 +339,7 @@ namespace osum.GameModes
                     "&accuracyBonus=" + RankableScore.accuracyBonusScore +
                     "&hitScore=" + RankableScore.hitScore +
                     "&rank=" + RankableScore.Ranking +
-                    "&filename=" + Path.GetFileName(Player.Beatmap.ContainerFilename) +
+                    "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
                     "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
                     "&c=" + check +
                     "&difficulty=" + (int)Player.Difficulty +

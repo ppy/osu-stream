@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG SIMULATOR FULL_DEBUG</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG SIMULATOR FULL_DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchI18n>cjk</MtouchI18n>
@@ -52,7 +52,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG FULL_DEBUG</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -295,6 +295,9 @@
     <Compile Include="GameModes\SongSelect\ScorePanel.cs" />
     <Compile Include="GameModes\MainMenu\NewsButton.cs" />
     <Compile Include="Helpers\UnixTimestamp.cs" />
+    <Compile Include="GameModes\Empty.cs" />
+    <Compile Include="GameModes\VideoPreview.cs" />
+    <Compile Include="GameModes\Play\PreviewPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -386,5 +389,6 @@
     <Content Include="Localisation\th.txt" />
     <Content Include="Localisation\zh-CHS.txt" />
     <Content Include="Localisation\zh-CHT.txt" />
+    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
   </ItemGroup>
 </Project>

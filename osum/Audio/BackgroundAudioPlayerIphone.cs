@@ -147,7 +147,6 @@ namespace osum
             else
             {
                 player.CurrentTime = milliseconds/1000d;
-                player.PrepareToPlay();
             }
 
 			return base.SeekTo(milliseconds);

@@ -203,13 +203,20 @@ namespace osum
             }
         }
 
+        string udidCached;
         public override string DeviceIdentifier {
             get {
+
+                if (udidCached == null)
+                {
 #if SIMULATOR
-                return base.DeviceIdentifier;
+                    udidCached = base.DeviceIdentifier;
 #else
-                return UIDevice.CurrentDevice.UniqueIdentifier;
+                    udidCached = UIDevice.CurrentDevice.UniqueIdentifier;
 #endif
+                }
+
+                return udidCached;
             }
         }
 
@@ -286,6 +293,11 @@ namespace osum
             Title = title;
         }
 
+        public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
+        {
+            return true;
+        }
+
         public override void LoadView()
         {
             base.LoadView();
@@ -319,6 +331,11 @@ namespace osum
 
         public void Close()
         {
+            ShouldClose = null;
+
+            webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("about:blank")));
+            webView.Delegate = null;
+            webView = null;
             DismissModalViewControllerAnimated(true);
             AppDelegate.SetUsingViewController(false);
         }

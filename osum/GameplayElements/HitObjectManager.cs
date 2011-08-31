@@ -29,7 +29,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// The loaded beatmap.
         /// </summary>
-        Beatmap beatmap;
+        protected Beatmap beatmap;
 
         /// <summary>
         /// A factory to create necessary hitObjects.
@@ -124,7 +124,7 @@ namespace osum.GameplayElements
         /// </summary>
         /// <param name="newDifficulty">The new stream difficulty.</param>
         /// <returns>The time at which the switch will take place. -1 on failure.</returns>
-        internal int SetActiveStream(Difficulty newDifficulty)
+        internal virtual int SetActiveStream(Difficulty newDifficulty)
         {
             Difficulty oldActiveStream = ActiveStream;
 
@@ -561,8 +561,8 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        public bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
-        public bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
+        public virtual bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
+        public virtual bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
 
         internal void StopAllSounds()
         {

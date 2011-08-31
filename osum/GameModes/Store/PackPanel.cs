@@ -49,7 +49,7 @@ namespace osum.GameModes.Store
             get { return expanded; }
             set
             {
-                if (value == expanded) return;
+                if (value == expanded || Downloading) return;
 
                 expanded = value;
 
@@ -189,10 +189,10 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_LoadingPrice);
             }
 
-            Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumbnail), Vector2.Zero)
+            Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
             {
                 DrawDepth = base_depth + 0.02f,
-                Offset = new Vector2(2, 2)
+                Offset = new Vector2(8.5f, 3.8f)
             });
         }
 
@@ -244,12 +244,14 @@ namespace osum.GameModes.Store
 
             PackItem item = packItems[currentDownload];
 
+            pDrawable back = songPreviewBacks[currentDownload];
+
             string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
 
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
-            string downloadPath = "http://www.osustream.com/dl/download2.php";
-            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+            string downloadPath = "http://www.osustream.com/dl/download.php";
+            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
             if (item.UpdateChecksum != null)
                 param += "&update=" + item.UpdateChecksum;
 #if !DIST
@@ -262,6 +264,8 @@ namespace osum.GameModes.Store
             {
                 BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
 
+                back.FadeColour(Color4.LimeGreen, 500);
+
                 currentDownload++;
                 if (currentDownload < packItems.Count)
                     startNextDownload();
@@ -272,8 +276,6 @@ namespace osum.GameModes.Store
                 }
 
             };
-
-            pDrawable back = songPreviewBacks[currentDownload];
 
             back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
 
@@ -297,7 +299,10 @@ namespace osum.GameModes.Store
         internal void ResetPreviews()
         {
             if (previewRequest != null)
+            {
                 previewRequest.Abort();
+                previewRequest = null;
+            }
 
             if (!isPreviewing) return;
             isPreviewing = false;
@@ -353,7 +358,8 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
-                if (previewRequest != null) previewRequest.Abort();
+                if (previewRequest != null)
+                    previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
                 string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&format=" + PREFERRED_FORMAT;
@@ -418,32 +424,19 @@ namespace osum.GameModes.Store
                 titleString = item.Title.Substring(item.Title.IndexOf('-') + 1).Trim();
             }
 
-            if (item.YoutubeId != null)
+            textOffset += 40;
+            pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
+            videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
+            videoPreview.OnClick += delegate
             {
-                textOffset += 40;
-                pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-                videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
-                videoPreview.OnClick += delegate
-                {
-                    StoreMode.ResetAllPreviews(true);
+                StoreMode.ResetAllPreviews(true);
+                VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
+                Director.ChangeMode(OsuMode.VideoPreview);
+            };
 
-                    GameBase.Instance.ShowWebView(@"http://www.youtube.com/watch?v=" + item.YoutubeId, artistString + " - " + titleString,
-                        delegate
-                        {
-                            //reset stuff after returning from the webView.
-                            StoreMode.ResetAllPreviews(true);
-                            return true;
-                        });
-
-                    back.FadeColour(colourHover, 0, false);
-                    back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
-                    back.TagNumeric = 1;
-                };
-
-                Sprites.Add(videoPreview);
-                PackItemSprites.Add(videoPreview);
-                songPreviewButtons.Add(videoPreview);
-            }
+            Sprites.Add(videoPreview);
+            PackItemSprites.Add(videoPreview);
+            songPreviewButtons.Add(videoPreview);
 
             pText artist = new pText(artistString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.SkyBlue, false);
             artist.Bold = true;

@@ -63,6 +63,9 @@ namespace osum
                 case 'o':
                     Director.ChangeMode(OsuMode.Options);
                     break;
+                case 'v':
+                    Director.ChangeMode(OsuMode.VideoPreview, new FadeTransition(1000, 1500));
+                    return;
                 case 'e':
                     DifficultyScoreInfo bmi = BeatmapDatabase.GetDifficultyInfo(Player.Beatmap, Difficulty.Normal);
                     if (bmi == null) break;
