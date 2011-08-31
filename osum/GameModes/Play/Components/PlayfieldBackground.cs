@@ -86,8 +86,8 @@ namespace osum.GameModes.Play.Components
             handle_vertices_pointer = handle_vertices.AddrOfPinnedObject();
             handle_colours_pointer = handle_colours.AddrOfPinnedObject();
 #else
-            handle_vertices_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 2 * sizeof(float));
-            handle_colours_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 2 * sizeof(float));
+            handle_vertices_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 2 * sizeof(float) );
+            handle_colours_pointer = Marshal.AllocHGlobal((line_count + 1) * 4 * 4 * sizeof(float) );
 #endif
 
             initialize();
