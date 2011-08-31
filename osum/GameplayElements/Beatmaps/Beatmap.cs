@@ -29,11 +29,12 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
-                if (ContainerFilename == null) return null;
-
                 try
                 {
                     if (package == null)
+                    {
+
+                        if (ContainerFilename == null) return null;
 #if iOS && DIST
                         if (ContainerFilename.EndsWith("osf2"))
                             package = new MapPackage(ContainerFilename);
@@ -42,6 +43,7 @@ namespace osum.GameplayElements.Beatmaps
 #else
                         package = new MapPackage(ContainerFilename);
 #endif
+                    }
                 }
                 catch
                 {
@@ -49,6 +51,11 @@ namespace osum.GameplayElements.Beatmaps
                 }
 
                 return package;
+            }
+
+            set
+            {
+                package = value;
             }
 
         }
