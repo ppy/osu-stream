@@ -23,46 +23,34 @@ namespace osu_common.Libraries.Osz2
         private const byte VERSION_EXPORT = 0;
         private static readonly MD5CryptoServiceProvider fHasher = new MD5CryptoServiceProvider();
 
-#if DIST
         //free key is changed for dist builds
-        private byte[] KEY = new byte[]
-                                        {
-                                            185, 24, 168, 9, 27, 145, 191, 243, 17, 75, 95, 163, 168, 123, 198, 56,
-                                            105, 29, 68, 74, 214, 62, 2, 142, 146, 28, 90, 167, 243, 85, 17, 96
-                                        };
-#else
-        private byte[] KEY = new byte[]
-                                        {
-                                            216, 98, 163, 48, 2, 109, 118, 89, 244, 247, 37, 194, 235, 70, 174, 52,
-                                            13, 106, 97, 84, 242, 62, 186, 48, 25, 66, 72, 85, 242, 22, 15, 92
-                                        };
-#endif
+        private byte[] k;
 
         private static readonly byte[] knownPlain = new byte[64];
 
-        private readonly string fFilename;
-        private readonly Dictionary<string, FileInfo> fFiles;
-        private readonly Dictionary<string, byte[]> fFilesToAdd;
+        private string fFilename;
+        private Dictionary<string, FileInfo> fFiles;
+        private Dictionary<string, byte[]> fFilesToAdd;
         private long fFilesAddedBytes = 0;
-        private readonly byte[] fIV;
+        private byte[] fIV;
 
         public byte[] hash_meta { get; private set; }
         public byte[] hash_info { get; private set; }
         public byte[] hash_body { get; private set; }
 
         //private readonly List<string> fMapFiles;
-        private readonly SortedDictionary<string, int> fMapIDsFiles;
-        private readonly Dictionary<string, DateTime> fFilesToAddDateCreated;
-        private readonly Dictionary<string, DateTime> fFilesToAddDateModified;
-        private readonly Dictionary<string, bool> fFilesToAddDateEncrypted; 
+        private SortedDictionary<string, int> fMapIDsFiles;
+        private Dictionary<string, DateTime> fFilesToAddDateCreated;
+        private Dictionary<string, DateTime> fFilesToAddDateModified;
+        private Dictionary<string, bool> fFilesToAddDateEncrypted; 
 
-        private readonly List<MapStream> fMapStreamsOpen;
-        private readonly Dictionary<MapMetaType, string> fMetadata;
+        private List<MapStream> fMapStreamsOpen;
+        private Dictionary<MapMetaType, string> fMetadata;
 
         /// <summary>
         /// Keep a handle on the .osz2 file itself to prevent writes while the file is open
         /// </summary>
-        private FileStream fHandle;
+        private Stream fHandle;
 
         private bool fClosed;
         private bool fSavable = true;
@@ -92,8 +80,6 @@ namespace osu_common.Libraries.Osz2
 
         private long brOffset = 0; //used to store binaryReader position used to do postprocessing later. 
 
-        
-
         /// <summary>
         ///
         /// Open a map package file. Integrity checks will be performed. If the file does not exist, an exception will be thrown.
@@ -111,6 +97,13 @@ namespace osu_common.Libraries.Osz2
         {
         }
 
+        public MapPackage(Stream stream, bool metadataOnly = false)
+        {
+            fHandle = stream;
+
+            init(metadataOnly);
+        }
+
         /// <summary>
         /// Note: use the factory method instead
         /// Open a map package file. Integrity checks will be performed.
@@ -126,6 +119,13 @@ namespace osu_common.Libraries.Osz2
             }
 
             fFilename = filename;
+            fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            init();
+        }
+
+        private void init(bool metadataOnly = false)
+        {
             fMetadata = new Dictionary<MapMetaType, string>();
             fFiles = new Dictionary<string, FileInfo>(StringComparer.CurrentCultureIgnoreCase);
             //fMapFiles = new List<string>();
@@ -156,7 +156,7 @@ namespace osu_common.Libraries.Osz2
             }
 
             // read data and perform integrity checks
-            using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
+            using (BinaryReader br = new BinaryReader(fHandle))
             {
                 // check magic number
                 byte[] magic = br.ReadBytes(3);
@@ -187,8 +187,8 @@ namespace osu_common.Libraries.Osz2
                         string dValue = br.ReadString();
 
                         // check the value is clean and add to dictionary
-                        if (Enum.IsDefined(typeof (MapMetaType), (int) dKey))
-                            fMetadata.Add((MapMetaType) dKey, dValue);
+                        if (Enum.IsDefined(typeof(MapMetaType), (int)dKey))
+                            fMetadata.Add((MapMetaType)dKey, dValue);
 
                         writer.Write(dKey);
                         writer.Write(dValue);
@@ -196,7 +196,7 @@ namespace osu_common.Libraries.Osz2
                     writer.Flush();
 
                     // check hash
-                    byte[] hash = GetOszHash(memstream.ToArray(), count*3, 0xa7);
+                    byte[] hash = GetOszHash(memstream.ToArray(), count * 3, 0xa7);
                     if (!GeneralHelper.CompareByteSequence(hash, hash_meta))
                         throw new IOException("File failed integrity check.");
 
@@ -208,14 +208,10 @@ namespace osu_common.Libraries.Osz2
                 int mapCount = br.ReadInt32();
                 for (int i = 0; i < mapCount; i++)
                     fMapIDsFiles.Add(br.ReadString(), br.ReadInt32());
-                
+
 
                 //get key
-                if (key != null)
-                {
-                    KEY = key;
-                }
-                else
+                if (k == null)
                 {
                     //no key is given, we'll generate it from the metadata.
 #if DIST
@@ -223,16 +219,13 @@ namespace osu_common.Libraries.Osz2
 #else
                     string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
 #endif
-                    KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
+                    k = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
                 }
 
-                // lock the file from writes
-                fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-              
                 //all metadata is now loaded.
                 if (metadataOnly)
                     //save brOffset for if postProcessing gets called later
-                    brOffset = br.BaseStream.Position; 
+                    brOffset = br.BaseStream.Position;
                 else
                     doPostProcessing(br);
             }
@@ -266,7 +259,7 @@ namespace osu_common.Libraries.Osz2
 
 #if !NO_ENCRYPTION
             //check whether we have the correct key by comparing to a known plain.
-            using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.One, KEY))
+            using (FastEncryptorStream decryptor = new FastEncryptorStream(br.BaseStream, EncryptionMethod.One, k))
             {
                 byte[] decryptedPlain = new byte[64];
                 decryptor.Read(decryptedPlain, 0, 64);
@@ -313,7 +306,7 @@ namespace osu_common.Libraries.Osz2
             {
                 // set up decrypter
                 aes.IV = fIV;
-                aes.Key = KEY; //TODO: key etc etc
+                aes.Key = k; //TODO: key etc etc
 
                 using (MemoryStream memstream = new MemoryStream(fileinfo))
                 
@@ -322,7 +315,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
                 using (Stream cstream = memstream)
 #else
-                using (Stream cstream = new FastEncryptorStream(memstream, EncryptionMethod.Two, KEY))
+                using (Stream cstream = new FastEncryptorStream(memstream, EncryptionMethod.Two, k))
 #endif
                 using (BinaryReader reader = new BinaryReader(cstream))
                 {
@@ -372,8 +365,8 @@ namespace osu_common.Libraries.Osz2
                                
                                 byte[] videoData = new byte[fileLength - 4];
                                 //decrypt data then check videhash
-                                using (MapStream ms = new MapStream(Filename, fOffsetData + offset_cur, fileLength - 4, fIV, KEY))
-                                //using (FastEncryptorStream ms = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XXTEA, KEY))
+                                using (MapStream ms = new MapStream(Filename, fOffsetData + offset_cur, fileLength - 4, fIV, k))
+                                //using (FastEncryptorStream ms = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XXTEA, k))
                                 {
                                     int halfLength = (fileLength - 4) / 2;
                                     //(data.LongLength / 2) - ((data.LongLength / 2) % 16) - 512 + 16
@@ -437,7 +430,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
                 using (Stream cstream = memstream)
 #else
-                using (Stream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,KEY))
+                using (Stream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,k))
 #endif
                 using (BinaryWriter writer = new BinaryWriter(cstream))
                 {
@@ -488,7 +481,7 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
             using (Stream cstream = memstream)
 #else
-            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,KEY))
+            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,k))
 #endif
             using (BinaryWriter writer = new BinaryWriter(cstream))
             {
@@ -505,7 +498,7 @@ namespace osu_common.Libraries.Osz2
 #if NO_ENCRYPTION
                     using (Stream decryptor = new MemoryStream(pair.Value, false))
 #else
-                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.Two,KEY))
+                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.Two,k))
 #endif
                     {
                         byte[] decrypted = new byte[pair.Value.Length];
@@ -824,7 +817,7 @@ namespace osu_common.Libraries.Osz2
             {
                 if (!raw)
                 {
-                    MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, KEY);
+                    MapStream ms = new MapStream(fFilename, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
                     fMapStreamsOpen.Add(ms);
                     ms.OnStreamClosed += MapStream_OnStreamClosed;
                     stream = ms;
@@ -888,7 +881,7 @@ namespace osu_common.Libraries.Osz2
                         return;
                     string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
 #endif
-                    KEY = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
+                    k = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
 
                     break;
             }
@@ -1253,7 +1246,7 @@ namespace osu_common.Libraries.Osz2
 
                 // set up encryptor
                 aes.IV = fIV;
-                aes.Key = KEY; //TODO: key stuff
+                aes.Key = k; //TODO: key stuff
 
                 // header
                 bw.Write(new byte[] {0xEC, (byte) 'H', (byte) 'O'});
@@ -1319,7 +1312,7 @@ namespace osu_common.Libraries.Osz2
                     }
 #if !NO_ENCRYPTION
                     using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream, 
-                        EncryptionMethod.One, KEY))
+                        EncryptionMethod.One, k))
                     {
                         encryptor.Write(knownPlain, 0, 64);
                     }
@@ -1449,7 +1442,7 @@ namespace osu_common.Libraries.Osz2
 
             if (fIV != null)
                 Array.Clear(fIV, 0, fIV.Length);
-            //Array.Clear(KEY, 0, KEY.Length); //TODO: key stuff
+            //Array.Clear(k, 0, k.Length); //TODO: key stuff
 
             if (fFiles != null) fFiles.Clear();
             if (fFilesToAdd != null) fFilesToAdd.Clear();
