@@ -244,6 +244,8 @@ namespace osum.GameModes.Store
 
             PackItem item = packItems[currentDownload];
 
+            pDrawable back = songPreviewBacks[currentDownload];
+
             string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
 
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
@@ -262,6 +264,8 @@ namespace osum.GameModes.Store
             {
                 BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
 
+                back.FadeColour(Color4.LimeGreen, 500);
+
                 currentDownload++;
                 if (currentDownload < packItems.Count)
                     startNextDownload();
@@ -272,8 +276,6 @@ namespace osum.GameModes.Store
                 }
 
             };
-
-            pDrawable back = songPreviewBacks[currentDownload];
 
             back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
 
