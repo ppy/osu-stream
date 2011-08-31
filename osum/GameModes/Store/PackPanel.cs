@@ -250,7 +250,7 @@ namespace osum.GameModes.Store
 
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
-            string downloadPath = "http://www.osustream.com/dl/download2.php";
+            string downloadPath = "http://www.osustream.com/dl/download.php";
             string param = "filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
             if (item.UpdateChecksum != null)
                 param += "&update=" + item.UpdateChecksum;
