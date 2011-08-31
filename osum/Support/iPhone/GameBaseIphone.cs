@@ -331,6 +331,11 @@ namespace osum
 
         public void Close()
         {
+            ShouldClose = null;
+
+            webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("about:blank")));
+            webView.Delegate = null;
+            webView = null;
             DismissModalViewControllerAnimated(true);
             AppDelegate.SetUsingViewController(false);
         }
