@@ -7,12 +7,15 @@ using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.GameModes.SongSelect;
+using osum.GameplayElements;
 
 namespace osum.GameModes.Play
 {
     class PreviewPlayer : Player
     {
         pText t_currentStream;
+        private BackButton backButton;
 
         public override void Initialize()
         {
@@ -23,6 +26,8 @@ namespace osum.GameModes.Play
             t_currentStream.Origin = OriginTypes.BottomRight;
             t_currentStream.TextShadow = true;
             spriteManager.Add(t_currentStream);
+
+            topMostSpriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
         }
 
         public override void Dispose ()

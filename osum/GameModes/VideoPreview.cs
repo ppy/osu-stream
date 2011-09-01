@@ -14,6 +14,8 @@ using osum.Audio;
 using osum.Support;
 using osu_common.Libraries.NetLib;
 using System.IO;
+using osum.Graphics.Drawables;
+using osum.GameModes.SongSelect;
 
 namespace osum.GameModes
 {
@@ -54,6 +56,8 @@ namespace osum.GameModes
             }
             else
                 ShowMetadata();
+
+            spriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
         }
 
         void dnr_onFinish(byte[] data, Exception e)
