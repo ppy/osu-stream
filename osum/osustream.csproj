@@ -49,7 +49,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG FULL_DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
