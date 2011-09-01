@@ -40,7 +40,8 @@ namespace osum.GameModes.Store
                         ids.Add(pp.PackId);
                 }
 
-                iap.RequestProductData(ids, productsResponse);
+                if (ids.Count > 0)
+                    iap.RequestProductData(ids, productsResponse);
             }
         }
 
