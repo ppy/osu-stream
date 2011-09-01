@@ -61,6 +61,7 @@ namespace osum.GameModes.Play
         public override void Dispose()
         {
             InputManager.OnDown -= InputManager_OnDown;
+            Beatmap = null;
 
             base.Dispose();
         }
@@ -214,7 +215,14 @@ namespace osum.GameModes.Play
 
                     GameBase.Scheduler.Add(delegate
                     {
-                        backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, true);
+                        backButton = new BackButton(delegate
+                        {
+                            GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Notice), LocalisationManager.GetString(OsuString.ExitTutorial), NotificationStyle.YesNo, delegate(bool yes)
+                                {
+                                    if (yes)
+                                        Director.ChangeMode(OsuMode.MainMenu);
+                                }));
+                        }, true);
                         backButton.FadeInFromZero(500);
                         topMostSpriteManager.Add(backButton);
                     }, 500);
