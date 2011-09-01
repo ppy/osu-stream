@@ -51,7 +51,17 @@ namespace osum.GameModes.Store
             s_Header.OnClick += delegate { };
             topMostSpriteManager.Add(s_Header);
 
-            s_ButtonBack = new BackButton(delegate { Director.ChangeMode(Director.LastOsuMode); }, true);
+            s_ButtonBack = new BackButton(delegate {
+                switch (Director.LastOsuMode)
+                {
+                    case OsuMode.SongSelect:
+                        Director.ChangeMode(OsuMode.SongSelect);
+                        break;
+                    default:
+                        Director.ChangeMode(OsuMode.MainMenu);
+                        break;
+                }
+            }, true);
             topMostSpriteManager.Add(s_ButtonBack);
 
             GameBase.ShowLoadingOverlay = true;
