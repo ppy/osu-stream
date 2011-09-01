@@ -24,6 +24,20 @@ namespace osum.GameplayElements
                     newStreamSwitchPoints.Add(beatmap.StreamSwitchPoints[i]);
             beatmap.StreamSwitchPoints = newStreamSwitchPoints;
 
+            int pointCount = beatmap.StreamSwitchPoints.Count;
+
+            int lastObjectTime = -1;
+            if (pointCount > 3)
+                lastObjectTime = beatmap.StreamSwitchPoints[Math.Min(pointCount - 1, 4)];
+
+            if (lastObjectTime > 0)
+                foreach (List<HitObject> objects in StreamHitObjects)
+                    foreach (HitObject h in objects.FindAll(h => h.StartTime > lastObjectTime))
+                    {
+                        h.Sprites.ForEach(s => s.Bypass = true);
+                        objects.Remove(h);
+                    }
+
             base.PostProcessing();
         }
 
@@ -37,7 +51,5 @@ namespace osum.GameplayElements
 
         public override bool IsLowestStream { get { return ActiveStream == Difficulty.Easy; } }
         public override bool IsHighestStream { get { return ActiveStream == Difficulty.Expert; } }
-
-
     }
 }
