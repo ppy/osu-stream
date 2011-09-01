@@ -8,6 +8,7 @@ using osum.Audio;
 using osum.GameModes.Store;
 using osum.GameModes.Play;
 using osum.GameModes.Options;
+using System.Collections.Generic;
 
 namespace osum
 {
@@ -33,11 +34,6 @@ namespace osum
         /// </summary>
         internal static Transition ActiveTransition;
 
-        internal static bool ChangeMode(OsuMode mode)
-        {
-            return ChangeMode(mode, new FadeTransition());
-        }
-
         /// <summary>
         /// Actions to perform when transition finishes. NOTE: Is cleared after each transition.
         public static event VoidDelegate OnTransitionEnded;
@@ -51,15 +47,28 @@ namespace osum
             }
         }
 
+        internal static bool ChangeMode(OsuMode mode, bool retainState = false)
+        {
+            return ChangeMode(mode, new FadeTransition(), retainState);
+        }
+
+        static Dictionary<OsuMode, GameMode> savedStates = new Dictionary<OsuMode, GameMode>();
+
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
         /// </summary>
         /// <param name="mode">The new mode.</param>
         /// <param name="transition">The transition (null for instant switching).</param>
         /// <returns></returns>
-        internal static bool ChangeMode(OsuMode mode, Transition transition)
+        internal static bool ChangeMode(OsuMode mode, Transition transition, bool retainState = false)
         {
             if (mode == OsuMode.Unknown || mode == PendingOsuMode) return false;
+
+            if (retainState)
+                //store a reference to the current mode to show that we want to keep state.
+                savedStates[CurrentOsuMode] = CurrentMode;
+            else
+                savedStates.Remove(CurrentOsuMode);
 
             if (transition == null)
             {
@@ -84,17 +93,30 @@ namespace osum
         private static void changeMode(OsuMode newMode)
         {
             if (CurrentMode != null)
-                CurrentMode.Dispose();
+            {
+                //check whether we want to retain state before outright disposing.
+                GameMode check = null;
+
+                if (!savedStates.TryGetValue(CurrentOsuMode, out check) || check != CurrentMode)
+                {
+                    if (check != null)
+                        savedStates.Remove(CurrentOsuMode); //we should never get here, since only one state should be saved.
+                    CurrentMode.Dispose();
+                }
+            }
 
             TextureManager.ModeChange();
 
+            bool restored = false;
+
             if (PendingMode == null)
-                loadNewMode(newMode);
-            /*else if ((PendingOsuMode == OsuMode.Play && CurrentOsuMode != OsuMode.Results) ||
-                (CurrentOsuMode == OsuMode.Tutorial || PendingOsuMode == OsuMode.Tutorial) ||
-                (PendingOsuMode == OsuMode.SongSelect && (CurrentOsuMode == OsuMode.Play || CurrentOsuMode == OsuMode.Results)))
-                //todo: check memory pressure -- do we need to unload ever?
-                TextureManager.DisposeAll();*/
+            {
+                //try to restore a saved state before loading fresh.
+                if (savedStates.TryGetValue(newMode, out PendingMode))
+                    restored = true;
+                else
+                    loadNewMode(newMode);
+            }
 
             AudioEngine.Reset();
 
@@ -105,10 +127,14 @@ namespace osum
 
             //enable dimming in case it got left on somewhere.
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
+            GameBase.ShowLoadingOverlay = false;
 
             LastOsuMode = CurrentOsuMode; //the case for the main menu on first load.
 
-            CurrentMode.Initialize();
+            if (restored)
+                CurrentMode.Restore();
+            else
+                CurrentMode.Initialize();
 
             if (PendingOsuMode != OsuMode.Unknown) //can be unknown on first startup
             {

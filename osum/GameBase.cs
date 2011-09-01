@@ -450,7 +450,6 @@ namespace osum
             MainSpriteManager.Update();
 
             if (Director.Update())
-
                 InputManager.Update();
 
             Components.ForEach(c => c.Update());
