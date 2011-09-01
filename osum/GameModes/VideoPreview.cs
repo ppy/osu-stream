@@ -61,6 +61,7 @@ namespace osum.GameModes
             GameBase.ShowLoadingOverlay = true;
 
             loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width + 1, 0), true, 0, new Color4(0, 97, 115, 180));
+            loadingBackground.Additive = true;
             loadingBackground.Field = FieldTypes.StandardSnapBottomLeft;
             loadingBackground.Origin = OriginTypes.BottomLeft;
 
@@ -71,26 +72,28 @@ namespace osum.GameModes
 
         void dnr_onFinish(byte[] data, Exception e)
         {
-            if (data == null || e != null)
-            {
-                Director.ChangeMode(OsuMode.Store);
-                return;
-            }
+            GameBase.Scheduler.Add(delegate {
+                if (data == null || e != null)
+                {
+                    Director.ChangeMode(OsuMode.Store);
+                    return;
+                }
 
-            downloadProgress = 1;
+                downloadProgress = 1;
 
-            Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
 
-            GameBase.ShowLoadingOverlay = false;
-            DownloadComplete = true;
+                GameBase.ShowLoadingOverlay = false;
+                DownloadComplete = true;
 
-            loadingBackground.FadeOut(1000);
-            songInfoSpriteManager.FadeInFromZero(400);
+                loadingBackground.FadeOut(1000);
+                songInfoSpriteManager.FadeInFromZero(400);
 
-            ShowMetadata();
+                ShowMetadata();
 
-            Player.Autoplay = true;
-            Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+                Player.Autoplay = true;
+                Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+            });
         }
 
         private DataNetRequest downloadRequest;
@@ -232,10 +235,10 @@ namespace osum.GameModes
                 songInfoSpriteManager.Add(source);
             }
 
-            pText mapper = new pText("Level design by " + beatmap.Creator, 26, new Vector2(0, 0), 1, true, Color4.White)
+            pText mapper = new pText("Level design by " + beatmap.Creator, 26, new Vector2(30, 0), 1, true, Color4.White)
             {
-                Field = FieldTypes.StandardSnapBottomLeft,
-                Origin = OriginTypes.BottomLeft
+                Field = FieldTypes.StandardSnapBottomRight,
+                Origin = OriginTypes.BottomRight
             };
             songInfoSpriteManager.Add(mapper);
         }
@@ -250,9 +253,10 @@ namespace osum.GameModes
 
         public override void Update()
         {
-            mb.Update();
-            base.Update();
             songInfoSpriteManager.Update();
+
+            base.Update();
+            mb.Update();
 
             loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSizeFixedWidth.Height * downloadProgress);
         }

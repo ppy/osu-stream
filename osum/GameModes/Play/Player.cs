@@ -79,7 +79,7 @@ namespace osum.GameModes
         /// <summary>
         /// If we are currently in the process of switching to another stream, this is when it should happen.
         /// </summary>
-        private int queuedStreamSwitchTime;
+        protected int queuedStreamSwitchTime;
 
         /// <summary>
         /// Warning graphic which appears when a stream change is in process.
@@ -92,7 +92,7 @@ namespace osum.GameModes
 
         internal TouchBurster touchBurster;
 
-        bool isIncreasingStream;
+        protected bool isIncreasingStream;
         protected bool Failed;
 
         public Player()
@@ -242,6 +242,8 @@ namespace osum.GameModes
             }
             catch
             {
+                if (HitObjectManager != null) HitObjectManager.Dispose();
+                HitObjectManager = null;
                 //if this fails, it will be handled later on in Initialize()
             }
         }
@@ -358,7 +360,7 @@ namespace osum.GameModes
         protected virtual void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
-            healthBar.SetCurrentHp(DifficultyManager.InitialHp);
+            if (healthBar != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
 
@@ -386,7 +388,7 @@ namespace osum.GameModes
             }
         }
 
-        void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
+        protected void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             double healthChange = 0;
             bool increaseCombo = false;
@@ -800,7 +802,7 @@ namespace osum.GameModes
             if (menu != null) menu.MenuDisplayed = true;
         }
 
-        private bool switchStream(bool increase)
+        protected bool switchStream(bool increase)
         {
             isIncreasingStream = increase;
             if (increase && HitObjectManager.IsHighestStream)
