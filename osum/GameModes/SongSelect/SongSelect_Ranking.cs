@@ -125,7 +125,7 @@ namespace osum.GameModes
             if (panel == null) return;
 
             Results.RankableScore = panel.Score;
-            Director.ChangeMode(OsuMode.Results);
+            Director.ChangeMode(OsuMode.Results, true);
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
         }
