@@ -413,7 +413,7 @@ namespace osum
 
 
         /// <summary>
-        /// Initializes the AssetManager. 
+        /// Initializes the AssetManager.
         /// Assets are skins, hitsounds, textures that come with the game.
         /// These are, depending on the platform, located in the executable itself.
         /// Maps are not included as assets to prevent oversized executables.
@@ -552,6 +552,7 @@ namespace osum
         internal static int SpriteSheetResolution;
         public static float InputToFixedWidthAlign;
         public static float SpriteToBaseRatioAligned;
+        public static bool HasAuth { get { return GameBase.Config.GetValue<string>("hash", null) != null; } }
 
         internal static void Notify(string simple, BoolDelegate action = null)
         {
