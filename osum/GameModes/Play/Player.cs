@@ -721,7 +721,7 @@ namespace osum.GameModes
                     switchStream(false);
                 }
             }
-            else
+            else if (Difficulty != Difficulty.Easy)
             {
 #if DEBUG
                 DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
