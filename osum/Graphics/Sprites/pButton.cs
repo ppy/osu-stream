@@ -16,7 +16,7 @@ namespace osum.GameModes.SongSelect
     {
         internal Beatmap Beatmap;
 
-        internal pDrawable s_BackingPlate;
+        internal pSprite s_BackingPlate;
         internal pText s_Text;
 
         float base_depth = 0.5f;
@@ -33,6 +33,7 @@ namespace osum.GameModes.SongSelect
 
         bool pendingUnhover = false;
         private pDrawable additiveButton;
+        private pSprite s_Status;
 
         internal pButton(string text, Vector2 position, Vector2 size, Color4 colour, EventHandler action)
         {
@@ -69,6 +70,15 @@ namespace osum.GameModes.SongSelect
             s_Text = new pText(text, 25, position, base_depth + 0.01f, true, Color4.White);
             s_Text.Origin = OriginTypes.Centre;
             Sprites.Add(s_Text);
+
+            s_Status = new pSprite(TextureManager.Load(OsuTexture.songselect_star), position + new Vector2(-200,0))
+            {
+                Origin = OriginTypes.Centre,
+                DrawDepth = base_depth + 0.005f,
+                Bypass = true,
+                ScaleScalar = 4
+            };
+            Sprites.Add(s_Status);
         }
 
         internal Color4 Colour
@@ -107,6 +117,12 @@ namespace osum.GameModes.SongSelect
             {
                 return s_BackingPlate.Position;
             }
+        }
+
+        internal void SetStatus(bool status)
+        {
+            s_Status.Bypass = false;
+            s_Status.Colour = status ? Color4.YellowGreen : Color4.Red;
         }
     }
 }
