@@ -25,6 +25,9 @@ namespace osum.GameModes.Options
         };
         private SliderControl soundEffectSlider;
 
+
+        static float scroll;
+
         public override void Initialize()
         {
             pDrawable background =
@@ -45,7 +48,7 @@ namespace osum.GameModes.Options
 
             int vPos = 10;
 
-            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
 
             vPos += 90;
@@ -67,7 +70,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            text = new pText(LocalisationManager.GetString(OsuString.DifficultySettings), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.DifficultySettings), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
 
             vPos += 90;
@@ -88,7 +91,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
 
             vPos += 80;
@@ -126,17 +129,17 @@ namespace osum.GameModes.Options
 
             vPos += 50;
 
-            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true };
+            text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
 
             vPos += 80;
 
-            if (GameBase.Config.GetValue<string>("hash",null) == null)
+            if (!GameBase.HasAuth)
             {
-                button = new pButton("Link to Twitter", new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                button = new pButton(LocalisationManager.GetString(OsuString.TwitterLink), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
-                    "Login with Twitter",
+                    LocalisationManager.GetString(OsuString.TwitterLink),
                     delegate (string url)
                     {
                         if (url.StartsWith("finished://"))
@@ -155,10 +158,32 @@ namespace osum.GameModes.Options
                     });
                 });
                 smd.Add(button);
+
+                vPos += 40;
+
+                text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(20, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+                smd.Add(text);
+
+                vPos += 100;
+
+                button = new pButton(LocalisationManager.GetString(OsuString.GuestUsername), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                {
+#if iOS
+                    TextInputNotification tin = new TextInputNotification(LocalisationManager.GetString(OsuString.ChooseUsername), GameBase.Config.GetValue<string>("username", "Guest"), delegate(bool yes)
+                        {
+                            if (yes)
+                            {
+                                GameBase.Config.SetValue<string>("username", tin.Text);
+                                GameBase.Config.SaveConfig();
+                            }
+                        });
+#endif
+                });
+                smd.Add(button);
             }
             else
             {
-                button = new pButton("Unlink '" + GameBase.Config.GetValue<string>("username",null) + "'", new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                button = new pButton(string.Format("",GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
                         + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash",null));
@@ -189,6 +214,8 @@ namespace osum.GameModes.Options
             UpdateButtons();
 
             vPos += 50;
+
+            smd.ScrollTo(scroll);
         }
 
         int lastEffectSound;
@@ -211,8 +238,8 @@ namespace osum.GameModes.Options
 
         private void UpdateButtons()
         {
-            buttonEasyMode.Colour = GameBase.Config.GetValue<bool>(@"EasyMode", false) ? Color4.White : new Color4(255, 100, 100, 255);
-            buttonFingerGuides.Colour = GameBase.Config.GetValue<bool>(@"GuideFingers", false) ? Color4.White : new Color4(255, 100, 100, 255);
+            buttonEasyMode.SetStatus(GameBase.Config.GetValue<bool>(@"EasyMode", false));
+            buttonFingerGuides.SetStatus(GameBase.Config.GetValue<bool>(@"GuideFingers", false));
         }
 
         internal static void DisplayEasyModeDialog()
@@ -231,6 +258,8 @@ namespace osum.GameModes.Options
 
         public override void Dispose()
         {
+            scroll = smd.ScrollPosition;
+
             GameBase.Config.SetValue<int>("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
             GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
             GameBase.Config.SaveConfig();

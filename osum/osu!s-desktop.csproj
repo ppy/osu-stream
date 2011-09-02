@@ -203,6 +203,7 @@
     <Compile Include="Support\Transition.cs" />
     <Compile Include="UI\Notification.cs" />
     <Compile Include="UI\SliderControl.cs" />
+    <Compile Include="UI\TextInputNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Drawing" />

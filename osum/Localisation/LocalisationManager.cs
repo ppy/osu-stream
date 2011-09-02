@@ -186,6 +186,10 @@ namespace osum.Resources
         MorePractice,
         PutTogether,
         Update,
-        ExitTutorial
+        ExitTutorial,
+        Twitter,
+        Cancel,
+        TwitterLink,
+        GuestUsername
     }
 }

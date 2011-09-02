@@ -49,7 +49,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG FULL_DEBUG DIST</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -294,6 +294,7 @@
     <Compile Include="GameModes\VideoPreview.cs" />
     <Compile Include="GameModes\Play\PreviewPlayer.cs" />
     <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
+    <Compile Include="UI\TextInputNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
