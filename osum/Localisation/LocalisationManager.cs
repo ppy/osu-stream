@@ -190,6 +190,7 @@ namespace osum.Resources
         Twitter,
         Cancel,
         TwitterLink,
-        GuestUsername
+        GuestUsername,
+        ChooseUsername
     }
 }
