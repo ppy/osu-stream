@@ -19,6 +19,8 @@ namespace osum.UI
         public bool Dismissed;
         private BoolDelegate Action;
 
+        NotificationStyle Style;
+
         pSprite okayButton;
         pSprite cancelButton;
 
@@ -52,8 +54,20 @@ namespace osum.UI
 
             Action = action;
 
-            const int button_height = 95;
 
+            Style = style;
+
+            AddControls(style);
+
+            Add(back);
+            Add(descText);
+            Add(titleText);
+        }
+
+        private void AddControls(NotificationStyle style)
+        {
+            const int button_height = 95;
+            
             switch (style)
             {
                 case NotificationStyle.Okay:
@@ -180,10 +194,6 @@ namespace osum.UI
                     }
                     break;
             }
-
-            Add(back);
-            Add(descText);
-            Add(titleText);
         }
 
         private void dismiss(bool completed)
@@ -203,7 +213,7 @@ namespace osum.UI
             
         }
 
-        internal void Display()
+        internal virtual void Display()
         {
             Transformation bounce = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 800, 1, 0.1f, 8);
             Transform(bounce);

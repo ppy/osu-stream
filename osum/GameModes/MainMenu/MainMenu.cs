@@ -204,13 +204,16 @@ namespace osum.GameModes
             string username = GameBase.Config.GetValue<string>("username", null);
             if (username != null)
             {
-                pText usernameText = new pText(username, 20, new Vector2(35, 0), 1, true, Color4.White);
+                bool hasAuth = GameBase.HasAuth;
+                pText usernameText = new pText(username + (hasAuth ? string.Empty : " (guest)"), 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
                 usernameText.TextShadow = true;
                 spriteManager.Add(usernameText);
 
-                pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
-                spriteManager.Add(avatar);
-
+                if (hasAuth)
+                {
+                    pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
+                    spriteManager.Add(avatar);
+                }
             }
 
             firstDisplay = false;

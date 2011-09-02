@@ -185,6 +185,12 @@ namespace osum.Resources
         FirstRunTutorial,
         MorePractice,
         PutTogether,
-        Update
+        Update,
+        ExitTutorial,
+        Twitter,
+        Cancel,
+        TwitterLink,
+        GuestUsername,
+        ChooseUsername
     }
 }

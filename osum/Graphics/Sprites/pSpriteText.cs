@@ -387,7 +387,7 @@ namespace osum.Graphics.Sprites
 
         public override bool Draw()
         {
-            if (Alpha > 0 && (AlwaysDraw || !noTransformationsLeft) && textArray.Length > 0)
+            if (Alpha > 0 && (AlwaysDraw || !noTransformationsLeft) && textArray != null && textArray.Length > 0)
             {
                 if (textChanged) MeasureText();
 

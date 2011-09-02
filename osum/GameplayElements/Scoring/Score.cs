@@ -44,6 +44,7 @@ namespace osum.GameplayElements.Scoring
         public const int ACCURACY_BONUS_AMOUNT = 400000;
         public const int HIT_PLUS_COMBO_BONUS_AMOUNT = MAX_SCORE - ACCURACY_BONUS_AMOUNT;
         public const int MAX_SCORE = 1000000;
+        public bool guest;
 
         public Rank Ranking
         {

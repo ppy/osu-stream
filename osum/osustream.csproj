@@ -298,6 +298,8 @@
     <Compile Include="GameModes\Empty.cs" />
     <Compile Include="GameModes\VideoPreview.cs" />
     <Compile Include="GameModes\Play\PreviewPlayer.cs" />
+    <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
+    <Compile Include="UI\TextInputNotification.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

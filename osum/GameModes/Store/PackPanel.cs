@@ -431,7 +431,7 @@ namespace osum.GameModes.Store
             {
                 StoreMode.ResetAllPreviews(true);
                 VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
-                Director.ChangeMode(OsuMode.VideoPreview);
+                Director.ChangeMode(OsuMode.VideoPreview, true);
             };
 
             Sprites.Add(videoPreview);

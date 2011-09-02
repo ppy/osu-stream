@@ -7,12 +7,17 @@ using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.GameModes.SongSelect;
+using osum.GameplayElements;
+using osum.Support;
+using osum.Helpers;
 
 namespace osum.GameModes.Play
 {
     class PreviewPlayer : Player
     {
         pText t_currentStream;
+        private BackButton backButton;
 
         public override void Initialize()
         {
@@ -23,6 +28,20 @@ namespace osum.GameModes.Play
             t_currentStream.Origin = OriginTypes.BottomRight;
             t_currentStream.TextShadow = true;
             spriteManager.Add(t_currentStream);
+
+            topMostSpriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
+        }
+
+        protected override bool CheckForCompletion()
+        {
+            if (HitObjectManager.AllNotesHit && !Director.IsTransitioning && !Completed)
+            {
+                Completed = true;
+                Director.ChangeMode(OsuMode.Store, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                return true;
+            }
+
+            return false;
         }
 
         public override void Dispose ()
@@ -33,19 +52,43 @@ namespace osum.GameModes.Play
 
         protected override void initializeUIElements()
         {
-            healthBar = new HealthBar();
-            healthBar.SetCurrentHp(200);
-
-            comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
 
             progressDisplay = new ProgressDisplay();
         }
 
+        protected override void UpdateStream()
+        {
+            if (HitObjectManager != null && !HitObjectManager.StreamChanging)
+                switchStream(true);
+            else
+            {
+#if DEBUG
+                DebugOverlay.AddLine("Stream changing at " + HitObjectManager.nextStreamChange + " to " + HitObjectManager.ActiveStream);
+#endif
+                playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 200));
+            }
+        }
+
         protected override void loadBeatmap()
         {
-            base.loadBeatmap();
+            HitObjectManager = new HitObjectManagerPreview(Beatmap);
+
+            HitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
+            HitObjectManager.OnStreamChanged += hitObjectManager_OnStreamChanged;
+
+            try
+            {
+                if (Beatmap.Package != null)
+                    HitObjectManager.LoadFile();
+            }
+            catch
+            {
+                if (HitObjectManager != null) HitObjectManager.Dispose();
+                HitObjectManager = null;
+                //if this fails, it will be handled later on in Initialize()
+            }
             
             Difficulty = GameplayElements.Difficulty.Easy;
             //force back to stream difficulty, as it may be modified during load to get correct AR etc. variables.
@@ -54,7 +97,6 @@ namespace osum.GameModes.Play
         protected override void hitObjectManager_OnStreamChanged(GameplayElements.Difficulty newStream)
         {
             base.hitObjectManager_OnStreamChanged(newStream);
-
             t_currentStream.Text = HitObjectManager.ActiveStream.ToString();
         }
     }

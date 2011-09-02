@@ -14,6 +14,8 @@ using osum.Audio;
 using osum.Support;
 using osu_common.Libraries.NetLib;
 using System.IO;
+using osum.Graphics.Drawables;
+using osum.GameModes.SongSelect;
 
 namespace osum.GameModes
 {
@@ -31,6 +33,7 @@ namespace osum.GameModes
         public override void Initialize()
         {
             mb = new MenuBackground();
+            mb.DrawDepth = 0.1f;
             mb.Position = new Vector2(440, -230);
             mb.ScaleScalar = 0.5f;
 
@@ -46,33 +49,80 @@ namespace osum.GameModes
 
             if (DownloadLink != null)
             {
-                DataNetRequest dnr = new DataNetRequest(DownloadLink);
-                dnr.onUpdate += dnr_onUpdate;
-                dnr.onFinish += dnr_onFinish;
+                downloadRequest = new DataNetRequest(DownloadLink);
+                downloadRequest.onUpdate += dnr_onUpdate;
+                downloadRequest.onFinish += dnr_onFinish;
 
-                NetManager.AddRequest(dnr);
+                NetManager.AddRequest(downloadRequest);
             }
             else
                 ShowMetadata();
+
+            GameBase.ShowLoadingOverlay = true;
+
+            loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width + 1, 0), true, 0, new Color4(0, 97, 115, 180));
+            loadingBackground.Additive = true;
+            loadingBackground.Field = FieldTypes.StandardSnapBottomLeft;
+            loadingBackground.Origin = OriginTypes.BottomLeft;
+
+            spriteManager.Add(loadingBackground);
+
+            spriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
         }
 
         void dnr_onFinish(byte[] data, Exception e)
         {
-            Player.Beatmap = new Beatmap();
-            Player.Beatmap.Package = new MapPackage(new MemoryStream(data));
-            DownloadComplete = true;
-            ShowMetadata();
+            GameBase.Scheduler.Add(delegate {
+                if (data == null || e != null)
+                {
+                    Director.ChangeMode(OsuMode.Store);
+                    return;
+                }
+
+                downloadProgress = 1;
+
+                Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+
+                GameBase.ShowLoadingOverlay = false;
+                DownloadComplete = true;
+
+                loadingBackground.FadeOut(1000);
+                songInfoSpriteManager.FadeInFromZero(400);
+
+                ShowMetadata();
+
+                Player.Autoplay = true;
+                Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+            });
         }
 
+        private DataNetRequest downloadRequest;
+        private pRectangle loadingBackground;
+
+        float downloadProgress;
+        private BackButton backButton;
         void dnr_onUpdate(object sender, long current, long total)
         {
-            
+            downloadProgress = (float)current / total;
         }
 
         public override void Dispose()
         {
+            if (downloadRequest != null)
+                downloadRequest.Abort();
+
             DownloadLink = null;
             base.Dispose();
+
+            if (Director.PendingOsuMode != OsuMode.Play)
+            {
+                //if we are exiting out early.
+                if (Player.Beatmap != null)
+                {
+                    Player.Beatmap.Dispose();
+                    Player.Beatmap = null;
+                }
+            }
         }
 
         private void ShowMetadata()
@@ -185,10 +235,10 @@ namespace osum.GameModes
                 songInfoSpriteManager.Add(source);
             }
 
-            pText mapper = new pText("Level design by " + beatmap.Creator, 26, new Vector2(0, 0), 1, true, Color4.White)
+            pText mapper = new pText("Level design by " + beatmap.Creator, 26, new Vector2(30, 0), 1, true, Color4.White)
             {
-                Field = FieldTypes.StandardSnapBottomLeft,
-                Origin = OriginTypes.BottomLeft
+                Field = FieldTypes.StandardSnapBottomRight,
+                Origin = OriginTypes.BottomRight
             };
             songInfoSpriteManager.Add(mapper);
         }
@@ -196,22 +246,19 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
-            songInfoSpriteManager.Draw();
             mb.Draw();
+            songInfoSpriteManager.Draw();
             return true;
         }
 
         public override void Update()
         {
-            mb.Update();
-            base.Update();
             songInfoSpriteManager.Update();
 
-            if (Clock.ModeTime > 4000 && !Director.IsTransitioning && DownloadComplete)
-            {
-                Player.Autoplay = true;
-                Director.ChangeMode(OsuMode.Play, new FadeTransition(2000,500));
-            }
+            base.Update();
+            mb.Update();
+
+            loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSizeFixedWidth.Height * downloadProgress);
         }
     }
 }

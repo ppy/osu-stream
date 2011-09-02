@@ -143,7 +143,8 @@ namespace osu_common.Helpers
             {
                 using (StreamWriter w = new StreamWriter(filename, false))
                     foreach (KeyValuePair<string, string> p in entriesRaw)
-                        w.WriteLine("{0} = {1}", p.Key, p.Value);
+                        if (p.Value != null)
+                            w.WriteLine("{0} = {1}", p.Key, p.Value);
             }
             catch
             {

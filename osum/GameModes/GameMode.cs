@@ -34,6 +34,13 @@ namespace osum.GameModes
         public abstract void Initialize();
 
         /// <summary>
+        /// Called when restoring from a saved state.
+        /// </summary>
+        public virtual void Restore()
+        {
+        }
+
+        /// <summary>
         /// A spriteManager provided free of charge.
         /// </summary>
         internal SpriteManager spriteManager;

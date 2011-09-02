@@ -51,6 +51,8 @@ namespace osum.Graphics.Sprites
                 Texture = t;
                 TextureManager.RegisterDisposable(t);
             }
+
+            Update();
         }
     }
 }
