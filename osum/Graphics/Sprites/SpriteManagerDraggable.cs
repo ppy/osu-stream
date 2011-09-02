@@ -101,6 +101,8 @@ namespace osum.Graphics.Sprites
             scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
         }
 
+        internal float ScrollPosition { get { return verticalDragOffset; } }
+
         private float verticalDragOffset;
         private float offset_min = 0;
         private float offset_max = 0;
@@ -196,7 +198,12 @@ namespace osum.Graphics.Sprites
         float? aimOffset;
         internal void ScrollTo(pDrawable sprite, float padding = 0)
         {
-            aimOffset = Math.Max(offset_min,Math.Min(0,-(sprite.Position.Y - 50 - padding)));
+            ScrollTo(-(sprite.Position.Y - 50 - padding));
+        }
+
+        internal void ScrollTo(float scrollPoint)
+        {
+            aimOffset = Math.Max(offset_min, Math.Min(0, scrollPoint));
             ShowScrollbar(true); //pulse scrollbar display.
         }
     }
