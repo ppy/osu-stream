@@ -67,7 +67,7 @@ namespace osum.GameModes.SongSelect
             };
             Sprites.Add(rankingSprite);
 
-            if (score.Username != @"Guest")
+            if (!score.guest)
             {
                 pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + score.Username)
                 {
@@ -78,7 +78,7 @@ namespace osum.GameModes.SongSelect
             }
 
 
-            s_Text = new pText(score.Username, 26, Vector2.Zero, Vector2.Zero, 0.5f, true, Color4.White, false);
+            s_Text = new pText(score.Username, 26, Vector2.Zero, Vector2.Zero, 0.5f, true, score.guest ? Color4.LightGray : Color4.White, false);
             s_Text.Bold = true;
             s_Text.Offset = new Vector2(100, 0);
             Sprites.Add(s_Text);

@@ -54,8 +54,8 @@ namespace osum.GameModes
 
             int period = 0;
 
-            rankingNetRequest = new StringNetRequest(@"http://osustream.com/score/retrieve.php", "POST", 
-                "udid=" + GameBase.Instance.DeviceIdentifier + 
+            rankingNetRequest = new StringNetRequest(@"http://osustream.com/score/retrieve.php", "POST",
+                "udid=" + GameBase.Instance.DeviceIdentifier +
                 "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
                 "&period=" + period +
                 "&difficulty=" + (int)Player.Difficulty);
@@ -98,7 +98,8 @@ namespace osum.GameModes
                     count50 = UInt16.Parse(split[i++]),
                     countMiss = UInt16.Parse(split[i++]),
                     maxCombo = UInt16.Parse(split[i++]),
-                    date = UnixTimestamp.Parse(Int32.Parse(split[i++]))
+                    date = UnixTimestamp.Parse(Int32.Parse(split[i++])),
+                    guest = split[i++] == "1"
                 };
 
                 rankingScores.Add(score);
@@ -109,7 +110,7 @@ namespace osum.GameModes
             {
                 ScorePanel sp = new ScorePanel(score, onScoreClicked, index + 1);
                 sp.Sprites.ForEach(s => s.Position = new Vector2(0, BeatmapPanel.PANEL_HEIGHT + 5 + (ScorePanel.PANEL_HEIGHT + 3) * index));
-                
+
                 rankingSpriteManager.Add(sp);
 
                 index++;
