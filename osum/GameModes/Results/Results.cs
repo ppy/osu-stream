@@ -343,6 +343,7 @@ namespace osum.GameModes
                     "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
                     "&c=" + check +
                     "&difficulty=" + (int)Player.Difficulty +
+                    "&username=" + GameBase.Config.GetValue<string>("username", string.Empty) +
                     "&dt=" + deviceType;
 
                 spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
