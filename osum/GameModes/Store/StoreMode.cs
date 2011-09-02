@@ -73,6 +73,14 @@ namespace osum.GameModes.Store
 
             if (GameBase.IsSlowDevice)
                 GameBase.ThrottleExecution = true;
+
+            SongSelectMode.InitializeBgm();
+        }
+
+        public override void Restore()
+        {
+            SongSelectMode.InitializeBgm();
+            base.Restore ();
         }
 
         public override void Dispose()
