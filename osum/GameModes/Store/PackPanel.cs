@@ -373,7 +373,7 @@ namespace osum.GameModes.Store
                         if (ex != null || data == null || data.Length < 10000)
                         {
                             StoreMode.ResetAllPreviews(true);
-                            GameBase.Notify("Failed to load song preview.\nPlease check your internet connection.");
+                            GameBase.Notify(LocalisationManager.GetString(OsuStrings.InternetFail));
                             return;
                         }
 

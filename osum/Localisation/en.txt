@@ -134,3 +134,4 @@ TwitterUnlink=Unlink '{0}'
 Cancel=Cancel
 GuestUsername=Set Guest Username
 ChooseUsername=Choose a Username!
+InternetFailed=Failed to load.\nPlease check you are connected to the internet and try again!

@@ -10,7 +10,7 @@ namespace osum.Resources
     {
         private static Dictionary<OsuString, string> strings = new Dictionary<OsuString, string>();
         private static bool initialised;
-        
+
         public static string GetString(OsuString stringType)
         {
             if (!initialised)
@@ -190,7 +190,9 @@ namespace osum.Resources
         Twitter,
         Cancel,
         TwitterLink,
+        TwitterUnlink,
         GuestUsername,
-        ChooseUsername
+        ChooseUsername,
+        InternetFailed
     }
 }
