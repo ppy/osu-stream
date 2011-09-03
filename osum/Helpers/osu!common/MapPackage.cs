@@ -42,7 +42,7 @@ namespace osu_common.Libraries.Osz2
         private SortedDictionary<string, int> fMapIDsFiles;
         private Dictionary<string, DateTime> fFilesToAddDateCreated;
         private Dictionary<string, DateTime> fFilesToAddDateModified;
-        private Dictionary<string, bool> fFilesToAddDateEncrypted; 
+        private Dictionary<string, bool> fFilesToAddDateEncrypted;
 
         private List<MapStream> fMapStreamsOpen;
         private Dictionary<MapMetaType, string> fMetadata;
@@ -66,7 +66,7 @@ namespace osu_common.Libraries.Osz2
         }
 
         public bool NoVideoVersion {get; private set;}
-       
+
 
         static MapPackage ()
         {
@@ -78,7 +78,7 @@ namespace osu_common.Libraries.Osz2
             Dispose(false);
         }
 
-        private long brOffset = 0; //used to store binaryReader position used to do postprocessing later. 
+        private long brOffset = 0; //used to store binaryReader position used to do postprocessing later.
 
         /// <summary>
         ///
@@ -310,7 +310,7 @@ namespace osu_common.Libraries.Osz2
                 aes.Key = k; //TODO: key etc etc
 
                 using (MemoryStream memstream = new MemoryStream(fileinfo))
-                
+
 #if STRONG_ENCRYPTION
                 using (CryptoStream cstream = new CryptoStream(memstream, aes.CreateDecryptor(), CryptoStreamMode.Read))
 #elif NO_ENCRYPTION
@@ -336,7 +336,7 @@ namespace osu_common.Libraries.Osz2
                         byte[] fileHash = reader.ReadBytes(16);
                         DateTime fileDateCreated = DateTime.FromBinary(reader.ReadInt64());
                         DateTime fileDateModified = DateTime.FromBinary(reader.ReadInt64());
-                        
+
                         // get next offset in order to calculate length of file
                         int offset_next;
                         if (i + 1 < count)
@@ -356,14 +356,14 @@ namespace osu_common.Libraries.Osz2
                             bool invalid = false;
                             long oldPos = br.BaseStream.Position;
                             long newPos = fOffsetData + offset_cur + fileLength / 2 - 512 + 4;
-                            
-                            
+
+
                             if (newPos >= br.BaseStream.Length || fileLength < 1024)
                                 invalid = true;
                             else
                             {
                                 byte[] footData = new byte[1024];
-                               
+
                                 byte[] videoData = new byte[fileLength - 4];
                                 //decrypt data then check videhash
                                 using (MapStream ms = new MapStream(Filename, fOffsetData + offset_cur, fileLength - 4, fIV, k))
@@ -412,7 +412,7 @@ namespace osu_common.Libraries.Osz2
 
             fHandle.Seek(0, SeekOrigin.Begin);
 
-            
+
         }
 
         #region Data processing methods
@@ -473,7 +473,7 @@ namespace osu_common.Libraries.Osz2
             }
         }
 
-        private byte[] EncryptFileinfo(SortedDictionary<string, byte[]> files, Dictionary<string, byte[]> filesHashes, 
+        private byte[] EncryptFileinfo(SortedDictionary<string, byte[]> files, Dictionary<string, byte[]> filesHashes,
             Dictionary<string, DateTime> filesTimeCreated, Dictionary<string, DateTime> filesTimeModified, ICryptoTransform encryptor)
         {
             using (MemoryStream memstream = new MemoryStream())
@@ -494,7 +494,7 @@ namespace osu_common.Libraries.Osz2
                 {
                     writer.Write(offset);
                     writer.Write(pair.Key);
-                   
+
                     //temporarily decrypt it so we can hash
 #if NO_ENCRYPTION
                     using (Stream decryptor = new MemoryStream(pair.Value, false))
@@ -546,7 +546,7 @@ namespace osu_common.Libraries.Osz2
                 return memstream.ToArray();
             }
         }
-        
+
         //todo: give stream instead so we don't copy memory unnecesseraly
         private static byte[] GetOszHash(byte[] buffer, int pos, byte swap)
         {
@@ -769,7 +769,7 @@ namespace osu_common.Libraries.Osz2
             }
 
             return GetMD5Hash(buffer);
-            
+
         }
         //only works for saved files.
         public byte[] GetCachedFileHash(string filename)
@@ -832,7 +832,7 @@ namespace osu_common.Libraries.Osz2
                     stream = new MemoryStream(file, false);
                 }*/
 
-                
+
             }
             else if (fFilesToAdd.ContainsKey(filename))
             {
@@ -1192,7 +1192,7 @@ namespace osu_common.Libraries.Osz2
         /// </summary>
         public List<FileInfo> GetFileInfo()
         {
-    
+
             //Save();
 
             List<FileInfo> ret = new List<FileInfo>();
@@ -1259,7 +1259,7 @@ namespace osu_common.Libraries.Osz2
                 Dictionary<string, byte[]> filesHashes = new Dictionary<string, byte[]>();
                 Dictionary<string, DateTime> filesDateCreated = new Dictionary<string, DateTime>();
                 Dictionary<string, DateTime> filesDateModified = new Dictionary<string, DateTime>();
-                
+
 
                 byte[] file_data;
                 if (fFiledataChanged)
@@ -1312,7 +1312,7 @@ namespace osu_common.Libraries.Osz2
                         bw.Write(mapID.Value);
                     }
 #if !NO_ENCRYPTION
-                    using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream, 
+                    using (FastEncryptorStream encryptor = new FastEncryptorStream(bw.BaseStream,
                         EncryptionMethod.One, k))
                     {
                         encryptor.Write(knownPlain, 0, 64);
@@ -1362,11 +1362,11 @@ namespace osu_common.Libraries.Osz2
 
                 // write file data
                 bw.Write(file_data);
-                
+
                 // calculate remaining hashes
                 hash_meta = GetOszHash(meta_data, fMetadata.Count * 3, 0xa7);
                 hash_body = GetBodyHash(new MemoryStream(file_data, false), file_data.Length / 2, 0x9f);
-                
+
                 //TODO: maybe an async write while getting the hash to speed things up
                 using (FileStream fs = File.Open(fFilename, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
@@ -1404,7 +1404,7 @@ namespace osu_common.Libraries.Osz2
                     int offset = 0;
                     foreach (KeyValuePair<string, byte[]> pair in files)
                     {
-                        fFiles.Add(pair.Key, new FileInfo(pair.Key, offset, pair.Value.Length, 
+                        fFiles.Add(pair.Key, new FileInfo(pair.Key, offset, pair.Value.Length,
                             filesHashes[pair.Key], filesDateCreated[pair.Key], filesDateModified[pair.Key]));
                         offset += pair.Value.Length;
                     }
@@ -1434,10 +1434,10 @@ namespace osu_common.Libraries.Osz2
         {
             //If the object is already closed, just return gracefully.
             if (fClosed) return;
-            
+
             if (fMapStreamsOpen != null)
                 fMapStreamsOpen.ForEach(s => s.Close());
-            
+
             //if(fSavable)
             //    Save();
 
@@ -1462,10 +1462,10 @@ namespace osu_common.Libraries.Osz2
         }
 
         object packageLock = new object();
- 
+
         public bool AcquireLock(int timeOut, bool releaseFileLock)
         {
-           
+
             //is safe from deadlocks as the same thread can enter the same object multiple times
             try
             {
@@ -1485,7 +1485,7 @@ namespace osu_common.Libraries.Osz2
                 fHandle.Close();
                 fHandle = null;
             }
-     
+
             return true;
 
         }
@@ -1578,7 +1578,7 @@ namespace osu_common.Libraries.Osz2
             Hash = sr.ReadByteArray();
             CreationTime = (DateTime)sr.ReadObject();
             ModifiedTime = (DateTime)sr.ReadObject();
-            
+
 
         }
 
@@ -1616,6 +1616,7 @@ namespace osu_common.Libraries.Osz2
         ArtistTwitter,
         SourceUnicode,
         ArtistUrl,
-        Revision
+        Revision,
+        PackId
     }
 }
