@@ -40,6 +40,7 @@ namespace osum.GameModes
 
         const float fill_height = 5;
         float count_height = 80;
+
         private pSpriteText countTotalScore;
         private pSpriteText countScoreHit;
         private pSpriteText countScoreCombo;
@@ -367,6 +368,14 @@ namespace osum.GameModes
             }
             else
             {
+                pText playerName = new pText("Played by " + RankableScore.Username, 30, new Vector2(10, fill_height + 5), 0.5f, true, new Color4(235,199,0,255))
+                {
+                    TextShadow = true,
+                    Field = FieldTypes.StandardSnapRight,
+                    Origin = OriginTypes.TopRight
+                };
+                layer1.Add(playerName);
+
                 //displaying a previous high score (or online high score)
                 finishDisplaying();
             }
