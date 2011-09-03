@@ -580,6 +580,18 @@ namespace osum.Graphics.Sprites
                     p.Dispose();
             }
 
+            if (SpriteQueue != null)
+            {
+                foreach (pDrawable p in SpriteQueue)
+                    p.Dispose();
+            }
+
+            if (ForwardPlayList != null)
+            {
+                foreach (pDrawable p in ForwardPlayList)
+                    p.Dispose();
+            }
+
             InputManager.OnMove -= HandleInputManagerOnMove;
             InputManager.OnDown -= HandleInputManagerOnDown;
             InputManager.OnUp -= HandleInputManagerOnUp;
