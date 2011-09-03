@@ -85,11 +85,8 @@ namespace osum.Graphics.Drawables
 #endif
         }
 
-        public bool IsDisposed { get; private set; }
         public override void Dispose()
         {
-            if (IsDisposed)
-                return;
 #if !NO_PIN_SUPPORT
             if (handle_colours.IsAllocated)
             {
@@ -100,7 +97,8 @@ namespace osum.Graphics.Drawables
             Marshal.FreeHGlobal(handle_vertices_pointer);
             Marshal.FreeHGlobal(handle_colours_pointer);
 #endif
-            IsDisposed = true;
+
+            base.Dispose();
         }
 
         public override bool Draw()

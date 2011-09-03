@@ -49,8 +49,6 @@ namespace osum.Graphics.Drawables
         GCHandle handle_vertices;
         IntPtr handle_vertices_pointer;
 
-        public bool IsDisposed { get; private set; }
-
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
             AlwaysDraw = alwaysDraw;
@@ -73,14 +71,13 @@ namespace osum.Graphics.Drawables
 
         public override void Dispose()
         {
-            if (IsDisposed)
-                return;
+            base.Dispose();
+
 #if !NO_PIN_SUPPORT
             if (handle_vertices.IsAllocated) handle_vertices.Free();
 #else
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
-            IsDisposed = true;
         }
 
         int parts = 48;

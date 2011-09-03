@@ -93,7 +93,7 @@ namespace osum.Graphics
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         /// <summary>
