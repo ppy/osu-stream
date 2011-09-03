@@ -365,6 +365,8 @@ namespace osum.GameModes
                     spriteSubmitting.FadeOut(100);
                 };
                 NetManager.AddRequest(nr);
+
+                InitializeBgm();
             }
             else
             {
@@ -382,7 +384,6 @@ namespace osum.GameModes
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
-            InitializeBgm();
         }
 
         bool cameFromSongSelect;

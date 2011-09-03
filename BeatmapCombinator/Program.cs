@@ -87,7 +87,7 @@ namespace BeatmapCombinator
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            
+
             if (dir.Length < 1)
             {
                 Console.WriteLine("No path specified!");
@@ -609,7 +609,7 @@ namespace BeatmapCombinator
                     Clock.ElapsedMilliseconds = 10;
 
                     p.Update();
-                    
+
                     if (switchHpObject != null && switchHpObject.IsHit)
                     {
                         double currentHp = p.healthBar.CurrentHp;
