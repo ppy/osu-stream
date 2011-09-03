@@ -268,7 +268,7 @@ namespace osum.GameModes
             if (rankingSpriteManager != null) rankingSpriteManager.Dispose();
 
             foreach (Beatmap b in maps)
-                b.Dispose();
+                if (b != Player.Beatmap) b.Dispose();
 
             if (State == SelectState.Exiting)
                 Player.Beatmap = null;

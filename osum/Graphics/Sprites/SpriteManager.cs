@@ -42,6 +42,7 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using osum.Input;
+using System.Diagnostics;
 #endif
 
 namespace osum.Graphics.Sprites
@@ -68,10 +69,14 @@ namespace osum.Graphics.Sprites
             Alpha = 1;
         }
 
+        ~SpriteManager()
+        {
+            Dispose(false);
+        }
+
         internal SpriteManager()
             : this(new List<pDrawable>())
         {
-
         }
 
         void mapToCoordinates(ref TrackingPoint t)
@@ -563,8 +568,12 @@ namespace osum.Graphics.Sprites
 
         public override void Dispose()
         {
-            base.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        public virtual void Dispose(bool disposing)
+        {
             if (Sprites != null)
             {
                 foreach (pDrawable p in Sprites)

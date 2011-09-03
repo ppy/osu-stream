@@ -41,16 +41,6 @@ namespace osum.GameModes.Play.Components
             base.Initialize();
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-        }
-
         bool isSwitching;
         bool increase;
 

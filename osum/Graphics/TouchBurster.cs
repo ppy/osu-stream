@@ -15,7 +15,7 @@ namespace osum.Graphics
     {
         List<pSprite> burstSprites = new List<pSprite>();
 
-        float[] random = new float[] {
+       static float[] random = new float[] {
             0.54668277924985f,
             0.63373556682948f,
             0.52338286143199f,
@@ -41,12 +41,11 @@ namespace osum.Graphics
             0.35293735193193f
         };
 
-        int nextRandIndex;
-        float nextRand()
+        static int nextRandIndex;
+        static float nextRand()
         {
             return random[nextRandIndex++ % random.Length];
         }
-
 
         int nextBurstSprite;
 
@@ -155,7 +154,6 @@ namespace osum.Graphics
         public override void Dispose()
         {
             BindInput = false;
-
             base.Dispose();
         }
 

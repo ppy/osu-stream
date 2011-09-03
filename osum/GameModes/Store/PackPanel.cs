@@ -373,7 +373,7 @@ namespace osum.GameModes.Store
                         if (ex != null || data == null || data.Length < 10000)
                         {
                             StoreMode.ResetAllPreviews(true);
-                            GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFail));
+                            GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed));
                             return;
                         }
 

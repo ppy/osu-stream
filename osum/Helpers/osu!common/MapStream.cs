@@ -164,7 +164,10 @@ namespace osu_common.Libraries.Osz2
 #endif
             // fire events
             if (OnStreamClosed != null)
+            {
                 OnStreamClosed(this);
+                OnStreamClosed = null;
+            }
 
             base.Close();
         }
