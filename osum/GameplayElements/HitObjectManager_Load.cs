@@ -52,10 +52,6 @@ namespace osum.GameplayElements
 
             int linenumber;
 
-            //Variables = new Dictionary<string, string>();
-
-            //if (osqEngine == null) osqEngine = new osq.Encoder();
-
             //The first file will be the actual .osu file.
             //The second file is the .osb for now.
             for (int fn = 0; fn < readableFiles.Count; fn++)
@@ -80,14 +76,14 @@ namespace osum.GameplayElements
                     bool readNew = true;
                     int objnumber = 0;
 
+                    bool headerReadFinished = false;
+
                     while (true)
                     {
                         if (readNew)
                         {
                             line = reader.ReadLine();
-
                             if (line == null) break;
-
                             linenumber++;
                         }
 
@@ -98,14 +94,18 @@ namespace osum.GameplayElements
 
                         //if (currentSection == FileSection.Events) ParseVariables(ref line);
 
-                        string[] split = line.Split(',');
-                        string[] var = line.Split(':');
                         string key = string.Empty;
                         string val = string.Empty;
-                        if (var.Length > 1)
+
+                        if (!headerReadFinished)
                         {
-                            key = var[0].Trim();
-                            val = var[1].Trim();
+                            string[] var = line.Split(':');
+
+                            if (var.Length > 1)
+                            {
+                                key = var[0].Trim();
+                                val = var[1].Trim();
+                            }
                         }
 
                         if (line[0] == '[')
@@ -114,6 +114,8 @@ namespace osum.GameplayElements
                             {
                                 currentSection =
                                     (FileSection)Enum.Parse(typeof(FileSection), line.Trim(new[] { '[', ']' }));
+                                if (currentSection == FileSection.HitObjects)
+                                    headerReadFinished = true;
                             }
                             catch (Exception)
                             {
@@ -135,30 +137,24 @@ namespace osum.GameplayElements
                                 }
                                 break;
                             case FileSection.TimingPoints:
-                                if (split.Length > 2)
-                                    beatmap.ControlPoints.Add(
-                                        new ControlPoint(Double.Parse(split[0], GameBase.nfi),
-                                                         Double.Parse(split[1], GameBase.nfi),
-                                                         split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
-                                                         (TimeSignatures)Int32.Parse(split[2]),
-                                                         (SampleSet)Int32.Parse(split[3]),
-                                                         split.Length > 4
-                                                             ? (CustomSampleSet)Int32.Parse(split[4])
-                                                             : CustomSampleSet.Default,
-                                                         Int32.Parse(split[5]),
-                                                         split.Length > 6 ? split[6][0] == '1' : true,
-                                                         split.Length > 7 ? split[7][0] == '1' : false));
-                                break;
-                            case FileSection.General:
-                                //todo: reimplement?
-                                switch (key)
                                 {
-                                    //case "AudioFilename":
-                                        //if (val.Length > 0)
-                                            //beatmap.AudioFilename = val;
-                                        //break;
+                                    string[] split = line.Split(',');
+
+                                    if (split.Length > 2)
+                                        beatmap.ControlPoints.Add(
+                                            new ControlPoint(Double.Parse(split[0], GameBase.nfi),
+                                                             Double.Parse(split[1], GameBase.nfi),
+                                                             split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
+                                                             (TimeSignatures)Int32.Parse(split[2]),
+                                                             (SampleSet)Int32.Parse(split[3]),
+                                                             split.Length > 4
+                                                                 ? (CustomSampleSet)Int32.Parse(split[4])
+                                                                 : CustomSampleSet.Default,
+                                                             Int32.Parse(split[5]),
+                                                             split.Length > 6 ? split[6][0] == '1' : true,
+                                                             split.Length > 7 ? split[7][0] == '1' : false));
+                                    break;
                                 }
-                                break;
                             case FileSection.Editor:
                                 switch (key)
                                 {
@@ -172,17 +168,9 @@ namespace osum.GameplayElements
                                         }
                                         break;
                                 }
+
                                 //not relevant
                                 continue;
-                            case FileSection.Colours:
-                                //not implemented yet.
-                                break;
-                            case FileSection.Variables:
-                                //not implemented yet.
-                                break;
-                            case FileSection.Events:
-                                //not implemented yet.
-                                break;
                             case FileSection.Difficulty:
                                 switch (key)
                                 {
@@ -211,6 +199,7 @@ namespace osum.GameplayElements
                                 }
                                 break;
                             case FileSection.HitObjects:
+                                {
                                 if (fn > 0)
                                     continue;
 
@@ -219,6 +208,8 @@ namespace osum.GameplayElements
                                     //ComboColoursReset();
                                     hitObjectPreInit = true;
                                 }
+
+                                string[] split = line.Split(',');
 
                                 int offset = 0;
 
@@ -343,7 +334,7 @@ namespace osum.GameplayElements
                                     Add(h, difficulty);
                                 }
                                 objnumber++;
-
+                                    }
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.
