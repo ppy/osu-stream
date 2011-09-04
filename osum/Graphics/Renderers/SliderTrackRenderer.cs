@@ -170,8 +170,10 @@ namespace osum.Graphics.Renderers
             sheetY = texture.Y;
             sheetHeight = texture.Height;
 
-            sheetStart = (1.0f + sheetX + TEXEL_ORIGIN) / retinaWidth;
-            sheetEnd = (-1.0f + sheetX + texture.Width + TEXEL_ORIGIN - TEXTURE_SHRINKAGE_FACTOR) / retinaWidth;
+            float texel_origin = GameBase.SpriteSheetResolution == 960 ? TEXEL_ORIGIN : 0.375f;
+
+            sheetStart = (2.0f + sheetX + texel_origin) / retinaWidth;
+            sheetEnd = (-3.0f + sheetX + texture.Width + texel_origin - TEXTURE_SHRINKAGE_FACTOR) / retinaWidth;
 
             CalculateCapMesh();
             CalculateQuadMesh();
