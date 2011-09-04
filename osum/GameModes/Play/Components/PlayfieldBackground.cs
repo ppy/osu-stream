@@ -169,22 +169,23 @@ namespace osum.GameModes.Play.Components
             }
         }
 
-        public bool IsDisposed { get; private set; }
-
         public override void Dispose()
         {
-            if (IsDisposed)
-                return;
 #if !NO_PIN_SUPPORT
-            handle_vertices.Free();
-            handle_colours.Free();
+            if (handle_vertices.IsAllocated)
+            {
+                handle_vertices.Free();
+                handle_colours.Free();
+            }
 #else
-            Marshal.FreeHGlobal(handle_colours_pointer);
-            Marshal.FreeHGlobal(handle_vertices_pointer);
+            if (handle_colours_pointer != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(handle_colours_pointer);
+                Marshal.FreeHGlobal(handle_vertices_pointer);
+            }
 #endif
             GameBase.OnScreenLayoutChanged -= initialize;
 
-            IsDisposed = true;
             base.Dispose();
         }
 

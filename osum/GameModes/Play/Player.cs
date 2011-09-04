@@ -300,9 +300,10 @@ namespace osum.GameModes
             if (countdown != null) countdown.Dispose();
             if (GuideFingers != null) GuideFingers.Dispose();
             if (menu != null) menu.Dispose();
+            if (comboCounter != null) comboCounter.Dispose();
             if (touchBurster != null) touchBurster.Dispose();
             if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
-
+            if (playfieldBackground != null) playfieldBackground.Dispose();
             if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
 
             if (progressDisplay != null) progressDisplay.Dispose();

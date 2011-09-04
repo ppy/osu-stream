@@ -51,6 +51,8 @@ namespace osum.GameModes
         SpriteManager layer2 = new SpriteManager();
         SpriteManager topMostLayer = new SpriteManager();
 
+        float offset;
+
         public override void Initialize()
         {
             background =
@@ -376,6 +378,7 @@ namespace osum.GameModes
                     Field = FieldTypes.StandardSnapRight,
                     Origin = OriginTypes.TopRight
                 };
+
                 layer1.Add(playerName);
 
                 //displaying a previous high score (or online high score)
@@ -403,8 +406,6 @@ namespace osum.GameModes
             if (didLoad)
                 AudioEngine.Music.Play();
         }
-
-        float offset;
 
         void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {

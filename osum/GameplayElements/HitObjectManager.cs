@@ -82,6 +82,7 @@ namespace osum.GameplayElements
 
             foreach (SpriteManager sm in streamSpriteManagers)
                 if (sm != null) sm.Dispose();
+            streamSpriteManagers = null;
 
             List<HitObject> objects = ActiveStreamObjects;
             if (objects != null)

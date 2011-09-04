@@ -44,9 +44,10 @@ namespace osum.Resources
             {
                 while (!sw.EndOfStream)
                 {
-                    string[] spl = sw.ReadLine().Split('=');
-                    if (spl.Length != 2) continue;
-                    strings[(OsuString)Enum.Parse(typeof(OsuString), spl[0], false)] = spl[1].Replace("\\n", "\n");
+                    string line = sw.ReadLine();
+                    int index = line.IndexOf('=');
+                    if (index <= 0) continue;
+                    strings[(OsuString)Enum.Parse(typeof(OsuString), line.Remove(index), false)] = line.Substring(index + 1).Replace("\\n", "\n");
                 }
             }
         }

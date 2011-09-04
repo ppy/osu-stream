@@ -819,8 +819,8 @@ namespace osu_common.Libraries.Osz2
                 //if (!raw)
                 //{
                     MapStream ms = new MapStream(fHandle, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
-                    fMapStreamsOpen.Add(ms);
-                    ms.OnStreamClosed += MapStream_OnStreamClosed;
+                    //fMapStreamsOpen.Add(ms);
+                    //ms.OnStreamClosed += MapStream_OnStreamClosed;
                     stream = ms;
                 /*}
                 else
@@ -1436,7 +1436,10 @@ namespace osu_common.Libraries.Osz2
             if (fClosed) return;
 
             if (fMapStreamsOpen != null)
+            {
                 fMapStreamsOpen.ForEach(s => s.Close());
+                fMapStreamsOpen.Clear();
+            }
 
             //if(fSavable)
             //    Save();
