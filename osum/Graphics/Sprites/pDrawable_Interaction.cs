@@ -87,7 +87,7 @@ namespace osum.Graphics.Sprites
             remove { onHoverLost -= value; }
         }
 
-        internal void UnbindAllEvents()
+        internal virtual void UnbindAllEvents()
         {
             onClick = null;
             onHover = null;

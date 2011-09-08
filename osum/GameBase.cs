@@ -51,6 +51,7 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
+using System.Text.RegularExpressions;
 #endif
 
 
@@ -365,23 +366,7 @@ namespace osum
 #endif
             OnlineHelper.Initialize();
 
-            int lastReadNews = GameBase.Config.GetValue<int>("NewsLastRead", 0);
-            StringNetRequest nr = new StringNetRequest(@"http://osustream.com/p/news?check=" + lastReadNews);
-            nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
-            NetManager.AddRequest(nr);
-
             Clock.Start();
-        }
-
-        void newsCheck_onFinish(string _result, Exception e)
-        {
-            if (true)
-            {
-                GameBase.Config.SetValue<int>("NewsLastRead", 0);
-                MainMenu m = Director.CurrentMode as MainMenu;
-                if (m != null)
-                    m.NewsButton.HasNews = true;
-            }
         }
 
         public virtual string DeviceIdentifier
