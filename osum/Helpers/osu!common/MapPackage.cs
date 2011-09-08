@@ -119,7 +119,8 @@ namespace osu_common.Libraries.Osz2
             }
 
             fFilename = filename;
-            fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (!fNotOnDisk)
+                fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             init();
         }

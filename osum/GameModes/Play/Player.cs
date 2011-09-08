@@ -660,20 +660,23 @@ namespace osum.GameModes
             {
                 Completed = true;
 
-                if (Player.Autoplay)
+                if (GameBase.Instance != null) //combinator
                 {
-                    Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
-                }
-                else
-                {
-                    Results.RankableScore = CurrentScore;
-                    Results.RankableScore.UseAccuracyBonus = true;
-
-                    GameBase.Scheduler.Add(delegate
+                    if (Player.Autoplay)
                     {
+                        Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    }
+                    else
+                    {
+                        Results.RankableScore = CurrentScore;
+                        Results.RankableScore.UseAccuracyBonus = true;
 
-                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
-                    }, 500);
+                        GameBase.Scheduler.Add(delegate
+                        {
+
+                            Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                        }, 500);
+                    }
                 }
             }
 
