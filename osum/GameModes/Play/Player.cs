@@ -152,11 +152,16 @@ namespace osum.GameModes
                     return;
                 }
 
-                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
-                    AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
-
                 if (AudioEngine.Music != null)
+                {
                     AudioEngine.Music.Stop(true);
+
+                    if (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)
+                        //could have switched to the results screen bgm.
+                        AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
+                    else
+                        AudioEngine.Music.Prepare();
+                }
 
                 Clock.ModeTimeReset();
 
@@ -189,6 +194,12 @@ namespace osum.GameModes
             spriteManager.Add(s_streamSwitchWarningArrow);
 
             topMostSpriteManager = new SpriteManager();
+
+            Clock.AudioTime = 0;
+            //hack: because seek doesn't update iOS player's internal time correctly.
+            //in theory the Clock.ModeTimeReset() above should handle this.
+
+            Resume(firstObjectTime, 8, true);
         }
 
         protected virtual void initializeUIElements()
@@ -370,8 +381,7 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-            if (firstObjectTime > 0)
-                Resume(firstObjectTime, 8, true);
+            
         }
 
         private void comboPain(bool harsh)
