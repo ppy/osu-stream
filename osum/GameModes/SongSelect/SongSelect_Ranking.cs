@@ -40,6 +40,7 @@ namespace osum.GameModes
             {
                 rankingSpriteManager.Clear();
                 rankingSpriteManager.FadeIn(0);
+                rankingSpriteManager.ScrollTo(0);
             }
             else
             {
