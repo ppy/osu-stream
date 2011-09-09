@@ -468,7 +468,6 @@ namespace osum.GameModes.Store
         public string Filename;
         public string UpdateChecksum;
         public string Title;
-        public string YoutubeId;
 
         public PackItem(string filename, string title, string updateChecksum = null)
         {
