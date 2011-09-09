@@ -199,7 +199,7 @@ namespace osum.GameModes
             }
 
             string username = GameBase.Config.GetValue<string>("username", null);
-            if (username != null)
+            if (!string.IsNullOrEmpty(username))
             {
                 bool hasAuth = GameBase.HasAuth;
                 pText usernameText = new pText(username + (hasAuth ? string.Empty : " (guest)"), 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
