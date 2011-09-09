@@ -236,7 +236,8 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
+                if (!ActiveTransition.FadeOutDone)
+                    AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
 
                 if (ActiveTransition.FadeOutDone)
                 {
