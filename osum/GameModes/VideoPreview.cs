@@ -16,6 +16,7 @@ using osu_common.Libraries.NetLib;
 using System.IO;
 using osum.Graphics.Drawables;
 using osum.GameModes.SongSelect;
+using osum.Resources;
 
 namespace osum.GameModes
 {
@@ -81,7 +82,16 @@ namespace osum.GameModes
 
                 downloadProgress = 1;
 
-                Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                bool success = true;
+
+                try
+                {
+                    Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                }
+                catch
+                {
+                    success = false;
+                }
 
                 GameBase.ShowLoadingOverlay = false;
                 DownloadComplete = true;
@@ -89,10 +99,17 @@ namespace osum.GameModes
                 loadingBackground.FadeOut(1000);
                 songInfoSpriteManager.FadeInFromZero(400);
 
-                ShowMetadata();
+                if (success)
+                {
+                    ShowMetadata();
 
-                Player.Autoplay = true;
-                Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+                    Player.Autoplay = true;
+                    Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+                }
+                else
+                {
+                    GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed), delegate { Director.ChangeMode(OsuMode.Store); });
+                }
             });
         }
 
