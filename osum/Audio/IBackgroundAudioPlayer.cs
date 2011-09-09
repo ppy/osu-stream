@@ -81,6 +81,15 @@ namespace osum
         public abstract bool Unload();
 
         /// <summary>
+        /// Buffers the audio ready for low-latency play() operations.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool Prepare()
+        {
+            return true;
+        }
+
+        /// <summary>
         /// Plays the loaded audio.
         /// </summary>
         /// <returns></returns>
