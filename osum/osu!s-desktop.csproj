@@ -236,8 +236,8 @@
     </Content>
     <Content Include="Localisation\ko.txt" />
     <Content Include="Localisation\th.txt" />
-    <Content Include="Localisation\zh-cn.txt" />
-    <Content Include="Localisation\zh-tw.txt" />
+    <Content Include="Localisation\zh-CHS.txt" />
+    <Content Include="Localisation\zh-CHT.txt" />
     <Content Include="Skins\Default\buttontap.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

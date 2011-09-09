@@ -387,5 +387,6 @@
     <Content Include="Localisation\zh-CHS.txt" />
     <Content Include="Localisation\zh-CHT.txt" />
     <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
+    <Content Include="Beatmaps\SkyMarshall - Hitchhikers (Gens).osf2" />
   </ItemGroup>
 </Project>
