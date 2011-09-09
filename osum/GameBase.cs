@@ -537,7 +537,7 @@ namespace osum
         internal static int SpriteSheetResolution;
         public static float InputToFixedWidthAlign;
         public static float SpriteToBaseRatioAligned;
-        public static bool HasAuth { get { return GameBase.Config.GetValue<string>("hash", null) != null; } }
+        public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }
 
         internal static void Notify(string simple, BoolDelegate action = null)
         {
