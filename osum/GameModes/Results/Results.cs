@@ -365,6 +365,9 @@ namespace osum.GameModes
                 {
                     spriteSubmitting.AlwaysDraw = false;
                     spriteSubmitting.FadeOut(100);
+
+                    if (e == null && result.StartsWith("message:"))
+                        GameBase.Notify(new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay));
                 };
                 NetManager.AddRequest(nr);
 
