@@ -260,6 +260,8 @@ namespace osum.GameModes
 
             if (isNewDifficulty)
             {
+                AudioEngine.PlaySample(OsuSamples.ButtonTap);
+
                 string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
@@ -298,8 +300,6 @@ namespace osum.GameModes
 
             if (State == SelectState.Starting) return;
 
-            AudioEngine.PlaySample(OsuSamples.ButtonTap);
-
             switch (Player.Difficulty)
             {
                 case Difficulty.Normal:
@@ -314,8 +314,6 @@ namespace osum.GameModes
         void onSelectNextMode(object sender, EventArgs e)
         {
             if (State == SelectState.Starting) return;
-
-            AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
             switch (Player.Difficulty)
             {
