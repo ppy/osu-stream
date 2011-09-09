@@ -236,7 +236,7 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                AudioEngine.Music.DimmableVolume = 0.3f + Director.ActiveTransition.CurrentValue * 0.7f;
+                AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
 
                 if (ActiveTransition.FadeOutDone)
                 {
@@ -257,6 +257,12 @@ namespace osum
                 SpriteManager.UniversalDim = Math.Min(0.8f, SpriteManager.UniversalDim + 0.06f);
             else
                 SpriteManager.UniversalDim = 0;
+
+            //audio dimming
+            if (SpriteManager.UniversalDim > 0)
+                AudioEngine.Music.DimmableVolume = Math.Min(1 - SpriteManager.UniversalDim * 0.8f, AudioEngine.Music.DimmableVolume);
+            if (AudioEngine.Music.DimmableVolume < 1)
+                AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
 
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.

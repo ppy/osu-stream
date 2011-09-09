@@ -431,23 +431,6 @@ namespace osum.GameModes
                     }
                     break;
             }
-
-            //handle audio adjustments
-            switch (State)
-            {
-                case SelectState.LoadingPreview:
-                    if (AudioEngine.Music.DimmableVolume > 0)
-                        AudioEngine.Music.DimmableVolume = Math.Max(0.5f, AudioEngine.Music.DimmableVolume * 0.97f);
-                    break;
-                case SelectState.RankingDisplay:
-                case SelectState.DifficultySelect:
-                case SelectState.SongSelect:
-                    if (AudioEngine.Music.DimmableVolume < 1)
-                        AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
-                    break;
-                default:
-                    break;
-            }
         }
     }
 
