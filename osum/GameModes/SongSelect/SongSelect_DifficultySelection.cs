@@ -43,7 +43,6 @@ namespace osum.GameModes
             get
             {
 #if !DIST
-
                 return false;
 #else
                 DifficultyScoreInfo sc = Player.Beatmap.BeatmapInfo.DifficultyScores[Difficulty.Normal];
