@@ -364,9 +364,20 @@ namespace osum.GameModes
                 nr.onFinish += delegate(string result, Exception e)
                 {
                     spriteSubmitting.AlwaysDraw = false;
-                    spriteSubmitting.FadeOut(100);
+                    if (e == null)
+                    {
+                        spriteSubmitting.FadeOut(200);
+                        spriteSubmitting.ScaleTo(3, 200);
+                        spriteSubmitting.Colour = Color4.YellowGreen;
+                    }
+                    else
+                    {
+                        spriteSubmitting.FadeOut(1000);
+                        spriteSubmitting.ScaleTo(1.2f, 200, EasingTypes.In);
+                        spriteSubmitting.Colour = Color4.Red;
+                    }
 
-                    if (e == null && result.StartsWith("message:"))
+                    if (e == null && result != null && result.StartsWith("message:"))
                         GameBase.Notify(new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay));
                 };
                 NetManager.AddRequest(nr);
@@ -375,14 +386,17 @@ namespace osum.GameModes
             }
             else
             {
-                pText playerName = new pText("Played by " + RankableScore.Username, 30, new Vector2(10, fill_height + 5), 0.5f, true, new Color4(235,199,0,255))
+                if (!string.IsNullOrEmpty(RankableScore.Username))
                 {
-                    TextShadow = true,
-                    Field = FieldTypes.StandardSnapRight,
-                    Origin = OriginTypes.TopRight
-                };
+                    pText playerName = new pText("Played by " + RankableScore.Username, 30, new Vector2(10, fill_height + 5), 0.5f, true, new Color4(235, 199, 0, 255))
+                    {
+                        TextShadow = true,
+                        Field = FieldTypes.StandardSnapRight,
+                        Origin = OriginTypes.TopRight
+                    };
 
-                layer1.Add(playerName);
+                    layer1.Add(playerName);
+                }
 
                 //displaying a previous high score (or online high score)
                 finishDisplaying();
