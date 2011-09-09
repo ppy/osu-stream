@@ -183,7 +183,7 @@ namespace osum.GameModes.Options
             }
             else
             {
-                button = new pButton(string.Format("",GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                button = new pButton(string.Format(LocalisationManager.GetString(OsuString.TwitterUnlink),GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
                         + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash",null));
