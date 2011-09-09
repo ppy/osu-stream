@@ -333,7 +333,7 @@ namespace osum.GameModes.Store
         internal void AddItem(PackItem item)
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-            preview.Offset = new Vector2(38, ExpandedHeight + 20);
+            preview.Offset = new Vector2(28, ExpandedHeight + 20);
 
             Sprites.Add(preview);
             PackItemSprites.Add(preview);
@@ -407,7 +407,7 @@ namespace osum.GameModes.Store
 
             string artistString;
             string titleString;
-            float textOffset = 80;
+            float textOffset = 50;
 
             if (item.Title == null)
             {
@@ -424,11 +424,16 @@ namespace osum.GameModes.Store
                 titleString = item.Title.Substring(item.Title.IndexOf('-') + 1).Trim();
             }
 
-            textOffset += 40;
-            pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-            videoPreview.Offset = new Vector2(78, ExpandedHeight + 20);
+            pSprite videoPreview = new pSprite(TextureManager.Load(OsuTexture.songselect_video), Vector2.Zero)
+            {
+                DrawDepth = base_depth + 0.02f,
+                Field = FieldTypes.StandardSnapRight,
+                Origin = OriginTypes.CentreRight
+            };
+            videoPreview.Offset = new Vector2(10, ExpandedHeight + 20);
             videoPreview.OnClick += delegate
             {
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
                 StoreMode.ResetAllPreviews(true);
                 VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
                 Director.ChangeMode(OsuMode.VideoPreview, true);
