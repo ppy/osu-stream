@@ -27,7 +27,7 @@ namespace osum.GameModes.Options
             "*Implementation",
             "peppy - Most stuff?",
             "Intermezzo - Android platform deployment, package file format, encryption",
-            "Greg \"mm201\" Edwards - Slider perfection, gameplay mechanic tweaking",
+            "Greg \"mm201\" Edwards - Slider perfection, gameplay mechanic tweaking, hit sample augments",
             "Echo49 - package file format, engine upgrades, general tweaking",
             "*Game Audio",
             "Jamie \"nekodex\" Taylor - osu!stream theme music, results screen sfx",
@@ -247,8 +247,8 @@ namespace osum.GameModes.Options
         int lastBeatNoLoop;
         public override void Update()
         {
-            int currentBeat = (int)((Clock.AudioTime - 110) / (beatLength / 4f)) % 16;
-            int currentBeatNoLoop = (int)((Clock.AudioTime - 110) / (beatLength / 4f));
+            int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;
+            int currentBeatNoLoop = (int)((Clock.AudioTime) / (beatLength / 4f));
 
             topMostSpriteManager.Update();
 
@@ -310,6 +310,10 @@ namespace osum.GameModes.Options
 
             playfieldBackground.Velocity = 0.4f * incrementalSpeed;
             base.Update();
+        }
+
+        protected override void UpdateStream()
+        {
         }
     }
 }
