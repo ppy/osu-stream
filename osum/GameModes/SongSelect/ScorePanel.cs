@@ -43,6 +43,9 @@ namespace osum.GameModes.SongSelect
                 Tag = this
             };
 
+            s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(new Color4(83, 156, 224, 80), 100); };
+            s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(new Color4(0, 0, 0, 40), 100); };
+
             Sprites.Add(s_BackingPlate);
 
             if (action != null)
