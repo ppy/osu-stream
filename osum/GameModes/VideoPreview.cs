@@ -144,10 +144,6 @@ namespace osum.GameModes
 
         private void ShowMetadata()
         {
-            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
-            AudioEngine.Music.Play();
-            AudioEngine.Music.DimmableVolume = 0;
-
             //song info
 
             songInfoSpriteManager.Position = new Vector2(20, 0);
