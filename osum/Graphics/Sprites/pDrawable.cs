@@ -560,6 +560,12 @@ namespace osum.Graphics.Sprites
             if (finalAlpha - Alpha < float.Epsilon)
                 return;
 
+            if (duration == 0)
+            {
+                Alpha = finalAlpha;
+                return;
+            }
+
             int now = ClockingNow;
             Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
         }
@@ -585,10 +591,18 @@ namespace osum.Graphics.Sprites
                     return;
             }
 
+            
+
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             if (Alpha - finalAlpha < float.Epsilon)
                 return;
+
+            if (duration == 0)
+            {
+                Alpha = finalAlpha;
+                return;
+            }
 
             int now = ClockingNow;
             Transform(new TransformationF(TransformationType.Fade, Alpha, finalAlpha, now, now + duration));
