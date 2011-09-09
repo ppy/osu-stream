@@ -266,15 +266,18 @@ namespace osum.GameModes
         /// <param name="beats">How many beats we should count in.</param>
         internal void Resume(int startTime, int beats, bool forceCountdown = false)
         {
-            double beatLength = Beatmap.beatLengthAt(startTime);
-
-            int countdownStartTime;
-            if (!countdown.HasFinished)
-                countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
-            else
+            if (Beatmap != null)
             {
-                countdown.SetStartTime(startTime, beatLength);
-                countdownStartTime = startTime - (int)(beatLength * beats);
+                double beatLength = Beatmap.beatLengthAt(startTime);
+
+                int countdownStartTime;
+                if (!countdown.HasFinished)
+                    countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
+                else
+                {
+                    countdown.SetStartTime(startTime, beatLength);
+                    countdownStartTime = startTime - (int)(beatLength * beats);
+                }
             }
 
             if (AudioEngine.Music != null)
