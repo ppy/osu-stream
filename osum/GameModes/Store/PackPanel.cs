@@ -263,6 +263,7 @@ namespace osum.GameModes.Store
             fnr.onFinish += delegate
             {
                 BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
+                BeatmapDatabase.Write();
 
                 back.FadeColour(Color4.LimeGreen, 500);
 
