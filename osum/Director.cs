@@ -129,6 +129,8 @@ namespace osum
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
             GameBase.ShowLoadingOverlay = false;
 
+            AudioDimming = true;
+
             LastOsuMode = CurrentOsuMode; //the case for the main menu on first load.
 
             if (restored)
@@ -214,6 +216,8 @@ namespace osum
         static bool modeChangePending;
         private static GameMode PendingMode;
 
+        public static bool AudioDimming = true;
+
 
         /// <summary>
         /// Updates the director, along with current game mode.
@@ -236,7 +240,7 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                if (!ActiveTransition.FadeOutDone)
+                if (AudioDimming && !ActiveTransition.FadeOutDone)
                     AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
 
                 if (ActiveTransition.FadeOutDone)
@@ -260,10 +264,13 @@ namespace osum
                 SpriteManager.UniversalDim = 0;
 
             //audio dimming
-            if (SpriteManager.UniversalDim > 0)
-                AudioEngine.Music.DimmableVolume = Math.Min(1 - SpriteManager.UniversalDim * 0.8f, AudioEngine.Music.DimmableVolume);
-            if (AudioEngine.Music.DimmableVolume < 1)
-                AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
+            if (AudioDimming)
+            {
+                if (SpriteManager.UniversalDim > 0)
+                    AudioEngine.Music.DimmableVolume = Math.Min(1 - SpriteManager.UniversalDim * 0.8f, AudioEngine.Music.DimmableVolume);
+                if (AudioEngine.Music.DimmableVolume < 1)
+                    AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
+            }
 
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.

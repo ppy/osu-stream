@@ -616,6 +616,8 @@ namespace osum.GameModes
             {
                 if (AudioEngine.Music != null)
                 {
+                    Director.AudioDimming = false;
+
                     float vol = AudioEngine.Music.DimmableVolume;
                     if (vol == 0 && isElapsing)
                         AudioEngine.Music.Pause();
