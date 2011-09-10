@@ -119,6 +119,7 @@ namespace osum.GameModes
             s_Header.Transform(new TransformationV(s_Header.Position, new Vector2(0, -63), Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
             s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0.03f, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
 
+            s_Footer.Transformations.Clear();
             s_Footer.Transform(new TransformationV(s_Footer.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
             s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0, Clock.ModeTime, Clock.ModeTime + animationTime, EasingTypes.In));
             s_Footer.Alpha = 1;
