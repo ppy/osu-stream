@@ -118,6 +118,8 @@ namespace osum.GameModes
             }
 
             GameBase.ShowLoadingOverlay = false;
+
+            rankingSpriteManager.FadeInFromZero(300);
         }
 
         void onScoreClicked(object sender, EventArgs args)
