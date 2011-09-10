@@ -84,7 +84,7 @@ namespace osum.GameModes.SongSelect
 
             pTexture thumb = null;
             
-            int starCount = 0;
+            float starCount = 0;
 
             if (beatmap != null)
             {
@@ -93,7 +93,7 @@ namespace osum.GameModes.SongSelect
                     s_Text.Text = beatmap.Title;
                     s_TextArtist.Text = beatmap.Artist;
                     if (s_TextCreator != null) s_TextCreator.Text = beatmap.Creator;
-                    starCount = (int)beatmap.DifficultyStars;
+                    starCount = beatmap.DifficultyStars / 2f;
                 }
                 catch
                 {
@@ -143,6 +143,9 @@ namespace osum.GameModes.SongSelect
                     };
                     Sprites.Add(s_Star);
                 }
+
+                if (starCount % 1 != 0)
+                    s_Star.DrawWidth /= 2;
 
                 BeatmapInfo info = Beatmap.BeatmapInfo;
 
