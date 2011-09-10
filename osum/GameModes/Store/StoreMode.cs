@@ -199,7 +199,7 @@ namespace osum.GameModes.Store
             GameBase.ShowLoadingOverlay = false;
 
             if (packs.Count == 0)
-                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
         }
 
         void AddPack(PackPanel pp)
@@ -305,7 +305,7 @@ namespace osum.GameModes.Store
             instance.RemovePack(pp);
 
             if (instance.packs.Count == 0)
-                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
                 instance.s_ButtonBack.FadeIn(100);
