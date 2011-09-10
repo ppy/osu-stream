@@ -42,7 +42,7 @@ namespace osum.UI
             };
             Add(s_Text);
 
-            s_BackingPlate.OnClick += new EventHandler(SliderControl_OnClick);
+            s_BackingPlate.OnClick += SliderControl_OnClick;
 
             UpdateValue(initialValue);
         }
@@ -56,16 +56,23 @@ namespace osum.UI
             wasClicked = true;
         }
 
+        TrackingPoint trackingPoint;
+
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            if (wasClicked) return; //already tracking
+
             base.HandleInputManagerOnDown(source, trackingPoint);
+
+            if (wasClicked)
+                this.trackingPoint = trackingPoint.originalTrackingPoint;
 
             UpdatePosition(trackingPoint);
         }
 
         private void UpdatePosition(TrackingPoint trackingPoint)
         {
-            if (wasClicked)
+            if (trackingPoint.originalTrackingPoint == this.trackingPoint)
             {
                 Box2 displayRect = s_BackingPlate.DisplayRectangle;
                 float fill = pMathHelper.ClampToOne((trackingPoint.BasePosition.X - displayRect.Left) / displayRect.Width);
@@ -91,7 +98,11 @@ namespace osum.UI
 
         internal override void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
         {
-            wasClicked = false;
+            if (trackingPoint.originalTrackingPoint == this.trackingPoint)
+            {
+                wasClicked = false;
+                this.trackingPoint = null;
+            }
 
             base.HandleOnUp(source, trackingPoint);
         }
