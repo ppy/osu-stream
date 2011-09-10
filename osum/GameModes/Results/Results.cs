@@ -388,12 +388,14 @@ namespace osum.GameModes
             {
                 if (!string.IsNullOrEmpty(RankableScore.Username))
                 {
-                    pText playerName = new pText("Played by " + RankableScore.Username, 30, new Vector2(10, fill_height + 5), 0.5f, true, new Color4(235, 199, 0, 255))
+                    pText playerName = new pText("Played by " + RankableScore.Username, 30, new Vector2(10, 10), 0.5f, true, new Color4(255, 234, 0, 255))
                     {
                         TextShadow = true,
-                        Field = FieldTypes.StandardSnapRight,
-                        Origin = OriginTypes.TopRight
+                        Field = FieldTypes.StandardSnapBottomRight,
+                        Origin = OriginTypes.BottomRight
                     };
+
+                    s_Footer.Bypass = true; //don't show footer. we need this room!
 
                     layer1.Add(playerName);
                 }
