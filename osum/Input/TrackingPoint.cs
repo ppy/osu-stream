@@ -32,6 +32,8 @@ namespace osum
         
         public object HoveringObject;
 
+        public TrackingPoint originalTrackingPoint;
+
         /// <summary>
         /// Each frame this will be set to false, and set to true when the previously hovering object
         /// is confirmed to still be the "highest" hovering object.
@@ -50,6 +52,7 @@ namespace osum
         {
             Location = location;
             WindowDelta = Vector2.Zero; //no delta on first ctor.
+            originalTrackingPoint = this;
         }
 
         public Vector2 BasePosition;
@@ -79,7 +82,9 @@ namespace osum
 
         public object Clone()
         {
-            return MemberwiseClone();
+            TrackingPoint clone = MemberwiseClone() as TrackingPoint;
+            clone.originalTrackingPoint = originalTrackingPoint;
+            return clone;
         }
 
         #endregion
