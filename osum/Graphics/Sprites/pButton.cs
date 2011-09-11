@@ -77,6 +77,9 @@ namespace osum.GameModes.SongSelect
                 DrawDepth = base_depth + 0.005f,
                 Bypass = true,
             };
+
+            s_Status.OnClick += s_BackingPlate_OnClick;
+
             Sprites.Add(s_Status);
         }
 
