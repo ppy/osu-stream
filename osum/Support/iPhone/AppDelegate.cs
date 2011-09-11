@@ -144,13 +144,13 @@ namespace osum.Support.iPhone
 
             if (!Director.IsTransitioning)
             {
-                TextureManager.PurgeUnusedTexture();
+                //TextureManager.PurgeUnusedTexture();
                 GC.Collect();
             }
-            else
+            /*else
             {
                 GameBase.Scheduler.Add(delegate { ReceiveMemoryWarning(application); }, 500);
-            }
+            }*/
         }
 
         public static UIViewController ViewController;
