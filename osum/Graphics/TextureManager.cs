@@ -535,6 +535,8 @@ namespace osum.Graphics.Skins
         news_light,
         news_button,
         store_header,
-        songselect_video
+        songselect_video,
+        notification_button_toggle,
+        options_header
     }
 }
