@@ -347,10 +347,7 @@ namespace osum.Graphics.Sprites
                     }
 
                     if (!exactCoordinatesOverride)
-                    {
-                        x = (int)x;
                         if (x % 2 != 0) x++;
-                    }
 
                     renderCoordinates[i] = x;
                 }
