@@ -537,6 +537,15 @@ namespace osum.Graphics.Skins
         store_header,
         songselect_video,
         notification_button_toggle,
-        options_header
+        options_header,
+        songselect_star_half,
+        rank_x_tiny,
+        rank_s_tiny,
+        rank_a_tiny,
+        rank_b_tiny,
+        rank_c_tiny,
+        rank_d_tiny,
+        difficulty_bar_bg,
+        difficulty_bar_colour
     }
 }

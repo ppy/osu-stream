@@ -34,6 +34,7 @@ namespace osum.GameModes.SongSelect
         internal const int PANEL_HEIGHT = 60;
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
         private pSprite s_Star;
+        private pSprite s_StarBg;
 
         internal BeatmapPanel(Beatmap beatmap, EventHandler action, int index)
         {
@@ -79,7 +80,7 @@ namespace osum.GameModes.SongSelect
             s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
             s_TextCreator.Origin = OriginTypes.TopRight;
             s_TextCreator.Field = FieldTypes.StandardSnapRight;
-            Sprites.Add(s_TextCreator);
+            //Sprites.Add(s_TextCreator);
 #endif
 
             pTexture thumb = null;
@@ -122,32 +123,76 @@ namespace osum.GameModes.SongSelect
 
             Sprites.Add(s_BackingPlate2);
 
-
             if (beatmap != null)
             {
-                Color4 col = Color4.YellowGreen;
-                if (starCount > 4)
-                    col = Color4.Red;
-                else if (starCount > 2)
-                    col = Color4.BlueViolet;
-
-                for (int i = 0; i < starCount; i++)
+#if oldstars
+                for (int i = 0; i < 0; i++)
                 {
+                    Color4 col;
+
+                    switch (i)
+                    {
+                        default:
+                        case 0:
+                            col = new Color4(180, 255, 0, 255);
+                            break;
+                        case 1:
+                            col = new Color4(230, 255, 0, 255);
+                            break;
+                        case 2:
+                            col = new Color4(255, 198, 0, 255);
+                            break;
+                        case 3:
+                            col = new Color4(255, 126, 0, 255);
+                            break;
+                        case 4:
+                            col = new Color4(255, 12, 0, 255);
+                            break;
+                    }
+
                     s_Star = new pSprite(TextureManager.Load(OsuTexture.songselect_star), Vector2.Zero)
                     {
-                        Origin = OriginTypes.BottomCentre,
-                        Field = FieldTypes.StandardSnapTopCentre,
-                        DrawDepth = base_depth + 0.06f,
+                        Origin = OriginTypes.BottomLeft,
+                        Field = FieldTypes.StandardSnapRight,
+                        ScaleScalar = 0.5f,
+                        DrawDepth = base_depth + 0.06f + i * 0.001f,
                         Colour = col,
-                        Offset = new Vector2(-(15 * starCount / 2f) + i * 15, PANEL_HEIGHT)
+                        Offset = new Vector2(124 - i * 18, PANEL_HEIGHT)
                     };
                     Sprites.Add(s_Star);
                 }
 
                 if (starCount % 1 != 0)
-                    s_Star.DrawWidth /= 2;
+                    s_Star.Texture = TextureManager.Load(OsuTexture.songselect_star_half);
+#else
+                s_StarBg = new pSprite(TextureManager.Load(OsuTexture.difficulty_bar_bg), Vector2.Zero)
+                {
+                    Origin = OriginTypes.BottomLeft,
+                    Field = FieldTypes.StandardSnapRight,
+                    DrawDepth = base_depth + 0.06f,
+                    Offset = new Vector2(174, PANEL_HEIGHT)
+                };
+                Sprites.Add(s_StarBg);
+
+                s_Star = new pSprite(TextureManager.Load(OsuTexture.difficulty_bar_colour), Vector2.Zero)
+                {
+                    Origin = OriginTypes.BottomLeft,
+                    Field = FieldTypes.StandardSnapRight,
+                    DrawDepth = base_depth + 0.07f,
+                    Offset = new Vector2(174, PANEL_HEIGHT)
+                };
+
+                s_Star.DrawWidth = (int)(50 * starCount) + (starCount == 5 ? 2 : 1);
+
+                Sprites.Add(s_Star);
+#endif
 
                 BeatmapInfo info = Beatmap.BeatmapInfo;
+
+                info.DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
+                info.DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
+                info.DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
+
 
                 foreach (DifficultyScoreInfo diffInfo in info.DifficultyScores.Values)
                 {
@@ -157,22 +202,22 @@ namespace osum.GameModes.SongSelect
                         switch (diffInfo.difficulty)
                         {
                             case Difficulty.Easy:
-                                offset = 150;
-                                break;
-                            case Difficulty.Normal:
                                 offset = 90;
                                 break;
+                            case Difficulty.Normal:
+                                offset = 50;
+                                break;
                             case Difficulty.Expert:
-                                offset = 30;
+                                offset = 10;
                                 break;
                         }
 
-                        pSprite rankingSprite = new pSprite(diffInfo.HighScore.RankingTextureSmall, Vector2.Zero)
+                        pSprite rankingSprite = new pSprite(diffInfo.HighScore.RankingTextureTiny, Vector2.Zero)
                         {
-                            Origin = OriginTypes.Centre,
+                            Origin = OriginTypes.TopRight,
                             Field = FieldTypes.StandardSnapRight,
-                            DrawDepth = base_depth + 0.06f,
-                            Offset = new Vector2(offset, PANEL_HEIGHT / 2)
+                            DrawDepth = base_depth + 0.08f,
+                            Offset = new Vector2(offset, 2)
                         };
                         Sprites.Add(rankingSprite);
                         rankSprites.Add(rankingSprite);
@@ -196,12 +241,16 @@ namespace osum.GameModes.SongSelect
         {
             foreach (pDrawable p in rankSprites)
                 p.FadeOut(instant ? 0 : 300);
+            s_StarBg.FadeOut(instant ? 0 : 300);
+            s_Star.FadeOut(instant ? 0 : 300);
         }
 
         internal void ShowRankings()
         {
             foreach (pDrawable p in rankSprites)
                 p.FadeIn(200);
+            s_StarBg.FadeIn(200);
+            s_Star.FadeIn(200);
         }
     }
 }
