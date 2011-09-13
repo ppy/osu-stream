@@ -100,6 +100,9 @@ namespace osum.GameplayElements.Beatmaps
             {
                 string deviceId = GameBase.Instance.DeviceIdentifier;
                 string str = (char)0x6f + Path.GetFileName(ContainerFilename) + (char)0x73 + deviceId.Substring(0, 2) + (char)0x75 + deviceId.Substring(2) + (char)0x6d;
+#if DEBUG
+                Console.WriteLine("key: " + str);
+#endif
                 return CryptoHelper.GetMd5ByteArrayString(str);
             }
         }
