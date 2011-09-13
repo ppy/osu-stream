@@ -251,10 +251,10 @@ namespace osum.GameModes.Store
             string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
             string downloadPath = "http://www.osustream.com/dl/download.php";
-            string param = "filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+            string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
             if (item.UpdateChecksum != null)
                 param += "&update=" + item.UpdateChecksum;
-#if !DIST
+#if DEBUG
             Console.WriteLine("Downloading " + downloadPath);
             Console.WriteLine("param " + param);
 #endif
@@ -264,6 +264,8 @@ namespace osum.GameModes.Store
             {
                 BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
                 BeatmapDatabase.Write();
+
+                SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.
 
                 back.FadeColour(Color4.LimeGreen, 500);
 
@@ -368,7 +370,7 @@ namespace osum.GameModes.Store
                     previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
-                string param = "filename=" + PackId + " - " + s_Text.Text + "/" + item.Filename + "&format=" + PREFERRED_FORMAT;
+                string param = "pack=" + PackId + "&filename=" + item.Filename + "&format=" + PREFERRED_FORMAT;
                 previewRequest = new DataNetRequest(downloadPath, "POST", param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {
@@ -463,7 +465,7 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                 StoreMode.ResetAllPreviews(true);
-                VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?filename=" + PackId + " - " + s_Text.Text + "/" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
+                VideoPreview.DownloadLink = "http://www.osustream.com/dl/download.php?pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
                 Director.ChangeMode(OsuMode.VideoPreview, true);
             };
 

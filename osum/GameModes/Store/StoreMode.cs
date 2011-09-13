@@ -167,7 +167,11 @@ namespace osum.GameModes.Store
                     {
                         if (b.Package != null)
                         {
+#if DEBUG
+                            Console.WriteLine("loaded package");
+#endif
                             string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
+
                             if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
                                 continue;
 
