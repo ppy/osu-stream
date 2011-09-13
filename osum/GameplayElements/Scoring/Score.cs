@@ -46,6 +46,8 @@ namespace osum.GameplayElements.Scoring
         public const int MAX_SCORE = 1000000;
         public bool guest;
 
+        public int OnlineRank;
+
         public Rank Ranking
         {
             get
@@ -123,6 +125,38 @@ namespace osum.GameplayElements.Scoring
                         break;
                     case Rank.D:
                         rankLetter = TextureManager.Load(OsuTexture.rank_d_small);
+                        break;
+                }
+
+                return rankLetter;
+            }
+        }
+
+        public pTexture RankingTextureTiny
+        {
+            get
+            {
+                pTexture rankLetter = null;
+
+                switch (Ranking)
+                {
+                    case Rank.SS:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_x_tiny);
+                        break;
+                    case Rank.S:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_s_tiny);
+                        break;
+                    case Rank.A:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_a_tiny);
+                        break;
+                    case Rank.B:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_b_tiny);
+                        break;
+                    case Rank.C:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_c_tiny);
+                        break;
+                    case Rank.D:
+                        rankLetter = TextureManager.Load(OsuTexture.rank_d_tiny);
                         break;
                 }
 
