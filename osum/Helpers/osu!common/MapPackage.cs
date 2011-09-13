@@ -101,7 +101,17 @@ namespace osu_common.Libraries.Osz2
         {
             fHandle = stream;
 
-            init(metadataOnly);
+            try {
+                init(metadataOnly);
+            }
+            catch (Exception e)
+            {
+#if DEBUG
+                Console.WriteLine("error in package: " + e);
+#endif
+                Close();
+                throw;
+            }
         }
 
         /// <summary>
@@ -118,11 +128,24 @@ namespace osu_common.Libraries.Osz2
                 throw new IOException("File does not exist ("+filename+").");
             }
 
-            fFilename = filename;
-            if (!fNotOnDisk)
-                fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (key != null)
+                k = key;
 
-            init();
+            try {
+                fFilename = filename;
+                if (!fNotOnDisk)
+                    fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+                init();
+            }
+            catch (Exception e)
+            {
+#if DEBUG
+                Console.WriteLine("error in package: " + e);
+#endif
+                Close();
+                throw;
+            }
         }
 
         private void init(bool metadataOnly = false)
