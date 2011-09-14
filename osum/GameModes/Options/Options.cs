@@ -26,10 +26,16 @@ namespace osum.GameModes.Options
         private SliderControl soundEffectSlider;
 
 
+        SpriteManager topMostSpriteManager = new SpriteManager();
+
         static float scroll;
 
         public override void Initialize()
         {
+            s_Header = new pSprite(TextureManager.Load(OsuTexture.options_header), new Vector2(0, 0));
+            s_Header.OnClick += delegate { };
+            topMostSpriteManager.Add(s_Header);
+
             pDrawable background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
@@ -46,7 +52,7 @@ namespace osum.GameModes.Options
 
             int button_x_offset = GameBase.BaseSize.Width / 2;
 
-            int vPos = 10;
+            int vPos = 70;
 
             pText text = new pText(LocalisationManager.GetString(OsuString.About), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
@@ -96,7 +102,7 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset - 15, vPos),
                 delegate(float v)
                 {
                     AudioEngine.Effect.Volume = v;
@@ -123,7 +129,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset - 15, vPos),
                 delegate(float v) { AudioEngine.Music.MaxVolume = v; });
             smd.Add(soundEffectSlider);
 
@@ -183,7 +189,7 @@ namespace osum.GameModes.Options
             }
             else
             {
-                button = new pButton(string.Format("",GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                button = new pButton(string.Format(LocalisationManager.GetString(OsuString.TwitterUnlink),GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
                         + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash",null));
@@ -221,6 +227,7 @@ namespace osum.GameModes.Options
         int lastEffectSound;
         private pButton buttonFingerGuides;
         private pButton buttonEasyMode;
+        private pSprite s_Header;
 
         internal static void DisplayFingerGuideDialog()
         {
@@ -264,6 +271,8 @@ namespace osum.GameModes.Options
             GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
             GameBase.Config.SaveConfig();
 
+            topMostSpriteManager.Dispose();
+
             smd.Dispose();
             base.Dispose();
         }
@@ -272,6 +281,7 @@ namespace osum.GameModes.Options
         {
             base.Draw();
             smd.Draw();
+            topMostSpriteManager.Draw();
             return true;
         }
 
@@ -279,6 +289,7 @@ namespace osum.GameModes.Options
         {
             smd.Update();
             base.Update();
+            topMostSpriteManager.Update();
         }
     }
 }

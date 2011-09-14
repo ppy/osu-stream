@@ -133,9 +133,6 @@ namespace osum.GameModes
 
             NewsButton = new NewsButton();
             spriteManager.Add(NewsButton);
-            NewsButton.OnClick += new EventHandler(newsButton_OnClick);
-            if (GameBase.Config.GetValue<int>("NewsLastRead", 0) == 0)
-                NewsButton.HasNews = true;
             NewsButton.Alpha = 0;
 
             menuBackgroundNew.Transform(fadeIn);
@@ -202,7 +199,7 @@ namespace osum.GameModes
             }
 
             string username = GameBase.Config.GetValue<string>("username", null);
-            if (username != null)
+            if (!string.IsNullOrEmpty(username) && username != "Guest")
             {
                 bool hasAuth = GameBase.HasAuth;
                 pText usernameText = new pText(username + (hasAuth ? string.Empty : " (guest)"), 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
@@ -217,16 +214,6 @@ namespace osum.GameModes
             }
 
             firstDisplay = false;
-        }
-
-        void newsButton_OnClick(object sender, EventArgs e)
-        {
-            int time = UnixTimestamp.FromDateTime(DateTime.Now);
-
-            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news", "News");
-            GameBase.Config.SetValue<int>("NewsLastRead", time);
-
-            NewsButton.HasNews = false;
         }
 
         void osuLogo_OnClick(object sender, EventArgs e)

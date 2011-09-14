@@ -110,6 +110,8 @@ namespace osum
                 Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200, 400));
             }
 
+            GameBase.Config.SaveConfig();
+
             base.OnClosing(e);
         }
 

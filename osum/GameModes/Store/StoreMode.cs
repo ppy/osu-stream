@@ -156,7 +156,7 @@ namespace osum.GameModes.Store
                 string checksum = split[1];
                 string revision = length > 3 ? split[3] : "1.0";
                 string title = length > 2 ? split[2] : null;
-                string youtubeId = length > 4 ? split[4] : null;
+                //string youtubeId = length > 4 ? split[4] : null;
                 string updateChecksum = null;
 
                 string path = SongSelectMode.BeatmapPath + "/" + filename;
@@ -167,7 +167,11 @@ namespace osum.GameModes.Store
                     {
                         if (b.Package != null)
                         {
+#if DEBUG
+                            Console.WriteLine("loaded package");
+#endif
                             string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
+
                             if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
                                 continue;
 
@@ -186,7 +190,7 @@ namespace osum.GameModes.Store
                 Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.AddItem(new PackItem(filename, title, updateChecksum) { YoutubeId = youtubeId });
+                pp.AddItem(new PackItem(filename, title, updateChecksum));
 
                 y++;
             }
@@ -199,7 +203,7 @@ namespace osum.GameModes.Store
             GameBase.ShowLoadingOverlay = false;
 
             if (packs.Count == 0)
-                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
         }
 
         void AddPack(PackPanel pp)
@@ -305,7 +309,7 @@ namespace osum.GameModes.Store
             instance.RemovePack(pp);
 
             if (instance.packs.Count == 0)
-                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(Director.LastOsuMode); });
+                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
 
             if (instance.packs.TrueForAll(p => !p.Downloading))
                 instance.s_ButtonBack.FadeIn(100);

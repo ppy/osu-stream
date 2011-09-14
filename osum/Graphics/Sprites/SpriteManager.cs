@@ -592,9 +592,16 @@ namespace osum.Graphics.Sprites
                     p.Dispose();
             }
 
+            UnbindAllEvents();
+        }
+
+        internal override void UnbindAllEvents()
+        {
             InputManager.OnMove -= HandleInputManagerOnMove;
             InputManager.OnDown -= HandleInputManagerOnDown;
             InputManager.OnUp -= HandleInputManagerOnUp;
+
+            base.UnbindAllEvents();
         }
 
         internal void Clear()

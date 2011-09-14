@@ -29,8 +29,6 @@ namespace osum.GameModes.Play.Components
 
         internal ScoreDisplay(Vector2 position, bool alignRight, float scale, bool showScore, bool showAccuracy)
         {
-            this.spriteManager = spriteManager;
-
             this.scale = scale;
 
             float vpos = position.Y;
@@ -70,7 +68,7 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(s_Accuracy);
         }
 
-        public override bool Draw()
+        public override void Update()
         {
             if (s_Accuracy != null && Math.Abs(displayAccuracy - currentAccuracy) > 0.005)
             {
@@ -95,14 +93,12 @@ namespace osum.GameModes.Play.Components
                 }
             }
 
-            return base.Draw();
+            base.Update();
         }
 
-        internal virtual void Update(int score)
+        internal virtual void SetScore(int score)
         {
             currentScore = score;
-
-            spriteManager.Update();
         }
 
         internal void SetAccuracy(float accuracy)
@@ -117,11 +113,6 @@ namespace osum.GameModes.Play.Components
             if (s_Accuracy != null)
                 s_Accuracy.FadeOut(0);
 
-        }
-
-        internal void SetScore(int score)
-        {
-            currentScore = score;
         }
     }
 }

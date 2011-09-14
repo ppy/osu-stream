@@ -64,6 +64,9 @@ namespace osum.Graphics.Sprites
                     {
                         Texture = t;
                         TextureManager.RegisterDisposable(t);
+
+                        if (IsOnScreen && Alpha > 0 && AlwaysDraw)
+                            FadeInFromZero(250);
                     }
                 }
 

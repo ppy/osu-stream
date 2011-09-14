@@ -75,16 +75,15 @@ namespace osum.GameModes.Play.Components
                     AudioEngine.PlaySample(OsuSamples.count3);
                     break;
                 case 4:
-                    spriteManager.Sprites.ForEach(s => { s.FadeIn(200); });
-                    didChangeTexture = false; //don't flash on 4
-                    break;
+                case 5:
+                case 6:
                 case 7:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_ready);
                     spriteManager.Sprites.ForEach(s => { s.FadeIn(200); });
+                    didChangeTexture = countdown == 7;
                     break;
                 default:
-                    didChangeTexture = false;
-                    break;
+                    return;
             }
 
             if (countdown < 4)

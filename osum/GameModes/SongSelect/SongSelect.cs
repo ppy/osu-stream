@@ -162,13 +162,19 @@ namespace osum.GameModes
             }
         }
 
+#if DEBUG
+        public static bool ForceBeatmapRefresh = true;
+#else
+        public static bool ForceBeatmapRefresh;
+#endif
+
         /// <summary>
         /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
         /// </summary>
         private void InitializeBeatmaps()
         {
 #if !MAPPER
-            if (BeatmapDatabase.BeatmapInfo.Count > 0)
+            if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                     maps.Add(bmi.GetBeatmap());
@@ -176,6 +182,7 @@ namespace osum.GameModes
             else
 #endif
             {
+                ForceBeatmapRefresh = false;
 
 #if DIST && iOS
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
@@ -201,8 +208,13 @@ namespace osum.GameModes
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {
                     Beatmap b = new Beatmap(s);
+
                     if (b.Package == null)
                         continue;
+
+#if DEBUG
+                    Console.WriteLine("Loaded beatmap " + s + " (difficulty " + b.DifficultyStars + ")");
+#endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
@@ -429,23 +441,6 @@ namespace osum.GameModes
                             pos.Y += 70;
                         }
                     }
-                    break;
-            }
-
-            //handle audio adjustments
-            switch (State)
-            {
-                case SelectState.LoadingPreview:
-                    if (AudioEngine.Music.DimmableVolume > 0)
-                        AudioEngine.Music.DimmableVolume = Math.Max(0.5f, AudioEngine.Music.DimmableVolume * 0.97f);
-                    break;
-                case SelectState.RankingDisplay:
-                case SelectState.DifficultySelect:
-                case SelectState.SongSelect:
-                    if (AudioEngine.Music.DimmableVolume < 1)
-                        AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
-                    break;
-                default:
                     break;
             }
         }

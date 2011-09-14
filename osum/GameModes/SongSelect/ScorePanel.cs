@@ -32,16 +32,19 @@ namespace osum.GameModes.SongSelect
 
         public Score Score;
 
-        internal ScorePanel(Score score, EventHandler action, int rank)
+        internal ScorePanel(Score score, EventHandler action)
         {
             Score = score;
 
-            base_depth += 0.0001f * rank;
+            base_depth += 0.0001f * score.OnlineRank;
 
             s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width,PANEL_HEIGHT), true, base_depth, new Color4(0,0,0,40))
             {
                 Tag = this
             };
+
+            s_BackingPlate.OnHover += delegate { s_BackingPlate.FadeColour(new Color4(83, 156, 224, 80), 100); };
+            s_BackingPlate.OnHoverLost += delegate { s_BackingPlate.FadeColour(new Color4(0, 0, 0, 40), 100); };
 
             Sprites.Add(s_BackingPlate);
 
@@ -50,7 +53,7 @@ namespace osum.GameModes.SongSelect
 
             s_BackingPlate.HandleClickOnUp = true;
 
-            pSpriteText rankNumber = new pSpriteText(rank.ToString(), "score", 0, FieldTypes.Standard, OriginTypes.CentreRight, ClockTypes.Mode, Vector2.Zero, 0.9f, true, new Color4(100, 100, 100, 255));
+            pSpriteText rankNumber = new pSpriteText(score.OnlineRank.ToString(), "score", 0, FieldTypes.Standard, OriginTypes.CentreRight, ClockTypes.Mode, Vector2.Zero, 0.9f, true, new Color4(100, 100, 100, 255));
             rankNumber.Offset = new Vector2(20, PANEL_HEIGHT / 2);
             rankNumber.TextConstantSpacing = true;
             rankNumber.SpacingOverlap = 8;
@@ -58,12 +61,11 @@ namespace osum.GameModes.SongSelect
             rankNumber.ScaleScalar = 0.5f;
             Sprites.Add(rankNumber);
 
-            pSprite rankingSprite = new pSprite(score.RankingTextureSmall, Vector2.Zero)
+            pSprite rankingSprite = new pSprite(score.RankingTextureTiny, Vector2.Zero)
             {
                 Origin = OriginTypes.CentreLeft,
                 DrawDepth = base_depth + 0.06f,
                 Offset = new Vector2(23, PANEL_HEIGHT / 2),
-                ScaleScalar = 0.8f
             };
             Sprites.Add(rankingSprite);
 

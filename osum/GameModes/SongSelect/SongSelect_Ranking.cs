@@ -40,6 +40,7 @@ namespace osum.GameModes
             {
                 rankingSpriteManager.Clear();
                 rankingSpriteManager.FadeIn(0);
+                rankingSpriteManager.ScrollTo(0);
             }
             else
             {
@@ -89,6 +90,7 @@ namespace osum.GameModes
                 Score score = new Score()
                 {
                     Id = Int32.Parse(split[i++]),
+                    OnlineRank = Int32.Parse(split[i++]),
                     Username = split[i++],
                     hitScore = Int32.Parse(split[i++]),
                     comboBonusScore = Int32.Parse(split[i++]),
@@ -108,7 +110,7 @@ namespace osum.GameModes
             int index = 0;
             foreach (Score score in rankingScores)
             {
-                ScorePanel sp = new ScorePanel(score, onScoreClicked, index + 1);
+                ScorePanel sp = new ScorePanel(score, onScoreClicked);
                 sp.Sprites.ForEach(s => s.Position = new Vector2(0, BeatmapPanel.PANEL_HEIGHT + 5 + (ScorePanel.PANEL_HEIGHT + 3) * index));
 
                 rankingSpriteManager.Add(sp);
@@ -117,6 +119,8 @@ namespace osum.GameModes
             }
 
             GameBase.ShowLoadingOverlay = false;
+
+            rankingSpriteManager.FadeInFromZero(300);
         }
 
         void onScoreClicked(object sender, EventArgs args)

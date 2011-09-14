@@ -25,7 +25,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -236,8 +236,8 @@
     </Content>
     <Content Include="Localisation\ko.txt" />
     <Content Include="Localisation\th.txt" />
-    <Content Include="Localisation\zh-cn.txt" />
-    <Content Include="Localisation\zh-tw.txt" />
+    <Content Include="Localisation\zh-CHS.txt" />
+    <Content Include="Localisation\zh-CHT.txt" />
     <Content Include="Skins\Default\buttontap.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

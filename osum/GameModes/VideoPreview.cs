@@ -16,6 +16,7 @@ using osu_common.Libraries.NetLib;
 using System.IO;
 using osum.Graphics.Drawables;
 using osum.GameModes.SongSelect;
+using osum.Resources;
 
 namespace osum.GameModes
 {
@@ -60,7 +61,7 @@ namespace osum.GameModes
 
             GameBase.ShowLoadingOverlay = true;
 
-            loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width + 1, 0), true, 0, new Color4(0, 97, 115, 180));
+            loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width + 1, 0), true, 0, new Color4(0, 97, 115, 180));
             loadingBackground.Additive = true;
             loadingBackground.Field = FieldTypes.StandardSnapBottomLeft;
             loadingBackground.Origin = OriginTypes.BottomLeft;
@@ -81,7 +82,16 @@ namespace osum.GameModes
 
                 downloadProgress = 1;
 
-                Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                bool success = true;
+
+                try
+                {
+                    Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                }
+                catch
+                {
+                    success = false;
+                }
 
                 GameBase.ShowLoadingOverlay = false;
                 DownloadComplete = true;
@@ -89,10 +99,17 @@ namespace osum.GameModes
                 loadingBackground.FadeOut(1000);
                 songInfoSpriteManager.FadeInFromZero(400);
 
-                ShowMetadata();
+                if (success)
+                {
+                    ShowMetadata();
 
-                Player.Autoplay = true;
-                Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+                    Player.Autoplay = true;
+                    Director.ChangeMode(OsuMode.Play, new FadeTransition(5000, 500));
+                }
+                else
+                {
+                    GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed), delegate { Director.ChangeMode(OsuMode.Store); });
+                }
             });
         }
 
@@ -127,10 +144,6 @@ namespace osum.GameModes
 
         private void ShowMetadata()
         {
-            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
-            AudioEngine.Music.Play();
-            AudioEngine.Music.DimmableVolume = 0;
-
             //song info
 
             songInfoSpriteManager.Position = new Vector2(20, 0);
@@ -258,7 +271,7 @@ namespace osum.GameModes
             base.Update();
             mb.Update();
 
-            loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSizeFixedWidth.Height * downloadProgress);
+            loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSize.Height * downloadProgress);
         }
     }
 }

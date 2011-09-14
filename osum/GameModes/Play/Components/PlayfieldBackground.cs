@@ -182,6 +182,7 @@ namespace osum.GameModes.Play.Components
             {
                 Marshal.FreeHGlobal(handle_colours_pointer);
                 Marshal.FreeHGlobal(handle_vertices_pointer);
+                handle_colours_pointer = IntPtr.Zero;
             }
 #endif
             GameBase.OnScreenLayoutChanged -= initialize;

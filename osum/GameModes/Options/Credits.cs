@@ -27,18 +27,18 @@ namespace osum.GameModes.Options
             "*Implementation",
             "peppy - Most stuff?",
             "Intermezzo - Android platform deployment, package file format, encryption",
-            "Greg \"mm201\" Edwards - Slider perfection, gameplay mechanic tweaking",
+            "Greg \"mm201\" Edwards - Slider perfection, gameplay mechanic tweaking, hit sample augments",
             "Echo49 - package file format, engine upgrades, general tweaking",
             "*Game Audio",
             "Jamie \"nekodex\" Taylor - osu!stream theme music, results screen sfx",
             "Natteke - credits screen mix",
             "XiaoUnlimited - countdown voice",
-            "*Level Music",
-            "天音 (Rolling Contact)",
-            "Haru☆",
-            "Lix (Skyriser)",
-            "SOU1 (switchworks)",
-            "tieff & Natteke",
+            //"*Level Music",
+            //"天音 (Rolling Contact)",
+            //"Haru☆",
+            //"Lix (Skyriser)",
+            //"SOU1 (switchworks)",
+            //"tieff & Natteke",
             "*Artist Relations",
             "dvorak",
             "jericho2442",
@@ -52,7 +52,13 @@ namespace osum.GameModes.Options
             "peppy",
             "Sushi",
             "*Localisation",
-            "SiRiRu, dvorak & co. - Japanese localisation",
+            "SiRiRu, dvorak & co. - Japanese",
+            "Kharl, SiRiRu - Thai",
+            "PJMS & co. - Korean",
+            "Alace, qiche - Chinese (Trad.)",
+            "chonicle, statementreply - Chinese (Simplified)",
+            "Card N'FoRcE, Inamaru - Italian",
+            "Elysion, Dagonpater - French",
             "*Thanks to",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
             "Testers - Special thanks to Cyclone, Doddler, dvorak, James, nekodex, Saphier, tobebuta and my mum (i'm serious)",
@@ -247,8 +253,8 @@ namespace osum.GameModes.Options
         int lastBeatNoLoop;
         public override void Update()
         {
-            int currentBeat = (int)((Clock.AudioTime - 110) / (beatLength / 4f)) % 16;
-            int currentBeatNoLoop = (int)((Clock.AudioTime - 110) / (beatLength / 4f));
+            int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;
+            int currentBeatNoLoop = (int)((Clock.AudioTime) / (beatLength / 4f));
 
             topMostSpriteManager.Update();
 
@@ -310,6 +316,10 @@ namespace osum.GameModes.Options
 
             playfieldBackground.Velocity = 0.4f * incrementalSpeed;
             base.Update();
+        }
+
+        protected override void UpdateStream()
+        {
         }
     }
 }

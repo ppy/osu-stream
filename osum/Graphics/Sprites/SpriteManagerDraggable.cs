@@ -19,6 +19,11 @@ namespace osum.Graphics.Sprites
         internal float EndStopLenience = 2;
 
         /// <summary>
+        /// How much extra space at the start of all items to allow for headers.
+        /// </summary>
+        internal float StartBufferZone = 0;
+        
+        /// <summary>
         /// How much extra space at the end of all items to allow for the back button.
         /// </summary>
         internal float EndBufferZone = 60;
@@ -115,7 +120,7 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                return Math.Min(offset_max, Math.Max(offset_min - EndBufferZone, verticalDragOffset));
+                return Math.Min(offset_max + StartBufferZone, Math.Max(offset_min - EndBufferZone, verticalDragOffset));
             }
         }
 
@@ -153,7 +158,6 @@ namespace osum.Graphics.Sprites
             nonDraggableManager.Draw();
             return true;
         }
-
 
         float lastFrameOffset;
         public override void Update()

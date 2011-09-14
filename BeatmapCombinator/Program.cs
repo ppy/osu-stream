@@ -626,6 +626,7 @@ namespace BeatmapCombinator
                     if (p.Completed)
                     {
                         Score s = p.CurrentScore;
+                        s.UseAccuracyBonus = true;
 
                         int excess = s.totalScore - s.spinnerBonusScore - 1000000;
 
@@ -667,6 +668,7 @@ namespace BeatmapCombinator
                         if (p.Completed)
                         {
                             Score s = p.CurrentScore;
+                            s.UseAccuracyBonus = true;
 
                             finalScore = (s.totalScore - s.spinnerBonusScore);
 

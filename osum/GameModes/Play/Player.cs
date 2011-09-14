@@ -152,11 +152,16 @@ namespace osum.GameModes
                     return;
                 }
 
-                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)) //could have switched to the results screen bgm.
-                    AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
-
                 if (AudioEngine.Music != null)
+                {
                     AudioEngine.Music.Stop(true);
+
+                    if (AudioEngine.Music.lastLoaded != Beatmap.AudioFilename)
+                        //could have switched to the results screen bgm.
+                        AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.AudioFilename);
+                    else
+                        AudioEngine.Music.Prepare();
+                }
 
                 Clock.ModeTimeReset();
 
@@ -189,6 +194,12 @@ namespace osum.GameModes
             spriteManager.Add(s_streamSwitchWarningArrow);
 
             topMostSpriteManager = new SpriteManager();
+
+            Clock.AudioTime = 0;
+            //hack: because seek doesn't update iOS player's internal time correctly.
+            //in theory the Clock.ModeTimeReset() above should handle this.
+
+            Resume(firstObjectTime, 8, true);
         }
 
         protected virtual void initializeUIElements()
@@ -255,15 +266,18 @@ namespace osum.GameModes
         /// <param name="beats">How many beats we should count in.</param>
         internal void Resume(int startTime, int beats, bool forceCountdown = false)
         {
-            double beatLength = Beatmap.beatLengthAt(startTime);
-
-            int countdownStartTime;
-            if (!countdown.HasFinished)
-                countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
-            else
+            if (Beatmap != null)
             {
-                countdown.SetStartTime(startTime, beatLength);
-                countdownStartTime = startTime - (int)(beatLength * beats);
+                double beatLength = Beatmap.beatLengthAt(startTime);
+
+                int countdownStartTime;
+                if (!countdown.HasFinished)
+                    countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
+                else
+                {
+                    countdown.SetStartTime(startTime, beatLength);
+                    countdownStartTime = startTime - (int)(beatLength * beats);
+                }
             }
 
             if (AudioEngine.Music != null)
@@ -370,8 +384,7 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-            if (firstObjectTime > 0)
-                Resume(firstObjectTime, 8, true);
+            
         }
 
         private void comboPain(bool harsh)
@@ -603,6 +616,8 @@ namespace osum.GameModes
             {
                 if (AudioEngine.Music != null)
                 {
+                    Director.AudioDimming = false;
+
                     float vol = AudioEngine.Music.DimmableVolume;
                     if (vol == 0 && isElapsing)
                         AudioEngine.Music.Pause();
@@ -660,20 +675,23 @@ namespace osum.GameModes
             {
                 Completed = true;
 
-                if (Player.Autoplay)
+                if (GameBase.Instance != null) //combinator
                 {
-                    Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
-                }
-                else
-                {
-                    Results.RankableScore = CurrentScore;
-                    Results.RankableScore.UseAccuracyBonus = true;
-
-                    GameBase.Scheduler.Add(delegate
+                    if (Player.Autoplay)
                     {
+                        Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                    }
+                    else
+                    {
+                        Results.RankableScore = CurrentScore;
+                        Results.RankableScore.UseAccuracyBonus = true;
 
-                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
-                    }, 500);
+                        GameBase.Scheduler.Add(delegate
+                        {
+
+                            Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                        }, 500);
+                    }
                 }
             }
 

@@ -7,6 +7,8 @@ using osum.Graphics.Skins;
 using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
+using System.Text.RegularExpressions;
+using osu_common.Libraries.NetLib;
 
 namespace osum.GameModes
 {
@@ -29,11 +31,28 @@ namespace osum.GameModes
             Add(newsLight);
 
             newsLight.Bypass = true;
+
+            string lastRead = GameBase.Config.GetValue<string>("NewsLastRead", string.Empty);
+            string lastRetrieved = GameBase.Config.GetValue<string>("NewsLastRetrieved", string.Empty);
+
+            if (lastRead == string.Empty || lastRetrieved != lastRead)
+                HasNews = true;
+
+            if (lastRetrieved == string.Empty || lastRetrieved == lastRead)
+            {
+                StringNetRequest nr = new StringNetRequest(@"http://news.osustream.com/rss");
+                nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
+                NetManager.AddRequest(nr);
+            }
         }
 
         void newsButton_OnClick(object sender, EventArgs e)
         {
-            Click(true);
+            HasNews = false;
+
+            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news", "News");
+
+            GameBase.Config.SetValue<string>("NewsLastRead", GameBase.Config.GetValue<string>("NewsLastRetrieved", string.Empty));
         }
 
         private bool hasNews;
@@ -44,6 +63,22 @@ namespace osum.GameModes
             {
                 hasNews = value;
                 newsLight.Bypass = !hasNews;
+            }
+        }
+
+        void newsCheck_onFinish(string _result, Exception e)
+        {
+            if (e == null)
+            {
+                Match ma = Regex.Match(_result, "<guid>([^<]*)</guid>");
+
+                string retrieved = ma.Groups[1].ToString();
+                string lastRead = GameBase.Config.GetValue<string>("NewsLastRead", string.Empty);
+
+                GameBase.Config.SetValue<string>("NewsLastRetrieved", retrieved);
+
+                if (lastRead != retrieved)
+                    HasNews = true;
             }
         }
     }

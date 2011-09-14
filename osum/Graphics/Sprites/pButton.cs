@@ -71,13 +71,15 @@ namespace osum.GameModes.SongSelect
             s_Text.Origin = OriginTypes.Centre;
             Sprites.Add(s_Text);
 
-            s_Status = new pSprite(TextureManager.Load(OsuTexture.songselect_star), position + new Vector2(-200,0))
+            s_Status = new pSprite(TextureManager.Load(OsuTexture.notification_button_toggle), position + new Vector2(-185,0))
             {
                 Origin = OriginTypes.Centre,
                 DrawDepth = base_depth + 0.005f,
                 Bypass = true,
-                ScaleScalar = 4
             };
+
+            s_Status.OnClick += s_BackingPlate_OnClick;
+
             Sprites.Add(s_Status);
         }
 
@@ -121,8 +123,19 @@ namespace osum.GameModes.SongSelect
 
         internal void SetStatus(bool status)
         {
-            s_Status.Bypass = false;
-            s_Status.Colour = status ? Color4.YellowGreen : Color4.Red;
+            if (s_Status.Bypass)
+            {
+                s_Status.Bypass = false;
+                Sprites.ForEach(s => s.Position.X += 15);
+            }
+
+            Color4 col = status ? new Color4(184,234,0,255) : new Color4(255,72,1,255);
+
+            if (s_Status.Colour != col)
+            {
+                s_Status.Colour = col;
+                s_Status.FlashColour(Color4.White, 400);
+            }
         }
     }
 }
