@@ -378,7 +378,13 @@ namespace osum.GameModes
                     }
 
                     if (e == null && result != null && result.StartsWith("message:"))
-                        GameBase.Notify(new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay));
+                    {
+                        if (finishedDisplaying)
+                        {
+                            rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
+                            GameBase.Notify(rankingNotification);
+                        }
+                    }
                 };
                 NetManager.AddRequest(nr);
 
@@ -537,6 +543,9 @@ namespace osum.GameModes
                 }));
             }
 
+            if (rankingNotification != null)
+                GameBase.Notify(rankingNotification);
+
             finishedDisplaying = true;
             if (submissionCompletePending)
                 showOnlineRanking();
@@ -645,6 +654,7 @@ namespace osum.GameModes
 
         int frameCount = 0;
         private pSprite spriteSubmitting;
+        private Notification rankingNotification;
 
         public override void Update()
         {
