@@ -189,11 +189,6 @@ namespace osum.GameModes.SongSelect
 
                 BeatmapInfo info = Beatmap.BeatmapInfo;
 
-                info.DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
-                info.DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
-                info.DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
-
-
                 foreach (DifficultyScoreInfo diffInfo in info.DifficultyScores.Values)
                 {
                     if (diffInfo.HighScore != null)
