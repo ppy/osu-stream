@@ -379,11 +379,9 @@ namespace osum.GameModes
 
                     if (e == null && result != null && result.StartsWith("message:"))
                     {
+                        rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
                         if (finishedDisplaying)
-                        {
-                            rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
                             GameBase.Notify(rankingNotification);
-                        }
                     }
                 };
                 NetManager.AddRequest(nr);
