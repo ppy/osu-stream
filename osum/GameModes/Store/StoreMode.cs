@@ -115,95 +115,104 @@ namespace osum.GameModes.Store
                 return;
             }
 
-            PackPanel pp = null;
-            bool newPack = true;
-
-            float yOffset = 0;
-
-            int y = 0;
-            foreach (string line in result.Split('\n'))
+            try
             {
-                if (line.Length == 0)
+
+                PackPanel pp = null;
+                bool newPack = true;
+
+                float yOffset = 0;
+
+                int y = 0;
+                foreach (string line in result.Split('\n'))
                 {
-                    newPack = true;
-                    continue;
-                }
-
-                string[] split = line.Split('\t');
-
-                if (newPack)
-                {
-                    AddPack(pp);
-#if DEBUG
-                    Console.WriteLine("Adding pack: " + split[0]);
-#endif
-
-                    string packId = split[0];
-                    string packName = split[1];
-                    bool isFree = packId.Contains("Free");
-
-                    pp = new PackPanel(packName, packId, isFree);
-
-                    newPack = false;
-                    continue;
-                }
-
-                int length = split.Length;
-
-                if (length == 0) continue;
-
-                string filename = split[0];
-                string checksum = split[1];
-                string revision = length > 3 ? split[3] : "1.0";
-                string title = length > 2 ? split[2] : null;
-                //string youtubeId = length > 4 ? split[4] : null;
-                string updateChecksum = null;
-
-                string path = SongSelectMode.BeatmapPath + "/" + filename;
-
-                if (File.Exists(path))
-                {
-                    using (Beatmap b = new Beatmap(path))
+                    if (line.Length == 0)
                     {
-                        if (b.Package != null)
-                        {
+                        newPack = true;
+                        continue;
+                    }
+
+                    string[] split = line.Split('\t');
+
+                    if (newPack)
+                    {
+                        AddPack(pp);
 #if DEBUG
-                            Console.WriteLine("loaded package");
+                        Console.WriteLine("Adding pack: " + split[0]);
 #endif
-                            string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
 
-                            if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
-                                continue;
+                        string packId = split[0];
+                        string packName = split[1];
+                        bool isFree = packId.Contains("Free");
 
-                            if (localRev == revision)
-                                continue;
+                        pp = new PackPanel(packName, packId, isFree);
 
-                            pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
-                            updateChecksum = CryptoHelper.GetMd5String(GameBase.Instance.DeviceIdentifier + (char)0x77 + filename + "-update");
+                        newPack = false;
+                        continue;
+                    }
+
+                    int length = split.Length;
+
+                    if (length == 0) continue;
+
+                    string filename = split[0];
+                    string checksum = split[1];
+                    string revision = length > 3 ? split[3] : "1.0";
+                    string title = length > 2 ? split[2] : null;
+                    //string youtubeId = length > 4 ? split[4] : null;
+                    string updateChecksum = null;
+
+                    string path = SongSelectMode.BeatmapPath + "/" + filename;
+
+                    if (File.Exists(path))
+                    {
+                        using (Beatmap b = new Beatmap(path))
+                        {
+                            if (b.Package != null)
+                            {
+#if DEBUG
+                                Console.WriteLine("loaded package");
+#endif
+                                string localRev = b.Package.GetMetadata(MapMetaType.Revision) ?? "1.0";
+
+                                if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
+                                    continue;
+
+                                if (localRev == revision)
+                                    continue;
+
+                                pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
+                                updateChecksum = CryptoHelper.GetMd5String(GameBase.Instance.DeviceIdentifier + (char)0x77 + filename + "-update");
+                            }
                         }
                     }
-                }
 
-                int thisY = y;
+                    int thisY = y;
 
 #if DEBUG
-                Console.WriteLine("Adding beatmap: " + filename);
+                    Console.WriteLine("Adding beatmap: " + filename);
 #endif
 
-                pp.AddItem(new PackItem(filename, title, updateChecksum));
+                    pp.AddItem(new PackItem(filename, title, updateChecksum));
 
-                y++;
+                    y++;
+                }
+
+                if ((Director.IsTransitioning && Director.ActiveTransition.FadeInDone) || Director.CurrentOsuMode != OsuMode.Store)
+                    return;
+
+                AddPack(pp);
+
+                GameBase.ShowLoadingOverlay = false;
+
+                if (packs.Count == 0)
+                    GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
             }
-
-            if ((Director.IsTransitioning && Director.ActiveTransition.FadeInDone) || Director.CurrentOsuMode != OsuMode.Store)
+            catch (Exception ex)
+            {
+                GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;
-
-            AddPack(pp);
-
-            GameBase.ShowLoadingOverlay = false;
-
-            if (packs.Count == 0)
-                GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
+            }
         }
 
         void AddPack(PackPanel pp)

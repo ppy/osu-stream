@@ -73,16 +73,19 @@ namespace osum.GameplayElements
             if (b == null) return null;
 
             BeatmapInfo i = PopulateBeatmap(b);
+
             return i.DifficultyScores[d];
         }
 
         internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
         {
-            BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.FullPath == beatmap.ContainerFilename);
+            string filename = Path.GetFileName(beatmap.ContainerFilename);
+
+            BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
 
             if (i == null)
             {
-                i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = Path.GetFileName(beatmap.ContainerFilename) };
+                i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = filename };
                 BeatmapInfo.Add(i);
             }
 
@@ -113,8 +116,10 @@ namespace osum.GameplayElements
         public void WriteToStream(SerializationWriter sw)
         {
             sw.Write(HighScore != null);
+
             if (HighScore != null)
                 HighScore.WriteToStream(sw);
+
             sw.Write(Playcount);
         }
     }

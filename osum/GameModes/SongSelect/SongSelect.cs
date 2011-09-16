@@ -84,7 +84,7 @@ namespace osum.GameModes
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
 
             //todo: write less
-            if (Director.LastOsuMode == OsuMode.Results || Director.LastOsuMode == OsuMode.Play)
+            if (Director.LastOsuMode == OsuMode.Play)
                 BeatmapDatabase.Write();
             else
                 BeatmapDatabase.Initialize();
@@ -162,11 +162,7 @@ namespace osum.GameModes
             }
         }
 
-#if DEBUG
         public static bool ForceBeatmapRefresh = true;
-#else
-        public static bool ForceBeatmapRefresh;
-#endif
 
         /// <summary>
         /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
@@ -334,7 +330,7 @@ namespace osum.GameModes
         public override bool Draw()
         {
             base.Draw();
-            
+
             if (rankingSpriteManager != null) rankingSpriteManager.Draw();
 
             spriteManagerDifficultySelect.Draw();

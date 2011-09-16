@@ -370,7 +370,7 @@ namespace osum.GameModes
             s_ModeArrowLeft.Colour = hasPrevious ? Color4.White : Color4.DarkGray;
             s_ModeArrowRight.Colour = hasNext ? Color4.White : Color4.DarkGray;
 
-            if (isNewDifficulty)
+            if (isNewDifficulty || bmi == null)
             {
                 if (s_ModeDescriptionText.Text != text)
                     s_ModeDescriptionText.FadeOut(100);
@@ -415,6 +415,7 @@ namespace osum.GameModes
         private void leaveDifficultySelection(object sender, EventArgs args)
         {
             Player.Beatmap = null;
+            bmi = null;
 
             touchingBegun = false;
             velocity = 0;
