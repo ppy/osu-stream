@@ -169,18 +169,22 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
-#if !MAPPER
+
+#if MAPPER
+            //desktop/mapper builds.
+            recursiveBeatmaps(BeatmapPath);
+#else
+
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                     maps.Add(bmi.GetBeatmap());
             }
             else
-#endif
             {
                 ForceBeatmapRefresh = false;
 
-#if DIST && iOS
+                #if DIST && iOS
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
                     //bundled maps
@@ -188,18 +192,7 @@ namespace osum.GameModes
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
-#endif
-
-#if MONO
-                //desktop/mapper builds.
-                foreach (string subdir in Directory.GetDirectories(BeatmapPath))
-                    foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
-                    {
-                        Beatmap b = new Beatmap(s);
-                        BeatmapDatabase.PopulateBeatmap(b);
-                        maps.AddInPlace(b);
-                    }
-#endif
+                #endif
 
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {
@@ -208,9 +201,9 @@ namespace osum.GameModes
                     if (b.Package == null)
                         continue;
 
-#if DEBUG
+                    #if DEBUG
                     Console.WriteLine("Loaded beatmap " + s + " (difficulty " + b.DifficultyStars + ")");
-#endif
+                    #endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
@@ -218,6 +211,7 @@ namespace osum.GameModes
 
                 BeatmapDatabase.Write();
             }
+#endif
 
             int index = 0;
 
@@ -233,6 +227,22 @@ namespace osum.GameModes
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);
+        }
+
+        private void recursiveBeatmaps(string subdir)
+        {
+            if (subdir.Contains("Abandoned"))
+                return;
+
+            foreach (string ss in Directory.GetDirectories(subdir))
+                recursiveBeatmaps(ss);
+
+            foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
+            {
+                Beatmap b = new Beatmap(s);
+                BeatmapDatabase.PopulateBeatmap(b);
+                maps.AddInPlace(b);
+            }
         }
 
         void panelSelected(object sender, EventArgs args)
