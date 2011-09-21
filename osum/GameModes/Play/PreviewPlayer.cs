@@ -23,13 +23,16 @@ namespace osum.GameModes.Play
         {
             base.Initialize();
 
-            t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 64, new Vector2(20, 20), 1, true, Color4.White);
-            t_currentStream.Field = FieldTypes.StandardSnapBottomRight;
-            t_currentStream.Origin = OriginTypes.BottomRight;
-            t_currentStream.TextShadow = true;
-            spriteManager.Add(t_currentStream);
-
-            topMostSpriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
+            if (HitObjectManager != null)
+            {
+                t_currentStream = new pText(HitObjectManager.ActiveStream.ToString(), 64, new Vector2(20, 20), 1, true, Color4.White);
+                t_currentStream.Field = FieldTypes.StandardSnapBottomRight;
+                t_currentStream.Origin = OriginTypes.BottomRight;
+                t_currentStream.TextShadow = true;
+                spriteManager.Add(t_currentStream);
+    
+                topMostSpriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
+            }
         }
 
         protected override bool CheckForCompletion()
