@@ -465,7 +465,9 @@ namespace BeatmapCombinator
 
             Player.Beatmap.Dispose();
 
+#if PREVIEW
             osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
+#endif
 
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
