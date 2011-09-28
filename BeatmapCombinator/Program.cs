@@ -56,7 +56,7 @@ namespace BeatmapCombinator
             {
                 if (args.Length > 0)
                 {
-#if DIST
+#if DIST || M4A
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
                     ProcessBeatmap(args[0]);
                     return;
