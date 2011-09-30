@@ -269,9 +269,9 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load("Skins/Default/songselect.m4a", true);
+            if (AudioEngine.Music.Load("Skins/Default/songselect.m4a", true))
 #else
-            AudioEngine.Music.Load("Skins/Default/songselect.mp3", true);
+            if (AudioEngine.Music.Load("Skins/Default/songselect.mp3", true))
 #endif
             AudioEngine.Music.Play();
         }

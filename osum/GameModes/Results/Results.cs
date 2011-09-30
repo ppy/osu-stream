@@ -293,6 +293,8 @@ namespace osum.GameModes
 
             if (!cameFromSongSelect)
             {
+                InitializeBgm();
+
                 //this is a bit of cheating to ensure that getting 100% will always result in 1mil. there are some race conditions with multitouch that may allow
                 //for ever-so-slightly lower max scores, but this would piss people off.
                 if (RankableScore.accuracy == 1 && RankableScore.totalScore - RankableScore.spinnerBonusScore != Score.MAX_SCORE)
@@ -385,8 +387,6 @@ namespace osum.GameModes
                     }
                 };
                 NetManager.AddRequest(nr);
-
-                InitializeBgm();
             }
             else
             {
@@ -530,8 +530,6 @@ namespace osum.GameModes
 
         private void finishDisplaying()
         {
-            InitializeBgm();
-
             if (unlockedExpert)
             {
                 GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate
