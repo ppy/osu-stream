@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 5;
+        const int DATABASE_VERSION = 6;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -124,7 +124,7 @@ namespace osum.GameplayElements
         }
     }
 
-    public class BeatmapInfo : bSerializable
+    public class BeatmapInfo : bSerializable, IComparable<BeatmapInfo>
     {
         public string Filename;
         public string FullPath;
@@ -163,6 +163,15 @@ namespace osum.GameplayElements
         public Beatmap GetBeatmap()
         {
             return new Beatmap(FullPath) { BeatmapInfo = this };
+        }
+
+        #endregion
+
+        #region IComparable<BeatmapInfo> Members
+
+        public int CompareTo(BeatmapInfo other)
+        {
+            return GetBeatmap().CompareTo(other.GetBeatmap());
         }
 
         #endregion
