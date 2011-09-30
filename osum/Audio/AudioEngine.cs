@@ -110,6 +110,9 @@ namespace osum.Audio
         internal static void Reset()
         {
             lastPlayedTimes.Clear();
+
+            if (Effect != null)
+                Effect.StopAllLooping(true);
         }
 
         internal static int LoadSample(OsuSamples sample, SampleSet set = SampleSet.Soft)

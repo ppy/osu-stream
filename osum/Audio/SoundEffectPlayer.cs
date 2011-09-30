@@ -20,7 +20,6 @@ namespace osum
 
         const int MAX_SOURCES = 32; //hardware limitation
 
-        int[] sources;
         Source[] sourceInfo;
 
         public SoundEffectPlayer()
@@ -43,7 +42,7 @@ namespace osum
                 throw new ApplicationException("OpenAL failed to initialize. Please run oainst.exe and try again.");
             }
 
-            sources = AL.GenSources(MAX_SOURCES);
+            int[] sources = AL.GenSources(MAX_SOURCES);
             sourceInfo = new Source[MAX_SOURCES];
 
             for (int i = 0; i < MAX_SOURCES; i++)
@@ -154,10 +153,24 @@ namespace osum
         public void Update()
         {
         }
+
+        internal void StopAllLooping(bool unreserve = false)
+        {
+            foreach (Source s in sourceInfo)
+            {
+                if (s.Playing && s.Looping)
+                {
+                    s.Stop();
+                    s.Reserved = false;
+                }
+            }
+        }
     }
 
     public class Source
     {
+        public int TagNumeric;
+
         int sourceId;
         public int SourceId
         {
