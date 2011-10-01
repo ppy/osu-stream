@@ -11,7 +11,11 @@ namespace osum
 
         static void Main(string[] args)
         {
+#if iOS
             game = new GameBaseIphone();
+#else
+            game = new GameBaseDesktop();
+#endif
         }
     }
 }

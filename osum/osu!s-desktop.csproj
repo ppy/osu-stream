@@ -185,6 +185,7 @@
     <Compile Include="Online\IOnlineServices.cs" />
     <Compile Include="Online\OnlineHelper.cs" />
     <Compile Include="Support\Benchmarker.cs" />
+    <Compile Include="Support\CrashHandler.cs" />
     <Compile Include="Support\FadeTransition.cs" />
     <Compile Include="Support\DebugOverlay.cs" />
     <Compile Include="Support\IDrawable.cs" />

@@ -1,9 +1,7 @@
 using System;
-using MonoTouch.UIKit;
 using System.Threading;
 using System.IO;
 using osum.UI;
-using osum.Support.iPhone;
 using osu_common.Libraries.NetLib;
 
 namespace osum.Support
@@ -45,7 +43,7 @@ namespace osum.Support
             string content = "exception=" + e.ExceptionObject.ToString();
 
 #if iOS
-            content += "&device=" + (int)HardwareDetection.Version;
+            content += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
 #endif
 
             File.WriteAllText(LOG_FILE, content);
