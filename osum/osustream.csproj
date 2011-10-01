@@ -295,6 +295,7 @@
     <Compile Include="GameModes\Play\PreviewPlayer.cs" />
     <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
     <Compile Include="UI\TextInputNotification.cs" />
+    <Compile Include="Support\CrashHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
