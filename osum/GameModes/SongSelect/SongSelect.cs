@@ -189,6 +189,11 @@ namespace osum.GameModes
                 {
                     //bundled maps
                     Beatmap b = new Beatmap(s);
+
+                    #if DEBUG
+                    Console.WriteLine("Attempting to load " + s);
+                    #endif
+
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
@@ -198,6 +203,10 @@ namespace osum.GameModes
                 {
                     Beatmap b = new Beatmap(s);
 
+                    #if DEBUG
+                    Console.WriteLine("Attempting to load " + s);
+                    #endif
+            
                     if (b.Package == null)
                         continue;
 
@@ -217,6 +226,12 @@ namespace osum.GameModes
 
             foreach (Beatmap b in maps)
             {
+                if (b.Package == null)
+                {
+                    BeatmapDatabase.Erase(b);
+                    continue;
+                }
+
                 BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
                 topmostSpriteManager.Add(panel);
                 panels.Add(panel);

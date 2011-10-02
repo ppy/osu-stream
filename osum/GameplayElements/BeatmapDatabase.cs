@@ -22,7 +22,7 @@ namespace osum.GameplayElements
         private static bool initialized;
         internal static int Version = -1;
 
-        public static List<BeatmapInfo> BeatmapInfo = new List<BeatmapInfo>();
+        public static pList<BeatmapInfo> BeatmapInfo = new pList<BeatmapInfo>();
 
         internal static void Initialize()
         {
@@ -43,6 +43,8 @@ namespace osum.GameplayElements
                     if (Version > 3)
                         BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                 }
+
+                BeatmapInfo.Sort();
             }
             catch { }
 
@@ -86,10 +88,19 @@ namespace osum.GameplayElements
             if (i == null)
             {
                 i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = filename };
-                BeatmapInfo.Add(i);
+                BeatmapInfo.AddInPlace(i);
             }
 
             return i;
+        }
+
+        internal static void Erase(Beatmap b)
+        {
+            string filename = Path.GetFileName(b.ContainerFilename);
+            BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
+
+            if (i != null)
+                BeatmapInfo.Remove(i);
         }
     }
 
