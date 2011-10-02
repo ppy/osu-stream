@@ -182,7 +182,11 @@ namespace osum.GameModes.SongSelect
                     Offset = new Vector2(174, PANEL_HEIGHT)
                 };
 
-                s_Star.DrawWidth = (int)(50 * starCount) + (starCount == 5 ? 2 : 1);
+                if (starCount == 0)
+                    //always use zero-width for no stars (even though this should not ever happen) to avoid single-pixel glitching.
+                    s_Star.DrawWidth = 0;
+                else
+                    s_Star.DrawWidth = (int)(50 * starCount) + (starCount == 5 ? 2 : 1);
 
                 Sprites.Add(s_Star);
 #endif
