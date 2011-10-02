@@ -54,11 +54,14 @@ namespace osum
                 case 'r':
                     Director.ChangeMode(Director.CurrentOsuMode);
                     break;
+                case 'd':
+                    TextureManager.PurgeUnusedTexture();
+                    break;
                 case 's':
                     TextureManager.ReloadAll();
                     break;
                 case 'x':
-                    TextureManager.ReloadAll(true);
+                    TextureManager.DisposeAll();
                     break;
                 case 'o':
                     Director.ChangeMode(OsuMode.Options);

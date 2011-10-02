@@ -49,7 +49,7 @@ namespace osum.Graphics.Sprites
         internal ClockTypes Clocking = ClockTypes.Mode;
 
         internal Color4 Colour = Color4.White;
-        
+
         internal bool Disposable;
         internal float Rotation;
         internal Vector2 Scale = Vector2.One;
@@ -103,8 +103,6 @@ namespace osum.Graphics.Sprites
         internal Vector2 Position;
         internal BlendingFactorDest BlendingMode = BlendingFactorDest.OneMinusSrcAlpha;
 
-        internal bool Premultiplied;
-
         internal virtual bool IsOnScreen
         {
             get
@@ -120,7 +118,7 @@ namespace osum.Graphics.Sprites
                 }
                 else
                 {
-                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right  < 0 ||
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right < 0 ||
                         rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 || rect.Bottom < 0)
                         return false;
                 }
@@ -184,9 +182,11 @@ namespace osum.Graphics.Sprites
         }
 
         protected bool exactCoordinatesOverride;
-        internal virtual bool ExactCoordinates {
+        internal virtual bool ExactCoordinates
+        {
             get { return !exactCoordinatesOverride && UsesTextures && !hasMovement; }
-            set {
+            set
+            {
                 exactCoordinatesOverride = !value;
             }
         }
@@ -404,11 +404,11 @@ namespace osum.Graphics.Sprites
                             case TransformationType.Fade:
                                 Alpha = ((TransformationF)t).StartFloat;
                                 break;
-    
+
                             case TransformationType.Movement:
                                 Position = ((TransformationV)t).StartVector;
                                 break;
-    
+
                             case TransformationType.MovementX:
                                 Position.X = ((TransformationF)t).StartFloat;
                                 break;
@@ -476,7 +476,7 @@ namespace osum.Graphics.Sprites
                             break;
 
                         case TransformationType.Scale:
-                            ScaleScalar =((TransformationF)t).EndFloat;
+                            ScaleScalar = ((TransformationF)t).EndFloat;
                             break;
 
                         case TransformationType.VectorScale:
@@ -591,7 +591,7 @@ namespace osum.Graphics.Sprites
                     return;
             }
 
-            
+
 
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
@@ -769,6 +769,7 @@ namespace osum.Graphics.Sprites
         #region IUpdateable Members
 
         protected bool drawThisFrame;
+        public bool Premultiplied;
 
         public virtual void Update()
         {

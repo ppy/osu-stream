@@ -135,10 +135,7 @@ namespace osum.Graphics
             try
             {
                 if (GL.IsTexture(Id))
-                {
-                    int[] textures = new[] { Id };
-                    GL.DeleteTextures(1, textures);
-                }
+                    GL.DeleteTextures(1, new[] { Id });
             }
             catch
             {
@@ -152,6 +149,7 @@ namespace osum.Graphics
         {
             if (IsDisposed)
                 return;
+
 #if !NO_PIN_SUPPORT
             handle_vertices.Free();
             handle_coordinates.Free();
@@ -432,6 +430,8 @@ namespace osum.Graphics
 #else
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Bgra;
 #endif
+
+        public bool usedSinceLastModeChange;
 
         /// <summary>
         /// Load texture data from a raw IntPtr location (BGRA 32bit format)

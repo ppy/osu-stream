@@ -95,46 +95,42 @@ namespace osum.Graphics.Skins
 
             if (textureLocations.TryGetValue(texture, out info))
             {
-                pTexture tex;
-                if (SpriteCache.TryGetValue(info.SheetName, out tex))
-                {
-                    tex.Dispose();
-                    SpriteCache.Remove(info.SheetName);
-                }
+                TextureGl tex;
+                if (SpriteTextureCache.TryGetValue(info.SheetName, out tex))
+                    tex.Delete();
             }
         }
 
         public static void DisposeAll()
         {
             UnloadAll();
-            SpriteCache.Clear();
             AnimationCache.Clear();
         }
 
         public static void ModeChange()
         {
             DisposeDisposable();
-            foreach (pTexture p in SpriteCache.Values)
+            foreach (TextureGl p in SpriteTextureCache.Values)
                 p.usedSinceLastModeChange = false;
         }
 
         public static void PurgeUnusedTexture()
         {
-            foreach (pTexture p in SpriteCache.Values.ToArray<pTexture>())
-                if (!p.usedSinceLastModeChange)
+            foreach (TextureGl p in SpriteTextureCache.Values.ToArray<TextureGl>())
+                if (!p.usedSinceLastModeChange && p.Loaded)
                 {
 #if !DIST
-                    Console.WriteLine("unloaded texture " + p.assetName);
+                    Console.WriteLine("unloaded texture " + p.Id);
 #endif
-                    Dispose(p.OsuTextureInfo);
+                    p.Delete();
                 }
             AnimationCache.Clear();
         }
 
         public static void UnloadAll()
         {
-            foreach (pTexture p in SpriteCache.Values)
-                p.UnloadTexture();
+            foreach (TextureGl p in SpriteTextureCache.Values)
+                p.Delete();
 
             DisposeDisposable();
         }
@@ -151,14 +147,10 @@ namespace osum.Graphics.Skins
         {
             DisposeDisposable();
 
-            List<pTexture> cache = SpriteCache.Values.ToList();
-            if (forceUnload) SpriteCache.Clear();
-
-            foreach (pTexture p in cache)
+            foreach (TextureGl p in SpriteTextureCache.Values)
             {
                 if (forceUnload)
-                    p.UnloadTexture();
-                p.ReloadIfPossible();
+                    p.Delete();
             }
 
             PopulateSurfaces();
@@ -173,7 +165,7 @@ namespace osum.Graphics.Skins
             DisposableTextures.Add(t);
         }
 
-        internal static Dictionary<string, pTexture> SpriteCache = new Dictionary<string, pTexture>();
+        internal static Dictionary<string, TextureGl> SpriteTextureCache = new Dictionary<string, TextureGl>();
         internal static Dictionary<string, pTexture[]> AnimationCache = new Dictionary<string, pTexture[]>();
         internal static List<pTexture> DisposableTextures = new List<pTexture>();
 
@@ -184,9 +176,9 @@ namespace osum.Graphics.Skins
             if (textureLocations.TryGetValue(texture, out info))
             {
                 pTexture tex = Load(info.SheetName);
-                tex.OsuTextureInfo = texture; //set this so if we need to do a reload we will get the correct sheet.
+                tex.OsuTextureInfo = texture; 
 
-                tex = tex.Clone(); //make a new instance because we may be using different coords.
+                //necessary?
                 tex.X = info.X;
                 tex.Y = info.Y;
                 tex.Width = info.Width;
@@ -203,22 +195,31 @@ namespace osum.Graphics.Skins
 
         internal static pTexture Load(string name)
         {
-            pTexture texture;
+            TextureGl glTexture;
 
-            if (SpriteCache.TryGetValue(name, out texture))
+            if (SpriteTextureCache.TryGetValue(name, out glTexture) && glTexture.Loaded)
             {
-                texture.usedSinceLastModeChange = true;
-                return texture;
+                glTexture.usedSinceLastModeChange = true;
+                return new pTexture(glTexture, glTexture.TextureHeight, glTexture.TextureWidth);
             }
-
 
             string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution) + ".png";
 
             if (NativeAssetManager.Instance.FileExists(path))
             {
-                texture = pTexture.FromFile(path);
-                texture.usedSinceLastModeChange = true;
-                SpriteCache.Add(name, texture);
+                pTexture texture = pTexture.FromFile(path);
+
+                if (glTexture != null)
+                {
+                    //steal the loaded GL texture from the newly loaded pTexture.
+                    glTexture.Id = texture.TextureGl.Id;
+                    texture.TextureGl.Id = -1;
+
+                    texture.TextureGl = glTexture;
+                    return texture;
+                }
+
+                SpriteTextureCache.Add(name, texture.TextureGl);
                 return texture;
             }
 

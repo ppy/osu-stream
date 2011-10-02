@@ -1233,7 +1233,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 return;
 
 #if iOS
-            sliderBodyTexture.Premultiplied = true;
+            spriteSliderBody.Premultiplied = true;
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);

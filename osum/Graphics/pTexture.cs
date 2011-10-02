@@ -53,7 +53,7 @@ namespace osum.Graphics
         internal int Height;
         internal int X;
         internal int Y;
-        internal bool Premultiplied;
+
 #if DEBUG
         internal int id;
         internal static int staticid = 1;
@@ -305,8 +305,6 @@ namespace osum.Graphics
                 }
                 
                 pTexture tex = FromRawBytes(pTextureData, width, height);
-                tex.Premultiplied = true;
-                
                 tex.assetName = assetname;
                 return tex;
             }
@@ -400,55 +398,8 @@ namespace osum.Graphics
             return pt;
         }
 
-        /*public static pTexture FromText(string text, SizeF dim, UITextAlignment alignment, string fontName, float fontSize) {
-            UIFont font = UIFont.FromName(fontName, fontSize);
-            
-            int width = (int)dim.Width;
-            if (width != 1 && (width & (width - 1)) != 0) {
-                int i = 1;
-                while (i < width) {
-                    i *= 2;
-                }
-                
-                width = i;
-            }
-            
-            int height = (int)dim.Height;
-            if (height != 1 && (height & (height - 1)) != 0) {
-                int i = 1;
-                while (i < height) {
-                    i *= 2;
-                }
-                height = i;
-            }
-            
-            CGColorSpace colorSpace = CGColorSpace.CreateDeviceRGB(); //CGColorSpace.CreateDeviceGray();
-            
-            byte[] data = new byte[width * height];
-            
-            unsafe {
-                fixed (byte* dataPb = data) {
-                    using (CGContext context = new CGBitmapContext((IntPtr)dataPb, width, height, 8, width, colorSpace, CGImageAlphaInfo.None)) {
-                        context.SetGrayFillColor(1f, 1f);
-                        context.TranslateCTM(0f, height);
-                        context.ScaleCTM(1f, -1f);
-                        UIGraphics.PushContext(context);
-                        //text.DrawInRect(new RectangleF(0, 0, dim.Width, dim.Height), font, UILineBreakMode.WordWrap, alignment);
-                        UIGraphics.PopContext();
-                    }
-                }
-            }
-            colorSpace.Dispose();
-            
-            return null;
-            //FromRawBytes(
-            //InitWithData(data, Texture2DPixelFormat.A8, width, height, dim);
-        }*/
-
         internal int fboId = -1;
         internal int fboDepthBuffer = -1;
-        public bool usedSinceLastModeChange;
-
         internal int BindFramebuffer()
         {
             if (fboId >= 0)

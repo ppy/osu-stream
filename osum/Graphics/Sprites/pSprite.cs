@@ -103,7 +103,9 @@ namespace osum.Graphics.Sprites
 
         internal virtual pTexture Texture
         {
-            get { return texture; }
+            get {
+                return texture;
+            }
             set
             {
                 if (value == texture)
@@ -113,7 +115,9 @@ namespace osum.Graphics.Sprites
 
                 if (texture != null)
                 {
-                    Premultiplied = texture.Premultiplied;
+#if iOS
+                    Premultiplied |= texture.OsuTextureInfo != OsuTexture.None;
+#endif
                     UpdateTextureSize();
                 }
             }
@@ -167,6 +171,8 @@ namespace osum.Graphics.Sprites
             if (texture == null || texture.TextureGl == null)
                 return false;
 
+            if (texture.TextureGl.Id == -1) texture.ReloadIfPossible();
+
             texture.TextureGl.Draw(FieldPosition, OriginVector, AlphaAppliedColour, FieldScale, Rotation, TextureRectangle);
             return true;
         }
@@ -175,10 +181,19 @@ namespace osum.Graphics.Sprites
 
         internal virtual void UpdateTextureSize()
         {
-            DrawWidth = TextureWidth;
-            DrawHeight = TextureHeight;
-            DrawTop = TextureY;
-            DrawLeft = TextureX;
+            //if (texture != null && SpriteInfo != null)
+            //{
+            //    DrawWidth = SpriteInfo.Width;
+            //    DrawHeight = SpriteInfo.Height;
+            //    DrawTop = SpriteInfo.Y;
+            //    DrawLeft = SpriteInfo.X;
+            //}
+            {
+                DrawWidth = TextureWidth;
+                DrawHeight = TextureHeight;
+                DrawTop = TextureY;
+                DrawLeft = TextureX;
+            }
         }
 
         internal override void UpdateOriginVector()

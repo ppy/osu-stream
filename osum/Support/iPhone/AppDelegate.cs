@@ -28,6 +28,7 @@ using osum.Audio;
 using osum.GameModes;
 using OpenTK.Graphics;
 using OpenTK.Platform;
+using osum.Helpers;
 
 namespace osum.Support.iPhone
 {
@@ -136,6 +137,7 @@ namespace osum.Support.iPhone
             glView.StopAnimation();
         }
 
+        int lastCleanup;
         public override void ReceiveMemoryWarning(UIApplication application)
         {
 #if !DIST
@@ -144,13 +146,16 @@ namespace osum.Support.iPhone
 
             if (!Director.IsTransitioning)
             {
-                //TextureManager.PurgeUnusedTexture();
+                if (Clock.Time - lastCleanup < 1000) return;
+
+                lastCleanup = Clock.Time;
+                TextureManager.PurgeUnusedTexture();
                 GC.Collect();
             }
-            /*else
+            else
             {
                 GameBase.Scheduler.Add(delegate { ReceiveMemoryWarning(application); }, 500);
-            }*/
+            }
         }
 
         public static UIViewController ViewController;
