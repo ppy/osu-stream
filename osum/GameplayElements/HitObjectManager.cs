@@ -298,14 +298,12 @@ namespace osum.GameplayElements
             Vector2 p1 = useEnd ? h1.EndPosition : h1.Position;
             Vector2 p2 = h2.Position;
 
-            HitObject firstObject = h1.CompareTo(h2) <= 0 ? h1 : h2;
-            HitObject secondObject = h1.CompareTo(h2) <= 0 ? h2 : h1;
+            HitObject firstObject =  h1.CompareTo(h2) <= 0 ? h1 : h2;
 
-            Vector2 p3 = (p2 + p1) / 2;
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
             pSprite connectingLine = new pSprite(TextureManager.Load(OsuTexture.connectionline), FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                firstObject.Sprites[0].Clocking, p3, SpriteManager.drawOrderBwd(firstObject.EndTime - 15), false, Color4.White);
+                firstObject.Sprites[0].Clocking, (p2 + p1) / 2, SpriteManager.drawOrderBwd(firstObject.EndTime - 15), false, Color4.White);
 
             //a small hack to allow for texel boundaries to be the correct colour.
             connectingLine.DrawLeft++;
@@ -314,14 +312,15 @@ namespace osum.GameplayElements
 
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
-            foreach (Transformation t in secondObject.Sprites[0].Transformations)
+
+            foreach (Transformation t in (h1.StartTime > h2.StartTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
             {
                 TransformationF tf = t as TransformationF;
                 if (tf != null && tf.EndFloat == 1)
                     connectingLine.Transform(t);
             }
 
-            foreach (Transformation t in firstObject.Sprites[0].Transformations)
+            foreach (Transformation t in (h1.EndTime < h2.EndTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
             {
                 TransformationF tf = t as TransformationF;
                 if (tf != null && tf.EndFloat == 0)
