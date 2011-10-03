@@ -536,13 +536,14 @@ namespace osum.GameModes
                 {
                     unlockedExpert = false; //reset and run again.
                     finishDisplaying();
+                    return;
                 }));
             }
 
             if (rankingNotification != null)
                 GameBase.Notify(rankingNotification);
-
             finishedDisplaying = true;
+
             if (submissionCompletePending)
                 showOnlineRanking();
             else
