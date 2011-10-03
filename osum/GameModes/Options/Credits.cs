@@ -15,7 +15,7 @@ namespace osum.GameModes.Options
     public class Credits : Player
     {
         SpriteManager topMostSpriteManager = new SpriteManager();
-        
+
         string[] creditsRoll = new string[] {
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
@@ -55,7 +55,7 @@ namespace osum.GameModes.Options
             "SiRiRu, dvorak & co. - Japanese",
             "Kharl, SiRiRu - Thai",
             "PJMS & co. - Korean",
-            "Alace, qiche - Chinese (Trad.)",
+            "Alace, qinche - Chinese (Trad.)",
             "chonicle, statementreply - Chinese (Simplified)",
             "Card N'FoRcE, Inamaru - Italian",
             "Elysion, Dagonpater - French",
@@ -289,7 +289,7 @@ namespace osum.GameModes.Options
                         spriteManager.ScaleScalar = 1.04f;
                         spriteManager.ScaleTo(1, 200, EasingTypes.In);
                         break;
-                    
+
                 }
                 lastBeat = currentBeat;
             }
@@ -306,7 +306,7 @@ namespace osum.GameModes.Options
                 lastBeatNoLoop = currentBeatNoLoop;
             }
 
-            
+
             if (!InputManager.IsPressed)
             {
                 incrementalSpeed = 0.2f + incrementalSpeed * 0.8f;
