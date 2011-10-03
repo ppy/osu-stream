@@ -72,8 +72,8 @@ namespace osum.GameModes
 
             if (e != null || _result == null)
             {
-                //error
-                Ranking_Hide();
+                //error occurred
+                GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed), delegate { Ranking_Hide(); });
                 return;
             }
 
