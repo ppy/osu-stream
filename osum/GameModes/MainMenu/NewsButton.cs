@@ -40,7 +40,7 @@ namespace osum.GameModes
 
             if (lastRetrieved == string.Empty || lastRetrieved == lastRead)
             {
-                StringNetRequest nr = new StringNetRequest(@"http://news.osustream.com/rss");
+                StringNetRequest nr = new StringNetRequest(@"http://osustream.com/misc/news.php");
                 nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
                 NetManager.AddRequest(nr);
             }
@@ -53,6 +53,7 @@ namespace osum.GameModes
             GameBase.Instance.ShowWebView(@"http://osustream.com/p/news", "News");
 
             GameBase.Config.SetValue<string>("NewsLastRead", GameBase.Config.GetValue<string>("NewsLastRetrieved", string.Empty));
+            GameBase.Config.SaveConfig();
         }
 
         private bool hasNews;
@@ -70,14 +71,11 @@ namespace osum.GameModes
         {
             if (e == null)
             {
-                Match ma = Regex.Match(_result, "<guid>([^<]*)</guid>");
-
-                string retrieved = ma.Groups[1].ToString();
                 string lastRead = GameBase.Config.GetValue<string>("NewsLastRead", string.Empty);
 
-                GameBase.Config.SetValue<string>("NewsLastRetrieved", retrieved);
+                GameBase.Config.SetValue<string>("NewsLastRetrieved", _result);
 
-                if (lastRead != retrieved)
+                if (lastRead != _result)
                     HasNews = true;
             }
         }
