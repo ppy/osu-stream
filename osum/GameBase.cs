@@ -129,9 +129,9 @@ namespace osum
                 Environment.Exit(-1);
 #endif
 
-            CrashHandler.Initialize();
-
             Instance = this;
+
+            CrashHandler.Initialize();
 
             //initialise config before everything, because it may be used in Initialize() override.
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");

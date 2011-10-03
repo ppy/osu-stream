@@ -6,7 +6,7 @@ using System.IO;
 namespace osu_common.Helpers
 {
     /// <summary>
-    /// Simple Configurtion Manager
+    /// Simple Configuration Manager
     /// </summary>
     public class pConfigManager : IDisposable
     {
@@ -94,14 +94,14 @@ namespace osu_common.Helpers
             dirty = true;
 
             if (WriteOnChange) SaveConfig();
-            
+
         }
 
         public void LoadConfig(string configName)
         {
             entriesRaw.Clear();
             entriesParsed.Clear();
-           
+
             configFilename = configName;
             ReadConfigFile(configName);
         }

@@ -9,16 +9,17 @@ namespace osum.Support
     public static class CrashHandler
     {
         const string LOG_FILE = "error.log";
+        static string LogFileFullPath { get { return GameBase.Instance.PathConfig + LOG_FILE; } }
 
         static bool isInitialized;
         public static void Initialize()
         {
             if (isInitialized) return;
 
-            if (File.Exists(LOG_FILE))
+            if (File.Exists(LogFileFullPath))
             {
-                string contents = File.ReadAllText(LOG_FILE);
-                File.Delete(LOG_FILE);
+                string contents = File.ReadAllText(LogFileFullPath);
+                File.Delete(LogFileFullPath);
 
                 GameBase.Scheduler.Add(delegate {
                     Notification notification = new Notification(
@@ -46,7 +47,7 @@ namespace osum.Support
             content += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
 #endif
 
-            File.WriteAllText(LOG_FILE, content);
+            File.WriteAllText(LogFileFullPath, content);
         }
     }
 }
