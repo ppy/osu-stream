@@ -22,11 +22,15 @@ namespace osum.GameModes.Store
             if (observer != null)
             {
                 SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(observer);
-                observer.Dispose();
                 observer = null;
             }
 
-            responseDelegate = null;
+            if (productsRequest != null)
+            {
+                productsRequest.Delegate = null;
+                productsRequest.Cancel();
+                productsRequest = null;
+            }
         }
 
         ProductResponseDelegate responseDelegate;
@@ -37,10 +41,10 @@ namespace osum.GameModes.Store
 
             foreach (string s in productIds)
                 setIds.Add(new NSString(s));
-            productsRequest = new SKProductsRequest(setIds);
 
             this.responseDelegate = responseDelegate;
 
+            productsRequest = new SKProductsRequest(setIds);
             productsRequest.Delegate = this;
             productsRequest.Start();
         }
@@ -73,7 +77,7 @@ namespace osum.GameModes.Store
 
         public bool CanMakePurchases()
         {
-            return SKPaymentQueue.CanMakePayments;   
+            return SKPaymentQueue.CanMakePayments;
         }
 
         PurchaseCompleteDelegate purchaseCompleteDelegate;
@@ -97,8 +101,6 @@ namespace osum.GameModes.Store
 
             SKPayment payment = SKPayment.PaymentWithProduct(productId);
             SKPaymentQueue.DefaultQueue.AddPayment(payment);
-
-
         }
 
         //
@@ -140,7 +142,7 @@ namespace osum.GameModes.Store
         /// Callback from payment observer on failure.
         /// </summary>
         public void handleFailedTransaction(SKPaymentTransaction transaction)
-        {    
+        {
 #if !DIST
             Console.WriteLine("Transaction failed with error code:" + transaction.Error.Code);
 #endif
@@ -150,7 +152,7 @@ namespace osum.GameModes.Store
             } else
             {
                 //payment was cancelled by the user at the apple dialog.
-                SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);  
+                SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
             }
 
             finishTransaction(transaction, false);
