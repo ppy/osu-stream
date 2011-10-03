@@ -102,7 +102,7 @@ namespace osum
                 case "th":
                     culture = "th-TH";
                     break;
-                    
+
             }
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
@@ -265,7 +265,7 @@ namespace osum
             WebViewController webViewController = new WebViewController(url, title);
             if (checkFinished != null) webViewController.ShouldClose += checkFinished;
             UINavigationController nav = new UINavigationController(webViewController);
-            nav.NavigationBar.TintColor = UIColor.DarkGray;
+            nav.NavigationBar.TintColor = new UIColor(0,134/255f, 219/255f, 1);
 
             AppDelegate.SetUsingViewController(true);
             AppDelegate.ViewController.PresentModalViewController(nav, true);
@@ -284,6 +284,7 @@ namespace osum
         string Title;
 
         UIWebView webView;
+        UIActivityIndicatorView activity;
 
         public event StringBoolDelegate ShouldClose;
 
@@ -310,6 +311,13 @@ namespace osum
             webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl(Url)));
             View = webView;
 
+            activity = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White);
+
+            activity.Frame = new RectangleF(0, -20, 20, 20);
+            activity.HidesWhenStopped = true;
+
+            NavigationItem.LeftBarButtonItem = new UIBarButtonItem(activity);
+
             NavigationItem.Title = Title;
             NavigationItem.RightBarButtonItem = new UIBarButtonItem("Close", UIBarButtonItemStyle.Done, delegate
             {
@@ -317,8 +325,15 @@ namespace osum
             });
         }
 
-        bool finished(string url)
+        bool finished(string url, bool done)
         {
+            if (done)
+                activity.StopAnimating();
+            else
+                activity.StartAnimating();
+
+            if (done) return true;
+
             Url = url;
             if (ShouldClose != null && ShouldClose(Url))
             {
@@ -354,16 +369,21 @@ namespace osum
 
     class FinishableWebViewDelegate : UIWebViewDelegate
     {
-        StringBoolDelegate finishedDelegate;
+        StringBoolBoolDelegate finishedDelegate;
 
-        public FinishableWebViewDelegate(StringBoolDelegate finished)
+        public FinishableWebViewDelegate(StringBoolBoolDelegate finished)
         {
             finishedDelegate = finished;
         }
 
         public override bool ShouldStartLoad(UIWebView webView, NSUrlRequest request, UIWebViewNavigationType navigationType)
         {
-            return !finishedDelegate(request.Url.AbsoluteString);
+            return !finishedDelegate(request.Url.AbsoluteString, false);
+        }
+
+        public override void LoadingFinished (UIWebView webView)
+        {
+            finishedDelegate(null, true);
         }
     }
 }
