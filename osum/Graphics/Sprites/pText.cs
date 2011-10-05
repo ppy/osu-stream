@@ -10,10 +10,6 @@ namespace osum.Graphics.Sprites
 {
     internal class pText : pSprite
     {
-        internal Color4 BackgroundColour;
-        internal Color4 BorderColour;
-        public bool TextUnderline;
-
         public int BorderWidth = 1;
         internal bool TextAntialiasing = true;
         internal TextAlignment TextAlignment;
@@ -127,7 +123,6 @@ namespace osum.Graphics.Sprites
             get
             {
                 Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio;
-                Vector2 scale = FieldScale / GameBase.BaseToNativeRatio;
 
                 return new Box2(pos.X, pos.Y,
                     pos.X + (float)DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
@@ -175,8 +170,8 @@ namespace osum.Graphics.Sprites
 
             Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
 
-            Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, TextUnderline, TextAlignment,
-                                      TextAntialiasing, out lastMeasure, BackgroundColour, BorderColour, BorderWidth, false, FontFace);
+            Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, false, TextAlignment,
+                                      TextAntialiasing, out lastMeasure, Color4.Transparent, Color4.Transparent, BorderWidth, false, FontFace);
 
             if (texture != null)
                 TextureManager.RegisterDisposable(texture);

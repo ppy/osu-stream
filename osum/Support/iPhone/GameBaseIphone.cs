@@ -5,8 +5,6 @@ using osum.Helpers;
 #if iOS
 using OpenTK.Graphics.ES11;
 using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -27,8 +25,6 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -38,10 +34,6 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
 
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
-using osum.Graphics.Skins;
 using System.Globalization;
 using System.Threading;
 using osum.GameModes;
@@ -281,7 +273,7 @@ namespace osum
     class WebViewController : UIViewController
     {
         string Url;
-        string Title;
+        new string Title;
 
         UIWebView webView;
         UIActivityIndicatorView activity;

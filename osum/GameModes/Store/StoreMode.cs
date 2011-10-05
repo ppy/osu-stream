@@ -121,8 +121,6 @@ namespace osum.GameModes.Store
                 PackPanel pp = null;
                 bool newPack = true;
 
-                float yOffset = 0;
-
                 int y = 0;
                 foreach (string line in result.Split('\n'))
                 {
@@ -187,8 +185,6 @@ namespace osum.GameModes.Store
                         }
                     }
 
-                    int thisY = y;
-
 #if DEBUG
                     Console.WriteLine("Adding beatmap: " + filename);
 #endif
@@ -208,7 +204,7 @@ namespace osum.GameModes.Store
                 if (packs.Count == 0)
                     GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });
             }
-            catch (Exception ex)
+            catch
             {
                 GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
                 return;

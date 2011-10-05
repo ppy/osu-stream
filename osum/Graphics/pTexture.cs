@@ -343,7 +343,7 @@ namespace osum.Graphics
 #endif
                 return pt;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

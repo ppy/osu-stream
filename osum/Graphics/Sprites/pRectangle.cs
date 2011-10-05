@@ -67,9 +67,7 @@ namespace osum.Graphics.Drawables
         }
 
 #if !NO_PIN_SUPPORT
-        float[] coordinates;
         float[] vertices;
-
         GCHandle handle_vertices;
 #endif
 

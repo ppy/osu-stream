@@ -182,8 +182,6 @@
     <Compile Include="Graphics\pTexture.cs" />
     <Compile Include="Graphics\TextureGl.cs" />
     <Compile Include="Graphics\Sprites\SpriteManager.cs" />
-    <Compile Include="Online\IOnlineServices.cs" />
-    <Compile Include="Online\OnlineHelper.cs" />
     <Compile Include="Support\Benchmarker.cs" />
     <Compile Include="Support\CrashHandler.cs" />
     <Compile Include="Support\FadeTransition.cs" />

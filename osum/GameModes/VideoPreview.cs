@@ -29,7 +29,6 @@ namespace osum.GameModes
         SpriteManager songInfoSpriteManager = new SpriteManager();
 
         public static string DownloadLink;
-        private bool DownloadComplete;
 
         public override void Initialize()
         {
@@ -68,7 +67,7 @@ namespace osum.GameModes
 
             spriteManager.Add(loadingBackground);
 
-            spriteManager.Add(backButton = new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
+            spriteManager.Add(new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
         }
 
         void dnr_onFinish(byte[] data, Exception e)
@@ -94,7 +93,6 @@ namespace osum.GameModes
                 }
 
                 GameBase.ShowLoadingOverlay = false;
-                DownloadComplete = true;
 
                 loadingBackground.FadeOut(1000);
                 songInfoSpriteManager.FadeInFromZero(400);
@@ -117,7 +115,6 @@ namespace osum.GameModes
         private pRectangle loadingBackground;
 
         float downloadProgress;
-        private BackButton backButton;
         void dnr_onUpdate(object sender, long current, long total)
         {
             downloadProgress = (float)current / total;

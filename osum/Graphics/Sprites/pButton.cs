@@ -14,8 +14,6 @@ namespace osum.GameModes.SongSelect
 {
     internal class pButton : pSpriteCollection
     {
-        internal Beatmap Beatmap;
-
         internal pSprite s_BackingPlate;
         internal pText s_Text;
 
@@ -23,7 +21,6 @@ namespace osum.GameModes.SongSelect
 
         Color4 colour;
         Color4 colourNormal = new Color4(28, 139, 242, 255);
-        Color4 colourHover = new Color4(27, 197, 241, 255);
 
         internal const int PANEL_HEIGHT = 80;
 

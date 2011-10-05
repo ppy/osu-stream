@@ -19,7 +19,6 @@ using osu_common.Libraries.Osz2;
 using osum.Resources;
 using osum.GameplayElements.Scoring;
 using osum.Graphics;
-using osum.Online;
 
 namespace osum.GameModes
 {

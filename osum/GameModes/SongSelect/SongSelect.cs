@@ -15,7 +15,6 @@ using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
 using osum.GameplayElements.Scoring;
-using osum.Online;
 using osum.Resources;
 using osu_common.Helpers;
 

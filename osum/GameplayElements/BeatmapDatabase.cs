@@ -142,7 +142,7 @@ namespace osum.GameplayElements
 
         public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
 
-        public BeatmapInfo(string filename) : base()
+        public BeatmapInfo(string filename)
         {
             Filename = Path.GetFileName(filename);
         }

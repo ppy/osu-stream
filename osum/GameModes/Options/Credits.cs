@@ -14,8 +14,6 @@ namespace osum.GameModes.Options
 {
     public class Credits : Player
     {
-        SpriteManager topMostSpriteManager = new SpriteManager();
-
         string[] creditsRoll = new string[] {
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
@@ -203,7 +201,6 @@ namespace osum.GameModes.Options
         public override void Dispose()
         {
             InputManager.OnMove -= new InputHandler(InputManager_OnMove);
-            topMostSpriteManager.Dispose();
             base.Dispose();
         }
 
@@ -243,8 +240,6 @@ namespace osum.GameModes.Options
         public override bool Draw()
         {
             base.Draw();
-            topMostSpriteManager.Draw();
-
             return true;
 
         }
@@ -255,8 +250,6 @@ namespace osum.GameModes.Options
         {
             int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;
             int currentBeatNoLoop = (int)((Clock.AudioTime) / (beatLength / 4f));
-
-            topMostSpriteManager.Update();
 
             if (lastText.Position.Y < 0 && !Director.IsTransitioning)
             {

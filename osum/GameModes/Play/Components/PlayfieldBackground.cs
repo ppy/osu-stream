@@ -211,9 +211,6 @@ namespace osum.GameModes.Play.Components
         {
             base.Update();
 
-            Color4 colourTop = Colour;
-            Color4 colourBottom = ColourHelper.Darken(Colour, 0.85f);
-
             if (Velocity != 0)
             {
                 Move(Velocity);

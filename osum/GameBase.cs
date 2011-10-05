@@ -12,7 +12,6 @@ using osum.Helpers;
 using osum.Support;
 using osum.Graphics.Renderers;
 using osum.Graphics;
-using osum.Online;
 using osum.UI;
 using osu_common.Helpers;
 using System.Threading;
@@ -366,7 +365,6 @@ namespace osum
             Director.ChangeMode(OsuMode.MainMenu, null);
             #endif
 #endif
-            OnlineHelper.Initialize();
 
             Clock.Start();
         }

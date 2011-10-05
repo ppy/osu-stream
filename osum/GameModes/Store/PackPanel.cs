@@ -31,9 +31,7 @@ namespace osum.GameModes.Store
 
         float base_depth = 0.6f;
 
-        static Color4 colourNormal = new Color4(50, 50, 50, 200);
         static Color4 colourHover = new Color4(28, 139, 242, 255);
-        static Color4 colourHover2 = new Color4(0, 77, 164, 255);
         static Color4 colourVideoPreviewNormal = new Color4(255, 255, 255, 40);
 
         internal const int PANEL_HEIGHT = 60;

@@ -13,11 +13,10 @@ namespace osum.GameModes.Store
 
     public class InAppPurchaseManager : SKProductsRequestDelegate, IDisposable
     {
-        private MonoTouch.StoreKit.SKProduct product;
         private SKProductsRequest productsRequest;
         private MySKPaymentObserver observer;
 
-        public void Dispose()
+        public new void Dispose()
         {
             if (observer != null)
             {

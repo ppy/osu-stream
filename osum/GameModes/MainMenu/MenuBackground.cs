@@ -283,7 +283,6 @@ namespace osum.GameModes
         bool first = true;
         private pQuad rectBorder;
         private pQuad rect;
-        private pSprite osuLogo;
         public override void Update()
         {
             if (awesomeTransformation != null || first)

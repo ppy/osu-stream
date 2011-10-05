@@ -32,7 +32,7 @@ namespace osu_common.Helpers
                         return sBuilder.ToString();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     return string.Empty;
                 }

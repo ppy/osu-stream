@@ -278,7 +278,6 @@ namespace osum.GameModes
         }
 
         double elapsedRotation;
-        private pSprite menuOptions;
         private pSprite stream;
 
         int lastBgmBeat = 0;

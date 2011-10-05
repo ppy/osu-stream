@@ -10,9 +10,7 @@ namespace osu_common.Libraries.Osz2
     public class MapStream : Stream
     {
         #region Delegates
-
         public delegate void MapStreamDelegate(MapStream ms);
-
         #endregion
 
         
@@ -172,7 +170,7 @@ namespace osu_common.Libraries.Osz2
             base.Close();
         }
 
-        public void Dispose()
+        public new void Dispose() //todo: check if we actually want to override here.
         {
             Dispose(true);
             GC.SuppressFinalize(this);

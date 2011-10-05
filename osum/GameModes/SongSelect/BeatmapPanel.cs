@@ -23,13 +23,9 @@ namespace osum.GameModes.SongSelect
         internal pSprite s_BackingPlate2;
         internal pText s_Text;
         internal pText s_TextArtist;
-        internal pText s_TextCreator;
         internal pSprite s_Thumbnail;
 
         float base_depth = 0.4f;
-
-        static Color4 colourNormal = new Color4(50, 50, 50, 255);
-        static Color4 colourHover = new Color4(28, 139, 242, 255);
 
         internal const int PANEL_HEIGHT = 60;
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
@@ -77,7 +73,7 @@ namespace osum.GameModes.SongSelect
             Sprites.Add(s_TextArtist);
 
 #if !DIST && !iOS
-            s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
+            pText s_TextCreator = new pText(string.Empty, 14, Vector2.Zero, Vector2.Zero, 0.52f, true, BACKGROUND_COLOUR, false);
             s_TextCreator.Origin = OriginTypes.TopRight;
             s_TextCreator.Field = FieldTypes.StandardSnapRight;
             //Sprites.Add(s_TextCreator);
@@ -93,7 +89,9 @@ namespace osum.GameModes.SongSelect
                 {
                     s_Text.Text = beatmap.Title;
                     s_TextArtist.Text = beatmap.Artist;
+#if !DIST && !iOS
                     if (s_TextCreator != null) s_TextCreator.Text = beatmap.Creator;
+#endif
                     starCount = beatmap.DifficultyStars / 2f;
                 }
                 catch

@@ -82,8 +82,6 @@ namespace osum
                 dl.RemoveFromRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
         }
 
-        int updateCount;
-
         [Export("DrawFrame")]
         private void DrawFrame()
         {

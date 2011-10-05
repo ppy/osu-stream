@@ -44,8 +44,6 @@ namespace osum.Graphics
 {
     public class TextureGl : IDisposable
     {
-        static readonly internal bool SUPPORTS_DRAWTEXTURE_EXT;
-
         internal int potHeight;
         internal int potWidth;
 
@@ -86,6 +84,7 @@ namespace osum.Graphics
         IntPtr handle_coordinates_pointer;
 
 #if IPHONE
+        static readonly internal bool SUPPORTS_DRAWTEXTURE_EXT;
         static TextureGl()
         {
             SUPPORTS_DRAWTEXTURE_EXT = GL.GetString(All.Extensions).Contains("OES_draw_texture");

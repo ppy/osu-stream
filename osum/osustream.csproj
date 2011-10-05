@@ -49,7 +49,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
+    <DefineConstants>iOS OSUM DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
@@ -250,9 +250,6 @@
     <Compile Include="Libraries\NetLib\NetRequest.cs" />
     <Compile Include="Libraries\NetLib\StringNetRequest.cs" />
     <Compile Include="Helpers\osu!common\CryptoHelper.cs" />
-    <Compile Include="Online\OnlineHelper.cs" />
-    <Compile Include="Online\IOnlineServices.cs" />
-    <Compile Include="Online\OnlineServicesIOS.cs" />
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="Support\iPhone\HardwareDetection.cs" />

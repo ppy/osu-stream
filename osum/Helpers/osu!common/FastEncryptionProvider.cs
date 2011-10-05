@@ -58,7 +58,6 @@ namespace osu_common.Helpers
             uint fullWordCount = unchecked((uint)count / nMAXBytes);
             uint leftover = unchecked((uint)count) % nMAXBytes;
 
-            uint na = nMAX;
             n = nMAX;
             UInt32 rounds = 6 + 52 / n;
 
@@ -293,7 +292,6 @@ namespace osu_common.Helpers
                     //Marshal.Copy(new IntPtr(bufferPtr), new IntPtr(outputPtr),)
                     //EncryptDecrypt(encrypted, encrypt);
                     throw new NotSupportedException();
-                    break;
                 case EncryptionMethod.Four:
                     checkKey();
                     break;

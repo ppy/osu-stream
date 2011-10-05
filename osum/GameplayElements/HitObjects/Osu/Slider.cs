@@ -207,9 +207,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             CalculateSnakingTimes();
             initializeSprites();
             initializeStartCircle();
-
-            if (PRERENDER_ALL)
-                UpdatePathTexture();
         }
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
@@ -1095,7 +1092,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         bool waitingForPathTextureClear;
 
+#if iOS
         static int oldFboId = -1;
+#endif
 
         /// <summary>
         /// Updates the slider's path texture if required.

@@ -406,7 +406,7 @@ namespace osum.GameModes
             }
         }
 
-        protected void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
+        protected virtual void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             double healthChange = 0;
             bool increaseCombo = false;
@@ -560,7 +560,7 @@ namespace osum.GameModes
                         }
 
 
-                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
                     }
                     else
                         healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));

@@ -39,9 +39,9 @@ namespace osu_common.Libraries.Osz2
                         package = new MapPackage(absolute,null, createIfNotFound, metadataOnly);
                     }
 #if DEBUG
-                    catch (ExecutionEngineException e)
+                    catch (ExecutionEngineException)
 #else
-                    catch (Exception e)
+                    catch (Exception)
 #endif
                     {
                         return null;

@@ -2,7 +2,6 @@ using System;
 using osum.GameModes.SongSelect;
 using osum.Graphics.Skins;
 using OpenTK;
-using osum.Online;
 using osum.Graphics.Sprites;
 using OpenTK.Graphics.ES11;
 using OpenTK.Graphics;
@@ -18,7 +17,6 @@ namespace osum.GameModes.Options
     public class Options : GameMode
     {
         BackButton s_ButtonBack;
-        pSprite gameCentre;
         SpriteManagerDraggable smd = new SpriteManagerDraggable()
         {
             Scrollbar = true
