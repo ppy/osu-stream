@@ -87,7 +87,7 @@ namespace osum.GameplayElements
 
             if (i == null)
             {
-                i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = filename };
+                i = new BeatmapInfo(filename);
                 BeatmapInfo.AddInPlace(i);
             }
 
@@ -97,6 +97,7 @@ namespace osum.GameplayElements
         internal static void Erase(Beatmap b)
         {
             string filename = Path.GetFileName(b.ContainerFilename);
+
             BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
 
             if (i != null)
@@ -138,9 +139,13 @@ namespace osum.GameplayElements
     public class BeatmapInfo : bSerializable, IComparable<BeatmapInfo>
     {
         public string Filename;
-        public string FullPath;
 
         public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
+
+        public BeatmapInfo(string filename) : base()
+        {
+            Filename = Path.GetFileName(filename);
+        }
 
         public BeatmapInfo()
         {
@@ -153,9 +158,8 @@ namespace osum.GameplayElements
 
         public void ReadFromStream(SerializationReader sr)
         {
-            FullPath = sr.ReadString();
-            Filename = Path.GetFileName(FullPath);
-            
+            //the GetFileName call is not necessary after old (pre-v1.11) databases are updated.
+            Filename = Path.GetFileName(sr.ReadString());
 
             DifficultyScores[Difficulty.Easy].ReadFromStream(sr);
             DifficultyScores[Difficulty.Normal].ReadFromStream(sr);
@@ -164,7 +168,7 @@ namespace osum.GameplayElements
 
         public void WriteToStream(SerializationWriter sw)
         {
-            sw.Write(FullPath);
+            sw.Write(Filename);
 
             DifficultyScores[Difficulty.Easy].WriteToStream(sw);
             DifficultyScores[Difficulty.Normal].WriteToStream(sw);
@@ -173,7 +177,8 @@ namespace osum.GameplayElements
 
         public Beatmap GetBeatmap()
         {
-            return new Beatmap(FullPath) { BeatmapInfo = this };
+            string path = (Filename.EndsWith(".osf2") ? "Beatmaps/" : SongSelectMode.BeatmapPath) + Filename;
+            return new Beatmap(path) { BeatmapInfo = this };
         }
 
         #endregion
