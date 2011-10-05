@@ -30,8 +30,7 @@ namespace osum.Support
                     GameBase.Notify(notification);
                 },true);
 
-                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/admin/crash.php", "POST", contents);
-                NetManager.AddRequest(nr);
+                Report(contents);
             }
 
             AppDomain.CurrentDomain.UnhandledException += HandleException;
@@ -39,15 +38,18 @@ namespace osum.Support
             isInitialized = true;
         }
 
+        public static void Report(string contents)
+        {
+#if iOS
+            contents += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
+#endif
+            StringNetRequest nr = new StringNetRequest("http://www.osustream.com/admin/crash.php", "POST", "exception=" + contents );
+            NetManager.AddRequest(nr);
+        }
+
         static void HandleException(object sender, UnhandledExceptionEventArgs e)
         {
-            string content = "exception=" + e.ExceptionObject.ToString();
-
-#if iOS
-            content += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
-#endif
-
-            File.WriteAllText(LogFileFullPath, content);
+            File.WriteAllText(LogFileFullPath, e.ExceptionObject.ToString());
         }
     }
 }
