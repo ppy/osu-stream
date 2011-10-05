@@ -172,11 +172,11 @@ namespace osum.GameModes.Store
             });
             s_PriceBackground.OnClick += onPurchase;
 
-            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 46, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 40, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
             {
-                Origin = OriginTypes.TopCentre,
+                Origin = OriginTypes.Centre,
                 Field = FieldTypes.StandardSnapRight,
-                Offset = new Vector2(80, 0)
+                Offset = new Vector2(75, 30)
             });
 
             if (!free)
