@@ -31,6 +31,8 @@ namespace osum.GameModes.Store
                 productsRequest.Cancel();
                 productsRequest = null;
             }
+
+            base.Dispose();
         }
 
         ProductResponseDelegate responseDelegate;
