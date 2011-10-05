@@ -36,6 +36,7 @@ Global
 		$2.FileWidth = 160
 		$2.NoTabsAfterNonTabs = True
 		$2.RemoveTrailingWhitespace = True
+		$2.EolMarker = Windows
 		$2.inheritsSet = VisualStudio
 		$2.inheritsScope = text/plain
 		$2.scope = text/x-csharp
