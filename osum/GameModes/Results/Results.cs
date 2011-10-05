@@ -382,8 +382,7 @@ namespace osum.GameModes
                     if (e == null && result != null && result.StartsWith("message:"))
                     {
                         rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
-                        if (finishedDisplaying)
-                            GameBase.Notify(rankingNotification);
+                        if (finishedDisplaying) GameBase.Notify(rankingNotification);
                     }
                 };
                 NetManager.AddRequest(nr);
@@ -536,8 +535,8 @@ namespace osum.GameModes
                 {
                     unlockedExpert = false; //reset and run again.
                     finishDisplaying();
-                    return;
                 }));
+                return;
             }
 
             if (rankingNotification != null)
