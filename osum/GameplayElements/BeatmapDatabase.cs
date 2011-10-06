@@ -145,13 +145,18 @@ namespace osum.GameplayElements
         public BeatmapInfo(string filename)
         {
             Filename = Path.GetFileName(filename);
-        }
 
-        public BeatmapInfo()
-        {
             DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
             DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
             DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="osum.GameplayElements.BeatmapInfo"/> class.
+        /// Do NOT use this for anything other than serialisation; it does not properly initialise scores.
+        /// </summary>
+        public BeatmapInfo()
+        {
         }
 
         #region bSerializable Members
@@ -177,7 +182,7 @@ namespace osum.GameplayElements
 
         public Beatmap GetBeatmap()
         {
-            string path = (Filename.EndsWith(".osf2") ? "Beatmaps/" : SongSelectMode.BeatmapPath) + Filename;
+            string path = (Filename.EndsWith(".osf2") ? "Beatmaps" : SongSelectMode.BeatmapPath) + "/" + Filename;
             return new Beatmap(path) { BeatmapInfo = this };
         }
 
