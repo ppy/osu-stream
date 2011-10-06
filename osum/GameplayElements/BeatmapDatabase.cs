@@ -182,7 +182,10 @@ namespace osum.GameplayElements
 
         public Beatmap GetBeatmap()
         {
-            string path = (Filename.EndsWith(".osf2") ? "Beatmaps" : SongSelectMode.BeatmapPath) + "/" + Filename;
+            string path = SongSelectMode.BeatmapPath + "/" + Filename;
+            if (Filename.EndsWith(".osf2") && !File.Exists(path))
+                path = "Beatmaps/" + Filename;
+
             return new Beatmap(path) { BeatmapInfo = this };
         }
 
