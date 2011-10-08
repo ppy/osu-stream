@@ -126,7 +126,7 @@ namespace osum.Graphics
 #if iOS
                     GL.Oes.DeleteFramebuffers(1,ref fboId);
                     fboId = -1;
-                    
+
 #else
                     GL.DeleteFramebuffers(1, ref fboId);
                     fboId = -1;
@@ -205,82 +205,111 @@ namespace osum.Graphics
         /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
-        public static pTexture FromFile(string filename, bool mipmap)
+        public unsafe static pTexture FromFile(string filename, bool mipmap)
         {
             //load base texture first...
-
             if (!NativeAssetManager.Instance.FileExists(filename)) return null;
 
             pTexture tex = null;
 
             try
             {
+#if BITMAP_CACHING
+                string bitmapFilename = GameBase.Instance.PathConfig + Path.GetFileName(filename.Replace(".png",".raw"));
+                string infoFilename = GameBase.Instance.PathConfig + Path.GetFileName(filename.Replace(".png", ".info"));
+
+                if (!NativeAssetManager.Instance.FileExists(bitmapFilename))
+                {
 #if iOS
+                    using (UIImage image = UIImage.FromFile(filename))
+                    {
+                        if (image == null)
+                            return null;
+
+                        int width = (int)image.Size.Width;
+                        int height = (int)image.Size.Height;
+
+                        byte[] buffer = new byte[width * height * 4];
+                        fixed (byte* p = buffer)
+                        {
+                            IntPtr data = (IntPtr)p;
+
+                            using (CGBitmapContext textureContext = new CGBitmapContext(data,
+                                        width, height, 8, width * 4,
+                                        image.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+                            {
+                                textureContext.DrawImage(new RectangleF (0, 0, width, height), image.CGImage);
+                            }
+
+                            File.WriteAllBytes(bitmapFilename, buffer);
+
+                            tex = FromRawBytes(data, width, height);
+                        }
+                    }
+#else
+                    using (Stream stream = NativeAssetManager.Instance.GetFileStream(filename))
+                    using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
+                    {
+                        BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
+                                                     System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                        byte[] bitmap = new byte[b.Width * b.Height * 4];
+                        Marshal.Copy(data.Scan0, bitmap, 0, bitmap.Length);
+                        File.WriteAllBytes(bitmapFilename, bitmap);
+
+                        tex = FromRawBytes(data.Scan0, b.Width, b.Height);
+                        b.UnlockBits(data);
+                    }
+#endif
+
+                    if (tex != null)
+                    {
+                        string info = tex.Width + "x" + tex.Height;
+                        File.WriteAllText(infoFilename, info);
+                    }
+                }
+                else
+                {
+                    byte[] buffer = File.ReadAllBytes(bitmapFilename);
+                    string info = File.ReadAllText(infoFilename);
+                    string[] split = info.Split('x');
+
+                    int width = Int32.Parse(split[0]);
+                    int height = Int32.Parse(split[1]);
+
+                    fixed (byte* p = buffer)
+                    {
+                        IntPtr location = (IntPtr)p;
+                        tex = FromRawBytes(location, width, height);
+                    }
+                }
+#else
+                #if iOS
                 using (UIImage image = UIImage.FromFile(filename))
                     tex = FromUIImage(image,filename);
-#else
+                #else
                 using (Stream stream = NativeAssetManager.Instance.GetFileStream(filename))
                     tex = FromStream(stream, filename);
+                #endif
 #endif
+
+                if (tex == null) return null;
 
                 //This makes sure we are always at the correct sprite resolution.
                 //Fucking hack, or fucking hax?
+                tex.assetName = filename;
                 tex.Width = (int)(tex.Width * 960f / GameBase.SpriteSheetResolution);
                 tex.Height = (int)(tex.Height * 960f / GameBase.SpriteSheetResolution);
                 tex.TextureGl.TextureWidth = tex.Width;
                 tex.TextureGl.TextureHeight = tex.Height;
+
+                return tex;
             }
             catch
             {
-                return null;
             }
 
-            if (mipmap)
-            {
-                int mipmapLevel = 1;
-
-                int width = tex.Width;
-                int height = tex.Height;
-
-                do
-                {
-                    string mmfilename = filename.Replace(".", mipmapLevel + ".");
-                    if (!NativeAssetManager.Instance.FileExists(mmfilename))
-                        break;
-
-                    width /= 2;
-                    height /= 2;
-
-#if iOS
-                    using (UIImage textureImage = UIImage.FromFile(mmfilename))
-                    {
-                        IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
-                
-                        using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
-                                    width, height, 8, width * 4,
-                                    textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-                            textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-                        
-                        tex.TextureGl.SetData(pTextureData,mipmapLevel,0);
-                        
-                        Marshal.FreeHGlobal(pTextureData);
-                    }
-#endif
-
-
-                    mipmapLevel++;
-                } while (true);
-
-            }
-
-            return tex;
-
-
-        }
-
-        public static pTexture FromStream(Stream stream, string assetname)
-        {
-            return FromStream(stream, assetname, false);
+            return null;
         }
 
 #if iOS
@@ -303,13 +332,18 @@ namespace osum.Graphics
                 {
                     textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
                 }
-                
+
                 pTexture tex = FromRawBytes(pTextureData, width, height);
                 tex.assetName = assetname;
                 return tex;
             }
         }
 #endif
+
+        public static pTexture FromStream(Stream stream, string assetname)
+        {
+            return FromStream(stream, assetname, false);
+        }
 
         /// <summary>
         /// Read a pTexture from an arbritrary file.
