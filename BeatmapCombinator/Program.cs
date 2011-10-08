@@ -568,6 +568,9 @@ namespace BeatmapCombinator
                 if (ordered[3] != null) versionsAvailable += "|Expert";
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
+                if (string.IsNullOrEmpty(audioFilename))
+                    throw new Exception("FATAL ERROR: audio file not found");
+
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
 #if PREVIEW
                 package.AddFile("audio.m4a", audioFilename.Replace(".m4a","_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
