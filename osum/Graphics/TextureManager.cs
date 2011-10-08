@@ -116,6 +116,8 @@ namespace osum.Graphics.Skins
 
         public static void PurgeUnusedTexture()
         {
+            DisposeDisposable();
+
             foreach (TextureGl p in SpriteTextureCache.Values.ToArray<TextureGl>())
                 if (!p.usedSinceLastModeChange && p.Loaded)
                 {
@@ -301,12 +303,13 @@ namespace osum.Graphics.Skins
 
             set
             {
+                if (requireSurfaces == value)
+                    return;
+
                 requireSurfaces = value;
 
                 if (value)
-                {
                     PopulateSurfaces();
-                }
                 else
                 {
                     if (availableSurfaces != null)
@@ -340,7 +343,6 @@ namespace osum.Graphics.Skins
                         p.Draw();
 #endif
 
-                    RegisterDisposable(t);
                     availableSurfaces.Enqueue(t);
                 }
             }
