@@ -82,12 +82,6 @@ namespace osum.GameModes
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
 
-            //todo: write less
-            if (Director.LastOsuMode == OsuMode.Play)
-                BeatmapDatabase.Write();
-            else
-                BeatmapDatabase.Initialize();
-
             GameBase.Config.SaveConfig();
 
             InputManager.OnMove += InputManager_OnMove;
@@ -168,6 +162,7 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
+            BeatmapDatabase.Initialize();
 
 #if MAPPER
             //desktop/mapper builds.

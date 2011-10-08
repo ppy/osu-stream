@@ -19,36 +19,42 @@ namespace osum.GameplayElements
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
 
-        private static bool initialized;
         internal static int Version = -1;
 
-        public static pList<BeatmapInfo> BeatmapInfo = new pList<BeatmapInfo>();
+        public static pList<BeatmapInfo> BeatmapInfo;
 
         internal static void Initialize()
         {
-            if (initialized)
+            if (BeatmapInfo != null)
                 return;
 
-            initialized = true;
+            BeatmapInfo = new pList<BeatmapInfo>();
 
-            if (!File.Exists(fullPath))
-                return;
-
-            try
+            if (File.Exists(fullPath))
             {
-                using (FileStream fs = File.OpenRead(fullPath))
-                using (SerializationReader reader = new SerializationReader(fs))
+                try
                 {
-                    Version = reader.ReadInt32();
-                    if (Version > 3)
-                        BeatmapInfo = reader.ReadBList<BeatmapInfo>();
-                }
+                    using (FileStream fs = File.OpenRead(fullPath))
+                    using (SerializationReader reader = new SerializationReader(fs))
+                    {
+                        Version = reader.ReadInt32();
+                        if (Version > 3)
+                            BeatmapInfo = reader.ReadBList<BeatmapInfo>();
+                    }
 
-                BeatmapInfo.Sort();
+                    BeatmapInfo.Sort();
+                }
+                catch (Exception e) {
+#if DEBUG
+                    Console.WriteLine("Error while reading database! " + e);
+#endif
+                }
             }
-            catch { }
 
             Version = DATABASE_VERSION;
+#if DEBUG
+            Console.WriteLine("Read beatmap database: " + BeatmapInfo.Count);
+#endif
         }
 
         internal static void Write()
@@ -68,19 +74,22 @@ namespace osum.GameplayElements
 
             File.Delete(filename);
             File.Move(tempFilename, filename);
+
+#if DEBUG
+            Console.WriteLine("Wrote beatmap database to " + filename + " with count " + BeatmapInfo.Count);
+#endif
         }
 
         internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)
         {
             if (b == null) return null;
-
-            BeatmapInfo i = PopulateBeatmap(b);
-
-            return i.DifficultyScores[d];
+            return PopulateBeatmap(b).DifficultyScores[d];
         }
 
         internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
         {
+            Initialize();
+
             string filename = Path.GetFileName(beatmap.ContainerFilename);
 
             BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
@@ -96,6 +105,8 @@ namespace osum.GameplayElements
 
         internal static void Erase(Beatmap b)
         {
+            Initialize();
+
             string filename = Path.GetFileName(b.ContainerFilename);
 
             BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
@@ -142,13 +153,9 @@ namespace osum.GameplayElements
 
         public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
 
-        public BeatmapInfo(string filename)
+        public BeatmapInfo(string filename) : this()
         {
             Filename = Path.GetFileName(filename);
-
-            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
-            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
-            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
         }
 
         /// <summary>
@@ -157,6 +164,9 @@ namespace osum.GameplayElements
         /// </summary>
         public BeatmapInfo()
         {
+            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
+            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
+            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
         }
 
         #region bSerializable Members

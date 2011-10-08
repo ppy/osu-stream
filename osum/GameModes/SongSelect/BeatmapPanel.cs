@@ -189,9 +189,7 @@ namespace osum.GameModes.SongSelect
                 Sprites.Add(s_Star);
 #endif
 
-                BeatmapInfo info = Beatmap.BeatmapInfo;
-
-                foreach (DifficultyScoreInfo diffInfo in info.DifficultyScores.Values)
+                foreach (DifficultyScoreInfo diffInfo in Beatmap.BeatmapInfo.DifficultyScores.Values)
                 {
                     if (diffInfo.HighScore != null)
                     {
