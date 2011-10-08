@@ -135,3 +135,4 @@ Cancel=Cancel
 GuestUsername=Set Guest Username
 ChooseUsername=Choose a Username!
 InternetFailed=Failed to load.\nPlease check you are connected to the internet and try again!
+Crashed=Looks like osu!stream encountered an error. Details will be sent to peppy (the guy who made this) so it can be fixed. Sorry for the trouble!

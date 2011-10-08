@@ -194,6 +194,7 @@ namespace osum.Resources
         TwitterUnlink,
         GuestUsername,
         ChooseUsername,
-        InternetFailed
+        InternetFailed,
+        Crashed
     }
 }

@@ -26,6 +26,8 @@ namespace osum.UI
 
         public Notification(string title, string description, NotificationStyle style, BoolDelegate action = null)
         {
+            Clocking = ClockTypes.Game;
+
             pSprite back = new pSprite(TextureManager.Load(OsuTexture.notification_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.98f, true, Color4.White)
             {
                 DimImmune = true,
@@ -215,7 +217,7 @@ namespace osum.UI
 
         internal virtual void Display()
         {
-            Transformation bounce = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + 800, 1, 0.1f, 8);
+            Transformation bounce = new TransformationBounce(Clock.Time, Clock.Time + 800, 1, 0.1f, 8);
             Transform(bounce);
 
             FadeIn(200);

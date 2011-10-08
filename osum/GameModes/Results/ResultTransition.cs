@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using osum.Audio;
 using osum.GameModes.SongSelect;
 using osum.Graphics;
-using osum.Online;
 using osu_common.Helpers;
 using osum.GameplayElements;
 using System.IO;
@@ -48,7 +47,6 @@ namespace osum.GameModes
         }
 
         int startTime;
-        private pDrawable flash;
 
         pSprite background;
 

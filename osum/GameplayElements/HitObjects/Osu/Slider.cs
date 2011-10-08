@@ -207,9 +207,6 @@ namespace osum.GameplayElements.HitObjects.Osu
             CalculateSnakingTimes();
             initializeSprites();
             initializeStartCircle();
-
-            if (PRERENDER_ALL)
-                UpdatePathTexture();
         }
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
@@ -231,14 +228,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             spriteFollowCircle =
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White){ ExactCoordinates = false };
+                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White) { ExactCoordinates = false };
 
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                               ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White){ ExactCoordinates = false };
+                               ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White) { ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
             Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1,
@@ -263,7 +260,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             spriteFollowBallOverlay =
 new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.GamefieldSprites,
-       OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59/64), 0.99f, false, Color.White) { ExactCoordinates = false };
+       OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59 / 64), 0.99f, false, Color.White) { ExactCoordinates = false };
 
             spriteFollowBallOverlay.Transform(fadeIn);
             spriteFollowBallOverlay.Transform(fadeOutInstant);
@@ -494,11 +491,14 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override int ColourIndex {
-            get {
+        internal override int ColourIndex
+        {
+            get
+            {
                 return base.ColourIndex;
             }
-            set {
+            set
+            {
                 HitCircleStart.ColourIndex = value;
                 if (spriteCollectionStart.Count > 0) ((pSprite)spriteCollectionStart[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
                 if (spriteCollectionEnd.Count > 0) ((pSprite)spriteCollectionEnd[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
@@ -544,8 +544,10 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 Position2 {
-            get {
+        internal override Vector2 Position2
+        {
+            get
+            {
                 return drawableSegments[drawableSegments.Count - 1].p2;
             }
         }
@@ -810,16 +812,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         internal override void StopSound(bool done = true)
         {
-            if (sourceSliding != null && sourceSliding.Reserved)
-            {
-                sourceSliding.Stop();
-                if (done)
-                {
-                    sourceSliding.Reserved = false;
-                    sourceSliding = null;
-                }
-            }
-
+            stopSliding(this);
             base.StopSound();
         }
 
@@ -839,7 +832,42 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        Source sourceSliding;
+        static Dictionary<SampleSet, Source> slidingSources = new Dictionary<SampleSet, Source>();
+        static void startSliding(Slider s)
+        {
+            if (AudioEngine.Effect == null) return;
+
+            Source source = null;
+
+            if (slidingSources.TryGetValue(s.SampleSet.SampleSet, out source))
+            {
+                source.TagNumeric++; //increment the number of sliders emitting this sound.
+                return;
+            }
+
+            source = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, s.SampleSet.SampleSet), s.SampleSet.Volume * 0.8f, true, true);
+            source.TagNumeric++;
+            source.Play();
+
+            slidingSources.Add(s.SampleSet.SampleSet, source);
+        }
+
+        static void stopSliding(Slider s)
+        {
+            if (AudioEngine.Effect == null) return;
+
+            Source source = null;
+
+            if (!slidingSources.TryGetValue(s.SampleSet.SampleSet, out source))
+                return;
+
+            if (--source.TagNumeric <= 0)
+            {
+                source.Stop();
+                source.Reserved = false;
+                slidingSources.Remove(s.SampleSet.SampleSet);
+            }
+        }
 
         protected virtual void newEndpoint()
         {
@@ -860,12 +888,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         protected virtual void beginTracking()
         {
-            if (AudioEngine.Effect != null)
-            {
-                if (sourceSliding == null || sourceSliding.BufferId == 0)
-                    sourceSliding = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, SampleSet.SampleSet), SampleSet.Volume * 0.8f, true, true);
-                sourceSliding.Play();
-            }
+            startSliding(this);
 
             //Begin tracking.
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
@@ -1069,7 +1092,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         bool waitingForPathTextureClear;
 
+#if iOS
         static int oldFboId = -1;
+#endif
 
         /// <summary>
         /// Updates the slider's path texture if required.
@@ -1207,7 +1232,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 return;
 
 #if iOS
-            sliderBodyTexture.Premultiplied = true;
+            spriteSliderBody.Premultiplied = true;
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);

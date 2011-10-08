@@ -42,7 +42,7 @@ namespace osum.Audio
     internal static class AudioEngine
     {
         static Dictionary<OsuSamples, int>[] loadedSamples = new Dictionary<OsuSamples, int>[]
-        { 
+        {
             new Dictionary<OsuSamples, int>(), // none
             new Dictionary<OsuSamples, int>(), // normal
             new Dictionary<OsuSamples, int>(), // soft
@@ -93,10 +93,11 @@ namespace osum.Audio
             if (lastPlayedTimes.TryGetValue(buffer, out lastPlayed))
                 if (Math.Abs(Clock.Time - lastPlayed) < 40)
                     return null;
+
             lastPlayedTimes[buffer] = Clock.Time;
 
             Source src = AudioEngine.Effect.LoadBuffer(buffer, volume);
-            
+
             if (src == null) return null;
 
             src.Play();
@@ -110,6 +111,9 @@ namespace osum.Audio
         internal static void Reset()
         {
             lastPlayedTimes.Clear();
+
+            if (Effect != null)
+                Effect.StopAllLooping(true);
         }
 
         internal static int LoadSample(OsuSamples sample, SampleSet set = SampleSet.Soft)
@@ -133,7 +137,7 @@ namespace osum.Audio
             {
                 string sampleName = sample.ToString().ToLower();
                 string setName = ss != SampleSet.None ? ss.ToString().ToLower() + "-" : string.Empty;
-                
+
                 bool oneShot = sample > OsuSamples.PRELOAD_END;
 
                 if (AudioEngine.Effect != null)

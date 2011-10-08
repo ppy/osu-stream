@@ -163,14 +163,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             else
             {
                 SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
-                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
-                          new SampleSetInfo
-                          {
-                              SampleSet = Beatmaps.SampleSet.Soft,
-                              CustomSampleSet = CustomSampleSet.Default,
-                              Volume = ss.Volume,
-                              AdditionSampleSet = ss.SampleSet
-                          });
+                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,ss);
             }
         }
 

@@ -29,8 +29,6 @@ namespace osum.Support
         static double lastUpdateTime;
         static bool updateFrame;
 
-        static int gcCount;
-
         static internal void Update()
         {
             if (fpsDisplay == null)
@@ -40,11 +38,11 @@ namespace osum.Support
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
-#if iOS
+                #if iOS
                 fpsDisplay.ScaleScalar = 0.6f;
-#elif !FULL_DEBUG
+                #elif !FULL_DEBUG
                 fpsDisplay.ScaleScalar = 0.3f;
-#endif
+                #endif
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #endif
             }

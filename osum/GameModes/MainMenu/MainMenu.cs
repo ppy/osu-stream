@@ -278,7 +278,6 @@ namespace osum.GameModes
         }
 
         double elapsedRotation;
-        private pSprite menuOptions;
         private pSprite stream;
 
         int lastBgmBeat = 0;
@@ -362,14 +361,7 @@ namespace osum.GameModes
         {
             spriteManagerBehind.Draw();
             menuBackgroundNew.Draw();
-
             base.Draw();
-
-
-
-            //if (!Director.IsTransitioning)
-            //	osuLogo.ScaleScalar = 1 + AudioEngine.Music.CurrentVolume/100;
-
             return true;
         }
 

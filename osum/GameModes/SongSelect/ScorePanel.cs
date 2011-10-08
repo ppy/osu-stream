@@ -20,12 +20,8 @@ namespace osum.GameModes.SongSelect
     {
         internal pDrawable s_BackingPlate;
         internal pText s_Text;
-        internal pText s_TextArtist;
 
         float base_depth = 0.4f;
-
-        static Color4 colourNormal = new Color4(50, 50, 50, 255);
-        static Color4 colourHover = new Color4(28, 139, 242, 255);
 
         internal const int PANEL_HEIGHT = 34;
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);

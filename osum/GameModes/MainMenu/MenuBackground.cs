@@ -27,7 +27,7 @@ namespace osum.GameModes
         public MenuBackground()
         {
             whoosh = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.MenuWhoosh), 1, false, true);
-            
+
             EndStopLenience = 0.5f;
             EndBufferZone = 0;
             AutomaticHeight = false;
@@ -265,27 +265,24 @@ namespace osum.GameModes
         {
             GameBase.Scheduler.Add(delegate
             {
-                whoosh.Play();
+                if (whoosh != null) whoosh.Play();
+
                 ScaleTo(scale_offset, duration / 2, EasingTypes.InOut);
                 MoveTo(new Vector2(75, -44), duration / 2, EasingTypes.InOut);
                 RotateTo(rotation_offset, duration / 2, EasingTypes.InOut);
 
-                //rect.FadeOut(duration);
                 rectBorder.FadeOut(duration);
             }, 200);
 
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
-            //new TransformationFloat(TransformationType.Fade, 0, 1, Clock.ModeTime, Clock.ModeTime + duration/4, EasingTypes.InDouble);
 
-            textSprites.ForEach(s => s.FadeIn(500));
-            
+            if (textSprites != null) textSprites.ForEach(s => s.FadeIn(500));
         }
 
         bool first = true;
         private pQuad rectBorder;
         private pQuad rect;
-        private pSprite osuLogo;
         public override void Update()
         {
             if (awesomeTransformation != null || first)

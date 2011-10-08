@@ -317,8 +317,6 @@ namespace osum.GameModes.Play
                     {
                         showText(LocalisationManager.GetString(OsuString.HitCircle4), -70);
 
-                        HitCircle c = sampleHitObject as HitCircle;
-
                         bool textShown = false;
 
                         currentSegmentDelegate = delegate
@@ -747,8 +745,6 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Spinner_3:
                     showText(LocalisationManager.GetString(OsuString.Spinner3), -140);
                     {
-                        Spinner sp = sampleHitObject as Spinner;
-
                         currentSegmentDelegate = delegate
                         {
                             if (Clock.ManualTime < 4600)
@@ -988,7 +984,6 @@ namespace osum.GameModes.Play
                     };
                     break;
                 case TutorialSegments.Stacked_3:
-                    int i = 0;
                     hideDemo();
                     showText(LocalisationManager.GetString(OsuString.Stacked3));
                     showTouchToContinue();
@@ -998,9 +993,7 @@ namespace osum.GameModes.Play
                         prepareInteract();
 
                         const int x1 = 100;
-                        const int x15 = 230;
                         const int x2 = 512 - 100;
-                        const int x25 = 512 - 230;
                         const int y1 = 80;
                         const int y2 = 384 - 80;
 
@@ -1487,7 +1480,7 @@ namespace osum.GameModes.Play
             loadBeatmap();
         }
 
-        void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
+        protected override void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             switch (change)
             {

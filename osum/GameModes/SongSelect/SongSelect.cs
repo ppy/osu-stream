@@ -15,7 +15,6 @@ using osum.Graphics.Drawables;
 using osum.GameplayElements;
 using System.Threading;
 using osum.GameplayElements.Scoring;
-using osum.Online;
 using osum.Resources;
 using osu_common.Helpers;
 
@@ -82,12 +81,6 @@ namespace osum.GameModes
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
-
-            //todo: write less
-            if (Director.LastOsuMode == OsuMode.Play)
-                BeatmapDatabase.Write();
-            else
-                BeatmapDatabase.Initialize();
 
             GameBase.Config.SaveConfig();
 
@@ -169,48 +162,51 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
-#if !MAPPER
+            BeatmapDatabase.Initialize();
+
+#if MAPPER
+            //desktop/mapper builds.
+            recursiveBeatmaps(BeatmapPath);
+#else
+
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                     maps.Add(bmi.GetBeatmap());
             }
             else
-#endif
             {
                 ForceBeatmapRefresh = false;
 
-#if DIST && iOS
+                #if DIST && iOS
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
                     //bundled maps
                     Beatmap b = new Beatmap(s);
+
+                    #if DEBUG
+                    Console.WriteLine("Attempting to load " + s);
+                    #endif
+
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
-#endif
-
-#if MONO
-                //desktop/mapper builds.
-                foreach (string subdir in Directory.GetDirectories(BeatmapPath))
-                    foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
-                    {
-                        Beatmap b = new Beatmap(s);
-                        BeatmapDatabase.PopulateBeatmap(b);
-                        maps.AddInPlace(b);
-                    }
-#endif
+                #endif
 
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {
                     Beatmap b = new Beatmap(s);
 
+                    #if DEBUG
+                    Console.WriteLine("Attempting to load " + s);
+                    #endif
+            
                     if (b.Package == null)
                         continue;
 
-#if DEBUG
+                    #if DEBUG
                     Console.WriteLine("Loaded beatmap " + s + " (difficulty " + b.DifficultyStars + ")");
-#endif
+                    #endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
@@ -218,11 +214,18 @@ namespace osum.GameModes
 
                 BeatmapDatabase.Write();
             }
+#endif
 
             int index = 0;
 
             foreach (Beatmap b in maps)
             {
+                if (b.Package == null)
+                {
+                    BeatmapDatabase.Erase(b);
+                    continue;
+                }
+
                 BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
                 topmostSpriteManager.Add(panel);
                 panels.Add(panel);
@@ -233,6 +236,22 @@ namespace osum.GameModes
             panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);
+        }
+
+        private void recursiveBeatmaps(string subdir)
+        {
+            if (subdir.Contains("Abandoned"))
+                return;
+
+            foreach (string ss in Directory.GetDirectories(subdir))
+                recursiveBeatmaps(ss);
+
+            foreach (string s in Directory.GetFiles(subdir, "*.osz2"))
+            {
+                Beatmap b = new Beatmap(s);
+                BeatmapDatabase.PopulateBeatmap(b);
+                maps.AddInPlace(b);
+            }
         }
 
         void panelSelected(object sender, EventArgs args)
@@ -259,9 +278,9 @@ namespace osum.GameModes
         {
             //Start playing song select BGM.
 #if iOS
-            AudioEngine.Music.Load("Skins/Default/songselect.m4a", true);
+            if (AudioEngine.Music.Load("Skins/Default/songselect.m4a", true))
 #else
-            AudioEngine.Music.Load("Skins/Default/songselect.mp3", true);
+            if (AudioEngine.Music.Load("Skins/Default/songselect.mp3", true))
 #endif
             AudioEngine.Music.Play();
         }

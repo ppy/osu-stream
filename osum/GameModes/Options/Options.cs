@@ -2,7 +2,6 @@ using System;
 using osum.GameModes.SongSelect;
 using osum.Graphics.Skins;
 using OpenTK;
-using osum.Online;
 using osum.Graphics.Sprites;
 using OpenTK.Graphics.ES11;
 using OpenTK.Graphics;
@@ -18,7 +17,6 @@ namespace osum.GameModes.Options
     public class Options : GameMode
     {
         BackButton s_ButtonBack;
-        pSprite gameCentre;
         SpriteManagerDraggable smd = new SpriteManagerDraggable()
         {
             Scrollbar = true
@@ -170,7 +168,7 @@ namespace osum.GameModes.Options
                 text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(20, vPos), 1, true, Color4.LightGray) { TextShadow = true };
                 smd.Add(text);
 
-                vPos += 100;
+                vPos += (int)text.MeasureText().Y + 50;
 
                 button = new pButton(LocalisationManager.GetString(OsuString.GuestUsername), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {

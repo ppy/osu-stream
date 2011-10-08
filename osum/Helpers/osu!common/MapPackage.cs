@@ -373,56 +373,6 @@ namespace osu_common.Libraries.Osz2
 
                         int fileLength = offset_next - offset_cur;
 
-                        //if we're dealing with a video file we check if the video data is correct
-                        //if not we pretend it doesn't exist.
-                        if (IsVideoFile(name))
-                        {
-                            bool invalid = false;
-                            long oldPos = br.BaseStream.Position;
-                            long newPos = fOffsetData + offset_cur + fileLength / 2 - 512 + 4;
-
-
-                            if (newPos >= br.BaseStream.Length || fileLength < 1024)
-                                invalid = true;
-                            else
-                            {
-                                byte[] footData = new byte[1024];
-
-                                byte[] videoData = new byte[fileLength - 4];
-                                //decrypt data then check videhash
-                                using (MapStream ms = new MapStream(Filename, fOffsetData + offset_cur, fileLength - 4, fIV, k))
-                                //using (FastEncryptorStream ms = new FastEncryptorStream(br.BaseStream, EncryptionMethod.XXTEA, k))
-                                {
-                                    int halfLength = (fileLength - 4) / 2;
-                                    //(data.LongLength / 2) - ((data.LongLength / 2) % 16) - 512 + 16
-                                    //ms.Position = fOffsetData + offset_cur + halfLength - (halfLength % 16) - 512 + 16 + 4;
-                                    ////ms.Position = fOffsetData + offset_cur + 4;
-                                    //br.BaseStream.Position = newPos;
-                                    //br.BaseStream.Read(footData, 0, 1024);
-                                    //br.BaseStream.Position = oldPos;
-                                    //ms.Read(footData, 0, 1024);
-                                    ms.Seek(halfLength - (halfLength % 16) - 512 + 16, SeekOrigin.Begin);
-                                    ms.Read(footData, 0, 1024);
-                                    br.BaseStream.Position = oldPos;
-
-                                    //Array.Copy(videoData, halfLength - (halfLength % 16) - 512 + 16, footData, 0, 1024);
-
-                                }
-                                string videoHash = BitConverter.ToString(fHasher.ComputeHash(footData)).Replace("-", "");
-                                invalid = !videoHash.Equals(fMetadata[MapMetaType.VideoHash]);
-                            }
-                            if (invalid)
-                            {
-                                //hash is invalid so we skip adding the file
-                                //we also mark the file as unsavable as it's missing data
-                                fSavable = false;
-                                NoVideoVersion = true;
-                                offset_cur = offset_next;
-                                continue;
-                            }
-
-                        }
-
                         fFiles.Add(name, new FileInfo(name, offset_cur, fileLength, fileHash, fileDateCreated, fileDateModified));
 
                         offset_cur = offset_next;
@@ -758,25 +708,6 @@ namespace osu_common.Libraries.Osz2
             Dictionary<string, byte[]> list = new Dictionary<string, byte[]>();
             foreach (KeyValuePair<string, FileInfo> pair in fFiles)
                 list[pair.Key] = pair.Value.Hash;
-
-            return list;
-
-
-            /*using (FileStream fs = File.OpenRead(fFilename))
-            {
-                // read files to memory
-                fs.Seek(fOffsetData, SeekOrigin.Begin);
-                byte[] file = new byte[fs.Length - fOffsetData];
-                fs.Read(file, 0, file.Length);
-
-                // get hash for each file
-                foreach (KeyValuePair<string, FileInfo> pair in fFiles)
-                {
-                    byte[] buffer = new byte[pair.Value.Length];
-                    Array.Copy(file, pair.Value.Offset, buffer, 0, buffer.Length);
-                    list.Add(pair.Key, GetMD5Hash(buffer));
-                }
-            }*/
 
             return list;
         }

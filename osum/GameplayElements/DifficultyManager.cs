@@ -50,7 +50,6 @@ namespace osum.GameplayElements
         {
             get
             {
-                float adjustment = 1;
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:

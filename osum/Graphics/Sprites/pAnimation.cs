@@ -14,9 +14,7 @@ namespace osum.Graphics.Sprites
     internal class pAnimation : pSprite
     {
         private int currentFrame;
-        private double currentFrameSkip;
         public int[] CustomSequence;
-        public bool DrawDimensionsManualOverride;
         internal bool Reverse;
         
         internal double FrameDelay = 1000/60f;
@@ -34,7 +32,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public LoopTypes LoopType;
+        public LoopTypes LoopType = LoopTypes.LoopForever;
         internal bool RunAnimation = true;
 
         private pTexture[] textureArray;

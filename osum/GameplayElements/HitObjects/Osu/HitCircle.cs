@@ -16,8 +16,6 @@ namespace osum.GameplayElements
     {
         #region General & Timing
 
-        public const int DIMMABLE_TAG = 12348;
-
         internal HitCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType)
             : base(hit_object_manager, pos, startTime, soundType, newCombo, comboOffset)
         {

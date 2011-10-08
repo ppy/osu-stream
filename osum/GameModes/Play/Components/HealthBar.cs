@@ -30,19 +30,9 @@ namespace osum.GameplayElements.Scoring
         internal bool InitialIncrease = true;
 
         /// <summary>
-        /// Time in Audio milliseconds to start the initial HP increase.
-        /// </summary>
-        internal int InitialIncreaseStartTime;
-
-        /// <summary>
         /// Rate of initial HP increase.
         /// </summary>
         internal double InitialIncreaseRate = 0.04;
-
-        /// <summary>
-        /// The rate at which HP will naturally drop.
-        /// </summary>
-        internal double HpDropRate;
 
         /// <summary>
         /// DisplayHp lags behind current hp due to smooth movement.  Handled internally.

@@ -23,7 +23,6 @@ namespace osu_common.Libraries.NetLib
         public string m_url;
         internal Thread thread;
         internal bool AbortRequested;
-        internal bool IsQueued;
 
         public NetRequest(string _url)
         {

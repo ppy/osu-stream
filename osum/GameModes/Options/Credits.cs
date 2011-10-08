@@ -14,8 +14,6 @@ namespace osum.GameModes.Options
 {
     public class Credits : Player
     {
-        SpriteManager topMostSpriteManager = new SpriteManager();
-        
         string[] creditsRoll = new string[] {
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
@@ -40,28 +38,36 @@ namespace osum.GameModes.Options
             //"SOU1 (switchworks)",
             //"tieff & Natteke",
             "*Artist Relations",
+            "peppy",
             "dvorak",
             "jericho2442",
             "*Level Design",
-            "Alace",
-            "Echo",
-            "James",
+            //"Alace",
+            //"Echo",
+            //"James",
+            "Garven",
+            "Gens",
             "jericho2442",
-            "Lybydose",
-            "m980",
+            "Krisom",
+            "Larto",
+            "mm201",
+            //"Lybydose",
+            //"m980",
+            "ouranhshc",
             "peppy",
+            "RandomJibberish",
             "Sushi",
             "*Localisation",
             "SiRiRu, dvorak & co. - Japanese",
             "Kharl, SiRiRu - Thai",
             "PJMS & co. - Korean",
-            "Alace, qiche - Chinese (Trad.)",
+            "Alace, qinche - Chinese (Trad.)",
             "chonicle, statementreply - Chinese (Simplified)",
             "Card N'FoRcE, Inamaru - Italian",
             "Elysion, Dagonpater - French",
             "*Thanks to",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
-            "Testers - Special thanks to Cyclone, Doddler, dvorak, James, nekodex, Saphier, tobebuta and my mum (i'm serious)",
+            "Testers - Special thanks to Cyclone, Doddler, dvorak, Guy-kun, James, nekodex, Project_MS, Saphier, tobebuta and my mum (i'm serious)",
             "#bat - For support and help on various occasions",
         };
 
@@ -203,7 +209,6 @@ namespace osum.GameModes.Options
         public override void Dispose()
         {
             InputManager.OnMove -= new InputHandler(InputManager_OnMove);
-            topMostSpriteManager.Dispose();
             base.Dispose();
         }
 
@@ -243,8 +248,6 @@ namespace osum.GameModes.Options
         public override bool Draw()
         {
             base.Draw();
-            topMostSpriteManager.Draw();
-
             return true;
 
         }
@@ -255,8 +258,6 @@ namespace osum.GameModes.Options
         {
             int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;
             int currentBeatNoLoop = (int)((Clock.AudioTime) / (beatLength / 4f));
-
-            topMostSpriteManager.Update();
 
             if (lastText.Position.Y < 0 && !Director.IsTransitioning)
             {
@@ -289,7 +290,7 @@ namespace osum.GameModes.Options
                         spriteManager.ScaleScalar = 1.04f;
                         spriteManager.ScaleTo(1, 200, EasingTypes.In);
                         break;
-                    
+
                 }
                 lastBeat = currentBeat;
             }
@@ -306,7 +307,7 @@ namespace osum.GameModes.Options
                 lastBeatNoLoop = currentBeatNoLoop;
             }
 
-            
+
             if (!InputManager.IsPressed)
             {
                 incrementalSpeed = 0.2f + incrementalSpeed * 0.8f;

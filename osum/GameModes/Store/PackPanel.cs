@@ -31,9 +31,8 @@ namespace osum.GameModes.Store
 
         float base_depth = 0.6f;
 
-        static Color4 colourNormal = new Color4(50, 50, 50, 200);
         static Color4 colourHover = new Color4(28, 139, 242, 255);
-        static Color4 colourHover2 = new Color4(0, 77, 164, 255);
+        static Color4 colourVideoPreviewNormal = new Color4(255, 255, 255, 40);
 
         internal const int PANEL_HEIGHT = 60;
         internal const int ITEM_HEIGHT = 40;
@@ -171,11 +170,11 @@ namespace osum.GameModes.Store
             });
             s_PriceBackground.OnClick += onPurchase;
 
-            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 46, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 40, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
             {
-                Origin = OriginTypes.TopCentre,
+                Origin = OriginTypes.Centre,
                 Field = FieldTypes.StandardSnapRight,
-                Offset = new Vector2(80, 0)
+                Offset = new Vector2(75, 30)
             });
 
             if (!free)
@@ -322,7 +321,7 @@ namespace osum.GameModes.Store
                         p.Rotation = 0;
                         break;
                     case OsuTexture.songselect_video:
-                        p.FadeColour(new Color4(255,255,255,128), 200);
+                        p.FadeColour(colourVideoPreviewNormal, 200);
                         break;
                 }
             }
@@ -451,7 +450,7 @@ namespace osum.GameModes.Store
                 DrawDepth = base_depth + 0.02f,
                 Field = FieldTypes.StandardSnapRight,
                 Origin = OriginTypes.CentreRight,
-                Colour = new Color4(255, 255, 255, 128)
+                Colour = colourVideoPreviewNormal
             };
             videoPreview.Offset = new Vector2(10, ExpandedHeight + 20);
             videoPreview.OnClick += delegate

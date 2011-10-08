@@ -23,6 +23,7 @@ using System.IO;
 using osu_common.Helpers;
 using osum.GameplayElements.HitObjects.Osu;
 using osum.UI;
+using osu_common.Libraries.Osz2;
 
 namespace osum.GameModes
 {
@@ -241,6 +242,9 @@ namespace osum.GameModes
             if (HitObjectManager != null)
                 HitObjectManager.Dispose();
 
+            if (Beatmap.Package != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview")
+                return; //can't load preview in this mode.
+
             HitObjectManager = new HitObjectManager(Beatmap);
 
             HitObjectManager.OnScoreChanged += hitObjectManager_OnScoreChanged;
@@ -384,7 +388,7 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-            
+
         }
 
         private void comboPain(bool harsh)
@@ -402,7 +406,7 @@ namespace osum.GameModes
             }
         }
 
-        protected void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
+        protected virtual void hitObjectManager_OnScoreChanged(ScoreChange change, HitObject hitObject)
         {
             double healthChange = 0;
             bool increaseCombo = false;
@@ -556,7 +560,7 @@ namespace osum.GameModes
                         }
 
 
-                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange);
+                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
                     }
                     else
                         healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));

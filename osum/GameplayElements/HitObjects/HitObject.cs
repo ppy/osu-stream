@@ -493,8 +493,6 @@ namespace osum.GameplayElements
             {
                 p.Transformations.RemoveAll(t => t.Type == TransformationType.OffsetX);
 
-                float pos = 0;
-
                 const int shake_count = 6;
                 const int shake_velocity = 8;
                 const int shake_period = 40;

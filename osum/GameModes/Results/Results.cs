@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using osum.Audio;
 using osum.GameModes.SongSelect;
 using osum.Graphics;
-using osum.Online;
 using osu_common.Helpers;
 using osum.GameplayElements;
 using System.IO;
@@ -39,7 +38,6 @@ namespace osum.GameModes
         const int time_between_fills = 600;
 
         const float fill_height = 5;
-        float count_height = 80;
 
         private pSpriteText countTotalScore;
         private pSpriteText countScoreHit;
@@ -293,6 +291,8 @@ namespace osum.GameModes
 
             if (!cameFromSongSelect)
             {
+                InitializeBgm();
+
                 //this is a bit of cheating to ensure that getting 100% will always result in 1mil. there are some race conditions with multitouch that may allow
                 //for ever-so-slightly lower max scores, but this would piss people off.
                 if (RankableScore.accuracy == 1 && RankableScore.totalScore - RankableScore.spinnerBonusScore != Score.MAX_SCORE)
@@ -380,13 +380,10 @@ namespace osum.GameModes
                     if (e == null && result != null && result.StartsWith("message:"))
                     {
                         rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
-                        if (finishedDisplaying)
-                            GameBase.Notify(rankingNotification);
+                        if (finishedDisplaying) GameBase.Notify(rankingNotification);
                     }
                 };
                 NetManager.AddRequest(nr);
-
-                InitializeBgm();
             }
             else
             {
@@ -447,7 +444,7 @@ namespace osum.GameModes
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreHit.ShowInt(RankableScore.hitScore, 6, false);
-                pDrawable flash = countScoreHit.AdditiveFlash(500, 1);
+                countScoreHit.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.hitScore;
                 countTotalScore.ShowInt(addedScore, 6, true);
@@ -460,7 +457,7 @@ namespace osum.GameModes
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6, false);
-                pDrawable flash = countScoreCombo.AdditiveFlash(500, 1);
+                countScoreCombo.AdditiveFlash(500, 1);
 
 
                 addedScore += RankableScore.comboBonusScore;
@@ -474,7 +471,7 @@ namespace osum.GameModes
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreAccuracy.ShowInt(RankableScore.accuracyBonusScore, 6, false);
-                pDrawable flash = countScoreAccuracy.AdditiveFlash(500, 1);
+                countScoreAccuracy.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.accuracyBonusScore;
                 countTotalScore.ShowInt(addedScore, 6, true);
@@ -487,7 +484,7 @@ namespace osum.GameModes
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
                 countScoreSpin.ShowInt(RankableScore.spinnerBonusScore, 6, false);
-                pDrawable flash = countScoreSpin.AdditiveFlash(500, 1);
+                countScoreSpin.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.spinnerBonusScore;
                 countTotalScore.ShowInt(addedScore, 6, true);
@@ -530,8 +527,6 @@ namespace osum.GameModes
 
         private void finishDisplaying()
         {
-            InitializeBgm();
-
             if (unlockedExpert)
             {
                 GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Congratulations), LocalisationManager.GetString(OsuString.UnlockedExpert), NotificationStyle.Okay, delegate
@@ -539,15 +534,13 @@ namespace osum.GameModes
                     unlockedExpert = false; //reset and run again.
                     finishDisplaying();
                 }));
+                return;
             }
 
             if (rankingNotification != null)
                 GameBase.Notify(rankingNotification);
-
             finishedDisplaying = true;
-            if (submissionCompletePending)
-                showOnlineRanking();
-            else
+
                 showNavigation();
         }
 
@@ -563,12 +556,6 @@ namespace osum.GameModes
             }
         }
 
-        private void showOnlineRanking()
-        {
-            if (Director.CurrentOsuMode == OsuMode.Results) //we could have left already...
-                OnlineHelper.ShowRanking(Player.SubmitString, delegate { showNavigation(); });
-        }
-
         bool finishedDisplaying;
 
 
@@ -578,7 +565,6 @@ namespace osum.GameModes
         private pSpriteText count50;
         private pSpriteText count0;
         private bool isPersonalBest;
-        private bool submissionCompletePending;
 
         private void initializeTransition()
         {

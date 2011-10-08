@@ -51,8 +51,6 @@ namespace osum.Graphics.Sprites
     {
         internal List<pDrawable> Sprites;
 
-        int creationTime = Clock.Time;
-
         internal bool CheckSpritesAreOnScreenBeforeRendering;
 
         internal SpriteManager(List<pDrawable> sprites)
@@ -86,7 +84,6 @@ namespace osum.Graphics.Sprites
             //t.UpdatePositions();
 
             Vector2 pos = t.BasePosition;
-            Vector2 origPos = pos;
 
             if (Rotation != 0)
             {
@@ -112,7 +109,6 @@ namespace osum.Graphics.Sprites
             pos -= (Position + Offset) * GameBase.InputToFixedWidthAlign;
 
             t.BasePosition = pos;
-            //t.WindowDelta = pos - origPos;
 
             return;
         }
@@ -271,9 +267,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        bool firstRender = true;
         List<int> removableSprites = new List<int>();
-
 
         int lastVisibleUpdate;
 
@@ -365,7 +359,6 @@ namespace osum.Graphics.Sprites
             //todo: implement batching.
         }
 
-        bool exactCoordinatesOverride;
         internal override bool ExactCoordinates
         {
             get { return !exactCoordinatesOverride && !hasMovement; }
@@ -381,8 +374,6 @@ namespace osum.Graphics.Sprites
         public override bool Draw()
         {
             if (!base.Draw()) return false;
-
-            pTexture currentBatchTexture = null;
 
             matrixOperations = Rotation != 0 || ScaleScalar != 1 || Offset.Y != 0 || Position != Vector2.Zero;
 
@@ -420,7 +411,7 @@ namespace osum.Graphics.Sprites
 
                     TexturesEnabled = p.UsesTextures;
                     AlphaBlend = p.AlphaBlend || p.Alpha != 1;
-
+					
                     if (p.Draw())
                     {
                         //todo: implement batching!
@@ -491,7 +482,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal static bool AlphaBlend
+        internal new static bool AlphaBlend
         {
             get { return alphaBlend; }
 

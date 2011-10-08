@@ -64,6 +64,7 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <AssemblyName>osustream</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
+    <IpaPackageName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -81,6 +82,7 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchLink>Full</MtouchLink>
     <AssemblyName>osustream</AssemblyName>
+    <IpaPackageName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
@@ -96,17 +98,10 @@
     <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <ConsolePause>false</ConsolePause>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterBuild" command="/bin/cp -r ${ProjectDir}/bin/${ProjectConfigPlat}/${ProjectConfigName}/${ProjectName}.app ${SolutionDir}/Output/Payload/${ProjectName}.app" workingdir="" />
-        <Command type="AfterBuild" command="/usr/bin/zip -r ../${ProjectName}.ipa ." workingdir="${SolutionDir}/Output/" />
-        <Command type="BeforeBuild" command="/bin/rm -rf ${SolutionDir}/Output/Payload/${ProjectName}.app/" />
-        <Command type="BeforeBuild" command="/bin/rm -rf ${SolutionDir}/${ProjectName}.ipa" />
-        <Command type="AfterBuild" command="/usr/bin/curl http://testflightapp.com/api/builds.json -F file=@../${ProjectName}.ipa -F api_token='f54845a9cb6434a853b90f50972b5200_NDc2ODk' -F team_token='67d0e6eb58872e4b1a37a6a6a3349f9a_MTA0MTM' -F notes='Automatic Build.' -F distribution_lists='Testers' -F notify=false" externalConsole="true" />
-      </CustomCommands>
-    </CustomCommands>
     <MtouchLink>Full</MtouchLink>
     <AssemblyName>osustream</AssemblyName>
+    <IpaPackageName />
+    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
@@ -122,6 +117,7 @@
     <AssemblyName>osustream</AssemblyName>
     <MtouchLink>Full</MtouchLink>
     <CodesignProvision>FB1023E2-3C5E-41CD-819D-8FDF88B365E8</CodesignProvision>
+    <IpaPackageName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -129,6 +125,7 @@
     <OutputPath>bin\Testflight</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>osustream</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -136,6 +133,7 @@
     <OutputPath>bin\Distribution</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>osustream</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -259,9 +257,6 @@
     <Compile Include="Libraries\NetLib\NetRequest.cs" />
     <Compile Include="Libraries\NetLib\StringNetRequest.cs" />
     <Compile Include="Helpers\osu!common\CryptoHelper.cs" />
-    <Compile Include="Online\OnlineHelper.cs" />
-    <Compile Include="Online\IOnlineServices.cs" />
-    <Compile Include="Online\OnlineServicesIOS.cs" />
     <Compile Include="GameModes\Store\PackPanel.cs" />
     <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
     <Compile Include="Support\iPhone\HardwareDetection.cs" />
@@ -300,6 +295,7 @@
     <Compile Include="GameModes\Play\PreviewPlayer.cs" />
     <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
     <Compile Include="UI\TextInputNotification.cs" />
+    <Compile Include="Support\CrashHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

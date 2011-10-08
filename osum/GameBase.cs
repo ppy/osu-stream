@@ -12,7 +12,6 @@ using osum.Helpers;
 using osum.Support;
 using osum.Graphics.Renderers;
 using osum.Graphics;
-using osum.Online;
 using osum.UI;
 using osu_common.Helpers;
 using System.Threading;
@@ -125,11 +124,13 @@ namespace osum
         public GameBase()
         {
 #if !DIST
-            if (DateTime.Now > new DateTime(2011, 10, 14))
+            if (DateTime.Now > new DateTime(2011, 11, 14))
                 Environment.Exit(-1);
 #endif
 
             Instance = this;
+
+            CrashHandler.Initialize();
 
             //initialise config before everything, because it may be used in Initialize() override.
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
@@ -364,7 +365,6 @@ namespace osum
             Director.ChangeMode(OsuMode.MainMenu, null);
             #endif
 #endif
-            OnlineHelper.Initialize();
 
             Clock.Start();
         }

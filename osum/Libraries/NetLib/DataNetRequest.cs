@@ -150,10 +150,11 @@ namespace osu_common.Libraries.NetLib
                 }
                 NSUrlConnection conn = new NSUrlConnection(req, del, true);
 
-#if !DIST
+                #if !DIST
                 if (error != null)
                     Console.WriteLine("requst finished with error " + error);
-#endif
+                #endif
+
 #else
                 using (WebClient wc = new WebClient())
                 {

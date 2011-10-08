@@ -227,8 +227,6 @@ namespace osum.Graphics.Sprites
         public override pDrawable Clone()
         {
             pDrawable cl = base.Clone();
-            pSpriteText st = cl as pSpriteText;
-            Console.WriteLine();
             return cl;
         }
 
@@ -412,7 +410,8 @@ namespace osum.Graphics.Sprites
                     if (ZeroAlpha < 1)
                         colZeroCached = new Color4(drawCol.R * ZeroAlpha, drawCol.G * ZeroAlpha, drawCol.B * ZeroAlpha, drawCol.A * ZeroAlpha);
 
-                    bool isPaddedZero = true;
+                    //todo: reimplement padding alpha changes
+                    //bool isPaddedZero = true;
 
                     int i = 0;
                     float coordScale = Scale.X * GameBase.SpriteToNativeRatio;

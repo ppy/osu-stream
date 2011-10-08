@@ -20,7 +20,7 @@ namespace osum
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public GameWindowDesktop()
-            : base(480, 320, GraphicsMode.Default, "osu!stream")
+            : base(960, 640, GraphicsMode.Default, "osu!stream")
         {
             VSync = VSyncMode.On;
             //GameBase.WindowSize = new Size(960,640);
@@ -54,11 +54,14 @@ namespace osum
                 case 'r':
                     Director.ChangeMode(Director.CurrentOsuMode);
                     break;
+                case 'd':
+                    TextureManager.PurgeUnusedTexture();
+                    break;
                 case 's':
                     TextureManager.ReloadAll();
                     break;
                 case 'x':
-                    TextureManager.ReloadAll(true);
+                    TextureManager.DisposeAll();
                     break;
                 case 'o':
                     Director.ChangeMode(OsuMode.Options);

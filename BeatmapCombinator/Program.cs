@@ -12,6 +12,8 @@ using osum.Helpers;
 using osum.GameplayElements.Scoring;
 using osum;
 using System.Threading;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace BeatmapCombinator
 {
@@ -54,15 +56,35 @@ namespace BeatmapCombinator
             {
                 if (args.Length > 0)
                 {
+#if DIST || M4A
+                    Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
                     ProcessBeatmap(args[0]);
-#if !DEBUG
-                Console.ReadLine();
-#endif
-
-                    Console.WriteLine();
-                    Console.WriteLine("All done :)");
-                    Thread.Sleep(2000);
                     return;
+#endif
+                    
+                    bool hasChanges = true;
+
+                    FileSystemWatcher fsw = new FileSystemWatcher(args[0]);
+                    fsw.Changed += delegate { hasChanges = true; };
+                    fsw.EnableRaisingEvents = true;
+
+                    while (true)
+                    {
+                        if (hasChanges)
+                        {
+                            fsw.EnableRaisingEvents = false;
+
+                            hasChanges = false;
+                            Console.WriteLine("Detected changes; recombinating!");
+
+                            ProcessBeatmap(args[0]);
+
+                            fsw.EnableRaisingEvents = true;
+                            Console.WriteLine("Waiting for changes...");
+                        }
+
+                        Thread.Sleep(1000);
+                    }
                 }
                 else
                 {
@@ -380,7 +402,7 @@ namespace BeatmapCombinator
             string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
 #if DIST
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
+            string osz2Filename = baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
 #elif M4A
             string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".m4a.osz2";
 #else
@@ -388,7 +410,14 @@ namespace BeatmapCombinator
 #endif
 
 #if M4A
-            string audioFilename = Directory.GetFiles(dir, "*.m4a")[0];
+            string audioFilename = "";
+            foreach (string s in Directory.GetFiles(dir, "*.m4a"))
+            {
+                if (s.Contains("_lq")) continue;
+
+                audioFilename = s;
+                break;
+            }
 #else
             string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 #endif
@@ -436,17 +465,51 @@ namespace BeatmapCombinator
 
             Player.Beatmap.Dispose();
 
+#if PREVIEW
+            osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
+#endif
+
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
         }
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)
         {
+#if PREVIEW
+            int hitObjectCutoff = 0;
+#endif
+
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
                 //write headers first (use first difficulty as arbitrary source)
                 foreach (string l in headerContent)
+                {
+#if PREVIEW
+                    if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
+                    {
+                        //may need to double up on bookmarks if they don't occur often often
+
+                        List<int> switchPoints = Player.Beatmap.StreamSwitchPoints;
+
+                        if (switchPoints.Count < 10 || switchPoints[9] > 60000)
+                        {
+                            string switchString = "Bookmarks:";
+                            
+                            foreach (int s in switchPoints)
+                            {
+                                switchString += s.ToString(nfi) + ",";
+                                switchString += s.ToString(nfi) + ","; //double bookmark hack for previews
+                            }
+
+                            output.WriteLine(switchString.Trim(','));
+
+                            hitObjectCutoff = switchPoints.Count < 10 ? switchPoints[4] : switchPoints[9];
+                            continue;
+                        }
+                    }
+#endif
                     output.WriteLine(l);
+                }
 
                 //keep track of how many hitObject lines are remaining for each difficulty
                 int[] linesRemaining = new int[difficulties.Count];
@@ -471,6 +534,14 @@ namespace BeatmapCombinator
 
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
+#if PREVIEW
+                        if (hitObjectCutoff > 0 && line.Time > hitObjectCutoff)
+                        {
+                            linesRemaining[i]--;
+                            continue;
+                        }
+#endif
+
                         if (line.Time >= currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
                         {
                             bestMatchDifficulty = i;
@@ -478,9 +549,11 @@ namespace BeatmapCombinator
                         }
                     }
 
-                    output.WriteLine(bestMatchDifficulty + "," + bestMatchLine.StringRepresentation);
-
-                    linesRemaining[bestMatchDifficulty]--;
+                    if (bestMatchLine != null)
+                    {
+                        output.WriteLine(bestMatchDifficulty + "," + bestMatchLine.StringRepresentation);
+                        linesRemaining[bestMatchDifficulty]--;
+                    }
                 }
             }
 
@@ -496,7 +569,9 @@ namespace BeatmapCombinator
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
-#if M4A
+#if PREVIEW
+                package.AddFile("audio.m4a", audioFilename.Replace(".m4a","_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
+#elif M4A
                 package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
 #else
                 package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
@@ -524,6 +599,10 @@ namespace BeatmapCombinator
                         }
                     }
                 }
+
+#if PREVIEW
+                package.AddMetadata(MapMetaType.Revision, "preview");
+#endif
 
                 string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))

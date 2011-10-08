@@ -14,39 +14,47 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 5;
+        const int DATABASE_VERSION = 6;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
 
-        private static bool initialized;
         internal static int Version = -1;
 
-        public static List<BeatmapInfo> BeatmapInfo = new List<BeatmapInfo>();
+        public static pList<BeatmapInfo> BeatmapInfo;
 
         internal static void Initialize()
         {
-            if (initialized)
+            if (BeatmapInfo != null)
                 return;
 
-            initialized = true;
+            BeatmapInfo = new pList<BeatmapInfo>();
 
-            if (!File.Exists(fullPath))
-                return;
-
-            try
+            if (File.Exists(fullPath))
             {
-                using (FileStream fs = File.OpenRead(fullPath))
-                using (SerializationReader reader = new SerializationReader(fs))
+                try
                 {
-                    Version = reader.ReadInt32();
-                    if (Version > 3)
-                        BeatmapInfo = reader.ReadBList<BeatmapInfo>();
+                    using (FileStream fs = File.OpenRead(fullPath))
+                    using (SerializationReader reader = new SerializationReader(fs))
+                    {
+                        Version = reader.ReadInt32();
+                        if (Version > 3)
+                            BeatmapInfo = reader.ReadBList<BeatmapInfo>();
+                    }
+
+                    BeatmapInfo.Sort();
+                }
+                catch (Exception e) {
+#if DEBUG
+                    Console.WriteLine("Error while reading database! " + e);
+#endif
                 }
             }
-            catch { }
 
             Version = DATABASE_VERSION;
+#if DEBUG
+            Console.WriteLine("Read beatmap database: " + BeatmapInfo.Count);
+#endif
         }
 
         internal static void Write()
@@ -66,30 +74,45 @@ namespace osum.GameplayElements
 
             File.Delete(filename);
             File.Move(tempFilename, filename);
+
+#if DEBUG
+            Console.WriteLine("Wrote beatmap database to " + filename + " with count " + BeatmapInfo.Count);
+#endif
         }
 
         internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)
         {
             if (b == null) return null;
-
-            BeatmapInfo i = PopulateBeatmap(b);
-
-            return i.DifficultyScores[d];
+            return PopulateBeatmap(b).DifficultyScores[d];
         }
 
         internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
         {
+            Initialize();
+
             string filename = Path.GetFileName(beatmap.ContainerFilename);
 
             BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
 
             if (i == null)
             {
-                i = new BeatmapInfo() { FullPath = beatmap.ContainerFilename, Filename = filename };
-                BeatmapInfo.Add(i);
+                i = new BeatmapInfo(filename);
+                BeatmapInfo.AddInPlace(i);
             }
 
             return i;
+        }
+
+        internal static void Erase(Beatmap b)
+        {
+            Initialize();
+
+            string filename = Path.GetFileName(b.ContainerFilename);
+
+            BeatmapInfo i = BeatmapInfo.Find(bmi => bmi.Filename == filename);
+
+            if (i != null)
+                BeatmapInfo.Remove(i);
         }
     }
 
@@ -124,13 +147,21 @@ namespace osum.GameplayElements
         }
     }
 
-    public class BeatmapInfo : bSerializable
+    public class BeatmapInfo : bSerializable, IComparable<BeatmapInfo>
     {
         public string Filename;
-        public string FullPath;
 
         public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
 
+        public BeatmapInfo(string filename) : this()
+        {
+            Filename = Path.GetFileName(filename);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="osum.GameplayElements.BeatmapInfo"/> class.
+        /// Do NOT use this for anything other than serialisation; it does not properly initialise scores.
+        /// </summary>
         public BeatmapInfo()
         {
             DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
@@ -142,9 +173,8 @@ namespace osum.GameplayElements
 
         public void ReadFromStream(SerializationReader sr)
         {
-            FullPath = sr.ReadString();
-            Filename = Path.GetFileName(FullPath);
-            
+            //the GetFileName call is not necessary after old (pre-v1.11) databases are updated.
+            Filename = Path.GetFileName(sr.ReadString());
 
             DifficultyScores[Difficulty.Easy].ReadFromStream(sr);
             DifficultyScores[Difficulty.Normal].ReadFromStream(sr);
@@ -153,7 +183,7 @@ namespace osum.GameplayElements
 
         public void WriteToStream(SerializationWriter sw)
         {
-            sw.Write(FullPath);
+            sw.Write(Filename);
 
             DifficultyScores[Difficulty.Easy].WriteToStream(sw);
             DifficultyScores[Difficulty.Normal].WriteToStream(sw);
@@ -162,7 +192,20 @@ namespace osum.GameplayElements
 
         public Beatmap GetBeatmap()
         {
-            return new Beatmap(FullPath) { BeatmapInfo = this };
+            string path = SongSelectMode.BeatmapPath + "/" + Filename;
+            if (Filename.EndsWith(".osf2") && !File.Exists(path))
+                path = "Beatmaps/" + Filename;
+
+            return new Beatmap(path) { BeatmapInfo = this };
+        }
+
+        #endregion
+
+        #region IComparable<BeatmapInfo> Members
+
+        public int CompareTo(BeatmapInfo other)
+        {
+            return GetBeatmap().CompareTo(other.GetBeatmap());
         }
 
         #endregion
