@@ -121,3 +121,4 @@ Cancel=キャンセル
 GuestUsername=ゲストネームをセットする
 ChooseUsername=ユーザーネームを選んでください
 InternetFailed=ロードに失敗しました\nネット接続を確認してください
+Crashed=osu!streamがクラッシュしてしまったみたいです。自動的に、解決に役に立つ情報をpeppyに送りますね。次のバージョンアップでの修正を頑張ります！

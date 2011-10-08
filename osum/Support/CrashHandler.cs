@@ -3,6 +3,7 @@ using System.Threading;
 using System.IO;
 using osum.UI;
 using osu_common.Libraries.NetLib;
+using osum.Resources;
 
 namespace osum.Support
 {
@@ -24,7 +25,7 @@ namespace osum.Support
                 GameBase.Scheduler.Add(delegate {
                     Notification notification = new Notification(
                             "Oops...",
-                            "Looks like osu!stream encountered an error. Details will be sent to peppy (the guy who made this) so it can be fixed. Sorry for the trouble!",
+                            LocalisationManager.GetString(OsuString.Crashed) ?? "A serious crash happened and has been reported",
                             NotificationStyle.Okay,
                             null);
                     GameBase.Notify(notification);
