@@ -90,7 +90,11 @@ namespace LocalisationUpdater
                         }
 
                         if (writers.Count > 0)
-                            writers[(int)cell.Column - 2].Add(currentKey, cell.Value.Trim(' ', '\n','\r','\t'));
+                        {
+                            if (cell.Value == null) continue;
+
+                            writers[(int)cell.Column - 2].Add(currentKey, cell.Value.Trim(' ', '\n', '\r', '\t'));
+                        }
 
                         break;
                 }
