@@ -84,7 +84,11 @@ namespace osum.Graphics.Skins
         public static void Update()
         {
 #if FULLER_DEBUG
-            DebugOverlay.AddLine("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
+            
+            int countLoaded = 0;
+            foreach (TextureGl t in SpriteTextureCache.Values)
+                if (t.Id >= 0) countLoaded++;
+            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic");
 #endif
         }
 

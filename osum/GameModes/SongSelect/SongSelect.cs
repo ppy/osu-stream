@@ -36,7 +36,7 @@ namespace osum.GameModes
         SpriteManager songInfoSpriteManager = new SpriteManager();
 
         private pSprite s_Header;
-        private pSprite s_Footer;
+        private pSprite s_Footer;   
         private BeatmapPanel SelectedPanel;
 
         private pDrawable s_ButtonBack;
