@@ -107,6 +107,13 @@ namespace osum
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (Director.CurrentOsuMode == OsuMode.PlayTest || Director.CurrentOsuMode == OsuMode.PositioningTest)
+            {
+                e.Cancel = true;
+                Director.ChangeMode(OsuMode.PositioningTest, null);
+                return;
+            }
+
             if (Director.CurrentOsuMode != OsuMode.MainMenu)
             {
                 e.Cancel = true;

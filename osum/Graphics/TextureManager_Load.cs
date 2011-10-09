@@ -4,6 +4,9 @@ namespace osum.Graphics.Skins
     {
         internal static void LoadSprites()
         {
+            if (textureLocations.Count > 0)
+                return;
+
             textureLocations.Add(OsuTexture.cleared, new SpriteSheetTexture("hit", 0, 0, 1024, 654));
             textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 656, 1024, 640));
             textureLocations.Add(OsuTexture.play_menu_background, new SpriteSheetTexture("hit", 0, 1298, 1024, 210));

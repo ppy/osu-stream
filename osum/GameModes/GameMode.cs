@@ -20,7 +20,8 @@ namespace osum.GameModes
         Credits,
         PositioningTest,
         Empty,
-        VideoPreview
+        VideoPreview,
+        PlayTest
     }
 
     /// <summary>

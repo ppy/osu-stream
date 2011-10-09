@@ -132,12 +132,19 @@ namespace osum.GameModes
                     default:
                         HitObjectManager.SetActiveStream();
                         break;
-                    case Difficulty.Expert:
-                        HitObjectManager.SetActiveStream(Difficulty.Expert);
-                        break;
                     case Difficulty.Easy:
                         HitObjectManager.SetActiveStream(Difficulty.Easy);
                         break;
+#if !iOS
+                    //can't start on hard unless testing on PC for the moment.
+                    case Difficulty.Hard:
+                        HitObjectManager.SetActiveStream(Difficulty.Hard);
+                        break;
+#endif
+                    case Difficulty.Expert:
+                        HitObjectManager.SetActiveStream(Difficulty.Expert);
+                        break;
+                    
                 }
 
                 BeatmapDifficultyInfo diff = null;

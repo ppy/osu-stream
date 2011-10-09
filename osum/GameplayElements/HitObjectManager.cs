@@ -80,9 +80,12 @@ namespace osum.GameplayElements
 
             if (sliderTrackRenderer != null) sliderTrackRenderer.Dispose();
 
-            foreach (SpriteManager sm in streamSpriteManagers)
-                if (sm != null) sm.Dispose();
-            streamSpriteManagers = null;
+            if (streamSpriteManagers != null)
+            {
+                foreach (SpriteManager sm in streamSpriteManagers)
+                    if (sm != null) sm.Dispose();
+                streamSpriteManagers = null;
+            }
 
             List<HitObject> objects = ActiveStreamObjects;
             if (objects != null)

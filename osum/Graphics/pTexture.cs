@@ -120,7 +120,9 @@ namespace osum.Graphics
 #else
                     GL.DeleteRenderbuffers(1, ref fboDepthBuffer);
 #endif
+                    fboDepthBuffer = -1;
                 }
+
                 if (fboId >= 0)
                 {
 #if iOS

@@ -47,7 +47,7 @@ namespace osum
         {
         }
 
-        override public void MainLoop()
+        override public void Run()
         {
             AppDelegate.game = this;
             MonoTouch.UIKit.UIApplication.Main(new string[]{},"HaxApplication","AppDelegate");

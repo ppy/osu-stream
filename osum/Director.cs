@@ -21,7 +21,7 @@ namespace osum
         /// The active game mode, which is being drawn to screen.
         /// </summary>
         internal static GameMode CurrentMode;
-        internal static OsuMode CurrentOsuMode;
+        public static OsuMode CurrentOsuMode;
         internal static OsuMode LastOsuMode;
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace osum
             }
         }
 
-        internal static bool ChangeMode(OsuMode mode, bool retainState = false)
+        public static bool ChangeMode(OsuMode mode, bool retainState = false)
         {
             return ChangeMode(mode, new FadeTransition(), retainState);
         }
@@ -60,7 +60,7 @@ namespace osum
         /// <param name="mode">The new mode.</param>
         /// <param name="transition">The transition (null for instant switching).</param>
         /// <returns></returns>
-        internal static bool ChangeMode(OsuMode mode, Transition transition, bool retainState = false)
+        public static bool ChangeMode(OsuMode mode, Transition transition, bool retainState = false)
         {
             if (mode == OsuMode.Unknown || mode == PendingOsuMode) return false;
 
@@ -92,6 +92,20 @@ namespace osum
         /// <param name="newMode">The new mode specification.</param>
         private static void changeMode(OsuMode newMode)
         {
+#if MONO
+            switch (newMode)
+            {
+                case OsuMode.PlayTest:
+                case OsuMode.PositioningTest:
+                    break;
+                default:
+                    PendingOsuMode = OsuMode.PositioningTest;
+                    newMode = OsuMode.PositioningTest;
+                    break;
+            }
+
+#endif
+
             if (CurrentMode != null)
             {
                 //check whether we want to retain state before outright disposing.
@@ -123,7 +137,7 @@ namespace osum
             CurrentMode = PendingMode;
             PendingMode = null;
 
-            Clock.ModeTimeReset();
+            if (Clock.ModeTime > 0) Clock.ModeTimeReset();
 
             //enable dimming in case it got left on somewhere.
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
@@ -175,6 +189,11 @@ namespace osum
                 case OsuMode.Results:
                     mode = new Results();
                     break;
+#if MONO
+                case OsuMode.PlayTest:
+                    mode = new PlayTest();
+                    break;
+#endif
                 case OsuMode.Play:
                     if (CurrentOsuMode == OsuMode.VideoPreview)
                         mode = new PreviewPlayer();

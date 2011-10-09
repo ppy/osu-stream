@@ -15,9 +15,9 @@ using System.Threading;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace BeatmapCombinator
+namespace osum
 {
-    class BeatmapDifficulty : Beatmap
+    public class BeatmapDifficulty : Beatmap
     {
         internal string VersionName;
         internal List<HitObjectLine> HitObjectLines = new List<HitObjectLine>();
@@ -34,13 +34,13 @@ namespace BeatmapCombinator
         }
     }
 
-    class HitObjectLine
+    public class HitObjectLine
     {
         internal string StringRepresentation;
         internal int Time;
     }
 
-    class BeatmapCombinator
+    public class BeatmapCombinator
     {
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
         private static List<string> headerContent;
@@ -77,7 +77,7 @@ namespace BeatmapCombinator
                             hasChanges = false;
                             Console.WriteLine("Detected changes; recombinating!");
 
-                            ProcessBeatmap(args[0]);
+                            Process(args[0]);
 
                             fsw.EnableRaisingEvents = true;
                             Console.WriteLine("Waiting for changes...");
@@ -103,7 +103,7 @@ namespace BeatmapCombinator
             }
         }
 
-        private static void ProcessBeatmap(string dir)
+        public static string Process(string dir, bool quick = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
@@ -113,7 +113,7 @@ namespace BeatmapCombinator
             if (dir.Length < 1)
             {
                 Console.WriteLine("No path specified!");
-                return;
+                return null;
             }
 
             List<string> osuFiles = new List<string>(Directory.GetFiles(dir, "*.osu"));
@@ -121,7 +121,7 @@ namespace BeatmapCombinator
             if (osuFiles.Count < 1)
             {
                 Console.WriteLine("No .osu files found!");
-                return;
+                return null;
             }
 
             string baseName = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1);
@@ -135,7 +135,7 @@ namespace BeatmapCombinator
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
 
-            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
+            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return null;
 
             Console.WriteLine("Files found:");
             foreach (string s in orderedDifficulties)
@@ -424,53 +424,59 @@ namespace BeatmapCombinator
 
             File.Delete(osz2Filename);
 
-            //write the package initially so we can use it for score testing purposes.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+            if (!quick)
+            {
 
-            //scoring
+                //write the package initially so we can use it for score testing purposes.
+                writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
 
-            Player.Beatmap = new Beatmap(osz2Filename);
-            Player.Autoplay = true;
+                //scoring
 
-            //Working on the scoring algorithm for osu!s
-            //Basically I need to calculate the total possible score from hitobjects before any multipliers kick in...
-            //but I need to know this before the beatmap is loaded.
+                Player.Beatmap = new Beatmap(osz2Filename);
+                Player.Autoplay = true;
 
-            //So this means running through the beatmap as if it was being played at the time of package creation
-            //(inside BeatmapCombinator).  After I find the score that can be achieved, I can figure out what multiplier
-            //i need in order to pad it out to a fixed 1,000,000 max score.
+                //Working on the scoring algorithm for osu!s
+                //Basically I need to calculate the total possible score from hitobjects before any multipliers kick in...
+                //but I need to know this before the beatmap is loaded.
 
-            //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
+                //So this means running through the beatmap as if it was being played at the time of package creation
+                //(inside BeatmapCombinator).  After I find the score that can be achieved, I can figure out what multiplier
+                //i need in order to pad it out to a fixed 1,000,000 max score.
 
-            FakeAudioTimeSource source = new FakeAudioTimeSource();
-            Clock.AudioTimeSource = source;
+                //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
 
-            headerContent.Remove("[HitObjects]");
+                FakeAudioTimeSource source = new FakeAudioTimeSource();
+                Clock.AudioTimeSource = source;
 
-            headerContent.Add(string.Empty);
-            headerContent.Add("[ScoringMultipliers]");
+                headerContent.Remove("[HitObjects]");
 
-            if (orderedDifficulties[(int)Difficulty.Easy] != null)
-                headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
-            if (orderedDifficulties[(int)Difficulty.Normal] != null)
-                headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
-            if (orderedDifficulties[(int)Difficulty.Expert] != null)
-                headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+                headerContent.Add(string.Empty);
+                headerContent.Add("[ScoringMultipliers]");
 
-            if (healthMultiplier != 0)
-                headerContent.Add("HP:" + healthMultiplier);
+                if (orderedDifficulties[(int)Difficulty.Easy] != null)
+                    headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
+                if (orderedDifficulties[(int)Difficulty.Normal] != null)
+                    headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
+                if (orderedDifficulties[(int)Difficulty.Expert] != null)
+                    headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
 
-            headerContent.Add(string.Empty);
-            headerContent.Add("[HitObjects]");
+                if (healthMultiplier != 0)
+                    headerContent.Add("HP:" + healthMultiplier);
 
-            Player.Beatmap.Dispose();
+                headerContent.Add(string.Empty);
+                headerContent.Add("[HitObjects]");
+
+                Player.Beatmap.Dispose();
 
 #if PREVIEW
             osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
 #endif
+            }
 
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+
+            return osz2Filename;
         }
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)

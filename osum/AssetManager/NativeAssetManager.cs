@@ -1,4 +1,6 @@
-﻿using System;
+﻿//TODO: change this class to just be a static. singleton is pointless.
+
+using System;
 using System.IO;
 
 namespace osum
@@ -17,8 +19,8 @@ namespace osum
 
         public NativeAssetManager()
         {
-            if (Instance != null)
-                throw new Exception("singleton");
+            //if (Instance != null)
+            //    throw new Exception("singleton");
 
             Instance = this;
         }

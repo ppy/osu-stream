@@ -517,13 +517,16 @@ namespace osum.Graphics.Renderers
         public void Dispose()
         {
 #if !NO_PIN_SUPPORT
-            for (int i = 0; i < COLOUR_COUNT; i++)
+            if (vertices_cap_handle.IsAllocated)
             {
-                coordinates_cap_handle[i].Free();
-                coordinates_quad_handle[i].Free();
-            }
+                for (int i = 0; i < COLOUR_COUNT; i++)
+                {
+                    coordinates_cap_handle[i].Free();
+                    coordinates_quad_handle[i].Free();
+                }
 
-            vertices_cap_handle.Free();
+                vertices_cap_handle.Free();
+            }
 #else
             for (int i = 0; i < COLOUR_COUNT; i++)
             {
