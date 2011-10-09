@@ -383,7 +383,9 @@ namespace osum.GameModes
                         if (finishedDisplaying) GameBase.Notify(rankingNotification);
                     }
                 };
+#if iOS
                 NetManager.AddRequest(nr);
+#endif
             }
             else
             {
