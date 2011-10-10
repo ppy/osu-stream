@@ -60,7 +60,7 @@ namespace osum
                 {
 #if DIST || M4A
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    ProcessBeatmap(args[0]);
+                    Process(args[0], false, true);
                     return;
 #endif
 
@@ -105,7 +105,7 @@ namespace osum
             }
         }
 
-        public static string Process(string dir, bool quick = false)
+        public static string Process(string dir, bool quick = false, bool usem4a = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
@@ -403,24 +403,25 @@ namespace osum
 
 #if DIST
             string osz2Filename = baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
-#elif M4A
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".m4a.osz2";
 #else
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
+            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + (usem4a ? ".m4a.osz2" : ".osz2");
 #endif
 
-#if M4A
-            string audioFilename = "";
-            foreach (string s in Directory.GetFiles(dir, "*.m4a"))
+            string audioFilename = null;
+
+            if (usem4a)
             {
-                if (s.Contains("_lq")) continue;
+                audioFilename = "";
+                foreach (string s in Directory.GetFiles(dir, "*.m4a"))
+                {
+                    if (s.Contains("_lq")) continue;
 
-                audioFilename = s;
-                break;
+                    audioFilename = s;
+                    break;
+                }
             }
-#else
-            string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
-#endif
+            else
+                audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 
             File.Delete(osz2Filename);
 
@@ -594,10 +595,8 @@ namespace osum
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
 #if PREVIEW
                 package.AddFile("audio.m4a", audioFilename.Replace(".m4a","_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
-#elif M4A
-                package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
 #else
-                package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
+                package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 #endif
 
                 string dir = Path.GetDirectoryName(audioFilename);

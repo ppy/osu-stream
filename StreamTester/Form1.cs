@@ -209,7 +209,7 @@ namespace StreamTester
                 //temporarily remove any instance to ensure we get correct and speedy calculations.
                 //this will be restored at the end of processing.
 
-                packageName = BeatmapCombinator.Process(Filename, checkBoxQuick.Checked);
+                packageName = BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
 
                 GameBase.Instance = game;
 
@@ -244,9 +244,9 @@ namespace StreamTester
                         break;
                 }
 
-                Invoke((MethodInvoker)delegate { visualisePackage(packageName); }); 
+                Invoke((MethodInvoker)delegate { visualisePackage(packageName); });
 
-                if (runTest)
+                if (runTest && !checkBoxm4a.Checked)
                 {
                     if (game == null)
                     {
@@ -303,6 +303,18 @@ namespace StreamTester
             radioButtonStreamDown.Enabled = sender != radioButtonEasy && sender != radioButtonExpert;
             radioButtonStreamUp.Enabled = sender != radioButtonHard && sender != radioButtonExpert;
 
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonTestOnSave.Enabled = !checkBoxm4a.Checked;
+            groupBoxDifficulty.Enabled = !checkBoxm4a.Checked;
+            groupBoxStreamSwitch.Enabled = !checkBoxm4a.Checked;
+
+            if (checkBoxm4a.Checked)
+                checkBoxQuick.Checked = false;
+
+            buttonTestOnce.Text = checkBoxm4a.Checked ? "Create Package" : "Test Once";
         }
 
     }

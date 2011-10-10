@@ -37,11 +37,12 @@
             this.radioButtonExpert = new System.Windows.Forms.RadioButton();
             this.buttonTestOnce = new System.Windows.Forms.Button();
             this.checkBoxAutoplay = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxDifficulty = new System.Windows.Forms.GroupBox();
             this.textBoxStartTime = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxm4a = new System.Windows.Forms.CheckBox();
             this.checkBoxQuick = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -57,7 +58,7 @@
             this.panelButtons = new System.Windows.Forms.Panel();
             this.arrow = new System.Windows.Forms.PictureBox();
             this.beatmapLayout = new System.Windows.Forms.PictureBox();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panelDrop.SuspendLayout();
@@ -165,18 +166,18 @@
             this.toolTip1.SetToolTip(this.checkBoxAutoplay, "Start with autoplay enabled.");
             this.checkBoxAutoplay.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // groupBoxDifficulty
             // 
-            this.groupBox1.Controls.Add(this.radioButtonEasy);
-            this.groupBox1.Controls.Add(this.radioButtonNormal);
-            this.groupBox1.Controls.Add(this.radioButtonHard);
-            this.groupBox1.Controls.Add(this.radioButtonExpert);
-            this.groupBox1.Location = new System.Drawing.Point(15, 140);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(116, 123);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Initial Difficulty";
+            this.groupBoxDifficulty.Controls.Add(this.radioButtonEasy);
+            this.groupBoxDifficulty.Controls.Add(this.radioButtonNormal);
+            this.groupBoxDifficulty.Controls.Add(this.radioButtonHard);
+            this.groupBoxDifficulty.Controls.Add(this.radioButtonExpert);
+            this.groupBoxDifficulty.Location = new System.Drawing.Point(15, 140);
+            this.groupBoxDifficulty.Name = "groupBoxDifficulty";
+            this.groupBoxDifficulty.Size = new System.Drawing.Size(116, 123);
+            this.groupBoxDifficulty.TabIndex = 8;
+            this.groupBoxDifficulty.TabStop = false;
+            this.groupBoxDifficulty.Text = "Initial Difficulty";
             // 
             // textBoxStartTime
             // 
@@ -199,15 +200,29 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxm4a);
             this.groupBox2.Controls.Add(this.checkBoxQuick);
             this.groupBox2.Controls.Add(this.streamSwitch);
             this.groupBox2.Controls.Add(this.checkBoxAutoplay);
-            this.groupBox2.Location = new System.Drawing.Point(259, 140);
+            this.groupBox2.Location = new System.Drawing.Point(254, 140);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(120, 123);
+            this.groupBox2.Size = new System.Drawing.Size(124, 123);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
+            // 
+            // checkBoxm4a
+            // 
+            this.checkBoxm4a.AutoSize = true;
+            this.checkBoxm4a.Location = new System.Drawing.Point(6, 93);
+            this.checkBoxm4a.Name = "checkBoxm4a";
+            this.checkBoxm4a.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxm4a.TabIndex = 9;
+            this.checkBoxm4a.Text = "Package for iOS";
+            this.toolTip1.SetToolTip(this.checkBoxm4a, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
+                    "n PC.");
+            this.checkBoxm4a.UseVisualStyleBackColor = true;
+            this.checkBoxm4a.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // checkBoxQuick
             // 
@@ -292,7 +307,7 @@
             this.groupBoxStreamSwitch.Controls.Add(this.radioButtonStreamDown);
             this.groupBoxStreamSwitch.Location = new System.Drawing.Point(137, 140);
             this.groupBoxStreamSwitch.Name = "groupBoxStreamSwitch";
-            this.groupBoxStreamSwitch.Size = new System.Drawing.Size(116, 123);
+            this.groupBoxStreamSwitch.Size = new System.Drawing.Size(109, 123);
             this.groupBoxStreamSwitch.TabIndex = 9;
             this.groupBoxStreamSwitch.TabStop = false;
             this.groupBoxStreamSwitch.Text = "Stream Switch";
@@ -377,15 +392,15 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxStartTime);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBoxDifficulty);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "osu!stream tester";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxDifficulty.ResumeLayout(false);
+            this.groupBoxDifficulty.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -411,7 +426,7 @@
         private System.Windows.Forms.RadioButton radioButtonExpert;
         private System.Windows.Forms.Button buttonTestOnce;
         private System.Windows.Forms.CheckBox checkBoxAutoplay;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxDifficulty;
         private System.Windows.Forms.TextBox textBoxStartTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
@@ -431,6 +446,7 @@
         private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.PictureBox beatmapLayout;
         private System.Windows.Forms.PictureBox arrow;
+        private System.Windows.Forms.CheckBox checkBoxm4a;
     }
 }
 
