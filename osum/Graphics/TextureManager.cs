@@ -75,6 +75,8 @@ namespace osum.Graphics.Skins
         {
             LoadSprites();
 
+            AnimationCache.Clear();
+
             GameBase.OnScreenLayoutChanged += delegate
             {
                 DisposeDisposable();

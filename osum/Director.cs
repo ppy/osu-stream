@@ -137,7 +137,7 @@ namespace osum
             CurrentMode = PendingMode;
             PendingMode = null;
 
-            if (Clock.ModeTime > 0) Clock.ModeTimeReset();
+            Clock.ModeTimeReset();
 
             //enable dimming in case it got left on somewhere.
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;

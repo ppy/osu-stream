@@ -14,6 +14,8 @@ using osum;
 using System.Threading;
 using System.Diagnostics;
 using System.Reflection;
+using osum.Support;
+using osum.Audio;
 
 namespace osum
 {
@@ -61,7 +63,7 @@ namespace osum
                     ProcessBeatmap(args[0]);
                     return;
 #endif
-                    
+
                     bool hasChanges = true;
 
                     FileSystemWatcher fsw = new FileSystemWatcher(args[0]);
@@ -106,8 +108,6 @@ namespace osum
         public static string Process(string dir, bool quick = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
-            Console.WriteLine();
-            Console.WriteLine();
             Console.WriteLine();
 
             if (dir.Length < 1)
@@ -232,8 +232,8 @@ namespace osum
 
                                     if (slider)
                                     {
-                                        repeatCount = Int32.Parse(split[6],nfi);
-                                        length = double.Parse(split[7],nfi);
+                                        repeatCount = Int32.Parse(split[6], nfi);
+                                        length = double.Parse(split[7], nfi);
                                         hadEndpointSamples = split.Length >= 9;
 
                                         hold = (repeatCount > 1 && length < 50) ||
@@ -424,54 +424,68 @@ namespace osum
 
             File.Delete(osz2Filename);
 
-            if (!quick)
+            //write the package initially so we can use it for score testing purposes.
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+
+            //scoring
+
+            Player.Beatmap = new Beatmap(osz2Filename);
+            Player.Autoplay = true;
+
+            //Working on the scoring algorithm for osu!s
+            //Basically I need to calculate the total possible score from hitobjects before any multipliers kick in...
+            //but I need to know this before the beatmap is loaded.
+
+            //So this means running through the beatmap as if it was being played at the time of package creation
+            //(inside BeatmapCombinator).  After I find the score that can be achieved, I can figure out what multiplier
+            //i need in order to pad it out to a fixed 1,000,000 max score.
+
+            //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
+
+            ITimeSource oldTimeSource = Clock.AudioTimeSource;
+            FakeAudioTimeSource source = new FakeAudioTimeSource();
+            Clock.AudioTimeSource = source;
+
+            SoundEffectPlayer oldEffect = AudioEngine.Effect;
+            BackgroundAudioPlayer oldMusic = AudioEngine.Music;
+
+            AudioEngine.Music = null;
+            AudioEngine.Effect = null;
+
+            headerContent.Remove("[HitObjects]");
+
+            headerContent.Add(string.Empty);
+            headerContent.Add("[ScoringMultipliers]");
+
+            if (quick)
             {
-
-                //write the package initially so we can use it for score testing purposes.
-                writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
-
-                //scoring
-
-                Player.Beatmap = new Beatmap(osz2Filename);
-                Player.Autoplay = true;
-
-                //Working on the scoring algorithm for osu!s
-                //Basically I need to calculate the total possible score from hitobjects before any multipliers kick in...
-                //but I need to know this before the beatmap is loaded.
-
-                //So this means running through the beatmap as if it was being played at the time of package creation
-                //(inside BeatmapCombinator).  After I find the score that can be achieved, I can figure out what multiplier
-                //i need in order to pad it out to a fixed 1,000,000 max score.
-
-                //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
-
-                FakeAudioTimeSource source = new FakeAudioTimeSource();
-                Clock.AudioTimeSource = source;
-
-                headerContent.Remove("[HitObjects]");
-
-                headerContent.Add(string.Empty);
-                headerContent.Add("[ScoringMultipliers]");
-
+                calculateMultiplier(Difficulty.Normal, true);
+            }
+            else
+            {
                 if (orderedDifficulties[(int)Difficulty.Easy] != null)
                     headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
                 if (orderedDifficulties[(int)Difficulty.Normal] != null)
                     headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
                 if (orderedDifficulties[(int)Difficulty.Expert] != null)
                     headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+            }
 
-                if (healthMultiplier != 0)
-                    headerContent.Add("HP:" + healthMultiplier);
+            if (healthMultiplier != 0)
+                headerContent.Add("HP:" + healthMultiplier.ToString("G17", nfi));
 
-                headerContent.Add(string.Empty);
-                headerContent.Add("[HitObjects]");
+            headerContent.Add(string.Empty);
+            headerContent.Add("[HitObjects]");
 
-                Player.Beatmap.Dispose();
+            Player.Beatmap.Dispose();
+
+            Clock.AudioTimeSource = oldTimeSource;
+            AudioEngine.Effect = oldEffect;
+            AudioEngine.Music = oldMusic;
 
 #if PREVIEW
             osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
 #endif
-            }
 
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
@@ -600,8 +614,8 @@ namespace osum
                         string val = string.Empty;
                         if (var.Length > 1)
                         {
-                            key = line.Substring(0,line.IndexOf(':'));
-                            val = line.Substring(line.IndexOf(':')+1).Trim();
+                            key = line.Substring(0, line.IndexOf(':'));
+                            val = line.Substring(line.IndexOf(':') + 1).Trim();
 
                             MapMetaType t = (MapMetaType)Enum.Parse(typeof(MapMetaType), key, true);
                             package.AddMetadata(t, val);
@@ -651,7 +665,7 @@ namespace osum
             return ((int)sounds).ToString(nfi);
         }
 
-        private static double calculateMultiplier(Difficulty difficulty)
+        private static double calculateMultiplier(Difficulty difficulty, bool quick = false)
         {
             Console.Write("Processing " + difficulty);
 
@@ -659,6 +673,8 @@ namespace osum
 
             Player.Difficulty = difficulty;
             Player.Autoplay = true;
+
+            Score s = null;
 
             using (Player p = new Player())
             {
@@ -707,13 +723,14 @@ namespace osum
                         {
                             //4.5 is the difference between 300 and 100 hit increase (5 - 0.5)
                             healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                            Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
                         }
                         switchHpObject = null;
                     }
 
                     if (p.Completed)
                     {
-                        Score s = p.CurrentScore;
+                        s = p.CurrentScore;
                         s.UseAccuracyBonus = true;
 
                         int excess = s.totalScore - s.spinnerBonusScore - 1000000;
@@ -727,66 +744,65 @@ namespace osum
             }
 
             int finalScore = 0;
-            double adjustment = 0;
 
-            while (finalScore < 1000000)
+            if (!quick)
             {
-                Console.Write(".");
+                double adjustment = 0;
 
-                Player.Difficulty = difficulty;
-                Player.Autoplay = true;
-
-                Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
-
-                //let's do some test runs
-                using (Player p = new Player())
+                while (finalScore < 1000000)
                 {
-                    p.Initialize();
+                    Console.Write(".");
 
-                    FakeAudioTimeSource source = new FakeAudioTimeSource();
-                    Clock.AudioTimeSource = source;
+                    Player.Difficulty = difficulty;
+                    Player.Autoplay = true;
 
-                    while (true)
+                    Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
+
+                    //let's do some test runs
+                    using (Player p = new Player())
                     {
-                        Clock.UpdateCustom(0.01);
-                        source.InternalTime += 0.01;
+                        p.Initialize();
 
-                        p.Update();
+                        FakeAudioTimeSource source = new FakeAudioTimeSource();
+                        Clock.AudioTimeSource = source;
 
-                        if (p.Completed)
+                        while (true)
                         {
-                            Score s = p.CurrentScore;
-                            s.UseAccuracyBonus = true;
+                            Clock.UpdateCustom(0.01);
+                            source.InternalTime += 0.01;
 
-                            finalScore = (s.totalScore - s.spinnerBonusScore);
+                            p.Update();
 
-                            if (finalScore < 1000000)
+                            if (p.Completed)
                             {
-                                int fellShortBy = 1000000 - finalScore;
-                                adjustment = (double)fellShortBy / s.comboBonusScore;
-                                comboMultiplier += adjustment;
-                            }
-                            else
-                            {
-                                Console.WriteLine(" Done");
-                                Console.WriteLine();
-                                Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
-                                Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
-                                Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
-                                Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
-                                Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
-                                Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
-                                Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
-                                Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
-                                Console.WriteLine();
-                                Console.WriteLine();
-                            }
+                                s = p.CurrentScore;
+                                s.UseAccuracyBonus = true;
 
-                            break;
+                                finalScore = (s.totalScore - s.spinnerBonusScore);
+
+                                if (finalScore < 1000000)
+                                {
+                                    int fellShortBy = 1000000 - finalScore;
+                                    adjustment = (double)fellShortBy / s.comboBonusScore;
+                                    comboMultiplier += adjustment;
+                                }
+                                break;
+                            }
                         }
                     }
                 }
             }
+
+            Console.WriteLine(" Done");
+            Console.WriteLine();
+            Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
+            Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
+            Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
+            Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
+            Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
+            Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
+            Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
+            Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
 
             //i guess the best thing to do might be to aim slightly above 1m and ignore the excess...
             //okay now we have numbers roughly around 1mil (always higher or equal to).

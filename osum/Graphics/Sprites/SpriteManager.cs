@@ -411,7 +411,7 @@ namespace osum.Graphics.Sprites
 
                     TexturesEnabled = p.UsesTextures;
                     AlphaBlend = p.AlphaBlend || p.Alpha != 1;
-					
+                    
                     if (p.Draw())
                     {
                         //todo: implement batching!

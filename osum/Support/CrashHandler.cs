@@ -17,6 +17,10 @@ namespace osum.Support
         {
             if (isInitialized) return;
 
+#if MONO
+            return;
+#endif
+
             if (File.Exists(LogFileFullPath))
             {
                 string contents = File.ReadAllText(LogFileFullPath);

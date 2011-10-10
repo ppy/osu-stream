@@ -11,9 +11,8 @@ namespace osum
 {
     public class GameBaseDesktop : GameBase
     {
-        GameWindowDesktop gameWindow;
+        public GameWindowDesktop Window;
 
-        
         public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
         }
@@ -25,8 +24,8 @@ namespace osum
         
         override public void Run()
         {
-            gameWindow = new GameWindowDesktop();
-            gameWindow.Run();
+            Window = new GameWindowDesktop();
+            Window.Run();
             Director.CurrentMode.Dispose();
         }
 
@@ -37,20 +36,20 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSourceMouse source = new InputSourceMouse(gameWindow.Mouse);
+            InputSourceMouse source = new InputSourceMouse(Window.Mouse);
             InputManager.AddSource(source);
         }
 
         public override void SetupScreen()
         {
-            NativeSize = gameWindow.ClientSize;
+            NativeSize = Window.ClientSize;
 
             base.SetupScreen();
         }
 
         public void Exit()
         {
-            gameWindow.Exit();
+            Window.Exit();
         }
     }
 }

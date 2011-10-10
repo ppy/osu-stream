@@ -36,7 +36,7 @@ namespace osum.GameplayElements
         /// </summary>
         HitFactory hitFactory;
 
-        internal pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
+        public pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
 
         internal int ProcessFrom;

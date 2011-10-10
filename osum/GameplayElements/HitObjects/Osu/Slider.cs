@@ -230,7 +230,6 @@ namespace osum.GameplayElements.HitObjects.Osu
     new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
                    OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White) { ExactCoordinates = false };
 
-
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
 
             spriteFollowBall =

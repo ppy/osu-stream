@@ -21,7 +21,7 @@ namespace ConsoleRedirection
         {
             base.Write(value);
             buffer.Append(value);
-            if (value == '\n')
+            if (value == '\n' || value == '.')
             {
                 _output.Invoke((MethodInvoker)delegate
                 {

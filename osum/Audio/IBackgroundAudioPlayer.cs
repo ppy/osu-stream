@@ -59,7 +59,7 @@ namespace osum
 
             lastLoaded = identifier;
             Clock.UseMp3Offset = lastLoaded != null && lastLoaded.Contains(".mp3");
-#if !DIST
+#if FULL_DEBUG
             Console.WriteLine("Using MP3 offset:" + Clock.UseMp3Offset);
 #endif
             return true;
@@ -110,7 +110,7 @@ namespace osum
         /// </summary>
         public virtual bool SeekTo(int milliseconds)
         {
-            Clock.SkipOccurred();
+            Clock.SkipOccurred(milliseconds);
             return true;
         }
 

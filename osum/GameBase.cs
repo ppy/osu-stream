@@ -243,7 +243,7 @@ namespace osum
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
 
-#if !DIST
+#if FULL_DEBUG
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
             Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
             Console.WriteLine("Sprite multiplier is " + SpriteToBaseRatio + " or aligned at " + SpriteToBaseRatioAligned);
