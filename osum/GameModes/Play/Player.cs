@@ -251,7 +251,7 @@ namespace osum.GameModes
             if (HitObjectManager != null)
                 HitObjectManager.Dispose();
 
-            if (Beatmap.Package != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview")
+            if (Beatmap.Package != null && (GameBase.Instance != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview"))
                 return; //can't load preview in this mode.
 
             HitObjectManager = new HitObjectManager(Beatmap);
