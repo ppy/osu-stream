@@ -736,7 +736,7 @@ namespace osum
 
                         double testMultiplier = (double)(s.comboBonusScore - excess) / s.comboBonusScore;
 
-                        comboMultiplier = testMultiplier;
+                        comboMultiplier = testMultiplier * 0.97f;
                         break;
                     }
                 }
