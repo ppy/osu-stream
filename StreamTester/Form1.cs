@@ -353,7 +353,14 @@ namespace StreamTester
             groupBoxStreamSwitch.Enabled = !checkBoxm4a.Checked;
 
             if (checkBoxm4a.Checked)
+            {
+                checkBoxQuick.Enabled = false;
                 checkBoxQuick.Checked = false;
+            }
+            else
+            {
+                checkBoxQuick.Enabled = true;
+            }
 
             buttonTestOnce.Text = checkBoxm4a.Checked ? "Create Package" : "Test Once";
         }

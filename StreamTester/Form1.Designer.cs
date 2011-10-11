@@ -1,6 +1,7 @@
-﻿namespace StreamTester
+﻿using System.Windows.Forms;
+namespace StreamTester
 {
-    partial class Form1
+    partial class Form1 : Form
     {
         /// <summary>
         /// Required designer variable.
@@ -222,7 +223,7 @@
             this.checkBoxm4a.TabIndex = 9;
             this.checkBoxm4a.Text = "Package for iOS";
             this.toolTip1.SetToolTip(this.checkBoxm4a, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
-        "n PC.");
+                    "n PC.");
             this.checkBoxm4a.UseVisualStyleBackColor = true;
             this.checkBoxm4a.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -296,9 +297,12 @@
             // 
             // console
             // 
+            this.console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.console.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.console.Location = new System.Drawing.Point(15, 341);
             this.console.Multiline = true;
             this.console.Name = "console";
+            this.console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.console.Size = new System.Drawing.Size(364, 129);
             this.console.TabIndex = 15;
             // 
@@ -360,7 +364,7 @@
             this.arrow.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.arrow.BackColor = System.Drawing.Color.Transparent;
             this.arrow.Image = global::StreamTester.Properties.Resources.arrow;
-            this.arrow.Location = new System.Drawing.Point(6, 76);
+            this.arrow.Location = new System.Drawing.Point(10, 76);
             this.arrow.Name = "arrow";
             this.arrow.Size = new System.Drawing.Size(13, 8);
             this.arrow.TabIndex = 18;
