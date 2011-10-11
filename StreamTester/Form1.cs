@@ -102,6 +102,8 @@ namespace StreamTester
         bool isDragging;
         private void beatmapLayout_MouseDown(object sender, MouseEventArgs e)
         {
+            checkBoxEditorTime.Checked = false;
+
             updatePosition();
             isDragging = true;
         }
@@ -114,6 +116,11 @@ namespace StreamTester
         private void updatePosition()
         {
             int time = (int)((float)beatmapLength * beatmapLayout.PointToClient(Cursor.Position).X / beatmapLayout.Width);
+            updateStartTime(time);
+        }
+
+        private void updateStartTime(int time)
+        {
             if (beatmapLength == 0 || time < 0 || time > beatmapLength)
                 return;
 
@@ -139,11 +146,12 @@ namespace StreamTester
             ThreadPool.QueueUserWorkItem(w => { CombinateAndTest(); });
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object s1, EventArgs e1)
         {
             checkingForChanges = !checkingForChanges;
             if (checkingForChanges)
             {
+                checkBoxEditorTime.Checked = true;
                 buttonTestOnSave.Text = "Cancel";
 
                 bool hasChanges = false;
@@ -151,7 +159,14 @@ namespace StreamTester
                 {
 
                     FileSystemWatcher fsw = new FileSystemWatcher(filename);
-                    fsw.Changed += delegate { hasChanges = true; };
+
+                    string changedFilename = null;
+
+                    fsw.Changed += delegate(object sender, FileSystemEventArgs e)
+                    {
+                        changedFilename = e.FullPath;
+                        hasChanges = true;
+                    };
                     fsw.EnableRaisingEvents = true;
 
                     Console.WriteLine("Waiting for changes...");
@@ -164,6 +179,32 @@ namespace StreamTester
 
                             hasChanges = false;
                             Console.WriteLine("Detected changes; recombinating!");
+
+
+                            if (checkBoxEditorTime.Checked)
+                            {
+                                foreach (string l in File.ReadAllLines(changedFilename))
+                                {
+                                    if (l.StartsWith("CurrentTime:"))
+                                    {
+                                        updateStartTime(Int32.Parse(l.Split(':')[1].Trim()));
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (checkBoxEditorDifficulty.Checked)
+                            {
+                                if (changedFilename.Contains("Easy"))
+                                    radioButtonEasy.Checked = true;
+                                else if (changedFilename.Contains("Normal"))
+                                    radioButtonNormal.Checked = true;
+                                else if (changedFilename.Contains("Hard"))
+                                    radioButtonHard.Checked = true;
+                                else if (changedFilename.Contains("Expert"))
+                                    radioButtonExpert.Checked = true;
+                            }
+
 
                             CombinateAndTest();
 

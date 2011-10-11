@@ -58,6 +58,8 @@
             this.panelButtons = new System.Windows.Forms.Panel();
             this.arrow = new System.Windows.Forms.PictureBox();
             this.beatmapLayout = new System.Windows.Forms.PictureBox();
+            this.checkBoxEditorTime = new System.Windows.Forms.CheckBox();
+            this.checkBoxEditorDifficulty = new System.Windows.Forms.CheckBox();
             this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -220,7 +222,7 @@
             this.checkBoxm4a.TabIndex = 9;
             this.checkBoxm4a.Text = "Package for iOS";
             this.toolTip1.SetToolTip(this.checkBoxm4a, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
-                    "n PC.");
+        "n PC.");
             this.checkBoxm4a.UseVisualStyleBackColor = true;
             this.checkBoxm4a.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -377,11 +379,37 @@
             this.beatmapLayout.MouseMove += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseMove);
             this.beatmapLayout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseUp);
             // 
+            // checkBoxEditorTime
+            // 
+            this.checkBoxEditorTime.AutoSize = true;
+            this.checkBoxEditorTime.Checked = true;
+            this.checkBoxEditorTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEditorTime.Location = new System.Drawing.Point(15, 27);
+            this.checkBoxEditorTime.Name = "checkBoxEditorTime";
+            this.checkBoxEditorTime.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxEditorTime.TabIndex = 19;
+            this.checkBoxEditorTime.Text = "Use osu! editor current time";
+            this.checkBoxEditorTime.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxEditorDifficulty
+            // 
+            this.checkBoxEditorDifficulty.AutoSize = true;
+            this.checkBoxEditorDifficulty.Checked = true;
+            this.checkBoxEditorDifficulty.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEditorDifficulty.Location = new System.Drawing.Point(15, 5);
+            this.checkBoxEditorDifficulty.Name = "checkBoxEditorDifficulty";
+            this.checkBoxEditorDifficulty.Size = new System.Drawing.Size(174, 17);
+            this.checkBoxEditorDifficulty.TabIndex = 20;
+            this.checkBoxEditorDifficulty.Text = "Use osu! editor current difficulty";
+            this.checkBoxEditorDifficulty.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 497);
+            this.Controls.Add(this.checkBoxEditorDifficulty);
+            this.Controls.Add(this.checkBoxEditorTime);
             this.Controls.Add(this.arrow);
             this.Controls.Add(this.beatmapLayout);
             this.Controls.Add(this.panelButtons);
@@ -447,6 +475,8 @@
         private System.Windows.Forms.PictureBox beatmapLayout;
         private System.Windows.Forms.PictureBox arrow;
         private System.Windows.Forms.CheckBox checkBoxm4a;
+        private System.Windows.Forms.CheckBox checkBoxEditorTime;
+        private System.Windows.Forms.CheckBox checkBoxEditorDifficulty;
     }
 }
 
