@@ -317,6 +317,7 @@ namespace osum.GameModes
             }
 
             InputManager.OnDown -= InputManager_OnDown;
+            Director.OnTransitionEnded -= Director_OnTransitionEnded;
 
             if (HitObjectManager != null) HitObjectManager.Dispose();
 
