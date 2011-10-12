@@ -381,7 +381,7 @@ namespace osum
 
             string osz2Filename;
 
-            string baseFileWithLocation = DistBuild ? baseName.Substring(baseName.LastIndexOf("\\") + 1) : upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1);
+            string baseFileWithLocation = baseName.Substring(baseName.LastIndexOf("\\") + 1);
 
             if (free && DistBuild)
                 osz2Filename = baseFileWithLocation + ".osf2";

@@ -14,11 +14,25 @@ using System.IO;
 using ConsoleRedirection;
 using osum.GameplayElements;
 using osu_common.Helpers;
+using System.Diagnostics;
 
 namespace StreamTester
 {
     public partial class Form1 : Form
     {
+        string tempDir = Path.GetTempPath() + "osu!stream";
+        string osusDir = Environment.CurrentDirectory;
+
+        public Form1()
+        {
+            InitializeComponent();
+            new TextBoxStreamWriter(console);
+
+            if (Directory.Exists(tempDir))
+                Directory.Delete(tempDir, true);
+            Directory.CreateDirectory(tempDir);
+        }
+
         string filename;
         private bool checkingForChanges;
         private GameBaseDesktop game;
@@ -138,12 +152,6 @@ namespace StreamTester
                 updatePosition();
         }
 
-        public Form1()
-        {
-            InitializeComponent();
-            new TextBoxStreamWriter(console);
-        }
-
         private void buttonTestOnce_Click(object sender, EventArgs e)
         {
             ThreadPool.QueueUserWorkItem(w => { CombinateAndTest(); });
@@ -208,7 +216,6 @@ namespace StreamTester
                                     radioButtonExpert.Checked = true;
                             }
 
-
                             CombinateAndTest();
 
                             fsw.EnableRaisingEvents = true;
@@ -253,7 +260,9 @@ namespace StreamTester
                 //temporarily remove any instance to ensure we get correct and speedy calculations.
                 //this will be restored at the end of processing.
 
-                packageName = BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
+                Environment.CurrentDirectory = tempDir;
+                packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
+                Environment.CurrentDirectory = osusDir;
 
                 GameBase.Instance = game;
 
@@ -312,6 +321,9 @@ namespace StreamTester
             }
 
             Invoke((MethodInvoker)delegate { panelButtons.Enabled = true; });
+
+            if (checkBoxm4a.Checked)
+                Process.Start(tempDir);
 
             return packageName;
         }
