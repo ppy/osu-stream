@@ -48,6 +48,8 @@ namespace osum
         private static List<string> headerContent;
         private static double healthMultiplier;
 
+        static bool DistBuild;
+
         /// <summary>
         /// Combines many .osu files into one .osc
         /// </summary>
@@ -58,35 +60,11 @@ namespace osum
             {
                 if (args.Length > 0)
                 {
-#if DIST || M4A
+                    DistBuild = true;
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    Process(args[0], false, true);
-                    return;
-#endif
-
-                    bool hasChanges = true;
-
-                    FileSystemWatcher fsw = new FileSystemWatcher(args[0]);
-                    fsw.Changed += delegate { hasChanges = true; };
-                    fsw.EnableRaisingEvents = true;
-
-                    while (true)
-                    {
-                        if (hasChanges)
-                        {
-                            fsw.EnableRaisingEvents = false;
-
-                            hasChanges = false;
-                            Console.WriteLine("Detected changes; recombinating!");
-
-                            Process(args[0]);
-
-                            fsw.EnableRaisingEvents = true;
-                            Console.WriteLine("Waiting for changes...");
-                        }
-
-                        Thread.Sleep(1000);
-                    }
+                    Process(args[0], true, true, true, true);
+                    Process(args[0], false, true, true, false);
+                    Process(args[0], false, true, false, false);
                 }
                 else
                 {
@@ -105,7 +83,7 @@ namespace osum
             }
         }
 
-        public static string Process(string dir, bool quick = false, bool usem4a = false)
+        public static string Process(string dir, bool quick = false, bool usem4a = false, bool free = false, bool previewMode = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
@@ -401,11 +379,14 @@ namespace osum
             string[] splitdir = dir.Split('\\');
             string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
-#if DIST
-            string osz2Filename = baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
-#else
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + (usem4a ? ".m4a.osz2" : ".osz2");
-#endif
+            string osz2Filename;
+
+            string baseFileWithLocation = DistBuild ? baseName.Substring(baseName.LastIndexOf("\\") + 1) : upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1);
+
+            if (free && DistBuild)
+                osz2Filename = baseFileWithLocation + ".osf2";
+            else
+                osz2Filename = baseFileWithLocation + (usem4a ? ".m4a.osz2" : ".osz2");
 
             string audioFilename = null;
 
@@ -484,9 +465,8 @@ namespace osum
             AudioEngine.Effect = oldEffect;
             AudioEngine.Music = oldMusic;
 
-#if PREVIEW
-            osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
-#endif
+            //only change the filename here so it is not treated as a preview above (else previewpoints will not be filled before necessary).
+            if (previewMode) osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
 
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
@@ -496,39 +476,40 @@ namespace osum
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)
         {
-#if PREVIEW
+            bool isPreview = osz2Filename.Contains("_preview");
+
             int hitObjectCutoff = 0;
-#endif
 
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
                 //write headers first (use first difficulty as arbitrary source)
                 foreach (string l in headerContent)
                 {
-#if PREVIEW
-                    if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
+                    if (isPreview)
                     {
-                        //may need to double up on bookmarks if they don't occur often often
-
-                        List<int> switchPoints = Player.Beatmap.StreamSwitchPoints;
-
-                        if (switchPoints.Count < 10 || switchPoints[9] > 60000)
+                        if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
                         {
-                            string switchString = "Bookmarks:";
-                            
-                            foreach (int s in switchPoints)
+                            //may need to double up on bookmarks if they don't occur often often
+
+                            List<int> switchPoints = Player.Beatmap.StreamSwitchPoints;
+
+                            if (switchPoints.Count < 10 || switchPoints[9] > 60000)
                             {
-                                switchString += s.ToString(nfi) + ",";
-                                switchString += s.ToString(nfi) + ","; //double bookmark hack for previews
+                                string switchString = "Bookmarks:";
+
+                                foreach (int s in switchPoints)
+                                {
+                                    switchString += s.ToString(nfi) + ",";
+                                    switchString += s.ToString(nfi) + ","; //double bookmark hack for previews
+                                }
+
+                                output.WriteLine(switchString.Trim(','));
+
+                                hitObjectCutoff = switchPoints.Count < 10 ? switchPoints[4] : switchPoints[9];
+                                continue;
                             }
-
-                            output.WriteLine(switchString.Trim(','));
-
-                            hitObjectCutoff = switchPoints.Count < 10 ? switchPoints[4] : switchPoints[9];
-                            continue;
                         }
                     }
-#endif
                     output.WriteLine(l);
                 }
 
@@ -555,13 +536,11 @@ namespace osum
 
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
-#if PREVIEW
-                        if (hitObjectCutoff > 0 && line.Time > hitObjectCutoff)
+                        if (isPreview && hitObjectCutoff > 0 && line.Time > hitObjectCutoff)
                         {
                             linesRemaining[i]--;
                             continue;
                         }
-#endif
 
                         if (line.Time >= currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
                         {
@@ -593,11 +572,10 @@ namespace osum
                     throw new Exception("FATAL ERROR: audio file not found");
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
-#if PREVIEW
-                package.AddFile("audio.m4a", audioFilename.Replace(".m4a","_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
-#else
-                package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
-#endif
+                if (isPreview)
+                    package.AddFile("audio.m4a", audioFilename.Replace(".m4a", "_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
+                else
+                    package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 
                 string dir = Path.GetDirectoryName(audioFilename);
 
@@ -622,9 +600,8 @@ namespace osum
                     }
                 }
 
-#if PREVIEW
-                package.AddMetadata(MapMetaType.Revision, "preview");
-#endif
+                if (isPreview)
+                    package.AddMetadata(MapMetaType.Revision, "preview");
 
                 string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))
