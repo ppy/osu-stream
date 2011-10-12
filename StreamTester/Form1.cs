@@ -68,12 +68,15 @@ namespace StreamTester
                     drawHitObjects(g, hom.StreamHitObjects[3], Color.BlueViolet, 3);
 
                     //draw bookmarks
-                    foreach (int time in b.StreamSwitchPoints)
+                    if (b.StreamSwitchPoints != null)
                     {
-                        int xPos = (int)((float)time / beatmapLength * width);
-                        g.DrawLine(new Pen(Color.Black), new Point(xPos - 1, 0), new Point(xPos - 1, height));
-                        g.DrawLine(new Pen(Color.Red), new Point(xPos, 0), new Point(xPos, height));
-                        g.DrawLine(new Pen(Color.Black), new Point(xPos + 1, 0), new Point(xPos + 1, height));
+                        foreach (int time in b.StreamSwitchPoints)
+                        {
+                            int xPos = (int)((float)time / beatmapLength * width);
+                            g.DrawLine(new Pen(Color.Black), new Point(xPos - 1, 0), new Point(xPos - 1, height));
+                            g.DrawLine(new Pen(Color.Red), new Point(xPos, 0), new Point(xPos, height));
+                            g.DrawLine(new Pen(Color.Black), new Point(xPos + 1, 0), new Point(xPos + 1, height));
+                        }
                     }
                 }
             }
