@@ -94,7 +94,7 @@ namespace StreamTester
             this.streamSwitch.Size = new System.Drawing.Size(105, 17);
             this.streamSwitch.TabIndex = 1;
             this.streamSwitch.Text = "Stream Switches";
-            this.toolTip1.SetToolTip(this.streamSwitch, "Allow stream switches.");
+            this.toolTip1.SetToolTip(this.streamSwitch, "Disabling this forces the current difficulty to play until the end.");
             this.streamSwitch.UseVisualStyleBackColor = true;
             this.streamSwitch.CheckedChanged += new System.EventHandler(this.streamSwitch_CheckedChanged);
             // 
@@ -223,7 +223,7 @@ namespace StreamTester
             this.checkBoxm4a.TabIndex = 9;
             this.checkBoxm4a.Text = "Package for iOS";
             this.toolTip1.SetToolTip(this.checkBoxm4a, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
-                    "n PC.");
+                    "n PC. Note that this needs an m4a audio track in the beatmap folder.");
             this.checkBoxm4a.UseVisualStyleBackColor = true;
             this.checkBoxm4a.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -237,7 +237,7 @@ namespace StreamTester
             this.checkBoxQuick.Size = new System.Drawing.Size(107, 17);
             this.checkBoxQuick.TabIndex = 8;
             this.checkBoxQuick.Text = "Quick Combinate";
-            this.toolTip1.SetToolTip(this.checkBoxQuick, "Bypass score/hp calculations to combinate super-fast for testing.");
+            this.toolTip1.SetToolTip(this.checkBoxQuick, "Bypass score calculations to combinate super-fast for testing.");
             this.checkBoxQuick.UseVisualStyleBackColor = true;
             // 
             // statusStrip1
@@ -328,6 +328,7 @@ namespace StreamTester
             this.radioButtonStreamNormal.TabIndex = 2;
             this.radioButtonStreamNormal.TabStop = true;
             this.radioButtonStreamNormal.Text = "Normal";
+            this.toolTip1.SetToolTip(this.radioButtonStreamNormal, "Test starting from 50% health.");
             this.radioButtonStreamNormal.UseVisualStyleBackColor = true;
             // 
             // radioButtonStreamUp
@@ -338,6 +339,7 @@ namespace StreamTester
             this.radioButtonStreamUp.Size = new System.Drawing.Size(75, 17);
             this.radioButtonStreamUp.TabIndex = 3;
             this.radioButtonStreamUp.Text = "Stream Up";
+            this.toolTip1.SetToolTip(this.radioButtonStreamUp, "Test starting from 100% health, causing a STREAM UP");
             this.radioButtonStreamUp.UseVisualStyleBackColor = true;
             // 
             // radioButtonStreamDown
@@ -348,6 +350,7 @@ namespace StreamTester
             this.radioButtonStreamDown.Size = new System.Drawing.Size(89, 17);
             this.radioButtonStreamDown.TabIndex = 4;
             this.radioButtonStreamDown.Text = "Stream Down";
+            this.toolTip1.SetToolTip(this.radioButtonStreamDown, "Test starting from 0% health, causing a STREAM DOWN");
             this.radioButtonStreamDown.UseVisualStyleBackColor = true;
             // 
             // panelButtons
@@ -379,6 +382,7 @@ namespace StreamTester
             this.beatmapLayout.Size = new System.Drawing.Size(364, 46);
             this.beatmapLayout.TabIndex = 17;
             this.beatmapLayout.TabStop = false;
+            this.toolTip1.SetToolTip(this.beatmapLayout, "Drag here to choose a start time.");
             this.beatmapLayout.MouseDown += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseDown);
             this.beatmapLayout.MouseMove += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseMove);
             this.beatmapLayout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseUp);
@@ -393,6 +397,8 @@ namespace StreamTester
             this.checkBoxEditorTime.Size = new System.Drawing.Size(155, 17);
             this.checkBoxEditorTime.TabIndex = 19;
             this.checkBoxEditorTime.Text = "Use osu! editor current time";
+            this.toolTip1.SetToolTip(this.checkBoxEditorTime, "When saving the currently linked map in osu! editor, the current editor time will" +
+                    " be used as a start time.");
             this.checkBoxEditorTime.UseVisualStyleBackColor = true;
             // 
             // checkBoxEditorDifficulty
@@ -405,6 +411,8 @@ namespace StreamTester
             this.checkBoxEditorDifficulty.Size = new System.Drawing.Size(174, 17);
             this.checkBoxEditorDifficulty.TabIndex = 20;
             this.checkBoxEditorDifficulty.Text = "Use osu! editor current difficulty";
+            this.toolTip1.SetToolTip(this.checkBoxEditorDifficulty, "When saving the currently linked map in the osu! editor, that difficulty will be " +
+                    "tested.");
             this.checkBoxEditorDifficulty.UseVisualStyleBackColor = true;
             // 
             // Form1
