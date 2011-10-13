@@ -463,7 +463,9 @@ namespace osum.GameplayElements
 
             if (objects == null) return null;
 
-            for (int i = ProcessFrom; i <= ProcessTo; i++)
+            int limit = Math.Min(ProcessTo, objects.Count - 1);
+
+            for (int i = ProcessFrom; i <= limit; i++)
             {
                 HitObject h = objects[i];
                 if (h.HitTestInitial(tracking))
