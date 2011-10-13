@@ -148,7 +148,6 @@ namespace osum.GameModes
                 pDrawable whiteLayer = pSprite.FullscreenWhitePixel;
                 whiteLayer.Alpha = 0;
                 whiteLayer.Clocking = ClockTypes.Mode;
-                //whiteLayer.Additive = true;
                 spriteManager.Add(whiteLayer);
 
                 whiteLayer.Transform(new TransformationF(TransformationType.Fade, 0, 0.125f, 800, initial_display - 200));

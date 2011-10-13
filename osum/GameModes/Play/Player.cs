@@ -102,12 +102,16 @@ namespace osum.GameModes
 
         int frameCount;
 
+#if SCORE_TESTING
+        string scoreTestFilename = "score-" + DateTime.Now.Ticks + ".txt";
+#endif
+
         public override void Initialize()
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
 #if SCORE_TESTING
-            File.WriteAllText("score.txt","");
+            File.WriteAllText(scoreTestFilename, "");
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
@@ -127,18 +131,7 @@ namespace osum.GameModes
                 GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
                 ShowGuideFingers = Autoplay || GameBase.Config.GetValue<bool>("GuideFingers", false);
 
-                switch (Difficulty)
-                {
-                    default:
-                        HitObjectManager.SetActiveStream();
-                        break;
-                    case Difficulty.Expert:
-                        HitObjectManager.SetActiveStream(Difficulty.Expert);
-                        break;
-                    case Difficulty.Easy:
-                        HitObjectManager.SetActiveStream(Difficulty.Easy);
-                        break;
-                }
+                InitializeStream();
 
                 BeatmapDifficultyInfo diff = null;
                 if (Beatmap.DifficultyInfo.TryGetValue(Difficulty, out diff))
@@ -153,7 +146,7 @@ namespace osum.GameModes
                     return;
                 }
 
-                if (AudioEngine.Music != null)
+                if (GameBase.Instance != null && AudioEngine.Music != null)
                 {
                     AudioEngine.Music.Stop(true);
 
@@ -203,6 +196,22 @@ namespace osum.GameModes
             Resume(firstObjectTime, 8, true);
         }
 
+        protected virtual void InitializeStream()
+        {
+            switch (Difficulty)
+            {
+                default:
+                    HitObjectManager.SetActiveStream();
+                    break;
+                case Difficulty.Easy:
+                    HitObjectManager.SetActiveStream(Difficulty.Easy);
+                    break;
+                case Difficulty.Expert:
+                    HitObjectManager.SetActiveStream(Difficulty.Expert);
+                    break;
+            }
+        }
+
         protected virtual void initializeUIElements()
         {
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
@@ -242,7 +251,7 @@ namespace osum.GameModes
             if (HitObjectManager != null)
                 HitObjectManager.Dispose();
 
-            if (Beatmap.Package != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview")
+            if (Beatmap.Package != null && (GameBase.Instance != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview"))
                 return; //can't load preview in this mode.
 
             HitObjectManager = new HitObjectManager(Beatmap);
@@ -284,7 +293,7 @@ namespace osum.GameModes
                 }
             }
 
-            if (AudioEngine.Music != null)
+            if (GameBase.Instance != null && AudioEngine.Music != null)
                 AudioEngine.Music.Play();
         }
 
@@ -308,6 +317,7 @@ namespace osum.GameModes
             }
 
             InputManager.OnDown -= InputManager_OnDown;
+            Director.OnTransitionEnded -= Director_OnTransitionEnded;
 
             if (HitObjectManager != null) HitObjectManager.Dispose();
 
@@ -382,6 +392,10 @@ namespace osum.GameModes
             if (healthBar != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
+
+#if SCORE_TESTING
+            File.AppendAllText(scoreTestFilename, "Stream switched at " + Clock.AudioTime + "\n");
+#endif
 
             queuedStreamSwitchTime = 0;
         }
@@ -526,7 +540,7 @@ namespace osum.GameModes
 #if !DIST
                             Console.WriteLine("WARNING: Score exceeded limits at " + CurrentScore.totalScore);
 #if SCORE_TESTING
-                            File.AppendAllText("score.txt", "WARNING: Score exceeded limits at " + CurrentScore.totalScore + "\n");
+                            File.AppendAllText(scoreTestFilename, "WARNING: Score exceeded limits at " + CurrentScore.totalScore + "\n");
 #endif
 #endif
                             CurrentScore.comboBonusScore = Math.Min(Score.HIT_PLUS_COMBO_BONUS_AMOUNT - CurrentScore.hitScore, CurrentScore.comboBonusScore);
@@ -536,7 +550,7 @@ namespace osum.GameModes
             }
 
 #if SCORE_TESTING
-            File.AppendAllText("score.txt", "at " + Clock.AudioTime + " : " + change + "\t" + CurrentScore.hitScore + "\t" + CurrentScore.comboBonusScore + "\n");
+            File.AppendAllText(scoreTestFilename, "at " + Clock.AudioTime + " : " + change + "\t" + CurrentScore.hitScore + "\t" + CurrentScore.comboBonusScore + "\t" + (healthBar != null ? healthBar.CurrentHp.ToString() : "") + "\n");
 #endif
 
             if (healthBar != null)
@@ -618,7 +632,7 @@ namespace osum.GameModes
 
             if (Failed)
             {
-                if (AudioEngine.Music != null)
+                if (GameBase.Instance != null && AudioEngine.Music != null)
                 {
                     Director.AudioDimming = false;
 
@@ -837,6 +851,10 @@ namespace osum.GameModes
 
             if (switchTime < 0)
                 return false;
+
+#if SCORE_TESTING
+            File.AppendAllText(scoreTestFilename, "Switching stream at " + switchTime + "\n");
+#endif
 
             streamSwitchDisplay.BeginSwitch(increase);
 

@@ -2,22 +2,31 @@ using System;
 using osum.Input.Sources;
 using osum.Audio;
 using OpenTK.Graphics.OpenGL;
+using osum.GameModes;
+using osum.GameplayElements.Beatmaps;
+using osum.GameModes.Play;
 
 
 namespace osum
 {
     public class GameBaseDesktop : GameBase
     {
-        GameWindowDesktop gameWindow;
+        public GameWindowDesktop Window;
 
-        public GameBaseDesktop()
+        public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
         }
-        
-        override public void MainLoop()
+
+        public override void Initialize()
         {
-            gameWindow = new GameWindowDesktop();
-            gameWindow.Run();
+            base.Initialize();
+        }
+        
+        override public void Run()
+        {
+            Window = new GameWindowDesktop();
+            Window.Run();
+            Director.CurrentMode.Dispose();
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()
@@ -27,15 +36,20 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSourceMouse source = new InputSourceMouse(gameWindow.Mouse);
+            InputSourceMouse source = new InputSourceMouse(Window.Mouse);
             InputManager.AddSource(source);
         }
 
         public override void SetupScreen()
         {
-            NativeSize = gameWindow.ClientSize;
+            NativeSize = Window.ClientSize;
 
             base.SetupScreen();
+        }
+
+        public void Exit()
+        {
+            Window.Exit();
         }
     }
 }

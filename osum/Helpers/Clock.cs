@@ -29,7 +29,7 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET_M4A = -8;
         public const int UNIVERSAL_OFFSET_INPUT = 16;//16 * 2; //roughly four frames
 #else
-        public const int UNIVERSAL_OFFSET_MP3 = 40;
+        public const int UNIVERSAL_OFFSET_MP3 = 50;
         public const int UNIVERSAL_OFFSET_M4A = -10;
         public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
@@ -208,9 +208,10 @@ namespace osum.Helpers
             ManualTime = 0;
         }
 
-        internal static void SkipOccurred()
+        internal static void SkipOccurred(int ms)
         {
             audioCheckFrame = 0;
+            AudioTime = ms;
         }
     }
 }

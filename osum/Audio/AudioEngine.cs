@@ -39,7 +39,7 @@ namespace osum.Audio
         RankingBam2
     }
 
-    internal static class AudioEngine
+    public static class AudioEngine
     {
         static Dictionary<OsuSamples, int>[] loadedSamples = new Dictionary<OsuSamples, int>[]
         {
@@ -49,8 +49,8 @@ namespace osum.Audio
             new Dictionary<OsuSamples, int>()  // drum
         };
 
-        internal static SoundEffectPlayer Effect;
-        internal static BackgroundAudioPlayer Music;
+        public static SoundEffectPlayer Effect;
+        public static BackgroundAudioPlayer Music;
 
 
         /// <summary>
@@ -83,11 +83,11 @@ namespace osum.Audio
 
         internal static Source PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
         {
-            int buffer = LoadSample(sample, set);
-            if (buffer < 0) return null;
-
             if (AudioEngine.Effect == null)
                 return null;
+
+            int buffer = LoadSample(sample, set);
+            if (buffer < 0) return null;
 
             int lastPlayed = -1;
             if (lastPlayedTimes.TryGetValue(buffer, out lastPlayed))

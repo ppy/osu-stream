@@ -75,6 +75,8 @@ namespace osum.Graphics.Skins
         {
             LoadSprites();
 
+            AnimationCache.Clear();
+
             GameBase.OnScreenLayoutChanged += delegate
             {
                 DisposeDisposable();
@@ -84,7 +86,11 @@ namespace osum.Graphics.Skins
         public static void Update()
         {
 #if FULLER_DEBUG
-            DebugOverlay.AddLine("TextureManager: " + SpriteCache.Count + " cached " + DisposableTextures.Count + " dynamic");
+            
+            int countLoaded = 0;
+            foreach (TextureGl t in SpriteTextureCache.Values)
+                if (t.Id >= 0) countLoaded++;
+            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic");
 #endif
         }
 
@@ -116,6 +122,8 @@ namespace osum.Graphics.Skins
 
         public static void PurgeUnusedTexture()
         {
+            DisposeDisposable();
+
             foreach (TextureGl p in SpriteTextureCache.Values.ToArray<TextureGl>())
                 if (!p.usedSinceLastModeChange && p.Loaded)
                 {
@@ -301,12 +309,13 @@ namespace osum.Graphics.Skins
 
             set
             {
+                if (requireSurfaces == value)
+                    return;
+
                 requireSurfaces = value;
 
                 if (value)
-                {
                     PopulateSurfaces();
-                }
                 else
                 {
                     if (availableSurfaces != null)
@@ -340,7 +349,6 @@ namespace osum.Graphics.Skins
                         p.Draw();
 #endif
 
-                    RegisterDisposable(t);
                     availableSurfaces.Enqueue(t);
                 }
             }

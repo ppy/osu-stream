@@ -16,7 +16,7 @@ using osum.GameplayElements.Scoring;
 
 namespace osum
 {
-    class GameWindowDesktop : GameWindow
+    public class GameWindowDesktop : GameWindow
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public GameWindowDesktop()
@@ -107,6 +107,13 @@ namespace osum
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (Director.CurrentOsuMode == OsuMode.PlayTest || Director.CurrentOsuMode == OsuMode.PositioningTest)
+            {
+                e.Cancel = true;
+                Director.ChangeMode(OsuMode.PositioningTest, null);
+                return;
+            }
+
             if (Director.CurrentOsuMode != OsuMode.MainMenu)
             {
                 e.Cancel = true;
@@ -128,7 +135,7 @@ namespace osum
         {
             base.OnResize(e);
 
-            GameBase.Instance.SetupScreen();
+            if (GameBase.Instance != null) GameBase.Instance.SetupScreen();
 
         }
 
@@ -148,7 +155,7 @@ namespace osum
                 Director.ChangeMode(OsuMode.Tutorial);
 
             //todo: make update happen from here.
-            GameBase.Instance.Update();
+            if (GameBase.Instance != null) GameBase.Instance.Update();
         }
 
         /// <summary>
@@ -159,7 +166,7 @@ namespace osum
         {
             base.OnRenderFrame(e);
 
-            GameBase.Instance.Draw();
+            if (GameBase.Instance != null) GameBase.Instance.Draw();
 
             // display
             SwapBuffers();

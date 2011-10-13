@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using osum.Support;
 
-namespace BeatmapCombinator
+namespace osum
 {
     public class FakeAudioTimeSource : ITimeSource
     {

@@ -101,7 +101,7 @@ namespace osum
 
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-        internal static Scheduler Scheduler = new Scheduler();
+        public static Scheduler Scheduler = new Scheduler();
 
         internal virtual bool DisableDimming { get; set; }
 
@@ -121,21 +121,21 @@ namespace osum
         //true for iphone 3g etc.
         internal static bool IsSlowDevice = false;
 
-        public GameBase()
+        OsuMode startupMode;
+        public GameBase(OsuMode mode = OsuMode.Unknown)
         {
 #if !DIST
             if (DateTime.Now > new DateTime(2011, 11, 14))
                 Environment.Exit(-1);
 #endif
 
+            startupMode = mode;
             Instance = this;
 
             CrashHandler.Initialize();
 
             //initialise config before everything, because it may be used in Initialize() override.
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
-
-            MainLoop();
         }
 
         internal static Size BaseSizeHalf
@@ -159,7 +159,7 @@ namespace osum
         /// <summary>
         /// MainLoop runs, starts the main loop and calls Initialize when ready.
         /// </summary>
-        public abstract void MainLoop();
+        public abstract void Run();
 
 
         public static event VoidDelegate OnScreenLayoutChanged;
@@ -243,7 +243,7 @@ namespace osum
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
 
-#if !DIST
+#if FULL_DEBUG
             Console.WriteLine("Base Resolution is " + BaseSize + " (fixed: " + BaseSizeFixedWidth + ")");
             Console.WriteLine("Sprite Resolution is " + SpriteResolution + " with SpriteSheet " + SpriteSheetResolution);
             Console.WriteLine("Sprite multiplier is " + SpriteToBaseRatio + " or aligned at " + SpriteToBaseRatioAligned);
@@ -360,7 +360,8 @@ namespace osum
 #else
             //Load the main menu initially.
             #if MONO && DEBUG
-            Director.ChangeMode(OsuMode.SongSelect, null);
+            if (Director.PendingOsuMode == OsuMode.Unknown)
+                Director.ChangeMode(startupMode != OsuMode.Unknown ? startupMode : OsuMode.SongSelect, null);
             #else
             Director.ChangeMode(OsuMode.MainMenu, null);
             #endif

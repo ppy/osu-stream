@@ -10,9 +10,11 @@ namespace osum
         static void Main(string[] args)
         {
 #if iOS
-            new GameBaseIphone();
+            GameBase game = new GameBaseIphone();
+            game.Run();
 #else
-            new GameBaseDesktop();
+            GameBase game = new GameBaseDesktop();
+            game.Run();
 #endif
         }
     }

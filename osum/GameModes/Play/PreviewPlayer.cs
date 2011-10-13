@@ -46,7 +46,7 @@ namespace osum.GameModes.Play
             return false;
         }
 
-        public override void Dispose ()
+        public override void Dispose()
         {
             Player.Beatmap = null;
             base.Dispose();

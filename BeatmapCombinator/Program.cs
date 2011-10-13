@@ -14,10 +14,12 @@ using osum;
 using System.Threading;
 using System.Diagnostics;
 using System.Reflection;
+using osum.Support;
+using osum.Audio;
 
-namespace BeatmapCombinator
+namespace osum
 {
-    class BeatmapDifficulty : Beatmap
+    public class BeatmapDifficulty : Beatmap
     {
         internal string VersionName;
         internal List<HitObjectLine> HitObjectLines = new List<HitObjectLine>();
@@ -34,17 +36,19 @@ namespace BeatmapCombinator
         }
     }
 
-    class HitObjectLine
+    public class HitObjectLine
     {
         internal string StringRepresentation;
         internal int Time;
     }
 
-    class BeatmapCombinator
+    public class BeatmapCombinator
     {
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
         private static List<string> headerContent;
         private static double healthMultiplier;
+
+        static bool DistBuild;
 
         /// <summary>
         /// Combines many .osu files into one .osc
@@ -56,35 +60,11 @@ namespace BeatmapCombinator
             {
                 if (args.Length > 0)
                 {
-#if DIST || M4A
+                    DistBuild = true;
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    ProcessBeatmap(args[0]);
-                    return;
-#endif
-                    
-                    bool hasChanges = true;
-
-                    FileSystemWatcher fsw = new FileSystemWatcher(args[0]);
-                    fsw.Changed += delegate { hasChanges = true; };
-                    fsw.EnableRaisingEvents = true;
-
-                    while (true)
-                    {
-                        if (hasChanges)
-                        {
-                            fsw.EnableRaisingEvents = false;
-
-                            hasChanges = false;
-                            Console.WriteLine("Detected changes; recombinating!");
-
-                            ProcessBeatmap(args[0]);
-
-                            fsw.EnableRaisingEvents = true;
-                            Console.WriteLine("Waiting for changes...");
-                        }
-
-                        Thread.Sleep(1000);
-                    }
+                    Process(args[0], true, true, true, true);
+                    Process(args[0], false, true, true, false);
+                    Process(args[0], false, true, false, false);
                 }
                 else
                 {
@@ -103,17 +83,15 @@ namespace BeatmapCombinator
             }
         }
 
-        private static void ProcessBeatmap(string dir)
+        public static string Process(string dir, bool quick = false, bool usem4a = false, bool free = false, bool previewMode = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
-            Console.WriteLine();
-            Console.WriteLine();
             Console.WriteLine();
 
             if (dir.Length < 1)
             {
                 Console.WriteLine("No path specified!");
-                return;
+                return null;
             }
 
             List<string> osuFiles = new List<string>(Directory.GetFiles(dir, "*.osu"));
@@ -121,7 +99,7 @@ namespace BeatmapCombinator
             if (osuFiles.Count < 1)
             {
                 Console.WriteLine("No .osu files found!");
-                return;
+                return null;
             }
 
             string baseName = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1);
@@ -135,7 +113,7 @@ namespace BeatmapCombinator
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
 
-            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return;
+            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return null;
 
             Console.WriteLine("Files found:");
             foreach (string s in orderedDifficulties)
@@ -232,8 +210,8 @@ namespace BeatmapCombinator
 
                                     if (slider)
                                     {
-                                        repeatCount = Int32.Parse(split[6],nfi);
-                                        length = double.Parse(split[7],nfi);
+                                        repeatCount = Int32.Parse(split[6], nfi);
+                                        length = double.Parse(split[7], nfi);
                                         hadEndpointSamples = split.Length >= 9;
 
                                         hold = (repeatCount > 1 && length < 50) ||
@@ -401,26 +379,30 @@ namespace BeatmapCombinator
             string[] splitdir = dir.Split('\\');
             string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
-#if DIST
-            string osz2Filename = baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osf2";
-#elif M4A
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".m4a.osz2";
-#else
-            string osz2Filename = upOneDir + "\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1) + ".osz2";
-#endif
+            string osz2Filename;
 
-#if M4A
-            string audioFilename = "";
-            foreach (string s in Directory.GetFiles(dir, "*.m4a"))
+            string baseFileWithLocation = baseName.Substring(baseName.LastIndexOf("\\") + 1);
+
+            if (free && DistBuild)
+                osz2Filename = baseFileWithLocation + ".osf2";
+            else
+                osz2Filename = baseFileWithLocation + (usem4a ? ".m4a.osz2" : ".osz2");
+
+            string audioFilename = null;
+
+            if (usem4a)
             {
-                if (s.Contains("_lq")) continue;
+                audioFilename = "";
+                foreach (string s in Directory.GetFiles(dir, "*.m4a"))
+                {
+                    if (s.Contains("_lq")) continue;
 
-                audioFilename = s;
-                break;
+                    audioFilename = s;
+                    break;
+                }
             }
-#else
-            string audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
-#endif
+            else
+                audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 
             File.Delete(osz2Filename);
 
@@ -442,72 +424,92 @@ namespace BeatmapCombinator
 
             //I am sure I will run into some rounding issues once I get that far, but we'll see how things go :p.
 
+            ITimeSource oldTimeSource = Clock.AudioTimeSource;
             FakeAudioTimeSource source = new FakeAudioTimeSource();
             Clock.AudioTimeSource = source;
+
+            SoundEffectPlayer oldEffect = AudioEngine.Effect;
+            BackgroundAudioPlayer oldMusic = AudioEngine.Music;
+
+            AudioEngine.Music = null;
+            AudioEngine.Effect = null;
 
             headerContent.Remove("[HitObjects]");
 
             headerContent.Add(string.Empty);
             headerContent.Add("[ScoringMultipliers]");
 
-            if (orderedDifficulties[(int)Difficulty.Easy] != null)
-                headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
-            if (orderedDifficulties[(int)Difficulty.Normal] != null)
-                headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
-            if (orderedDifficulties[(int)Difficulty.Expert] != null)
-                headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+            if (quick)
+            {
+                calculateMultiplier(Difficulty.Normal, true);
+            }
+            else
+            {
+                if (orderedDifficulties[(int)Difficulty.Easy] != null)
+                    headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
+                if (orderedDifficulties[(int)Difficulty.Normal] != null)
+                    headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
+                if (orderedDifficulties[(int)Difficulty.Expert] != null)
+                    headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+            }
 
             if (healthMultiplier != 0)
-                headerContent.Add("HP:" + healthMultiplier);
+                headerContent.Add("HP:" + healthMultiplier.ToString("G17", nfi));
 
             headerContent.Add(string.Empty);
             headerContent.Add("[HitObjects]");
 
             Player.Beatmap.Dispose();
 
-#if PREVIEW
-            osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
-#endif
+            Clock.AudioTimeSource = oldTimeSource;
+            AudioEngine.Effect = oldEffect;
+            AudioEngine.Music = oldMusic;
+
+            //only change the filename here so it is not treated as a preview above (else previewpoints will not be filled before necessary).
+            if (previewMode) osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
 
             //write the package a second time with new multiplier header data.
             writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+
+            return osz2Filename;
         }
 
         private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)
         {
-#if PREVIEW
+            bool isPreview = osz2Filename.Contains("_preview");
+
             int hitObjectCutoff = 0;
-#endif
 
             using (StreamWriter output = new StreamWriter(oscFilename))
             {
                 //write headers first (use first difficulty as arbitrary source)
                 foreach (string l in headerContent)
                 {
-#if PREVIEW
-                    if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
+                    if (isPreview)
                     {
-                        //may need to double up on bookmarks if they don't occur often often
-
-                        List<int> switchPoints = Player.Beatmap.StreamSwitchPoints;
-
-                        if (switchPoints.Count < 10 || switchPoints[9] > 60000)
+                        if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
                         {
-                            string switchString = "Bookmarks:";
-                            
-                            foreach (int s in switchPoints)
+                            //may need to double up on bookmarks if they don't occur often often
+
+                            List<int> switchPoints = Player.Beatmap.StreamSwitchPoints;
+
+                            if (switchPoints.Count < 10 || switchPoints[9] > 60000)
                             {
-                                switchString += s.ToString(nfi) + ",";
-                                switchString += s.ToString(nfi) + ","; //double bookmark hack for previews
+                                string switchString = "Bookmarks:";
+
+                                foreach (int s in switchPoints)
+                                {
+                                    switchString += s.ToString(nfi) + ",";
+                                    switchString += s.ToString(nfi) + ","; //double bookmark hack for previews
+                                }
+
+                                output.WriteLine(switchString.Trim(','));
+
+                                hitObjectCutoff = switchPoints.Count < 10 ? switchPoints[4] : switchPoints[9];
+                                continue;
                             }
-
-                            output.WriteLine(switchString.Trim(','));
-
-                            hitObjectCutoff = switchPoints.Count < 10 ? switchPoints[4] : switchPoints[9];
-                            continue;
                         }
                     }
-#endif
                     output.WriteLine(l);
                 }
 
@@ -534,13 +536,11 @@ namespace BeatmapCombinator
 
                         HitObjectLine line = difficulties[i].HitObjectLines[holOffset];
 
-#if PREVIEW
-                        if (hitObjectCutoff > 0 && line.Time > hitObjectCutoff)
+                        if (isPreview && hitObjectCutoff > 0 && line.Time > hitObjectCutoff)
                         {
                             linesRemaining[i]--;
                             continue;
                         }
-#endif
 
                         if (line.Time >= currentTime && (bestMatchLine == null || line.Time < bestMatchLine.Time))
                         {
@@ -568,14 +568,14 @@ namespace BeatmapCombinator
                 if (ordered[3] != null) versionsAvailable += "|Expert";
                 package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
 
+                if (string.IsNullOrEmpty(audioFilename))
+                    throw new Exception("FATAL ERROR: audio file not found");
+
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
-#if PREVIEW
-                package.AddFile("audio.m4a", audioFilename.Replace(".m4a","_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
-#elif M4A
-                package.AddFile("audio.m4a", audioFilename, DateTime.MinValue, DateTime.MinValue);
-#else
-                package.AddFile("audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
-#endif
+                if (isPreview)
+                    package.AddFile("audio.m4a", audioFilename.Replace(".m4a", "_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
+                else
+                    package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 
                 string dir = Path.GetDirectoryName(audioFilename);
 
@@ -591,8 +591,8 @@ namespace BeatmapCombinator
                         string val = string.Empty;
                         if (var.Length > 1)
                         {
-                            key = line.Substring(0,line.IndexOf(':'));
-                            val = line.Substring(line.IndexOf(':')+1).Trim();
+                            key = line.Substring(0, line.IndexOf(':'));
+                            val = line.Substring(line.IndexOf(':') + 1).Trim();
 
                             MapMetaType t = (MapMetaType)Enum.Parse(typeof(MapMetaType), key, true);
                             package.AddMetadata(t, val);
@@ -600,9 +600,8 @@ namespace BeatmapCombinator
                     }
                 }
 
-#if PREVIEW
-                package.AddMetadata(MapMetaType.Revision, "preview");
-#endif
+                if (isPreview)
+                    package.AddMetadata(MapMetaType.Revision, "preview");
 
                 string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))
@@ -642,7 +641,7 @@ namespace BeatmapCombinator
             return ((int)sounds).ToString(nfi);
         }
 
-        private static double calculateMultiplier(Difficulty difficulty)
+        private static double calculateMultiplier(Difficulty difficulty, bool quick = false)
         {
             Console.Write("Processing " + difficulty);
 
@@ -650,6 +649,8 @@ namespace BeatmapCombinator
 
             Player.Difficulty = difficulty;
             Player.Autoplay = true;
+
+            Score s = null;
 
             using (Player p = new Player())
             {
@@ -698,86 +699,86 @@ namespace BeatmapCombinator
                         {
                             //4.5 is the difference between 300 and 100 hit increase (5 - 0.5)
                             healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                            Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
                         }
                         switchHpObject = null;
                     }
 
                     if (p.Completed)
                     {
-                        Score s = p.CurrentScore;
+                        s = p.CurrentScore;
                         s.UseAccuracyBonus = true;
 
                         int excess = s.totalScore - s.spinnerBonusScore - 1000000;
 
                         double testMultiplier = (double)(s.comboBonusScore - excess) / s.comboBonusScore;
 
-                        comboMultiplier = testMultiplier;
+                        comboMultiplier = testMultiplier * 0.97f;
                         break;
                     }
                 }
             }
 
             int finalScore = 0;
-            double adjustment = 0;
 
-            while (finalScore < 1000000)
+            if (!quick)
             {
-                Console.Write(".");
+                double adjustment = 0;
 
-                Player.Difficulty = difficulty;
-                Player.Autoplay = true;
-
-                Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
-
-                //let's do some test runs
-                using (Player p = new Player())
+                while (finalScore < 1000000)
                 {
-                    p.Initialize();
+                    Console.Write(".");
 
-                    FakeAudioTimeSource source = new FakeAudioTimeSource();
-                    Clock.AudioTimeSource = source;
+                    Player.Difficulty = difficulty;
+                    Player.Autoplay = true;
 
-                    while (true)
+                    Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
+
+                    //let's do some test runs
+                    using (Player p = new Player())
                     {
-                        Clock.UpdateCustom(0.01);
-                        source.InternalTime += 0.01;
+                        p.Initialize();
 
-                        p.Update();
+                        FakeAudioTimeSource source = new FakeAudioTimeSource();
+                        Clock.AudioTimeSource = source;
 
-                        if (p.Completed)
+                        while (true)
                         {
-                            Score s = p.CurrentScore;
-                            s.UseAccuracyBonus = true;
+                            Clock.UpdateCustom(0.01);
+                            source.InternalTime += 0.01;
 
-                            finalScore = (s.totalScore - s.spinnerBonusScore);
+                            p.Update();
 
-                            if (finalScore < 1000000)
+                            if (p.Completed)
                             {
-                                int fellShortBy = 1000000 - finalScore;
-                                adjustment = (double)fellShortBy / s.comboBonusScore;
-                                comboMultiplier += adjustment;
-                            }
-                            else
-                            {
-                                Console.WriteLine(" Done");
-                                Console.WriteLine();
-                                Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
-                                Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
-                                Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
-                                Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
-                                Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
-                                Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
-                                Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
-                                Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
-                                Console.WriteLine();
-                                Console.WriteLine();
-                            }
+                                s = p.CurrentScore;
+                                s.UseAccuracyBonus = true;
 
-                            break;
+                                finalScore = (s.totalScore - s.spinnerBonusScore);
+
+                                if (finalScore < 1000000)
+                                {
+                                    int fellShortBy = 1000000 - finalScore;
+                                    adjustment = (double)fellShortBy / s.comboBonusScore;
+                                    comboMultiplier += adjustment;
+                                }
+                                break;
+                            }
                         }
                     }
                 }
             }
+
+            Console.WriteLine(" Done");
+            Console.WriteLine();
+            Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
+            Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
+            Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
+            Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
+            Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
+            Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
+            Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
+            Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
 
             //i guess the best thing to do might be to aim slightly above 1m and ignore the excess...
             //okay now we have numbers roughly around 1mil (always higher or equal to).

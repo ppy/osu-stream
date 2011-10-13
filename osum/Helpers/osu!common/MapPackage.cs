@@ -234,18 +234,7 @@ namespace osu_common.Libraries.Osz2
                 for (int i = 0; i < mapCount; i++)
                     fMapIDsFiles.Add(br.ReadString(), br.ReadInt32());
 
-
-                //get key
-                if (k == null)
-                {
-                    //no key is given, we'll generate it from the metadata.
-#if DIST
-                    string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
-#else
-                    string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
-#endif
-                    k = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
-                }
+                cK();
 
                 //all metadata is now loaded.
                 if (metadataOnly)
@@ -253,6 +242,34 @@ namespace osu_common.Libraries.Osz2
                     brOffset = br.BaseStream.Position;
                 else
                     doPostProcessing(br);
+            }
+        }
+
+        private void cK(bool force = false)
+        {
+            if (k == null || force)
+            {
+                //no key is given, we'll generate it from the metadata.
+#if DIST
+                string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
+#else           
+                string seed;
+                #if OSUM
+                if (fFilename.EndsWith(".osf2"))
+                {
+                    if (!fMetadata.ContainsKey(MapMetaType.Title) || !fMetadata.ContainsKey(MapMetaType.Artist))
+                        return;
+                    seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
+                }
+                else
+                #endif
+                {
+                    if (!fMetadata.ContainsKey(MapMetaType.Creator) || !fMetadata.ContainsKey(MapMetaType.BeatmapSetID))
+                        return;
+                    seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
+                }
+#endif
+                k = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
             }
         }
 
@@ -821,24 +838,9 @@ namespace osu_common.Libraries.Osz2
                 case MapMetaType.Title:
                 case MapMetaType.Creator:
                 case MapMetaType.BeatmapSetID:
-                    string artist;
-                    string title;
-
-#if DIST
-                    fMetadata.TryGetValue(MapMetaType.Artist, out artist);
-                    fMetadata.TryGetValue(MapMetaType.Title, out title);
-                    if (artist == null || title == null)
-                        return;
-                    string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
-#else
-                    fMetadata.TryGetValue(MapMetaType.Creator, out artist);
-                    fMetadata.TryGetValue(MapMetaType.BeatmapSetID, out title);
-                    if (artist == null || title == null)
-                        return;
-                    string seed = fMetadata[MapMetaType.Creator] + "yhxyfjo5" + fMetadata[MapMetaType.BeatmapSetID];
+#if !DIST
+                    cK();
 #endif
-                    k = GetMD5Hash(Encoding.ASCII.GetBytes(seed));
-
                     break;
             }
         }

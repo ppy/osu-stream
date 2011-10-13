@@ -36,7 +36,7 @@ namespace osum.GameplayElements
         /// </summary>
         HitFactory hitFactory;
 
-        internal pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
+        public pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
 
         internal int ProcessFrom;
@@ -80,9 +80,12 @@ namespace osum.GameplayElements
 
             if (sliderTrackRenderer != null) sliderTrackRenderer.Dispose();
 
-            foreach (SpriteManager sm in streamSpriteManagers)
-                if (sm != null) sm.Dispose();
-            streamSpriteManagers = null;
+            if (streamSpriteManagers != null)
+            {
+                foreach (SpriteManager sm in streamSpriteManagers)
+                    if (sm != null) sm.Dispose();
+                streamSpriteManagers = null;
+            }
 
             List<HitObject> objects = ActiveStreamObjects;
             if (objects != null)
@@ -460,7 +463,9 @@ namespace osum.GameplayElements
 
             if (objects == null) return null;
 
-            for (int i = ProcessFrom; i <= ProcessTo; i++)
+            int limit = Math.Min(ProcessTo, objects.Count - 1);
+
+            for (int i = ProcessFrom; i <= limit; i++)
             {
                 HitObject h = objects[i];
                 if (h.HitTestInitial(tracking))

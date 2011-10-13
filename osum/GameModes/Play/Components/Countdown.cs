@@ -103,7 +103,7 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            if (StartTime < 0) return;
+            if (StartTime < 0 || (Clock.AudioTime > StartTime && lastCountdownUpdate < 0)) return;
 
             if (HasFinished)
             {
