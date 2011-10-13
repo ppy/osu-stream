@@ -845,6 +845,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
 
             source = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, s.SampleSet.SampleSet), s.SampleSet.Volume * 0.8f, true, true);
+
+            if (source == null) return;
+
             source.TagNumeric++;
             source.Play();
 
