@@ -258,6 +258,8 @@ namespace osum.GameModes
             bool isNewDifficulty = Player.Difficulty != newDifficulty || force;
             velocity = 0;
 
+            if (Player.Beatmap.Package == null) return;
+
             if (isNewDifficulty)
             {
                 if (!force) AudioEngine.PlaySample(OsuSamples.ButtonTap);
@@ -285,8 +287,6 @@ namespace osum.GameModes
                         isNewDifficulty = false;
                         GameBase.Notify(LocalisationManager.GetString(OsuString.ExpertUnlock), delegate { pendingModeChange = false; });
                     }
-
-
                 }
                 else
                     Player.Difficulty = newDifficulty;
