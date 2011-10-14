@@ -135,3 +135,4 @@ Cancel=Abbrechen
 GuestUsername=Gastnamen wählen
 ChooseUsername=Wähle einen Benutzernamen!
 InternetFailed=Fehler beim Laden.\nStelle sicher, dass du mit dem Internet verbunden bist, und versuche es nochmal!
+Crashed=osu!stream hat einen Fehler festgestellt. Die Details werden an peppy (der Typ, der osu!stream gemacht hat) geschickt, damit es behoben werden kann. Entschuldigung für die Umstände!
