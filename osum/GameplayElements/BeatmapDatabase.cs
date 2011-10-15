@@ -88,6 +88,8 @@ namespace osum.GameplayElements
 
         internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
         {
+            if (beatmap == null) return;
+
             Initialize();
 
             string filename = Path.GetFileName(beatmap.ContainerFilename);
