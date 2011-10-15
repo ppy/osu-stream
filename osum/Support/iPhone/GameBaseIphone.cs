@@ -354,7 +354,7 @@ namespace osum
 
         public override void ViewDidUnload()
         {
-            webView.Dispose();
+            if (webView != null) webView.Dispose();
             base.ViewDidUnload();
         }
     }
