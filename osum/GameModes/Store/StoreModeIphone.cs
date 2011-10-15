@@ -74,18 +74,22 @@ namespace osum.GameModes.Store
 #endif
 
                 NSData receiptRaw = transaction.TransactionReceipt;
-                byte[] dataBytes = new byte[receiptRaw.Length];
-                Marshal.Copy(receiptRaw.Bytes, dataBytes, 0, Convert.ToInt32(receiptRaw.Length));
 
-                pack.Receipt = dataBytes;
+                if (receiptRaw == null || receiptRaw.Bytes == null)
+                    wasSuccessful = false;
+                else
+                {
+                    byte[] dataBytes = new byte[receiptRaw.Length];
+                    Marshal.Copy(receiptRaw.Bytes, dataBytes, 0, Convert.ToInt32(receiptRaw.Length));
 
-                download(pack);
+                    pack.Receipt = dataBytes;
+
+                    download(pack);
+                }
             }
-            else
-            {
-                if (transaction.Error.Code != 2)
+
+            if (!wasSuccessful && transaction.Error.Code != 2)
                 GameBase.Notify(transaction.Error.ToString(), null);
-            }
         }
 
         void productsResponse(SKProduct[] products)
