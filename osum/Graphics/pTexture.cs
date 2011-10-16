@@ -311,30 +311,26 @@ namespace osum.Graphics
         }
 
 #if iOS
-        public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname, bool requireClear = false)
+        public unsafe static pTexture FromUIImage(UIImage image, string assetname, bool requireClear = false)
         {
-            if (textureImage == null)
+            if (image == null)
                 return null;
 
-            int width = (int)textureImage.Size.Width;
-            int height = (int)textureImage.Size.Height;
+            int width = (int)image.Size.Width;
+            int height = (int)image.Size.Height;
 
-            byte[] buffer = new byte[width * height * 4];
-            fixed (byte* p = buffer)
-            {
-                IntPtr pTextureData = (IntPtr)p;
+            IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
 
-                using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
-                            width, height, 8, width * 4,
-                            textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-                {
-                    textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-                }
+            using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+                        width, height, 8, width * 4, image.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+                textureContext.DrawImage(new RectangleF (0, 0, width, height), image.CGImage);
 
-                pTexture tex = FromRawBytes(pTextureData, width, height);
-                tex.assetName = assetname;
-                return tex;
-            }
+            pTexture tex = FromRawBytes(pTextureData, width, height);
+
+            Marshal.FreeHGlobal(pTextureData);
+
+            tex.assetName = assetname;
+            return tex;
         }
 #endif
 
