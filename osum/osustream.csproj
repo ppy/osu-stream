@@ -23,7 +23,6 @@
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchSdkVersion>4.3</MtouchSdkVersion>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <DebugSymbols>true</DebugSymbols>
     <AssemblyName>osum</AssemblyName>
