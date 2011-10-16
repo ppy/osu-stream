@@ -1155,9 +1155,10 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             if (lastDrawnSegmentIndex >= FirstSegmentIndex || FirstSegmentIndex == 0)
             {
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
+
+                sliderBodyTexture.BindFramebuffer();
 #if iOS
-                if (oldFboId < 0)
-                    GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
+                if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
                 DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);

@@ -113,15 +113,15 @@ namespace osum.Graphics
         {
             if (TextureGl != null)
             {
-                if (fboDepthBuffer >= 0)
-                {
-#if iOS
-                    GL.Oes.DeleteRenderbuffers(1, ref fboDepthBuffer);
-#else
-                    GL.DeleteRenderbuffers(1, ref fboDepthBuffer);
-#endif
-                    fboDepthBuffer = -1;
-                }
+//                if (fboDepthBuffer >= 0)
+//                {
+//#if iOS
+//                    GL.Oes.DeleteRenderbuffers(1, ref fboDepthBuffer);
+//#else
+//                    GL.DeleteRenderbuffers(1, ref fboDepthBuffer);
+//#endif
+//                    fboDepthBuffer = -1;
+//                }
 
                 if (fboId >= 0)
                 {
@@ -133,6 +133,7 @@ namespace osum.Graphics
                     GL.DeleteFramebuffers(1, ref fboId);
                     fboId = -1;
 #endif
+                    fboSingleton = -1;
                 }
 
 
@@ -150,10 +151,7 @@ namespace osum.Graphics
         internal void UnloadTexture()
         {
             if (TextureGl != null)
-            {
                 TextureGl.Dispose();
-                //TextureGl = null;
-            }
         }
 
         internal bool ReloadIfPossible()
@@ -167,9 +165,7 @@ namespace osum.Graphics
                     if (TextureGl == null)
                         TextureGl = reloadedTexture.TextureGl;
                     else
-                    {
                         TextureGl.Id = reloadedTexture.TextureGl.Id;
-                    }
 
                     reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
 
@@ -434,50 +430,40 @@ namespace osum.Graphics
             return pt;
         }
 
+        static int fboSingleton = -1;
         internal int fboId = -1;
-        internal int fboDepthBuffer = -1;
+        //internal int fboDepthBuffer = -1;
+
         internal int BindFramebuffer()
         {
-            if (fboId >= 0)
-                return fboId;
+            if (fboSingleton >= 0)
+                fboId = fboSingleton;
 
 #if iOS
             int oldFBO = 0;
-            int oldRB = 0;
-
-
-            GL.GetInteger(All.RenderbufferBindingOes, ref oldRB);
-            //GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
-            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
-            //GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
 
             GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-            GL.Oes.GenFramebuffers(1, ref fboId);
+
+            if (fboId < 0)
+                GL.Oes.GenFramebuffers(1, ref fboId);
+
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);
-            //GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
-
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, oldRB);
 #else
             try
             {
-                // make depth buffer
-                GL.GenRenderbuffers(1, out fboDepthBuffer);
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, fboDepthBuffer);
-                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, Width, Height);
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+                if (fboId < 0)
+                    GL.GenFramebuffers(1, out fboId);
 
-                GL.GenFramebuffers(1, out fboId);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-
                 GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
-                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, fboDepthBuffer);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             }
             catch { return fboId; }
 #endif
 
+            fboSingleton = fboId;
             return fboId;
         }
 
