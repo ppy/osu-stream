@@ -163,7 +163,7 @@ namespace osum.GameModes
                 GameBase.Scheduler.Add(delegate
                 {
                     AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
-                    GameBase.Scheduler.Add(delegate { AudioEngine.Music.Play(); }, 2950);
+                    GameBase.Scheduler.Add(delegate { if (AudioEngine.Music != null) AudioEngine.Music.Play(); }, 2950);
                 }, true);
 
                 if (GameBase.Config.GetValue<bool>("firstrun", true))
@@ -256,6 +256,8 @@ namespace osum.GameModes
         /// </summary>
         internal static bool InitializeBgm()
         {
+            if (AudioEngine.Music == null) return false;
+
             //Start playing song select BGM.
 #if iOS
             bool didLoad = AudioEngine.Music.Load("Skins/Default/mainmenu.m4a", true);
@@ -292,7 +294,7 @@ namespace osum.GameModes
         {
             osuLogoGloss.Rotation = -menuBackgroundNew.Rotation;
 
-            if (AudioEngine.Music.IsElapsing)
+            if (AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
             {
                 elapsedRotation += Clock.ElapsedMilliseconds;
                 osuLogo.Rotation += (float)(Math.Cos((elapsedRotation) / 1000f) * 0.0001 * Clock.ElapsedMilliseconds);

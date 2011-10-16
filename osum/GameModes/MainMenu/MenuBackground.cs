@@ -26,7 +26,8 @@ namespace osum.GameModes
 
         public MenuBackground()
         {
-            whoosh = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.MenuWhoosh), 1, false, true);
+            if (AudioEngine.Effect != null)
+                whoosh = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.MenuWhoosh), 1, false, true);
 
             EndStopLenience = 0.5f;
             EndBufferZone = 0;
