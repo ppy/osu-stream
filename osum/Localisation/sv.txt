@@ -19,7 +19,6 @@ YouCantFail=Du kan inte misslyckas
 DynamicStreamSwitching=Dynamisk stream ändring!
 NotForTheFaintHearted=Inte för dom svaga!
 ExpertUnlock=Lås upp Expert igenom att få A rank eller högre på Stream mode!
-GameCentreInactive=Game Center Inaktiv
 Loading=Laddar...
 AndHoldUntilTheCircleExplodes=...och håll tills cirkeln exploderar!
 WelcomeToTheWorldOfOsu=Välkommen till världen av osu!.\nDenna tutorial kommer att lära dig allt du behöver för att bli en rhythm mästare
