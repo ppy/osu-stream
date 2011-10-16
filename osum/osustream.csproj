@@ -290,6 +290,7 @@
     <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
     <Compile Include="UI\TextInputNotification.cs" />
     <Compile Include="Support\CrashHandler.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

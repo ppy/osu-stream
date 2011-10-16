@@ -68,6 +68,7 @@
     <Compile Include="GameModes\GameComponent.cs" />
     <Compile Include="GameModes\GameMode.cs" />
     <Compile Include="GameModes\MainMenu\MainMenu.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
     <Compile Include="GameModes\MainMenu\MenuBackground.cs" />
     <Compile Include="GameModes\MainMenu\NewsButton.cs" />
     <Compile Include="GameModes\Options\Credits.cs" />

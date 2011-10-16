@@ -366,8 +366,6 @@ namespace osum.Graphics.Skins
             while (maxTries-- > 0)
             {
                 pTexture tex = availableSurfaces.Dequeue();
-                //tex.Width = width;
-                //tex.Height = height;
                 if (tex.Width >= width)
                     return tex;
             }
