@@ -1238,6 +1238,10 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             spriteSliderBody.Premultiplied = true;
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
+
+            spriteSliderBody.DrawWidth = trackBounds.Width;
+            spriteSliderBody.DrawHeight = trackBounds.Height;
+
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
 
             waitingForPathTextureClear = true;

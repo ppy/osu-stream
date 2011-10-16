@@ -86,7 +86,7 @@ namespace osum.Graphics.Skins
         public static void Update()
         {
 #if FULLER_DEBUG
-            
+
             int countLoaded = 0;
             foreach (TextureGl t in SpriteTextureCache.Values)
                 if (t.Id >= 0) countLoaded++;
