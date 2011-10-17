@@ -337,9 +337,10 @@ namespace osum.Graphics.Skins
 
                 for (int i = 0; i < 4; i++)
                 {
-                    TextureGl gl = new TextureGl(i > 1 ? size / 2 : size, size);
+                    int width = i > 1 ? size / 2 : size;
+                    TextureGl gl = new TextureGl(width, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-                    pTexture t = new pTexture(gl, size, size);
+                    pTexture t = new pTexture(gl, width, size);
                     t.BindFramebuffer();
 
 #if iOS

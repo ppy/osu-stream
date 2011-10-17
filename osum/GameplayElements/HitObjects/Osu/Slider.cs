@@ -1092,8 +1092,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// </summary>
         protected double Velocity;
 
-        bool waitingForPathTextureClear;
-
 #if iOS
         static int oldFboId = -1;
 #endif
@@ -1124,8 +1122,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             if (sliderBodyTexture.fboId < 0)
             {
-                waitingForPathTextureClear = true;
-
                 lastDrawnSegmentIndex = -1;
                 FirstSegmentIndex = 0;
             }
@@ -1158,22 +1154,21 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 sliderBodyTexture.BindFramebuffer();
 #if iOS
-                if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
-                DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
+                DrawPath(partialDrawable, prev, next);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);
 #else
                 if (sliderBodyTexture.fboId >= 0)
                 {
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
 
-                    DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
+                    DrawPath(partialDrawable, prev, next);
 
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 }
                 else
                 {
-                    DrawPath(partialDrawable, prev, next, waitingForPathTextureClear);
+                    DrawPath(partialDrawable, prev, next);
 
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
                     GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potWidth, 0);
@@ -1182,13 +1177,11 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                 }
 #endif
-                waitingForPathTextureClear = false;
-
                 GameBase.Instance.SetViewport();
             }
         }
 
-        private void DrawPath(List<Line> partialDrawable, Line prev, Line next, bool clear)
+        private void DrawPath(List<Line> partialDrawable, Line prev, Line next)
         {
             GL.Viewport(0, 0, trackBounds.Width, trackBounds.Height);
             GL.MatrixMode(MatrixMode.Projection);
@@ -1200,15 +1193,8 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                         trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
                         -1, 1);
 
-            if (clear)
-            {
-                //GL.DepthMask(true);
-                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
-            }
-
             m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
                                                         DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev, next);
-
         }
 
         /// <summary>
@@ -1239,12 +1225,26 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
 
+            sliderBodyTexture.BindFramebuffer();
+            if (sliderBodyTexture.fboId >= 0)
+            {
+#if iOS
+                //clear the full buffer before changing the viewport.
+                if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
+                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+                GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);
+#else
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, sliderBodyTexture.fboId);
+                GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+#endif
+            }
+
             spriteSliderBody.DrawWidth = trackBounds.Width;
             spriteSliderBody.DrawHeight = trackBounds.Height;
 
             spriteSliderBody.Position = new Vector2(trackBounds.X, trackBounds.Y);
-
-            waitingForPathTextureClear = true;
         }
 
         internal override void Shake()
