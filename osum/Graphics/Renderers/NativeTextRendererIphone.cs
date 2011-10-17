@@ -44,10 +44,14 @@ namespace osum.Graphics.Renderers
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);
 
-            IntPtr dataPtr = Marshal.AllocHGlobal(width * height);
+            IntPtr data = Marshal.AllocHGlobal(width * height);
+            unsafe {
+                byte* bytes = (byte*)data;
+                for (int i = width * height - 1; i >= 0; i--) bytes[i] = 0;
+            }
 
             using (CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray())
-            using (CGBitmapContext context = new CGBitmapContext(dataPtr, width, height, 8, width, colorSpace,CGImageAlphaInfo.None))
+            using (CGBitmapContext context = new CGBitmapContext(data, width, height, 8, width, colorSpace,CGImageAlphaInfo.None))
             {
                 context.SetGrayFillColor(1, 1);
                 context.TranslateCTM(0, height);
@@ -75,9 +79,9 @@ namespace osum.Graphics.Renderers
     			SpriteManager.TexturesEnabled = true;
 
                 TextureGl gl = new TextureGl(width, height);
-                gl.SetData(dataPtr, 0, All.Alpha);
+                gl.SetData(data, 0, All.Alpha);
 
-                Marshal.FreeHGlobal(dataPtr);
+                Marshal.FreeHGlobal(data);
 
                 return new pTexture(gl, (int)actualSize.Width, (int)actualSize.Height);
             }

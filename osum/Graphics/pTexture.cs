@@ -41,6 +41,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Text;
 using OpenTK;
 using osum.Graphics.Skins;
+using System.Diagnostics;
 
 
 namespace osum.Graphics
@@ -319,15 +320,17 @@ namespace osum.Graphics
             int width = (int)image.Size.Width;
             int height = (int)image.Size.Height;
 
-            IntPtr pTextureData = Marshal.AllocHGlobal(width * height * 4);
+            IntPtr data = Marshal.AllocHGlobal(width * height * 4);
+            byte* bytes = (byte*)data;
+            for (int i = width * height * 4 - 1; i >= 0; i--) bytes[i] = 0;
 
-            using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
+            using (CGBitmapContext textureContext = new CGBitmapContext(data,
                         width, height, 8, width * 4, image.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
                 textureContext.DrawImage(new RectangleF (0, 0, width, height), image.CGImage);
 
-            pTexture tex = FromRawBytes(pTextureData, width, height);
+            pTexture tex = FromRawBytes(data, width, height);
 
-            Marshal.FreeHGlobal(pTextureData);
+            Marshal.FreeHGlobal(data);
 
             tex.assetName = assetname;
             return tex;
