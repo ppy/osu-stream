@@ -9,6 +9,7 @@ using OpenTK.Graphics.ES11;
 using System.Drawing;
 using OpenTK;
 using osum.Graphics.Sprites;
+using System.Runtime.InteropServices;
 
 namespace osum.Graphics.Renderers
 {
@@ -43,16 +44,11 @@ namespace osum.Graphics.Renderers
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
             int height = TextureGl.GetPotDimension((int)restrictBounds.Y);
 
-            CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray();
+            IntPtr dataPtr = Marshal.AllocHGlobal(width * height);
 
-            byte[] data = new byte[height * width];
-
-            fixed (byte* dataPtr = data)
+            using (CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray())
+            using (CGBitmapContext context = new CGBitmapContext(dataPtr, width, height, 8, width, colorSpace,CGImageAlphaInfo.None))
             {
-                CGBitmapContext context = new CGBitmapContext((IntPtr)dataPtr, width, height, 8, width, colorSpace,CGImageAlphaInfo.None);
-
-                colorSpace.Dispose();
-
                 context.SetGrayFillColor(1, 1);
                 context.TranslateCTM(0, height);
                 context.ScaleCTM(1, -1);
@@ -74,13 +70,15 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PopContext();
 
-                measured = new OpenTK.Vector2(actualSize.Width, actualSize.Height);
-				
-				SpriteManager.TexturesEnabled = true;
-    
+                measured = new Vector2(actualSize.Width, actualSize.Height);
+
+    			SpriteManager.TexturesEnabled = true;
+
                 TextureGl gl = new TextureGl(width, height);
-                gl.SetData((IntPtr)dataPtr, 0, All.Alpha);
-    
+                gl.SetData(dataPtr, 0, All.Alpha);
+
+                Marshal.FreeHGlobal(dataPtr);
+
                 return new pTexture(gl, (int)actualSize.Width, (int)actualSize.Height);
             }
         }
