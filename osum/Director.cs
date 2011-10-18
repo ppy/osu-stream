@@ -168,7 +168,8 @@ namespace osum
             PendingOsuMode = OsuMode.Unknown;
             CurrentOsuMode = newMode;
 
-            GC.Collect(); //force a full collect before we start displaying the new mode.
+            if (PendingOsuMode == OsuMode.Play)
+                GC.Collect(); //force a full collect before we start displaying the new mode.
 
             GameBase.ThrottleExecution = false;
             //reset this here just in case it got stuck.
