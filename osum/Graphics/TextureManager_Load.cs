@@ -4,9 +4,6 @@ namespace osum.Graphics.Skins
     {
         internal static void LoadSprites()
         {
-            if (textureLocations.Count > 0)
-                return;
-
             textureLocations.Add(OsuTexture.cleared, new SpriteSheetTexture("hit", 0, 0, 1024, 654));
             textureLocations.Add(OsuTexture.spinner_background, new SpriteSheetTexture("hit", 0, 656, 1024, 640));
             textureLocations.Add(OsuTexture.play_menu_background, new SpriteSheetTexture("hit", 0, 1298, 1024, 210));
@@ -121,8 +118,9 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.kokoban, new SpriteSheetTexture("menu", 976, 1588, 150, 150));
             textureLocations.Add(OsuTexture.gamecentre, new SpriteSheetTexture("menu", 1428, 1192, 128, 128));
             textureLocations.Add(OsuTexture.songselect_thumb_dl, new SpriteSheetTexture("menu", 772, 1868, 128, 86));
+            textureLocations.Add(OsuTexture.new_notify, new SpriteSheetTexture("menu", 1926, 586, 104, 104));
             textureLocations.Add(OsuTexture.backbutton_arrows1, new SpriteSheetTexture("menu", 1954, 468, 82, 94));
-            textureLocations.Add(OsuTexture.backbutton_arrows2, new SpriteSheetTexture("menu", 1926, 586, 82, 94));
+            textureLocations.Add(OsuTexture.backbutton_arrows2, new SpriteSheetTexture("menu", 1888, 692, 82, 94));
             textureLocations.Add(OsuTexture.songselect_star, new SpriteSheetTexture("menu", 1974, 238, 68, 66));
             textureLocations.Add(OsuTexture.rank_x_small, new SpriteSheetTexture("menu", 1974, 306, 62, 74));
             textureLocations.Add(OsuTexture.rank_a_small, new SpriteSheetTexture("menu", 1660, 686, 62, 70));
@@ -130,18 +128,18 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.rank_b_small, new SpriteSheetTexture("menu", 1724, 686, 60, 68));
             textureLocations.Add(OsuTexture.rank_d_small, new SpriteSheetTexture("menu", 1786, 686, 60, 68));
             textureLocations.Add(OsuTexture.news_light, new SpriteSheetTexture("menu", 1708, 0, 60, 34));
-            textureLocations.Add(OsuTexture.rank_c_small, new SpriteSheetTexture("menu", 1848, 686, 58, 70));
+            textureLocations.Add(OsuTexture.rank_c_small, new SpriteSheetTexture("menu", 1972, 692, 58, 70));
             textureLocations.Add(OsuTexture.songselect_audio_pause, new SpriteSheetTexture("menu", 1770, 0, 54, 54));
             textureLocations.Add(OsuTexture.songselect_audio_play, new SpriteSheetTexture("menu", 1826, 0, 54, 54));
             textureLocations.Add(OsuTexture.songselect_audio_preview, new SpriteSheetTexture("menu", 1882, 0, 54, 54));
             textureLocations.Add(OsuTexture.rank_x_tiny, new SpriteSheetTexture("menu", 1938, 0, 52, 62));
             textureLocations.Add(OsuTexture.rank_a_tiny, new SpriteSheetTexture("menu", 1992, 0, 52, 60));
-            textureLocations.Add(OsuTexture.rank_s_tiny, new SpriteSheetTexture("menu", 1908, 686, 50, 60));
-            textureLocations.Add(OsuTexture.rank_b_tiny, new SpriteSheetTexture("menu", 1960, 682, 48, 56));
-            textureLocations.Add(OsuTexture.rank_d_tiny, new SpriteSheetTexture("menu", 1908, 748, 48, 56));
-            textureLocations.Add(OsuTexture.rank_c_tiny, new SpriteSheetTexture("menu", 1960, 740, 46, 56));
+            textureLocations.Add(OsuTexture.rank_s_tiny, new SpriteSheetTexture("menu", 1888, 788, 50, 60));
+            textureLocations.Add(OsuTexture.rank_b_tiny, new SpriteSheetTexture("menu", 926, 1774, 48, 56));
+            textureLocations.Add(OsuTexture.rank_d_tiny, new SpriteSheetTexture("menu", 1208, 1498, 48, 56));
+            textureLocations.Add(OsuTexture.rank_c_tiny, new SpriteSheetTexture("menu", 976, 1740, 46, 56));
             textureLocations.Add(OsuTexture.songselect_star_half, new SpriteSheetTexture("menu", 1616, 66, 42, 66));
-            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("menu", 926, 1774, 38, 44));
+            textureLocations.Add(OsuTexture.songselect_mode_arrow, new SpriteSheetTexture("menu", 1848, 686, 38, 44));
             textureLocations.Add(OsuTexture.menu_item_background, new SpriteSheetTexture("menu", 2038, 306, 4, 400));
             textureLocations.Add(OsuTexture.notification_background, new SpriteSheetTexture("notification", 0, 0, 900, 514));
             textureLocations.Add(OsuTexture.notification_button_ok, new SpriteSheetTexture("notification", 0, 516, 500, 80));

@@ -37,6 +37,21 @@ namespace osum.GameModes.Store
         const int HEADER_PADDING = 60;
         float totalHeight = HEADER_PADDING;
 
+        internal static bool HasNewStoreItems
+        {
+            get
+            {
+                return GameBase.Config.GetValue<string>("StoreLastRead", null) != GameBase.Config.GetValue<string>("StoreLastRetrieved", null);
+            }
+            set
+            {
+                if (value)
+                    MenuBackground.UpdateStoreNotify();
+                else
+                    GameBase.Config.SetValue<string>("StoreLastRead", GameBase.Config.GetValue<string>("StoreLastRetrieved", string.Empty));
+            }
+        }
+
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
@@ -51,7 +66,8 @@ namespace osum.GameModes.Store
             s_Header.OnClick += delegate { };
             topMostSpriteManager.Add(s_Header);
 
-            s_ButtonBack = new BackButton(delegate {
+            s_ButtonBack = new BackButton(delegate
+            {
                 switch (Director.LastOsuMode)
                 {
                     case OsuMode.SongSelect:
@@ -80,7 +96,7 @@ namespace osum.GameModes.Store
         public override void Restore()
         {
             SongSelectMode.InitializeBgm();
-            base.Restore ();
+            base.Restore();
         }
 
         public override void Dispose()
@@ -200,6 +216,8 @@ namespace osum.GameModes.Store
                 AddPack(pp);
 
                 GameBase.ShowLoadingOverlay = false;
+
+                HasNewStoreItems = false;
 
                 if (packs.Count == 0)
                     GameBase.Notify(LocalisationManager.GetString(OsuString.HaveAllAvailableSongPacks), delegate { Director.ChangeMode(OsuMode.SongSelect); });

@@ -558,6 +558,7 @@ namespace osum.Graphics.Skins
         rank_c_tiny,
         rank_d_tiny,
         difficulty_bar_bg,
-        difficulty_bar_colour
+        difficulty_bar_colour,
+        new_notify
     }
 }

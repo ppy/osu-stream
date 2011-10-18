@@ -60,11 +60,6 @@ namespace osum.GameModes.Play
             progressDisplay = new ProgressDisplay();
         }
 
-        internal override bool Pause()
-        {
-            return false;
-        }
-
         protected override void UpdateStream()
         {
             if (HitObjectManager != null && !HitObjectManager.StreamChanging)

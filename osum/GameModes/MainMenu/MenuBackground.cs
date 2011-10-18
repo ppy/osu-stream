@@ -11,6 +11,7 @@ using osum.Helpers;
 using osum.Audio;
 using osum.Graphics.Skins;
 using osum.Graphics;
+using osum.GameModes.Store;
 
 namespace osum.GameModes
 {
@@ -24,8 +25,12 @@ namespace osum.GameModes
 
         Source whoosh;
 
+        internal static MenuBackground Instance;
+
         public MenuBackground()
         {
+            Instance = this;
+
             if (AudioEngine.Effect != null)
                 whoosh = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.MenuWhoosh), 1, false, true);
 
@@ -74,17 +79,6 @@ namespace osum.GameModes
             pTexture specialTexture = TextureManager.Load(OsuTexture.menu_item_background);
             specialTexture.X++;
             specialTexture.Width -= 2;
-
-            //osuLogo = new pSprite(TextureManager.Load(OsuTexture.menu_logo), new Vector2(-135, 28))
-            //{
-            //    Colour = new Color4(254, 242, 0, 255),
-            //    Field = FieldTypes.StandardSnapCentre,
-            //    Origin = OriginTypes.Centre,
-            //    Rotation = -rotation_offset,
-            //    ScaleScalar = 1 / scale_offset,
-            //    Alpha = 0
-            //};
-            //Add(osuLogo);
 
             yellow = new pQuad(
                 Vector2.Zero,
@@ -158,7 +152,7 @@ namespace osum.GameModes
             text.Field = FieldTypes.StandardSnapCentre;
             text.Origin = OriginTypes.Centre;
             text.Rotation = -rotation_offset;
-            text.ScaleScalar = 1/scale_offset;
+            text.ScaleScalar = 1 / scale_offset;
             text.Alpha = 0;
             Add(text);
             textSprites.Add(text);
@@ -181,6 +175,20 @@ namespace osum.GameModes
             Add(text);
             textSprites.Add(text);
 
+
+            storeNew = new pSprite(TextureManager.Load(OsuTexture.new_notify), new Vector2(-17, 30));
+            storeNew.Field = FieldTypes.StandardSnapCentre;
+            storeNew.Origin = OriginTypes.Centre;
+            storeNew.Rotation = -rotation_offset;
+            storeNew.ScaleScalar = 1 / scale_offset;
+            storeNew.Alpha = 0;
+            storeNew.Transform(new TransformationF(TransformationType.Scale, storeNew.ScaleScalar * 0.8f, storeNew.ScaleScalar, 0, 600, EasingTypes.In) { Looping = true, LoopDelay = 600 });
+            storeNew.Transform(new TransformationF(TransformationType.Scale, storeNew.ScaleScalar, storeNew.ScaleScalar * 0.8f, 600, 1200, EasingTypes.Out) { Looping = true, LoopDelay = 600 });
+            storeNew.Bypass = true;
+            textSprites.Add(storeNew);
+            Add(storeNew);
+
+
             text = new pSprite(TextureManager.Load(OsuTexture.menu_options), new Vector2(-44, 74));
             text.Field = FieldTypes.StandardSnapCentre;
             text.Origin = OriginTypes.Centre;
@@ -196,27 +204,19 @@ namespace osum.GameModes
         void Option_OnHoverLost(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
-
-            //if (d == yellow)
-            //    osuLogo.FadeColour((Color4)d.Tag, 600);
-
             d.FadeColour((Color4)d.Tag, 600);
-            //d.FadeColour(ColourHelper.Darken(d.Colour, 0.5f), 50);
         }
 
         void Option_OnHover(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
-
-            //if (d == yellow)
-            //    osuLogo.FadeColour(Color4.White, 150);
-
             d.FadeColour(Color4.White, 150);
-            //d.FadeColour(ColourHelper.Lighten(d.Colour, 0.5f),50);
         }
 
         public override void Dispose()
         {
+            Instance = null;
+
             if (whoosh != null)
             {
                 whoosh.Reserved = false;
@@ -278,12 +278,27 @@ namespace osum.GameModes
             awesomeStartTime = Clock.ModeTime;
             awesomeTransformation = new TransformationBounce(Clock.ModeTime, Clock.ModeTime + duration / 3, 1, 0.6f, 6);
 
-            if (textSprites != null) textSprites.ForEach(s => s.FadeIn(500));
+            UpdateStoreNotify();
+
+            if (textSprites != null)
+                textSprites.ForEach(s => s.FadeIn(500));
+        }
+
+        internal static void UpdateStoreNotify()
+        {
+            MenuBackground mb = MenuBackground.Instance;
+            if (mb == null || mb.awesomeStartTime <= 0)
+                return;
+
+            if (StoreMode.HasNewStoreItems)
+                mb.storeNew.Bypass = false;
         }
 
         bool first = true;
         private pQuad rectBorder;
         private pQuad rect;
+        private pSprite storeNew;
+
         public override void Update()
         {
             if (awesomeTransformation != null || first)
