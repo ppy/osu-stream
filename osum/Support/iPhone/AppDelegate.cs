@@ -123,6 +123,8 @@ namespace osum.Support.iPhone
         public override void OnActivated(UIApplication app)
         {
             glView.StartAnimation();
+            if (Director.CurrentMode is osum.GameModes.Play.PreviewPlayer && AudioEngine.Music != null)
+                AudioEngine.Music.Play();
         }
 
         public override void OnResignActivation(UIApplication app)

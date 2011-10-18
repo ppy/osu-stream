@@ -29,7 +29,7 @@ namespace osum.GameModes.Play
                 t_currentStream.Origin = OriginTypes.BottomRight;
                 t_currentStream.TextShadow = true;
                 spriteManager.Add(t_currentStream);
-    
+
                 topMostSpriteManager.Add(new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
             }
         }
@@ -58,6 +58,11 @@ namespace osum.GameModes.Play
             countdown = new CountdownDisplay();
 
             progressDisplay = new ProgressDisplay();
+        }
+
+        internal override bool Pause()
+        {
+            return false;
         }
 
         protected override void UpdateStream()
@@ -91,7 +96,7 @@ namespace osum.GameModes.Play
                 HitObjectManager = null;
                 //if this fails, it will be handled later on in Initialize()
             }
-            
+
             Difficulty = GameplayElements.Difficulty.Easy;
             //force back to stream difficulty, as it may be modified during load to get correct AR etc. variables.
         }
