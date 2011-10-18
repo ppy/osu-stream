@@ -387,5 +387,9 @@
     <Content Include="Localisation\de.txt" />
     <Content Include="Localisation\sv.txt" />
     <Content Include="Localisation\es.txt" />
+    <Content Include="Skins\Default\rankbling.wav" />
+    <Content Include="Skins\Default\rankfail.wav" />
+    <Content Include="Skins\Default\rankpass.wav" />
+    <Content Include="Skins\Default\rankwhoosh.wav" />
   </ItemGroup>
 </Project>

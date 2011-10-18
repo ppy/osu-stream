@@ -36,7 +36,11 @@ namespace osum.Audio
         MenuWhoosh,
         MainMenu_Intro,
         RankingBam,
-        RankingBam2
+        RankingBam2,
+        RankPass,
+        RankFail,
+        RankBling,
+        RankWhoosh
     }
 
     public static class AudioEngine
