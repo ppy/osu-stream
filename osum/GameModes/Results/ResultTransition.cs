@@ -103,6 +103,8 @@ namespace osum.GameModes
                 p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));
             }
 
+            GameBase.Scheduler.Add(delegate { AudioEngine.PlaySample(OsuSamples.RankBling); }, 1400);
+
             spriteManager.Add(fillSprites);
 
             base.Initialize();
@@ -110,20 +112,8 @@ namespace osum.GameModes
 
         internal override void FadeIn()
         {
-            //spriteManager.Sprites.ForEach(s =>
-            //{
-            //    s.AlwaysDraw = false;
-            //});
-
-            //background.FadeOut(100);
-            //fillSprites.ForEach(s => s.FadeOut(800));
-
-            spriteManager.MoveTo(new Vector2(0, -GameBase.BaseSize.Height), 1000, EasingTypes.InOut);
-
-            /*flash = pSprite.FullscreenWhitePixel;
-            flash.Clocking = ClockTypes.Game;
-            flash.FadeOutFromOne(800);
-            spriteManager.Add(flash);*/
+            spriteManager.MoveTo(new Vector2(0, -GameBase.BaseSize.Height), 1300, EasingTypes.InOut);
+            AudioEngine.PlaySample(OsuSamples.RankWhoosh);
             base.FadeIn();
         }
 

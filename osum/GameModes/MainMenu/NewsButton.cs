@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Text.RegularExpressions;
 using osu_common.Libraries.NetLib;
+using osum.GameModes.Store;
 
 namespace osum.GameModes
 {
@@ -38,12 +39,9 @@ namespace osum.GameModes
             if (lastRead == string.Empty || lastRetrieved != lastRead)
                 HasNews = true;
 
-            if (lastRetrieved == string.Empty || lastRetrieved == lastRead)
-            {
-                StringNetRequest nr = new StringNetRequest(@"http://osustream.com/misc/news.php");
-                nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
-                NetManager.AddRequest(nr);
-            }
+            StringNetRequest nr = new StringNetRequest(@"http://osustream.com/misc/news.php?v=2");
+            nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
+            NetManager.AddRequest(nr);
         }
 
         void newsButton_OnClick(object sender, EventArgs e)
@@ -71,12 +69,36 @@ namespace osum.GameModes
         {
             if (e == null)
             {
-                string lastRead = GameBase.Config.GetValue<string>("NewsLastRead", string.Empty);
+                string[] split = _result.Split('\n');
 
-                GameBase.Config.SetValue<string>("NewsLastRetrieved", _result);
+                if (split.Length < 2)
+                    return;
 
-                if (lastRead != _result)
-                    HasNews = true;
+                string newsLastRead = GameBase.Config.GetValue<string>("NewsLastRead", string.Empty);
+                string storeLastRead = GameBase.Config.GetValue<string>("StoreLastRead", string.Empty);
+
+                foreach (string line in split)
+                {
+                    int index = line.IndexOf(':');
+                    if (index < 0) continue;
+
+                    string key = line.Remove(index);
+                    string val = line.Substring(index + 1);
+
+                    switch (key)
+                    {
+                        case "news":
+                            GameBase.Config.SetValue<string>("NewsLastRetrieved", val);
+                            if (newsLastRead != val)
+                                HasNews = true;
+                            break;
+                        case "store":
+                            GameBase.Config.SetValue<string>("StoreLastRetrieved", val);
+                            if (storeLastRead != val)
+                                StoreMode.HasNewStoreItems = true;
+                            break;
+                    }
+                }
             }
         }
     }

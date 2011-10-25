@@ -36,6 +36,14 @@ namespace osum.Helpers
 
         public static bool UseMp3Offset = true;
 
+        public static Stopwatch sw = new Stopwatch();
+        static double swLast;
+        static double swLastUpdate;
+
+        static int audioCheckFrame;
+        const int CHECK_AUDIO_FRAME_COUNT = 20;
+        public const double ELAPSED_AT_SIXTY_FRAMES = 1000d/60;
+
         /// <summary>
         /// Get the current game time in milliseconds.
         /// </summary>
@@ -105,14 +113,6 @@ namespace osum.Helpers
                     return ManualTime;
             }
         }
-
-        public static Stopwatch sw = new Stopwatch();
-        static double swLast;
-        static double swLastUpdate;
-
-        static int audioCheckFrame;
-        const int CHECK_AUDIO_FRAME_COUNT = 20;
-        public const double ELAPSED_AT_SIXTY_FRAMES = 1000d/60;
 
         /// <summary>
         /// Update from a non-game loop. elapsed is elapsed game time. Hook your own audioTimeSource.
@@ -188,7 +188,7 @@ namespace osum.Helpers
             }
             else
             {
-                currentFrameAudioTime = AudioTimeSource.CurrentTime;
+                //currentFrameAudioTime = AudioTimeSource.CurrentTime;
                 audioCheckFrame = 0;
             }
 

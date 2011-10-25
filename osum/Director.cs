@@ -97,6 +97,7 @@ namespace osum
             {
                 case OsuMode.PlayTest:
                 case OsuMode.PositioningTest:
+
                     break;
                 default:
                     PendingOsuMode = OsuMode.PositioningTest;
@@ -167,7 +168,8 @@ namespace osum
             PendingOsuMode = OsuMode.Unknown;
             CurrentOsuMode = newMode;
 
-            GC.Collect(); //force a full collect before we start displaying the new mode.
+            if (PendingOsuMode == OsuMode.Play)
+                GC.Collect(); //force a full collect before we start displaying the new mode.
 
             GameBase.ThrottleExecution = false;
             //reset this here just in case it got stuck.
@@ -259,7 +261,7 @@ namespace osum
             {
                 ActiveTransition.Update();
 
-                if (AudioDimming && !ActiveTransition.FadeOutDone)
+                if (AudioDimming && !ActiveTransition.FadeOutDone && AudioEngine.Music != null)
                     AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
 
                 if (ActiveTransition.FadeOutDone)
@@ -283,7 +285,7 @@ namespace osum
                 SpriteManager.UniversalDim = 0;
 
             //audio dimming
-            if (AudioDimming)
+            if (AudioDimming && AudioEngine.Music != null)
             {
                 if (SpriteManager.UniversalDim > 0)
                     AudioEngine.Music.DimmableVolume = Math.Min(1 - SpriteManager.UniversalDim * 0.8f, AudioEngine.Music.DimmableVolume);

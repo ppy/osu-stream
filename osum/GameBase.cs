@@ -328,7 +328,7 @@ namespace osum
 #if false
             //benchmark
 
-            string path = SongSelectMode.BeatmapPath + "/Amane - Being Proof (James).osz2";
+            string path = SongSelectMode.BeatmapPath + "/Aperture Science Psychoacoustics Laboratory - Want You Gone (Larto).osz2";
             Console.WriteLine(path);
 
             Player.Beatmap = new osum.GameplayElements.Beatmaps.Beatmap(path);
@@ -352,7 +352,7 @@ namespace osum
                 date = DateTime.Now,
                 spinnerBonusScore = 1500,
                 comboBonusScore = 578420,
-                hitScore = 800000 - 578420,
+                hitScore = 100000 - 578420,
                 maxCombo = 198
             };
 

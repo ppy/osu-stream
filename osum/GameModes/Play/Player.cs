@@ -829,7 +829,7 @@ namespace osum.GameModes
             get { return menu != null && menu.MenuDisplayed; }
         }
 
-        internal void Pause()
+        internal virtual bool Pause()
         {
             if (!Failed) AudioEngine.Music.Pause();
 
@@ -837,6 +837,8 @@ namespace osum.GameModes
                 HitObjectManager.StopAllSounds();
 
             if (menu != null) menu.MenuDisplayed = true;
+
+            return true;
         }
 
         protected bool switchStream(bool increase)

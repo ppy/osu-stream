@@ -34,7 +34,8 @@ namespace osum.GameModes
         {
             State = SelectState.RankingDisplay;
 
-            spriteManagerDifficultySelect.FadeOut(200);
+            if (spriteManagerDifficultySelect != null)
+                spriteManagerDifficultySelect.FadeOut(200);
 
             if (rankingSpriteManager != null)
             {
@@ -51,7 +52,7 @@ namespace osum.GameModes
 
             GameBase.ShowLoadingOverlay = true;
 
-            s_SongInfo.FadeOut(100);
+            if (s_SongInfo != null) s_SongInfo.FadeOut(100);
 
             int period = 0;
 

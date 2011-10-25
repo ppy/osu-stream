@@ -41,6 +41,7 @@ using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 using System.Text;
 using OpenTK;
 using osum.Graphics.Skins;
+using System.Diagnostics;
 
 
 namespace osum.Graphics
@@ -113,15 +114,15 @@ namespace osum.Graphics
         {
             if (TextureGl != null)
             {
-                if (fboDepthBuffer >= 0)
-                {
-#if iOS
-                    GL.Oes.DeleteRenderbuffers(1, ref fboDepthBuffer);
-#else
-                    GL.DeleteRenderbuffers(1, ref fboDepthBuffer);
-#endif
-                    fboDepthBuffer = -1;
-                }
+//                if (fboDepthBuffer >= 0)
+//                {
+//#if iOS
+//                    GL.Oes.DeleteRenderbuffers(1, ref fboDepthBuffer);
+//#else
+//                    GL.DeleteRenderbuffers(1, ref fboDepthBuffer);
+//#endif
+//                    fboDepthBuffer = -1;
+//                }
 
                 if (fboId >= 0)
                 {
@@ -133,6 +134,7 @@ namespace osum.Graphics
                     GL.DeleteFramebuffers(1, ref fboId);
                     fboId = -1;
 #endif
+                    fboSingleton = -1;
                 }
 
 
@@ -150,10 +152,7 @@ namespace osum.Graphics
         internal void UnloadTexture()
         {
             if (TextureGl != null)
-            {
                 TextureGl.Dispose();
-                //TextureGl = null;
-            }
         }
 
         internal bool ReloadIfPossible()
@@ -167,9 +166,7 @@ namespace osum.Graphics
                     if (TextureGl == null)
                         TextureGl = reloadedTexture.TextureGl;
                     else
-                    {
                         TextureGl.Id = reloadedTexture.TextureGl.Id;
-                    }
 
                     reloadedTexture.TextureGl = null; //deassociate with temporary pTexture to avoid disposal.
 
@@ -315,30 +312,28 @@ namespace osum.Graphics
         }
 
 #if iOS
-        public unsafe static pTexture FromUIImage(UIImage textureImage, string assetname, bool requireClear = false)
+        public unsafe static pTexture FromUIImage(UIImage image, string assetname, bool requireClear = false)
         {
-            if (textureImage == null)
+            if (image == null)
                 return null;
 
-            int width = (int)textureImage.Size.Width;
-            int height = (int)textureImage.Size.Height;
+            int width = (int)image.Size.Width;
+            int height = (int)image.Size.Height;
 
-            byte[] buffer = new byte[width * height * 4];
-            fixed (byte* p = buffer)
-            {
-                IntPtr pTextureData = (IntPtr)p;
+            IntPtr data = Marshal.AllocHGlobal(width * height * 4);
+            byte* bytes = (byte*)data;
+            for (int i = width * height * 4 - 1; i >= 0; i--) bytes[i] = 0;
 
-                using (CGBitmapContext textureContext = new CGBitmapContext(pTextureData,
-                            width, height, 8, width * 4,
-                            textureImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
-                {
-                    textureContext.DrawImage(new RectangleF (0, 0, width, height), textureImage.CGImage);
-                }
+            using (CGBitmapContext textureContext = new CGBitmapContext(data,
+                        width, height, 8, width * 4, image.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
+                textureContext.DrawImage(new RectangleF (0, 0, width, height), image.CGImage);
 
-                pTexture tex = FromRawBytes(pTextureData, width, height);
-                tex.assetName = assetname;
-                return tex;
-            }
+            pTexture tex = FromRawBytes(data, width, height);
+
+            Marshal.FreeHGlobal(data);
+
+            tex.assetName = assetname;
+            return tex;
         }
 #endif
 
@@ -434,50 +429,40 @@ namespace osum.Graphics
             return pt;
         }
 
+        static int fboSingleton = -1;
         internal int fboId = -1;
-        internal int fboDepthBuffer = -1;
+        //internal int fboDepthBuffer = -1;
+
         internal int BindFramebuffer()
         {
-            if (fboId >= 0)
-                return fboId;
+            if (fboSingleton >= 0)
+                fboId = fboSingleton;
 
 #if iOS
             int oldFBO = 0;
-            int oldRB = 0;
-
-
-            GL.GetInteger(All.RenderbufferBindingOes, ref oldRB);
-            //GL.Oes.GenRenderbuffers(1, ref fboDepthBuffer);
-            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, fboDepthBuffer);
-            //GL.Oes.RenderbufferStorage(All.RenderbufferOes, All.DepthComponent16Oes, Width, Height);
 
             GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
-            GL.Oes.GenFramebuffers(1, ref fboId);
+
+            if (fboId < 0)
+                GL.Oes.GenFramebuffers(1, ref fboId);
+
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);
-            //GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.DepthAttachmentOes, All.RenderbufferOes, fboDepthBuffer);
-
             GL.Oes.BindFramebuffer(All.FramebufferOes, oldFBO);
-            //GL.Oes.BindRenderbuffer(All.RenderbufferOes, oldRB);
 #else
             try
             {
-                // make depth buffer
-                GL.GenRenderbuffers(1, out fboDepthBuffer);
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, fboDepthBuffer);
-                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent16, Width, Height);
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+                if (fboId < 0)
+                    GL.GenFramebuffers(1, out fboId);
 
-                GL.GenFramebuffers(1, out fboId);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboId);
-
                 GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
-                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, fboDepthBuffer);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             }
             catch { return fboId; }
 #endif
 
+            fboSingleton = fboId;
             return fboId;
         }
 

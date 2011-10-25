@@ -123,6 +123,8 @@ namespace osum.Support.iPhone
         public override void OnActivated(UIApplication app)
         {
             glView.StartAnimation();
+            if (Director.CurrentMode is osum.GameModes.Play.PreviewPlayer && AudioEngine.Music != null)
+                AudioEngine.Music.Play();
         }
 
         public override void OnResignActivation(UIApplication app)
@@ -144,18 +146,15 @@ namespace osum.Support.iPhone
             Console.WriteLine("OSU MEMORY CLEANUP!");
 #endif
 
-            if (!Director.IsTransitioning)
-            {
-                if (Clock.Time - lastCleanup < 1000) return;
+            if (Clock.Time - lastCleanup < 1000) return;
 
-                lastCleanup = Clock.Time;
-                TextureManager.PurgeUnusedTexture();
-                GC.Collect();
-            }
-            else
-            {
+            if (!Director.IsTransitioning)
                 GameBase.Scheduler.Add(delegate { ReceiveMemoryWarning(application); }, 500);
-            }
+            else
+                GC.Collect();
+
+            lastCleanup = Clock.Time;
+            TextureManager.PurgeUnusedTexture();
         }
 
         public static UIViewController ViewController;

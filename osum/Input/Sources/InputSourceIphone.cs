@@ -16,7 +16,6 @@ namespace osum
         {
             Clock.Update(true);
 
-
             if (touches.Count == 1)
                 handleUITouch((UITouch)touches.AnyObject);
             else
@@ -41,18 +40,17 @@ namespace osum
                     break;
                 case UITouchPhase.Cancelled:
                 case UITouchPhase.Ended:
-                    point = touchDictionary[u];
+                    if (!touchDictionary.TryGetValue(u, out point))
+                        return;
                     trackingPoints.Remove(point);
                     touchDictionary.Remove(u);
                     TriggerOnUp(point);
                     break;
                 case UITouchPhase.Moved:
-                    point = touchDictionary[u];
-                    if (point != null)
-                    {
-                        point.Location = u.LocationInView(EAGLView.Instance);
-                        TriggerOnMove(point);
-                    }
+                    if (!touchDictionary.TryGetValue(u, out point))
+                        return;
+                    point.Location = u.LocationInView(EAGLView.Instance);
+                    TriggerOnMove(point);
                     break;
             }
         }

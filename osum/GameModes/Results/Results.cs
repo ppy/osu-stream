@@ -497,12 +497,35 @@ namespace osum.GameModes
 
             GameBase.Scheduler.Add(delegate
             {
-                AudioEngine.PlaySample(OsuSamples.RankingBam2);
-                rankGraphic.Alpha = 1;
-                rankGraphic.AdditiveFlash(1500, 1);
+                if (RankableScore.Ranking == Rank.D)
+                {
+                    AudioEngine.PlaySample(OsuSamples.RankFail);
+                    rankGraphic.FadeIn(2000);
+                    rankGraphic.ScaleScalar = 0.7f;
+                    rankGraphic.ScaleTo(1, 1400, EasingTypes.In);
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        int interval = 100;
+                        rankGraphic.Transform(new TransformationF(TransformationType.Rotation, 0, 0.3f, Clock.Time, Clock.Time + interval));
+                        rankGraphic.Transform(new TransformationF(TransformationType.Rotation, 0.3f, -0.3f, Clock.Time + interval, Clock.Time + interval * 3));
+                        rankGraphic.Transform(new TransformationF(TransformationType.Rotation, -0.3f, 0, Clock.Time + interval * 3, Clock.Time + interval * 4));
+                    }, 1550);
+                }
+                else
+                {
+                    AudioEngine.PlaySample(OsuSamples.RankPass);
+                    rankGraphic.FadeIn(4000);
+
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        rankGraphic.Transformations.Clear();
+                        rankGraphic.Alpha = 1;
+                        rankGraphic.AdditiveFlash(1500, 1);
+                    }, 1400);
+                }
             }, time);
 
-            time += increment;
+            time += increment + 1200;
 
             if (isPersonalBest)
             {

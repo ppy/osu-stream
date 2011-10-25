@@ -86,7 +86,7 @@ namespace osum.Graphics.Skins
         public static void Update()
         {
 #if FULLER_DEBUG
-            
+
             int countLoaded = 0;
             foreach (TextureGl t in SpriteTextureCache.Values)
                 if (t.Id >= 0) countLoaded++;
@@ -184,7 +184,7 @@ namespace osum.Graphics.Skins
             if (textureLocations.TryGetValue(texture, out info))
             {
                 pTexture tex = Load(info.SheetName);
-                tex.OsuTextureInfo = texture; 
+                tex.OsuTextureInfo = texture;
 
                 //necessary?
                 tex.X = info.X;
@@ -298,7 +298,6 @@ namespace osum.Graphics.Skins
 
         static Queue<pTexture> availableSurfaces;
 
-
         static bool requireSurfaces;
         internal static bool RequireSurfaces
         {
@@ -338,9 +337,10 @@ namespace osum.Graphics.Skins
 
                 for (int i = 0; i < 4; i++)
                 {
-                    TextureGl gl = new TextureGl(size, size);
+                    int width = i > 1 ? size / 2 : size;
+                    TextureGl gl = new TextureGl(width, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
-                    pTexture t = new pTexture(gl, size, size);
+                    pTexture t = new pTexture(gl, width, size);
                     t.BindFramebuffer();
 
 #if iOS
@@ -359,16 +359,19 @@ namespace osum.Graphics.Skins
         {
             PopulateSurfaces();
 
-            if (availableSurfaces == null || availableSurfaces.Count == 0)
+            if (availableSurfaces == null)
                 return null;
 
-            //todo: optimise FBO width/height. should only need two at max dimensions (or maybe even one)
+            int maxTries = availableSurfaces.Count;
 
-            pTexture tex = availableSurfaces.Dequeue();
-            tex.Width = width;
-            tex.Height = height;
+            while (maxTries-- > 0)
+            {
+                pTexture tex = availableSurfaces.Dequeue();
+                if (tex.Width >= width)
+                    return tex;
+            }
 
-            return tex;
+            return null;
         }
 
         internal static void ReturnTexture(pTexture texture)
@@ -555,6 +558,7 @@ namespace osum.Graphics.Skins
         rank_c_tiny,
         rank_d_tiny,
         difficulty_bar_bg,
-        difficulty_bar_colour
+        difficulty_bar_colour,
+        new_notify
     }
 }

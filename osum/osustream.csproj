@@ -26,7 +26,6 @@
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
-    <MtouchSdkVersion>4.3</MtouchSdkVersion>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <DebugSymbols>true</DebugSymbols>
     <AssemblyName>osum</AssemblyName>
@@ -296,6 +295,7 @@
     <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
     <Compile Include="UI\TextInputNotification.cs" />
     <Compile Include="Support\CrashHandler.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -389,5 +389,12 @@
     <Content Include="Localisation\zh-CHT.txt" />
     <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
     <Content Include="Beatmaps\SkyMarshall - Hitchhikers %28Gens%29.osf2" />
+    <Content Include="Localisation\de.txt" />
+    <Content Include="Localisation\sv.txt" />
+    <Content Include="Localisation\es.txt" />
+    <Content Include="Skins\Default\rankbling.wav" />
+    <Content Include="Skins\Default\rankfail.wav" />
+    <Content Include="Skins\Default\rankpass.wav" />
+    <Content Include="Skins\Default\rankwhoosh.wav" />
   </ItemGroup>
 </Project>

@@ -245,7 +245,7 @@ namespace osum.Graphics.Drawables
                     vertices[3].Y = pos.Y + p3.Y * scale.Y - origin.Y;
                 }
 
-                if (Texture != null)
+                if (Texture != null && Texture.TextureGl != null)
                 {
                     SpriteManager.TexturesEnabled = true;
                     Texture.TextureGl.Bind();

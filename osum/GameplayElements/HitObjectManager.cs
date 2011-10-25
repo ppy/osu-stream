@@ -254,9 +254,8 @@ namespace osum.GameplayElements
         {
             get
             {
-                if (ActiveStream == Difficulty.None)
+                if (ActiveStream == Difficulty.None || streamSpriteManagers == null)
                     return null;
-
                 return streamSpriteManagers[(int)ActiveStream];
             }
         }

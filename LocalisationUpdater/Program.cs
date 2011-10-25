@@ -93,7 +93,30 @@ namespace LocalisationUpdater
                         {
                             if (cell.Value == null) continue;
 
-                            writers[(int)cell.Column - 2].Add(currentKey, cell.Value.Trim(' ', '\n', '\r', '\t'));
+                            string content = cell.Value.Trim(' ', '\n', '\r', '\t');
+
+                            if (content.IndexOf(@"\\") >= 0)
+                            {
+                                Console.WriteLine("key {0} translation {1} failed with excess escape characters", currentKey, content);
+                                Console.ReadLine();
+                            }
+
+                            try
+                            {
+                                int argCount = content.Count<char>(c => c == '{');
+                                string[] args = new string[argCount];
+                                for (int i = 0; i < argCount; i++)
+                                    args[i] = "test";
+
+                                string test = string.Format(content,args);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("key {0} translation {1} failed with string format", currentKey, content);
+                                Console.ReadLine();
+                            }
+
+                            writers[(int)cell.Column - 2].Add(currentKey, content);
                         }
 
                         break;

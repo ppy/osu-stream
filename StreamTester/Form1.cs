@@ -70,7 +70,11 @@ namespace StreamTester
 
                 beatmapLayout.Image = new Bitmap(width, height);
 
-                beatmapLength = hom.StreamHitObjects[3].FindLast(s => s == s).EndTime + 1000;
+                int lastMap = 3;
+                while (hom.StreamHitObjects[lastMap] == null)
+                    lastMap--;
+
+                beatmapLength = hom.StreamHitObjects[lastMap].FindLast(s => s == s).EndTime + 1000;
 
                 using (Graphics g = Graphics.FromImage(beatmapLayout.Image))
                 {
