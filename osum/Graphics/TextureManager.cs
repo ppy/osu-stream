@@ -346,7 +346,7 @@ namespace osum.Graphics.Skins
 
                 for (int i = 0; i < 4; i++)
                 {
-                    int width = i < 2 ? size / 2 : size;
+                    int width = TextureGl.GetPotDimension(i < 2 ? size / 2 : size);
                     TextureGl gl = new TextureGl(width, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
                     pTexture t = new pTexture(gl, width, size);
