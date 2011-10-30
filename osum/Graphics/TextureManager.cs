@@ -39,6 +39,7 @@ using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing;
+using osu_common.Helpers;
 #endif
 
 
@@ -90,7 +91,7 @@ namespace osum.Graphics.Skins
             int countLoaded = 0;
             foreach (TextureGl t in SpriteTextureCache.Values)
                 if (t.Id >= 0) countLoaded++;
-            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic");
+            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic " + (availableSurfaces == null ? "-" : availableSurfaces.Count.ToString()) + " fbo remaining");
 #endif
         }
 
@@ -296,7 +297,7 @@ namespace osum.Graphics.Skins
             return null;
         }
 
-        static Queue<pTexture> availableSurfaces;
+        static pList<pTexture> availableSurfaces;
 
         static bool requireSurfaces;
         internal static bool RequireSurfaces
@@ -319,11 +320,18 @@ namespace osum.Graphics.Skins
                 {
                     if (availableSurfaces != null)
                     {
-                        while (availableSurfaces.Count > 0)
-                            availableSurfaces.Dequeue().Dispose();
+                        availableSurfaces.ForEach(s => s.Dispose());
                         availableSurfaces = null;
                     }
                 }
+            }
+        }
+
+        class widthComp : IComparer<pTexture>
+        {
+            public int Compare(pTexture x, pTexture y)
+            {
+                return x.Width.CompareTo(y.Width);
             }
         }
 
@@ -331,13 +339,13 @@ namespace osum.Graphics.Skins
         {
             if (availableSurfaces == null && RequireSurfaces)
             {
-                availableSurfaces = new Queue<pTexture>();
+                availableSurfaces = new pList<pTexture>(new widthComp(), false);
 
                 int size = GameBase.NativeSize.Width;
 
                 for (int i = 0; i < 4; i++)
                 {
-                    int width = i > 1 ? size / 2 : size;
+                    int width = i < 2 ? size / 2 : size;
                     TextureGl gl = new TextureGl(width, size);
                     gl.SetData(IntPtr.Zero, 0, PixelFormat.Rgba);
                     pTexture t = new pTexture(gl, width, size);
@@ -349,7 +357,7 @@ namespace osum.Graphics.Skins
                         p.Draw();
 #endif
 
-                    availableSurfaces.Enqueue(t);
+                    availableSurfaces.Add(t);
                 }
             }
         }
@@ -364,11 +372,14 @@ namespace osum.Graphics.Skins
 
             int maxTries = availableSurfaces.Count;
 
-            while (maxTries-- > 0)
+            for (int i = 0; i < availableSurfaces.Count; i++)
             {
-                pTexture tex = availableSurfaces.Dequeue();
-                if (tex.Width >= width)
-                    return tex;
+                pTexture t = availableSurfaces[i];
+                if (t.Width >= width)
+                {
+                    availableSurfaces.Remove(t);
+                    return t;
+                }
             }
 
             return null;
@@ -381,7 +392,7 @@ namespace osum.Graphics.Skins
                 return;
 
             if (!texture.IsDisposed && texture.TextureGl.Loaded)
-                availableSurfaces.Enqueue(texture);
+                availableSurfaces.AddInPlace(texture);
         }
     }
 
