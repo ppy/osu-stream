@@ -90,7 +90,7 @@ namespace osum.Graphics.Skins
             int countLoaded = 0;
             foreach (TextureGl t in SpriteTextureCache.Values)
                 if (t.Id >= 0) countLoaded++;
-            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic");
+            DebugOverlay.AddLine("TextureManager: " + SpriteTextureCache.Count + " cached " + countLoaded + " loaded " + DisposableTextures.Count + " dynamic " + (availableSurfaces == null ? "-" : availableSurfaces.Count.ToString()) + " fbo remaining");
 #endif
         }
 
