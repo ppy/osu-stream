@@ -35,6 +35,7 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using osu_common.Helpers;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
