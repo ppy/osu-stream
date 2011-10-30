@@ -475,7 +475,7 @@ namespace osum.Graphics
 
         public int CompareTo(pTexture other)
         {
-            return id.CompareTo(other.id);
+            return assetName.CompareTo(other.assetName);
         }
 
         #endregion
