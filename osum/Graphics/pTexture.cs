@@ -46,7 +46,7 @@ using System.Diagnostics;
 
 namespace osum.Graphics
 {
-    public class pTexture : IDisposable
+    public class pTexture : IDisposable, IComparable<pTexture>
     {
         public string assetName;
         public bool fromResourceStore;
@@ -470,5 +470,14 @@ namespace osum.Graphics
         {
             return (pTexture)this.MemberwiseClone();
         }
+
+        #region IComparable<pTexture> Members
+
+        public int CompareTo(pTexture other)
+        {
+            return id.CompareTo(other.id);
+        }
+
+        #endregion
     }
 }
