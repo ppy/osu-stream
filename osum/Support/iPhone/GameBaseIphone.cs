@@ -76,9 +76,6 @@ namespace osum
                 case "zh-Hant":
                     culture = "zh-CHT";
                     break;
-                case "da":
-                    culture = "da";
-                    break;
                 case "fr":
                     culture = "fr-FR";
                     break;
@@ -94,14 +91,20 @@ namespace osum
                 case "th":
                     culture = "th-TH";
                     break;
+                default:
+                    culture = NSLocale.PreferredLanguages[0];
+                    break;
 
             }
 
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
-
+            try {
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+    
 #if !DIST
-            Console.WriteLine("Running with culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
+                Console.WriteLine("Running with culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
 #endif
+            }
+            catch {}
 
             switch (HardwareDetection.Version)
             {

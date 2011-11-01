@@ -372,7 +372,10 @@ namespace osum.GameModes
             if (isNewDifficulty || bmi == null)
             {
                 if (s_ModeDescriptionText.Text != text)
+                {
+                    s_ModeDescriptionText.MoveTo(new Vector2(-20, s_ModeDescriptionText.Position.Y), 100, EasingTypes.Out);
                     s_ModeDescriptionText.FadeOut(100);
+                }
 
                 GameBase.Scheduler.Add(delegate
                 {
@@ -382,6 +385,8 @@ namespace osum.GameModes
                         if (s_ModeDescriptionText.Text != text)
                         {
                             s_ModeDescriptionText.Text = text;
+                            s_ModeDescriptionText.Position = new Vector2(20, s_ModeDescriptionText.Position.Y);
+                            s_ModeDescriptionText.MoveTo(new Vector2(0, s_ModeDescriptionText.Position.Y), 100, EasingTypes.In);
                             s_ModeDescriptionText.FadeInFromZero(300);
                         }
 

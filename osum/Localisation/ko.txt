@@ -133,3 +133,5 @@ Cancel=취소
 GuestUsername=게스트 유저명 설정
 ChooseUsername=유저명을 입력해 주세요.
 InternetFailed=불러오는데 실패하였습니다.\n기기가 인터넷에 연결되어 있는지 다시 확인해 주십시오.
+Crashed=osu!stream에 에러가 있었던 것 같습니다. 이를 바로잡기 위해서 세부사항이 peppy(제작자)에게 보내집니다. 불편을 끼쳐드려 죄송합니다!
+AppleReallyScrewedThisUp1=iOS5의 비정상적인 강제 실행에 의해 일부 노래가 지워진 것 같습니다. Store에서 무료로 다시 다운로드 해주시길 부탁드립니다.
