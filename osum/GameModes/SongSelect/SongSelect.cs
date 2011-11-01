@@ -23,7 +23,11 @@ namespace osum.GameModes
     public partial class SongSelectMode : GameMode
     {
 #if iOS
+        #if MAPPER
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
+        #else
+        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches/"; } }
+        #endif
 #else
         public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
@@ -36,7 +40,7 @@ namespace osum.GameModes
         SpriteManager songInfoSpriteManager = new SpriteManager();
 
         private pSprite s_Header;
-        private pSprite s_Footer;   
+        private pSprite s_Footer;
         private BeatmapPanel SelectedPanel;
 
         private pDrawable s_ButtonBack;
@@ -155,7 +159,7 @@ namespace osum.GameModes
             }
         }
 
-        public static bool ForceBeatmapRefresh = true;
+        public static bool ForceBeatmapRefresh = false;
 
         /// <summary>
         /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
@@ -171,42 +175,67 @@ namespace osum.GameModes
 
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
+                bool hasMissingMaps = false;
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
-                    maps.Add(bmi.GetBeatmap());
+                {
+                    Beatmap b = bmi.GetBeatmap();
+                    if (!File.Exists(b.ContainerFilename))
+                    {
+                        hasMissingMaps = true;
+                        continue;
+                    }
+
+                    maps.Add(b);
+                }
+
+                if (hasMissingMaps)
+                {
+                    if (!GameBase.Config.GetValue<bool>("AppleScrewedUp1", false))
+                    {
+                        //prompt the user that apple just fucked their ass without permission.
+                        //we only prompt once per install now for simplicity, but this should be managed on a databsae level.
+                        GameBase.Notify(LocalisationManager.GetString(OsuString.AppleReallyScrewedThisUp1), delegate { GameBase.Config.SetValue<bool>("AppleScrewedUp1", true); });
+                    }
+                }
+                else
+                {
+                    //do this in case we have recovered maps and need to reset the warning (it might happen again!)
+                    GameBase.Config.SetValue<bool>("AppleScrewedUp1", false);
+                }
             }
             else
             {
                 ForceBeatmapRefresh = false;
 
-                #if DIST && iOS
+#if DIST && iOS
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
                     //bundled maps
                     Beatmap b = new Beatmap(s);
 
-                    #if DEBUG
+#if DEBUG
                     Console.WriteLine("Attempting to load " + s);
-                    #endif
+#endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
-                #endif
+#endif
 
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {
                     Beatmap b = new Beatmap(s);
 
-                    #if DEBUG
+#if DEBUG
                     Console.WriteLine("Attempting to load " + s);
-                    #endif
-            
+#endif
+
                     if (b.Package == null)
                         continue;
 
-                    #if DEBUG
+#if DEBUG
                     Console.WriteLine("Loaded beatmap " + s + " (difficulty " + b.DifficultyStars + ")");
-                    #endif
+#endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
@@ -282,7 +311,7 @@ namespace osum.GameModes
 #else
             if (AudioEngine.Music.Load("Skins/Default/songselect.mp3", true))
 #endif
-            AudioEngine.Music.Play();
+                AudioEngine.Music.Play();
         }
 
         public override void Dispose()
@@ -397,9 +426,9 @@ namespace osum.GameModes
                         Vector2 pos = new Vector2(difficultySelectOffset, 0);
                         if (Math.Abs(pos.X - s_ModeButtonEasy.Position.X) > 10)
                         {
-                            s_ModeButtonEasy.MoveTo(pos, 300, EasingTypes.In);
-                            s_ModeButtonStream.MoveTo(pos, 300, EasingTypes.In);
-                            s_ModeButtonExpert.MoveTo(pos, 300, EasingTypes.In);
+                            s_ModeButtonEasy.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonStream.MoveTo(pos, 200, EasingTypes.In);
+                            s_ModeButtonExpert.MoveTo(pos, 200, EasingTypes.In);
                         }
 
                         s_ModeButtonEasy.ScaleScalar = (float)Math.Sqrt(1 - 0.002f * Math.Abs(s_ModeButtonEasy.Offset.X + s_ModeButtonEasy.Position.X));
