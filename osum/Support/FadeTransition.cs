@@ -9,8 +9,8 @@ namespace osum.Support
 {
     class FadeTransition : Transition
     {
-        public const int DEFAULT_FADE_OUT = 400;
-        public const int DEFAULT_FADE_IN = 400;
+        public const int DEFAULT_FADE_OUT = 300;
+        public const int DEFAULT_FADE_IN = 300;
 
         private int FadeOutTime;
         private int FadeInTime;
