@@ -52,15 +52,16 @@ namespace osum.GameplayElements.Scoring
         {
             get
             {
-                if (accuracy == 1)
+                float acc = accuracy;
+                if (acc == 1)
                     return Rank.SS;
-                if (totalScore > 900000 && countMiss == 0)
+                if (acc > 0.9f)
                     return Rank.S;
-                if (totalScore > 750000)
+                if (acc > 0.8f)
                     return Rank.A;
-                if (totalScore > 600000)
+                if (acc > 0.7f)
                     return Rank.B;
-                if (totalScore > 450000)
+                if (acc > 0.6f)
                     return Rank.C;
                 if (totalScore > 0)
                     return Rank.D;
