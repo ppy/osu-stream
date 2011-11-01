@@ -195,6 +195,7 @@ namespace osum.Resources
         GuestUsername,
         ChooseUsername,
         InternetFailed,
-        Crashed
+        Crashed,
+        AppleReallyScrewedThisUp1
     }
 }
