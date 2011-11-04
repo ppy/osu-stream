@@ -355,7 +355,10 @@ namespace osum.GameModes
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
             if (menu != null && menu.MenuDisplayed)
+            {
+                menu.handleInput(source, point);
                 return;
+            }
 
             if (!(Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
             {
@@ -364,26 +367,26 @@ namespace osum.GameModes
                     return;
             }
 
-
-
-            //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
-            if (hitObjectManager != null && !Autoplay)
-            {
-                Slider s = hitObjectManager.ActiveObject as Slider;
-                if (s != null && s.IsTracking)
-                    return;
-
-                List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
-                for (int i = hitObjectManager.ProcessFrom; i <= hitObjectManager.ProcessTo; i++)
-                {
-                    HitObject h = objects[i];
-                    if (h.IsVisible && h.TrackingPosition.Y < 50)
-                        return;
-                }
-            }
-
             if (menu != null)
+            {
+                //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
+                if (hitObjectManager != null && !Autoplay)
+                {
+                    Slider s = hitObjectManager.ActiveObject as Slider;
+                    if (s != null && s.IsTracking)
+                        return;
+
+                    List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
+                    for (int i = hitObjectManager.ProcessFrom; i <= hitObjectManager.ProcessTo; i++)
+                    {
+                        HitObject h = objects[i];
+                        if (h.IsVisible && menu.CheckHitObjectBlocksMenu(h.TrackingPosition.Y))
+                            return;
+                    }
+                }
+
                 menu.handleInput(source, point);
+            }
         }
 
         protected virtual void hitObjectManager_OnStreamChanged(Difficulty newStream)

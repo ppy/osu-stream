@@ -44,20 +44,20 @@ namespace osum.GameModes.Play.Components
                     if (menuText == null)
                     {
 #if DIST
-                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,-80), 1, true, Color4.White)
 #else
-                        menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.LightGray)
+                        menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, -80), 1, true, Color4.White)
 #endif
                         {
                             TextAlignment = TextAlignment.Centre,
-                            Field = FieldTypes.StandardSnapBottomCentre,
+                            Field = FieldTypes.StandardSnapCentre,
                             Origin = OriginTypes.Centre,
                             Clocking = ClockTypes.Game,
                             TextShadow = true,
                             Alpha = 0
                         };
     
-                        menuText.FadeInFromZero(400);
+                        menuText.FadeInFromZero(100);
                         GameBase.MainSpriteManager.Add(menuText);
                     }
 
@@ -133,18 +133,28 @@ namespace osum.GameModes.Play.Components
         const float offscreen_y = -160;
         private Color4 colourInactive = new Color4(200, 200, 200, 255);
         private pSprite pullnotice;
+        internal bool FromBottom;
 
         public override void Initialize()
         {
             base.Initialize();
 
-            background = new pSprite(TextureManager.Load(OsuTexture.play_menu_background), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.8f, true, Color4.White);
+            FromBottom = true; // GameBase.Instance.FlipView;
+
+            FieldTypes field = FromBottom ? FieldTypes.StandardSnapBottomCentre : FieldTypes.StandardSnapTopCentre;
+            OriginTypes origin = FromBottom ? OriginTypes.BottomCentre : OriginTypes.TopCentre;
+
+            background = new pSprite(TextureManager.Load(OsuTexture.play_menu_background), field, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.8f, true, Color4.White);
+            background.Rotation = FromBottom ? (float)Math.PI : 0;
             background.OnClick += Background_OnClick;
             spriteManager.Add(background);
 
             if (Director.LastOsuMode != OsuMode.Play)
             {
-                pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
+                pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), field, origin, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
+                pullnotice.DrawHeight = 87;
+
+                if (!FromBottom) pullnotice.DrawTop += 26;
                 pullnotice.Offset = new Vector2(0, 30);
                 spriteManager.Add(pullnotice);
 
@@ -162,19 +172,19 @@ namespace osum.GameModes.Play.Components
                 background.Position.Y = offscreen_y;
             }
 
-            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(-210, 0) };
+            buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), field, origin, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(-210, 3) };
             buttonContinue.OnClick += ButtonContinue_OnClick;
             buttonContinue.OnHover += HandleButtonHover;
             buttonContinue.OnHoverLost += HandleButtonHoverLost;
             spriteManager.Add(buttonContinue);
 
-            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(0, 0) };
+            buttonRestart = new pSprite(TextureManager.Load(OsuTexture.play_menu_restart), field, origin, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(0, 3) };
             buttonRestart.OnClick += ButtonRestart_OnClick;
             buttonRestart.OnHover += HandleButtonHover;
             buttonRestart.OnHoverLost += HandleButtonHoverLost;
             spriteManager.Add(buttonRestart);
 
-            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), FieldTypes.StandardSnapTopCentre, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(210, 0) };
+            buttonQuit = new pSprite(TextureManager.Load(OsuTexture.play_menu_quit), field, origin, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(210, 3) };
             buttonQuit.OnClick += ButtonQuit_OnClick;
             buttonQuit.OnHover += HandleButtonHover;
             buttonQuit.OnHoverLost += HandleButtonHoverLost;
@@ -222,8 +232,7 @@ namespace osum.GameModes.Play.Components
             if (validPoint == null)
             {
                 //todo: this is lazy and wrong.
-                validPoint = InputManager.PrimaryTrackingPoint;
-                validPointOffset = validPoint.BasePosition.Y;
+                
             }
         }
 
@@ -237,17 +246,36 @@ namespace osum.GameModes.Play.Components
 
         internal void handleInput(InputSource source, TrackingPoint trackingPoint)
         {
-            if (validPoint != null || MenuDisplayed) return;
+            if (validPoint != null) return;
 
-            if (trackingPoint.BasePosition.Y < (GameBase.IsHandheld ? 45 : 30))
+            float pos = getPos(trackingPoint);
+
+            if (MenuDisplayed)
             {
-                validPoint = trackingPoint;
-                validPointOffset = validPoint.BasePosition.Y;
+                if (pos > 100 && pos < 180)
+                {
+                    validPoint = trackingPoint;
+                    validPointOffset = getPos(validPoint);
+                }
             }
+            else
+            {
+                if (pos < (GameBase.IsHandheld ? 45 : 30))
+                {
+                    validPoint = trackingPoint;
+                    validPointOffset = pos;
+                }
+            }
+        }
+
+        float getPos(TrackingPoint point)
+        {
+            return FromBottom ? GameBase.BaseSizeFixedWidth.Height - point.BasePosition.Y : point.BasePosition.Y;
         }
 
         public override void Update()
         {
+           
             if (validPoint != null && !Failed)
             {
                 if (pullnotice != null)
@@ -256,7 +284,9 @@ namespace osum.GameModes.Play.Components
                     pullnotice = null;
                 }
 
-                float pulledAmount = Math.Min(1, (validPoint.BasePosition.Y - validPointOffset + (MenuDisplayed ? -offscreen_y : 30)) / -offscreen_y);
+                float pos = getPos(validPoint);
+
+                float pulledAmount = Math.Min(1, (pos - validPointOffset + (MenuDisplayed ? -offscreen_y : 30)) / -offscreen_y);
 
                 const float valid_pull = 0.7f;
 
@@ -286,6 +316,16 @@ namespace osum.GameModes.Play.Components
             }
 
             base.Update();
+        }
+
+        /// <summary>
+        /// returns true if a hitobject positioned at this location should override the menu
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        internal bool CheckHitObjectBlocksMenu(float pos)
+        {
+            return (FromBottom ? GameBase.BaseSizeFixedWidth.Height - pos : pos) < (GameBase.IsHandheld ? 45 : 30);
         }
     }
 }
