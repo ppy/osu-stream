@@ -1,4 +1,3 @@
-Language Code=Not translated: 0
 MaxCombo=คอมโบสูงสุด
 AvgTiming=ความแม่นยำในการกดโดยเฉลี่ย:
 Score=คะแนน
