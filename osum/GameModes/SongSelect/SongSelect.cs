@@ -26,7 +26,7 @@ namespace osum.GameModes
         #if MAPPER
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
         #else
-        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches/"; } }
+        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
         #endif
 #else
         public static string BeatmapPath { get { return @"Beatmaps"; } }
@@ -116,7 +116,7 @@ namespace osum.GameModes
             topmostSpriteManager.Add(s_ButtonBack = new BackButton(onBackPressed, Director.LastOsuMode == OsuMode.MainMenu));
 
             if (Player.Beatmap != null)
-                showDifficultySelection(panels.Find(p => p.Beatmap.ContainerFilename == Player.Beatmap.ContainerFilename), true);
+                showDifficultySelection(panels.Find(p => p.Beatmap != null && p.Beatmap.ContainerFilename == Player.Beatmap.ContainerFilename), true);
             else
             {
                 InitializeBgm();
@@ -250,10 +250,7 @@ namespace osum.GameModes
             foreach (Beatmap b in maps)
             {
                 if (b.Package == null)
-                {
-                    BeatmapDatabase.Erase(b);
                     continue;
-                }
 
                 BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
                 topmostSpriteManager.Add(panel);
