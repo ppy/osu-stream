@@ -1517,6 +1517,8 @@ namespace osum.GameModes.Play
                     }
                     break;
             }
+
+            base.hitObjectManager_OnScoreChanged(change, hitObject);
         }
 
         protected override void UpdateStream()
