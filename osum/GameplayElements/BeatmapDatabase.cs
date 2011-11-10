@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 6;
+        const int DATABASE_VERSION = 8;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -51,6 +51,21 @@ namespace osum.GameplayElements
                 }
             }
 
+#if !MAPPER
+            //move beatmaps from Documents to Library/Cache/ as per new storage guidelines (see http://www.marco.org/2011/10/13/ios5-caches-cleaning)
+            if (Version < 8)
+            {
+                string newLocation = SongSelectMode.BeatmapPath;
+                foreach (string file in Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal),"*.os*"))
+                {
+                    string newFile = newLocation + "/" + Path.GetFileName(file);
+                    File.Delete(newFile);
+                    File.Move(file, newFile);
+                }
+            }
+#endif
+
+
             Version = DATABASE_VERSION;
 #if DEBUG
             Console.WriteLine("Read beatmap database: " + BeatmapInfo.Count);
@@ -77,7 +92,7 @@ namespace osum.GameplayElements
 
 #if DEBUG
             Console.WriteLine("Wrote beatmap database to " + filename + " with count " + BeatmapInfo.Count);
-#endif
+#endif          
         }
 
         internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)
@@ -206,7 +221,13 @@ namespace osum.GameplayElements
 
         public int CompareTo(BeatmapInfo other)
         {
-            return GetBeatmap().CompareTo(other.GetBeatmap());
+            using (Beatmap beatmapThis = GetBeatmap())
+            using (Beatmap beatmapOther = other.GetBeatmap())
+            {
+                if (beatmapThis == null) return 1;
+                if (beatmapOther == null) return -1;
+                return beatmapThis.CompareTo(beatmapOther);
+            }
         }
 
         #endregion

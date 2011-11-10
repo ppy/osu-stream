@@ -93,18 +93,20 @@ namespace osum
         private static void changeMode(OsuMode newMode)
         {
 #if MONO
-            switch (newMode)
+            if (Environment.CommandLine.Contains("Tester"))
             {
-                case OsuMode.PlayTest:
-                case OsuMode.PositioningTest:
+                switch (newMode)
+                {
+                    case OsuMode.PlayTest:
+                    case OsuMode.PositioningTest:
 
-                    break;
-                default:
-                    PendingOsuMode = OsuMode.PositioningTest;
-                    newMode = OsuMode.PositioningTest;
-                    break;
+                        break;
+                    default:
+                        PendingOsuMode = OsuMode.PositioningTest;
+                        newMode = OsuMode.PositioningTest;
+                        break;
+                }
             }
-
 #endif
 
             if (CurrentMode != null)

@@ -134,3 +134,4 @@ GuestUsername=Imposta un Nome Ospite
 ChooseUsername=Scegli un Nome Utente!
 InternetFailed=Impossibile caricare.\nPer favore controlla di essere connesso a internet e riprova!
 Crashed=Sembra che si sia verificato un errore in osu!stream. I dettagli saranno inviati a peppy (il creatore) in modo che possa correggerlo. Siamo spiacenti per l'inconveniente!
+AppleReallyScrewedThisUp1=Sembra che alcune delle tue canzoni siano state eliminate. Ciò è conseguenza di un errore in iOS5 ed è stato inevitabile. Torna allo store per riscaricare gratuitamente le canzoni perse.

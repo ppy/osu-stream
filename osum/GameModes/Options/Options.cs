@@ -67,7 +67,7 @@ namespace osum.GameModes.Options
 
             button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
-                GameBase.Instance.ShowWebView("http://www.osustream.com/help/","Online Help");
+                GameBase.Instance.ShowWebView("http://www.osustream.com/help/", "Online Help");
             });
 
             smd.Add(button);
@@ -143,23 +143,23 @@ namespace osum.GameModes.Options
                 button = new pButton(LocalisationManager.GetString(OsuString.TwitterLink), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
-                    LocalisationManager.GetString(OsuString.TwitterLink),
-                    delegate (string url)
-                    {
-                        if (url.StartsWith("finished://"))
+                        LocalisationManager.GetString(OsuString.TwitterLink),
+                        delegate(string url)
                         {
-                            string[] split = url.Replace("finished://","").Split('/');
+                            if (url.StartsWith("finished://"))
+                            {
+                                string[] split = url.Replace("finished://", "").Split('/');
 
-                            GameBase.Config.SetValue<string>("username",split[0]);
-                            GameBase.Config.SetValue<string>("hash",split[1]);
-                            GameBase.Config.SetValue<string>("twitterId",split[2]);
-                            GameBase.Config.SaveConfig();
+                                GameBase.Config.SetValue<string>("username", split[0]);
+                                GameBase.Config.SetValue<string>("hash", split[1]);
+                                GameBase.Config.SetValue<string>("twitterId", split[2]);
+                                GameBase.Config.SaveConfig();
 
-                            Director.ChangeMode(Director.CurrentOsuMode);
-                            return true;
-                        }
-                        return false;
-                    });
+                                Director.ChangeMode(Director.CurrentOsuMode);
+                                return true;
+                            }
+                            return false;
+                        });
                 });
                 smd.Add(button);
 
@@ -187,24 +187,25 @@ namespace osum.GameModes.Options
             }
             else
             {
-                button = new pButton(string.Format(LocalisationManager.GetString(OsuString.TwitterUnlink),GameBase.Config.GetValue<string>("username",null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
+                button = new pButton(string.Format(LocalisationManager.GetString(OsuString.TwitterUnlink), GameBase.Config.GetValue<string>("username", null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
                     StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
-                        + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash",null));
-                    nr.onFinish += delegate(string _result, Exception e) {
-                            GameBase.GloballyDisableInput = false;
+                        + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash", null));
+                    nr.onFinish += delegate(string _result, Exception e)
+                    {
+                        GameBase.GloballyDisableInput = false;
 
-                            if (e != null || _result != "success")
-                                GameBase.Notify("An error occurred during unlinking. Please check your internet connection and try again");
-                            else
-                            {
-                                GameBase.Config.SetValue<string>("username",null);
-                                GameBase.Config.SetValue<string>("hash",null);
-                                GameBase.Config.SetValue<string>("twitterId",null);
-                                GameBase.Config.SaveConfig();
+                        if (e != null || _result != "success")
+                            GameBase.Notify("An error occurred during unlinking. Please check your internet connection and try again");
+                        else
+                        {
+                            GameBase.Config.SetValue<string>("username", null);
+                            GameBase.Config.SetValue<string>("hash", null);
+                            GameBase.Config.SetValue<string>("twitterId", null);
+                            GameBase.Config.SaveConfig();
 
-                                Director.ChangeMode(Director.CurrentOsuMode);
-                            }
+                            Director.ChangeMode(Director.CurrentOsuMode);
+                        }
                     };
 
                     GameBase.GloballyDisableInput = true;
