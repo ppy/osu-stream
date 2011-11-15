@@ -102,10 +102,6 @@ namespace osum
                 return null;
             }
 
-            string baseName = osuFiles[0].Remove(osuFiles[0].LastIndexOf('[') - 1);
-
-            string oscFilename = baseName + ".osc";
-
             List<string> orderedDifficulties = new List<string>();
 
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Easy].osu")));
@@ -122,8 +118,6 @@ namespace osum
             Console.WriteLine();
 
             List<BeatmapDifficulty> difficulties = new List<BeatmapDifficulty>();
-
-            string Artist = string.Empty, Creator = string.Empty, Source = string.Empty, Title = string.Empty;
 
             foreach (string f in orderedDifficulties)
             {
@@ -370,6 +364,41 @@ namespace osum
                     bd.HeaderLines.Add(writeLine);
                 }
             }
+
+
+            string metadata = dir + "\\metadata.txt";
+            string Artist = "", Title = "", Creator = "";
+            if (File.Exists(metadata))
+            {
+                foreach (string line in File.ReadAllLines(metadata))
+                {
+                    if (line.Length == 0) continue;
+
+                    string[] var = line.Split(':');
+                    string key = string.Empty;
+                    string val = string.Empty;
+                    if (var.Length > 1)
+                    {
+                        key = line.Substring(0, line.IndexOf(':'));
+                        val = line.Substring(line.IndexOf(':') + 1).Trim();
+                        switch (key)
+                        {
+                            case "Artist":
+                                Artist = val;
+                                break;
+                            case "Title":
+                                Title = val;
+                                break;
+                            case "Creator":
+                                Creator = val;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            string baseName = Artist + " - " + Title + " (" + Creator + ")";
+            string oscFilename = baseName + ".osc";
 
             foreach (BeatmapDifficulty d in difficulties)
                 if (d != null) d.HitObjectLines.Sort(delegate(HitObjectLine h1, HitObjectLine h2) { return h1.Time.CompareTo(h2.Time); });
