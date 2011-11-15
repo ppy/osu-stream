@@ -450,7 +450,8 @@ namespace osum.GameplayElements
                 val = ScoreChange.Hit100;
             else if (currentRotationCount > rotationRequirement - 1)
                 val = ScoreChange.Hit50;
-            if (val > 0)
+
+            if (val > ScoreChange.Miss)
                 PlaySound();
             return val;
         }
