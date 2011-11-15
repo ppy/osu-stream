@@ -1141,14 +1141,14 @@ namespace osum.GameModes.Play
                             streamTitle.FadeOut(50);
                             streamTitle = showText(getDifficultyName(currentStream), -90);
 
-                            HitObjectManager.ActiveStream = currentStream;
+                            HitObjectManager.SetActiveStream(currentStream, true);
                             playfieldBackground.ChangeColour(currentStream, true);
                         }
                     };
 
                     break;
                 case TutorialSegments.Stream_5:
-                    HitObjectManager.ActiveStream = Difficulty.Normal;
+                    HitObjectManager.SetActiveStream(Difficulty.Normal, true);
                     playfieldBackground.ChangeColour(Difficulty.Normal, true);
 
                     foreach (SpriteManager sm in HitObjectManager.streamSpriteManagers)
@@ -1192,7 +1192,7 @@ namespace osum.GameModes.Play
                                 if (increaseRate > 20)
                                 {
                                     streamSwitchDisplay.EndSwitch();
-                                    HitObjectManager.ActiveStream = Difficulty.Hard;
+                                    HitObjectManager.SetActiveStream(Difficulty.Hard, true);
                                     healthBar.SetCurrentHp(100);
                                     playfieldBackground.ChangeColour(Difficulty.Hard);
                                     showTouchToContinue();
@@ -1224,7 +1224,7 @@ namespace osum.GameModes.Play
                                 if (increaseRate > 20)
                                 {
                                     streamSwitchDisplay.EndSwitch();
-                                    HitObjectManager.ActiveStream = Difficulty.Normal;
+                                    HitObjectManager.SetActiveStream(Difficulty.Normal, true);
                                     healthBar.SetCurrentHp(100);
                                     playfieldBackground.ChangeColour(Difficulty.Normal);
 
@@ -1247,7 +1247,7 @@ namespace osum.GameModes.Play
                 case TutorialSegments.Healthbar_5:
                     showText(LocalisationManager.GetString(OsuString.Healthbar5), -80);
 
-                    HitObjectManager.ActiveStream = Difficulty.Easy;
+                    HitObjectManager.SetActiveStream(Difficulty.Easy, true);
                     playfieldBackground.ChangeColour(Difficulty.Easy, true);
 
                     currentSegmentDelegate = delegate
