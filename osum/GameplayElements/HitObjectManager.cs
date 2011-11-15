@@ -39,8 +39,8 @@ namespace osum.GameplayElements
         public pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
 
-        internal int ProcessFrom;
-        internal int ProcessTo;
+        internal int ProcessFrom = 0;
+        internal int ProcessTo = -1;
 
         /// <summary>
         /// Internal spriteManager for drawing all hitObject related content.
@@ -128,7 +128,7 @@ namespace osum.GameplayElements
         /// </summary>
         /// <param name="newDifficulty">The new stream difficulty.</param>
         /// <returns>The time at which the switch will take place. -1 on failure.</returns>
-        internal virtual int SetActiveStream(Difficulty newDifficulty)
+        internal virtual int SetActiveStream(Difficulty newDifficulty, bool instant = false)
         {
             Difficulty oldActiveStream = ActiveStream;
 
@@ -137,10 +137,13 @@ namespace osum.GameplayElements
 
             pList<HitObject> oldStreamObjects = ActiveStreamObjects;
 
-            if (oldActiveStream == Difficulty.None)
+            if (oldActiveStream == Difficulty.None || instant)
             {
                 //loading a new stream.
                 ActiveStream = newDifficulty;
+                ProcessFrom = 0;
+                ProcessTo = -1;
+
                 return 0;
             }
 
@@ -243,6 +246,7 @@ namespace osum.GameplayElements
             }
 
             ProcessFrom = 0;
+            ProcessTo = -1;
 
             nextStreamChange = switchTime;
             return switchTime;
@@ -300,7 +304,7 @@ namespace osum.GameplayElements
             Vector2 p1 = useEnd ? h1.EndPosition : h1.Position;
             Vector2 p2 = h2.Position;
 
-            HitObject firstObject =  h1.CompareTo(h2) <= 0 ? h1 : h2;
+            HitObject firstObject = h1.CompareTo(h2) <= 0 ? h1 : h2;
 
             float length = ((p2 - p1).Length - DifficultyManager.HitObjectRadiusSolidGamefield * 1.96f) / DifficultyManager.HitObjectSizeModifier;
 
@@ -370,7 +374,7 @@ namespace osum.GameplayElements
             int lowestActiveObject = -1;
 
             ProcessTo = activeObjects.Count - 1;
-            //initialise to the last object. if we don't find an earlier one below, this wil be used.
+            //initialise to the last object. if we don't find an earlier one below, this will be used.
 
             ActiveObject = null;
             NextObject = null;
@@ -462,9 +466,7 @@ namespace osum.GameplayElements
 
             if (objects == null) return null;
 
-            int limit = Math.Min(ProcessTo, objects.Count - 1);
-
-            for (int i = ProcessFrom; i <= limit; i++)
+            for (int i = ProcessFrom; i <= ProcessTo; i++)
             {
                 HitObject h = objects[i];
                 if (h.HitTestInitial(tracking))
