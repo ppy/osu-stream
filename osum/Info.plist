@@ -13,13 +13,13 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osu</string>
 	<key>CFBundleVersion</key>
-	<string>1.13b</string>
+	<string>1.13</string>
 	<key>MinimumOSVersion</key>
 	<string>3.2</string>
 	<key>UIDeviceFamily</key>
 	<array>
-		<string>1</string>
-		<string>2</string>
+		<integer>1</integer>
+		<integer>2</integer>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<string>NO</string>

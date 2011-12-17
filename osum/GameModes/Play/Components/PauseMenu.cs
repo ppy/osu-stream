@@ -146,7 +146,6 @@ namespace osum.GameModes.Play.Components
 
             background = new pSprite(TextureManager.Load(OsuTexture.play_menu_background), field, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.8f, true, Color4.White);
             background.Rotation = FromBottom ? (float)Math.PI : 0;
-            background.OnClick += Background_OnClick;
             spriteManager.Add(background);
 
             if (Director.LastOsuMode != OsuMode.Play)
@@ -225,15 +224,6 @@ namespace osum.GameModes.Play.Components
         {
             MenuDisplayed = false;
             AudioEngine.PlaySample(OsuSamples.MenuHit);
-        }
-
-        void Background_OnClick(object sender, EventArgs e)
-        {
-            if (validPoint == null)
-            {
-                //todo: this is lazy and wrong.
-                
-            }
         }
 
         public override void Dispose()
