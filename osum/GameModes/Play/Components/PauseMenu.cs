@@ -58,7 +58,7 @@ namespace osum.GameModes.Play.Components
                         };
     
                         menuText.FadeInFromZero(100);
-                        GameBase.MainSpriteManager.Add(menuText);
+                        spriteManager.Add(menuText);
                     }
 
                     spriteManager.Sprites.ForEach(s =>
@@ -84,7 +84,7 @@ namespace osum.GameModes.Play.Components
                     {
                         menuText.AlwaysDraw = false;
                         menuText.Transformations.Clear();
-                        menuText.FadeOut(100);
+                        menuText.Alpha = 0;
                         menuText = null;
                     }
 
@@ -116,6 +116,11 @@ namespace osum.GameModes.Play.Components
             buttonContinue.AlwaysDraw = false;
         }
 
+        public void Toggle()
+        {
+            MenuDisplayed = !menuDisplayed;
+        }
+
         public void ShowMenu()
         {
             MenuDisplayed = true;
@@ -139,16 +144,16 @@ namespace osum.GameModes.Play.Components
         {
             base.Initialize();
 
-            FromBottom = true; // GameBase.Instance.FlipView;
+            FromBottom = false; // GameBase.Instance.FlipView;
 
             FieldTypes field = FromBottom ? FieldTypes.StandardSnapBottomCentre : FieldTypes.StandardSnapTopCentre;
             OriginTypes origin = FromBottom ? OriginTypes.BottomCentre : OriginTypes.TopCentre;
 
-            background = new pSprite(TextureManager.Load(OsuTexture.play_menu_background), field, OriginTypes.TopCentre, ClockTypes.Mode, Vector2.Zero, 0.8f, true, Color4.White);
+            background = new pSprite(TextureManager.Load(OsuTexture.play_menu_background), field, OriginTypes.TopCentre, ClockTypes.Mode, new Vector2(0, offscreen_y), 0.8f, true, Color4.White);
             background.Rotation = FromBottom ? (float)Math.PI : 0;
             spriteManager.Add(background);
 
-            if (Director.LastOsuMode != OsuMode.Play)
+            /*if (Director.LastOsuMode != OsuMode.Play)
             {
                 pullnotice = new pSprite(TextureManager.Load(OsuTexture.play_menu_pull), field, origin, ClockTypes.Mode, Vector2.Zero, 0.9f, false, Color4.White);
                 pullnotice.DrawHeight = 87;
@@ -169,7 +174,7 @@ namespace osum.GameModes.Play.Components
             else
             {
                 background.Position.Y = offscreen_y;
-            }
+            }*/
 
             buttonContinue = new pSprite(TextureManager.Load(OsuTexture.play_menu_continue), field, origin, ClockTypes.Mode, Vector2.Zero, 0.85f, true, colourInactive) { Alpha = 0, Offset = new Vector2(-210, 3) };
             buttonContinue.OnClick += ButtonContinue_OnClick;
