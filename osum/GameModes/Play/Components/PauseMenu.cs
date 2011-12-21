@@ -255,6 +255,9 @@ namespace osum.GameModes.Play.Components
             }
             else
             {
+                return;
+                //disable pull behaviour for now.
+
                 if (pos < (GameBase.IsHandheld ? 45 : 30))
                 {
                     validPoint = trackingPoint;
