@@ -54,6 +54,7 @@ namespace osum.GameModes.Play.Components
                             Origin = OriginTypes.Centre,
                             Clocking = ClockTypes.Game,
                             TextShadow = true,
+                            TagNumeric = -1,
                             Alpha = 0
                         };
     
@@ -292,6 +293,7 @@ namespace osum.GameModes.Play.Components
                 {
                     spriteManager.Sprites.ForEach(s =>
                     {
+                        if (s.TagNumeric == -1) return;
                         s.Position.Y = offscreen_y * (1 - pulledAmount);
                         s.Alpha = 0.4f + 0.6f * (pulledAmount);
                     });
