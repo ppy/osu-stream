@@ -25,6 +25,10 @@ namespace osu_common.Libraries.NetLib
 
         public override void processFinishedRequest()
         {
+            NetManager.ReportCompleted(this);
+
+            if (AbortRequested) return;
+            
             GameBase.Scheduler.Add(delegate
             {
                 if (onFinish != null)

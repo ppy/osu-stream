@@ -37,6 +37,7 @@ namespace osu_common.Libraries.NetLib
         public virtual void Abort()
         {
             AbortRequested = true;
+            NetManager.ReportCompleted(this);
         }
 
         /// <summary>

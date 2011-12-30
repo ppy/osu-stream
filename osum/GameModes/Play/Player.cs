@@ -223,6 +223,17 @@ namespace osum.GameModes
 
             menu = new PauseMenu();
 
+            pSprite menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
+                                    ClockTypes.Game,
+                                    new Vector2(20,25), 1, true, Color4.White);
+            menuPauseButton.OnClick += delegate { menu.Toggle(); };
+            spriteManager.Add(menuPauseButton);
+
+            menuPauseButton.ScaleScalar = 2;
+            menuPauseButton.Alpha = 0;
+            menuPauseButton.ScaleTo(1, 800, EasingTypes.Out);
+            menuPauseButton.FadeIn(500);
+
             progressDisplay = new ProgressDisplay();
         }
 

@@ -241,61 +241,71 @@ namespace osum.GameModes.Store
         {
             Downloading = true;
 
-            PackItem item = packItems[currentDownload];
-
-            pDrawable back = songPreviewBacks[currentDownload];
-
-            string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
-
-            string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
-
-            string downloadPath = "http://www.osustream.com/dl/download.php";
-            string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
-            if (item.UpdateChecksum != null)
-                param += "&update=" + item.UpdateChecksum;
-#if DEBUG
-            Console.WriteLine("Downloading " + downloadPath);
-            Console.WriteLine("param " + param);
-#endif
-
-            FileNetRequest fnr = new FileNetRequest(path, downloadPath, "POST", param);
-            fnr.onFinish += delegate
+            lock (packItems)
             {
-                BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
-                BeatmapDatabase.Write();
-
-                SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.
-
-                back.FadeColour(Color4.LimeGreen, 500);
-
-                currentDownload++;
-                if (currentDownload < packItems.Count)
-                    startNextDownload();
-                else
+                if (currentDownload >= packItems.Count)
                 {
                     Downloading = false;
-                    GameBase.Scheduler.Add(delegate { StoreMode.DownloadComplete(this); });
+                    return;
                 }
 
-            };
+                PackItem item = packItems[currentDownload];
+                pDrawable back = songPreviewBacks[currentDownload];
 
-            back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
+                string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
 
-            fnr.onUpdate += delegate(object sender, long current, long total)
-            {
-                if (back.Alpha != 1)
+                string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
+
+                string downloadPath = "http://www.osustream.com/dl/download.php";
+                string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
+                if (item.UpdateChecksum != null)
+                    param += "&update=" + item.UpdateChecksum;
+#if DEBUG
+                Console.WriteLine("Downloading " + downloadPath);
+                Console.WriteLine("param " + param);
+#endif
+
+                FileNetRequest fnr = new FileNetRequest(path, downloadPath, "POST", param);
+                fnr.onFinish += delegate
                 {
-                    GameBase.Scheduler.Add(delegate
+                    BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
+                    BeatmapDatabase.Write();
+
+                    SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.
+
+                    back.FadeColour(Color4.LimeGreen, 500);
+
+                    lock (packItems)
                     {
-                        back.Transformations.Clear();
-                        back.Alpha = 1;
-                    }, true);
-                }
+                        currentDownload++;
+                        if (currentDownload < packItems.Count)
+                            startNextDownload();
+                        else
+                        {
+                            Downloading = false;
+                            GameBase.Scheduler.Add(delegate { StoreMode.DownloadComplete(this); });
+                        }
+                    }
+                };
 
-                back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
-            };
+                back.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime, Clock.ModeTime + 700) { Looping = true });
 
-            NetManager.AddRequest(fnr);
+                fnr.onUpdate += delegate(object sender, long current, long total)
+                {
+                    if (back.Alpha != 1)
+                    {
+                        GameBase.Scheduler.Add(delegate
+                        {
+                            back.Transformations.Clear();
+                            back.Alpha = 1;
+                        }, true);
+                    }
+
+                    back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
+                };
+
+                NetManager.AddRequest(fnr);
+            }
         }
 
         internal void ResetPreviews()

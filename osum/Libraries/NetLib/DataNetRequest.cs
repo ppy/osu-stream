@@ -150,15 +150,15 @@ namespace osu_common.Libraries.NetLib
                 }
                 NSUrlConnection conn = new NSUrlConnection(req, del, true);
 
-                #if !DIST
+#if !DIST
                 if (error != null)
                     Console.WriteLine("requst finished with error " + error);
-                #endif
+#endif
 
 #else
                 using (WebClient wc = new WebClient())
                 {
-                    
+
 
                     if (postData != null)
                     {
@@ -166,7 +166,7 @@ namespace osu_common.Libraries.NetLib
                         wc.UploadProgressChanged += wc_UploadProgressChanged;
                         wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
                         wc.UploadDataAsync(new Uri(m_url), method, UTF8Encoding.UTF8.GetBytes(postData));
-                        
+
                     }
                     else
                     {
@@ -206,6 +206,8 @@ namespace osu_common.Libraries.NetLib
 
         public virtual void processFinishedRequest()
         {
+            NetManager.ReportCompleted(this);
+
             if (AbortRequested) return;
 
             GameBase.Scheduler.Add(delegate
@@ -223,7 +225,7 @@ namespace osu_common.Libraries.NetLib
                     onUpdate(this, e.BytesReceived, e.TotalBytesToReceive);
             });
         }
-        
+
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             GameBase.Scheduler.Add(delegate

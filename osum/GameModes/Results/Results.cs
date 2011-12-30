@@ -262,18 +262,6 @@ namespace osum.GameModes
             if (Director.LastOsuMode == OsuMode.SongSelect)
                 cameFromSongSelect = true;
 
-            //Average Timing
-            if (!cameFromSongSelect)
-            {
-                float avg = (float)Math.Abs(RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount));
-                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
-                {
-                    Field = FieldTypes.StandardSnapBottomCentre,
-                    Origin = OriginTypes.BottomCentre
-                };
-                layer1.Add(heading);
-            }
-
             layer2.Add(resultSprites);
 
             s_ButtonBack = new BackButton(returnToSelect, false);
@@ -308,6 +296,15 @@ namespace osum.GameModes
                     bmi.HighScore = RankableScore;
                     BeatmapDatabase.Write();
                 }
+
+                //Average Timing
+                float avg = (float)Math.Abs(RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount));
+                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
+                {
+                    Field = FieldTypes.StandardSnapBottomCentre,
+                    Origin = OriginTypes.BottomCentre
+                };
+                layer1.Add(heading);
 
                 int deviceType = 0;
 #if iOS
@@ -347,7 +344,8 @@ namespace osum.GameModes
                     "&c=" + check +
                     "&difficulty=" + (int)Player.Difficulty +
                     "&username=" + GameBase.Config.GetValue<string>("username", string.Empty) +
-                    "&dt=" + deviceType;
+                    "&dt=" + deviceType +
+                    "&offset=" + avg;
 
                 spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
                 {

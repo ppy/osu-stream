@@ -571,6 +571,7 @@ namespace osum.Graphics.Skins
         rank_d_tiny,
         difficulty_bar_bg,
         difficulty_bar_colour,
-        new_notify
+        new_notify,
+        pausebutton
     }
 }
