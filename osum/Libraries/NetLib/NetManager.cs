@@ -21,8 +21,7 @@ namespace osu_common.Libraries.NetLib
             lock (requestQueue)
             {
                 activeRequests.Remove(request);
-                while (requestQueue.Count > 0)
-                    AddRequest(null);
+                while (requestQueue.Count > 0 && AddRequest(requestQueue.Dequeue())) ;
             }
 
             return true;
@@ -41,15 +40,7 @@ namespace osu_common.Libraries.NetLib
                 {
                     if (request != null)
                         requestQueue.Enqueue(request);
-                    return true;
-                }
-
-                if (request == null)
-                {
-                    if (requestQueue.Count > 0)
-                        request = requestQueue.Dequeue();
-                    else
-                        return false;
+                    return false;
                 }
 
                 activeRequests.Add(request);
@@ -59,11 +50,12 @@ namespace osu_common.Libraries.NetLib
             if (request.AbortRequested) return false;
             request.Perform();
 #else
-            ThreadPool.QueueUserWorkItem(work => {
+            ThreadPool.QueueUserWorkItem(work =>
+            {
                 try
                 {
                     if (request.AbortRequested) return;
-                     request.Perform();
+                    request.Perform();
                 }
                 catch (ThreadAbortException)
                 {
