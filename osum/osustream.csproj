@@ -80,7 +80,6 @@
     <AssemblyName>osustream</AssemblyName>
     <IpaPackageName />
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
