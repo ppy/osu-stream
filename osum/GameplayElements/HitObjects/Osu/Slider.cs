@@ -1168,13 +1168,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 }
                 else
                 {
+                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
+
                     DrawPath(partialDrawable, prev, next);
 
                     GL.BindTexture(TextureGl.SURFACE_TYPE, sliderBodyTexture.TextureGl.Id);
-                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potWidth, 0);
+                    GL.CopyTexImage2D(TextureGl.SURFACE_TYPE, 0, PixelInternalFormat.Rgba, 0, 0, sliderBodyTexture.TextureGl.potWidth, sliderBodyTexture.TextureGl.potHeight, 0);
                     GL.BindTexture(TextureGl.SURFACE_TYPE, TextureGl.lastDrawTexture);
-
-                    GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                 }
 #endif
                 GameBase.Instance.SetViewport();
