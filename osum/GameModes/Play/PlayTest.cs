@@ -36,9 +36,6 @@ namespace osum.GameModes.Play
         protected override void initializeUIElements()
         {
             base.initializeUIElements();
-
-            menu.Dispose();
-            menu = null;
         }
 
         protected override void InitializeStream()
