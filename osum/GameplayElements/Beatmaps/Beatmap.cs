@@ -83,6 +83,14 @@ namespace osum.GameplayElements.Beatmaps
         }
 #endif
 
+        public string PackIdentifier
+        {
+            get
+            {
+                return Artist + Title;
+            }
+        }
+
         public List<int> StreamSwitchPoints;
 
         public Beatmap()
