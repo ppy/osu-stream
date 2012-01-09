@@ -58,7 +58,7 @@ namespace osum.GameModes.Play.Components
                             new Vector2(hOffset, 0), 0.95F, true, Color4.White);
                 s_Accuracy.TextConstantSpacing = true;
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.7f : 1);
-                s_Accuracy.Position = new Vector2(hOffset, vpos);
+                s_Accuracy.Position = new Vector2(hOffset - 35, vpos);
             }
 
             

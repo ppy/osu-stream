@@ -225,7 +225,7 @@ namespace osum.GameModes
 
             pSprite menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
-                                    new Vector2(20,25), 1, true, Color4.White);
+                                    new Vector2(19,16.5f), 1, true, Color4.White);
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
             spriteManager.Add(menuPauseButton);
 
