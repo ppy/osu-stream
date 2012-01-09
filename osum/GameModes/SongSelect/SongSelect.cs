@@ -359,14 +359,13 @@ namespace osum.GameModes
                 case SelectState.DifficultySelect:
                     {
                         float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
-                        float bound = Math.Min(mode_button_width, Math.Max(mapRequiresUnlock ? 0 : -mode_button_width, difficultySelectOffset));
+                        float bound = Math.Min(mode_button_width, Math.Max(-mode_button_width, difficultySelectOffset));
 
                         velocity = change * 4;
 
                         if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
                         difficultySelectOffset = difficultySelectOffset + change;
-
                     }
                     break;
             }
