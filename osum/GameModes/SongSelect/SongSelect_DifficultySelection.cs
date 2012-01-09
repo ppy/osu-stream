@@ -277,17 +277,9 @@ namespace osum.GameModes
                         pendingModeChange = false;
                     }
                 }
-                else if (newDifficulty == Difficulty.Expert && mapRequiresUnlock)
-                {
-                    if (Player.Difficulty == Difficulty.Easy)
+                else if (newDifficulty == Difficulty.Expert && Player.Difficulty == Difficulty.Easy)
                         //came from easy -> expert; drop back on normal!
                         Player.Difficulty = Difficulty.Normal;
-                    else
-                    {
-                        isNewDifficulty = false;
-                        GameBase.Notify(LocalisationManager.GetString(OsuString.ExpertUnlock), delegate { pendingModeChange = false; });
-                    }
-                }
                 else
                     Player.Difficulty = newDifficulty;
             }
@@ -353,7 +345,7 @@ namespace osum.GameModes
                     break;
                 case Difficulty.Normal:
                     hasPrevious = true;
-                    hasNext = !mapRequiresUnlock;
+                    hasNext = true;
                     difficultySelectOffset = 0;
                     text = LocalisationManager.GetString(OsuString.DynamicStreamSwitching);
                     background.FadeColour(new Color4(70, 70, 70, 255), 500);
@@ -461,6 +453,12 @@ namespace osum.GameModes
         private void onStartButtonPressed(object sender, EventArgs args)
         {
             if (State == SelectState.Starting) return;
+
+            if (Player.Difficulty == Difficulty.Expert && mapRequiresUnlock && !Player.Autoplay)
+            {
+                GameBase.Notify(LocalisationManager.GetString(OsuString.ExpertUnlock), delegate { pendingModeChange = false; });
+                return;
+            }
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
