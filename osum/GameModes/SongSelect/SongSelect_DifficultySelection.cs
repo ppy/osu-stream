@@ -76,8 +76,8 @@ namespace osum.GameModes
 
             if (instant)
             {
-                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.AudioFilename))
-                        AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.AudioFilename);
+                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
+                    AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
                 showDifficultySelection2(true);
             }
             else
@@ -88,8 +88,8 @@ namespace osum.GameModes
                 {
                     if (State != SelectState.LoadingPreview) return;
 
-                    if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.AudioFilename))
-                        AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.AudioFilename);
+                    if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
+                        AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
 
                     GameBase.Scheduler.Add(delegate { showDifficultySelection2(false); }, true);
                 }, 400);
@@ -278,8 +278,8 @@ namespace osum.GameModes
                     }
                 }
                 else if (newDifficulty == Difficulty.Expert && Player.Difficulty == Difficulty.Easy)
-                        //came from easy -> expert; drop back on normal!
-                        Player.Difficulty = Difficulty.Normal;
+                    //came from easy -> expert; drop back on normal!
+                    Player.Difficulty = Difficulty.Normal;
                 else
                     Player.Difficulty = newDifficulty;
             }

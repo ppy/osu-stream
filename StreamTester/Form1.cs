@@ -43,7 +43,7 @@ namespace StreamTester
             {
                 filename = value;
 
-                buttonTestOnce.Enabled = !File.Exists(filename);
+                buttonTestOnce. Enabled = !File.Exists(filename);
                 buttonTestOnSave.Enabled = !File.Exists(filename);
                 Invoke((MethodInvoker)delegate
                 {

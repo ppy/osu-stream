@@ -41,12 +41,18 @@ namespace osum.GameModes.Play.Components
                     Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
+                    spriteManager.Sprites.ForEach(s =>
+                    {
+                        s.Transform(move);
+                        s.Transform(fade);
+                    });
+
                     if (menuText == null)
                     {
 #if DIST
-                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,-80), 1, true, Color4.White)
+                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,80), 1, true, Color4.White)
 #else
-                        menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, -80), 1, true, Color4.White)
+                        menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.White)
 #endif
                         {
                             TextAlignment = TextAlignment.Centre,
@@ -61,12 +67,6 @@ namespace osum.GameModes.Play.Components
                         menuText.FadeInFromZero(100);
                         spriteManager.Add(menuText);
                     }
-
-                    spriteManager.Sprites.ForEach(s =>
-                    {
-                        s.Transform(move);
-                        s.Transform(fade);
-                    });
 
                     if (p != null)
                     {
