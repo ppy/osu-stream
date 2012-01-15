@@ -113,7 +113,6 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
     <AssemblyName>osustream</AssemblyName>
     <MtouchLink>Full</MtouchLink>
-    <CodesignProvision>FB1023E2-3C5E-41CD-819D-8FDF88B365E8</CodesignProvision>
     <IpaPackageName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhoneSimulator' ">
