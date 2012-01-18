@@ -63,7 +63,7 @@ namespace osum.GameModes.Play.Components
                             TagNumeric = -1,
                             Alpha = 0
                         };
-    
+
                         menuText.FadeInFromZero(100);
                         spriteManager.Add(menuText);
                     }
@@ -274,7 +274,7 @@ namespace osum.GameModes.Play.Components
 
         public override void Update()
         {
-           
+
             if (validPoint != null && !Failed)
             {
                 if (pullnotice != null)

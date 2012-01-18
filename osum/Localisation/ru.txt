@@ -1,0 +1,12 @@
+Score=Счёт
+Accuracy=Точность
+Combo=Комбо
+DownloadMoreSongs=Скачать больше песен...
+ErrorWhileDownloadingSongListing=Ошибка во время загрузки списка песен.
+HaveAllAvailableSongPacks=У вас есть все доступные сборнкки песен.\Возвращайтесь позже!
+Notice=Уведомление
+Yes=Да
+No=Нет
+Okay=Ок
+Loading=Загрузка...
+WelcomeToTheWorldOfOsu=Добро пожаловать в мир osu!.\nЭтот туториал научит вас всему,что нужно знать,чтобы стать мастером ритма.
