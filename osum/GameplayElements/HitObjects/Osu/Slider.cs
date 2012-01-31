@@ -391,11 +391,10 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 if (lineLength + currentLength > PathLength || i + 1 == smoothPoints.Count)
                 {
-                    l.p2 = l.p1 + Vector2.Normalize(l.p2 - l.p1) * (float)(PathLength - currentLength);
+                    l.p2 = l.p1 + (l.p2 - l.p1) * (float)(PathLength - currentLength) / lineLength;
                     l.Recalc();
 
-                    currentLength += l.rho;
-                    cumulativeLengths.Add(currentLength);
+                    cumulativeLengths.Add(PathLength);
                     break; //we are done.
                 }
 
