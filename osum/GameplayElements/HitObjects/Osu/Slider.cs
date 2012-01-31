@@ -1052,9 +1052,10 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
-                spriteCollectionEnd[1].Rotation = endAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                spriteCollectionEnd[1].Rotation = (lastDrawnSegmentIndex >= 0 ? drawableSegments[lastDrawnSegmentIndex].theta + MathHelper.Pi : endAngle)
+                                                + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
-                spriteCollectionStart[1].Rotation = 3 + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                spriteCollectionStart[1].Rotation = MathHelper.Pi + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
 
             base.Update();
         }
