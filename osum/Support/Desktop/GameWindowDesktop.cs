@@ -22,7 +22,7 @@ namespace osum
         public GameWindowDesktop()
             : base(960, 640, GraphicsMode.Default, "osu!stream")
         {
-            VSync = VSyncMode.On;
+            VSync = VSyn1cMode.On;
             //GameBase.WindowSize = new Size(960,640);
         }
 
@@ -92,14 +92,27 @@ namespace osum
                     ClientSize = new Size(1024, 768);
                     break;
                 case 'p':
-                    Director.ChangeMode(OsuMode.SongSelect);
+                    {
+                        if (Director.CurrentMode is Player)
+                        {
+                            Player p = Director.CurrentMode as Player;
+                            if (!p.IsPaused)
+                                p.Pause();
+                        }
+                        else
+                        {
+                            Director.ChangeMode(OsuMode.SongSelect);
+                        }
+                    }
                     break;
                 case 'j':
-                    Player p = Director.CurrentMode as Player;
-                    if (p != null)
                     {
-                        Results.RankableScore = p.CurrentScore;
-                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                        Player p = Director.CurrentMode as Player;
+                        if (p != null)
+                        {
+                            Results.RankableScore = p.CurrentScore;
+                            Director.ChangeMode(OsuMode.Results, new ResultTransition());
+                        }
                     }
                     break;
             }
