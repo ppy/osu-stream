@@ -36,6 +36,11 @@ namespace osum.GameModes.Store
 
         ProductResponseDelegate responseDelegate;
 
+        public void RestorePurchases()
+        {
+            SKPaymentQueue.DefaultQueue.RestoreCompletedTransactions();
+        }
+
         public void RequestProductData(List<string> productIds, ProductResponseDelegate responseDelegate)
         {
             NSMutableSet setIds = new NSMutableSet();

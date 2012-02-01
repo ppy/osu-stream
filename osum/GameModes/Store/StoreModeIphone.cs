@@ -20,6 +20,11 @@ namespace osum.GameModes.Store
             iap = new InAppPurchaseManager();
         }
 
+        public override void RestorePurchases()
+        {
+            iap.RestorePurchases();
+        }
+
         public override void Dispose ()
         {
             base.Dispose();

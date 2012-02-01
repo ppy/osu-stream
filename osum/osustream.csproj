@@ -76,10 +76,10 @@
     </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchLink>Full</MtouchLink>
     <AssemblyName>osustream</AssemblyName>
     <IpaPackageName />
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testflight|iPhone' ">
     <DebugType>none</DebugType>
@@ -95,10 +95,10 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <ConsolePause>false</ConsolePause>
-    <MtouchLink>Full</MtouchLink>
     <AssemblyName>osustream</AssemblyName>
     <IpaPackageName />
     <BuildIpa>true</BuildIpa>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
@@ -310,7 +310,6 @@
     <Folder Include="GameModes\SongSelect\" />
     <Folder Include="GameModes\" />
     <Folder Include="Graphics\Drawables\" />
-    <Folder Include="Online\" />
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
   </ItemGroup>
