@@ -270,18 +270,15 @@ namespace osum.GameModes
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
 
-                    if (Player.Difficulty == Difficulty.Easy)
+                    /*if (Player.Difficulty == Difficulty.Easy)
                         //came from easy -> expert; drop back on normal!
                         Player.Difficulty = Difficulty.Normal;
-                    else
+                    else*/
                     {
                         isNewDifficulty = false;
                         pendingModeChange = false;
                     }
                 }
-                else if (newDifficulty == Difficulty.Expert && Player.Difficulty == Difficulty.Easy)
-                    //came from easy -> expert; drop back on normal!
-                    Player.Difficulty = Difficulty.Normal;
                 else
                     Player.Difficulty = newDifficulty;
             }
