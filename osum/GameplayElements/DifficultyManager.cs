@@ -205,5 +205,10 @@ namespace osum.GameplayElements
         public static int FollowPointScreenTime = 200;
 
         public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
+
+        /// <summary>
+        /// Time taken after hitobject fadein for rebound arrows to fade in
+        /// </summary>
+        public static int FadeInReboundArrow { get { return 100; } }
     }
 }

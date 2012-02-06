@@ -52,6 +52,11 @@ namespace osum.GameModes.Store
             }
         }
 
+        public virtual void RestorePurchases()
+        {
+
+        }
+
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
@@ -63,7 +68,9 @@ namespace osum.GameModes.Store
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.store_header), new Vector2(0, 0));
-            s_Header.OnClick += delegate { };
+            s_Header.OnClick += delegate {
+                RestorePurchases();
+            };
             topMostSpriteManager.Add(s_Header);
 
             s_ButtonBack = new BackButton(delegate

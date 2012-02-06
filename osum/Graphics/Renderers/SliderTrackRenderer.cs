@@ -66,7 +66,7 @@ namespace osum.Graphics.Renderers
         protected const float QUAD_MIDDLECRACK_FUDGE = 1.0e-4f;
 
         // Bias to the number of polygons to render in a given wedge. Also ... fixes ... holes.
-        protected const float WEDGE_COUNT_FUDGE = 0.2f; // Seems this fudge is needed for osu!m
+        protected const float WEDGE_COUNT_FUDGE = 0.25f; // Seems this fudge is needed for osu!m
 
         // how much to trim off the inside of the texture
         protected const float TEXTURE_SHRINKAGE_FACTOR = 0.0f;
