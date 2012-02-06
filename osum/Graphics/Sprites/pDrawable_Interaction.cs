@@ -98,16 +98,18 @@ namespace osum.Graphics.Sprites
 
         internal bool IsHovering;
 
+        internal int ClickableMargin = 0;
+
         protected virtual bool checkHover(Vector2 position)
         {
             if (Alpha == 0 || Bypass)
                 return false;
 
             Box2 rect = DisplayRectangle;
-            return rect.Left < position.X &&
-                rect.Right >= position.X &&
-                rect.Top < position.Y &&
-                rect.Bottom >= position.Y;
+            return rect.Left - ClickableMargin < position.X &&
+                rect.Right + ClickableMargin >= position.X &&
+                rect.Top - ClickableMargin < position.Y &&
+                rect.Bottom + ClickableMargin >= position.Y;
         }
 
         void inputUpdateHoverState(TrackingPoint trackingPoint)
