@@ -215,7 +215,12 @@ namespace osum.GameModes
             }
             else
             {
+#if MAPPER
+                Player.AllowStreamSwitches = !Player.AllowStreamSwitches;
+                GameBase.Notify("Stream switches are now " + (Player.AllowStreamSwitches ? "allowed" : "disallowed"), null);
+#else
                 Ranking_Show();
+#endif
             }
         }
 

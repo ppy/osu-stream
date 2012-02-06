@@ -49,6 +49,8 @@ namespace osum.GameModes
         private int firstObjectTime;
         private int lastObjectTime;
 
+        internal static bool AllowStreamSwitches = true;
+
         /// <summary>
         /// Score which is being played (or watched?)
         /// </summary>
@@ -857,6 +859,9 @@ namespace osum.GameModes
 
         protected bool switchStream(bool increase)
         {
+            if (!AllowStreamSwitches)
+                return false;
+
             isIncreasingStream = increase;
             if (increase && HitObjectManager.IsHighestStream)
                 return false;
