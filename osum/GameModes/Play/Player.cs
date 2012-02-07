@@ -124,6 +124,8 @@ namespace osum.GameModes
 
             loadBeatmap();
 
+            topMostSpriteManager = new SpriteManager();
+
             initializeUIElements();
 
             if (HitObjectManager != null)
@@ -187,8 +189,6 @@ namespace osum.GameModes
 
             spriteManager.Add(s_streamSwitchWarningArrow);
 
-            topMostSpriteManager = new SpriteManager();
-
             Clock.AudioTime = 0;
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
@@ -226,9 +226,9 @@ namespace osum.GameModes
             pSprite menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
                                     new Vector2(19,16.5f), 1, true, Color4.White);
-            menuPauseButton.ClickableMargin = 15;
+            menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
-            spriteManager.Add(menuPauseButton);
+            topMostSpriteManager.Add(menuPauseButton);
 
             menuPauseButton.ScaleScalar = 2;
             menuPauseButton.Alpha = 0;
