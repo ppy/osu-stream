@@ -679,10 +679,10 @@ namespace osum.GameModes
 
             if (countdown != null) countdown.Draw();
 
+            if (scoreDisplay != null) scoreDisplay.Draw();
+
             if (HitObjectManager != null)
                 HitObjectManager.Draw();
-
-            if (scoreDisplay != null) scoreDisplay.Draw();
 
             if (healthBar != null) healthBar.Draw();
 
