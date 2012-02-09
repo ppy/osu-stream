@@ -115,7 +115,7 @@ namespace osum.GameModes
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
-
+            
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
@@ -168,6 +168,33 @@ namespace osum.GameModes
             }
 
             resetScore();
+
+            //256x172
+            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
+
+            mapBackgroundImage = new pSpriteDynamic()
+            {
+                LoadDelegate = delegate
+                {
+                    pTexture thumb = null;
+                    byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                    if (bytes != null)
+                        thumb = pTexture.FromBytes(bytes);
+                    return thumb;
+                },
+                DrawDepth = 0.005f,
+                Field = FieldTypes.StandardSnapCentre,
+                Origin = OriginTypes.Centre,
+                ScaleScalar = aspectAdjust,
+                Alpha = 0.001f,
+                Additive = true,
+                RemoveOldTransformations = false
+            };
+
+            mapBackgroundImage.FadeIn(3000, 0.1f);
+            mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
+
+            spriteManager.Add(mapBackgroundImage);
 
             playfieldBackground = new PlayfieldBackground();
             playfieldBackground.ChangeColour(Difficulty);
@@ -535,6 +562,35 @@ namespace osum.GameModes
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
 
+            const float effect_magnitude = 1.4f;
+            const float effect_limit = 1.5f;
+
+            if (mapBackgroundImage != null && scoreChange > 0)
+            {
+                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
+                t.StartTime = mapBackgroundImage.ClockingNow;
+                t.EndTime = t.StartTime + 600;
+                t.EndFloat = 0.1f;
+
+                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
+                t2.StartTime = mapBackgroundImage.ClockingNow;
+                t2.EndTime = t.StartTime + 600;
+            }
+            else
+            {
+                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                t.StartTime = mapBackgroundImage.ClockingNow;
+                t.EndTime = t.StartTime + 2000;
+                t.StartFloat = 0;
+                t.EndFloat = 0.1f;
+
+                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                t2.StartTime = mapBackgroundImage.ClockingNow;
+                t2.EndTime = t.StartTime + 100;
+            }
+
             if (increaseCombo && comboCounter != null)
             {
                 comboCounter.IncreaseCombo();
@@ -894,6 +950,7 @@ namespace osum.GameModes
 
         protected bool ShowGuideFingers;
         protected ProgressDisplay progressDisplay;
+        private pSpriteDynamic mapBackgroundImage;
     }
 }
 
