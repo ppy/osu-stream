@@ -632,11 +632,11 @@ namespace osum.GameModes
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
+            topMostSpriteManager.Draw();
+
             if (menu != null) menu.Draw();
 
             if (touchBurster != null) touchBurster.Draw();
-
-            topMostSpriteManager.Draw();
 
             return true;
         }
