@@ -54,8 +54,12 @@ namespace osum.GameModes
         {
             if (!instant && State != SelectState.SongSelect && State != SelectState.SongInfo) return;
 
+            if (Clock.ModeTime - lastDownTime > 1200) return;
+
             SelectedPanel = panel;
             Player.Beatmap = panel.Beatmap;
+
+            cancelLockedHoverPreview();
 
             panel.s_BackingPlate2.Alpha = 1;
             panel.s_BackingPlate2.AdditiveFlash(400, 1, true);

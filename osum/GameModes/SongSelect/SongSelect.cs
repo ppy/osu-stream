@@ -23,11 +23,11 @@ namespace osum.GameModes
     public partial class SongSelectMode : GameMode
     {
 #if iOS
-        #if MAPPER
+#if MAPPER
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
-        #else
+#else
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
-        #endif
+#endif
 #else
         public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
@@ -42,6 +42,7 @@ namespace osum.GameModes
         private pSprite s_Header;
         private pSprite s_Footer;
         private BeatmapPanel SelectedPanel;
+        private BeatmapPanel PreviewingPanel;
 
         private pDrawable s_ButtonBack;
 
@@ -89,6 +90,7 @@ namespace osum.GameModes
             GameBase.Config.SaveConfig();
 
             InputManager.OnMove += InputManager_OnMove;
+            InputManager.OnDown += InputManager_OnDown;
 
             InitializeBeatmaps();
 
@@ -327,6 +329,7 @@ namespace osum.GameModes
                 Player.Beatmap = null;
 
             InputManager.OnMove -= InputManager_OnMove;
+            InputManager.OnDown -= InputManager_OnDown;
         }
 
         private void footerHide()
@@ -335,6 +338,12 @@ namespace osum.GameModes
             s_Footer.Transform(new TransformationV(s_Footer.Position, new Vector2(-60, -85), Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Footer.Transform(new TransformationF(TransformationType.Rotation, s_Footer.Rotation, 0.04f, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
             s_Footer.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 500));
+        }
+
+        int lastDownTime;
+        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        {
+            lastDownTime = Clock.ModeTime;
         }
 
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
@@ -460,6 +469,64 @@ namespace osum.GameModes
 
                     if (Director.PendingOsuMode == OsuMode.Unknown)
                     {
+                        if (InputManager.PrimaryTrackingPoint != null && InputManager.IsPressed)
+                        {
+                            const int time_to_hover = 800;
+
+                            pSprite sprite = InputManager.PrimaryTrackingPoint.HoveringObject as pSprite;
+
+                            if (sprite != null)
+                            {
+                                BeatmapPanel panel = sprite.Tag as BeatmapPanel;
+
+                                //check for beatmap present; the store link doesn't have one.
+                                if (panel != null && panel.Beatmap != null)
+                                {
+                                    if (SelectedPanel != panel)
+                                    {
+                                        cancelHoverPreview();
+
+                                        SelectedPanel = panel;
+                                        Player.Beatmap = panel.Beatmap;
+
+                                        SelectedPanelHoverGlow = panel.s_BackingPlate2.AdditiveFlash(0, 1, true);
+                                        SelectedPanelHoverGlow.FadeIn(time_to_hover);
+
+                                        GameBase.Scheduler.Add(delegate
+                                        {
+                                            if (panel != SelectedPanel || panel == PreviewingPanel || State != SelectState.SongSelect) return;
+
+                                            cancelLockedHoverPreview();
+
+                                            if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
+                                            {
+                                                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
+                                                if (!AudioEngine.Music.IsElapsing)
+                                                    playFromPreview();
+
+                                                SelectedPanelHoverGlow.Alpha = 1;
+                                                SelectedPanelHoverGlow.FadeOut(500, 0.8f);
+                                                SelectedPanelHoverGlow.Transformations[0].Looping = true;
+                                                SelectedPanelHoverGlowLockedIn = SelectedPanelHoverGlow;
+                                                SelectedPanelHoverGlow = null;
+                                                PreviewingPanel = panel;
+                                                PreviewingPanel.Add(SelectedPanelHoverGlowLockedIn);
+                                            }
+                                        }, time_to_hover);
+                                    }
+                                    else
+                                    {
+                                        if (SelectedPanelHoverGlow != null && Math.Abs(SelectedPanelHoverGlow.Position.Y - panel.s_BackingPlate2.Position.Y) > 3)
+                                            cancelHoverPreview();
+                                    }
+                                }
+                                else
+                                    cancelHoverPreview();
+                            }
+                        }
+                        else
+                            cancelHoverPreview();
+
                         if (newIntOffset != lastIntOffset)
                         {
                             if (isBound && wasBound)
@@ -482,6 +549,48 @@ namespace osum.GameModes
                         }
                     }
                     break;
+            }
+        }
+        
+        /// <summary>
+        /// Once a song preview starts from a hover event, a flashing effect is displayed on its panel.
+        /// This sprite holds that effect. The reference is used later to cancel it when necessary.
+        /// </summary>
+        private pDrawable SelectedPanelHoverGlowLockedIn;
+
+        /// <summary>
+        /// Cancel the flashing effect on the currently previewing song's panel.
+        /// </summary>
+        private void cancelLockedHoverPreview()
+        {
+            if (SelectedPanelHoverGlowLockedIn != null)
+            {
+                SelectedPanelHoverGlowLockedIn.Transformations.Clear();
+                SelectedPanelHoverGlowLockedIn.FadeOut(400);
+                SelectedPanelHoverGlowLockedIn = null;
+                PreviewingPanel = null;
+            }
+        }
+
+        /// <summary>
+        /// WHen a hover event is started on a particular beatmap panel, it begins to glow brighter.
+        /// This holds that glow effect. It is either cancelled if the user moves their finger or when it turns into a locked glow (and the preview plays).
+        /// </summary>
+        private pDrawable SelectedPanelHoverGlow;
+
+        /// <summary>
+        /// Cances the increasing glow effect during a hover even over a particular beatmap panel.
+        /// </summary>
+        private void cancelHoverPreview()
+        {
+            SelectedPanel = null;
+            if (SelectedPanelHoverGlow != null)
+            {
+                SelectedPanelHoverGlow.AlwaysDraw = false;
+                SelectedPanelHoverGlow.Transformations.Clear();
+
+                SelectedPanelHoverGlow.FadeOut(200);
+                SelectedPanelHoverGlow = null;
             }
         }
     }
