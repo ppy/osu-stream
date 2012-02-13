@@ -78,6 +78,9 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
+                    if (p != null)
+                        p.Resume();
+
                     Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
                     Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
 
