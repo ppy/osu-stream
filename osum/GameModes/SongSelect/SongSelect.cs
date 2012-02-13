@@ -315,6 +315,9 @@ namespace osum.GameModes
         {
             base.Dispose();
 
+            cancelHoverPreview();
+            cancelLockedHoverPreview();
+
             topmostSpriteManager.Dispose();
             spriteManagerDifficultySelect.Dispose();
             songInfoSpriteManager.Dispose();
@@ -598,6 +601,7 @@ namespace osum.GameModes
         private void cancelHoverPreview()
         {
             SelectedPanel = null;
+
             if (SelectedPanelHoverGlow != null)
             {
                 SelectedPanelHoverGlow.AlwaysDraw = false;
