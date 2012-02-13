@@ -152,7 +152,6 @@ namespace osum.GameModes
                     break;
                 case SelectState.SongInfo:
                     SongInfo_Hide();
-                    showDifficultySelection2();
                     break;
                 case SelectState.RankingDisplay:
                     Ranking_Hide();

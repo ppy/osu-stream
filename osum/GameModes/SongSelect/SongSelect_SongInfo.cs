@@ -178,6 +178,8 @@ namespace osum.GameModes
 
         private void SongInfo_Hide()
         {
+            showDifficultySelection2();
+
             background.FadeIn(300);
             songInfoSpriteManager.Transformations.Clear();
             songInfoSpriteManager.FadeOut(400);

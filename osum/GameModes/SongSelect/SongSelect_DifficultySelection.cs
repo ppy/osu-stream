@@ -207,12 +207,17 @@ namespace osum.GameModes
         void onSongInfoClick(object sender, EventArgs e)
         {
             s_SongInfo.AdditiveFlash(1000, 0.8f);
-            AudioEngine.PlaySample(OsuSamples.MenuBling);
-
-            if (State != SelectState.DifficultySelect)
-                return;
-
-            SongInfo_Show();
+            
+            switch (State)
+            {
+                case SelectState.DifficultySelect:
+                    AudioEngine.PlaySample(OsuSamples.MenuBling);
+                    SongInfo_Show();
+                    break;
+                case SelectState.SongInfo:
+                    SongInfo_Hide();
+                    break;
+            }
         }
 
         private void footer_onClick(object sender, EventArgs e)
