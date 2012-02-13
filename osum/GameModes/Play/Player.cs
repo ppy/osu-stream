@@ -561,34 +561,41 @@ namespace osum.GameModes
 
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
-
+            
             const float effect_magnitude = 1.4f;
             const float effect_limit = 1.5f;
 
-            if (mapBackgroundImage != null && scoreChange > 0)
+            if (mapBackgroundImage != null)
             {
-                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
-                t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
-                t.StartTime = mapBackgroundImage.ClockingNow;
-                t.EndTime = t.StartTime + 600;
-                t.EndFloat = 0.1f;
+                try
+                {
+                    if (scoreChange > 0)
+                    {
+                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                        t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
+                        t.StartTime = mapBackgroundImage.ClockingNow;
+                        t.EndTime = t.StartTime + 600;
+                        t.EndFloat = 0.1f;
 
-                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
-                t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
-                t2.StartTime = mapBackgroundImage.ClockingNow;
-                t2.EndTime = t.StartTime + 600;
-            }
-            else
-            {
-                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
-                t.StartTime = mapBackgroundImage.ClockingNow;
-                t.EndTime = t.StartTime + 2000;
-                t.StartFloat = 0;
-                t.EndFloat = 0.1f;
+                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                        t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
+                        t2.StartTime = mapBackgroundImage.ClockingNow;
+                        t2.EndTime = t.StartTime + 600;
+                    }
+                    else
+                    {
+                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                        t.StartTime = mapBackgroundImage.ClockingNow;
+                        t.EndTime = t.StartTime + 2000;
+                        t.StartFloat = 0;
+                        t.EndFloat = 0.1f;
 
-                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
-                t2.StartTime = mapBackgroundImage.ClockingNow;
-                t2.EndTime = t.StartTime + 100;
+                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                        t2.StartTime = mapBackgroundImage.ClockingNow;
+                        t2.EndTime = t.StartTime + 100;
+                    }
+                }
+                catch { }
             }
 
             if (increaseCombo && comboCounter != null)
