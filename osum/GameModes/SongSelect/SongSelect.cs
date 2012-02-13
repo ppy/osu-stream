@@ -491,7 +491,10 @@ namespace osum.GameModes
                                         SelectedPanelHoverGlow = panel.s_BackingPlate2.AdditiveFlash(0, 1, true);
                                         SelectedPanelHoverGlow.FadeIn(time_to_hover);
 
-                                        GameBase.Scheduler.Add(delegate
+                                        //cancel any previously scheduled preview that was not activated yet.
+                                        GameBase.Scheduler.Cancel(previewDelegate);
+
+                                        previewDelegate = GameBase.Scheduler.Add(delegate
                                         {
                                             if (panel != SelectedPanel || panel == PreviewingPanel || State != SelectState.SongSelect) return;
 
@@ -584,6 +587,11 @@ namespace osum.GameModes
         /// This holds that glow effect. It is either cancelled if the user moves their finger or when it turns into a locked glow (and the preview plays).
         /// </summary>
         private pDrawable SelectedPanelHoverGlow;
+        
+        /// <summary>
+        /// Holds the scheduled preview. We keep a reference to this so we can cancel previously scheduled previews that have not yet been activated.
+        /// </summary>
+        private ScheduledDelegate previewDelegate;
 
         /// <summary>
         /// Cances the increasing glow effect during a hover even over a particular beatmap panel.
