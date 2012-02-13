@@ -22,8 +22,8 @@ namespace osum.GameModes.Store
 {
     public class StoreMode : GameMode
     {
-        SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
         SpriteManager topMostSpriteManager = new SpriteManager();
+        SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
 
         bool playingPreview;
         private pSprite s_Header;
