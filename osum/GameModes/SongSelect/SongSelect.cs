@@ -287,13 +287,6 @@ namespace osum.GameModes
 
             if (panel == null || State != SelectState.SongSelect) return;
 
-            if (panel == panelDownloadMore)
-            {
-                Director.ChangeMode(OsuMode.Store);
-                AudioEngine.PlaySample(OsuSamples.MenuHit);
-                return;
-            }
-
             showDifficultySelection(panel);
         }
 
