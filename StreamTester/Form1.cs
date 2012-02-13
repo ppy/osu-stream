@@ -49,6 +49,7 @@ namespace StreamTester
                 {
                     checkBoxQuick.Checked = true;
                     CombinateAndTest(false);
+                    File.Delete(tempDir + "\\" + Path.GetFileNameWithoutExtension(Filename) + ".osz2");
                 });
             }
         }
@@ -326,6 +327,8 @@ namespace StreamTester
 
             Invoke((MethodInvoker)delegate { panelButtons.Enabled = true; });
 
+            File.Delete(tempDir + "\\" + Path.GetFileNameWithoutExtension(Filename) + ".osc");
+
             if (checkBoxm4a.Checked)
                 Process.Start(tempDir);
 
@@ -370,6 +373,8 @@ namespace StreamTester
             buttonTestOnSave.Enabled = !checkBoxm4a.Checked;
             groupBoxDifficulty.Enabled = !checkBoxm4a.Checked;
             groupBoxStreamSwitch.Enabled = !checkBoxm4a.Checked;
+            
+            checkBoxQuick.Checked = !checkBoxm4a.Checked;
 
             buttonTestOnce.Text = checkBoxm4a.Checked ? "Create Package" : "Test Once";
         }
