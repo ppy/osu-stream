@@ -74,6 +74,18 @@ namespace osum.GameplayElements
             }
         }
 
+        /// <summary>
+        /// When we are spinning, we still want to show the score on top of the spinner display.
+        /// This should allow for that.
+        /// </summary>
+        internal bool DrawBelowOverlay
+        {
+            get
+            {
+                return ActiveObject is Spinner;
+            }
+        }
+
         public void Dispose()
         {
             spriteManager.Dispose();
