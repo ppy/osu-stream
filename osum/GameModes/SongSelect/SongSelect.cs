@@ -284,8 +284,6 @@ namespace osum.GameModes
 
         void panelSelected(object sender, EventArgs args)
         {
-            AudioEngine.PlaySample(OsuSamples.MenuHit);
-
             BeatmapPanel panel = ((pDrawable)sender).Tag as BeatmapPanel;
 
             if (panel == null || State != SelectState.SongSelect) return;
@@ -293,6 +291,7 @@ namespace osum.GameModes
             if (panel == panelDownloadMore)
             {
                 Director.ChangeMode(OsuMode.Store);
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
                 return;
             }
 
@@ -392,6 +391,8 @@ namespace osum.GameModes
             return true;
         }
 
+        const int time_to_hover = 600;
+
         public override void Update()
         {
             base.Update();
@@ -471,8 +472,6 @@ namespace osum.GameModes
                     {
                         if (InputManager.PrimaryTrackingPoint != null && InputManager.IsPressed)
                         {
-                            const int time_to_hover = 800;
-
                             pSprite sprite = InputManager.PrimaryTrackingPoint.HoveringObject as pSprite;
 
                             if (sprite != null)
@@ -482,7 +481,7 @@ namespace osum.GameModes
                                 //check for beatmap present; the store link doesn't have one.
                                 if (panel != null && panel.Beatmap != null)
                                 {
-                                    if (SelectedPanel != panel)
+                                    if (SelectedPanel != panel && PreviewingPanel != panel)
                                     {
                                         cancelHoverPreview();
 
@@ -505,6 +504,7 @@ namespace osum.GameModes
                                                     playFromPreview();
 
                                                 SelectedPanelHoverGlow.Alpha = 1;
+                                                SelectedPanelHoverGlow.Colour = Color4.White;
                                                 SelectedPanelHoverGlow.FadeOut(500, 0.8f);
                                                 SelectedPanelHoverGlow.Transformations[0].Looping = true;
                                                 SelectedPanelHoverGlowLockedIn = SelectedPanelHoverGlow;
@@ -525,7 +525,11 @@ namespace osum.GameModes
                             }
                         }
                         else
+                        {
                             cancelHoverPreview();
+                            if (!AudioEngine.Music.IsElapsing)
+                                InitializeBgm();
+                        }
 
                         if (newIntOffset != lastIntOffset)
                         {
@@ -537,6 +541,9 @@ namespace osum.GameModes
 
                             lastIntOffset = newIntOffset;
                         }
+
+                        if (SelectedPanelHoverGlow != null)
+                            AudioEngine.Music.DimmableVolume = 1 - SelectedPanelHoverGlow.Alpha;
 
                         Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0.5f + songSelectOffset * 0.5f);
 
