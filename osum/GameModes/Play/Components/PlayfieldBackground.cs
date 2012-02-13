@@ -92,7 +92,7 @@ namespace osum.GameModes.Play.Components
 
             initialize();
 
-            DrawDepth = 0;
+            DrawDepth = 0.002f;
             AlwaysDraw = true;
             Alpha = 1;
             currentColour = Colour = COLOUR_INTRO;

@@ -54,6 +54,13 @@ namespace osum.GameModes
         {
             if (!instant && State != SelectState.SongSelect && State != SelectState.SongInfo) return;
 
+            if (Clock.ModeTime - lastDownTime > time_to_hover) return;
+
+            AudioEngine.PlaySample(OsuSamples.MenuHit);
+
+            cancelHoverPreview();
+            cancelLockedHoverPreview();
+
             SelectedPanel = panel;
             Player.Beatmap = panel.Beatmap;
 
@@ -169,6 +176,7 @@ namespace osum.GameModes
             const float arrow_spread = 180;
 
             s_ModeArrowLeft = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(-arrow_spread, yOffset), 0.45f, true, Color4.White);
+            s_ModeArrowLeft.ClickableMargin = 30;
             s_ModeArrowLeft.OnHover += delegate { s_ModeArrowLeft.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnHoverLost += delegate { s_ModeArrowLeft.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowLeft.OnClick += onSelectPreviousMode;
@@ -176,6 +184,7 @@ namespace osum.GameModes
             spriteManagerDifficultySelect.Add(s_ModeArrowLeft);
 
             s_ModeArrowRight = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_arrow), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(arrow_spread, yOffset), 0.45f, true, Color4.DarkGray);
+            s_ModeArrowRight.ClickableMargin = 30;
             s_ModeArrowRight.OnHover += delegate { s_ModeArrowRight.ScaleTo(1.2f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnHoverLost += delegate { s_ModeArrowRight.ScaleTo(1f, 100, EasingTypes.In); };
             s_ModeArrowRight.OnClick += onSelectNextMode;
@@ -198,12 +207,17 @@ namespace osum.GameModes
         void onSongInfoClick(object sender, EventArgs e)
         {
             s_SongInfo.AdditiveFlash(1000, 0.8f);
-            AudioEngine.PlaySample(OsuSamples.MenuBling);
-
-            if (State != SelectState.DifficultySelect)
-                return;
-
-            SongInfo_Show();
+            
+            switch (State)
+            {
+                case SelectState.DifficultySelect:
+                    AudioEngine.PlaySample(OsuSamples.MenuBling);
+                    SongInfo_Show();
+                    break;
+                case SelectState.SongInfo:
+                    SongInfo_Hide();
+                    break;
+            }
         }
 
         private void footer_onClick(object sender, EventArgs e)
@@ -273,18 +287,15 @@ namespace osum.GameModes
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
 
-                    if (Player.Difficulty == Difficulty.Easy)
+                    /*if (Player.Difficulty == Difficulty.Easy)
                         //came from easy -> expert; drop back on normal!
                         Player.Difficulty = Difficulty.Normal;
-                    else
+                    else*/
                     {
                         isNewDifficulty = false;
                         pendingModeChange = false;
                     }
                 }
-                else if (newDifficulty == Difficulty.Expert && Player.Difficulty == Difficulty.Easy)
-                    //came from easy -> expert; drop back on normal!
-                    Player.Difficulty = Difficulty.Normal;
                 else
                     Player.Difficulty = newDifficulty;
             }

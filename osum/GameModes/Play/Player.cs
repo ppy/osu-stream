@@ -117,7 +117,7 @@ namespace osum.GameModes
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
-
+            
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
@@ -125,6 +125,8 @@ namespace osum.GameModes
                 touchBurster = new TouchBurster(!Player.Autoplay);
 
             loadBeatmap();
+
+            topMostSpriteManager = new SpriteManager();
 
             initializeUIElements();
 
@@ -169,6 +171,33 @@ namespace osum.GameModes
 
             resetScore();
 
+            //256x172
+            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
+
+            mapBackgroundImage = new pSpriteDynamic()
+            {
+                LoadDelegate = delegate
+                {
+                    pTexture thumb = null;
+                    byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                    if (bytes != null)
+                        thumb = pTexture.FromBytes(bytes);
+                    return thumb;
+                },
+                DrawDepth = 0.005f,
+                Field = FieldTypes.StandardSnapCentre,
+                Origin = OriginTypes.Centre,
+                ScaleScalar = aspectAdjust,
+                Alpha = 0.001f,
+                Additive = true,
+                RemoveOldTransformations = false
+            };
+
+            mapBackgroundImage.FadeIn(3000, 0.1f);
+            mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
+
+            spriteManager.Add(mapBackgroundImage);
+
             playfieldBackground = new PlayfieldBackground();
             playfieldBackground.ChangeColour(Difficulty);
             spriteManager.Add(playfieldBackground);
@@ -188,8 +217,6 @@ namespace osum.GameModes
             s_streamSwitchWarningArrow.Alpha = 0;
 
             spriteManager.Add(s_streamSwitchWarningArrow);
-
-            topMostSpriteManager = new SpriteManager();
 
             Clock.AudioTime = 0;
             //hack: because seek doesn't update iOS player's internal time correctly.
@@ -228,8 +255,9 @@ namespace osum.GameModes
             pSprite menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
                                     new Vector2(19,16.5f), 1, true, Color4.White);
+            menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
-            spriteManager.Add(menuPauseButton);
+            topMostSpriteManager.Add(menuPauseButton);
 
             menuPauseButton.ScaleScalar = 2;
             menuPauseButton.Alpha = 0;
@@ -535,6 +563,42 @@ namespace osum.GameModes
 
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
+            
+            const float effect_magnitude = 1.4f;
+            const float effect_limit = 1.5f;
+
+            if (mapBackgroundImage != null)
+            {
+                try
+                {
+                    if (scoreChange > 0)
+                    {
+                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                        t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
+                        t.StartTime = mapBackgroundImage.ClockingNow;
+                        t.EndTime = t.StartTime + 600;
+                        t.EndFloat = 0.1f;
+
+                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                        t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
+                        t2.StartTime = mapBackgroundImage.ClockingNow;
+                        t2.EndTime = t.StartTime + 600;
+                    }
+                    else
+                    {
+                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                        t.StartTime = mapBackgroundImage.ClockingNow;
+                        t.EndTime = t.StartTime + 2000;
+                        t.StartFloat = 0;
+                        t.EndFloat = 0.1f;
+
+                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                        t2.StartTime = mapBackgroundImage.ClockingNow;
+                        t2.EndTime = t.StartTime + 100;
+                    }
+                }
+                catch { }
+            }
 
             if (increaseCombo && comboCounter != null)
             {
@@ -625,19 +689,29 @@ namespace osum.GameModes
             if (countdown != null) countdown.Draw();
 
             if (HitObjectManager != null)
-                HitObjectManager.Draw();
-
-            if (scoreDisplay != null) scoreDisplay.Draw();
+            {
+                if (hitObjectManager.DrawBelowOverlay)
+                {
+                    HitObjectManager.Draw();
+                    if (scoreDisplay != null) scoreDisplay.Draw();
+                }
+                else
+                {
+                    if (scoreDisplay != null) scoreDisplay.Draw();
+                    HitObjectManager.Draw();
+                }
+            }
+            else if (scoreDisplay != null) scoreDisplay.Draw();
 
             if (healthBar != null) healthBar.Draw();
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
+            topMostSpriteManager.Draw();
+
             if (menu != null) menu.Draw();
 
             if (touchBurster != null) touchBurster.Draw();
-
-            topMostSpriteManager.Draw();
 
             return true;
         }
@@ -898,6 +972,7 @@ namespace osum.GameModes
 
         protected bool ShowGuideFingers;
         protected ProgressDisplay progressDisplay;
+        private pSpriteDynamic mapBackgroundImage;
     }
 }
 

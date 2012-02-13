@@ -54,10 +54,20 @@ namespace osum.Helpers
             }
         }
 
-        public void Add(VoidDelegate d, int timeUntilRun)
+        public ScheduledDelegate Add(VoidDelegate d, int timeUntilRun)
         {
             ScheduledDelegate del = new ScheduledDelegate(d, timer.ElapsedMilliseconds + timeUntilRun);
             timedQueue.Add(del);
+            return del;
+        }
+
+        /// <summary>
+        /// Cancel a timed (delayed) delegate before it has been run.
+        /// </summary>
+        /// <returns>true if the delegate was successfully cancelled.</returns>
+        public bool Cancel(ScheduledDelegate d)
+        {
+            return timedQueue.Remove(d);
         }
 
         public void Add(VoidDelegate d, bool forceDelayed = false)
@@ -74,7 +84,7 @@ namespace osum.Helpers
         }
     }
 
-    struct ScheduledDelegate : IComparable<ScheduledDelegate>
+    public struct ScheduledDelegate : IComparable<ScheduledDelegate>
     {
         public ScheduledDelegate(VoidDelegate task, long time)
         {
