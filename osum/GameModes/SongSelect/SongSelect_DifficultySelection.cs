@@ -56,8 +56,6 @@ namespace osum.GameModes
 
             if (Clock.ModeTime - lastDownTime > time_to_hover) return;
 
-            AudioEngine.PlaySample(OsuSamples.MenuHit);
-
             cancelHoverPreview();
             cancelLockedHoverPreview();
 
@@ -89,6 +87,8 @@ namespace osum.GameModes
             }
             else
             {
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
+
                 State = SelectState.LoadingPreview;
 
                 GameBase.Scheduler.Add(delegate
@@ -207,7 +207,7 @@ namespace osum.GameModes
         void onSongInfoClick(object sender, EventArgs e)
         {
             s_SongInfo.AdditiveFlash(1000, 0.8f);
-            
+
             switch (State)
             {
                 case SelectState.DifficultySelect:

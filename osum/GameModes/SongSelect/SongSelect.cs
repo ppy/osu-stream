@@ -287,13 +287,6 @@ namespace osum.GameModes
 
             if (panel == null || State != SelectState.SongSelect) return;
 
-            if (panel == panelDownloadMore)
-            {
-                Director.ChangeMode(OsuMode.Store);
-                AudioEngine.PlaySample(OsuSamples.MenuHit);
-                return;
-            }
-
             showDifficultySelection(panel);
         }
 
@@ -314,6 +307,9 @@ namespace osum.GameModes
         public override void Dispose()
         {
             base.Dispose();
+
+            cancelHoverPreview();
+            cancelLockedHoverPreview();
 
             topmostSpriteManager.Dispose();
             spriteManagerDifficultySelect.Dispose();
@@ -598,6 +594,7 @@ namespace osum.GameModes
         private void cancelHoverPreview()
         {
             SelectedPanel = null;
+
             if (SelectedPanelHoverGlow != null)
             {
                 SelectedPanelHoverGlow.AlwaysDraw = false;
