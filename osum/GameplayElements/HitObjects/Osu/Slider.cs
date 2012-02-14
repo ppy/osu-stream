@@ -237,24 +237,24 @@ namespace osum.GameplayElements.HitObjects.Osu
                                ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White) { ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
-            Transformation fadeIn = new TransformationF(TransformationType.Fade, 0, 1,
+            Transformation fadeInBall = new TransformationF(TransformationType.Fade, 0, 1,
                 StartTime, StartTime);
-            Transformation fadeInTrack = new TransformationF(TransformationType.Fade, 0, 1,
+            Transformation fadeInHead = new TransformationF(TransformationType.Fade, 0, 1,
                 StartTime - DifficultyManager.PreEmpt, StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn);
             Transformation fadeOut = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime + DifficultyManager.FadeOut / 2);
             Transformation fadeOutInstant = new TransformationF(TransformationType.Fade, 1, 0, EndTime, EndTime);
-            Transformation fadeInArrows = new TransformationF(TransformationType.Fade, 0, 1,
-                StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeIn,
-                StartTime - DifficultyManager.PreEmpt + DifficultyManager.FadeInReboundArrow);
+            Transformation fadeInTail = new TransformationF(TransformationType.Fade, 0, 1,
+                snakingBegin - DifficultyManager.FadeInReboundArrow,
+                snakingBegin);
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
                                    ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0.01f : SpriteManager.drawOrderBwd(EndTime + 14),
                                    false, Color.White);
 
-            spriteSliderBody.Transform(fadeInTrack);
+            spriteSliderBody.Transform(fadeInHead);
             spriteSliderBody.Transform(fadeOut);
 
-            spriteFollowBall.Transform(fadeIn);
+            spriteFollowBall.Transform(fadeInBall);
             spriteFollowBall.Transform(fadeOutInstant);
 
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
@@ -263,7 +263,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.GamefieldSprites,
        OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59 / 64), 0.99f, false, Color.White) { ExactCoordinates = false };
 
-            spriteFollowBallOverlay.Transform(fadeIn);
+            spriteFollowBallOverlay.Transform(fadeInBall);
             spriteFollowBallOverlay.Transform(fadeOutInstant);
 
             Sprites.Add(spriteSliderBody);
@@ -277,26 +277,26 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             spriteCollectionStart.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 9), false, Color.White));
 
-            spriteCollectionStart.ForEach(s => s.Transform(fadeInTrack));
+            spriteCollectionStart.ForEach(s => s.Transform(fadeInHead));
             spriteCollectionStart.ForEach(s => s.Transform(fadeOut));
 
             if (RepeatCount > 2)
             {
                 pSprite headArrow = new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 7), false, Color.White) { Additive = true };
-                headArrow.Transform(fadeInArrows);
+                headArrow.Transform(fadeInTail);
                 headArrow.Transform(fadeOut);
                 spriteCollectionStart.Add(headArrow);
             }
 
             spriteCollectionEnd.Add(new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 12), false, Color.White));
 
-            spriteCollectionEnd.ForEach(s => s.Transform(fadeInTrack));
+            spriteCollectionEnd.ForEach(s => s.Transform(fadeInTail));
             spriteCollectionEnd.ForEach(s => s.Transform(fadeOut));
 
             if (RepeatCount > 1)
             {
                 pSprite tailArrow = new pSprite(TextureManager.Load(OsuTexture.sliderarrow), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(EndTime + 10), false, Color.White) { Additive = true };
-                tailArrow.Transform(fadeInArrows);
+                tailArrow.Transform(fadeInTail);
                 tailArrow.Transform(fadeOut);
                 spriteCollectionEnd.Add(tailArrow);
             }
