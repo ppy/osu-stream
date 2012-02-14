@@ -111,9 +111,15 @@ namespace sspack
 
             // compile a list of images
             List<string> images = new List<string>();
+            List<string> images_lowres = new List<string>();
 
             foreach (string str in Directory.GetFiles(dir, "*.png"))
-                images.Add(str);
+            {
+                if (str.Length > 10 && str.Substring(str.Length - 10).ToLowerInvariant() == ".small.png")
+                    images_lowres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".small.png", ""));
+                else
+                    images.Add(str);
+            }
 
 
             // generate our output
@@ -126,6 +132,9 @@ namespace sspack
 
             string sheetName = dir.Substring(dir.LastIndexOf(@"/") + 1);
 
+            Bitmap bmpLowres = new Bitmap(outputImage, new Size(outputImage.Width / 2, outputImage.Height / 2));
+            Graphics gfxLowres = Graphics.FromImage(bmpLowres);
+            gfxLowres.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
             foreach (var m in outputMap)
             {
@@ -135,6 +144,13 @@ namespace sspack
                     Console.WriteLine("FATAL: width of " + m.Key + " is not div 2");
 
                 string spriteName = m.Key.Substring(m.Key.LastIndexOf(@"\") + 1).Replace(".png","");
+
+                if (images_lowres.Contains(spriteName))
+                {
+                    Bitmap spriteLowres = Bitmap.FromFile(m.Key.Replace(".png", ".small.png")) as Bitmap;
+                    gfxLowres.DrawImageUnscaledAndClipped(spriteLowres, new Rectangle(m.Value.X / 2, m.Value.Y / 2, m.Value.Width / 2, m.Value.Height / 2));
+                }
+
                 sb.AppendFormat("            textureLocations.Add(OsuTexture.{0}, new SpriteSheetTexture(\"{1}\", {2}, {3}, {4}, {5}));\r\n",
                     spriteName, sheetName, m.Value.Left, m.Value.Top, m.Value.Width, m.Value.Height);
             }
@@ -147,11 +163,9 @@ namespace sspack
 
             if (File.Exists(dir))
                 File.Delete(dir);
-            imageExporter.Save(dir + "_960.png", outputImage);
 
-            using (Image i = Image.FromFile(dir + "_960.png"))
-            using (Bitmap b = new Bitmap(i, new Size(i.Width / 2, i.Height / 2)))
-                b.Save(dir + "_480.png", ImageFormat.Png);
+            imageExporter.Save(dir + "_960.png", outputImage);
+            bmpLowres.Save(dir + "_480.png", ImageFormat.Png);
         }
     }
 }
