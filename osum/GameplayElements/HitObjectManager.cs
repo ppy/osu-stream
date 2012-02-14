@@ -337,10 +337,6 @@ namespace osum.GameplayElements
             connectingLine.Transform(new TransformationF(TransformationType.Fade, 0, 1,
                 startTime, startTime + DifficultyManager.FadeIn));
 
-            int endTime = Math.Min(h1.EndTime, h2.EndTime);
-            connectingLine.Transform(new TransformationF(TransformationType.Fade, 0, 1,
-                startTime, startTime + DifficultyManager.FadeIn));
-
             foreach (Transformation t in (h1.EndTime < h2.EndTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
             {
                 TransformationF tf = t as TransformationF;
