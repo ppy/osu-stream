@@ -331,12 +331,15 @@ namespace osum.GameplayElements
             connectingLine.Scale = new Vector2(length / 2 * (1 / GameBase.SpriteToBaseRatio), 1);
             connectingLine.Rotation = (float)Math.Atan2(p2.Y - p1.Y, p2.X - p1.X);
 
-            foreach (Transformation t in (h1.StartTime > h2.StartTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
-            {
-                TransformationF tf = t as TransformationF;
-                if (tf != null && tf.EndFloat == 1)
-                    connectingLine.Transform(t);
-            }
+            int startTime = (useEnd && h1 is Slider) ? ((Slider)h1).snakingEnd : h1.StartTime - DifficultyManager.PreEmpt;
+            startTime = Math.Max(startTime, h2.StartTime - DifficultyManager.PreEmpt);
+
+            connectingLine.Transform(new TransformationF(TransformationType.Fade, 0, 1,
+                startTime, startTime + DifficultyManager.FadeIn));
+
+            int endTime = Math.Min(h1.EndTime, h2.EndTime);
+            connectingLine.Transform(new TransformationF(TransformationType.Fade, 0, 1,
+                startTime, startTime + DifficultyManager.FadeIn));
 
             foreach (Transformation t in (h1.EndTime < h2.EndTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
             {
