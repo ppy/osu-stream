@@ -591,8 +591,6 @@ namespace osum.Graphics.Sprites
                     return;
             }
 
-
-
             Transformations.RemoveAll(t => t.Type == TransformationType.Fade);
 
             if (Alpha - finalAlpha < float.Epsilon)

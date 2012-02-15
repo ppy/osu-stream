@@ -22,6 +22,8 @@ namespace osum.GameModes.Store
 {
     public class PackPanel : pSpriteCollection
     {
+        internal const string RESTORE_PACK_ID = "restore";
+
         internal pDrawable s_BackingPlate;
         internal pDrawable s_BackingPlate2;
         internal pText s_Text;
@@ -177,7 +179,7 @@ namespace osum.GameModes.Store
                 Offset = new Vector2(75, 30)
             });
 
-            if (!free)
+            if (!free && PackId != RESTORE_PACK_ID)
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
@@ -231,8 +233,8 @@ namespace osum.GameModes.Store
             songPreviewButtons.ForEach(b => b.FadeOut(100));
             songPreviewBacks.ForEach(b =>
             {
+                b.FadeOut(0);
                 b.HandleInput = false;
-                b.Alpha = 0;
                 b.Colour = Color4.OrangeRed;
             });
         }

@@ -31,13 +31,28 @@ namespace osum.GameModes.Store
                 productsRequest = null;
             }
 
+            responseDelegate = null;
+            purchaseCompleteDelegate = null;
+
             base.Dispose();
         }
 
         ProductResponseDelegate responseDelegate;
 
-        public void RestorePurchases()
+        private void attachObserver()
         {
+            if (observer == null)
+            {
+                observer = new MySKPaymentObserver(this);
+                SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
+            }
+        }
+
+        public void RestorePurchases(PurchaseCompleteDelegate purchaseCompleteResponse)
+        {
+            purchaseCompleteDelegate = purchaseCompleteResponse;
+            attachObserver();
+
             SKPaymentQueue.DefaultQueue.RestoreCompletedTransactions();
         }
 
@@ -99,11 +114,7 @@ namespace osum.GameModes.Store
             Console.WriteLine("Beginning purchase of " + productId);
 #endif
 
-            if (observer == null)
-            {
-                observer = new MySKPaymentObserver(this);
-                SKPaymentQueue.DefaultQueue.AddTransactionObserver(observer);
-            }
+            attachObserver();
 
             SKPayment payment = SKPayment.PaymentWithProduct(productId);
             SKPaymentQueue.DefaultQueue.AddPayment(payment);
@@ -118,13 +129,13 @@ namespace osum.GameModes.Store
             Console.WriteLine("Purchase compete with " + (wasSuccessful ? "success" : "failure"));
 #endif
 
-            // remove the transaction from the payment queue.
-            SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
-
             if (purchaseCompleteDelegate != null)
-            {
                 purchaseCompleteDelegate(transaction, wasSuccessful);
-                purchaseCompleteDelegate = null;
+
+            if (transaction != null)
+            {
+                // remove the transaction from the payment queue.
+                SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
             }
         }
 
@@ -141,7 +152,7 @@ namespace osum.GameModes.Store
         /// </summary>
         public void handleRestoreTransaction(SKPaymentTransaction transaction)
         {
-            finishTransaction(transaction.OriginalTransaction, true);
+            finishTransaction(transaction, true);
         }
 
         /// <summary>
@@ -149,16 +160,19 @@ namespace osum.GameModes.Store
         /// </summary>
         public void handleFailedTransaction(SKPaymentTransaction transaction)
         {
+            if (transaction != null)
+            {
 #if !DIST
-            Console.WriteLine("Transaction failed with error code:" + transaction.Error.Code);
+                Console.WriteLine("Transaction failed with error code:" + transaction.Error.Code);
 #endif
-            if (transaction.Error.Code != 2)
-            {
-                //there was an actual error during the purchase process.
-            } else
-            {
-                //payment was cancelled by the user at the apple dialog.
-                SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
+                if (transaction.Error.Code != 2)
+                {
+                    //there was an actual error during the purchase process.
+                } else
+                {
+                    //payment was cancelled by the user at the apple dialog.
+                    SKPaymentQueue.DefaultQueue.FinishTransaction(transaction);
+                }
             }
 
             finishTransaction(transaction, false);
@@ -172,6 +186,16 @@ namespace osum.GameModes.Store
         public MySKPaymentObserver(InAppPurchaseManager manager)
         {
             this.manager = manager;
+        }
+
+        public override void PaymentQueueRestoreCompletedTransactionsFinished(SKPaymentQueue queue)
+        {
+            manager.handleFailedTransaction(null);
+        }
+
+        public override void RestoreCompletedTransactionsFailedWithError(SKPaymentQueue queue, NSError error)
+        {
+            manager.handleFailedTransaction(null);
         }
 
         public override void UpdatedTransactions(SKPaymentQueue queue, SKPaymentTransaction[] transactions)

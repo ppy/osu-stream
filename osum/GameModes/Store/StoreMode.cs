@@ -54,7 +54,6 @@ namespace osum.GameModes.Store
 
         public virtual void RestorePurchases()
         {
-
         }
 
         public override void Initialize()
@@ -68,9 +67,6 @@ namespace osum.GameModes.Store
             spriteManager.Add(background);
 
             s_Header = new pSprite(TextureManager.Load(OsuTexture.store_header), new Vector2(0, 0));
-            s_Header.OnClick += delegate {
-                RestorePurchases();
-            };
             topMostSpriteManager.Add(s_Header);
 
             s_ButtonBack = new BackButton(delegate
@@ -222,6 +218,9 @@ namespace osum.GameModes.Store
 
                 AddPack(pp);
 
+                PackPanel restorePack = new PackPanel(LocalisationManager.GetString(OsuString.RestorePurchases), PackPanel.RESTORE_PACK_ID, false);
+                AddPack(restorePack);
+
                 GameBase.ShowLoadingOverlay = false;
 
                 HasNewStoreItems = false;
@@ -238,7 +237,7 @@ namespace osum.GameModes.Store
 
         void AddPack(PackPanel pp)
         {
-            if (pp == null || pp.BeatmapCount == 0)
+            if (pp == null || (pp.PackId != "restore" && pp.BeatmapCount == 0))
                 return;
 
             pp.Sprites.ForEach(s => s.Position.Y += totalHeight);
@@ -327,6 +326,8 @@ namespace osum.GameModes.Store
         /// </summary>
         protected virtual void download(PackPanel pack)
         {
+            ShowPack(pack, false);
+
             pack.Download();
             s_ButtonBack.FadeOut(100);
         }
@@ -345,15 +346,21 @@ namespace osum.GameModes.Store
                 instance.s_ButtonBack.FadeIn(100);
         }
 
-        public static void ShowPack(PackPanel pack)
+        public static void ShowPack(PackPanel pack, bool preview = true)
         {
             StoreMode instance = Director.CurrentMode as StoreMode;
             if (instance == null) return;
 
+            if (pack.PackId == PackPanel.RESTORE_PACK_ID)
+            {
+                instance.RestorePurchases();
+                return;
+            }
+
             foreach (PackPanel p in instance.packs)
                 p.Expanded = p == pack;
 
-            pack.StartPreviewing();
+            if (preview) pack.StartPreviewing();
 
             instance.recalculateHeights();
             instance.scrollableSpriteManager.ScrollTo(pack.s_BackingPlate, HEADER_PADDING);
