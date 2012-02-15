@@ -83,7 +83,7 @@ namespace osum.GameplayElements.Beatmaps
         }
 #endif
 
-        public string PackIdentifier
+        public string PackageIdentifier
         {
             get
             {
@@ -180,6 +180,18 @@ namespace osum.GameplayElements.Beatmaps
                 try
                 {
                     return Package.GetMetadata(MapMetaType.Artist);
+                }
+                catch { return "error"; }
+            }
+        }
+
+        public string PackId
+        {
+            get
+            {
+                try
+                {
+                    return Package.GetMetadata(MapMetaType.PackId);
                 }
                 catch { return "error"; }
             }
