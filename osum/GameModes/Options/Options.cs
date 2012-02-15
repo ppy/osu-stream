@@ -286,6 +286,8 @@ namespace osum.GameModes.Options
 
         public override void Update()
         {
+            s_Header.Position.Y = Math.Min(0,-smd.ScrollPercentage * 20);
+
             smd.Update();
             base.Update();
             topMostSpriteManager.Update();
