@@ -190,11 +190,22 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_LoadingPrice);
             }
 
-            Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
+            if (PackId == RESTORE_PACK_ID)
             {
-                DrawDepth = base_depth + 0.02f,
-                Offset = new Vector2(8.5f, 3.8f)
-            });
+                Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumb_restore),Vector2.Zero)
+                {
+                    DrawDepth = base_depth + 0.02f,
+                    Offset = new Vector2(8.5f, 3.8f)
+                });
+            }
+            else
+            {
+                Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
+                {
+                    DrawDepth = base_depth + 0.02f,
+                    Offset = new Vector2(8.5f, 3.8f)
+                });
+            }
         }
 
         public void SetPrice(string price, bool isFree = false)
