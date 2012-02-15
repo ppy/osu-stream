@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -283,6 +283,10 @@ namespace osum.GameModes.Store
                 {
                     BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
                     BeatmapDatabase.Write();
+
+#if iOS
+                    MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(downloadPath,true);
+#endif
 
                     SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.
 
