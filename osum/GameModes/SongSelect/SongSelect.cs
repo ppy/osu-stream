@@ -261,7 +261,8 @@ namespace osum.GameModes
             }, index++);
 
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
-            panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
+            panelDownloadMore.s_Text.Colour = Color4.White;
+            panelDownloadMore.s_Text.Offset.Y += 16;
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);
         }
