@@ -172,29 +172,33 @@ namespace osum.GameModes
             //256x172
             float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
 
-            mapBackgroundImage = new pSpriteDynamic()
+            if (Beatmap != null)
             {
-                LoadDelegate = delegate
+                mapBackgroundImage = new pSpriteDynamic()
                 {
-                    pTexture thumb = null;
-                    byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
-                    if (bytes != null)
-                        thumb = pTexture.FromBytes(bytes);
-                    return thumb;
-                },
-                DrawDepth = 0.005f,
-                Field = FieldTypes.StandardSnapCentre,
-                Origin = OriginTypes.Centre,
-                ScaleScalar = aspectAdjust,
-                Alpha = 0.001f,
-                Additive = true,
-                RemoveOldTransformations = false
-            };
+                    LoadDelegate = delegate
+                    {
+                        pTexture thumb = null;
+                        byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                        if (bytes != null)
+                            thumb = pTexture.FromBytes(bytes);
+                        return thumb;
+                    },
+                    DrawDepth = 0.005f,
+                    Field = FieldTypes.StandardSnapCentre,
+                    Origin = OriginTypes.Centre,
+                    ScaleScalar = aspectAdjust,
+                    Alpha = 0.001f,
+                    Additive = true,
+                    RemoveOldTransformations = false
+                };
 
-            mapBackgroundImage.FadeIn(3000, 0.1f);
-            mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
 
-            spriteManager.Add(mapBackgroundImage);
+                mapBackgroundImage.FadeIn(3000, 0.1f);
+                mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
+
+                spriteManager.Add(mapBackgroundImage);
+            }
 
             playfieldBackground = new PlayfieldBackground();
             playfieldBackground.ChangeColour(Difficulty);
