@@ -126,6 +126,8 @@ namespace osum
 
             bool restored = false;
 
+            Clock.ModeTimeReset();
+
             if (PendingMode == null)
             {
                 //try to restore a saved state before loading fresh.
@@ -139,8 +141,6 @@ namespace osum
 
             CurrentMode = PendingMode;
             PendingMode = null;
-
-            Clock.ModeTimeReset();
 
             //enable dimming in case it got left on somewhere.
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;

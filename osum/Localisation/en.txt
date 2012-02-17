@@ -135,3 +135,4 @@ ChooseUsername=Choose a Username!
 InternetFailed=Failed to load.\nPlease check you are connected to the internet and try again!
 Crashed=Looks like osu!stream encountered an error. Details will be sent to peppy (the guy who made this) so it can be fixed. Sorry for the trouble!
 AppleReallyScrewedThisUp1=It would seem some of your songs have been purged. This is an unfortunate behaviour of iOS5 which cannot be avoided. Please visit the store to re-download your songs for free.
+RestorePurchases=Restore previous purchases

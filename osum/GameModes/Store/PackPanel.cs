@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +22,8 @@ namespace osum.GameModes.Store
 {
     public class PackPanel : pSpriteCollection
     {
+        internal const string RESTORE_PACK_ID = "restore";
+
         internal pDrawable s_BackingPlate;
         internal pDrawable s_BackingPlate2;
         internal pText s_Text;
@@ -177,7 +179,7 @@ namespace osum.GameModes.Store
                 Offset = new Vector2(75, 30)
             });
 
-            if (!free)
+            if (!free && PackId != RESTORE_PACK_ID)
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
@@ -188,11 +190,22 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_LoadingPrice);
             }
 
-            Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
+            if (PackId == RESTORE_PACK_ID)
             {
-                DrawDepth = base_depth + 0.02f,
-                Offset = new Vector2(8.5f, 3.8f)
-            });
+                Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumb_restore),Vector2.Zero)
+                {
+                    DrawDepth = base_depth + 0.02f,
+                    Offset = new Vector2(8.5f, 3.8f)
+                });
+            }
+            else
+            {
+                Sprites.Add(s_Thumbnail = new pSpriteWeb("http://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
+                {
+                    DrawDepth = base_depth + 0.02f,
+                    Offset = new Vector2(8.5f, 3.8f)
+                });
+            }
         }
 
         public void SetPrice(string price, bool isFree = false)
@@ -231,8 +244,8 @@ namespace osum.GameModes.Store
             songPreviewButtons.ForEach(b => b.FadeOut(100));
             songPreviewBacks.ForEach(b =>
             {
+                b.FadeOut(0);
                 b.HandleInput = false;
-                b.Alpha = 0;
                 b.Colour = Color4.OrangeRed;
             });
         }
@@ -270,6 +283,10 @@ namespace osum.GameModes.Store
                 {
                     BeatmapDatabase.PopulateBeatmap(new Beatmap(path)); //record the new download in our local database.
                     BeatmapDatabase.Write();
+
+#if iOS
+                    MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(downloadPath,true);
+#endif
 
                     SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.
 

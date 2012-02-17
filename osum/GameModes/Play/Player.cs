@@ -154,9 +154,9 @@ namespace osum.GameModes
                 {
                     AudioEngine.Music.Stop(true);
 
-                    if (AudioEngine.Music.lastLoaded != Beatmap.PackIdentifier)
+                    if (AudioEngine.Music.lastLoaded != Beatmap.PackageIdentifier)
                         //could have switched to the results screen bgm.
-                        AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.PackIdentifier);
+                        AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.PackageIdentifier);
                     else
                         AudioEngine.Music.Prepare();
                 }
@@ -174,29 +174,33 @@ namespace osum.GameModes
             //256x172
             float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
 
-            mapBackgroundImage = new pSpriteDynamic()
+            if (Beatmap != null)
             {
-                LoadDelegate = delegate
+                mapBackgroundImage = new pSpriteDynamic()
                 {
-                    pTexture thumb = null;
-                    byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
-                    if (bytes != null)
-                        thumb = pTexture.FromBytes(bytes);
-                    return thumb;
-                },
-                DrawDepth = 0.005f,
-                Field = FieldTypes.StandardSnapCentre,
-                Origin = OriginTypes.Centre,
-                ScaleScalar = aspectAdjust,
-                Alpha = 0.001f,
-                Additive = true,
-                RemoveOldTransformations = false
-            };
+                    LoadDelegate = delegate
+                    {
+                        pTexture thumb = null;
+                        byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                        if (bytes != null)
+                            thumb = pTexture.FromBytes(bytes);
+                        return thumb;
+                    },
+                    DrawDepth = 0.005f,
+                    Field = FieldTypes.StandardSnapCentre,
+                    Origin = OriginTypes.Centre,
+                    ScaleScalar = aspectAdjust,
+                    Alpha = 0.001f,
+                    Additive = true,
+                    RemoveOldTransformations = false
+                };
 
-            mapBackgroundImage.FadeIn(3000, 0.1f);
-            mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
 
-            spriteManager.Add(mapBackgroundImage);
+                mapBackgroundImage.FadeIn(3000, 0.1f);
+                mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
+
+                spriteManager.Add(mapBackgroundImage);
+            }
 
             playfieldBackground = new PlayfieldBackground();
             playfieldBackground.ChangeColour(Difficulty);
@@ -252,7 +256,7 @@ namespace osum.GameModes
 
             menu = new PauseMenu();
 
-            pSprite menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
+            menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
                                     new Vector2(19,16.5f), 1, true, Color4.White);
             menuPauseButton.ClickableMargin = 5;
@@ -318,9 +322,9 @@ namespace osum.GameModes
         /// </summary>
         /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
         /// <param name="beats">How many beats we should count in.</param>
-        internal void Resume(int startTime, int beats, bool forceCountdown = false)
+        internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false)
         {
-            if (Beatmap != null)
+            if (Beatmap != null && startTime != 0 && beats != 0)
             {
                 double beatLength = Beatmap.beatLengthAt(startTime);
 
@@ -336,6 +340,8 @@ namespace osum.GameModes
 
             if (GameBase.Instance != null && AudioEngine.Music != null)
                 AudioEngine.Music.Play();
+
+            if (menuPauseButton != null) menuPauseButton.HandleInput = true;
         }
 
         //static pSprite fpsTotalCount;
@@ -876,6 +882,8 @@ namespace osum.GameModes
 
         protected void showFailScreen()
         {
+            if (menuPauseButton != null) menuPauseButton.HandleInput = false;
+
             Failed = true;
             playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
             AudioEngine.PlaySample(OsuSamples.fail);
@@ -927,6 +935,7 @@ namespace osum.GameModes
                 HitObjectManager.StopAllSounds();
 
             if (menu != null) menu.MenuDisplayed = true;
+            if (menuPauseButton != null) menuPauseButton.HandleInput = false;
 
             return true;
         }
@@ -973,6 +982,7 @@ namespace osum.GameModes
         protected bool ShowGuideFingers;
         protected ProgressDisplay progressDisplay;
         private pSpriteDynamic mapBackgroundImage;
+        private pSprite menuPauseButton;
     }
 }
 

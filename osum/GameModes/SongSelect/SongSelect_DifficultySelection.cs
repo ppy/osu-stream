@@ -81,8 +81,8 @@ namespace osum.GameModes
 
             if (instant)
             {
-                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
-                    AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
+                if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackageIdentifier))
+                    AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackageIdentifier);
                 showDifficultySelection2(true);
             }
             else
@@ -95,8 +95,8 @@ namespace osum.GameModes
                 {
                     if (State != SelectState.LoadingPreview) return;
 
-                    if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
-                        AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
+                    if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackageIdentifier))
+                        AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackageIdentifier);
 
                     GameBase.Scheduler.Add(delegate { showDifficultySelection2(false); }, true);
                 }, 400);

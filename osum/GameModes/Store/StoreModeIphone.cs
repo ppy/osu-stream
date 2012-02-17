@@ -12,6 +12,7 @@ namespace osum.GameModes.Store
 
         public StoreModeIphone()
         {
+            Console.WriteLine("hello?");
         }
 
         public override void Initialize()
@@ -22,7 +23,8 @@ namespace osum.GameModes.Store
 
         public override void RestorePurchases()
         {
-            iap.RestorePurchases();
+            GameBase.GloballyDisableInput = true;
+            iap.RestorePurchases(purchaseCompleteResponse);
         }
 
         public override void Dispose ()
@@ -65,6 +67,8 @@ namespace osum.GameModes.Store
         {
             GameBase.GloballyDisableInput = false;
 
+            if (transaction == null) return;
+
             PackPanel pack = packs.Find(p => p.PackId == transaction.Payment.ProductIdentifier);
             if (pack == null) return;
 
@@ -93,7 +97,7 @@ namespace osum.GameModes.Store
                 }
             }
 
-            if (!wasSuccessful && transaction.Error.Code != 2)
+            if (!wasSuccessful && transaction.Error != null && transaction.Error.Code != 2)
                 GameBase.Notify(transaction.Error.ToString(), null);
         }
 

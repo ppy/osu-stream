@@ -166,6 +166,7 @@ namespace osum.GameModes.Options
                 vPos += 40;
 
                 text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(20, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+                text.TextBounds.X = 600;
                 smd.Add(text);
 
                 vPos += (int)text.MeasureText().Y + 50;
@@ -286,6 +287,8 @@ namespace osum.GameModes.Options
 
         public override void Update()
         {
+            s_Header.Position.Y = Math.Min(0, -smd.ScrollPercentage * 20);
+
             smd.Update();
             base.Update();
             topMostSpriteManager.Update();

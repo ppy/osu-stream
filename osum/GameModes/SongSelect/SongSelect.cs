@@ -214,10 +214,6 @@ namespace osum.GameModes
                     //bundled maps
                     Beatmap b = new Beatmap(s);
 
-#if DEBUG
-                    Console.WriteLine("Attempting to load " + s);
-#endif
-
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
@@ -227,16 +223,8 @@ namespace osum.GameModes
                 {
                     Beatmap b = new Beatmap(s);
 
-#if DEBUG
-                    Console.WriteLine("Attempting to load " + s);
-#endif
-
                     if (b.Package == null)
                         continue;
-
-#if DEBUG
-                    Console.WriteLine("Loaded beatmap " + s + " (difficulty " + b.DifficultyStars + ")");
-#endif
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
@@ -248,6 +236,13 @@ namespace osum.GameModes
 
             int index = 0;
 
+            /*maps.Sort((a, b) =>
+            {
+                int compare = (a.PackId ?? string.Empty).CompareTo((b.PackId ?? string.Empty));
+                if (compare != 0) return compare;
+                return a.CompareTo(b);
+            });*/
+
             foreach (Beatmap b in maps)
             {
                 if (b.Package == null)
@@ -258,9 +253,16 @@ namespace osum.GameModes
                 panels.Add(panel);
             }
 
-            panelDownloadMore = new BeatmapPanel(null, delegate { AudioEngine.PlaySample(OsuSamples.MenuHit); Director.ChangeMode(OsuMode.Store); }, index++);
+            panelDownloadMore = new BeatmapPanel(null, delegate
+            {
+                AudioEngine.PlaySample(OsuSamples.MenuHit);
+                State = SelectState.Exiting;
+                Director.ChangeMode(OsuMode.Store);
+            }, index++);
+
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
-            panelDownloadMore.s_Text.Colour = new Color4(151, 227, 255, 255);
+            panelDownloadMore.s_Text.Colour = Color4.White;
+            panelDownloadMore.s_Text.Offset.Y += 16;
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);
         }
@@ -495,9 +497,9 @@ namespace osum.GameModes
 
                                             cancelLockedHoverPreview();
 
-                                            if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackIdentifier))
+                                            if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackageIdentifier))
                                             {
-                                                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackIdentifier);
+                                                AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackageIdentifier);
                                                 if (!AudioEngine.Music.IsElapsing)
                                                     playFromPreview();
 
@@ -556,7 +558,7 @@ namespace osum.GameModes
                     break;
             }
         }
-        
+
         /// <summary>
         /// Once a song preview starts from a hover event, a flashing effect is displayed on its panel.
         /// This sprite holds that effect. The reference is used later to cancel it when necessary.
@@ -582,7 +584,7 @@ namespace osum.GameModes
         /// This holds that glow effect. It is either cancelled if the user moves their finger or when it turns into a locked glow (and the preview plays).
         /// </summary>
         private pDrawable SelectedPanelHoverGlow;
-        
+
         /// <summary>
         /// Holds the scheduled preview. We keep a reference to this so we can cancel previously scheduled previews that have not yet been activated.
         /// </summary>

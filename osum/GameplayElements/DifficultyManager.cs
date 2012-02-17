@@ -186,7 +186,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Distance between consecutive follow-line sprites.
         /// </summary>
-        public static int FollowLineDistance = 32;
+        public static int FollowLineDistance = 24;
 
         /// <summary>
         /// Number of milliseconds to preempt the follow line.  Higher will make the line appear earlier.

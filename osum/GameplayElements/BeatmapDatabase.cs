@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 8;
+        const int DATABASE_VERSION = 9;
         const string FILENAME = "osu!.db";
 
         private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -62,6 +62,15 @@ namespace osum.GameplayElements
                     File.Delete(newFile);
                     File.Move(file, newFile);
                 }
+            }
+            else if (Version < 9)
+            {
+#if iOS
+                foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
+                {
+                    MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
+                }
+#endif
             }
 #endif
 

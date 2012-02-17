@@ -196,6 +196,7 @@ namespace osum.Resources
         ChooseUsername,
         InternetFailed,
         Crashed,
-        AppleReallyScrewedThisUp1
+        AppleReallyScrewedThisUp1,
+        RestorePurchases
     }
 }
