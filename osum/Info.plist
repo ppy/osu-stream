@@ -13,7 +13,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osu</string>
 	<key>CFBundleVersion</key>
-	<string>1.15_4</string>
+	<string>1.15_5</string>
 	<key>MinimumOSVersion</key>
 	<string>3.2</string>
 	<key>UIDeviceFamily</key>
