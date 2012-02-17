@@ -19,6 +19,8 @@ namespace osum.GameModes.Play.Components
 
         const float distance_from_bottom = 0;
 
+        internal event VoidDelegate OnPulse;
+
         public override void Initialize()
         {
             background = new pSprite(TextureManager.Load(OsuTexture.countdown_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(0, distance_from_bottom), 0.99f, true, Color4.White);
@@ -30,6 +32,12 @@ namespace osum.GameModes.Play.Components
             spriteManager.Sprites.ForEach(s => s.Alpha = 0);
 
             base.Initialize();
+        }
+
+        public override void Dispose()
+        {
+            OnPulse = null;
+            base.Dispose();
         }
 
         internal int StartTime = -1;
@@ -93,6 +101,9 @@ namespace osum.GameModes.Play.Components
 
                 text.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, text.ScaleScalar), 0.2f, 3));
                 background.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, background.ScaleScalar), 0.2f, 3));
+
+                if (OnPulse != null)
+                    OnPulse();
             }
 
             if (didChangeTexture)
