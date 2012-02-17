@@ -58,7 +58,7 @@ namespace osum.GameModes.Play.Components
             {
                 case 0:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_go);
-                    spriteManager.Sprites.ForEach(s => { s.FadeOut(150); s.ScaleTo(1.3f, 200); });
+                    spriteManager.Sprites.ForEach(s => { s.FadeOut(400); });
                     AudioEngine.PlaySample(OsuSamples.countgo);
                     HasFinished = true;
                     break;
@@ -88,14 +88,18 @@ namespace osum.GameModes.Play.Components
 
             if (countdown < 4)
             {
-                text.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 150, 1, 0.2f, 2));
-                background.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 150, 1, 0.1f, 2));
+                text.Transformations.RemoveAll(t => t is TransformationBounce);
+                background.Transformations.RemoveAll(t => t is TransformationBounce);
+
+                text.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, text.ScaleScalar), 0.2f, 3));
+                background.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, background.ScaleScalar), 0.2f, 3));
             }
 
             if (didChangeTexture)
             {
-                pDrawable flash = text.AdditiveFlash(250, 0.5f);
-                flash.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, Clock.AudioTime, Clock.AudioTime + 250));
+                pDrawable flash = text.AdditiveFlash(300, 0.5f);
+                flash.Transform(new TransformationF(TransformationType.Scale, 1, 1.2f, Clock.AudioTime, Clock.AudioTime + 400));
+                flash.Transform(new TransformationF(TransformationType.Rotation, 0, 0.1f, Clock.AudioTime, Clock.AudioTime + 400));
             }
         }
 
