@@ -532,18 +532,21 @@ namespace osum.GameModes
                 case ScoreChange.Hit50:
                     scoreChange = 50;
                     CurrentScore.count50++;
+                    lastJudgeType = ScoreChange.Hit50;
                     increaseCombo = true;
                     healthChange = -8;
                     break;
                 case ScoreChange.Hit100:
                     scoreChange = 100;
                     CurrentScore.count100++;
+                    lastJudgeType = ScoreChange.Hit100;
                     increaseCombo = true;
                     healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
                     scoreChange = 300;
                     CurrentScore.count300++;
+                    lastJudgeType = ScoreChange.Hit300;
                     increaseCombo = true;
                     healthChange = 5;
                     break;
@@ -557,6 +560,7 @@ namespace osum.GameModes
                     break;
                 case ScoreChange.Miss:
                     CurrentScore.countMiss++;
+                    lastJudgeType = ScoreChange.Miss;
                     if (comboCounter != null)
                     {
                         //if (comboCounter.currentCombo >= 30)
@@ -785,7 +789,7 @@ namespace osum.GameModes
 
             if (progressDisplay != null)
             {
-                progressDisplay.SetProgress(Progress);
+                progressDisplay.SetProgress(Progress, lastJudgeType);
                 progressDisplay.Update();
             }
 
@@ -989,6 +993,7 @@ namespace osum.GameModes
         protected ProgressDisplay progressDisplay;
         private pSpriteDynamic mapBackgroundImage;
         private pSprite menuPauseButton;
+        private ScoreChange lastJudgeType = ScoreChange.Ignore;
     }
 }
 
