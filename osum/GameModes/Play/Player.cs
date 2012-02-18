@@ -190,11 +190,10 @@ namespace osum.GameModes
                     Field = FieldTypes.StandardSnapCentre,
                     Origin = OriginTypes.Centre,
                     ScaleScalar = aspectAdjust,
-                    Alpha = 0.001f,
+                    Alpha = 0.0005f,
                     Additive = true,
                     RemoveOldTransformations = false
                 };
-
 
                 mapBackgroundImage.FadeIn(3000, 0.1f);
                 mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
@@ -253,6 +252,7 @@ namespace osum.GameModes
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
+            countdown.OnPulse += new VoidDelegate(countdown_OnPulse);
 
             menu = new PauseMenu();
 
@@ -263,12 +263,24 @@ namespace osum.GameModes
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
             topMostSpriteManager.Add(menuPauseButton);
 
-            menuPauseButton.ScaleScalar = 2;
             menuPauseButton.Alpha = 0;
-            menuPauseButton.ScaleTo(1, 800, EasingTypes.Out);
+            menuPauseButton.Transform(new TransformationBounce(Clock.Time, Clock.Time + 1500, 1, 0.4f, 7));
             menuPauseButton.FadeIn(500);
 
+            if (healthBar != null)
+            {
+                healthBar.spriteManager.Position = new Vector2(0, -40);
+                healthBar.spriteManager.Rotation = -0.01f;
+                healthBar.spriteManager.MoveTo(Vector2.Zero, 1000, EasingTypes.In);
+                healthBar.spriteManager.RotateTo(0, 1000, EasingTypes.In);
+            }
+
             progressDisplay = new ProgressDisplay();
+        }
+
+        void countdown_OnPulse()
+        {
+            PulseBackground(true);
         }
 
         protected virtual void resetScore()
@@ -522,18 +534,21 @@ namespace osum.GameModes
                 case ScoreChange.Hit50:
                     scoreChange = 50;
                     CurrentScore.count50++;
+                    lastJudgeType = ScoreChange.Hit50;
                     increaseCombo = true;
                     healthChange = -8;
                     break;
                 case ScoreChange.Hit100:
                     scoreChange = 100;
                     CurrentScore.count100++;
+                    lastJudgeType = ScoreChange.Hit100;
                     increaseCombo = true;
                     healthChange = 0.5;
                     break;
                 case ScoreChange.Hit300:
                     scoreChange = 300;
                     CurrentScore.count300++;
+                    lastJudgeType = ScoreChange.Hit300;
                     increaseCombo = true;
                     healthChange = 5;
                     break;
@@ -547,6 +562,7 @@ namespace osum.GameModes
                     break;
                 case ScoreChange.Miss:
                     CurrentScore.countMiss++;
+                    lastJudgeType = ScoreChange.Miss;
                     if (comboCounter != null)
                     {
                         //if (comboCounter.currentCombo >= 30)
@@ -570,41 +586,8 @@ namespace osum.GameModes
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
             
-            const float effect_magnitude = 1.4f;
-            const float effect_limit = 1.5f;
-
             if (mapBackgroundImage != null)
-            {
-                try
-                {
-                    if (scoreChange > 0)
-                    {
-                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
-                        t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
-                        t.StartTime = mapBackgroundImage.ClockingNow;
-                        t.EndTime = t.StartTime + 600;
-                        t.EndFloat = 0.1f;
-
-                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
-                        t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
-                        t2.StartTime = mapBackgroundImage.ClockingNow;
-                        t2.EndTime = t.StartTime + 600;
-                    }
-                    else
-                    {
-                        TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
-                        t.StartTime = mapBackgroundImage.ClockingNow;
-                        t.EndTime = t.StartTime + 2000;
-                        t.StartFloat = 0;
-                        t.EndFloat = 0.1f;
-
-                        TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
-                        t2.StartTime = mapBackgroundImage.ClockingNow;
-                        t2.EndTime = t.StartTime + 100;
-                    }
-                }
-                catch { }
-            }
+                PulseBackground(scoreChange > 0);
 
             if (increaseCombo && comboCounter != null)
             {
@@ -671,6 +654,38 @@ namespace osum.GameModes
             {
                 scoreDisplay.SetScore(CurrentScore.totalScore);
                 scoreDisplay.SetAccuracy(CurrentScore.accuracy * 100);
+            }
+        }
+
+        private void PulseBackground(bool positive)
+        {
+            const float effect_magnitude = 1.4f;
+            const float effect_limit = 1.5f;
+
+            if (positive)
+            {
+                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
+                t.StartTime = mapBackgroundImage.ClockingNow;
+                t.EndTime = t.StartTime + 600;
+                t.EndFloat = 0.1f;
+
+                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
+                t2.StartTime = mapBackgroundImage.ClockingNow;
+                t2.EndTime = t.StartTime + 600;
+            }
+            else
+            {
+                TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
+                t.StartTime = mapBackgroundImage.ClockingNow;
+                t.EndTime = t.StartTime + 2000;
+                t.StartFloat = 0;
+                t.EndFloat = 0.1f;
+
+                TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
+                t2.StartTime = mapBackgroundImage.ClockingNow;
+                t2.EndTime = t.StartTime + 100;
             }
         }
 
@@ -776,7 +791,7 @@ namespace osum.GameModes
 
             if (progressDisplay != null)
             {
-                progressDisplay.SetProgress(Progress);
+                progressDisplay.SetProgress(Progress, lastJudgeType);
                 progressDisplay.Update();
             }
 
@@ -983,6 +998,7 @@ namespace osum.GameModes
         protected ProgressDisplay progressDisplay;
         private pSpriteDynamic mapBackgroundImage;
         private pSprite menuPauseButton;
+        private ScoreChange lastJudgeType = ScoreChange.Ignore;
     }
 }
 

@@ -160,6 +160,27 @@ namespace osum.GameModes
                 headphones.Transform(new TransformationF(TransformationType.Fade, 1, 1, 1000, initial_display));
                 spriteManager.Add(headphones);
 
+                pDrawable add = headphones.Clone();
+                add.Additive = true;
+                add.Transform(new TransformationF(TransformationType.Fade, 0, 0.1f, 50, 200));
+                add.Transform(new TransformationF(TransformationType.Fade, 0.1f, 0.2f, 1000, initial_display));
+                add.Transform(new TransformationF(TransformationType.Scale, 1, 1.12f, 1000, initial_display, EasingTypes.Out));
+                spriteManager.Add(add);
+
+                add = headphones.Clone();
+                add.Additive = true;
+                add.Transform(new TransformationF(TransformationType.Fade, 0, 0.1f, 50, 200));
+                add.Transform(new TransformationF(TransformationType.Fade, 0.1f, 0.2f, 1000, initial_display));
+                add.Transform(new TransformationF(TransformationType.Scale, 1, 1.04f, 1000, initial_display, EasingTypes.Out));
+                spriteManager.Add(add);
+
+                add = headphones.Clone();
+                add.Additive = true;
+                add.Transform(new TransformationF(TransformationType.Fade, 0, 0.1f, 50, 200));
+                add.Transform(new TransformationF(TransformationType.Fade, 0.1f, 0.2f, 1000, initial_display));
+                add.Transform(new TransformationF(TransformationType.Scale, 1, 1.08f, 1000, initial_display, EasingTypes.Out));
+                spriteManager.Add(add);
+
                 GameBase.Scheduler.Add(delegate
                 {
                     AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);

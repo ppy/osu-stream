@@ -610,7 +610,7 @@ namespace osum.GameplayElements
                                     dot.Transform(
                                         new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
                                     dot.Transform(
-                                        new TransformationF(TransformationType.Scale, 0.5f, 1, fadein, fadein + DifficultyManager.FadeIn));
+                                        new TransformationBounce(fadein, fadein + DifficultyManager.FadeIn, 1, 2f, 2));
                                     dot.Transform(
                                         new TransformationF(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeOut));
                                     diffSpriteManager.Add(dot);

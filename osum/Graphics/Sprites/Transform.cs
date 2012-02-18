@@ -95,8 +95,13 @@ namespace osum.Graphics.Sprites
         internal Vector2 EndVector;
 
         internal TransformationV(Vector2 source, Vector2 destination, int start, int end, EasingTypes easing = EasingTypes.None)
+            : this(TransformationType.Movement, source, destination, start, end, easing)
         {
-            Type = TransformationType.Movement;
+        }
+
+        internal TransformationV(TransformationType type, Vector2 source, Vector2 destination, int start, int end, EasingTypes easing = EasingTypes.None)
+        {
+            Type = type;
             StartVector = source;
             EndVector = destination;
             StartTime = start;
