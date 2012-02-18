@@ -701,9 +701,9 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
-            if (progressDisplay != null) progressDisplay.Draw();
-
             if (comboCounter != null) comboCounter.Draw();
+
+            if (progressDisplay != null) progressDisplay.Draw();
 
             if (countdown != null) countdown.Draw();
 
@@ -789,7 +789,7 @@ namespace osum.GameModes
 
             if (progressDisplay != null)
             {
-                progressDisplay.SetProgress(Progress, lastJudgeType);
+                if (!Failed) progressDisplay.SetProgress(Progress, lastJudgeType);
                 progressDisplay.Update();
             }
 
@@ -933,6 +933,13 @@ namespace osum.GameModes
 
             topMostSpriteManager.Add(failSprite);
             topMostSpriteManager.Add(failGlow);
+
+            if (progressDisplay != null)
+            {
+                progressDisplay.SetProgress(Progress, ScoreChange.Ignore);
+                progressDisplay.SetProgress(1, ScoreChange.Ignore);
+                progressDisplay.ExtendHeight(2000, 10);
+            }
         }
 
         internal bool IsPaused
