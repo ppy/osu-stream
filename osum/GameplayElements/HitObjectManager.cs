@@ -74,6 +74,7 @@ namespace osum.GameplayElements
             }
         }
 
+        HitObject drawBelowOverlayActiveSpinner;
         /// <summary>
         /// When we are spinning, we still want to show the score on top of the spinner display.
         /// This should allow for that.
@@ -82,7 +83,21 @@ namespace osum.GameplayElements
         {
             get
             {
-                return ActiveObject is Spinner;
+                if (NextObject is Spinner)
+                    drawBelowOverlayActiveSpinner = NextObject;
+
+                if (drawBelowOverlayActiveSpinner != null)
+                {
+                    if (!drawBelowOverlayActiveSpinner.IsVisible && drawBelowOverlayActiveSpinner.IsHit)
+                    {
+                        drawBelowOverlayActiveSpinner = null; //the spinner has finished fading out.
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return false;
             }
         }
 
