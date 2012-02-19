@@ -38,7 +38,7 @@ namespace osum.GameModes.Play.Components
                 {
                     if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
-                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, 0, Clock.ModeTime, Clock.ModeTime + 400, EasingTypes.In);
                     Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 1, Clock.ModeTime, Clock.ModeTime + 200);
 
                     spriteManager.Sprites.ForEach(s =>
@@ -81,22 +81,22 @@ namespace osum.GameModes.Play.Components
                     if (p != null)
                         p.Resume();
 
-                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200);
+                    Transformation move = new TransformationF(TransformationType.MovementY, background.Position.Y, offscreen_y, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.Out);
                     Transformation fade = new TransformationF(TransformationType.Fade, background.Alpha, 0.4f, Clock.ModeTime, Clock.ModeTime + 200);
-
-                    if (menuText != null)
-                    {
-                        menuText.AlwaysDraw = false;
-                        menuText.Transformations.Clear();
-                        menuText.Alpha = 0;
-                        menuText = null;
-                    }
 
                     spriteManager.Sprites.ForEach(s =>
                     {
                         s.Transform(move);
                         s.Transform(fade);
                     });
+
+                    if (menuText != null)
+                    {
+                        menuText.AlwaysDraw = false;
+                        menuText.Transformations.Clear();
+                        menuText.FadeOut(200);
+                        menuText = null;
+                    }
 
                     if (p != null && isPaused)
                     {
