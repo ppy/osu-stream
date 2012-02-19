@@ -13,7 +13,7 @@ namespace osum.GameModes.Play.Components
 {
     public class ProgressDisplay : SpriteManager
     {
-        const int HEIGHT = 5;
+        const int HEIGHT = 6;
         pRectangle progressRect;
         pRectangle progressRectBg;
         public ProgressDisplay()
@@ -23,7 +23,7 @@ namespace osum.GameModes.Play.Components
             progressRectBg.Origin = OriginTypes.BottomLeft;
             Add(progressRectBg);
 
-            progressRect = new pRectangle(Vector2.Zero, new Vector2(0, HEIGHT - 1), true, 1, Color4.Gray);
+            progressRect = new pRectangle(Vector2.Zero, new Vector2(0, HEIGHT - 1), true, 1, gray_colour);
             progressRect.Field = FieldTypes.StandardSnapBottomLeft;
             progressRect.Origin = OriginTypes.BottomLeft;
             progressRect.Additive = true;
@@ -32,6 +32,17 @@ namespace osum.GameModes.Play.Components
 
         ScoreChange lastDisplayedChange;
         float lastProgressStart;
+        
+        private Color4 gray_colour = new Color4(40,40,40,255);
+
+        internal void ExtendHeight(int duration, float extent)
+        {
+            Sprites.ForEach(s => {
+                Transformation t = new TransformationV(TransformationType.VectorScale, s.Scale, new Vector2(s.Scale.X, s.Scale.Y * extent),
+                    s.ClockingNow, s.ClockingNow + duration, EasingTypes.In);
+                s.Transform(t);
+            });
+        }
 
         internal void SetProgress(float progress, ScoreChange latestChange)
         {
@@ -41,7 +52,9 @@ namespace osum.GameModes.Play.Components
             {
                 lastDisplayedChange = latestChange;
 
-                Color4 displayColour;
+                Color4 displayColour = gray_colour;
+
+                float heightMultiplier = 1;
 
                 switch (lastDisplayedChange)
                 {
@@ -50,20 +63,22 @@ namespace osum.GameModes.Play.Components
                         break;
                     case ScoreChange.Hit100:
                         displayColour = new Color4(117, 204, 65, 255);
+                        heightMultiplier = 0.8f;
                         break;
                     case ScoreChange.Hit50:
                         displayColour = new Color4(118, 65, 143, 255);
+                        heightMultiplier = 0.6f;
                         break;
-                    default:
                     case ScoreChange.Miss:
                         displayColour = new Color4(144, 0, 16, 255);
+                        heightMultiplier = 0.4f;
                         break;
                 }
 
                 progressRect.FlashColour(Color4.White, 1000);
-                progressRect.Transform(new TransformationV(TransformationType.VectorScale, new Vector2(progressRect.Scale.X, progressRect.Scale.Y * 2), progressRect.Scale, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
+                //progressRect.Transform(new TransformationV(TransformationType.VectorScale, new Vector2(progressRect.Scale.X, progressRect.Scale.Y * 2), progressRect.Scale, Clock.ModeTime, Clock.ModeTime + 1000, EasingTypes.In));
 
-                progressRect = new pRectangle(new Vector2(progressRect.Scale.X + progressRect.Position.X, 0), new Vector2(0, HEIGHT - 1), true, 1, displayColour);
+                progressRect = new pRectangle(new Vector2(progressRect.Scale.X + progressRect.Position.X, 0), new Vector2(0, HEIGHT * heightMultiplier - 1), true, 1, displayColour);
                 progressRect.Field = FieldTypes.StandardSnapBottomLeft;
                 progressRect.Origin = OriginTypes.BottomLeft;
                 Add(progressRect);

@@ -165,8 +165,9 @@ namespace osum.GameplayElements
             }
         }
 
-        public static int FadeIn { get { return 400; } }
-        public static int FadeOut { get { return 300; } }
+        public static int FadeIn = 400;
+        public static int FadeOut = 300;
+
         public static float SpinnerRotationRatio
         {
             get
@@ -181,7 +182,7 @@ namespace osum.GameplayElements
             }
         }
 
-        public static int DistanceBetweenTicks { get { return 30; } }
+        public static int DistanceBetweenTicks = 30;
 
         /// <summary>
         /// Distance between consecutive follow-line sprites.

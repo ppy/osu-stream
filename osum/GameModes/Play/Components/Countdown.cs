@@ -29,7 +29,7 @@ namespace osum.GameModes.Play.Components
             text = new pSprite(null, FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Audio, new Vector2(0, distance_from_bottom), 1, true, Color4.White);
             spriteManager.Add(text);
 
-            spriteManager.Sprites.ForEach(s => s.Alpha = 0);
+            spriteManager.Alpha = 0;
 
             base.Initialize();
         }
@@ -47,7 +47,7 @@ namespace osum.GameModes.Play.Components
         {
             StartTime = start;
             BeatLength = beatLength;
-            spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); s.Update(); });
+            spriteManager.Alpha = 0;
             HasFinished = false;
         }
 
@@ -55,7 +55,7 @@ namespace osum.GameModes.Play.Components
         {
             HasFinished = true;
             StartTime = -1;
-            spriteManager.Sprites.ForEach(s => { s.Alpha = 0; s.Transformations.Clear(); });
+            spriteManager.Alpha = 0;
         }
 
         internal void SetDisplay(int countdown)
@@ -66,7 +66,7 @@ namespace osum.GameModes.Play.Components
             {
                 case 0:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_go);
-                    spriteManager.Sprites.ForEach(s => { s.FadeOut(400); });
+                    spriteManager.FadeOut(400);
                     AudioEngine.PlaySample(OsuSamples.countgo);
                     HasFinished = true;
                     break;
@@ -87,7 +87,7 @@ namespace osum.GameModes.Play.Components
                 case 6:
                 case 7:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_ready);
-                    spriteManager.Sprites.ForEach(s => { s.FadeIn(200); });
+                    if (spriteManager.Alpha == 0) spriteManager.FadeIn(200);
                     didChangeTexture = countdown == 7;
                     break;
                 default:
@@ -120,15 +120,7 @@ namespace osum.GameModes.Play.Components
         {
             if (StartTime < 0 || (Clock.AudioTime > StartTime && lastCountdownUpdate < 0)) return;
 
-            if (HasFinished)
-            {
-                if (background.Alpha == 0 && Clock.AudioTime > StartTime)
-                {
-                    StartTime = -1;
-                    spriteManager.Sprites.ForEach(s => { s.ScaleScalar = 1; s.Alpha = 0; s.Transformations.Clear(); s.Update(); });
-                }
-            }
-            else
+            if (!HasFinished)
             {
                 int countdown = (int)Math.Max(0, (StartTime - Clock.AudioTime) / BeatLength);
 

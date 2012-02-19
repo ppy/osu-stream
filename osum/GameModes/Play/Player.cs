@@ -195,7 +195,7 @@ namespace osum.GameModes
                     RemoveOldTransformations = false
                 };
 
-                mapBackgroundImage.FadeIn(3000, 0.1f);
+                mapBackgroundImage.FadeIn(3000, 0.05f);
                 mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
 
                 spriteManager.Add(mapBackgroundImage);
@@ -659,8 +659,9 @@ namespace osum.GameModes
 
         private void PulseBackground(bool positive)
         {
-            const float effect_magnitude = 1.4f;
-            const float effect_limit = 1.5f;
+            const float effect_magnitude = 1.3f;
+            const float effect_limit = 1.4f;
+            const float min = 0.05f;
 
             if (positive)
             {
@@ -668,7 +669,7 @@ namespace osum.GameModes
                 t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
                 t.StartTime = mapBackgroundImage.ClockingNow;
                 t.EndTime = t.StartTime + 600;
-                t.EndFloat = 0.1f;
+                t.EndFloat = min;
 
                 TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
                 t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
@@ -681,7 +682,7 @@ namespace osum.GameModes
                 t.StartTime = mapBackgroundImage.ClockingNow;
                 t.EndTime = t.StartTime + 2000;
                 t.StartFloat = 0;
-                t.EndFloat = 0.1f;
+                t.EndFloat = min;
 
                 TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
                 t2.StartTime = mapBackgroundImage.ClockingNow;
@@ -703,9 +704,9 @@ namespace osum.GameModes
 
             if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
 
-            if (progressDisplay != null) progressDisplay.Draw();
-
             if (comboCounter != null) comboCounter.Draw();
+
+            if (progressDisplay != null) progressDisplay.Draw();
 
             if (countdown != null) countdown.Draw();
 
@@ -791,7 +792,7 @@ namespace osum.GameModes
 
             if (progressDisplay != null)
             {
-                progressDisplay.SetProgress(Progress, lastJudgeType);
+                if (!Failed) progressDisplay.SetProgress(Progress, lastJudgeType);
                 progressDisplay.Update();
             }
 
@@ -935,6 +936,13 @@ namespace osum.GameModes
 
             topMostSpriteManager.Add(failSprite);
             topMostSpriteManager.Add(failGlow);
+
+            if (progressDisplay != null)
+            {
+                progressDisplay.SetProgress(Progress, ScoreChange.Ignore);
+                progressDisplay.SetProgress(1, ScoreChange.Ignore);
+                progressDisplay.ExtendHeight(2000, 10);
+            }
         }
 
         internal bool IsPaused

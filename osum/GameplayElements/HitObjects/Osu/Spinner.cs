@@ -186,7 +186,7 @@ namespace osum.GameplayElements
             get
             {
                 int now = ClockingNow;
-                return now >= StartTime - DifficultyManager.FadeIn && now <= EndTime;
+                return now >= StartTime - DifficultyManager.FadeIn && now <= EndTime + DifficultyManager.FadeOut / 2;
             }
         }
 
