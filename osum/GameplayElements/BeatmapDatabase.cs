@@ -17,7 +17,7 @@ namespace osum.GameplayElements
         const int DATABASE_VERSION = 9;
         const string FILENAME = "osu!.db";
 
-        private static string fullPath { get { return GameBase.Instance.PathConfig + FILENAME; } }
+        private static string databasePath { get { return GameBase.Instance.PathConfig + FILENAME; } }
 
         internal static int Version = -1;
 
@@ -30,11 +30,11 @@ namespace osum.GameplayElements
 
             BeatmapInfo = new pList<BeatmapInfo>();
 
-            if (File.Exists(fullPath))
+            if (File.Exists(databasePath))
             {
                 try
                 {
-                    using (FileStream fs = File.OpenRead(fullPath))
+                    using (FileStream fs = File.OpenRead(databasePath))
                     using (SerializationReader reader = new SerializationReader(fs))
                     {
                         Version = reader.ReadInt32();
@@ -85,8 +85,8 @@ namespace osum.GameplayElements
         {
             Initialize();
 
-            string filename = fullPath;
-            string tempFilename = fullPath + "_";
+            string filename = databasePath;
+            string tempFilename = databasePath + "_";
 
             //write to a new file and then move, just in case something bad was to happen when writing.
             using (FileStream fs = File.Create(tempFilename))
