@@ -34,7 +34,7 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
 
-        public static bool UseMp3Offset = true;
+        
 
         public static Stopwatch sw = new Stopwatch();
         static double swLast;
@@ -153,7 +153,11 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = UseMp3Offset ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A;
+#if iOS
+            int offset = UNIVERSAL_OFFSET_M4A;
+#else
+            int offset = UNIVERSAL_OFFSET_MP3;
+#endif
 
             if (AudioTimeSource.IsElapsing)
             {
