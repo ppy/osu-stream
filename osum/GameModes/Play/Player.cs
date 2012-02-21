@@ -941,7 +941,7 @@ namespace osum.GameModes
             {
                 progressDisplay.SetProgress(Progress, ScoreChange.Ignore);
                 progressDisplay.SetProgress(1, ScoreChange.Ignore);
-                progressDisplay.ExtendHeight(2000, 10);
+                progressDisplay.ExtendHeight(1500, 50);
             }
         }
 
