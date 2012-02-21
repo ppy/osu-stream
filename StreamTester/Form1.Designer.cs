@@ -410,7 +410,7 @@ namespace StreamTester
             this.arrow.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.arrow.BackColor = System.Drawing.Color.Transparent;
             this.arrow.Image = global::StreamTester.Properties.Resources.arrow;
-            this.arrow.Location = new System.Drawing.Point(133, 76);
+            this.arrow.Location = new System.Drawing.Point(10, 76);
             this.arrow.Name = "arrow";
             this.arrow.Size = new System.Drawing.Size(13, 8);
             this.arrow.TabIndex = 18;
