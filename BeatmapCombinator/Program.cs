@@ -721,15 +721,11 @@ namespace osum
 
                     if (switchHpObject != null && switchHpObject.IsHit)
                     {
-                        double currentHp = p.healthBar.CurrentHp;
-                        //Console.WriteLine("HP at required stream switch point (" + switchHpObject.EndTime + ") is " + currentHp);
+                        double currentHp = p.healthBar.CurrentHpUncapped;
+                        
+                        healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                        Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
 
-                        if (currentHp < HealthBar.HP_BAR_MAXIMUM) //use uncapped?
-                        {
-                            //4.5 is the difference between 300 and 100 hit increase (5 - 0.5)
-                            healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
-                            Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
-                        }
                         switchHpObject = null;
                     }
 

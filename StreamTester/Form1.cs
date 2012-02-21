@@ -23,6 +23,8 @@ namespace StreamTester
         string tempDir = Path.GetTempPath() + "osu!stream";
         string osusDir = Environment.CurrentDirectory;
 
+        const string BEATMAP_PATH = "Beatmaps\\";
+
         public Form1()
         {
             InitializeComponent();
@@ -31,6 +33,32 @@ namespace StreamTester
             if (Directory.Exists(tempDir))
                 Directory.Delete(tempDir, true);
             Directory.CreateDirectory(tempDir);
+
+            
+            List<ListEntry> entries = findMaps(BEATMAP_PATH);
+            entries.Sort();
+            listAvailableMaps.Items.AddRange(entries.ToArray());
+        }
+
+        private List<ListEntry> findMaps(string p, List<ListEntry> entries = null)
+        {
+            if (entries == null)
+                entries = new List<ListEntry>();
+
+            foreach (string d in Directory.GetDirectories(p))
+                findMaps(d, entries);
+            
+            string[] files = Directory.GetFiles(p, "*.osu");
+            if (files.Length > 0)
+            {
+                string displayName = files[0];
+                displayName = displayName.Remove(displayName.IndexOf('['));
+                displayName = displayName.Substring(displayName.LastIndexOf('\\') + 1);
+                displayName = displayName.Replace(".osu", "");
+                entries.Add(new ListEntry(p, displayName));
+            }
+
+            return entries;
         }
 
         string filename;
@@ -379,6 +407,13 @@ namespace StreamTester
             buttonTestOnce.Text = checkBoxm4a.Checked ? "Create Package" : "Test Once";
         }
 
+        private void listAvailableMaps_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (listAvailableMaps.SelectedItem == null) return;
+
+            Filename = osusDir + "\\" + ((ListEntry)listAvailableMaps.SelectedItem).Path;
+        }
+
     }
 
     public class HitObjectManagerLoadAll : HitObjectManager
@@ -392,5 +427,33 @@ namespace StreamTester
         {
             return true;
         }
+    }
+
+    public class ListEntry : IComparable<ListEntry>
+    {
+        public string Display;
+        public string Path;
+
+        public ListEntry(string path, string display)
+        {
+            Display = display;
+            Path = path;
+        }
+
+        public override string ToString()
+        {
+            return Display;
+        }
+
+
+
+        #region IComparable<ListEntry> Members
+
+        public int CompareTo(ListEntry other)
+        {
+            return Display.CompareTo(other.Display);
+        }
+
+        #endregion
     }
 }

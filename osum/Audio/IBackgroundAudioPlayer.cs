@@ -58,10 +58,6 @@ namespace osum
             if (identifier != null && lastLoaded == identifier) return false;
 
             lastLoaded = identifier;
-            Clock.UseMp3Offset = lastLoaded != null && lastLoaded.Contains(".mp3");
-#if FULL_DEBUG
-            Console.WriteLine("Using MP3 offset:" + Clock.UseMp3Offset);
-#endif
             return true;
         }
 

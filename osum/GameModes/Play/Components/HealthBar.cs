@@ -47,7 +47,7 @@ namespace osum.GameplayElements.Scoring
         /// <summary>
         /// Current HP with no upper limiter.
         /// </summary>
-        internal double CurrentHpUncapped { get; private set; }
+        public double CurrentHpUncapped { get; private set; }
 
         private bool visible = true;
 

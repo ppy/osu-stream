@@ -174,7 +174,7 @@ namespace osum.GameModes
             //256x172
             float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
 
-            if (Beatmap != null)
+            if (Beatmap != null && GameBase.Instance != null)
             {
                 mapBackgroundImage = new pSpriteDynamic()
                 {
@@ -659,6 +659,8 @@ namespace osum.GameModes
 
         private void PulseBackground(bool positive)
         {
+            if (mapBackgroundImage == null) return;
+
             const float effect_magnitude = 1.3f;
             const float effect_limit = 1.4f;
             const float min = 0.05f;
@@ -941,7 +943,7 @@ namespace osum.GameModes
             {
                 progressDisplay.SetProgress(Progress, ScoreChange.Ignore);
                 progressDisplay.SetProgress(1, ScoreChange.Ignore);
-                progressDisplay.ExtendHeight(2000, 10);
+                progressDisplay.ExtendHeight(1500, 50);
             }
         }
 

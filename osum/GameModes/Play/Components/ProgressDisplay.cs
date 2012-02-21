@@ -33,12 +33,12 @@ namespace osum.GameModes.Play.Components
         ScoreChange lastDisplayedChange;
         float lastProgressStart;
         
-        private Color4 gray_colour = new Color4(40,40,40,255);
+        private Color4 gray_colour = new Color4(80,80,80,255);
 
         internal void ExtendHeight(int duration, float extent)
         {
             Sprites.ForEach(s => {
-                Transformation t = new TransformationV(TransformationType.VectorScale, s.Scale, new Vector2(s.Scale.X, s.Scale.Y * extent),
+                Transformation t = new TransformationV(TransformationType.VectorScale, s.Scale, new Vector2(s.Scale.X, s == progressRectBg ? extent : extent - 1),
                     s.ClockingNow, s.ClockingNow + duration, EasingTypes.In);
                 s.Transform(t);
             });
@@ -63,15 +63,15 @@ namespace osum.GameModes.Play.Components
                         break;
                     case ScoreChange.Hit100:
                         displayColour = new Color4(117, 204, 65, 255);
-                        heightMultiplier = 0.8f;
+                        heightMultiplier = 0.9f;
                         break;
                     case ScoreChange.Hit50:
                         displayColour = new Color4(118, 65, 143, 255);
-                        heightMultiplier = 0.6f;
+                        heightMultiplier = 0.8f;
                         break;
                     case ScoreChange.Miss:
                         displayColour = new Color4(144, 0, 16, 255);
-                        heightMultiplier = 0.4f;
+                        heightMultiplier = 0.7f;
                         break;
                 }
 

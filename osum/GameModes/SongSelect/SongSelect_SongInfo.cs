@@ -79,7 +79,7 @@ namespace osum.GameModes
                 vPos += 40;
             }
 
-            pText title = new pText(normalTitle, 30, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            pText title = new pText(normalTitle, 30, new Vector2(0, vPos), 1, true, Color4.White)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre,
@@ -91,7 +91,7 @@ namespace osum.GameModes
 
             string unicodeArtist = beatmap.Package.GetMetadata(MapMetaType.ArtistUnicode);
 
-            pText artist = new pText("by " + beatmap.Package.GetMetadata(MapMetaType.ArtistFullName), 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+            pText artist = new pText("by " + beatmap.Package.GetMetadata(MapMetaType.ArtistFullName), 24, new Vector2(0, vPos), 1, true, Color4.White)
             {
                 Field = FieldTypes.StandardSnapTopCentre,
                 Origin = OriginTypes.Centre,
@@ -143,7 +143,7 @@ namespace osum.GameModes
             if (normalSource != null)
             {
                 vPos += 40;
-                pText source = new pText(normalSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+                pText source = new pText(normalSource, 24, new Vector2(0, vPos), 1, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre,
@@ -155,7 +155,7 @@ namespace osum.GameModes
             if (normalSource != unicodeSource)
             {
                 vPos += 40;
-                pText source = new pText(unicodeSource, 24, new Vector2(0, vPos), 1, true, Color4.LightYellow)
+                pText source = new pText(unicodeSource, 24, new Vector2(0, vPos), 1, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapTopCentre,
                     Origin = OriginTypes.Centre,

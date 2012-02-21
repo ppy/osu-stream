@@ -46,6 +46,12 @@ namespace StreamTester
             this.checkBoxm4a = new System.Windows.Forms.CheckBox();
             this.checkBoxQuick = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.radioButtonStreamNormal = new System.Windows.Forms.RadioButton();
+            this.radioButtonStreamUp = new System.Windows.Forms.RadioButton();
+            this.radioButtonStreamDown = new System.Windows.Forms.RadioButton();
+            this.beatmapLayout = new System.Windows.Forms.PictureBox();
+            this.checkBoxEditorTime = new System.Windows.Forms.CheckBox();
+            this.checkBoxEditorDifficulty = new System.Windows.Forms.CheckBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelDrop = new System.Windows.Forms.Panel();
@@ -53,22 +59,17 @@ namespace StreamTester
             this.labelBeatmapTitle = new System.Windows.Forms.Label();
             this.console = new System.Windows.Forms.TextBox();
             this.groupBoxStreamSwitch = new System.Windows.Forms.GroupBox();
-            this.radioButtonStreamNormal = new System.Windows.Forms.RadioButton();
-            this.radioButtonStreamUp = new System.Windows.Forms.RadioButton();
-            this.radioButtonStreamDown = new System.Windows.Forms.RadioButton();
             this.panelButtons = new System.Windows.Forms.Panel();
             this.arrow = new System.Windows.Forms.PictureBox();
-            this.beatmapLayout = new System.Windows.Forms.PictureBox();
-            this.checkBoxEditorTime = new System.Windows.Forms.CheckBox();
-            this.checkBoxEditorDifficulty = new System.Windows.Forms.CheckBox();
+            this.listAvailableMaps = new System.Windows.Forms.ListBox();
             this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.panelDrop.SuspendLayout();
             this.groupBoxStreamSwitch.SuspendLayout();
             this.panelButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.arrow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonTestOnSave
@@ -223,7 +224,7 @@ namespace StreamTester
             this.checkBoxm4a.TabIndex = 9;
             this.checkBoxm4a.Text = "Package for iOS";
             this.toolTip1.SetToolTip(this.checkBoxm4a, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
-                    "n PC. Note that this needs an m4a audio track in the beatmap folder.");
+        "n PC. Note that this needs an m4a audio track in the beatmap folder.");
             this.checkBoxm4a.UseVisualStyleBackColor = true;
             this.checkBoxm4a.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -240,6 +241,83 @@ namespace StreamTester
             this.toolTip1.SetToolTip(this.checkBoxQuick, "Bypass score calculations to combinate super-fast for testing.");
             this.checkBoxQuick.UseVisualStyleBackColor = true;
             // 
+            // radioButtonStreamNormal
+            // 
+            this.radioButtonStreamNormal.AutoSize = true;
+            this.radioButtonStreamNormal.Checked = true;
+            this.radioButtonStreamNormal.Location = new System.Drawing.Point(15, 27);
+            this.radioButtonStreamNormal.Name = "radioButtonStreamNormal";
+            this.radioButtonStreamNormal.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonStreamNormal.TabIndex = 2;
+            this.radioButtonStreamNormal.TabStop = true;
+            this.radioButtonStreamNormal.Text = "Normal";
+            this.toolTip1.SetToolTip(this.radioButtonStreamNormal, "Test starting from 50% health.");
+            this.radioButtonStreamNormal.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonStreamUp
+            // 
+            this.radioButtonStreamUp.AutoSize = true;
+            this.radioButtonStreamUp.Location = new System.Drawing.Point(15, 50);
+            this.radioButtonStreamUp.Name = "radioButtonStreamUp";
+            this.radioButtonStreamUp.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonStreamUp.TabIndex = 3;
+            this.radioButtonStreamUp.Text = "Stream Up";
+            this.toolTip1.SetToolTip(this.radioButtonStreamUp, "Test starting from 100% health, causing a STREAM UP");
+            this.radioButtonStreamUp.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonStreamDown
+            // 
+            this.radioButtonStreamDown.AutoSize = true;
+            this.radioButtonStreamDown.Location = new System.Drawing.Point(15, 73);
+            this.radioButtonStreamDown.Name = "radioButtonStreamDown";
+            this.radioButtonStreamDown.Size = new System.Drawing.Size(89, 17);
+            this.radioButtonStreamDown.TabIndex = 4;
+            this.radioButtonStreamDown.Text = "Stream Down";
+            this.toolTip1.SetToolTip(this.radioButtonStreamDown, "Test starting from 0% health, causing a STREAM DOWN");
+            this.radioButtonStreamDown.UseVisualStyleBackColor = true;
+            // 
+            // beatmapLayout
+            // 
+            this.beatmapLayout.BackColor = System.Drawing.SystemColors.Control;
+            this.beatmapLayout.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.beatmapLayout.Location = new System.Drawing.Point(15, 84);
+            this.beatmapLayout.Name = "beatmapLayout";
+            this.beatmapLayout.Size = new System.Drawing.Size(364, 46);
+            this.beatmapLayout.TabIndex = 17;
+            this.beatmapLayout.TabStop = false;
+            this.toolTip1.SetToolTip(this.beatmapLayout, "Drag here to choose a start time.");
+            this.beatmapLayout.MouseDown += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseDown);
+            this.beatmapLayout.MouseMove += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseMove);
+            this.beatmapLayout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseUp);
+            // 
+            // checkBoxEditorTime
+            // 
+            this.checkBoxEditorTime.AutoSize = true;
+            this.checkBoxEditorTime.Checked = true;
+            this.checkBoxEditorTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEditorTime.Location = new System.Drawing.Point(15, 27);
+            this.checkBoxEditorTime.Name = "checkBoxEditorTime";
+            this.checkBoxEditorTime.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxEditorTime.TabIndex = 19;
+            this.checkBoxEditorTime.Text = "Use osu! editor current time";
+            this.toolTip1.SetToolTip(this.checkBoxEditorTime, "When saving the currently linked map in osu! editor, the current editor time will" +
+        " be used as a start time.");
+            this.checkBoxEditorTime.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxEditorDifficulty
+            // 
+            this.checkBoxEditorDifficulty.AutoSize = true;
+            this.checkBoxEditorDifficulty.Checked = true;
+            this.checkBoxEditorDifficulty.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxEditorDifficulty.Location = new System.Drawing.Point(15, 5);
+            this.checkBoxEditorDifficulty.Name = "checkBoxEditorDifficulty";
+            this.checkBoxEditorDifficulty.Size = new System.Drawing.Size(174, 17);
+            this.checkBoxEditorDifficulty.TabIndex = 20;
+            this.checkBoxEditorDifficulty.Text = "Use osu! editor current difficulty";
+            this.toolTip1.SetToolTip(this.checkBoxEditorDifficulty, "When saving the currently linked map in the osu! editor, that difficulty will be " +
+        "tested.");
+            this.checkBoxEditorDifficulty.UseVisualStyleBackColor = true;
+            // 
             // statusStrip1
             // 
             this.statusStrip1.AllowMerge = false;
@@ -248,7 +326,7 @@ namespace StreamTester
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.statusStrip1.Location = new System.Drawing.Point(0, 479);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(392, 18);
+            this.statusStrip1.Size = new System.Drawing.Size(639, 18);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
@@ -303,7 +381,7 @@ namespace StreamTester
             this.console.Multiline = true;
             this.console.Name = "console";
             this.console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.console.Size = new System.Drawing.Size(364, 129);
+            this.console.Size = new System.Drawing.Size(364, 125);
             this.console.TabIndex = 15;
             // 
             // groupBoxStreamSwitch
@@ -317,41 +395,6 @@ namespace StreamTester
             this.groupBoxStreamSwitch.TabIndex = 9;
             this.groupBoxStreamSwitch.TabStop = false;
             this.groupBoxStreamSwitch.Text = "Stream Switch";
-            // 
-            // radioButtonStreamNormal
-            // 
-            this.radioButtonStreamNormal.AutoSize = true;
-            this.radioButtonStreamNormal.Checked = true;
-            this.radioButtonStreamNormal.Location = new System.Drawing.Point(15, 27);
-            this.radioButtonStreamNormal.Name = "radioButtonStreamNormal";
-            this.radioButtonStreamNormal.Size = new System.Drawing.Size(58, 17);
-            this.radioButtonStreamNormal.TabIndex = 2;
-            this.radioButtonStreamNormal.TabStop = true;
-            this.radioButtonStreamNormal.Text = "Normal";
-            this.toolTip1.SetToolTip(this.radioButtonStreamNormal, "Test starting from 50% health.");
-            this.radioButtonStreamNormal.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonStreamUp
-            // 
-            this.radioButtonStreamUp.AutoSize = true;
-            this.radioButtonStreamUp.Location = new System.Drawing.Point(15, 50);
-            this.radioButtonStreamUp.Name = "radioButtonStreamUp";
-            this.radioButtonStreamUp.Size = new System.Drawing.Size(75, 17);
-            this.radioButtonStreamUp.TabIndex = 3;
-            this.radioButtonStreamUp.Text = "Stream Up";
-            this.toolTip1.SetToolTip(this.radioButtonStreamUp, "Test starting from 100% health, causing a STREAM UP");
-            this.radioButtonStreamUp.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonStreamDown
-            // 
-            this.radioButtonStreamDown.AutoSize = true;
-            this.radioButtonStreamDown.Location = new System.Drawing.Point(15, 73);
-            this.radioButtonStreamDown.Name = "radioButtonStreamDown";
-            this.radioButtonStreamDown.Size = new System.Drawing.Size(89, 17);
-            this.radioButtonStreamDown.TabIndex = 4;
-            this.radioButtonStreamDown.Text = "Stream Down";
-            this.toolTip1.SetToolTip(this.radioButtonStreamDown, "Test starting from 0% health, causing a STREAM DOWN");
-            this.radioButtonStreamDown.UseVisualStyleBackColor = true;
             // 
             // panelButtons
             // 
@@ -373,53 +416,21 @@ namespace StreamTester
             this.arrow.TabIndex = 18;
             this.arrow.TabStop = false;
             // 
-            // beatmapLayout
+            // listAvailableMaps
             // 
-            this.beatmapLayout.BackColor = System.Drawing.SystemColors.Control;
-            this.beatmapLayout.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.beatmapLayout.Location = new System.Drawing.Point(15, 84);
-            this.beatmapLayout.Name = "beatmapLayout";
-            this.beatmapLayout.Size = new System.Drawing.Size(364, 46);
-            this.beatmapLayout.TabIndex = 17;
-            this.beatmapLayout.TabStop = false;
-            this.toolTip1.SetToolTip(this.beatmapLayout, "Drag here to choose a start time.");
-            this.beatmapLayout.MouseDown += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseDown);
-            this.beatmapLayout.MouseMove += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseMove);
-            this.beatmapLayout.MouseUp += new System.Windows.Forms.MouseEventHandler(this.beatmapLayout_MouseUp);
-            // 
-            // checkBoxEditorTime
-            // 
-            this.checkBoxEditorTime.AutoSize = true;
-            this.checkBoxEditorTime.Checked = true;
-            this.checkBoxEditorTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxEditorTime.Location = new System.Drawing.Point(15, 27);
-            this.checkBoxEditorTime.Name = "checkBoxEditorTime";
-            this.checkBoxEditorTime.Size = new System.Drawing.Size(155, 17);
-            this.checkBoxEditorTime.TabIndex = 19;
-            this.checkBoxEditorTime.Text = "Use osu! editor current time";
-            this.toolTip1.SetToolTip(this.checkBoxEditorTime, "When saving the currently linked map in osu! editor, the current editor time will" +
-                    " be used as a start time.");
-            this.checkBoxEditorTime.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxEditorDifficulty
-            // 
-            this.checkBoxEditorDifficulty.AutoSize = true;
-            this.checkBoxEditorDifficulty.Checked = true;
-            this.checkBoxEditorDifficulty.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxEditorDifficulty.Location = new System.Drawing.Point(15, 5);
-            this.checkBoxEditorDifficulty.Name = "checkBoxEditorDifficulty";
-            this.checkBoxEditorDifficulty.Size = new System.Drawing.Size(174, 17);
-            this.checkBoxEditorDifficulty.TabIndex = 20;
-            this.checkBoxEditorDifficulty.Text = "Use osu! editor current difficulty";
-            this.toolTip1.SetToolTip(this.checkBoxEditorDifficulty, "When saving the currently linked map in the osu! editor, that difficulty will be " +
-                    "tested.");
-            this.checkBoxEditorDifficulty.UseVisualStyleBackColor = true;
+            this.listAvailableMaps.FormattingEnabled = true;
+            this.listAvailableMaps.Location = new System.Drawing.Point(385, 7);
+            this.listAvailableMaps.Name = "listAvailableMaps";
+            this.listAvailableMaps.Size = new System.Drawing.Size(242, 459);
+            this.listAvailableMaps.TabIndex = 21;
+            this.listAvailableMaps.SelectedValueChanged += new System.EventHandler(this.listAvailableMaps_SelectedValueChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(392, 497);
+            this.ClientSize = new System.Drawing.Size(639, 497);
+            this.Controls.Add(this.listAvailableMaps);
             this.Controls.Add(this.checkBoxEditorDifficulty);
             this.Controls.Add(this.checkBoxEditorTime);
             this.Controls.Add(this.arrow);
@@ -443,6 +454,7 @@ namespace StreamTester
             this.groupBoxDifficulty.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panelDrop.ResumeLayout(false);
@@ -450,7 +462,6 @@ namespace StreamTester
             this.groupBoxStreamSwitch.PerformLayout();
             this.panelButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.arrow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -489,6 +500,7 @@ namespace StreamTester
         private System.Windows.Forms.CheckBox checkBoxm4a;
         private System.Windows.Forms.CheckBox checkBoxEditorTime;
         private System.Windows.Forms.CheckBox checkBoxEditorDifficulty;
+        private ListBox listAvailableMaps;
     }
 }
 
