@@ -49,6 +49,8 @@ namespace osum.GameModes
         private int firstObjectTime;
         private int lastObjectTime;
 
+        internal static bool AllowStreamSwitches = true;
+
         /// <summary>
         /// Score which is being played (or watched?)
         /// </summary>
@@ -106,12 +108,19 @@ namespace osum.GameModes
         string scoreTestFilename = "score-" + DateTime.Now.Ticks + ".txt";
 #endif
 
+#if HP_TESTING
+        string healthTestFilename = "health-" + DateTime.Now.Ticks + ".txt";
+#endif
+
         public override void Initialize()
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
 #if SCORE_TESTING
             File.WriteAllText(scoreTestFilename, "");
+#endif
+#if HP_TESTING
+            File.WriteAllText(healthTestFilename, "");
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
@@ -417,7 +426,7 @@ namespace osum.GameModes
                 return;
             }
 
-            if (!(Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
+            if (!(Clock.AudioTime > 0 && (AudioEngine.Music == null ||!AudioEngine.Music.IsElapsing)))
             {
                 //pass on the event to hitObjectManager for handling.
                 if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
@@ -515,19 +524,19 @@ namespace osum.GameModes
                     scoreChange = 30;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 2 * hitObject.HpMultiplier;
+                    healthChange = 1.2 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderEnd:
                     scoreChange = 30;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 3 * hitObject.HpMultiplier;
+                    healthChange = 1.6 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderTick:
                     scoreChange = 10;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 1 * hitObject.HpMultiplier;
+                    healthChange = 0.8 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Hit50:
                     scoreChange = 50;
@@ -541,7 +550,7 @@ namespace osum.GameModes
                     CurrentScore.count100++;
                     lastJudgeType = ScoreChange.Hit100;
                     increaseCombo = true;
-                    healthChange = 0.5;
+                    healthChange = 1;
                     break;
                 case ScoreChange.Hit300:
                     scoreChange = 300;
@@ -598,6 +607,7 @@ namespace osum.GameModes
 
                     CurrentScore.comboBonusScore += comboAmount;
 
+
                     //check we don't exceed 0.6mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
                     if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore > Score.HIT_PLUS_COMBO_BONUS_AMOUNT)
@@ -620,32 +630,34 @@ namespace osum.GameModes
             File.AppendAllText(scoreTestFilename, "at " + Clock.AudioTime + " : " + change + "\t" + CurrentScore.hitScore + "\t" + CurrentScore.comboBonusScore + "\t" + (healthBar != null ? healthBar.CurrentHp.ToString() : "") + "\n");
 #endif
 
+#if HP_TESTING
+            File.AppendAllText(healthTestFilename, "at " + Clock.AudioTime + " : " + change + "\t" + healthChange + "\t" + (healthChange * Beatmap.HpStreamAdjustmentMultiplier) + "x\t" + (healthBar != null ? healthBar.CurrentHpUncapped.ToString() : "") + " -> " + (healthBar != null ? (healthBar.CurrentHpUncapped + healthChange * Beatmap.HpStreamAdjustmentMultiplier).ToString() : "") + "\n");
+#endif
+
             if (healthBar != null)
             {
-                if (HitObjectManager == null || !HitObjectManager.StreamChanging)
+                //then handle the hp addition
+                if (healthChange < 0)
                 {
-                    //then handle the hp addition
-                    if (healthChange < 0)
+                    Difficulty streamDifficulty = hitObjectManager.ActiveStream;
+                    float streamMultiplier = 1;
+
+                    switch (streamDifficulty)
                     {
-                        Difficulty streamDifficulty = hitObjectManager.ActiveStream;
-                        float streamMultiplier = 1;
-
-                        switch (streamDifficulty)
-                        {
-                            case Difficulty.Hard:
-                                streamMultiplier = 1.3f;
-                                break;
-                            case Difficulty.Normal:
-                                streamMultiplier = 1.1f;
-                                break;
-                        }
-
-
-                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
+                        case Difficulty.Hard:
+                            streamMultiplier = 1.3f;
+                            break;
+                        case Difficulty.Normal:
+                            streamMultiplier = 1.1f;
+                            break;
                     }
-                    else
-                        healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
+
+
+                    if (HitObjectManager == null || !HitObjectManager.StreamChanging)
+                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
                 }
+                else
+                    healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
             }
 
             if (scoreDisplay != null)
@@ -965,6 +977,9 @@ namespace osum.GameModes
 
         protected bool switchStream(bool increase)
         {
+            if (!AllowStreamSwitches)
+                return false;
+
             isIncreasingStream = increase;
             if (increase && HitObjectManager.IsHighestStream)
                 return false;

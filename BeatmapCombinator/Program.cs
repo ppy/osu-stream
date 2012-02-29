@@ -701,7 +701,7 @@ namespace osum
 
                     if (index <= 0)
                         throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
-                    switchHpObject = p.HitObjectManager.ActiveStreamObjects[index - 1];
+                    switchHpObject = p.HitObjectManager.ActiveStreamObjects[index];
                 }
 
 
@@ -723,7 +723,7 @@ namespace osum
                     {
                         double currentHp = p.healthBar.CurrentHpUncapped;
                         
-                        healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                        healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 5) / (currentHp - HealthBar.HP_BAR_INITIAL);
                         Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
 
                         switchHpObject = null;
