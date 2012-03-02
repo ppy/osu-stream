@@ -415,7 +415,7 @@ namespace osum
             if (free && DistBuild)
                 osz2Filename = baseFileWithLocation + ".osf2";
             else
-                osz2Filename = baseFileWithLocation + (usem4a ? ".m4a.osz2" : ".osz2");
+                osz2Filename = baseFileWithLocation + (usem4a && !DistBuild ? ".m4a.osz2" : ".osz2");
 
             string audioFilename = null;
 
