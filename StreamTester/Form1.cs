@@ -35,9 +35,9 @@ namespace StreamTester
             Directory.CreateDirectory(tempDir);
 
             
-            List<ListEntry> entries = findMaps(BEATMAP_PATH);
-            entries.Sort();
-            listAvailableMaps.Items.AddRange(entries.ToArray());
+            maps = findMaps(BEATMAP_PATH);
+            maps.Sort();
+            listAvailableMaps.Items.AddRange(maps.ToArray());
         }
 
         private List<ListEntry> findMaps(string p, List<ListEntry> entries = null)
@@ -150,6 +150,7 @@ namespace StreamTester
 
 
         bool isDragging;
+        private List<ListEntry> maps;
         private void beatmapLayout_MouseDown(object sender, MouseEventArgs e)
         {
             checkBoxEditorTime.Checked = false;
@@ -412,6 +413,34 @@ namespace StreamTester
             if (listAvailableMaps.SelectedItem == null) return;
 
             Filename = osusDir + "\\" + ((ListEntry)listAvailableMaps.SelectedItem).Path;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string searchQuery = textBox1.Text == "search..." ? string.Empty : textBox1.Text.ToLower();
+
+            listAvailableMaps.Items.Clear();
+
+            List<ListEntry> filtered = maps.FindAll(en => en.Display.ToLower().Contains(searchQuery));
+            filtered.Sort();
+            listAvailableMaps.Items.AddRange(filtered.ToArray());
+
+        }
+
+        private void textBox1_Enter(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "search...")
+                textBox1.Text = string.Empty;
+            textBox1.ForeColor = Color.Black;
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            if (textBox1.Text.Length == 0)
+            {
+                textBox1.Text = "search...";
+                textBox1.ForeColor = Color.Gray;
+            }
         }
 
     }
