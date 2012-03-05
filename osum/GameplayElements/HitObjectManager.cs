@@ -49,6 +49,8 @@ namespace osum.GameplayElements
 
         internal SliderTrackRenderer sliderTrackRenderer;
 
+        internal int CountdownTime;
+
         public HitObjectManager(Beatmap beatmap)
         {
             this.beatmap = beatmap;

@@ -216,21 +216,26 @@ namespace osum.GameplayElements
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
 
-                                if (!shouldLoadDifficulty(difficulty))
-                                    continue;
-
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
                                 int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int time = (int)Decimal.Parse(split[offset++], GameBase.nfi);
+
+                                if (objnumber == 0) CountdownTime = time;
+                                else CountdownTime = Math.Min(CountdownTime, time);
+                                objnumber++;
+
+                                if (!shouldLoadDifficulty(difficulty))
+                                    continue;
+
                                 HitObjectType type = (HitObjectType)Int32.Parse(split[offset], GameBase.nfi) & ~HitObjectType.ColourHax;
                                 int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
 
                                 Vector2 pos = new Vector2(x, y);
 
-                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner || objnumber == 0;
+                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner || StreamHitObjects[(int)difficulty] == null || StreamHitObjects[(int)difficulty].Count == 0;
 
                                 HitObject h = null;
 
@@ -333,7 +338,6 @@ namespace osum.GameplayElements
                                     h.SampleSet = ssi;
                                     Add(h, difficulty);
                                 }
-                                objnumber++;
                                     }
                                 break;
                             case FileSection.Unknown:
