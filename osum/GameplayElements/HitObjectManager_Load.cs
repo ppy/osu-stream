@@ -507,6 +507,7 @@ namespace osum.GameplayElements
 
                 int currentComboNumber = 0;
                 int colourIndex = -1;
+                bool lastWasSpinner = false;
 
                 for (int i = 0; i < objects.Count; i++)
                 {
@@ -530,6 +531,11 @@ namespace osum.GameplayElements
                         }
                     }
                     else if (last == null) colourIndex = 0;
+                    else if (((last.Type & HitObjectType.Spinner) != 0) &&
+                             ((currHitObject.Type & HitObjectType.Spinner) == 0))
+                    {
+                        colourIndex++;
+                    }
 
                     if (colourIndex < 0)
                         colourIndex = 0;
