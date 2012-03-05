@@ -232,7 +232,7 @@ namespace osum.GameModes
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
 
-            Resume(hitObjectManager.CountdownTime, 8, true);
+            Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
         }
 
         protected virtual void InitializeStream()
@@ -341,13 +341,13 @@ namespace osum.GameModes
         /// </summary>
         /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
         /// <param name="beats">How many beats we should count in.</param>
-        internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false)
+        internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false, int countdownOffset = 0)
         {
             if (Beatmap != null && startTime != 0 && beats != 0)
             {
                 double beatLength = Beatmap.beatLengthAt(startTime);
                 double offset = Beatmap.controlPointAt(startTime).offset;
-                int actualStartTime = (int)(offset + (int)((startTime - offset) / beatLength + 0.5d) * beatLength);
+                int actualStartTime = (int)(offset + (int)((startTime - offset) / beatLength + 0.5d - countdownOffset) * beatLength);
 
                 int countdownStartTime;
                 if (!countdown.HasFinished)

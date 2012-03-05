@@ -136,6 +136,18 @@ namespace osum.GameplayElements
                                     beatmap.DifficultyInfo[diff] = new BeatmapDifficultyInfo(diff) { ComboMultiplier = double.Parse(val, GameBase.nfi) };
                                 }
                                 break;
+                            case FileSection.General:
+                                switch (key)
+                                {
+                                    case "CountdownOffset":
+                                        if (val.Length > 0)
+                                        {
+                                            beatmap.CountdownOffset = Int32.Parse(val);
+                                        }
+                                        break;
+                                }
+
+                                break;
                             case FileSection.TimingPoints:
                                 {
                                     string[] split = line.Split(',');
