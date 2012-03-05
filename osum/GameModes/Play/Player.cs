@@ -346,14 +346,16 @@ namespace osum.GameModes
             if (Beatmap != null && startTime != 0 && beats != 0)
             {
                 double beatLength = Beatmap.beatLengthAt(startTime);
+                double offset = Beatmap.controlPointAt(startTime).offset;
+                int actualStartTime = (int)(offset + (int)((startTime - offset) / beatLength + 0.5d) * beatLength);
 
                 int countdownStartTime;
                 if (!countdown.HasFinished)
                     countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
                 else
                 {
-                    countdown.SetStartTime(startTime, beatLength);
-                    countdownStartTime = startTime - (int)(beatLength * beats);
+                    countdown.SetStartTime(actualStartTime, beatLength);
+                    countdownStartTime = actualStartTime - (int)(beatLength * beats);
                 }
             }
 
