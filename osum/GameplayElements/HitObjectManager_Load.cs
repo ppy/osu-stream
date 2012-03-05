@@ -660,7 +660,7 @@ namespace osum.GameplayElements
             Vector2 distanceVector = pos2 - pos1;
             Vector2 unitVector = distanceVector;
             unitVector.Normalize();
-            unitVector *= (hitRadius * 0.75f); // this 0.75 lets the followpoints get closer to their circles, for a better looking effect.
+            unitVector *= (hitRadius - DifficultyManager.FollowLineDistance * 0.125f); // this lets the followpoints get closer to their circles, for a better looking effect.
 
             // these two now represent the very edges of the two circles to be joined.
             pos1 += unitVector;
