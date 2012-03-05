@@ -677,7 +677,8 @@ namespace osum.GameplayElements
                 // the first followpoint appears moments before the destination object appears.
                 float expandStart = Math.Max(time3, time2 - DifficultyManager.PreEmpt - DifficultyManager.FollowLinePreEmptStart);
                 // it should reach its target just in time for that circle to appear
-                float expandEnd = time2 - DifficultyManager.PreEmpt;
+                // the line's speed is limited so it may arrive a bit late if the slider it leaves from is still snaking.
+                float expandEnd = Math.Max(time2 - DifficultyManager.PreEmpt, expandStart + DifficultyManager.FollowPointSpeedLimit);
 
                 // begin contracting followpoints as soon as the first object is done
                 float contractStart = Math.Max(time1, expandStart + DifficultyManager.FollowPointScreenTime);
