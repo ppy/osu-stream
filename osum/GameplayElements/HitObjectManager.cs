@@ -316,7 +316,7 @@ namespace osum.GameplayElements
 
             if (diffObjects == null)
             {
-                diffObjects = new pList<HitObject>() { UseBackwardsSearch = true };
+                diffObjects = new pList<HitObject>() { UseBackwardsSearch = true, InsertAfterOnEqual = true };
                 StreamHitObjects[diffIndex] = diffObjects;
                 streamSpriteManagers[diffIndex] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
             }
