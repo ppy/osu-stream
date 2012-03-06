@@ -554,6 +554,7 @@ namespace osum.GameplayElements
                              ((currHitObject.Type & HitObjectType.Spinner) == 0))
                     {
                         colourIndex++;
+                        colourIndex %= TextureManager.DefaultColours.Length;
                     }
 
                     if (colourIndex < 0)
