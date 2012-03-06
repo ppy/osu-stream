@@ -257,7 +257,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(texture),
                             FieldTypes.GamefieldSprites,
                             OriginTypes.Centre,
-                            ClockTypes.Game, EndPosition, depth, false, Color4.White);
+                            ClockTypes.Audio, EndPosition, depth, false, Color4.White);
 
             Sprites.Add(p);
 
@@ -266,28 +266,29 @@ namespace osum.GameplayElements
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 400;
             const int HitFadeOutStart = 400;
+            int now = p.ClockingNow;
 
             if (action > ScoreChange.Miss)
             {
                 p.Transform(
-                    new TransformationBounce(Clock.Time, (int)(Clock.Time + (HitFadeIn * 2)), 1, 0.2f, 3));
+                    new TransformationBounce(now, (int)(now + (HitFadeIn * 2)), 1, 0.2f, 3));
                 p.Transform(
                     new TransformationF(TransformationType.Fade, 1, 0,
-                                       Clock.Time + HitFadeOutStart, Clock.Time + HitFadeOutStart + HitFadeOutDuration));
+                                       now + HitFadeOutStart, now + HitFadeOutStart + HitFadeOutDuration));
             }
             else
             {
                 p.Transform(
-                            new TransformationF(TransformationType.Scale, 2, 1, Clock.Time,
-                                               Clock.Time + HitFadeIn));
+                            new TransformationF(TransformationType.Scale, 2, 1, now,
+                                               now + HitFadeIn));
                 p.Transform(
-                    new TransformationF(TransformationType.Fade, 1, 0, Clock.Time + HitFadeOutStart,
-                                       Clock.Time + HitFadeOutStart + HitFadeOutDuration));
+                    new TransformationF(TransformationType.Fade, 1, 0, now + HitFadeOutStart,
+                                       now + HitFadeOutStart + HitFadeOutDuration));
 
                 p.Transform(
                     new TransformationF(TransformationType.Rotation, 0,
-                                       (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), Clock.Time,
-                                       Clock.Time + HitFadeIn));
+                                       (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), now,
+                                       now + HitFadeIn));
             }
         }
 
