@@ -36,10 +36,15 @@ namespace osum
         }
     }
 
-    public class HitObjectLine
+    public class HitObjectLine : IComparable<HitObjectLine>
     {
         internal string StringRepresentation;
         internal int Time;
+
+        public int CompareTo(HitObjectLine h)
+        {
+            return Time.CompareTo(h.Time);
+        }
     }
 
     public class BeatmapCombinator
@@ -401,7 +406,7 @@ namespace osum
             string oscFilename = baseName + ".osc";
 
             foreach (BeatmapDifficulty d in difficulties)
-                if (d != null) d.HitObjectLines.Sort(delegate(HitObjectLine h1, HitObjectLine h2) { return h1.Time.CompareTo(h2.Time); });
+                if (d != null) ListHelper.StableSort(d.HitObjectLines);
 
             headerContent = difficulties.Find(d => d != null).HeaderLines;
 

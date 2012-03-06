@@ -147,6 +147,7 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\osu!common\Aes.cs" />
     <Compile Include="Helpers\osu!common\AesManaged.cs" />
     <Compile Include="Helpers\osu!common\bSerializable.cs" />
