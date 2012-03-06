@@ -56,7 +56,7 @@ namespace osu_common.Helpers
                         int compare = base[index].CompareTo(item);
                         if (compare > 0) continue;
 
-                        base.Insert((compare < 0 || !InsertAfterOnEqual) ? index : ++index, item);
+                        base.Insert((compare < 0 || InsertAfterOnEqual) ? ++index : index, item);
                         return index;
                     }
 
