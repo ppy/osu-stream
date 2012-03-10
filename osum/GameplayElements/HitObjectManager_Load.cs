@@ -136,6 +136,18 @@ namespace osum.GameplayElements
                                     beatmap.DifficultyInfo[diff] = new BeatmapDifficultyInfo(diff) { ComboMultiplier = double.Parse(val, GameBase.nfi) };
                                 }
                                 break;
+                            case FileSection.General:
+                                switch (key)
+                                {
+                                    case "CountdownOffset":
+                                        if (val.Length > 0)
+                                        {
+                                            beatmap.CountdownOffset = Int32.Parse(val);
+                                        }
+                                        break;
+                                }
+
+                                break;
                             case FileSection.TimingPoints:
                                 {
                                     string[] split = line.Split(',');
@@ -216,21 +228,26 @@ namespace osum.GameplayElements
                                 Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
 
 
-                                if (!shouldLoadDifficulty(difficulty))
-                                    continue;
-
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
                                 int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
                                 int time = (int)Decimal.Parse(split[offset++], GameBase.nfi);
+
+                                if (objnumber == 0) CountdownTime = time;
+                                else CountdownTime = Math.Min(CountdownTime, time);
+                                objnumber++;
+
+                                if (!shouldLoadDifficulty(difficulty))
+                                    continue;
+
                                 HitObjectType type = (HitObjectType)Int32.Parse(split[offset], GameBase.nfi) & ~HitObjectType.ColourHax;
                                 int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
                                 HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
 
                                 Vector2 pos = new Vector2(x, y);
 
-                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner || objnumber == 0;
+                                bool newCombo = (type & HitObjectType.NewCombo) > 0 || lastAddedSpinner || StreamHitObjects[(int)difficulty] == null || StreamHitObjects[(int)difficulty].Count == 0;
 
                                 HitObject h = null;
 
@@ -333,7 +350,6 @@ namespace osum.GameplayElements
                                     h.SampleSet = ssi;
                                     Add(h, difficulty);
                                 }
-                                objnumber++;
                                     }
                                 break;
                             case FileSection.Unknown:
@@ -503,7 +519,8 @@ namespace osum.GameplayElements
                     }
                 }
 
-                HitObject last = null;
+                HitObject last = null, secondlast = null;
+                HitObject lastLeft = null, lastRight = null;
 
                 int currentComboNumber = 0;
                 int colourIndex = -1;
@@ -516,7 +533,10 @@ namespace osum.GameplayElements
                         //add the previously calculated stack offset here.
                         currHitObject.Position = currHitObject.Position - currHitObject.StackCount * stackVector;
 
+                    // two starts connected
                     bool sameTimeAsLastAdded = last != null && Math.Abs(currHitObject.StartTime - last.StartTime) < 10;
+
+                    // one start connected to a slider end
                     bool sameTimeAsLastAdded2 = !sameTimeAsLastAdded && (last is Slider && !(last is HoldCircle)) && Math.Abs(currHitObject.StartTime - last.EndTime) < 10;
 
                     if (currHitObject.NewCombo)
@@ -530,6 +550,12 @@ namespace osum.GameplayElements
                         }
                     }
                     else if (last == null) colourIndex = 0;
+                    else if (((last.Type & HitObjectType.Spinner) != 0) &&
+                             ((currHitObject.Type & HitObjectType.Spinner) == 0))
+                    {
+                        colourIndex++;
+                        colourIndex %= TextureManager.DefaultColours.Length;
+                    }
 
                     if (colourIndex < 0)
                         colourIndex = 0;
@@ -543,83 +569,79 @@ namespace osum.GameplayElements
                     currHitObject.ColourIndex = colourIndex;
 
                     if (sameTimeAsLastAdded || sameTimeAsLastAdded2)
+                    {
                         //connect multitouch beats
                         diffSpriteManager.Add(Connect(last, currHitObject, sameTimeAsLastAdded2));
-                    else if (last != null && !currHitObject.NewCombo && !(last is Spinner))
+                    }
+                    else if (last != null && lastLeft == null)
                     {
-                        int time1 = last.EndTime;
-                        int time2 = currHitObject.StartTime;
+                        // draw a followpoint line to adjacent object if the previous isn't a multi pair
+                        // and the objects to be joined aren't multi wrt. each other
+                        // the case where it's a pair down to a single is handled later
+                        // single up to a pair is handled here
+                        FollowConnect(last, currHitObject, diffSpriteManager, fptexture);
+                    }
 
-                        if ((time1 < time2) && !(last is Spinner) && !(currHitObject is Spinner) && (last.connectedObject != currHitObject))
+                    if (sameTimeAsLastAdded && lastLeft != null)
+                    {
+                        // add pairs of followpoints between pairs of objects on each side
+                        float x1 = last.Position.X;
+                        float x2 = currHitObject.Position.X;
+                        HitObject currLeft, currRight;
+                        if (x1 <= x2)
                         {
-                            // followpoint code
-                            int time3 = last.StartTime - DifficultyManager.PreEmpt;
-                            // only allow followpoints to start their trek once their starting slider has finished snaking
-                            if (last.Type == HitObjectType.Slider)
-                                time3 = Math.Max(time3, ((Slider)last).snakingEnd);
+                            currLeft = last;
+                            currRight = currHitObject;
+                        }
+                        else
+                        {
+                            currLeft = currHitObject;
+                            currRight = last;
+                        }
 
-                            float hitRadius = DifficultyManager.HitObjectRadiusSolid / 2;
-
-                            Vector2 pos1 = last.EndPosition;
-                            Vector2 pos2 = currHitObject.Position;
-
-                            float distance = pMathHelper.Distance(pos1, pos2);
-                            distance -= hitRadius * 2;
-
-                            Vector2 distanceVector = pos2 - pos1;
-                            Vector2 unitVector = distanceVector;
-                            unitVector.Normalize();
-                            unitVector *= (hitRadius * 0.75f); // this 0.75 lets the followpoints get closer to their circles, for a better looking effect.
-
-                            // these two now represent the very edges of the two circles to be joined.
-                            pos1 += unitVector;
-                            pos2 -= unitVector;
-
-                            // number of spaces between followpoints, including the spaces between
-                            // the first and last followpoints and their joining circles
-                            int count = (int)(distance / DifficultyManager.FollowLineDistance + 0.5f);
-
-                            if (count > 1)
-                            {
-                                float countf = (float)count;
-
-                                // the first followpoint appears moments before the destination object appears.
-                                float expandStart = Math.Max(time3, time2 - DifficultyManager.PreEmpt - DifficultyManager.FollowLinePreEmptStart);
-                                // it should reach its target just in time for that circle to appear
-                                float expandEnd = time2 - DifficultyManager.PreEmpt;
-
-                                // begin contracting followpoints as soon as the first object is done
-                                float contractStart = Math.Max(time1, expandStart + DifficultyManager.FollowPointScreenTime);
-                                // try to contract at the same speed but always finish just as the later object needs to be hit
-                                float contractEnd = Math.Max(Math.Min(time2, time1 + DifficultyManager.FollowLinePreEmptEnd), expandEnd + DifficultyManager.FollowPointScreenTime);
-
-                                // exclude j=0 and j=count, since they represent the two circles
-                                for (int j = 1; j < count; j++)
-                                {
-                                    float progress = j / countf;
-                                    Vector2 pos = Vector2.Lerp(pos1, pos2, progress);
-
-                                    int fadein = (int)pMathHelper.Lerp(expandStart, expandEnd, progress);
-                                    int fadeout = (int)pMathHelper.Lerp(contractStart, contractEnd, progress);
-
-                                    pSprite dot =
-                                        new pSprite(fptexture,
-                                                       FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                                       0.005f, false, Color4.White);
-
-                                    dot.Transform(
-                                        new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
-                                    dot.Transform(
-                                        new TransformationBounce(fadein, fadein + DifficultyManager.FadeIn, 1, 2f, 2));
-                                    dot.Transform(
-                                        new TransformationF(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeOut));
-                                    diffSpriteManager.Add(dot);
-                                    currHitObject.Sprites.Add(dot);
-                                }
-                            }
+                        if (!currLeft.NewCombo && !currRight.NewCombo)
+                        {
+                            FollowConnect(lastLeft, currLeft, diffSpriteManager, fptexture);
+                            FollowConnect(lastRight, currRight, diffSpriteManager, fptexture);
                         }
                     }
 
+                    if (last != null)
+                    {
+                        if (Math.Abs(currHitObject.EndTime - last.EndTime) < 10)
+                        {
+                            // current is pair
+                            float x1 = last.EndPosition.X;
+                            float x2 = currHitObject.EndPosition.X;
+
+                            if (x1 <= x2)
+                            {
+                                lastLeft = last;
+                                lastRight = currHitObject;
+                            }
+                            else
+                            {
+                                lastLeft = currHitObject;
+                                lastRight = last;
+                            }
+                        }
+                        else if (lastLeft != null && (Math.Abs(last.EndTime - lastLeft.EndTime) >= 10 || Math.Abs(last.EndTime - lastRight.EndTime) >= 10))
+                        {
+                            // curr/last not a pair but pair still formed
+
+                            // wipe last pair if the last object isn't a member of this pair
+                            lastLeft = null;
+                            lastRight = null;
+
+                            if (secondlast != null)
+                                FollowConnect(secondlast, last, diffSpriteManager, fptexture);
+
+                            // connect this pass's objects here since the left/right pair is still remembered above
+                            FollowConnect(last, currHitObject, diffSpriteManager, fptexture);
+                        }
+                    }
+
+                    secondlast = last;
                     last = currHitObject;
                 }
 
@@ -630,5 +652,86 @@ namespace osum.GameplayElements
 
             spriteManager.ForwardPlayOptimisedAdd = false;
         }
+
+        private void FollowConnect(HitObject first, HitObject second, SpriteManager diffSpriteManager, pTexture fptexture)
+        {
+            if (!ShouldFollow(first, second)) return;
+
+            int time1 = first.EndTime;
+            int time2 = second.StartTime;
+
+            // followpoint code
+            int time3 = first.StartTime - DifficultyManager.PreEmpt;
+            // only allow followpoints to start their trek once their starting slider has finished snaking
+            if (first.Type == HitObjectType.Slider)
+                time3 = Math.Max(time3, ((Slider)first).snakingEnd);
+
+            float hitRadius = DifficultyManager.HitObjectRadiusSolid / 2;
+
+            Vector2 pos1 = first.EndPosition;
+            Vector2 pos2 = second.Position;
+
+            float distance = pMathHelper.Distance(pos1, pos2);
+            distance -= hitRadius * 2;
+
+            Vector2 distanceVector = pos2 - pos1;
+            Vector2 unitVector = distanceVector;
+            unitVector.Normalize();
+            unitVector *= (hitRadius - DifficultyManager.FollowLineDistance * 0.125f); // this lets the followpoints get closer to their circles, for a better looking effect.
+
+            // these two now represent the very edges of the two circles to be joined.
+            pos1 += unitVector;
+            pos2 -= unitVector;
+
+            // number of spaces between followpoints, including the spaces between
+            // the first and last followpoints and their joining circles
+            int count = (int)(distance / DifficultyManager.FollowLineDistance + 0.5f);
+
+            if (count > 1)
+            {
+                float countf = (float)count;
+
+                // the first followpoint appears moments before the destination object appears.
+                float expandStart = Math.Max(time3, time2 - DifficultyManager.PreEmpt - DifficultyManager.FollowLinePreEmptStart);
+                // it should reach its target just in time for that circle to appear
+                // the line's speed is limited so it may arrive a bit late if the slider it leaves from is still snaking.
+                float expandEnd = Math.Max(time2 - DifficultyManager.PreEmpt, expandStart + DifficultyManager.FollowPointSpeedLimit);
+
+                // begin contracting followpoints as soon as the first object is done
+                float contractStart = Math.Max(time1, expandStart + DifficultyManager.FollowPointScreenTime);
+                // try to contract at the same speed but always finish just as the later object needs to be hit
+                float contractEnd = Math.Max(Math.Min(time2, time1 + DifficultyManager.FollowLinePreEmptEnd), expandEnd + DifficultyManager.FollowPointScreenTime);
+
+                // exclude j=0 and j=count, since they represent the two circles
+                for (int j = 1; j < count; j++)
+                {
+                    float progress = j / countf;
+                    Vector2 pos = Vector2.Lerp(pos1, pos2, progress);
+
+                    int fadein = (int)pMathHelper.Lerp(expandStart, expandEnd, progress);
+                    int fadeout = (int)pMathHelper.Lerp(contractStart, contractEnd, progress);
+
+                    pSprite dot =
+                        new pSprite(fptexture,
+                                       FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
+                                       0.005f, false, Color4.White);
+
+                    dot.Transform(
+                        new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
+                    dot.Transform(
+                        new TransformationBounce(fadein, fadein + DifficultyManager.FadeIn, 1, 2f, 2));
+                    dot.Transform(
+                        new TransformationF(TransformationType.Fade, 1, 0, fadeout, fadeout + DifficultyManager.FadeOut));
+                    diffSpriteManager.Add(dot);
+                    second.Sprites.Add(dot);
+                }
+            }
+        }
+
+        internal static bool ShouldFollow(HitObject first, HitObject second)
+        {
+            return (first.EndTime < second.StartTime) && !(first is Spinner) && !(second is Spinner) && !(first.connectedObject == second) && !second.NewCombo;
+        }
+
     }
 }

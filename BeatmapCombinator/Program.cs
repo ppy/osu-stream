@@ -36,10 +36,15 @@ namespace osum
         }
     }
 
-    public class HitObjectLine
+    public class HitObjectLine : IComparable<HitObjectLine>
     {
         internal string StringRepresentation;
         internal int Time;
+
+        public int CompareTo(HitObjectLine h)
+        {
+            return Time.CompareTo(h.Time);
+        }
     }
 
     public class BeatmapCombinator
@@ -401,7 +406,7 @@ namespace osum
             string oscFilename = baseName + ".osc";
 
             foreach (BeatmapDifficulty d in difficulties)
-                if (d != null) d.HitObjectLines.Sort(delegate(HitObjectLine h1, HitObjectLine h2) { return h1.Time.CompareTo(h2.Time); });
+                if (d != null) ListHelper.StableSort(d.HitObjectLines);
 
             headerContent = difficulties.Find(d => d != null).HeaderLines;
 
@@ -415,7 +420,7 @@ namespace osum
             if (free && DistBuild)
                 osz2Filename = baseFileWithLocation + ".osf2";
             else
-                osz2Filename = baseFileWithLocation + (usem4a ? ".m4a.osz2" : ".osz2");
+                osz2Filename = baseFileWithLocation + (usem4a && !DistBuild ? ".m4a.osz2" : ".osz2");
 
             string audioFilename = null;
 
@@ -701,7 +706,7 @@ namespace osum
 
                     if (index <= 0)
                         throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
-                    switchHpObject = p.HitObjectManager.ActiveStreamObjects[index - 1];
+                    switchHpObject = p.HitObjectManager.ActiveStreamObjects[index];
                 }
 
 
@@ -723,7 +728,7 @@ namespace osum
                     {
                         double currentHp = p.healthBar.CurrentHpUncapped;
                         
-                        healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 4.5) / (currentHp - HealthBar.HP_BAR_INITIAL);
+                        healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 5) / (currentHp - HealthBar.HP_BAR_INITIAL);
                         Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
 
                         switchHpObject = null;

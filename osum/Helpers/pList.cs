@@ -8,6 +8,7 @@ namespace osu_common.Helpers
     {
         private readonly bool forceSortOnAdd;
         internal bool UseBackwardsSearch;
+        internal bool InsertAfterOnEqual;
         private IComparer<T> comparer;
 
         public pList()
@@ -52,9 +53,10 @@ namespace osu_common.Helpers
                 {
                     for (index = count - 1; index >= 0; index--)
                     {
-                        if (base[index].CompareTo(item) > 0)
-                            continue;
-                        base.Insert(++index, item);
+                        int compare = base[index].CompareTo(item);
+                        if (compare > 0) continue;
+
+                        base.Insert((compare < 0 || InsertAfterOnEqual) ? ++index : index, item);
                         return index;
                     }
 
@@ -65,7 +67,7 @@ namespace osu_common.Helpers
             else
             {
                 index = comparer != null ? BinarySearch(item, comparer) : BinarySearch(item);
-                index = index < 0 ? ~index : index;
+                index = index < 0 ? ~index : (InsertAfterOnEqual ? index + 1 : index);
                 Insert(index, item);
             }
 

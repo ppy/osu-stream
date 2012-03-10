@@ -108,12 +108,19 @@ namespace osum.GameModes
         string scoreTestFilename = "score-" + DateTime.Now.Ticks + ".txt";
 #endif
 
+#if HP_TESTING
+        string healthTestFilename = "health-" + DateTime.Now.Ticks + ".txt";
+#endif
+
         public override void Initialize()
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
 #if SCORE_TESTING
             File.WriteAllText(scoreTestFilename, "");
+#endif
+#if HP_TESTING
+            File.WriteAllText(healthTestFilename, "");
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
@@ -225,7 +232,7 @@ namespace osum.GameModes
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
 
-            Resume(firstObjectTime, 8, true);
+            Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
         }
 
         protected virtual void InitializeStream()
@@ -334,19 +341,21 @@ namespace osum.GameModes
         /// </summary>
         /// <param name="startTime">AudioTime of the point at which the countdown finishes (the "go"+1 beat)</param>
         /// <param name="beats">How many beats we should count in.</param>
-        internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false)
+        internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false, int countdownOffset = 0)
         {
             if (Beatmap != null && startTime != 0 && beats != 0)
             {
                 double beatLength = Beatmap.beatLengthAt(startTime);
+                double offset = Beatmap.controlPointAt(startTime).offset;
+                int actualStartTime = (int)(offset + (int)((startTime - offset) / beatLength + 0.5d - countdownOffset) * beatLength);
 
                 int countdownStartTime;
                 if (!countdown.HasFinished)
                     countdownStartTime = countdown.StartTime - (int)(beatLength * beats);
                 else
                 {
-                    countdown.SetStartTime(startTime, beatLength);
-                    countdownStartTime = startTime - (int)(beatLength * beats);
+                    countdown.SetStartTime(actualStartTime, beatLength);
+                    countdownStartTime = actualStartTime - (int)(beatLength * beats);
                 }
             }
 
@@ -419,7 +428,7 @@ namespace osum.GameModes
                 return;
             }
 
-            if (!(Clock.AudioTime > 0 && !AudioEngine.Music.IsElapsing))
+            if (!(Clock.AudioTime > 0 && (AudioEngine.Music == null ||!AudioEngine.Music.IsElapsing)))
             {
                 //pass on the event to hitObjectManager for handling.
                 if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
@@ -517,19 +526,19 @@ namespace osum.GameModes
                     scoreChange = 30;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 2 * hitObject.HpMultiplier;
+                    healthChange = 1.2 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderEnd:
                     scoreChange = 30;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 3 * hitObject.HpMultiplier;
+                    healthChange = 1.6 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.SliderTick:
                     scoreChange = 10;
                     comboMultiplier = false;
                     increaseCombo = true;
-                    healthChange = 1 * hitObject.HpMultiplier;
+                    healthChange = 0.8 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Hit50:
                     scoreChange = 50;
@@ -543,7 +552,7 @@ namespace osum.GameModes
                     CurrentScore.count100++;
                     lastJudgeType = ScoreChange.Hit100;
                     increaseCombo = true;
-                    healthChange = 0.5;
+                    healthChange = 1;
                     break;
                 case ScoreChange.Hit300:
                     scoreChange = 300;
@@ -600,6 +609,7 @@ namespace osum.GameModes
 
                     CurrentScore.comboBonusScore += comboAmount;
 
+
                     //check we don't exceed 0.6mil total (before accuracy bonus).
                     //null check makes sure we aren't doing score calculations via combinator.
                     if (GameBase.Instance != null && CurrentScore.hitScore + CurrentScore.comboBonusScore > Score.HIT_PLUS_COMBO_BONUS_AMOUNT)
@@ -622,32 +632,34 @@ namespace osum.GameModes
             File.AppendAllText(scoreTestFilename, "at " + Clock.AudioTime + " : " + change + "\t" + CurrentScore.hitScore + "\t" + CurrentScore.comboBonusScore + "\t" + (healthBar != null ? healthBar.CurrentHp.ToString() : "") + "\n");
 #endif
 
+#if HP_TESTING
+            File.AppendAllText(healthTestFilename, "at " + Clock.AudioTime + " : " + change + "\t" + healthChange + "\t" + (healthChange * Beatmap.HpStreamAdjustmentMultiplier) + "x\t" + (healthBar != null ? healthBar.CurrentHpUncapped.ToString() : "") + " -> " + (healthBar != null ? (healthBar.CurrentHpUncapped + healthChange * Beatmap.HpStreamAdjustmentMultiplier).ToString() : "") + "\n");
+#endif
+
             if (healthBar != null)
             {
-                if (HitObjectManager == null || !HitObjectManager.StreamChanging)
+                //then handle the hp addition
+                if (healthChange < 0)
                 {
-                    //then handle the hp addition
-                    if (healthChange < 0)
+                    Difficulty streamDifficulty = hitObjectManager.ActiveStream;
+                    float streamMultiplier = 1;
+
+                    switch (streamDifficulty)
                     {
-                        Difficulty streamDifficulty = hitObjectManager.ActiveStream;
-                        float streamMultiplier = 1;
-
-                        switch (streamDifficulty)
-                        {
-                            case Difficulty.Hard:
-                                streamMultiplier = 1.3f;
-                                break;
-                            case Difficulty.Normal:
-                                streamMultiplier = 1.1f;
-                                break;
-                        }
-
-
-                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
+                        case Difficulty.Hard:
+                            streamMultiplier = 1.3f;
+                            break;
+                        case Difficulty.Normal:
+                            streamMultiplier = 1.1f;
+                            break;
                     }
-                    else
-                        healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
+
+
+                    if (HitObjectManager == null || !HitObjectManager.StreamChanging)
+                        healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
                 }
+                else
+                    healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
             }
 
             if (scoreDisplay != null)

@@ -205,6 +205,11 @@ namespace osum.GameplayElements
         /// </summary>
         public static int FollowPointScreenTime = 200;
 
+        /// <summary>
+        /// Fastest time a follow line can extend at.
+        /// </summary>
+        public static int FollowPointSpeedLimit = 200;
+
         public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
 
         /// <summary>

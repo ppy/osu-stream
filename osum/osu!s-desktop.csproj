@@ -55,6 +55,9 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>osu!s.ico</ApplicationIcon>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\osu!common\Aes.cs" />
     <Compile Include="Helpers\osu!common\AesManaged.cs" />
     <Compile Include="Helpers\osu!common\bSerializable.cs" />
@@ -263,6 +267,7 @@
     <Content Include="Localisation\zh-CHT.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="osu!s.ico" />
     <Content Include="Skins\Default\rankbling.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

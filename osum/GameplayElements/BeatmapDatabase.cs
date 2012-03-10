@@ -66,9 +66,12 @@ namespace osum.GameplayElements
             else if (Version < 9)
             {
 #if iOS
-                foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
+                if (MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."))
                 {
-                    MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
+                    foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
+                    {
+                        MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
+                    }
                 }
 #endif
             }

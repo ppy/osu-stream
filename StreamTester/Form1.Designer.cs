@@ -62,6 +62,7 @@ namespace StreamTester
             this.panelButtons = new System.Windows.Forms.Panel();
             this.arrow = new System.Windows.Forms.PictureBox();
             this.listAvailableMaps = new System.Windows.Forms.ListBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).BeginInit();
@@ -324,9 +325,9 @@ namespace StreamTester
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 479);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 477);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(639, 18);
+            this.statusStrip1.Size = new System.Drawing.Size(639, 20);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
@@ -334,7 +335,7 @@ namespace StreamTester
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(276, 13);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(298, 15);
             this.toolStripStatusLabel1.Text = "for osu!stream mappers only. please do not distribute :)";
             // 
             // panelDrop
@@ -419,17 +420,30 @@ namespace StreamTester
             // listAvailableMaps
             // 
             this.listAvailableMaps.FormattingEnabled = true;
-            this.listAvailableMaps.Location = new System.Drawing.Point(385, 7);
+            this.listAvailableMaps.Location = new System.Drawing.Point(385, 35);
             this.listAvailableMaps.Name = "listAvailableMaps";
-            this.listAvailableMaps.Size = new System.Drawing.Size(242, 459);
+            this.listAvailableMaps.Size = new System.Drawing.Size(242, 433);
             this.listAvailableMaps.TabIndex = 21;
             this.listAvailableMaps.SelectedValueChanged += new System.EventHandler(this.listAvailableMaps_SelectedValueChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.ForeColor = System.Drawing.Color.LightGray;
+            this.textBox1.Location = new System.Drawing.Point(385, 8);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(242, 20);
+            this.textBox1.TabIndex = 22;
+            this.textBox1.Text = "search...";
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.Enter += new System.EventHandler(this.textBox1_Enter);
+            this.textBox1.Leave += new System.EventHandler(this.textBox1_Leave);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(639, 497);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listAvailableMaps);
             this.Controls.Add(this.checkBoxEditorDifficulty);
             this.Controls.Add(this.checkBoxEditorTime);
@@ -501,6 +515,7 @@ namespace StreamTester
         private System.Windows.Forms.CheckBox checkBoxEditorTime;
         private System.Windows.Forms.CheckBox checkBoxEditorDifficulty;
         private ListBox listAvailableMaps;
+        private TextBox textBox1;
     }
 }
 
