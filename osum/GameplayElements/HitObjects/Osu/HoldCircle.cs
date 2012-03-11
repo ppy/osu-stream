@@ -263,7 +263,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.AlwaysDraw = false;
         }
 
-        internal override Vector2 EndPosition
+        public override Vector2 EndPosition
         {
             get
             {
@@ -271,7 +271,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        internal override Vector2 Position2
+        public override Vector2 Position2
         {
             get
             {

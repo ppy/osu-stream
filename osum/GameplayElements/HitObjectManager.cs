@@ -136,7 +136,7 @@ namespace osum.GameplayElements
         /// This is a temporary solution until we have all difficulties mapped for all maps.
         /// </summary>
         /// <returns></returns>
-        internal int SetActiveStream()
+        public int SetActiveStream()
         {
             if (StreamHitObjects[(int)Difficulty.Normal] != null)
                 return SetActiveStream(Difficulty.Normal);
@@ -157,7 +157,7 @@ namespace osum.GameplayElements
         /// </summary>
         /// <param name="newDifficulty">The new stream difficulty.</param>
         /// <returns>The time at which the switch will take place. -1 on failure.</returns>
-        internal virtual int SetActiveStream(Difficulty newDifficulty, bool instant = false)
+        public virtual int SetActiveStream(Difficulty newDifficulty, bool instant = false)
         {
             Difficulty oldActiveStream = ActiveStream;
 

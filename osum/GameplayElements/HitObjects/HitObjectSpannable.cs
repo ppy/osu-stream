@@ -35,7 +35,7 @@ namespace osum.GameplayElements.HitObjects
             }
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get
             {

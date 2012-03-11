@@ -160,7 +160,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get
             {

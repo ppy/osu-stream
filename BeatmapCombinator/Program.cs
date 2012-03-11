@@ -16,6 +16,8 @@ using System.Diagnostics;
 using System.Reflection;
 using osum.Support;
 using osum.Audio;
+using osum.GameModes.Play;
+using OpenTK;
 
 namespace osum
 {
@@ -727,7 +729,7 @@ namespace osum
                     if (switchHpObject != null && switchHpObject.IsHit)
                     {
                         double currentHp = p.healthBar.CurrentHpUncapped;
-                        
+
                         healthMultiplier = (HealthBar.HP_BAR_MAXIMUM - HealthBar.HP_BAR_INITIAL + 5) / (currentHp - HealthBar.HP_BAR_INITIAL);
                         Player.Beatmap.HpStreamAdjustmentMultiplier = healthMultiplier;
 
@@ -748,6 +750,9 @@ namespace osum
                     }
                 }
             }
+
+            if (difficulty == Difficulty.Normal)
+                checkStreamOverlaps();
 
             int finalScore = 0;
 
@@ -814,6 +819,72 @@ namespace osum
             //okay now we have numbers roughly around 1mil (always higher or equal to).
             //need to do something about this static, then load them up in osu!s.
             return comboMultiplier;
+        }
+
+        private static void checkStreamOverlaps()
+        {
+            bool first = true;
+            foreach (int switchTime in Player.Beatmap.StreamSwitchPoints)
+            {
+                if (!first)
+                {
+                    checkStreamOverlaps(Difficulty.Easy, Difficulty.Normal, switchTime);
+                    checkStreamOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
+                }
+
+                checkStreamOverlaps(Difficulty.Normal, Difficulty.Easy, switchTime);
+                checkStreamOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
+
+                first = false;
+            }
+
+            Player.Autoplay = true;
+        }
+
+        private static void checkStreamOverlaps(Difficulty s1, Difficulty s2, int switchTime)
+        {
+            PlayTest.StartTime = switchTime - 10000;
+            PlayTest.InitialDifficulty = s1;
+            PlayTest.AllowStreamSwitch = true;
+            Player.Autoplay = true;
+
+            if (s2 > s1)
+                PlayTest.InitialHp = 200;
+            else
+                PlayTest.InitialHp = 0;
+
+            //we want to check within a certain 
+            using (PlayTest p = new PlayTest())
+            {
+                p.Initialize();
+
+                FakeAudioTimeSource source = new FakeAudioTimeSource();
+                source.InternalTime = (PlayTest.StartTime - 10000) / 1000f;
+                Clock.AudioTimeSource = source;
+
+                HitObjectManager hitObjectManager = p.HitObjectManager;
+
+                while (Clock.AudioTime < switchTime + 10000)
+                {
+                    Clock.UpdateCustom(0.01);
+                    source.InternalTime += 0.01;
+
+                    List<HitObject> objects = hitObjectManager.ActiveStreamObjects.FindAll(h => h.IsVisible);
+                    foreach (HitObject h1 in objects)
+                        foreach (HitObject h2 in objects)
+                        {
+                            if (h1 == h2) continue;
+
+                            if (pMathHelper.Distance(h1.Position, h2.Position) < DifficultyManager.HitObjectRadiusSprite ||
+                                pMathHelper.Distance(h1.Position, h2.Position2) < DifficultyManager.HitObjectRadiusSprite ||
+                                pMathHelper.Distance(h1.Position2, h2.Position) < DifficultyManager.HitObjectRadiusSprite ||
+                                pMathHelper.Distance(h1.Position2, h2.Position2) < DifficultyManager.HitObjectRadiusSprite)
+                            {
+                                Console.WriteLine("Overlap detected at {0} from {1} to {2}", Clock.AudioTime, s1, s2 );
+                            }
+                        }
+                }
+            }
         }
     }
 }

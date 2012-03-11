@@ -475,7 +475,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get
             {
@@ -525,7 +525,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 Position
+        public override Vector2 Position
         {
             get
             {
@@ -543,7 +543,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 EndPosition
+        public override Vector2 EndPosition
         {
             get
             {
@@ -551,7 +551,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 Position2
+        public override Vector2 Position2
         {
             get
             {

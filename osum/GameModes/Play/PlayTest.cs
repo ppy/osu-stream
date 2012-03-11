@@ -23,15 +23,19 @@ namespace osum.GameModes.Play
 
         public override void Dispose()
         {
-            AudioEngine.Music.Stop();
-            Beatmap.Dispose();
+            if (AudioEngine.Music != null)
+            {
+                AudioEngine.Music.Stop();
+                Beatmap.Dispose();
+            }
             base.Dispose();
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            AudioEngine.Music.SeekTo(StartTime);
+            if (AudioEngine.Music != null && StartTime > 0)
+                AudioEngine.Music.SeekTo(StartTime);
             foreach (pList<HitObject> h in HitObjectManager.StreamHitObjects)
             {
                 if (h == null) continue;
