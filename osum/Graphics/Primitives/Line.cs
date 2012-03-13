@@ -12,7 +12,7 @@ namespace osum.Graphics.Primitives
     /// <summary>
     /// Represents a single line segment.  Drawing is handled by the LineManager class.
     /// </summary>
-    internal class Line
+    public class Line
     {
         internal Color color = Color.White;
         internal Vector2 p1; // Begin point of the line

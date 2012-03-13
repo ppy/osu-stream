@@ -234,7 +234,8 @@ namespace osum.GameModes
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
 
-            Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
+            if (hitObjectManager != null)
+                Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
         }
 
         protected virtual void InitializeStream()

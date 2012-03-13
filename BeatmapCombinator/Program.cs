@@ -18,6 +18,7 @@ using osum.Support;
 using osum.Audio;
 using osum.GameModes.Play;
 using OpenTK;
+using osum.GameplayElements.HitObjects.Osu;
 
 namespace osum
 {
@@ -477,16 +478,19 @@ namespace osum
 
             if (quick)
             {
-                calculateMultiplier(Difficulty.Normal, true);
+                processDifficulty(Difficulty.Easy, true);
+                processDifficulty(Difficulty.Normal, true);
+                processDifficulty(Difficulty.Hard, true);
+                processDifficulty(Difficulty.Expert, true);
             }
             else
             {
                 if (orderedDifficulties[(int)Difficulty.Easy] != null)
-                    headerContent.Add("0: " + calculateMultiplier(Difficulty.Easy).ToString("G17", nfi));
+                    headerContent.Add("0: " + processDifficulty(Difficulty.Easy).ToString("G17", nfi));
                 if (orderedDifficulties[(int)Difficulty.Normal] != null)
-                    headerContent.Add("1: " + calculateMultiplier(Difficulty.Normal).ToString("G17", nfi));
+                    headerContent.Add("1: " + processDifficulty(Difficulty.Normal).ToString("G17", nfi));
                 if (orderedDifficulties[(int)Difficulty.Expert] != null)
-                    headerContent.Add("3: " + calculateMultiplier(Difficulty.Expert).ToString("G17", nfi));
+                    headerContent.Add("3: " + processDifficulty(Difficulty.Expert).ToString("G17", nfi));
             }
 
             if (healthMultiplier != 0)
@@ -677,7 +681,13 @@ namespace osum
             return ((int)sounds).ToString(nfi);
         }
 
-        private static double calculateMultiplier(Difficulty difficulty, bool quick = false)
+        /// <summary>
+        /// Does various calculations for each difficulty.
+        /// </summary>
+        /// <param name="difficulty">The difficulty to process</param>
+        /// <param name="quick">Skips score normalisation if true</param>
+        /// <returns>Score multiplier if quick is not set to true, else 0</returns>
+        private static double processDifficulty(Difficulty difficulty, bool quick = false)
         {
             Console.Write("Processing " + difficulty);
 
@@ -710,7 +720,6 @@ namespace osum
                         throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
                     switchHpObject = p.HitObjectManager.ActiveStreamObjects[index];
                 }
-
 
                 FakeAudioTimeSource source = new FakeAudioTimeSource();
                 Clock.AudioTimeSource = source;
@@ -751,8 +760,9 @@ namespace osum
                 }
             }
 
-            if (difficulty == Difficulty.Normal)
-                checkStreamOverlaps();
+            Console.WriteLine();
+
+            checkOverlaps(difficulty);
 
             int finalScore = 0;
 
@@ -804,16 +814,21 @@ namespace osum
                 }
             }
 
-            Console.WriteLine(" Done");
+
+            Console.WriteLine("Done");
             Console.WriteLine();
-            Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
-            Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
-            Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
-            Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
-            Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
-            Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
-            Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
-            Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
+
+            if (!quick)
+            {
+                Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
+                Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
+                Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
+                Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);
+                Console.WriteLine("Spin score: ".PadRight(25) + s.spinnerBonusScore);
+                Console.WriteLine("Accuracy score: ".PadRight(25) + s.accuracyBonusScore);
+                Console.WriteLine("Total score: ".PadRight(25) + s.totalScore);
+                Console.WriteLine("Total score (no spin): ".PadRight(25) + finalScore);
+            }
 
             //i guess the best thing to do might be to aim slightly above 1m and ignore the excess...
             //okay now we have numbers roughly around 1mil (always higher or equal to).
@@ -821,31 +836,44 @@ namespace osum
             return comboMultiplier;
         }
 
-        private static void checkStreamOverlaps()
+        private static void checkOverlaps(Difficulty difficulty)
         {
-            bool first = true;
-            foreach (int switchTime in Player.Beatmap.StreamSwitchPoints)
+            Console.Write("Searching for overlaps", difficulty);
+            checkOverlaps(difficulty, Difficulty.None);
+            Console.WriteLine();
+
+            if (difficulty == Difficulty.Normal) //do stream overlap checks here
             {
-                if (!first)
+                Console.Write("Searching for stream switch overlaps");
+
+                bool first = true;
+                foreach (int switchTime in Player.Beatmap.StreamSwitchPoints)
                 {
-                    checkStreamOverlaps(Difficulty.Easy, Difficulty.Normal, switchTime);
-                    checkStreamOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
+                    if (!first)
+                    {
+                        checkOverlaps(Difficulty.Easy, Difficulty.Normal, switchTime);
+                        checkOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
+                    }
+
+                    checkOverlaps(Difficulty.Normal, Difficulty.Easy, switchTime);
+                    checkOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
+
+                    first = false;
                 }
 
-                checkStreamOverlaps(Difficulty.Normal, Difficulty.Easy, switchTime);
-                checkStreamOverlaps(Difficulty.Hard, Difficulty.Normal, switchTime);
-
-                first = false;
+                Console.WriteLine();
             }
-
-            Player.Autoplay = true;
         }
 
-        private static void checkStreamOverlaps(Difficulty s1, Difficulty s2, int switchTime)
+        private static void checkOverlaps(Difficulty s1, Difficulty s2 = Difficulty.None, int switchTime = 0)
         {
-            PlayTest.StartTime = switchTime - 10000;
+            bool streamSwitch = s2 != Difficulty.None;
+            PlayTest.AllowStreamSwitch = streamSwitch;
+
+            PlayTest.StartTime = switchTime > 0 ? switchTime - 10000 : 0;
+            int endTime = switchTime > 0 ? switchTime + 10000 : 0;
             PlayTest.InitialDifficulty = s1;
-            PlayTest.AllowStreamSwitch = true;
+
             Player.Autoplay = true;
 
             if (s2 > s1)
@@ -853,19 +881,23 @@ namespace osum
             else
                 PlayTest.InitialHp = 0;
 
-            //we want to check within a certain 
             using (PlayTest p = new PlayTest())
             {
                 p.Initialize();
 
                 FakeAudioTimeSource source = new FakeAudioTimeSource();
-                source.InternalTime = (PlayTest.StartTime - 10000) / 1000f;
+                source.InternalTime = Math.Max((PlayTest.StartTime - 10000) / 1000f, 0);
                 Clock.AudioTimeSource = source;
 
                 HitObjectManager hitObjectManager = p.HitObjectManager;
 
-                while (Clock.AudioTime < switchTime + 10000)
+                List<HitObjectPair> pairs = new List<HitObjectPair>();
+
+                while ((switchTime == 0 && p.Progress < 1) || Clock.AudioTime < switchTime + 10000)
                 {
+                    if (source.InternalTime % 20 < 0.01)
+                        Console.Write(".");
+
                     Clock.UpdateCustom(0.01);
                     source.InternalTime += 0.01;
 
@@ -875,16 +907,49 @@ namespace osum
                         {
                             if (h1 == h2) continue;
 
+                            HitObjectPair hop = new HitObjectPair(h1, h2);
+
+                            if (pairs.IndexOf(hop) >= 0) continue;
+
+                            //hack in the current snaking point for added security.
+                            Vector2 h1pos2 = h1 is Slider ? ((Slider)h1).SnakingEndPosition : h1.Position2;
+                            Vector2 h2pos2 = h2 is Slider ? ((Slider)h2).SnakingEndPosition : h2.Position2;
+
                             if (pMathHelper.Distance(h1.Position, h2.Position) < DifficultyManager.HitObjectRadiusSprite ||
-                                pMathHelper.Distance(h1.Position, h2.Position2) < DifficultyManager.HitObjectRadiusSprite ||
-                                pMathHelper.Distance(h1.Position2, h2.Position) < DifficultyManager.HitObjectRadiusSprite ||
-                                pMathHelper.Distance(h1.Position2, h2.Position2) < DifficultyManager.HitObjectRadiusSprite)
+                                pMathHelper.Distance(h1.Position, h2pos2) < DifficultyManager.HitObjectRadiusSprite ||
+                                pMathHelper.Distance(h1pos2, h2.Position) < DifficultyManager.HitObjectRadiusSprite ||
+                                pMathHelper.Distance(h1pos2, h2pos2) < DifficultyManager.HitObjectRadiusSprite)
                             {
-                                Console.WriteLine("Overlap detected at {0} from {1} to {2}", Clock.AudioTime, s1, s2 );
+                                pairs.Add(hop);
+                                if (s2 != Difficulty.None)
+                                    Console.WriteLine("[mod] [{1}->{2}] Overlap at {0}", Clock.AudioTime, s1.ToString()[0], s2.ToString()[0]);
+                                else
+                                    Console.WriteLine("[mod] [{1}] Overlap at {0}", Clock.AudioTime, s1, s2);
                             }
                         }
                 }
             }
+        }
+
+        internal class HitObjectPair : IEquatable<HitObjectPair>
+        {
+            internal HitObject h1;
+            internal HitObject h2;
+
+            public HitObjectPair(HitObject h1, HitObject h2)
+            {
+                this.h1 = h1;
+                this.h2 = h2;
+            }
+
+            #region IEquatable<HitObjectPair> Members
+
+            public bool Equals(HitObjectPair other)
+            {
+                return (h1 == other.h1 || h1 == other.h2) && (h2 == other.h1 || h2 == other.h2);
+            }
+
+            #endregion
         }
     }
 }

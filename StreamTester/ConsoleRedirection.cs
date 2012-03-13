@@ -8,10 +8,12 @@ namespace ConsoleRedirection
     public class TextBoxStreamWriter : TextWriter
     {
         TextBox _output = null;
+        TextBox _mod = null;
 
-        public TextBoxStreamWriter(TextBox output)
+        public TextBoxStreamWriter(TextBox output, TextBox mod)
         {
             _output = output;
+            _mod = mod;
             Console.SetOut(this);
         }
 
@@ -21,12 +23,19 @@ namespace ConsoleRedirection
         {
             base.Write(value);
             buffer.Append(value);
+
             if (value == '\n' || value == '.')
             {
-                _output.Invoke((MethodInvoker)delegate
+                string writeable = buffer.ToString();
+
+                if (writeable.StartsWith("[mod]"))
                 {
-                    _output.AppendText(buffer.ToString()); // When character data is written, append it to the text box.
-                });
+                    _mod.Invoke((MethodInvoker)delegate { _mod.AppendText(writeable.Replace("[mod] ","")); });
+                }
+                else
+                {
+                    _output.Invoke((MethodInvoker)delegate { _output.AppendText(writeable); });
+                }
                 buffer = new StringBuilder();
             }
         }

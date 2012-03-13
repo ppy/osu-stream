@@ -28,13 +28,13 @@ namespace StreamTester
         public Form1()
         {
             InitializeComponent();
-            new TextBoxStreamWriter(console);
+            new TextBoxStreamWriter(console, modconsole);
 
             if (Directory.Exists(tempDir))
                 Directory.Delete(tempDir, true);
             Directory.CreateDirectory(tempDir);
 
-            
+
             maps = findMaps(BEATMAP_PATH);
             maps.Sort();
             listAvailableMaps.Items.AddRange(maps.ToArray());
@@ -47,7 +47,7 @@ namespace StreamTester
 
             foreach (string d in Directory.GetDirectories(p))
                 findMaps(d, entries);
-            
+
             string[] files = Directory.GetFiles(p, "*.osu");
             if (files.Length > 0)
             {
@@ -71,13 +71,17 @@ namespace StreamTester
             {
                 filename = value;
 
-                buttonTestOnce. Enabled = !File.Exists(filename);
+                buttonTestOnce.Enabled = !File.Exists(filename);
                 buttonTestOnSave.Enabled = !File.Exists(filename);
+
                 Invoke((MethodInvoker)delegate
                 {
                     checkBoxQuick.Checked = true;
-                    CombinateAndTest(false);
-                    File.Delete(tempDir + "\\" + Path.GetFileNameWithoutExtension(Filename) + ".osz2");
+                    ThreadPool.QueueUserWorkItem(delegate
+                    {
+                        CombinateAndTest(false);
+                        File.Delete(tempDir + "\\" + Path.GetFileNameWithoutExtension(Filename) + ".osz2");
+                    });
                 });
             }
         }
@@ -274,18 +278,16 @@ namespace StreamTester
             Invoke((MethodInvoker)delegate
             {
                 console.Text = string.Empty;
+                modconsole.Text = string.Empty;
+
                 panelButtons.Enabled = false;
             });
 
             if (game != null)
             {
-                GameBase.Scheduler.Add(delegate
-                {
-                    Director.ChangeMode(OsuMode.PositioningTest, null);
-                }, true);
-
+                GameBase.Scheduler.Add(delegate { Director.ChangeMode(OsuMode.PositioningTest, null); }, true);
                 while (Director.CurrentOsuMode == OsuMode.PlayTest)
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
             }
 
             try
@@ -402,7 +404,7 @@ namespace StreamTester
             buttonTestOnSave.Enabled = !checkBoxm4a.Checked;
             groupBoxDifficulty.Enabled = !checkBoxm4a.Checked;
             groupBoxStreamSwitch.Enabled = !checkBoxm4a.Checked;
-            
+
             buttonTestOnce.Text = checkBoxm4a.Checked ? "Create Package" : "Test Once";
         }
 

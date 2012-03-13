@@ -33,6 +33,10 @@ namespace osum.GameModes.Play
 
         public override void Initialize()
         {
+            Director.ActiveTransition = null; //can get in a weird state if we don't reset this.
+            
+            Autoplay = true;
+
             base.Initialize();
             if (AudioEngine.Music != null && StartTime > 0)
                 AudioEngine.Music.SeekTo(StartTime);
