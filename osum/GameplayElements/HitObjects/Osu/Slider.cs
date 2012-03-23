@@ -54,7 +54,7 @@ using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
-    internal class Slider : HitObjectSpannable
+    public class Slider : HitObjectSpannable
     {
         #region Sprites
 
@@ -184,6 +184,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             : base(hitObjectManager, startPosition, startTime, soundType, newCombo, comboOffset)
         {
             CurveType = curveType;
+
+            SnakingEndPosition = Position;
 
             controlPoints = sliderPoints;
 
@@ -475,7 +477,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get
             {
@@ -525,7 +527,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 Position
+        public override Vector2 Position
         {
             get
             {
@@ -543,7 +545,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 EndPosition
+        public override Vector2 EndPosition
         {
             get
             {
@@ -551,7 +553,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Vector2 Position2
+        public override Vector2 Position2
         {
             get
             {
@@ -1100,6 +1102,8 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// Used by both sliders and hold circles
         /// </summary>
         protected double Velocity;
+        
+        public Vector2 SnakingEndPosition;
 
 #if iOS
         static int oldFboId = -1;
@@ -1150,9 +1154,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
 
             Line l;
-            Vector2 drawEndPosition = positionAtProgress(drawProgress, lastDrawnSegmentIndex + 1, out l);
+            SnakingEndPosition = positionAtProgress(drawProgress, lastDrawnSegmentIndex + 1, out l);
             foreach (pDrawable p in spriteCollectionEnd)
-                p.Position = drawEndPosition;
+                p.Position = SnakingEndPosition;
 
             Line prev = FirstSegmentIndex > 0 ? drawableSegments[FirstSegmentIndex - 1] : null;
             Line next = lastDrawnSegmentIndex + 1 < drawableSegments.Count ? drawableSegments[lastDrawnSegmentIndex + 1] : null;

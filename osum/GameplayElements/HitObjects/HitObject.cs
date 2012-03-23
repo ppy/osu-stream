@@ -28,7 +28,7 @@ namespace osum.GameplayElements
             throw new NotImplementedException();
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get { throw new NotImplementedException(); }
         }
@@ -318,7 +318,7 @@ namespace osum.GameplayElements
         #region Drawing
 
         protected Vector2 position;
-        internal virtual Vector2 Position
+        public virtual Vector2 Position
         {
             get { return position; }
             set
@@ -330,7 +330,7 @@ namespace osum.GameplayElements
             }
         }
 
-        internal virtual Vector2 EndPosition
+        public virtual Vector2 EndPosition
         {
             get { return Position; }
         }
@@ -338,7 +338,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// For objects with two distinct endpoints, this will be the "far" one.
         /// </summary>
-        internal virtual Vector2 Position2
+        public virtual Vector2 Position2
         {
             get { return Position; }
         }
@@ -350,7 +350,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Id this hitObject visible at the current audio time?
         /// </summary>
-        internal abstract bool IsVisible { get; }
+        public abstract bool IsVisible { get; }
 
         #endregion
 

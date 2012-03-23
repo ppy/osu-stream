@@ -166,6 +166,7 @@ namespace osum.GameModes.Play
 
         private HitObject sampleHitObject;
         private pSprite s_Demo;
+        private SampleSetInfo drumSampleSetInfo = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f };
 
         protected override void resetScore()
         {
@@ -450,6 +451,7 @@ namespace osum.GameModes.Play
 
                         sampleHitObject = new HoldCircle(HitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
                         sampleHitObject.Clocking = ClockTypes.Manual;
+                        sampleHitObject.SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f };
 
                         HitObjectManager.Add(sampleHitObject, Difficulty.Easy);
                         HitObjectManager.PostProcessing();
@@ -491,20 +493,20 @@ namespace osum.GameModes.Play
                         const int y1 = 80;
                         const int y2 = 384 - 80;
 
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 160 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 168 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 176 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 184 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
 
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 200 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 204 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 192 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 196 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 200 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 204 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
 
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 208 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 212 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
-                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 220 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1), Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y1), music_offset + 208 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y1), music_offset + 212 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x1, y2), music_offset + 216 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                        HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(x2, y2), music_offset + 220 * music_beatlength, true, 0, HitObjectSoundType.Normal, (4 * music_beatlength) / 8f / 1000f, 8, null, 1, 1) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
 
                         HitObjectManager.PostProcessing();
 
@@ -1365,9 +1367,9 @@ namespace osum.GameModes.Play
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(256, 320), music_offset + 82500, false, 0, HitObjectSoundType.Normal), Difficulty);
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(112, 320), music_offset + 83250, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(400, 104), music_offset + 84000, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50), Difficulty);
-                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(112, 104), music_offset + 85500, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50), Difficulty);
-                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(400, 288), music_offset + 87000, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50), Difficulty);
+                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(400, 104), music_offset + 84000, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(112, 104), music_offset + 85500, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50) { SampleSet = new SampleSetInfo() { SampleSet = SampleSet.Drum, Volume = 0.8f } }, Difficulty);
+                    HitObjectManager.Add(new HoldCircle(HitObjectManager, new Vector2(400, 288), music_offset + 87000, true, 0, HitObjectSoundType.Normal, 50, 8, null, 266.666666666, 50) { SampleSet = drumSampleSetInfo }, Difficulty);
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(120, 264), music_offset + 88500, true, 0, HitObjectSoundType.Normal), Difficulty);
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(256, 152), music_offset + 89250, false, 0, HitObjectSoundType.Normal), Difficulty);
 

@@ -7,7 +7,7 @@ using osum.Helpers;
 
 namespace osum.GameplayElements.HitObjects
 {
-    class HitObjectSpannable : HitObject
+    public class HitObjectSpannable : HitObject
     {
         public HitObjectSpannable(HitObjectManager hitObjectManager, Vector2 position, int startTime, HitObjectSoundType soundType, bool newCombo, int comboOffset)
             : base(hitObjectManager, position, startTime, soundType, newCombo, comboOffset)
@@ -35,7 +35,7 @@ namespace osum.GameplayElements.HitObjects
             }
         }
 
-        internal override bool IsVisible
+        public override bool IsVisible
         {
             get
             {

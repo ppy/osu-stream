@@ -63,6 +63,7 @@ namespace StreamTester
             this.arrow = new System.Windows.Forms.PictureBox();
             this.listAvailableMaps = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.modconsole = new System.Windows.Forms.TextBox();
             this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).BeginInit();
@@ -327,7 +328,7 @@ namespace StreamTester
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.statusStrip1.Location = new System.Drawing.Point(0, 477);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(639, 20);
+            this.statusStrip1.Size = new System.Drawing.Size(642, 20);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
@@ -378,11 +379,11 @@ namespace StreamTester
             // 
             this.console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.console.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.console.Location = new System.Drawing.Point(15, 341);
+            this.console.Location = new System.Drawing.Point(15, 342);
             this.console.Multiline = true;
             this.console.Name = "console";
             this.console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.console.Size = new System.Drawing.Size(364, 125);
+            this.console.Size = new System.Drawing.Size(273, 125);
             this.console.TabIndex = 15;
             // 
             // groupBoxStreamSwitch
@@ -411,7 +412,7 @@ namespace StreamTester
             this.arrow.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.arrow.BackColor = System.Drawing.Color.Transparent;
             this.arrow.Image = global::StreamTester.Properties.Resources.arrow;
-            this.arrow.Location = new System.Drawing.Point(10, 76);
+            this.arrow.Location = new System.Drawing.Point(12, 76);
             this.arrow.Name = "arrow";
             this.arrow.Size = new System.Drawing.Size(13, 8);
             this.arrow.TabIndex = 18;
@@ -422,7 +423,7 @@ namespace StreamTester
             this.listAvailableMaps.FormattingEnabled = true;
             this.listAvailableMaps.Location = new System.Drawing.Point(385, 35);
             this.listAvailableMaps.Name = "listAvailableMaps";
-            this.listAvailableMaps.Size = new System.Drawing.Size(242, 433);
+            this.listAvailableMaps.Size = new System.Drawing.Size(242, 303);
             this.listAvailableMaps.TabIndex = 21;
             this.listAvailableMaps.SelectedValueChanged += new System.EventHandler(this.listAvailableMaps_SelectedValueChanged);
             // 
@@ -438,11 +439,23 @@ namespace StreamTester
             this.textBox1.Enter += new System.EventHandler(this.textBox1_Enter);
             this.textBox1.Leave += new System.EventHandler(this.textBox1_Leave);
             // 
+            // modconsole
+            // 
+            this.modconsole.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.modconsole.ForeColor = System.Drawing.Color.Red;
+            this.modconsole.Location = new System.Drawing.Point(294, 342);
+            this.modconsole.Multiline = true;
+            this.modconsole.Name = "modconsole";
+            this.modconsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.modconsole.Size = new System.Drawing.Size(333, 125);
+            this.modconsole.TabIndex = 23;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 497);
+            this.ClientSize = new System.Drawing.Size(642, 497);
+            this.Controls.Add(this.modconsole);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listAvailableMaps);
             this.Controls.Add(this.checkBoxEditorDifficulty);
@@ -516,6 +529,7 @@ namespace StreamTester
         private System.Windows.Forms.CheckBox checkBoxEditorDifficulty;
         private ListBox listAvailableMaps;
         private TextBox textBox1;
+        private TextBox modconsole;
     }
 }
 

@@ -24,6 +24,7 @@ using osu_common.Helpers;
 using osum.GameplayElements.HitObjects.Osu;
 using osum.UI;
 using osu_common.Libraries.Osz2;
+using osum.GameModes.Play;
 
 namespace osum.GameModes
 {
@@ -139,8 +140,9 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
-                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
-                ShowGuideFingers = Autoplay || GameBase.Config.GetValue<bool>("GuideFingers", false);
+                ShowGuideFingers = Autoplay || (GameBase.Config != null && GameBase.Config.GetValue<bool>("GuideFingers", false));
+                if (this is Tutorial || ShowGuideFingers)
+                    GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
 
                 InitializeStream();
 
@@ -232,7 +234,8 @@ namespace osum.GameModes
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
 
-            Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
+            if (hitObjectManager != null)
+                Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
         }
 
         protected virtual void InitializeStream()
