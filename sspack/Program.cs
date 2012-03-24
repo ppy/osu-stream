@@ -66,6 +66,7 @@ namespace sspack
             string skinDir = @"../../../osum/Skins/Default/";
             foreach (string dir in Directory.GetDirectories(skinDir))
             {
+                if (dir.Contains("_huge")) continue;
                 Console.WriteLine(dir);
                 Launch(dir);
             }
@@ -118,11 +119,13 @@ namespace sspack
             {
                 if (str.EndsWith(".small.png"))
                     images_lowres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".small.png", ""));
-                else if (str.EndsWith(".huge.png"))
-                    images_lowres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".huge.png", ""));
                 else
                     images.Add(str);
             }
+
+            if (Directory.Exists(dir + "_huge"))
+                foreach (string str in Directory.GetFiles(dir + "_huge", "*.png"))
+                    images_highres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".png",""));
 
             // generate our output
             ImagePacker imagePacker = new ImagePacker();
@@ -159,7 +162,11 @@ namespace sspack
 
                 if (images_highres.Contains(spriteName))
                 {
-                    Bitmap spriteHighres = Bitmap.FromFile(m.Key.Replace(".png", ".small.png")) as Bitmap;
+                    Bitmap spriteHighres = Bitmap.FromFile(dir + "_huge\\" + spriteName + ".png") as Bitmap;
+
+                    if (spriteHighres.Width != m.Value.Width * 2 || spriteHighres.Height != m.Value.Height * 2)
+                        Console.WriteLine("FATAL: dimensions of high res sprite " + m.Key + " do not match!");
+
                     gfxHighres.DrawImageUnscaledAndClipped(spriteHighres, new Rectangle(m.Value.X * 2, m.Value.Y * 2, m.Value.Width * 2, m.Value.Height * 2));
                 }
 
