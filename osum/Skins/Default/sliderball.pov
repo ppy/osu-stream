@@ -2,7 +2,7 @@
 #declare FINAL_BALL = true; // +w1024 +h1024 +ki0 +kf0.9 +kfi0 +kff9 +ua +fn
 #declare FINAL_GLOSS = false; // +w1024 +h1024 +fn
 
-#version 3.6
+#version 3.7
 
 global_settings
 {
