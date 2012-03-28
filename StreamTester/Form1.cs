@@ -344,8 +344,16 @@ namespace StreamTester
                     {
                         ThreadPool.QueueUserWorkItem(w =>
                         {
-                            game = new GameBaseDesktop(OsuMode.PlayTest);
-                            game.Run();
+                            try
+                            {
+                                game = new GameBaseDesktop(OsuMode.PlayTest);
+                                game.Run();
+                            }
+                            catch (ApplicationException ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                game.Exit();
+                            }
                         });
                     }
                     else
