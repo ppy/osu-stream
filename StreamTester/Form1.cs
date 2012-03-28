@@ -74,6 +74,8 @@ namespace StreamTester
                 buttonTestOnce.Enabled = !File.Exists(filename);
                 buttonTestOnSave.Enabled = !File.Exists(filename);
 
+                modconsole.Text = string.Empty;
+
                 Invoke((MethodInvoker)delegate
                 {
                     checkBoxQuick.Checked = true;
@@ -278,7 +280,7 @@ namespace StreamTester
             Invoke((MethodInvoker)delegate
             {
                 console.Text = string.Empty;
-                modconsole.Text = string.Empty;
+                if (checkBoxAnalysis.Checked) modconsole.Text = string.Empty;
 
                 panelButtons.Enabled = false;
             });
