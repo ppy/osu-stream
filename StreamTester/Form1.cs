@@ -297,6 +297,7 @@ namespace StreamTester
                 //this will be restored at the end of processing.
 
                 Environment.CurrentDirectory = tempDir;
+                BeatmapCombinator.Analysis = checkBoxAnalysis.Checked;
                 packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
                 Environment.CurrentDirectory = osusDir;
 
