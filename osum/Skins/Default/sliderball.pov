@@ -1,7 +1,6 @@
-// +w1024 +h1024 +ki0 +kf0.9 +kfi0 +kff9 +ua
 #declare TEST = false;
-#declare FINAL_BALL = true;
-#declare FINAL_GLOSS = false;
+#declare FINAL_BALL = true; // +w1024 +h1024 +ki0 +kf0.9 +kfi0 +kff9 +ua +fn
+#declare FINAL_GLOSS = false; // +w1024 +h1024 +fn
 
 #version 3.7
 
@@ -12,7 +11,11 @@ global_settings
 
 background
 {
+    #if (FINAL_GLOSS)
+    color rgb 0
+    #else
     color rgbt 1
+    #end
 }
 
 camera

@@ -174,7 +174,7 @@ namespace osum.GameModes.Store
 
                     string filename = split[0];
                     string checksum = split[1];
-                    string revision = length > 3 ? split[3] : "1.0";
+                    string revision = length > 2 ? split[3] : "1.0";
                     string title = length > 2 ? split[2] : null;
                     //string youtubeId = length > 4 ? split[4] : null;
                     string updateChecksum = null;

@@ -74,6 +74,8 @@ namespace StreamTester
                 buttonTestOnce.Enabled = !File.Exists(filename);
                 buttonTestOnSave.Enabled = !File.Exists(filename);
 
+                modconsole.Text = string.Empty;
+
                 Invoke((MethodInvoker)delegate
                 {
                     checkBoxQuick.Checked = true;
@@ -278,7 +280,7 @@ namespace StreamTester
             Invoke((MethodInvoker)delegate
             {
                 console.Text = string.Empty;
-                modconsole.Text = string.Empty;
+                if (checkBoxAnalysis.Checked) modconsole.Text = string.Empty;
 
                 panelButtons.Enabled = false;
             });
@@ -297,6 +299,7 @@ namespace StreamTester
                 //this will be restored at the end of processing.
 
                 Environment.CurrentDirectory = tempDir;
+                BeatmapCombinator.Analysis = checkBoxAnalysis.Checked;
                 packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
                 Environment.CurrentDirectory = osusDir;
 
@@ -341,8 +344,16 @@ namespace StreamTester
                     {
                         ThreadPool.QueueUserWorkItem(w =>
                         {
-                            game = new GameBaseDesktop(OsuMode.PlayTest);
-                            game.Run();
+                            try
+                            {
+                                game = new GameBaseDesktop(OsuMode.PlayTest);
+                                game.Run();
+                            }
+                            catch (ApplicationException ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                game.Exit();
+                            }
                         });
                     }
                     else

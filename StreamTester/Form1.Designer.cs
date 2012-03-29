@@ -64,6 +64,7 @@ namespace StreamTester
             this.listAvailableMaps = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.modconsole = new System.Windows.Forms.TextBox();
+            this.checkBoxAnalysis = new System.Windows.Forms.CheckBox();
             this.groupBoxDifficulty.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.beatmapLayout)).BeginInit();
@@ -326,9 +327,9 @@ namespace StreamTester
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 477);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 479);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(642, 20);
+            this.statusStrip1.Size = new System.Drawing.Size(642, 18);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
@@ -336,7 +337,7 @@ namespace StreamTester
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(298, 15);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(276, 13);
             this.toolStripStatusLabel1.Text = "for osu!stream mappers only. please do not distribute :)";
             // 
             // panelDrop
@@ -423,7 +424,7 @@ namespace StreamTester
             this.listAvailableMaps.FormattingEnabled = true;
             this.listAvailableMaps.Location = new System.Drawing.Point(385, 35);
             this.listAvailableMaps.Name = "listAvailableMaps";
-            this.listAvailableMaps.Size = new System.Drawing.Size(242, 303);
+            this.listAvailableMaps.Size = new System.Drawing.Size(242, 264);
             this.listAvailableMaps.TabIndex = 21;
             this.listAvailableMaps.SelectedValueChanged += new System.EventHandler(this.listAvailableMaps_SelectedValueChanged);
             // 
@@ -450,11 +451,26 @@ namespace StreamTester
             this.modconsole.Size = new System.Drawing.Size(333, 125);
             this.modconsole.TabIndex = 23;
             // 
+            // checkBoxAnalysis
+            // 
+            this.checkBoxAnalysis.AutoSize = true;
+            this.checkBoxAnalysis.Checked = true;
+            this.checkBoxAnalysis.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAnalysis.Location = new System.Drawing.Point(389, 312);
+            this.checkBoxAnalysis.Name = "checkBoxAnalysis";
+            this.checkBoxAnalysis.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxAnalysis.TabIndex = 10;
+            this.checkBoxAnalysis.Text = "Run Map Analysis";
+            this.toolTip1.SetToolTip(this.checkBoxAnalysis, "Make an osz2 specifically for device testing. Better timing, but cannot be used o" +
+        "n PC. Note that this needs an m4a audio track in the beatmap folder.");
+            this.checkBoxAnalysis.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(642, 497);
+            this.Controls.Add(this.checkBoxAnalysis);
             this.Controls.Add(this.modconsole);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listAvailableMaps);
@@ -530,6 +546,7 @@ namespace StreamTester
         private ListBox listAvailableMaps;
         private TextBox textBox1;
         private TextBox modconsole;
+        private CheckBox checkBoxAnalysis;
     }
 }
 

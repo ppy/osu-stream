@@ -212,8 +212,11 @@ namespace osum
             //define any available sprite sheets here.
             if (NativeSize.Width < 720)
                 SpriteSheetResolution = 480;
-            else
+            else if (NativeSize.Width < 1280)
                 SpriteSheetResolution = 960;
+            else
+                SpriteSheetResolution = 1920;
+
 
             //if we are switching to a new sprite sheet (resizing window on PC) let's refresh our textures.
             if (SpriteSheetResolution != oldResolution && oldResolution > 0)

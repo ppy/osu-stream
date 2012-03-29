@@ -66,6 +66,7 @@ namespace sspack
             string skinDir = @"../../../osum/Skins/Default/";
             foreach (string dir in Directory.GetDirectories(skinDir))
             {
+                if (dir.Contains("_huge")) continue;
                 Console.WriteLine(dir);
                 Launch(dir);
             }
@@ -112,15 +113,19 @@ namespace sspack
             // compile a list of images
             List<string> images = new List<string>();
             List<string> images_lowres = new List<string>();
+            List<string> images_highres = new List<string>();
 
             foreach (string str in Directory.GetFiles(dir, "*.png"))
             {
-                if (str.Length > 10 && str.Substring(str.Length - 10).ToLowerInvariant() == ".small.png")
+                if (str.EndsWith(".small.png"))
                     images_lowres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".small.png", ""));
                 else
                     images.Add(str);
             }
 
+            if (Directory.Exists(dir + "_huge"))
+                foreach (string str in Directory.GetFiles(dir + "_huge", "*.png"))
+                    images_highres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".png",""));
 
             // generate our output
             ImagePacker imagePacker = new ImagePacker();
@@ -136,6 +141,10 @@ namespace sspack
             Graphics gfxLowres = Graphics.FromImage(bmpLowres);
             gfxLowres.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
+            Bitmap bmpHighres = new Bitmap(outputImage, new Size(outputImage.Width * 2, outputImage.Height * 2));
+            Graphics gfxHighres = Graphics.FromImage(bmpHighres);
+            gfxHighres.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
             foreach (var m in outputMap)
             {
                 if (m.Value.Width % 2 != 0)
@@ -149,6 +158,16 @@ namespace sspack
                 {
                     Bitmap spriteLowres = Bitmap.FromFile(m.Key.Replace(".png", ".small.png")) as Bitmap;
                     gfxLowres.DrawImageUnscaledAndClipped(spriteLowres, new Rectangle(m.Value.X / 2, m.Value.Y / 2, m.Value.Width / 2, m.Value.Height / 2));
+                }
+
+                if (images_highres.Contains(spriteName))
+                {
+                    Bitmap spriteHighres = Bitmap.FromFile(dir + "_huge\\" + spriteName + ".png") as Bitmap;
+
+                    if (spriteHighres.Width != m.Value.Width * 2 || spriteHighres.Height != m.Value.Height * 2)
+                        Console.WriteLine("FATAL: dimensions of high res sprite " + m.Key + " do not match!");
+
+                    gfxHighres.DrawImageUnscaledAndClipped(spriteHighres, new Rectangle(m.Value.X * 2, m.Value.Y * 2, m.Value.Width * 2, m.Value.Height * 2));
                 }
 
                 sb.AppendFormat("            textureLocations.Add(OsuTexture.{0}, new SpriteSheetTexture(\"{1}\", {2}, {3}, {4}, {5}));\r\n",
@@ -166,6 +185,7 @@ namespace sspack
 
             imageExporter.Save(dir + "_960.png", outputImage);
             bmpLowres.Save(dir + "_480.png", ImageFormat.Png);
+            bmpHighres.Save(dir + "_1920.png", ImageFormat.Png);
         }
     }
 }

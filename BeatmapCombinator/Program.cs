@@ -57,6 +57,7 @@ namespace osum
         private static double healthMultiplier;
 
         static bool DistBuild;
+        public static bool Analysis;
 
         /// <summary>
         /// Combines many .osu files into one .osc
@@ -762,7 +763,8 @@ namespace osum
 
             Console.WriteLine();
 
-            checkOverlaps(difficulty);
+            if (Analysis)
+                checkOverlaps(difficulty);
 
             int finalScore = 0;
 
