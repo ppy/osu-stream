@@ -80,11 +80,14 @@ namespace osum.GameplayElements
         public const int sensitivity_modifier = 16;
 
         public static Vector2 SpinnerCentreFromBottom = new Vector2(0, 210);
-        public static Vector2 SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.Width/2, GameBase.BaseSize.Height - SpinnerCentreFromBottom.Y));
+        public static Vector2 SpinnerCentre;
 
         internal Spinner(HitObjectManager hitObjectManager, int startTime, int endTime, HitObjectSoundType soundType)
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
+            if (SpinnerCentre == Vector2.Zero)
+                SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, GameBase.BaseSize.Height - SpinnerCentreFromBottom.Y));
+
             Position = SpinnerCentre;
             EndTime = endTime;
             Type = HitObjectType.Spinner;
