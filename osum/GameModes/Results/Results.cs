@@ -307,9 +307,8 @@ namespace osum.GameModes
                 layer1.Add(heading);
 
                 int deviceType = 0;
-#if iOS
+#if iOS && !MAPPER
                 deviceType = (int)osum.Support.iPhone.HardwareDetection.Version;
-#endif
 
                 string check = CryptoHelper.GetMd5String("moocow" +
                     GameBase.Instance.DeviceIdentifier +
@@ -381,7 +380,6 @@ namespace osum.GameModes
                         if (finishedDisplaying) GameBase.Notify(rankingNotification);
                     }
                 };
-#if iOS && !MAPPER
                 NetManager.AddRequest(nr);
 #endif
             }
