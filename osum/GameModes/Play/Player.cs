@@ -125,7 +125,7 @@ namespace osum.GameModes
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
-            
+
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
@@ -425,6 +425,16 @@ namespace osum.GameModes
 
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
+#if MAPPER
+            if (Player.Autoplay)
+            {
+                if (IsPaused)
+                    Resume();
+                else
+                    Pause(false);
+            }
+#endif
+
             if (menu != null && menu.MenuDisplayed)
             {
                 menu.handleInput(source, point);
@@ -964,17 +974,21 @@ namespace osum.GameModes
 
         internal bool IsPaused
         {
+#if MAPPER
+            get { return !AudioEngine.Music.IsElapsing; }
+#else
             get { return menu != null && menu.MenuDisplayed; }
+#endif
         }
 
-        internal virtual bool Pause()
+        internal virtual bool Pause(bool showMenu = true)
         {
             if (!Failed) AudioEngine.Music.Pause();
 
             if (HitObjectManager != null)
                 HitObjectManager.StopAllSounds();
 
-            if (menu != null) menu.MenuDisplayed = true;
+            if (menu != null && showMenu) menu.MenuDisplayed = true;
             if (menuPauseButton != null) menuPauseButton.HandleInput = false;
 
             return true;
