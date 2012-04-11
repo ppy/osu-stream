@@ -189,7 +189,7 @@ namespace osum.GameModes
                     maps.Add(b);
                 }
 
-                if (hasMissingMaps)
+                /*if (hasMissingMaps)
                 {
                     if (!GameBase.Config.GetValue<bool>("AppleScrewedUp1", false))
                     {
@@ -202,7 +202,7 @@ namespace osum.GameModes
                 {
                     //do this in case we have recovered maps and need to reset the warning (it might happen again!)
                     GameBase.Config.SetValue<bool>("AppleScrewedUp1", false);
-                }
+                }*/ 
             }
             else
             {
