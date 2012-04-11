@@ -125,7 +125,7 @@ namespace osum
         public GameBase(OsuMode mode = OsuMode.Unknown)
         {
 #if !DIST
-            if (DateTime.Now > new DateTime(2012, 04, 10))
+            if (DateTime.Now > new DateTime(2012, 06, 30))
                 Environment.Exit(-1);
 #endif
 
