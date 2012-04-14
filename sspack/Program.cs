@@ -160,6 +160,8 @@ namespace sspack
                     gfxLowres.DrawImageUnscaledAndClipped(spriteLowres, new Rectangle(m.Value.X / 2, m.Value.Y / 2, m.Value.Width / 2, m.Value.Height / 2));
                 }
 
+                Brush transparentBrush = new SolidBrush(Color.Transparent);
+
                 if (images_highres.Contains(spriteName))
                 {
                     Bitmap spriteHighres = Bitmap.FromFile(dir + "_huge\\" + spriteName + ".png") as Bitmap;
@@ -167,6 +169,8 @@ namespace sspack
                     if (spriteHighres.Width != m.Value.Width * 2 || spriteHighres.Height != m.Value.Height * 2)
                         Console.WriteLine("FATAL: dimensions of high res sprite " + m.Key + " do not match!");
 
+                    // wipe away any sprite gunk that bled into the padding region from the upscale.
+                    gfxHighres.FillRectangle(transparentBrush, new Rectangle(m.Value.X * 2 - 4, m.Value.Y * 2 - 4, m.Value.Width * 2 + 8, m.Value.Height * 2 + 8));
                     gfxHighres.DrawImageUnscaledAndClipped(spriteHighres, new Rectangle(m.Value.X * 2, m.Value.Y * 2, m.Value.Width * 2, m.Value.Height * 2));
                 }
 
