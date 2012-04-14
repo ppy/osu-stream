@@ -102,6 +102,7 @@
     <IpaPackageName />
     <BuildIpa>true</BuildIpa>
     <MtouchLink>Full</MtouchLink>
+    <CrashReportingApiKey />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
