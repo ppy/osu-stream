@@ -125,7 +125,7 @@ namespace osum.GameModes
 #endif
 
             InputManager.OnDown += InputManager_OnDown;
-            
+
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
@@ -268,7 +268,7 @@ namespace osum.GameModes
 
             menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
-                                    new Vector2(19,16.5f), 1, true, Color4.White);
+                                    new Vector2(19, 16.5f), 1, true, Color4.White);
             menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
             topMostSpriteManager.Add(menuPauseButton);
@@ -425,13 +425,24 @@ namespace osum.GameModes
 
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
+            if (GameBase.Mapper)
+            {
+                if (Player.Autoplay)
+                {
+                    if (IsPaused)
+                        Resume();
+                    else
+                        Pause(false);
+                }
+            }
+
             if (menu != null && menu.MenuDisplayed)
             {
                 menu.handleInput(source, point);
                 return;
             }
 
-            if (!(Clock.AudioTime > 0 && (AudioEngine.Music == null ||!AudioEngine.Music.IsElapsing)))
+            if (!(Clock.AudioTime > 0 && (AudioEngine.Music == null || !AudioEngine.Music.IsElapsing)))
             {
                 //pass on the event to hitObjectManager for handling.
                 if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
@@ -597,7 +608,7 @@ namespace osum.GameModes
 
             if (scoreChange > 0 && addHitScore)
                 CurrentScore.hitScore += scoreChange;
-            
+
             if (mapBackgroundImage != null)
                 PulseBackground(scoreChange > 0);
 
@@ -964,17 +975,17 @@ namespace osum.GameModes
 
         internal bool IsPaused
         {
-            get { return menu != null && menu.MenuDisplayed; }
+            get { return GameBase.Mapper ? !AudioEngine.Music.IsElapsing : menu != null && menu.MenuDisplayed; }
         }
 
-        internal virtual bool Pause()
+        internal virtual bool Pause(bool showMenu = true)
         {
             if (!Failed) AudioEngine.Music.Pause();
 
             if (HitObjectManager != null)
                 HitObjectManager.StopAllSounds();
 
-            if (menu != null) menu.MenuDisplayed = true;
+            if (menu != null && showMenu) menu.MenuDisplayed = true;
             if (menuPauseButton != null) menuPauseButton.HandleInput = false;
 
             return true;

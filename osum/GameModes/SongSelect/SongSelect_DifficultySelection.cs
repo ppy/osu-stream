@@ -227,10 +227,17 @@ namespace osum.GameModes
                 Player.Autoplay = true;
                 onStartButtonPressed(null, null);
             }
-            else
+            else if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 1)
             {
                 Ranking_Show();
             }
+#if !DIST
+            else if (GameBase.Mapper)
+            {
+                Player.AllowStreamSwitches = !Player.AllowStreamSwitches;
+                GameBase.Notify("Stream switches are now " + (Player.AllowStreamSwitches ? "allowed" : "disallowed"), null);
+            }
+#endif
         }
 
         void Handle_ScoreInfoOnClick(object sender, EventArgs e)

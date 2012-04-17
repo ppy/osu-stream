@@ -23,7 +23,7 @@ namespace osum.GameModes
     public partial class SongSelectMode : GameMode
     {
 #if iOS
-#if MAPPER
+#if !DIST
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
 #else
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
@@ -169,11 +169,10 @@ namespace osum.GameModes
         {
             BeatmapDatabase.Initialize();
 
-#if MAPPER
+#if !DIST
             //desktop/mapper builds.
             recursiveBeatmaps(BeatmapPath);
 #else
-
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
                 bool hasMissingMaps = false;
@@ -189,7 +188,7 @@ namespace osum.GameModes
                     maps.Add(b);
                 }
 
-                if (hasMissingMaps)
+                /*if (hasMissingMaps)
                 {
                     if (!GameBase.Config.GetValue<bool>("AppleScrewedUp1", false))
                     {
@@ -202,22 +201,23 @@ namespace osum.GameModes
                 {
                     //do this in case we have recovered maps and need to reset the warning (it might happen again!)
                     GameBase.Config.SetValue<bool>("AppleScrewedUp1", false);
-                }
+                }*/ 
             }
             else
             {
                 ForceBeatmapRefresh = false;
 
-#if DIST && iOS
+                #if DIST && iOS
+                //bundled maps    
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
-                    //bundled maps
+                    
                     Beatmap b = new Beatmap(s);
 
                     BeatmapDatabase.PopulateBeatmap(b);
                     maps.AddInPlace(b);
                 }
-#endif
+                #endif
 
                 foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
                 {

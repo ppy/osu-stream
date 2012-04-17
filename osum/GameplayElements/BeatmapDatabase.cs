@@ -51,7 +51,7 @@ namespace osum.GameplayElements
                 }
             }
 
-#if !MAPPER
+#if iOS && DIST
             //move beatmaps from Documents to Library/Cache/ as per new storage guidelines (see http://www.marco.org/2011/10/13/ios5-caches-cleaning)
             if (Version < 8)
             {
@@ -65,15 +65,9 @@ namespace osum.GameplayElements
             }
             else if (Version < 9)
             {
-#if iOS
                 if (MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."))
-                {
                     foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
-                    {
                         MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
-                    }
-                }
-#endif
             }
 #endif
 

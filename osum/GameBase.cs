@@ -125,7 +125,7 @@ namespace osum
         public GameBase(OsuMode mode = OsuMode.Unknown)
         {
 #if !DIST
-            if (DateTime.Now > new DateTime(2012, 04, 10))
+            if (DateTime.Now > new DateTime(2012, 06, 30))
                 Environment.Exit(-1);
 #endif
 
@@ -541,6 +541,7 @@ namespace osum
         internal static int SpriteSheetResolution;
         public static float InputToFixedWidthAlign;
         public static float SpriteToBaseRatioAligned;
+        public static bool Mapper;
         public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }
 
         internal static void Notify(string simple, BoolDelegate action = null)
