@@ -170,8 +170,11 @@ namespace osum.GameModes
             BeatmapDatabase.Initialize();
 
 #if !DIST
-            //desktop/mapper builds.
-            recursiveBeatmaps(BeatmapPath);
+            if (GameBase.Mapper)
+            {
+                //desktop/mapper builds.
+                recursiveBeatmaps(BeatmapPath);
+            }
 #else
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
