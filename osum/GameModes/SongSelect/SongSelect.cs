@@ -175,7 +175,8 @@ namespace osum.GameModes
                 //desktop/mapper builds.
                 recursiveBeatmaps(BeatmapPath);
             }
-#else
+            else
+#endif
             if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
             {
                 bool hasMissingMaps = false;
@@ -190,27 +191,12 @@ namespace osum.GameModes
 
                     maps.Add(b);
                 }
-
-                /*if (hasMissingMaps)
-                {
-                    if (!GameBase.Config.GetValue<bool>("AppleScrewedUp1", false))
-                    {
-                        //prompt the user that apple just fucked their ass without permission.
-                        //we only prompt once per install now for simplicity, but this should be managed on a databsae level.
-                        GameBase.Notify(LocalisationManager.GetString(OsuString.AppleReallyScrewedThisUp1), delegate { GameBase.Config.SetValue<bool>("AppleScrewedUp1", true); });
-                    }
-                }
-                else
-                {
-                    //do this in case we have recovered maps and need to reset the warning (it might happen again!)
-                    GameBase.Config.SetValue<bool>("AppleScrewedUp1", false);
-                }*/ 
             }
             else
             {
                 ForceBeatmapRefresh = false;
 
-                #if DIST && iOS
+                #if iOS
                 //bundled maps    
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
@@ -235,7 +221,6 @@ namespace osum.GameModes
 
                 BeatmapDatabase.Write();
             }
-#endif
 
             int index = 0;
 
