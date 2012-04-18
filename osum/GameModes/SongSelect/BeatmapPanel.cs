@@ -183,8 +183,11 @@ namespace osum.GameModes.SongSelect
                 if (starCount == 0)
                     //always use zero-width for no stars (even though this should not ever happen) to avoid single-pixel glitching.
                     s_Star.DrawWidth = 0;
-                else
-                    s_Star.DrawWidth = (int)(50 * starCount) + (starCount == 5 ? 2 : 1);
+                else if (starCount < 5)
+                {
+                    const int border = 2;
+                    s_Star.DrawWidth = (int)((s_Star.DrawWidth - border * 2) * starCount / 5f) + border;
+                }
 
                 Sprites.Add(s_Star);
 #endif
