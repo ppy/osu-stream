@@ -541,7 +541,14 @@ namespace osum
         internal static int SpriteSheetResolution;
         public static float InputToFixedWidthAlign;
         public static float SpriteToBaseRatioAligned;
+
+#if !iOS
+        //always assumer mapper for PC builds.
+        public static bool Mapper = true;
+#else
         public static bool Mapper;
+#endif
+
         public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }
 
         internal static void Notify(string simple, BoolDelegate action = null)
