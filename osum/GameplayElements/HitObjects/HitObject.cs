@@ -91,12 +91,12 @@ namespace osum.GameplayElements
                 if (isDimmed)
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.Colour = ColourHelper.Darken(p.Colour, 0.3f);
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(new Color4(0.5f, 0.5f, 0.5f, 1), 0, true);
                 }
                 else
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(ColourHelper.Lighten(p.Colour, 0.7f), (int)m_HitObjectManager.FirstBeatLength);
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(Color4.White, (int)m_HitObjectManager.FirstBeatLength / 2);
                 }
             }
         }

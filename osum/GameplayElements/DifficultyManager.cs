@@ -165,7 +165,7 @@ namespace osum.GameplayElements
             }
         }
 
-        public static int FadeIn = 400;
+        public static int FadeIn = 220;
         public static int FadeOut = 300;
 
         public static float SpinnerRotationRatio
