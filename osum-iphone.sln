@@ -6,25 +6,16 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhone = Debug|iPhone
-		Release|iPhone = Release|iPhone
-		Testflight|iPhone = Testflight|iPhone
+		Testing|iPhone = Testing|iPhone
 		Distribution|iPhone = Distribution|iPhone
-		Debug|iPhoneSimulator = Debug|iPhoneSimulator
-		Release|iPhoneSimulator = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhone.Build.0 = Debug|iPhone
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Distribution|iPhone.ActiveCfg = Distribution|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Distribution|iPhone.Build.0 = Distribution|iPhone
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhone.ActiveCfg = Release|iPhone
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhone.Build.0 = Release|iPhone
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testflight|iPhone.ActiveCfg = Testflight|iPhone
-		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testflight|iPhone.Build.0 = Testflight|iPhone
+		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testing|iPhone.ActiveCfg = Testing|iPhone
+		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testing|iPhone.Build.0 = Testing|iPhone
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = osum\osustream.csproj
@@ -65,7 +56,7 @@ Global
 		$4.inheritsScope = text/plain
 		$4.scope = text/plain
 		$0.StandardHeader = $5
-		$5.Text = 
+		$5.Text =
 		$5.IncludeInNewFiles = True
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
