@@ -456,11 +456,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Beatmaps\Amane - DEADLYBLOW %28Echo%29.osf2" />
-    <None Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
     <None Include="Skins\Default\Futura-CondensedExtraBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
