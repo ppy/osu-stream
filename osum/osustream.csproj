@@ -47,7 +47,7 @@
     <MtouchLink>Full</MtouchLink>
     <CrashReportingApiKey />
     <BundleIdentifier>sh.ppy.osutest</BundleIdentifier>
-    <BundleVersion>20120417</BundleVersion>
+    <BundleVersion>20120419</BundleVersion>
     <BundleDisplayName>osu!test</BundleDisplayName>
     <BundleIcon>IconTest.png</BundleIcon>
   </PropertyGroup>
