@@ -91,7 +91,7 @@ namespace osum.GameplayElements
                 if (isDimmed)
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(new Color4(0.5f, 0.5f, 0.5f, 1), 0, true);
+                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(new Color4(0.7f, 0.7f, 0.7f, 1), 0, true);
                 }
                 else
                 {
