@@ -1,6 +1,7 @@
 using System;
 using MonoTouch.UIKit;
 using osum.Helpers;
+using MonoTouch.Security;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -99,7 +100,7 @@ namespace osum
 
             try {
                 System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
-    
+
 #if !DIST
                 Console.WriteLine("Running with culture " + culture + " " + System.Threading.Thread.CurrentThread.CurrentUICulture);
 #endif
@@ -198,20 +199,45 @@ namespace osum
             }
         }
 
-        string udidCached;
+        string identifier;
         public override string DeviceIdentifier {
             get {
 
-                if (udidCached == null)
+                if (identifier == null)
                 {
 #if SIMULATOR
-                    udidCached = base.DeviceIdentifier;
+                    identifier = base.DeviceIdentifier;
 #else
-                    udidCached = UIDevice.CurrentDevice.UniqueIdentifier;
+                    const string name = @"o!s";
+                    const string account = @"identifier";
+                    SecStatusCode eCode;
+                    // Query the record.
+                    SecRecord oQueryRec = new SecRecord(SecKind.GenericPassword) { Service = name, Label = name, Account = account };
+                    oQueryRec = SecKeyChain.QueryAsRecord(oQueryRec, out eCode);
+
+                    // If found, try to get password.
+                    if (eCode == SecStatusCode.Success && oQueryRec != null && oQueryRec.Generic != null)
+                    {
+                        // Decode from UTF8.
+                        return NSString.FromData(oQueryRec.Generic, NSStringEncoding.UTF8);
+                    }
+
+                    //create a new unique identifier
+                    identifier = Guid.NewGuid().ToString();
+
+                    //store to keychain
+                    eCode = SecKeyChain.Add(new SecRecord(SecKind.GenericPassword)
+                    {
+                        Service = name,
+                        Label = name,
+                        Account = account,
+                        Generic = NSData.FromString(identifier, NSStringEncoding.UTF8),
+                        Accessible = SecAccessible.AfterFirstUnlockThisDeviceOnly
+                    });
 #endif
                 }
 
-                return udidCached;
+                return identifier;
             }
         }
 
