@@ -16,6 +16,11 @@ using System.IO;
 using osum.Resources;
 using osum.UI;
 using osu_common.Libraries.NetLib;
+#if iOS
+using MonoTouch.Accounts;
+#endif
+
+
 namespace osum.GameModes
 {
     public class Results : GameMode
@@ -311,7 +316,28 @@ namespace osum.GameModes
                 if (!GameBase.Mapper)
                 {
                     deviceType = (int)osum.Support.iPhone.HardwareDetection.Version;
-    
+
+                    //todo: for iOS5 twitter authentication, we need to double-check we actually have auth.
+                    string hash = GameBase.Config.GetValue<string>("hash", null);
+                    if (hash == null)
+                    {
+                        //todo: no twitter auth. are we not submitting anymore?
+                    }
+
+                    if (hash.StartsWith("ios-"))
+                    {
+                        hash = hash.Substring(4);
+                        using (ACAccountStore store = new ACAccountStore())
+                        {
+                            ACAccount account = store.FindAccount(hash);
+                            if (account != null)
+                            {
+                                //yay, i think.
+                                //todo: test that this actually checks grants (it should in theory).
+                            }
+                        }
+                    }
+
                     string check = CryptoHelper.GetMd5String("moocow" +
                         GameBase.Instance.DeviceIdentifier +
                         RankableScore.count100 +
@@ -327,7 +353,7 @@ namespace osum.GameModes
                         deviceType +
                         RankableScore.hitScore +
                         (int)Player.Difficulty);
-    
+
                     string postString =
                         "udid=" + GameBase.Instance.DeviceIdentifier +
                         "&count300=" + RankableScore.count300 +
@@ -345,20 +371,21 @@ namespace osum.GameModes
                         "&c=" + check +
                         "&difficulty=" + (int)Player.Difficulty +
                         "&username=" + GameBase.Config.GetValue<string>("username", string.Empty) +
+                        "&twitterid=" + GameBase.Config.GetValue<string>("twitterId", string.Empty) +
                         "&dt=" + deviceType +
                         "&offset=" + avg;
-    
+
                     spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
                     {
                         ExactCoordinates = false,
                         DimImmune = true,
                         ScaleScalar = 0.7f
                     };
-    
+
                     spriteSubmitting.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
                     GameBase.MainSpriteManager.Add(spriteSubmitting);
                     spriteSubmitting.FadeInFromZero(300);
-    
+
                     StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
                     nr.onFinish += delegate(string result, Exception e)
                     {
@@ -375,7 +402,7 @@ namespace osum.GameModes
                             spriteSubmitting.ScaleTo(1.2f, 200, EasingTypes.In);
                             spriteSubmitting.Colour = Color4.Red;
                         }
-    
+
                         if (e == null && result != null && result.StartsWith("message:"))
                         {
                             rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);

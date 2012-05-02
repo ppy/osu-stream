@@ -11,6 +11,11 @@ using osum.Audio;
 using osum.UI;
 using osum.Resources;
 using osu_common.Libraries.NetLib;
+#if iOS
+using MonoTouch.Accounts;
+using MonoTouch.Foundation;
+using osum.Support.iPhone;
+#endif
 
 namespace osum.GameModes.Options
 {
@@ -140,27 +145,7 @@ namespace osum.GameModes.Options
 
             if (!GameBase.HasAuth)
             {
-                button = new pButton(LocalisationManager.GetString(OsuString.TwitterLink), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
-                {
-                    GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
-                        LocalisationManager.GetString(OsuString.TwitterLink),
-                        delegate(string url)
-                        {
-                            if (url.StartsWith("finished://"))
-                            {
-                                string[] split = url.Replace("finished://", "").Split('/');
-
-                                GameBase.Config.SetValue<string>("username", split[0]);
-                                GameBase.Config.SetValue<string>("hash", split[1]);
-                                GameBase.Config.SetValue<string>("twitterId", split[2]);
-                                GameBase.Config.SaveConfig();
-
-                                Director.ChangeMode(Director.CurrentOsuMode);
-                                return true;
-                            }
-                            return false;
-                        });
-                });
+                button = new pButton(LocalisationManager.GetString(OsuString.TwitterLink), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, HandleTwitterAuth);
                 smd.Add(button);
 
                 vPos += 40;
@@ -223,6 +208,86 @@ namespace osum.GameModes.Options
 
             smd.ScrollTo(scroll);
         }
+
+#if iOS
+        ACAccountStore accountStore;
+        private void HandleTwitterAuth(object sender, EventArgs args)
+        {
+            if (HardwareDetection.RunningiOS5)
+            {
+                //if we are running iOS5 or later, we can use the in-built API for handling twitter authentication.
+                accountStore = new ACAccountStore();
+                accountStore.RequestAccess(accountStore.FindAccountType(ACAccountType.Twitter), retrievedAccounts);
+            }
+            else
+            {
+                GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
+                    LocalisationManager.GetString(OsuString.TwitterLink),
+                    delegate(string url)
+                    {
+                        if (url.StartsWith("finished://"))
+                        {
+                            string[] split = url.Replace("finished://", "").Split('/');
+
+                            GameBase.Config.SetValue<string>("username", split[0]);
+                            GameBase.Config.SetValue<string>("hash", split[1]);
+                            GameBase.Config.SetValue<string>("twitterId", split[2]);
+                            GameBase.Config.SaveConfig();
+
+                            Director.ChangeMode(Director.CurrentOsuMode);
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+        }
+
+        private void retrievedAccounts(bool granted, NSError error)
+        {
+            ACAccount[] accounts = accountStore.FindAccounts(accountStore.FindAccountType(ACAccountType.Twitter));
+
+            if (!granted || accounts.Length == 0)
+            {
+                Notification n = new Notification("Access not granted!",
+                                                  "You didn't give osu!stream access to an account. Please do so to complete the linking process",
+                                                  NotificationStyle.Okay,
+                                                  null);
+                GameBase.Notify(n);
+            }
+            else
+            {
+                //for now let's juse use the first account (the user may select more than one, but we can't handle this).
+                ACAccount account = accounts[0];
+
+                NSDictionary properties = account.GetDictionaryOfValuesFromKeys(new NSString[]{new NSString("properties")});
+                string twitter_id = properties.ObjectForKey(new NSString("properties")).ValueForKey(new NSString("user_id")).ToString();
+                //works!!
+    
+                {
+                    Notification n = new Notification("Link successful!",
+                                                          "Now linked with " + twitter_id,
+                                                          NotificationStyle.Okay,
+                                                          null);
+                    GameBase.Notify(n);
+    
+                    GameBase.Config.SetValue<string>("username", account.Username);
+                    GameBase.Config.SetValue<string>("hash", "ios-" + account.Identifier);
+                    GameBase.Config.SetValue<string>("twitterId", twitter_id);
+                    GameBase.Config.SaveConfig();
+    
+                    Director.ChangeMode(Director.CurrentOsuMode);
+                }
+            }
+
+            accountStore.Dispose();
+            accountStore = null;
+        }
+#else
+        private void HandleTwitterAuth(object sender, EventArgs args)
+        { 
+            //not available on PC builds.
+        }
+#endif
 
         int lastEffectSound;
         private pButton buttonFingerGuides;
