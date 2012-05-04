@@ -45,7 +45,7 @@ namespace osum.GameModes
             }
             else
             {
-                rankingSpriteManager = new SpriteManagerDraggable();
+                rankingSpriteManager = new SpriteManagerDraggable() { StartBufferZone = BeatmapPanel.PANEL_HEIGHT + 5 };
             }
 
             footerHide();
@@ -112,7 +112,7 @@ namespace osum.GameModes
             foreach (Score score in rankingScores)
             {
                 ScorePanel sp = new ScorePanel(score, onScoreClicked);
-                sp.Sprites.ForEach(s => s.Position = new Vector2(0, BeatmapPanel.PANEL_HEIGHT + 5 + (ScorePanel.PANEL_HEIGHT + 3) * index));
+                sp.Sprites.ForEach(s => s.Position = new Vector2(0, (ScorePanel.PANEL_HEIGHT + 3) * index));
 
                 rankingSpriteManager.Add(sp);
 
