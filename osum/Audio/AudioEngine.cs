@@ -94,11 +94,10 @@ namespace osum.Audio
             if (buffer < 0) return null;
 
             int lastPlayed = -1;
-            if (lastPlayedTimes.TryGetValue(buffer, out lastPlayed))
+            if (lastPlayedTimes.TryGetValue((int)set + (int)sample << 1, out lastPlayed))
                 if (Math.Abs(Clock.Time - lastPlayed) < 40)
                     return null;
-
-            lastPlayedTimes[buffer] = Clock.Time;
+            lastPlayedTimes[(int)set + ((int)sample << 8)] = Clock.Time;
 
             Source src = AudioEngine.Effect.LoadBuffer(buffer, volume);
 
