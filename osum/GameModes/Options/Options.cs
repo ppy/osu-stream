@@ -221,25 +221,30 @@ namespace osum.GameModes.Options
             }
             else
             {
-                GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
-                    LocalisationManager.GetString(OsuString.TwitterLink),
-                    delegate(string url)
-                    {
-                        if (url.StartsWith("finished://"))
-                        {
-                            string[] split = url.Replace("finished://", "").Split('/');
-
-                            GameBase.Config.SetValue<string>("username", split[0]);
-                            GameBase.Config.SetValue<string>("hash", split[1]);
-                            GameBase.Config.SetValue<string>("twitterId", split[2]);
-                            GameBase.Config.SaveConfig();
-
-                            Director.ChangeMode(Director.CurrentOsuMode);
-                            return true;
-                        }
-                        return false;
-                    });
+                HandleTwitterOAuth();
             }
+        }
+
+        private void HandleTwitterOAuth()
+        {
+            GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
+                LocalisationManager.GetString(OsuString.TwitterLink),
+                delegate(string url)
+                {
+                    if (url.StartsWith("finished://"))
+                    {
+                        string[] split = url.Replace("finished://", "").Split('/');
+        
+                        GameBase.Config.SetValue<string>("username", split[0]);
+                        GameBase.Config.SetValue<string>("hash", split[1]);
+                        GameBase.Config.SetValue<string>("twitterId", split[2]);
+                        GameBase.Config.SaveConfig();
+        
+                        Director.ChangeMode(Director.CurrentOsuMode);
+                        return true;
+                    }
+                    return false;
+                });
         }
 
         private void retrievedAccounts(bool granted, NSError error)
@@ -249,9 +254,11 @@ namespace osum.GameModes.Options
             if (!granted || accounts.Length == 0)
             {
                 Notification n = new Notification("Access not granted!",
-                                                  "You didn't give osu!stream access to an account. Please do so to complete the linking process",
-                                                  NotificationStyle.Okay,
-                                                  null);
+                                                  "You didn't give osu!stream access, or have no registered twitter accounts. Would you like to link manually by logging in?",
+                                                  NotificationStyle.YesNo,
+                                                 delegate(bool resp) {
+                    if (resp) HandleTwitterOAuth();
+                });
                 GameBase.Notify(n);
             }
             else
