@@ -255,6 +255,7 @@
     <Folder Include="Graphics\Drawables\" />
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
+    <Folder Include="Beatmaps\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -324,8 +325,6 @@
     <Content Include="Localisation\th.txt" />
     <Content Include="Localisation\zh-CHS.txt" />
     <Content Include="Localisation\zh-CHT.txt" />
-    <Content Include="Beatmaps\tieff &amp; Natteke - Sunrise %28jericho2442%29.osf2" />
-    <Content Include="Beatmaps\SkyMarshall - Hitchhikers %28Gens%29.osf2" />
     <Content Include="Localisation\de.txt" />
     <Content Include="Localisation\sv.txt" />
     <Content Include="Localisation\es.txt" />
@@ -338,5 +337,7 @@
     <Content Include="Skins\Default\menu_1920.png" />
     <Content Include="Skins\Default\notification_1920.png" />
     <Content Include="Skins\Default\ranking_1920.png" />
+    <Content Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2" />
+    <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
   </ItemGroup>
 </Project>
