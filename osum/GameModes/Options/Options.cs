@@ -251,7 +251,7 @@ namespace osum.GameModes.Options
         {
             ACAccount[] accounts = accountStore.FindAccounts(accountStore.FindAccountType(ACAccountType.Twitter));
 
-            if (!granted || accounts.Length == 0)
+            if (!granted || error != null || accounts == null || accounts.Length == 0)
             {
                 Notification n = new Notification("Access not granted!",
                                                   "You didn't give osu!stream access, or have no registered twitter accounts. Would you like to link manually by logging in?",
@@ -272,7 +272,7 @@ namespace osum.GameModes.Options
     
                 {
                     Notification n = new Notification("Link successful!",
-                                                          "Now linked with " + twitter_id,
+                                                          "Now linked with " + account.Username,
                                                           NotificationStyle.Okay,
                                                           null);
                     GameBase.Notify(n);
