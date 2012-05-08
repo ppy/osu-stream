@@ -14,7 +14,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        const int DATABASE_VERSION = 9;
+        internal const int DATABASE_VERSION = 10;
         const string FILENAME = "osu!.db";
 
         private static string databasePath { get { return GameBase.Instance.PathConfig + FILENAME; } }
@@ -98,7 +98,7 @@ namespace osum.GameplayElements
 
 #if DEBUG
             Console.WriteLine("Wrote beatmap database to " + filename + " with count " + BeatmapInfo.Count);
-#endif          
+#endif
         }
 
         internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)

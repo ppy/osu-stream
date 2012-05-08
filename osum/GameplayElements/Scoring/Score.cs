@@ -48,25 +48,32 @@ namespace osum.GameplayElements.Scoring
 
         public int OnlineRank;
 
+        private Rank ranking;
         public Rank Ranking
         {
             get
             {
-                float acc = accuracy;
-                if (acc == 1)
-                    return Rank.SS;
-                if (acc > 0.9f)
-                    return Rank.S;
-                if (acc > 0.8f)
-                    return Rank.A;
-                if (acc > 0.7f)
-                    return Rank.B;
-                if (acc > 0.6f)
-                    return Rank.C;
-                if (totalScore > 0)
-                    return Rank.D;
-                return Rank.N;
+                if (ranking == Rank.N)
+                {
+                    float acc = accuracy;
+                    if (acc == 1)
+                        ranking = Rank.SS;
+                    if (acc > 0.9f)
+                        ranking = Rank.S;
+                    if (acc > 0.8f)
+                        ranking = Rank.A;
+                    if (acc > 0.7f)
+                        ranking = Rank.B;
+                    if (acc > 0.6f)
+                        ranking = Rank.C;
+                    if (totalScore > 0)
+                        ranking = Rank.D;
+                }
+
+                return ranking;
             }
+
+            set { ranking = value; }
         }
 
         public pTexture RankingTexture
@@ -192,6 +199,7 @@ namespace osum.GameplayElements.Scoring
             spinnerBonusScore = sr.ReadInt32();
             comboBonusScore = sr.ReadInt32();
             hitScore = sr.ReadInt32();
+            if (BeatmapDatabase.DATABASE_VERSION > 9) ranking = (Rank)sr.ReadInt32();
         }
 
         public void WriteToStream (SerializationWriter sw)
@@ -204,6 +212,7 @@ namespace osum.GameplayElements.Scoring
             sw.Write(spinnerBonusScore);
             sw.Write(comboBonusScore);
             sw.Write(hitScore);
+            sw.Write((int)Ranking);
         }
         #endregion
     }

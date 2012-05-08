@@ -301,6 +301,8 @@ namespace osum.GameModes
                     bmi.HighScore = RankableScore;
                     BeatmapDatabase.Write();
                 }
+                else if (bmi.HighScore != null && RankableScore.Ranking > bmi.HighScore.Ranking)
+                    bmi.HighScore.Ranking = RankableScore.Ranking;
 
                 //Average Timing
                 float avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
