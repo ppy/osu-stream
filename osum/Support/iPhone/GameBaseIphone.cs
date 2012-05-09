@@ -2,6 +2,7 @@ using System;
 using MonoTouch.UIKit;
 using osum.Helpers;
 using MonoTouch.Security;
+using osum.GameplayElements;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -209,21 +210,32 @@ namespace osum
                     identifier = base.DeviceIdentifier;
 #else
                     const string name = @"o!s";
-                    const string account = @"identifier";
+                    const string account = @"soup";
                     SecStatusCode eCode;
                     // Query the record.
                     SecRecord oQueryRec = new SecRecord(SecKind.GenericPassword) { Service = name, Label = name, Account = account };
                     oQueryRec = SecKeyChain.QueryAsRecord(oQueryRec, out eCode);
 
-                    // If found, try to get password.
+                    // If found, try to get the identifier.
                     if (eCode == SecStatusCode.Success && oQueryRec != null && oQueryRec.Generic != null)
                     {
                         // Decode from UTF8.
                         return NSString.FromData(oQueryRec.Generic, NSStringEncoding.UTF8);
                     }
 
-                    //create a new unique identifier
-                    identifier = Guid.NewGuid().ToString();
+                    //we haven't yet stored a unique identifier. for old databases, let's migrate the udid across
+                    //to make sure purchased content still works.
+
+                    BeatmapDatabase.Initialize();
+                    if (BeatmapDatabase.Version < 10 && BeatmapDatabase.BeatmapInfo.Find(b => b.Filename.Contains(".osp2")) != null)
+                    {
+                        identifier = UIDevice.CurrentDevice.UniqueIdentifier;
+                    }
+                    else
+                    {
+                        //create a new unique identifier
+                        identifier = Guid.NewGuid().ToString();
+                    }
 
                     //store to keychain
                     eCode = SecKeyChain.Add(new SecRecord(SecKind.GenericPassword)

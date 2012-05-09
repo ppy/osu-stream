@@ -167,6 +167,8 @@ namespace osum.GameModes
         /// </summary>
         private void InitializeBeatmaps()
         {
+            string udid = GameBase.Instance.DeviceIdentifier; //cache the udid before possibly writing the database out.
+
             BeatmapDatabase.Initialize();
 
 #if !DIST
@@ -177,8 +179,12 @@ namespace osum.GameModes
             }
             else
 #endif
-            if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh)
+            if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh && BeatmapDatabase.Version == BeatmapDatabase.DATABASE_VERSION)
             {
+#if !DIST
+                Console.WriteLine("Regenerating database!");
+#endif
+
                 bool hasMissingMaps = false;
                 foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                 {
@@ -197,10 +203,10 @@ namespace osum.GameModes
                 ForceBeatmapRefresh = false;
 
                 #if iOS
-                //bundled maps    
+                //bundled maps
                 foreach (string s in Directory.GetFiles("Beatmaps/"))
                 {
-                    
+
                     Beatmap b = new Beatmap(s);
 
                     BeatmapDatabase.PopulateBeatmap(b);

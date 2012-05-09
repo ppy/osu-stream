@@ -71,8 +71,6 @@ namespace osum.GameplayElements
             }
 #endif
 
-
-            Version = DATABASE_VERSION;
 #if DEBUG
             Console.WriteLine("Read beatmap database: " + BeatmapInfo.Count);
 #endif
@@ -81,6 +79,8 @@ namespace osum.GameplayElements
         internal static void Write()
         {
             Initialize();
+
+            Version = DATABASE_VERSION;
 
             string filename = databasePath;
             string tempFilename = databasePath + "_";
