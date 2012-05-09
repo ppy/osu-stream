@@ -199,7 +199,7 @@ namespace osum.GameplayElements.Scoring
             spinnerBonusScore = sr.ReadInt32();
             comboBonusScore = sr.ReadInt32();
             hitScore = sr.ReadInt32();
-            if (BeatmapDatabase.DATABASE_VERSION > 9) ranking = (Rank)sr.ReadInt32();
+            if (BeatmapDatabase.Version > 9) ranking = (Rank)sr.ReadInt32();
         }
 
         public void WriteToStream (SerializationWriter sw)
