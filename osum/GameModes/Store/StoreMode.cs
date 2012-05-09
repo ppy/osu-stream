@@ -195,10 +195,13 @@ namespace osum.GameModes.Store
                                 if (Path.GetFileNameWithoutExtension(b.ContainerFilename) != Path.GetFileNameWithoutExtension(b.Package.MapFiles[0]))
                                     continue;
 
-                                if (localRev == revision)
+#if DEBUG
+                                Console.WriteLine("Local revision is " + localRev + " | Remote revision is " + revision);
+#endif
+
+                                if (float.Parse(localRev) >= float.Parse(revision))
                                     continue;
 
-                                pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
                                 updateChecksum = CryptoHelper.GetMd5String(GameBase.Instance.DeviceIdentifier + (char)0x77 + filename + "-update");
                             }
                         }
@@ -239,6 +242,20 @@ namespace osum.GameModes.Store
         {
             if (pp == null || (pp.PackId != "restore" && pp.BeatmapCount == 0))
                 return;
+
+            bool failAsUpdates = false;
+            foreach (PackItem p in pp.PackItems)
+                if (p.UpdateChecksum == null)
+                {
+                    //if any of the songs aren't updates, make them all fail as updates.
+                    failAsUpdates = true;
+                    break;
+                }
+
+            if (failAsUpdates)
+                pp.PackItems.ForEach(p => p.UpdateChecksum = null);
+            else
+                pp.SetPrice(LocalisationManager.GetString(OsuString.Update), true);
 
             pp.Sprites.ForEach(s => s.Position.Y += totalHeight);
             pp.PackItemSprites.ForEach(s => s.FadeOut(0));

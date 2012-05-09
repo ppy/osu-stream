@@ -94,14 +94,14 @@ namespace osum.GameModes.Store
 
         List<pDrawable> songPreviewBacks = new List<pDrawable>();
         List<pSprite> songPreviewButtons = new List<pSprite>();
-        List<PackItem> packItems = new List<PackItem>();
+        internal List<PackItem> PackItems = new List<PackItem>();
 
         bool isPreviewing;
         DataNetRequest previewRequest;
 
         pSprite s_LoadingPrice;
 
-        internal int BeatmapCount { get { return packItems.Count; } }
+        internal int BeatmapCount { get { return PackItems.Count; } }
 
         int currentDownload = 0;
 
@@ -254,15 +254,15 @@ namespace osum.GameModes.Store
         {
             Downloading = true;
 
-            lock (packItems)
+            lock (PackItems)
             {
-                if (currentDownload >= packItems.Count)
+                if (currentDownload >= PackItems.Count)
                 {
                     Downloading = false;
                     return;
                 }
 
-                PackItem item = packItems[currentDownload];
+                PackItem item = PackItems[currentDownload];
                 pDrawable back = songPreviewBacks[currentDownload];
 
                 string path = SongSelectMode.BeatmapPath + "/" + item.Filename;
@@ -293,10 +293,10 @@ namespace osum.GameModes.Store
 
                     back.FadeColour(Color4.LimeGreen, 500);
 
-                    lock (packItems)
+                    lock (PackItems)
                     {
                         currentDownload++;
-                        if (currentDownload < packItems.Count)
+                        if (currentDownload < PackItems.Count)
                             startNextDownload();
                         else
                         {
@@ -440,7 +440,7 @@ namespace osum.GameModes.Store
             back.Offset = new Vector2(0, ExpandedHeight + 20);
             Sprites.Add(back);
 
-            packItems.Add(item);
+            PackItems.Add(item);
 
             string artistString;
             string titleString;
