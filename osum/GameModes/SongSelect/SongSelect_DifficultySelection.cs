@@ -279,13 +279,15 @@ namespace osum.GameModes
             bool isNewDifficulty = Player.Difficulty != newDifficulty || force;
             velocity = 0;
 
-            if (Player.Beatmap.Package == null) return;
+            MapPackage package = Player.Beatmap.Package;
+
+            if (package == null) return;
 
             if (isNewDifficulty)
             {
                 if (!force) AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
-                string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
+                string versions = package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
 
