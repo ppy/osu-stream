@@ -58,15 +58,15 @@ namespace osum.GameplayElements.Scoring
                     float acc = accuracy;
                     if (acc == 1)
                         ranking = Rank.SS;
-                    if (acc > 0.9f)
+                    else if (acc > 0.9f)
                         ranking = Rank.S;
-                    if (acc > 0.8f)
+                    else if (acc > 0.8f)
                         ranking = Rank.A;
-                    if (acc > 0.7f)
+                    else if (acc > 0.7f)
                         ranking = Rank.B;
-                    if (acc > 0.6f)
+                    else if (acc > 0.6f)
                         ranking = Rank.C;
-                    if (totalScore > 0)
+                    else if (totalScore > 0)
                         ranking = Rank.D;
                 }
 
