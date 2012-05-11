@@ -456,10 +456,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Beatmaps\" />
     <Folder Include="GameModes\Play\Rulesets\Osu\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Skins\Default\Futura-CondensedExtraBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
