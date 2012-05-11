@@ -54,6 +54,7 @@ namespace osum.GameModes
         SpriteManager layer2 = new SpriteManager();
         SpriteManager topMostLayer = new SpriteManager();
 
+        float avg;
         float offset;
 
         public override void Initialize()
@@ -305,7 +306,7 @@ namespace osum.GameModes
                     bmi.HighScore.Ranking = RankableScore.Ranking;
 
                 //Average Timing
-                float avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
+                avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
                 pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -313,106 +314,7 @@ namespace osum.GameModes
                 };
                 layer1.Add(heading);
 
-                int deviceType = 0;
-#if iOS
-                if (!GameBase.Mapper)
-                {
-                    deviceType = (int)osum.Support.iPhone.HardwareDetection.Version;
-
-                    //todo: for iOS5 twitter authentication, we need to double-check we actually have auth.
-                    string hash = GameBase.Config.GetValue<string>("hash", null);
-                    if (hash == null)
-                    {
-                        //todo: no twitter auth. are we not submitting anymore?
-                    }
-                    else if (hash.StartsWith("ios-"))
-                    {
-                        hash = hash.Substring(4);
-                        using (ACAccountStore store = new ACAccountStore())
-                        {
-                            ACAccount account = store.FindAccount(hash);
-                            if (account != null)
-                            {
-                                //yay, i think.
-                                //todo: test that this actually checks grants (it should in theory).
-                            }
-                        }
-                    }
-
-                    string check = CryptoHelper.GetMd5String("moocow" +
-                        GameBase.Instance.DeviceIdentifier +
-                        RankableScore.count100 +
-                        RankableScore.count300 +
-                        RankableScore.count50 +
-                        RankableScore.countMiss +
-                        RankableScore.maxCombo +
-                        RankableScore.spinnerBonusScore +
-                        RankableScore.comboBonusScore +
-                        RankableScore.accuracyBonusScore +
-                        RankableScore.Ranking +
-                        Path.GetFileName(Player.Beatmap.ContainerFilename) +
-                        deviceType +
-                        RankableScore.hitScore +
-                        (int)Player.Difficulty);
-
-                    string postString =
-                        "udid=" + GameBase.Instance.DeviceIdentifier +
-                        "&count300=" + RankableScore.count300 +
-                        "&count100=" + RankableScore.count100 +
-                        "&count50=" + RankableScore.count50 +
-                        "&countMiss=" + RankableScore.countMiss +
-                        "&maxCombo=" + RankableScore.maxCombo +
-                        "&spinnerBonus=" + RankableScore.spinnerBonusScore +
-                        "&comboBonus=" + RankableScore.comboBonusScore +
-                        "&accuracyBonus=" + RankableScore.accuracyBonusScore +
-                        "&hitScore=" + RankableScore.hitScore +
-                        "&rank=" + RankableScore.Ranking +
-                        "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
-                        "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
-                        "&c=" + check +
-                        "&difficulty=" + (int)Player.Difficulty +
-                        "&username=" + GameBase.Config.GetValue<string>("username", string.Empty) +
-                        "&twitterid=" + GameBase.Config.GetValue<string>("twitterId", string.Empty) +
-                        "&dt=" + deviceType +
-                        "&offset=" + avg;
-
-                    spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
-                    {
-                        ExactCoordinates = false,
-                        DimImmune = true,
-                        ScaleScalar = 0.7f
-                    };
-
-                    spriteSubmitting.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
-                    GameBase.MainSpriteManager.Add(spriteSubmitting);
-                    spriteSubmitting.FadeInFromZero(300);
-
-                    StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
-                    nr.onFinish += delegate(string result, Exception e)
-                    {
-                        spriteSubmitting.AlwaysDraw = false;
-                        if (e == null)
-                        {
-                            spriteSubmitting.FadeOut(200);
-                            spriteSubmitting.ScaleTo(3, 200);
-                            spriteSubmitting.Colour = Color4.YellowGreen;
-                        }
-                        else
-                        {
-                            spriteSubmitting.FadeOut(1000);
-                            spriteSubmitting.ScaleTo(1.2f, 200, EasingTypes.In);
-                            spriteSubmitting.Colour = Color4.Red;
-                        }
-
-                        if (e == null && result != null && result.StartsWith("message:"))
-                        {
-                            rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
-                            if (finishedDisplaying) GameBase.Notify(rankingNotification);
-                        }
-                    };
-                    NetManager.AddRequest(nr);
-                }
-#endif
+                doSubmission();
             }
             else
             {
@@ -436,6 +338,120 @@ namespace osum.GameModes
 
             Director.OnTransitionEnded += Director_OnTransitionEnded;
             InputManager.OnMove += HandleInputManagerOnMove;
+        }
+
+        private void doSubmission()
+        {
+            int deviceType = 0;
+#if iOS
+            if (!GameBase.Mapper)
+            {
+                deviceType = (int)osum.Support.iPhone.HardwareDetection.Version;
+
+                //todo: for iOS5 twitter authentication, we need to double-check we actually have auth.
+                string hash = GameBase.Config.GetValue<string>("hash", null);
+                if (hash == null)
+                {
+                    //todo: no twitter auth. are we not submitting anymore?
+                    return;
+                }
+                else if (hash.StartsWith("ios-"))
+                {
+                    hash = hash.Substring(4);
+                    using (ACAccountStore store = new ACAccountStore())
+                    {
+                        ACAccount account = store.FindAccount(hash);
+                        if (account != null)
+                        {
+                            //yay, i think.
+                            //todo: test that this actually checks grants (it should in theory).
+                        }
+                        else
+                        {
+                            GameBase.Notify("Twitter authentication failed. Please visit the options screen to login again.");
+                            GameBase.Config.SetValue<string>("username", null);
+                            GameBase.Config.SetValue<string>("hash", null);
+                            GameBase.Config.SetValue<string>("twitterId", null);
+                            GameBase.Config.SaveConfig();                
+                            return;
+                        }
+                    }
+                }
+
+                string check = CryptoHelper.GetMd5String("moocow" +
+                    GameBase.Instance.DeviceIdentifier +
+                    RankableScore.count100 +
+                    RankableScore.count300 +
+                    RankableScore.count50 +
+                    RankableScore.countMiss +
+                    RankableScore.maxCombo +
+                    RankableScore.spinnerBonusScore +
+                    RankableScore.comboBonusScore +
+                    RankableScore.accuracyBonusScore +
+                    RankableScore.Ranking +
+                    Path.GetFileName(Player.Beatmap.ContainerFilename) +
+                    deviceType +
+                    RankableScore.hitScore +
+                    (int)Player.Difficulty);
+
+                string postString =
+                    "udid=" + GameBase.Instance.DeviceIdentifier +
+                    "&count300=" + RankableScore.count300 +
+                    "&count100=" + RankableScore.count100 +
+                    "&count50=" + RankableScore.count50 +
+                    "&countMiss=" + RankableScore.countMiss +
+                    "&maxCombo=" + RankableScore.maxCombo +
+                    "&spinnerBonus=" + RankableScore.spinnerBonusScore +
+                    "&comboBonus=" + RankableScore.comboBonusScore +
+                    "&accuracyBonus=" + RankableScore.accuracyBonusScore +
+                    "&hitScore=" + RankableScore.hitScore +
+                    "&rank=" + RankableScore.Ranking +
+                    "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
+                    "&cc=" + GameBase.Config.GetValue<string>("hash", string.Empty) +
+                    "&c=" + check +
+                    "&difficulty=" + (int)Player.Difficulty +
+                    "&username=" + GameBase.Config.GetValue<string>("username", string.Empty) +
+                    "&twitterid=" + GameBase.Config.GetValue<string>("twitterId", string.Empty) +
+                    "&dt=" + deviceType +
+                    "&offset=" + avg;
+
+                spriteSubmitting = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Game, new Vector2(20, 20), 0.999f, true, Color4.White)
+                {
+                    ExactCoordinates = false,
+                    DimImmune = true,
+                    ScaleScalar = 0.7f
+                };
+
+                spriteSubmitting.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.Time, Clock.Time + 1500) { Looping = true });
+                GameBase.MainSpriteManager.Add(spriteSubmitting);
+                spriteSubmitting.FadeInFromZero(300);
+
+                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
+                nr.onFinish += delegate(string result, Exception e)
+                {
+                    spriteSubmitting.AlwaysDraw = false;
+                    if (e == null)
+                    {
+                        spriteSubmitting.FadeOut(200);
+                        spriteSubmitting.ScaleTo(3, 200);
+                        spriteSubmitting.Colour = Color4.YellowGreen;
+                    }
+                    else
+                    {
+                        spriteSubmitting.FadeOut(1000);
+                        spriteSubmitting.ScaleTo(1.2f, 200, EasingTypes.In);
+                        spriteSubmitting.Colour = Color4.Red;
+                    }
+
+                    if (e == null && result != null && result.StartsWith("message:"))
+                    {
+                        rankingNotification = new Notification("Ranking", result.Replace("message:", string.Empty), NotificationStyle.Okay);
+                        if (finishedDisplaying) GameBase.Notify(rankingNotification);
+                    }
+                };
+                NetManager.AddRequest(nr);
+            }
+#endif
         }
 
         bool cameFromSongSelect;
