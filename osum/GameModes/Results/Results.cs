@@ -325,8 +325,7 @@ namespace osum.GameModes
                     {
                         //todo: no twitter auth. are we not submitting anymore?
                     }
-
-                    if (hash.StartsWith("ios-"))
+                    else if (hash.StartsWith("ios-"))
                     {
                         hash = hash.Substring(4);
                         using (ACAccountStore store = new ACAccountStore())
