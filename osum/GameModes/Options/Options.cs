@@ -234,12 +234,12 @@ namespace osum.GameModes.Options
                     if (url.StartsWith("finished://"))
                     {
                         string[] split = url.Replace("finished://", "").Split('/');
-        
+
                         GameBase.Config.SetValue<string>("username", split[0]);
                         GameBase.Config.SetValue<string>("hash", split[1]);
                         GameBase.Config.SetValue<string>("twitterId", split[2]);
                         GameBase.Config.SaveConfig();
-        
+
                         Director.ChangeMode(Director.CurrentOsuMode);
                         return true;
                     }
@@ -252,46 +252,74 @@ namespace osum.GameModes.Options
             ACAccount[] accounts = accountStore.FindAccounts(accountStore.FindAccountType(ACAccountType.Twitter));
 
             if (!granted || error != null || accounts == null || accounts.Length == 0)
-            {
-                Notification n = new Notification("Access not granted!",
-                                                  "You didn't give osu!stream access, or have no registered twitter accounts. Would you like to link manually by logging in?",
-                                                  NotificationStyle.YesNo,
-                                                 delegate(bool resp) {
-                    if (resp) HandleTwitterOAuth();
-                });
-                GameBase.Notify(n);
-            }
+                handleManualAuth();
             else
-            {
-                //for now let's juse use the first account (the user may select more than one, but we can't handle this).
-                ACAccount account = accounts[0];
+                tryNextAccount();
+        }
 
-                NSDictionary properties = account.GetDictionaryOfValuesFromKeys(new NSString[]{new NSString("properties")});
-                string twitter_id = properties.ObjectForKey(new NSString("properties")).ValueForKey(new NSString("user_id")).ToString();
-                //works!!
-    
-                {
-                    Notification n = new Notification("Link successful!",
-                                                          "Now linked with " + account.Username,
-                                                          NotificationStyle.Okay,
-                                                          null);
-                    GameBase.Notify(n);
-    
-                    GameBase.Config.SetValue<string>("username", account.Username);
-                    GameBase.Config.SetValue<string>("hash", "ios-" + account.Identifier);
-                    GameBase.Config.SetValue<string>("twitterId", twitter_id);
-                    GameBase.Config.SaveConfig();
-    
-                    Director.ChangeMode(Director.CurrentOsuMode);
-                }
+        private void handleManualAuth()
+        {
+            if (accountStore != null)
+            {
+                accountStore.Dispose();
+                accountStore = null;
             }
 
-            accountStore.Dispose();
-            accountStore = null;
+            Notification n = new Notification("Access not granted!",
+                                              "You didn't give osu!stream access, or have no registered twitter accounts. Would you like to link manually by logging in?",
+                                              NotificationStyle.YesNo,
+                                             delegate(bool resp) {
+                if (resp) HandleTwitterOAuth();
+            });
+            GameBase.Notify(n);
         }
+
+        private void tryNextAccount(int index = 0)
+        {
+                ACAccount[] accounts = accountStore.FindAccounts(accountStore.FindAccountType(ACAccountType.Twitter));
+                ACAccount account = accounts[index];
+
+                Notification n = new Notification("Twitter Link",
+                                              "Link with " + account.Username + "?",
+                                              NotificationStyle.YesNo,
+                                             delegate(bool resp) {
+
+                    if (!resp)
+                    {
+                        if (index == accounts.Length - 1) //exhausted our options.
+                            handleManualAuth();
+                        else
+                            tryNextAccount(index + 1);
+                        return;
+                    }
+
+                    NSDictionary properties = account.GetDictionaryOfValuesFromKeys(new NSString[]{new NSString("properties")});
+                    string twitter_id = properties.ObjectForKey(new NSString("properties")).ValueForKey(new NSString("user_id")).ToString();
+                    //works!!
+
+                    {
+                        Notification n1 = new Notification("Link successful!",
+                                                              "Now linked with " + account.Username,
+                                                              NotificationStyle.Okay,
+                                                              null);
+                        GameBase.Notify(n1);
+
+                        GameBase.Config.SetValue<string>("username", account.Username);
+                        GameBase.Config.SetValue<string>("hash", "ios-" + account.Identifier);
+                        GameBase.Config.SetValue<string>("twitterId", twitter_id);
+                        GameBase.Config.SaveConfig();
+
+                        Director.ChangeMode(Director.CurrentOsuMode);
+                    }
+
+
+                });
+            GameBase.Notify(n);
+        }
+
 #else
         private void HandleTwitterAuth(object sender, EventArgs args)
-        { 
+        {
             //not available on PC builds.
         }
 #endif
