@@ -9,6 +9,9 @@ using osu_common.Bancho;
 using osum.GameplayElements.Beatmaps;
 using osum.GameModes;
 using osum.GameplayElements.Scoring;
+#if iOS
+using osum.Support.iPhone;
+#endif
 
 namespace osum.GameplayElements
 {
@@ -65,7 +68,7 @@ namespace osum.GameplayElements
             }
             else if (Version < 9)
             {
-                if (MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."))
+                if (HardwareDetection.RunningiOS5)
                     foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
                         MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
             }
