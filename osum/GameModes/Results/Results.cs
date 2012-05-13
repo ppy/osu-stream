@@ -307,7 +307,7 @@ namespace osum.GameModes
 
                 //Average Timing
                 avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
-                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + avg + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
+                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + Math.Round(Math.Abs(avg),1) + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
                     Origin = OriginTypes.BottomCentre
@@ -372,7 +372,7 @@ namespace osum.GameModes
                             GameBase.Config.SetValue<string>("username", null);
                             GameBase.Config.SetValue<string>("hash", null);
                             GameBase.Config.SetValue<string>("twitterId", null);
-                            GameBase.Config.SaveConfig();                
+                            GameBase.Config.SaveConfig();
                             return;
                         }
                     }
