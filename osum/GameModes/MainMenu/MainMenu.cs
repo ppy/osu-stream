@@ -233,18 +233,22 @@ namespace osum.GameModes
             }
 
             string username = GameBase.Config.GetValue<string>("username", null);
-            if (!string.IsNullOrEmpty(username) && username != "Guest")
-            {
-                bool hasAuth = GameBase.HasAuth;
-                pText usernameText = new pText(username + (hasAuth ? string.Empty : " (guest)"), 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
-                usernameText.TextShadow = true;
-                spriteManager.Add(usernameText);
 
-                if (hasAuth)
-                {
-                    pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
-                    spriteManager.Add(avatar);
-                }
+            bool hasAuth = GameBase.HasAuth;
+            pText usernameText = new pText(hasAuth ? username : "Guest", 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
+            usernameText.TextShadow = true;
+            spriteManager.Add(usernameText);
+
+            if (hasAuth)
+            {
+                pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
+                spriteManager.Add(avatar);
+            }
+            else
+            {
+                usernameText.OnClick += delegate {
+                    //todo: offer link options.
+                };
             }
 
             firstDisplay = false;
