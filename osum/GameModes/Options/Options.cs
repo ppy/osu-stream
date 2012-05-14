@@ -154,7 +154,7 @@ namespace osum.GameModes.Options
                 text.TextBounds.X = 600;
                 smd.Add(text);
 
-                vPos += (int)text.MeasureText().Y + 50;
+                /*vPos += (int)text.MeasureText().Y + 50;
 
                 button = new pButton(LocalisationManager.GetString(OsuString.GuestUsername), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
@@ -169,7 +169,7 @@ namespace osum.GameModes.Options
                         });
 #endif
                 });
-                smd.Add(button);
+                smd.Add(button);*/
             }
             else
             {
