@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>IconTest.png</string>
+		<string>IconTest@2x.png</string>
+		<string>IconTest-72.png</string>
+		<string>IconTest-72@2x.png</string>
+	</array>
+	<key>CFBundleDisplayName</key>
+	<string>osu!</string>
+	<key>CFBundleIdentifier</key>
+	<string>sh.ppy.osutest</string>
+	<key>CFBundleVersion</key>
+	<string>20120514</string>
+	<key>MinimumOSVersion</key>
+	<string>3.2</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<string>YES</string>
+	<key>UILaunchImageFile</key>
+	<string>Support/iPhone/loading</string>
+	<key>UIPrerenderedIcon</key>
+	<string>YES</string>
+	<key>UIStatusBarHidden</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~iphone</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+	</array>
+</dict>
+</plist>
