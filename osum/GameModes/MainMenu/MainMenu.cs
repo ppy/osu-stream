@@ -239,9 +239,12 @@ namespace osum.GameModes
             usernameText.TextShadow = true;
             spriteManager.Add(usernameText);
 
+            if (firstDisplay) usernameText.Transform(fadeIn);
+
             if (hasAuth)
             {
                 pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
+                if (firstDisplay) avatar.Transform(fadeIn);
                 spriteManager.Add(avatar);
             }
             else
