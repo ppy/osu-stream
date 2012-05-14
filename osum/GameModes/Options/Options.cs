@@ -182,7 +182,7 @@ namespace osum.GameModes.Options
                         GameBase.GloballyDisableInput = false;
 
                         if (e != null || _result != "success")
-                            GameBase.Notify("An error occurred during unlinking. Please check your internet connection and try again");
+                            GameBase.Notify(LocalisationManager.GetString(OsuString.TwitterLinkError));
                         else
                         {
                             GameBase.Config.SetValue<string>("username", null);
@@ -265,8 +265,8 @@ namespace osum.GameModes.Options
                 accountStore = null;
             }
 
-            Notification n = new Notification("Access not granted!",
-                                              "You didn't give osu!stream access, or have no registered twitter accounts. Would you like to link manually by logging in?",
+            Notification n = new Notification(LocalisationManager.GetString(OsuString.AccessNotGranted),
+                                              LocalisationManager.GetString(OsuString.AccessNotGrantedDetails),
                                               NotificationStyle.YesNo,
                                              delegate(bool resp) {
                 if (resp) HandleTwitterOAuth();
@@ -279,11 +279,11 @@ namespace osum.GameModes.Options
                 ACAccount[] accounts = accountStore.FindAccounts(accountStore.FindAccountType(ACAccountType.Twitter));
                 ACAccount account = accounts[index];
 
-                Notification n = new Notification("Twitter Link",
-                                              "Link with " + account.Username + "?",
-                                              NotificationStyle.YesNo,
-                                             delegate(bool resp) {
-
+                Notification n = new Notification(
+                                    LocalisationManager.GetString(OsuString.TwitterLinkQuestion),
+                                    string.Format(LocalisationManager.GetString(OsuString.TwitterLinkQuestionDetails), account.Username),
+                                    NotificationStyle.YesNo,
+                                    delegate(bool resp) {
                     if (!resp)
                     {
                         if (index == accounts.Length - 1) //exhausted our options.
@@ -298,10 +298,10 @@ namespace osum.GameModes.Options
                     //works!!
 
                     {
-                        Notification n1 = new Notification("Link successful!",
-                                                              "Now linked with " + account.Username,
-                                                              NotificationStyle.Okay,
-                                                              null);
+                        Notification n1 = new Notification(LocalisationManager.GetString(OsuString.TwitterSuccess),
+                                                        string.Format(LocalisationManager.GetString(OsuString.TwitterSuccessDetails), account.Username),
+                                                        NotificationStyle.Okay,
+                                                        null);
                         GameBase.Notify(n1);
 
                         GameBase.Config.SetValue<string>("username", account.Username);
@@ -311,8 +311,6 @@ namespace osum.GameModes.Options
 
                         Director.ChangeMode(Director.CurrentOsuMode);
                     }
-
-
                 });
             GameBase.Notify(n);
         }

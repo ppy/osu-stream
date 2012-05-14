@@ -197,6 +197,13 @@ namespace osum.Resources
         InternetFailed,
         Crashed,
         AppleReallyScrewedThisUp1,
-        RestorePurchases
+        RestorePurchases,
+        TwitterLinkError,
+        AccessNotGranted,
+        AccessNotGrantedDetails,
+        TwitterLinkQuestion,
+        TwitterLinkQuestionDetails,
+        TwitterSuccess,
+        TwitterSuccessDetails
     }
 }
