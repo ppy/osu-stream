@@ -31,7 +31,7 @@ namespace osum.GameModes.Options
 
         SpriteManager topMostSpriteManager = new SpriteManager();
 
-        static float scroll;
+        internal static float ScrollPosition;
 
         public override void Initialize()
         {
@@ -151,6 +151,7 @@ namespace osum.GameModes.Options
                 vPos += 40;
 
                 text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(20, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+                text.MeasureText(); //force a measure as this is the last sprite to be added to the draggable area (need height to be precalculated)
                 text.TextBounds.X = 600;
                 smd.Add(text);
 
@@ -206,7 +207,7 @@ namespace osum.GameModes.Options
 
             vPos += 50;
 
-            smd.ScrollTo(scroll);
+            smd.ScrollTo(ScrollPosition);
         }
 
 #if iOS
@@ -363,7 +364,7 @@ namespace osum.GameModes.Options
 
         public override void Dispose()
         {
-            scroll = smd.ScrollPosition;
+            ScrollPosition = smd.ScrollPosition;
 
             GameBase.Config.SetValue<int>("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
             GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));

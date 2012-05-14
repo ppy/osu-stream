@@ -216,7 +216,7 @@ namespace osum.Graphics.Sprites
 
         internal void ScrollTo(float scrollPoint)
         {
-            aimOffset = Math.Max(offset_min, Math.Min(0, scrollPoint));
+            aimOffset = Math.Max(offset_min - EndBufferZone, Math.Min(0, scrollPoint));
             ShowScrollbar(true); //pulse scrollbar display.
         }
     }

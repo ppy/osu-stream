@@ -251,6 +251,8 @@ namespace osum.GameModes
             {
                 usernameText.OnClick += delegate {
                     //todo: offer link options.
+                    Options.Options.ScrollPosition = Int32.MinValue;
+                    Director.ChangeMode(OsuMode.Options);
                 };
             }
 
