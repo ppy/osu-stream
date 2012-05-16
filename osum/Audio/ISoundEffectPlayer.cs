@@ -11,55 +11,11 @@ namespace osum
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
     /// </summary>
-    public class SoundEffectPlayer : IUpdateable
+    public abstract class SoundEffectPlayer : IUpdateable
     {
-        /// <summary>
-        /// Current OpenAL context.
-        /// </summary>
-        AudioContext context;
+        internal const int MAX_SOURCES = 32; //hardware limitation
 
-        const int MAX_SOURCES = 32; //hardware limitation
-
-        Source[] sourceInfo;
-
-        public SoundEffectPlayer()
-        {
-            try
-            {
-                context = new AudioContext();
-            }
-            catch (DllNotFoundException)
-            {
-                //needs openal32.dll
-                throw new ApplicationException("OpenAL failed to initialize. Please run oainst.exe and try again.");
-            }
-            catch (AudioException)
-            {
-                //todo: handle error here.
-            }
-            catch (TypeInitializationException)
-            {
-                throw new ApplicationException("OpenAL failed to initialize. Please run oainst.exe and try again.");
-            }
-
-            int[] sources = AL.GenSources(MAX_SOURCES);
-            sourceInfo = new Source[MAX_SOURCES];
-
-            for (int i = 0; i < MAX_SOURCES; i++)
-            {
-                Source info = sourceInfo[i];
-
-                if (info == null)
-                    sourceInfo[i] = new Source(sources[i]);
-                else
-                {
-                    info.SourceId = sources[i];
-                    info.BufferId = 0;
-                }
-            }
-
-            GameBase.Scheduler.Add(CheckUnload, 1000);
-        }
+        protected Source[] sourceInfo;
 
         void CheckUnload()
         {
@@ -74,26 +30,7 @@ namespace osum
         /// </summary>
         /// <param name="filename">Filename of a 44khz 16-bit wav sample.</param>
         /// <returns>-1 on error, bufferId on success.</returns>
-        public int Load(string filename)
-        {
-#if DEBUG
-            if (!NativeAssetManager.Instance.FileExists(filename)) return -1;
-#endif
-
-            int buffer = AL.GenBuffer();
-
-            using (Stream str = NativeAssetManager.Instance.GetFileStream(filename))
-            using (WaveReader sound = new WaveReader(str))
-            {
-                SoundData s = sound.ReadToEnd();
-                AL.BufferData(buffer, s.SoundFormat.SampleFormatAsOpenALFormat, s.Data, s.Data.Length, s.SoundFormat.SampleRate);
-            }
-
-            if (AL.GetError() != ALError.NoError)
-                return -1;
-
-            return buffer;
-        }
+        public abstract int Load(string filename);
 
         /// <summary>
         /// Unloads all samples and clears cache.
@@ -167,11 +104,11 @@ namespace osum
         }
     }
 
-    public class Source
+    public abstract class Source
     {
         public int TagNumeric;
 
-        int sourceId;
+        protected int sourceId;
         public int SourceId
         {
             get { return sourceId; }
@@ -185,7 +122,7 @@ namespace osum
         }
 
         float pitch = 1;
-        public float Pitch
+        public virtual float Pitch
         {
             get { return pitch; }
             set
@@ -196,21 +133,19 @@ namespace osum
                     return;
 
                 pitch = value;
-                AL.Source(sourceId, ALSourcef.Pitch, pitch);
             }
         }
 
         public bool Reserved;
 
-        int bufferId = 0;
-        public int BufferId
+        protected int bufferId = 0;
+        public virtual int BufferId
         {
             get { return bufferId; }
             set
             {
                 if (Disposable) DeleteBuffer();
                 bufferId = value;
-                AL.Source(sourceId, ALSourcei.Buffer, bufferId);
             }
         }
 
@@ -220,54 +155,37 @@ namespace osum
         }
 
         float volume = 1;
-        public float Volume
+        public virtual float Volume
         {
             get { return volume; }
             set
             {
                 if (value == volume) return;
-
                 volume = value;
-                AL.Source(sourceId, ALSourcef.Gain, volume);
             }
         }
 
         bool looping;
         public bool Disposable;
-        public bool Looping
+        public virtual bool Looping
         {
             get { return looping; }
             set
             {
                 if (looping == value) return;
                 looping = value;
-                AL.Source(sourceId, ALSourceb.Looping, looping);
             }
         }
 
-        public bool Playing { get { return AL.GetSourceState(sourceId) == ALSourceState.Playing; } }
+        public abstract bool Playing { get; }
 
-        internal void Play()
+        internal abstract void Play();
+        
+        internal abstract void Stop();
+        
+        internal virtual void DeleteBuffer()
         {
-            if (!Playing)
-                AL.SourcePlay(sourceId);
-        }
-
-        internal void Stop()
-        {
-            if (Playing)
-                AL.SourceStop(sourceId);
-        }
-
-        internal void DeleteBuffer()
-        {
-            int buffer = bufferId;
-
-            //must unload before deleting.
             bufferId = 0;
-            AL.Source(sourceId, ALSourcei.Buffer, bufferId);
-
-            AL.DeleteBuffer(buffer);
             Disposable = false;
         }
     }

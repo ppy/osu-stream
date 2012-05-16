@@ -91,7 +91,7 @@ namespace osum.Audio
                 return null;
 
             int buffer = LoadSample(sample, set);
-            if (buffer < 0) return null;
+            if (buffer == -1) return null;
 
             int lastPlayed = -1;
             if (lastPlayedTimes.TryGetValue((int)set + ((int)sample << 8), out lastPlayed))

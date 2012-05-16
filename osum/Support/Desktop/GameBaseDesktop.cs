@@ -34,6 +34,11 @@ namespace osum
             return new BackgroundAudioPlayerDesktop();
         }
 
+        protected override SoundEffectPlayer InitializeSoundEffects()
+        {
+            return new SoundEffectPlayerBass();
+        }
+
         protected override void InitializeInput()
         {
             InputSourceMouse source = new InputSourceMouse(Window.Mouse);

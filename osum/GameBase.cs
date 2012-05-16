@@ -387,7 +387,7 @@ namespace osum
         protected virtual SoundEffectPlayer InitializeSoundEffects()
         {
             //currently openAL implementation is used across the board.
-            return new SoundEffectPlayer();
+            return new SoundEffectPlayerOpenAL();
         }
 
         /// <summary>
