@@ -364,7 +364,7 @@ namespace osum
             //Load the main menu initially.
             #if MONO && DEBUG
             if (Director.PendingOsuMode == OsuMode.Unknown)
-                Director.ChangeMode(startupMode != OsuMode.Unknown ? startupMode : OsuMode.SongSelect, null);
+                Director.ChangeMode(startupMode != OsuMode.Unknown ? startupMode : OsuMode.MainMenu, null);
             #else
             Director.ChangeMode(OsuMode.MainMenu, null);
             #endif
