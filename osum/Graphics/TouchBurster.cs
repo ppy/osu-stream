@@ -54,9 +54,15 @@ namespace osum.Graphics
             BindInput = bindInput;
         }
 
+#if iOS
+        const int MAX_BURST = 32;
+#else
+        const int MAX_BURST = 512;
+#endif
+
         public override void Initialize()
         {
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < MAX_BURST; i++)
             {
                 pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
                 burst.Additive = true;
@@ -101,13 +107,22 @@ namespace osum.Graphics
         }
         void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
+#if iOS
             if (InputManager.IsPressed && spacing++ % 1 == 0)
                 Burst(trackingPoint.BasePosition, 20, 0.5f, 1);
+#else
+            if (InputManager.IsPressed)
+                Burst(trackingPoint.BasePosition, 20, 0.5f, 2);
+#endif
         }
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
+#if iOS
             Burst(trackingPoint.BasePosition, 100, 1, 5);
+#else
+            Burst(trackingPoint.BasePosition, 100, 1, 30);
+#endif
         }
 
         internal void Burst(Vector2 pos, float spread = 100, float scale = 1, int count = 5)
