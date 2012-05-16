@@ -32,7 +32,7 @@ namespace osum.GameModes
         public static string BeatmapPath { get { return @"Beatmaps"; } }
 #endif
 
-        private pList<Beatmap> maps = new pList<Beatmap>();
+        private pList<Beatmap> maps = new pList<Beatmap>(new BeatmapPackComparer(), false);
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
         SpriteManager topmostSpriteManager = new SpriteManager();
@@ -179,63 +179,56 @@ namespace osum.GameModes
             }
             else
 #endif
-            if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh && BeatmapDatabase.Version == BeatmapDatabase.DATABASE_VERSION)
-            {
+                if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh && BeatmapDatabase.Version == BeatmapDatabase.DATABASE_VERSION)
+                {
+                    bool hasMissingMaps = false;
+                    foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
+                    {
+                        Beatmap b = bmi.GetBeatmap();
+                        if (!File.Exists(b.ContainerFilename))
+                        {
+                            hasMissingMaps = true;
+                            continue;
+                        }
+
+                        maps.Add(b);
+                    }
+                }
+                else
+                {
 #if !DIST
-                Console.WriteLine("Regenerating database!");
+                    Console.WriteLine("Regenerating database!");
 #endif
 
-                bool hasMissingMaps = false;
-                foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
-                {
-                    Beatmap b = bmi.GetBeatmap();
-                    if (!File.Exists(b.ContainerFilename))
+                    ForceBeatmapRefresh = false;
+
+#if iOS
+                    //bundled maps
+                    foreach (string s in Directory.GetFiles("Beatmaps/"))
                     {
-                        hasMissingMaps = true;
-                        continue;
+
+                        Beatmap b = new Beatmap(s);
+
+                        BeatmapDatabase.PopulateBeatmap(b);
+                        maps.AddInPlace(b);
+                    }
+#endif
+
+                    foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
+                    {
+                        Beatmap b = new Beatmap(s);
+
+                        if (b.Package == null)
+                            continue;
+
+                        BeatmapDatabase.PopulateBeatmap(b);
+                        maps.AddInPlace(b);
                     }
 
-                    maps.Add(b);
+                    BeatmapDatabase.Write();
                 }
-            }
-            else
-            {
-                ForceBeatmapRefresh = false;
-
-                #if iOS
-                //bundled maps
-                foreach (string s in Directory.GetFiles("Beatmaps/"))
-                {
-
-                    Beatmap b = new Beatmap(s);
-
-                    BeatmapDatabase.PopulateBeatmap(b);
-                    maps.AddInPlace(b);
-                }
-                #endif
-
-                foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
-                {
-                    Beatmap b = new Beatmap(s);
-
-                    if (b.Package == null)
-                        continue;
-
-                    BeatmapDatabase.PopulateBeatmap(b);
-                    maps.AddInPlace(b);
-                }
-
-                BeatmapDatabase.Write();
-            }
 
             int index = 0;
-
-            /*maps.Sort((a, b) =>
-            {
-                int compare = (a.PackId ?? string.Empty).CompareTo((b.PackId ?? string.Empty));
-                if (compare != 0) return compare;
-                return a.CompareTo(b);
-            });*/
 
             foreach (Beatmap b in maps)
             {

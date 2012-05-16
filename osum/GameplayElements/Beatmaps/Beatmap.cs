@@ -257,5 +257,28 @@ namespace osum.GameplayElements.Beatmaps
 
         #endregion
     }
+
+    class BeatmapPackComparer : IComparer<Beatmap>
+    {
+
+        public int Compare(Beatmap a, Beatmap b)
+        {
+            string aId = a.PackId;
+            string bId = b.PackId;
+
+            if (!(aId == null && bId == null))
+            {
+                if (aId == null)
+                    return 1;
+                if (bId == null)
+                    return -1;
+
+                int compare = aId.CompareTo(bId);
+                if (compare != 0) return compare;
+            }
+
+            return a.CompareTo(b);
+        }
+    }
 }
 
