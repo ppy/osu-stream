@@ -191,7 +191,7 @@ namespace osum.GameModes
                             continue;
                         }
 
-                        maps.Add(b);
+                        maps.AddInPlace(b);
                     }
                 }
                 else
@@ -230,12 +230,19 @@ namespace osum.GameModes
 
             int index = 0;
 
+            string lastPackId = null;
             foreach (Beatmap b in maps)
             {
                 if (b.Package == null)
                     continue;
 
                 BeatmapPanel panel = new BeatmapPanel(b, panelSelected, index++);
+                if (b.PackId != lastPackId)
+                {
+                    panel.NewSection = true;
+                    lastPackId = b.PackId;
+                }
+
                 topmostSpriteManager.Add(panel);
                 panels.Add(panel);
             }
@@ -245,8 +252,8 @@ namespace osum.GameModes
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                 State = SelectState.Exiting;
                 Director.ChangeMode(OsuMode.Store);
-            }, index++);
-
+            }, index++) { NewSection = true };
+            
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = Color4.White;
             panelDownloadMore.s_Text.Offset.Y += 16;
@@ -536,10 +543,13 @@ namespace osum.GameModes
 
                         foreach (BeatmapPanel p in panels)
                         {
+                            if (p.NewSection)
+                                pos.Y += 20;
+
                             if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
                                 //todo: change this to use a draggable spritemanager instead. better performance and will move smoother on lower fps.
                                 p.MoveTo(pos, touchingBegun ? 50 : 300);
-                            pos.Y += 70;
+                            pos.Y += 63;
                         }
                     }
                     break;
