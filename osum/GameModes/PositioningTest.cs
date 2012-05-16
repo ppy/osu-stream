@@ -6,6 +6,7 @@ using osum.Graphics.Sprites;
 using osum.Graphics.Skins;
 using OpenTK.Graphics;
 using OpenTK;
+using osum.Graphics.Drawables;
 
 namespace osum.GameModes
 {
@@ -44,6 +45,10 @@ namespace osum.GameModes
 
         void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
+            pRectangle rect = new pRectangle(Vector2.Zero, new Vector2(GameBase.NativeSize.Width, GameBase.NativeSize.Height), false, 0.2f, Color4.White);
+            rect.FadeOutFromOne(500);
+            spriteManager.Add(rect);
+
             pointAt(trackingPoint.BasePosition / GameBase.InputToFixedWidthAlign);
         }
 
