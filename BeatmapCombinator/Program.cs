@@ -614,7 +614,14 @@ namespace osum
 
                 package.AddFile(Path.GetFileName(oscFilename), oscFilename, DateTime.MinValue, DateTime.MinValue);
                 if (isPreview)
+                {
+                    if (!File.Exists(audioFilename.Replace(".m4a", "_lq.m4a")))
+                    {
+                        Console.WriteLine("WARNING: missing preview audio file (_lq.m4a)");
+                        return;
+                    }
                     package.AddFile("audio.m4a", audioFilename.Replace(".m4a", "_lq.m4a"), DateTime.MinValue, DateTime.MinValue);
+                }
                 else
                     package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 
