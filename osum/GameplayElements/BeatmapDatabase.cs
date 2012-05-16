@@ -17,7 +17,7 @@ namespace osum.GameplayElements
 {
     internal static class BeatmapDatabase
     {
-        internal const int DATABASE_VERSION = 11;
+        internal const int DATABASE_VERSION = 12;
         const string FILENAME = "osu!.db";
 
         private static string databasePath { get { return GameBase.Instance.PathConfig + FILENAME; } }
