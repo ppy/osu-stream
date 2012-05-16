@@ -41,8 +41,8 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSourceMouse source = new InputSourceMouse(Window.Mouse);
-            InputManager.AddSource(source);
+            //InputManager.AddSource(new InputSourceMouse(Window.Mouse));
+            InputManager.AddSource(new InputSourceBaanto());
         }
 
         public override void SetupScreen()
