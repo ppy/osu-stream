@@ -718,7 +718,7 @@ namespace osum.GameModes
                 if (finishedDisplaying)
                 {
                     if (!InputManager.IsPressed)
-                        offset *= 0.90f;
+                        offset *= 1 - 0.1f * Clock.ElapsedRatioToSixty;
 
                     float thisOffset = 0;
                     if (offset != 0)
@@ -737,7 +737,7 @@ namespace osum.GameModes
                 fallingSprites.RemoveAll(p => p.Transformations.Count == 0);
                 foreach (pSprite p in fallingSprites)
                 {
-                    p.Position.Y += p.TagNumeric * 0.003f * (float)Clock.ElapsedMilliseconds;
+                    p.Position.Y += p.TagNumeric * Clock.ElapsedRatioToSixty * 0.003f * (float)Clock.ElapsedMilliseconds;
                     p.TagNumeric++;
                 }
 

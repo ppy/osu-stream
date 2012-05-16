@@ -83,7 +83,7 @@ namespace osum.GameModes.Play.Components
             {
                 if (displayScore != currentScore)
                 {
-                    int change = (int)((currentScore - displayScore) / 6f);
+                    int change = (int)((currentScore - displayScore) / (6f / Clock.ElapsedRatioToSixty));
 
                     //in case it gets rounded too close to zero.
                     if (change == 0) change = currentScore - displayScore;

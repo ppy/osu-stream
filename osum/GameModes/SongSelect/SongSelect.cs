@@ -447,12 +447,12 @@ namespace osum.GameModes
                     if (!InputManager.IsPressed)
                     {
                         float lastOffset = songSelectOffset;
-                        songSelectOffset = songSelectOffset * 0.8f + bound * 0.2f + velocity;
+                        songSelectOffset = songSelectOffset * (1 - 0.2f * Clock.ElapsedRatioToSixty) + bound * 0.2f * Clock.ElapsedRatioToSixty + velocity * Clock.ElapsedRatioToSixty;
 
                         if (songSelectOffset != bound)
-                            velocity *= 0.7f;
+                            velocity *= (1 - 0.3f * Clock.ElapsedRatioToSixty);
                         else
-                            velocity *= 0.94f;
+                            velocity *= (1 - 0.06f * Clock.ElapsedRatioToSixty);
                     }
 
                     float panelHeightPadded = BeatmapPanel.PANEL_HEIGHT + 10;

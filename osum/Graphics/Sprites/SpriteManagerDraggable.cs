@@ -57,7 +57,7 @@ namespace osum.Graphics.Sprites
 
             base.HandleInputManagerOnMove(source, trackingPoint);
 
-            if (LockHorizontal && movedX > 10 && movedY < 20)
+            if (LockHorizontal && movedX > 20 && movedY < 20)
                 return;
 
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
@@ -183,12 +183,12 @@ namespace osum.Graphics.Sprites
 
             if (!InputManager.IsPressed)
             {
-                verticalDragOffset = verticalDragOffset * 0.8f + bound * 0.2f + velocity;
+                verticalDragOffset = verticalDragOffset * (1 - 0.2f * Clock.ElapsedRatioToSixty) + bound * 0.2f * Clock.ElapsedRatioToSixty + velocity * Clock.ElapsedRatioToSixty;
 
                 if (verticalDragOffset != bound)
-                    velocity *= 0.7f;
+                    velocity *= (1 - 0.3f * Clock.ElapsedRatioToSixty);
                 else
-                    velocity *= 0.94f;
+                    velocity *= (1 - 0.06f * Clock.ElapsedRatioToSixty);
             }
 
             hasMovement = lastFrameOffset != verticalDragOffset;
