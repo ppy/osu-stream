@@ -21,18 +21,13 @@ namespace osum.Input.Sources
             mouse.Move += new EventHandler<MouseMoveEventArgs>(mouse_Move);
         }
 
-        private void updateTrackingPosition(Point position)
-        {
-            if (trackingPoints.Count == 0)
-                trackingPoints.Add(new TrackingPoint(position));
-            else
-                trackingPoints[0].Location = position;
-        }
-
         void mouse_Move(object sender, MouseMoveEventArgs e)
         {
-            updateTrackingPosition(e.Position);
-            TriggerOnMove(trackingPoints[0]);
+            if (trackingPoints.Count > 0)
+            {
+                trackingPoints[0].Location = e.Position;
+                TriggerOnMove(trackingPoints[0]);
+            }
         }
 
         List<MouseButton> pressedButtons = new List<MouseButton>();
