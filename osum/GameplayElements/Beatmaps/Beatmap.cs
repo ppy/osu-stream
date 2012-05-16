@@ -78,8 +78,7 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
-                if (ContainerFilename.EndsWith(".m4a.osz2")) return "audio.m4a";
-                return ContainerFilename.EndsWith(".osz2") ? "audio.mp3" : "audio.m4a";
+                return "audio.m4a";
             }
         }
 #endif

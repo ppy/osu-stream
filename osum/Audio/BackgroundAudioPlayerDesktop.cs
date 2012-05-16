@@ -6,6 +6,7 @@ using Un4seen.Bass;
 using System.IO;
 using System.Runtime.InteropServices;
 using osum.Helpers;
+using Un4seen.Bass.AddOn.Aac;
 
 namespace osum.Audio
 {
@@ -20,10 +21,10 @@ namespace osum.Audio
         {
             BassNet.Registration("poo@poo.com", "2X25242411252422");
 
-            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, (IntPtr)0, null);
+            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
 
-            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_BUFFER, 100);
-            Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATEPERIOD, 10);
+            //Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_BUFFER, 100);
+            //Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATEPERIOD, 10);
         }
 
         /// <summary>
@@ -77,8 +78,11 @@ namespace osum.Audio
 
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 
-            audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
-
+            if (identifier.Contains("mp3"))
+                audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
+            else
+                audioStream = BassAac.BASS_MP4_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
+            
             updateVolume();
 
             return true;
