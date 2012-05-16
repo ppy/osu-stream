@@ -13,6 +13,7 @@ using osum.Helpers;
 using osum.Graphics.Skins;
 using osum.GameplayElements;
 using osum.GameplayElements.Scoring;
+using System.Runtime.InteropServices;
 
 namespace osum
 {
@@ -26,11 +27,16 @@ namespace osum
             //GameBase.WindowSize = new Size(960,640);
         }
 
+        [DllImport("user32.dll")]
+        static extern int ShowCursor(bool bShow);
+        
         /// <summary>Load resources here.</summary>
         /// <param name="e">Not used.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            ShowCursor(false);
 
             MakeCurrent();
 
