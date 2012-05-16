@@ -44,8 +44,6 @@ namespace osum.GameplayElements
                         if (Version > 3)
                             BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                     }
-
-                    BeatmapInfo.Sort();
                 }
                 catch (Exception e) {
 #if DEBUG

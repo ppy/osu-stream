@@ -225,6 +225,7 @@ namespace osum.GameModes.SongSelect
         }
 
         List<pDrawable> rankSprites = new List<pDrawable>();
+        public bool NewSection;
 
         private pTexture GetThumbnail()
         {
