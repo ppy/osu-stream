@@ -5,6 +5,8 @@ namespace osum
 {
     public class TrackingPoint : ICloneable
     {
+        public object Tag;
+        
         private PointF location;
         /// <summary>
         /// The raw screen location 
@@ -17,7 +19,7 @@ namespace osum
                 UpdatePositions();
             }
         }
-
+        
         public virtual void UpdatePositions()
         {
             Vector2 baseLast = BasePosition;
@@ -50,6 +52,7 @@ namespace osum
             
         public TrackingPoint(PointF location, object tag)
         {
+            Tag = tag;
             Location = location;
             WindowDelta = Vector2.Zero; //no delta on first ctor.
             originalTrackingPoint = this;
@@ -65,8 +68,6 @@ namespace osum
                 return GameBase.StandardToGamefield(BasePosition);
             }
         }
-
-
 
         internal void IncreaseValidity()
         {

@@ -167,8 +167,14 @@
     <Compile Include="Helpers\pList.cs" />
     <Compile Include="Helpers\pMathHelper.cs" />
     <Compile Include="Helpers\UnixTimestamp.cs" />
+    <Compile Include="Input\Sources\InputSourceBaanto.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
+    <Compile Include="Input\Sources\UsbHID\Interface.cs" />
+    <Compile Include="Input\Sources\UsbHID\USB\HidDeclarations.cs" />
+    <Compile Include="Input\Sources\UsbHID\USB\HIDUSBDevice.cs" />
+    <Compile Include="Input\Sources\UsbHID\USB\ListWithEvent.cs" />
+    <Compile Include="Input\Sources\UsbHID\USB\USBSharp.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
     <Compile Include="Libraries\NetLib\DataNetRequest.cs">
       <SubType>Code</SubType>

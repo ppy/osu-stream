@@ -35,14 +35,12 @@ namespace osum
                     if (AppDelegate.UsingViewController) return;
                     point = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
                     touchDictionary[u] = point;
-                    trackingPoints.Add(point);
                     TriggerOnDown(point);
                     break;
                 case UITouchPhase.Cancelled:
                 case UITouchPhase.Ended:
                     if (!touchDictionary.TryGetValue(u, out point))
                         return;
-                    trackingPoints.Remove(point);
                     touchDictionary.Remove(u);
                     TriggerOnUp(point);
                     break;

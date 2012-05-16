@@ -20,11 +20,15 @@ namespace osum
         protected void TriggerOnDown(TrackingPoint trackingPoint)
         {
             PressedCount++;
+            trackingPoints.Add(trackingPoint);
 
             trackingPoint.HoveringObjectConfirmed = false;
 
-            if (OnDown != null)
-                OnDown(this, trackingPoint);
+            GameBase.Scheduler.Add(delegate
+            {
+                if (OnDown != null)
+                    OnDown(this, trackingPoint);
+            });
 
             if (!trackingPoint.HoveringObjectConfirmed)
                 trackingPoint.HoveringObject = null;
@@ -34,9 +38,13 @@ namespace osum
         protected void TriggerOnUp(TrackingPoint trackingPoint)
         {
             PressedCount--;
+            trackingPoints.Remove(trackingPoint);
 
-            if (OnUp != null)
-                OnUp(this, trackingPoint);
+            GameBase.Scheduler.Add(delegate
+            {
+                if (OnUp != null)
+                    OnUp(this, trackingPoint);
+            });
 
             if (!trackingPoint.HoveringObjectConfirmed)
                 trackingPoint.HoveringObject = null;
@@ -47,8 +55,11 @@ namespace osum
         {
             trackingPoint.HoveringObjectConfirmed = false;
 
-            if (OnClick != null)
-                OnClick(this, trackingPoint);
+            GameBase.Scheduler.Add(delegate
+            {
+                if (OnClick != null)
+                    OnClick(this, trackingPoint);
+            });
 
             if (!trackingPoint.HoveringObjectConfirmed)
                 trackingPoint.HoveringObject = null;
@@ -59,8 +70,11 @@ namespace osum
         {
             trackingPoint.HoveringObjectConfirmed = false;
 
-            if (OnMove != null)
-                OnMove(this, trackingPoint);
+            GameBase.Scheduler.Add(delegate
+            {
+                if (OnMove != null)
+                    OnMove(this, trackingPoint);
+            });
         }
     }
 }
