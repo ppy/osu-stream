@@ -29,7 +29,7 @@ namespace osum.GameModes
         public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
 #endif
 #else
-        public static string BeatmapPath { get { return @"Beatmaps"; } }
+        public static string BeatmapPath { get { return @"Beatmaps/"; } }
 #endif
 
         private pList<Beatmap> maps = new pList<Beatmap>(new BeatmapPackComparer(), false);
