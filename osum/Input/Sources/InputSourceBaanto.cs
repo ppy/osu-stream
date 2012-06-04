@@ -13,7 +13,8 @@ namespace osum.Input.Sources
 {
     class TrackingPointBaanto : TrackingPoint
     {
-        public TrackingPointBaanto(PointF location, object tag) : base(location, tag)
+        public TrackingPointBaanto(PointF location, object tag)
+            : base(location, tag)
         {
         }
 
@@ -24,7 +25,7 @@ namespace osum.Input.Sources
             WindowDelta = BasePosition - baseLast;
         }
     }
-    
+
     class InputSourceBaanto : InputSource
     {
         enum TouchType
@@ -55,12 +56,33 @@ namespace osum.Input.Sources
             public float X { get { return (float)(xposition + section_size * xsection) / max_length; } }
             public float Y { get { return (float)(yposition + section_size * ysection) / max_length; } }
         }
-        
-        public InputSourceBaanto() : base()
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct CustomTouchPoint
+        {
+            byte xsection;
+            byte xposition;
+            byte ysection;
+            byte yposition;
+            byte zsection;
+            byte zposition;
+
+            const int max_length = 4094;
+            const int section_size = 256;
+
+            public TouchType State { get { return xposition + section_size * xsection <= max_length ? TouchType.Touch : TouchType.Release; } }
+            public float X { get { return (float)(xposition + section_size * xsection) / max_length; } }
+            public float Y { get { return (float)(yposition + section_size * ysection) / max_length; } }
+        }
+
+        public InputSourceBaanto()
+            : base()
         {
             USBInterface usb = new USBInterface("vid_2453", "pid_0100");
 
-            usb.Connect();
+            if (!usb.Connect())
+                GameBase.Notify("Couldn't connect with touchscreen.");
+
             usb.enableUsbBufferEvent(incomingData);
             usb.startRead();
         }
@@ -81,8 +103,9 @@ namespace osum.Input.Sources
                 lock (USBInterface.usbBuffer.SyncRoot)
                     USBInterface.usbBuffer.RemoveAt(0);
 
+#if WM_TOUCH
                 if (buffer.Length != 56) return;
-
+             
                 const int touch_point_count = 5;
                 const int touch_point_size = 10;
                 const int byte_offset = 1;
@@ -118,6 +141,47 @@ namespace osum.Input.Sources
                         TriggerOnDown(tp);
                     }
                 }
+#else
+                if (buffer.Length != 64 || buffer[0] != 0x0f) return;
+
+                const int touch_point_count = 5;
+                const int touch_point_size = 6;
+                const int byte_offset = 1;
+
+                List<CustomTouchPoint> points = new List<CustomTouchPoint>();
+
+                IntPtr ptr = Marshal.AllocHGlobal(touch_point_size * touch_point_count);
+                Marshal.Copy(buffer, 0, ptr, touch_point_size * touch_point_count);
+
+                for (int i = 0; i < touch_point_count; i++)
+                {
+                    CustomTouchPoint point = (CustomTouchPoint)Marshal.PtrToStructure(new IntPtr(ptr.ToInt32() + touch_point_size * i + byte_offset), typeof(CustomTouchPoint));
+                    points.Add(point);
+                }
+
+                Marshal.FreeHGlobal(ptr);
+
+                int id = 0;
+                foreach (CustomTouchPoint p in points)
+                {
+                    TrackingPoint tp = trackingPoints.Find(t => t.Tag.ToString() == id.ToString());
+                    if (tp != null)
+                    {
+                        tp.Location = new PointF(p.X, p.Y);
+                        if (p.State == TouchType.Touch)
+                            TriggerOnMove(tp);
+                        else
+                            TriggerOnUp(tp);
+                    }
+                    else if (p.State == TouchType.Touch)
+                    {
+                        tp = new TrackingPointBaanto(new PointF(p.X, p.Y), id.ToString());
+                        TriggerOnDown(tp);
+                    }
+
+                    id++;
+                }
+#endif
             }
         }
     }

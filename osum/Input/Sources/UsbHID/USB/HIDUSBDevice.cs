@@ -139,7 +139,7 @@ namespace USBHIDDRIVER.USB
                 resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
 
                 //is this the device i want?
-                string deviceID = this.vendorID + "&" + this.productID;
+                string deviceID = this.vendorID + "&" + this.productID + "&col05";
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
                     //yes it is
