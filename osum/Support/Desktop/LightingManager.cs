@@ -65,7 +65,8 @@ namespace osum
 
             float power = AudioEngine.Music.CurrentPower;
 
-            byte colour = (byte)Math.Max(1,((power - 0.5) * 2) * (255*intensity));
+            //byte colour = (byte)Math.Max(1,((power - 0.5) * 2) * (255*intensity));
+            byte colour = (byte)Math.Max(1, (power - 0.3f) / 0.7f * (255 * intensity));
 
             MainMenu m = Director.CurrentMode as MainMenu;
 
@@ -76,21 +77,27 @@ namespace osum
                 switch (m.lastExplode)
                 {
                     case 0:
-                        r = 152/255f;
-                        g = 110/255f;
+                        r = 152 / 255f;
+                        g = 110 / 255f;
                         b = 201 / 255f;
                         break;
                     case 1:
-                        r = 247/255f;
-                        g = 74/255f;
+                        r = 247 / 255f;
+                        g = 74 / 255f;
                         b = 189 / 255f;
                         break;
                     case 2:
-                        r = 255/255f;
-                        g = 175/255f;
+                        r = 255 / 255f;
+                        g = 175 / 255f;
                         b = 142 / 255f;
                         break;
                 }
+            }
+            else
+            {
+                r = (float)GameBase.Random.NextDouble();
+                g = (float)GameBase.Random.NextDouble();
+                b = (float)GameBase.Random.NextDouble();
             }
 
             if (colour > 1)
