@@ -128,10 +128,13 @@ namespace osum.Audio
             {
 
                 int word = Bass.BASS_ChannelGetLevel(audioStream);
+
+                if (word == -1) return 0;
+
                 int left = Utils.LowWord32(word);
                 int right = Utils.HighWord32(word);
 
-                return (left + right) / 65536f * 2f;
+                return (left + right) / 65536f;
             }
         }
 

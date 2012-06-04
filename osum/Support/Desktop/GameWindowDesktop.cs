@@ -142,6 +142,8 @@ namespace osum
                 Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(200, 400));
             }
 
+            GameBase.Instance.Dispose();
+
             GameBase.Config.SaveConfig();
 
             base.OnClosing(e);

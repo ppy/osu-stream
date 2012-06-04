@@ -13,12 +13,15 @@ namespace osum
     {
         public GameWindowDesktop Window;
 
+        LightingManager lighting;
+
         public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
         }
 
         public override void Initialize()
         {
+            lighting = new LightingManager();
             base.Initialize();
         }
         
@@ -51,6 +54,19 @@ namespace osum
 
             base.SetupScreen();
         }
+
+        public override bool Update()
+        {
+            lighting.Update();
+            return base.Update();
+        }
+
+        public override void Dispose()
+        {
+            lighting.Dispose();
+            base.Dispose();
+        }
+
 
         public void Exit()
         {

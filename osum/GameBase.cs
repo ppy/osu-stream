@@ -56,7 +56,7 @@ using System.Text.RegularExpressions;
 
 namespace osum
 {
-    public abstract class GameBase
+    public abstract class GameBase : IDisposable
     {
         public static GameBase Instance;
 
@@ -417,7 +417,7 @@ namespace osum
         /// Main update cycle
         /// </summary>
         /// <returns>true if a draw should occur</returns>
-        public bool Update()
+        public virtual bool Update()
         {
             Clock.Update(false);
 
@@ -590,5 +590,9 @@ namespace osum
         }
 
         public virtual string PathConfig { get { return string.Empty; } }
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

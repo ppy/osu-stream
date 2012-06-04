@@ -57,7 +57,7 @@ namespace osum.GameModes
         pSprite osuLogo;
         pSprite osuLogoGloss;
 
-        List<pSprite> explosions = new List<pSprite>();
+        internal List<pSprite> explosions = new List<pSprite>();
 
         internal SpriteManager spriteManagerBehind = new SpriteManager();
 
@@ -370,8 +370,12 @@ namespace osum.GameModes
             osuLogoGloss.ScaleScalar = osuLogo.ScaleScalar;
         }
 
+        internal int lastExplode;
+
         private void explode(int beat)
         {
+            lastExplode = beat;
+
             pDrawable explosion = explosions[beat];
 
             if (explosion.Alpha == 0 && !menuBackgroundNew.IsAwesome && osuLogo.ScaleScalar >= 0.6f)
