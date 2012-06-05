@@ -8,6 +8,7 @@ using osum.GameModes.Play;
 using System.IO.Ports;
 using System.Drawing;
 using System.Collections.Generic;
+using OpenTK.Graphics;
 
 
 namespace osum
@@ -17,6 +18,13 @@ namespace osum
         public byte R;
         public byte G;
         public byte B;
+
+        internal void FromColor4(Color4 colour)
+        {
+            R = (byte)Math.Round(colour.R * 255);
+            G = (byte)Math.Round(colour.G * 255);
+            B = (byte)Math.Round(colour.B * 255);
+        }
     }
 
     public class LightingManager : GameComponent, IDisposable
@@ -26,7 +34,9 @@ namespace osum
         const int LED_COUNT = 58;
         const float intensity = 1;
         const float diminish = 0.99f;
-        
+
+        internal static LightingManager Instance;
+
         LightingColour[] colours = new LightingColour[LED_COUNT];
         byte[] buffer = new byte[LED_COUNT * 3];
 
@@ -41,7 +51,8 @@ namespace osum
 
         public LightingManager()
         {
-            
+            Instance = this;
+
             for (int i = 0; i < LED_COUNT; i++)
                 colours[i] = new LightingColour() { R = 1, G = 1, B = 1 };
 
@@ -116,16 +127,22 @@ namespace osum
                 if (c.G > 1) c.G = (byte)(c.G * diminish);
                 if (c.B > 1) c.B = (byte)(c.B * diminish);
 
-                buffer[i * 3] = c.R;
+                buffer[i * 3] = c.B;
                 buffer[i * 3 + 1] = c.G;
-                buffer[i * 3 + 2] = c.B;
-                
+                buffer[i * 3 + 2] = c.R;
+
                 i++;
             }
-            
+
             port.Write(buffer, 0, buffer.Length);
 
             base.Update();
+        }
+
+        public void Blind(Color4 colour)
+        {
+            foreach (LightingColour c in colours)
+                c.FromColor4(colour);
         }
     }
 }
