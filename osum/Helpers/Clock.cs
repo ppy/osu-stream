@@ -30,7 +30,7 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET_INPUT = 16;//16 * 2; //roughly four frames
 #else
         public const int UNIVERSAL_OFFSET_MP3 = 50;
-        public const int UNIVERSAL_OFFSET_M4A = -20;
+        public const int UNIVERSAL_OFFSET_M4A = -55;
         public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
 
