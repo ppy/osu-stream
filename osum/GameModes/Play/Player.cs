@@ -495,6 +495,8 @@ namespace osum.GameModes
             if (Failed) return;
 
             playfieldBackground.FlashColour(Color4.Red, 500).Offset(-250);
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.Blind(Color4.DarkRed);
 
             if (harsh)
             {
