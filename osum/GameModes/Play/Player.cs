@@ -474,7 +474,10 @@ namespace osum.GameModes
         protected virtual void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             playfieldBackground.ChangeColour(HitObjectManager.ActiveStream);
-            if (healthBar != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
+
+            //don't change HP here when combinating. There could be a race condition between hitting the stream change note and resetting the health, which results in
+            //incorrect calculations.
+            if (healthBar != null && GameBase.Instance != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
             streamSwitchDisplay.EndSwitch();
 
