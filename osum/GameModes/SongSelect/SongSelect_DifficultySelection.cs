@@ -282,6 +282,8 @@ namespace osum.GameModes
             bool isNewDifficulty = Player.Difficulty != newDifficulty || force;
             velocity = 0;
 
+            if (Player.Beatmap == null) return;
+
             MapPackage package = Player.Beatmap.Package;
 
             if (package == null) return;
