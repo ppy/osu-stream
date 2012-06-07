@@ -147,9 +147,12 @@ namespace osum.GameModes
 
         private void playFromPreview()
         {
-            AudioEngine.Music.DimmableVolume = 0;
-            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
-            AudioEngine.Music.Play();
+            if (Player.Beatmap != null)
+            {
+                AudioEngine.Music.DimmableVolume = 0;
+                AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
+                AudioEngine.Music.Play();
+            }
         }
 
         private void initializeDifficultySelection()
