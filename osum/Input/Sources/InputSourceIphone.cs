@@ -56,7 +56,7 @@ namespace osum
 
         public void ReleaseAllTouches()
         {
-            foreach (TrackingPoint t in trackingPoints)
+            foreach (TrackingPoint t in trackingPoints.ToArray())
                 TriggerOnUp(t);
             trackingPoints.Clear();
             touchDictionary.Clear();
