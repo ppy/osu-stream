@@ -78,50 +78,58 @@ namespace osum.GameModes
                 return;
             }
 
-            rankingScores = new List<Score>();
-
-            foreach (string s in _result.Split('\n'))
+            try
             {
-                if (s.Length == 0) continue;
+                rankingScores = new List<Score>();
 
-                string[] split = s.Split('|');
-
-                int i = 0;
-
-                Score score = new Score()
+                foreach (string s in _result.Split('\n'))
                 {
-                    Id = Int32.Parse(split[i++]),
-                    OnlineRank = Int32.Parse(split[i++]),
-                    Username = split[i++],
-                    hitScore = Int32.Parse(split[i++]),
-                    comboBonusScore = Int32.Parse(split[i++]),
-                    spinnerBonusScore = Int32.Parse(split[i++]),
-                    count300 = UInt16.Parse(split[i++]),
-                    count100 = UInt16.Parse(split[i++]),
-                    count50 = UInt16.Parse(split[i++]),
-                    countMiss = UInt16.Parse(split[i++]),
-                    maxCombo = UInt16.Parse(split[i++]),
-                    date = UnixTimestamp.Parse(Int32.Parse(split[i++])),
-                    guest = split[i++] == "1"
-                };
+                    if (s.Length == 0) continue;
 
-                rankingScores.Add(score);
+                    string[] split = s.Split('|');
+
+                    int i = 0;
+
+                    Score score = new Score()
+                    {
+                        Id = Int32.Parse(split[i++], GameBase.nfi),
+                        OnlineRank = Int32.Parse(split[i++], GameBase.nfi),
+                        Username = split[i++],
+                        hitScore = Int32.Parse(split[i++], GameBase.nfi),
+                        comboBonusScore = Int32.Parse(split[i++], GameBase.nfi),
+                        spinnerBonusScore = Int32.Parse(split[i++], GameBase.nfi),
+                        count300 = UInt16.Parse(split[i++], GameBase.nfi),
+                        count100 = UInt16.Parse(split[i++], GameBase.nfi),
+                        count50 = UInt16.Parse(split[i++], GameBase.nfi),
+                        countMiss = UInt16.Parse(split[i++], GameBase.nfi),
+                        maxCombo = UInt16.Parse(split[i++], GameBase.nfi),
+                        date = UnixTimestamp.Parse(Int32.Parse(split[i++], GameBase.nfi)),
+                        guest = split[i++] == "1"
+                    };
+
+                    rankingScores.Add(score);
+                }
+
+                int index = 0;
+                foreach (Score score in rankingScores)
+                {
+                    ScorePanel sp = new ScorePanel(score, onScoreClicked);
+                    sp.Sprites.ForEach(s => s.Position = new Vector2(0, (ScorePanel.PANEL_HEIGHT + 3) * index));
+
+                    rankingSpriteManager.Add(sp);
+
+                    index++;
+                }
+
+                GameBase.ShowLoadingOverlay = false;
+
+                rankingSpriteManager.FadeInFromZero(300);
             }
-
-            int index = 0;
-            foreach (Score score in rankingScores)
+            catch
             {
-                ScorePanel sp = new ScorePanel(score, onScoreClicked);
-                sp.Sprites.ForEach(s => s.Position = new Vector2(0, (ScorePanel.PANEL_HEIGHT + 3) * index));
-
-                rankingSpriteManager.Add(sp);
-
-                index++;
+                GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed), delegate { Ranking_Hide(); });
+                return;
             }
-
-            GameBase.ShowLoadingOverlay = false;
-
-            rankingSpriteManager.FadeInFromZero(300);
         }
 
         void onScoreClicked(object sender, EventArgs args)
