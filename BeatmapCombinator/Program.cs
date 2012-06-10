@@ -73,7 +73,6 @@ namespace osum
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
                     Process(args[0], true, true, true, true);
                     Process(args[0], false, true, true, false);
-                    Process(args[0], false, true, false, false);
                 }
                 else
                 {
@@ -92,7 +91,7 @@ namespace osum
             }
         }
 
-        public static string Process(string dir, bool quick = false, bool usem4a = false, bool free = false, bool previewMode = false)
+        public static string Process(string dir, bool quick = false, bool usem4a = true, bool free = false, bool previewMode = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
