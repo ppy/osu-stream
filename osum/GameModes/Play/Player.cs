@@ -129,7 +129,7 @@ namespace osum.GameModes
             if (GameBase.Instance != null)
                 TextureManager.RequireSurfaces = true;
 
-            if (!GameBase.IsSlowDevice)
+            if (!GameBase.IsSlowDevice && GameBase.Instance != null)
                 touchBurster = new TouchBurster(!Player.Autoplay);
 
             loadBeatmap();
@@ -140,8 +140,8 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
-                ShowGuideFingers = Autoplay || (GameBase.Config != null && GameBase.Config.GetValue<bool>("GuideFingers", false));
-                if (this is Tutorial || ShowGuideFingers)
+                ShowGuideFingers = GameBase.Instance != null && (this is Tutorial || Autoplay || (GameBase.Config != null && GameBase.Config.GetValue<bool>("GuideFingers", false)));
+                if (ShowGuideFingers)
                     GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
 
                 InitializeStream();
@@ -346,6 +346,8 @@ namespace osum.GameModes
         /// <param name="beats">How many beats we should count in.</param>
         internal void Resume(int startTime = 0, int beats = 0, bool forceCountdown = false, int countdownOffset = 0)
         {
+            if (countdown == null) return;
+
             if (Beatmap != null && startTime != 0 && beats != 0)
             {
                 double beatLength = Beatmap.beatLengthAt(startTime);
@@ -479,7 +481,8 @@ namespace osum.GameModes
             //incorrect calculations.
             if (healthBar != null && GameBase.Instance != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
-            streamSwitchDisplay.EndSwitch();
+            if (streamSwitchDisplay != null)
+                streamSwitchDisplay.EndSwitch();
 
 #if SCORE_TESTING
             File.AppendAllText(scoreTestFilename, "Stream switched at " + Clock.AudioTime + "\n");
@@ -1014,7 +1017,8 @@ namespace osum.GameModes
             File.AppendAllText(scoreTestFilename, "Switching stream at " + switchTime + "\n");
 #endif
 
-            streamSwitchDisplay.BeginSwitch(increase);
+            if (streamSwitchDisplay != null)
+                streamSwitchDisplay.BeginSwitch(increase);
 
             queuedStreamSwitchTime = switchTime;
             return true;

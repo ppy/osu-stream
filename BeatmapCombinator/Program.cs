@@ -705,7 +705,7 @@ namespace osum
 
             Score s = null;
 
-            using (Player p = new Player())
+            using (Player p = new PlayCombinate())
             {
                 p.Initialize();
 
@@ -792,7 +792,7 @@ namespace osum
                     Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
 
                     //let's do some test runs
-                    using (Player p = new Player())
+                    using (Player p = new PlayCombinate())
                     {
                         p.Initialize();
 
