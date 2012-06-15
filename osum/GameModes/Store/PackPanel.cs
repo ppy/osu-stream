@@ -397,7 +397,7 @@ namespace osum.GameModes.Store
                     previewRequest.Abort();
 
                 string downloadPath = "http://www.osustream.com/dl/preview.php";
-                string param = "pack=" + PackId + "&filename=" + item.Filename + "&format=" + PREFERRED_FORMAT;
+                string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&format=" + PREFERRED_FORMAT;
                 previewRequest = new DataNetRequest(downloadPath, "POST", param);
                 previewRequest.onFinish += delegate(Byte[] data, Exception ex)
                 {

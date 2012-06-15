@@ -147,9 +147,12 @@ namespace osum.GameModes
 
         private void playFromPreview()
         {
-            AudioEngine.Music.DimmableVolume = 0;
-            AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
-            AudioEngine.Music.Play();
+            if (Player.Beatmap != null)
+            {
+                AudioEngine.Music.DimmableVolume = 0;
+                AudioEngine.Music.SeekTo(Player.Beatmap.PreviewPoint);
+                AudioEngine.Music.Play();
+            }
         }
 
         private void initializeDifficultySelection()
@@ -278,6 +281,8 @@ namespace osum.GameModes
         {
             bool isNewDifficulty = Player.Difficulty != newDifficulty || force;
             velocity = 0;
+
+            if (Player.Beatmap == null) return;
 
             MapPackage package = Player.Beatmap.Package;
 

@@ -115,7 +115,6 @@
     <Compile Include="Support\iPhone\AppDelegate.cs" />
     <Compile Include="Input\TrackingPoint.cs" />
     <Compile Include="Input\TrackingPointIphone.cs" />
-    <Compile Include="Audio\SoundEffectPlayer.cs" />
     <Compile Include="Helpers\Audio\AudioReaderException.cs" />
     <Compile Include="Helpers\Audio\Sound.cs" />
     <Compile Include="Helpers\Audio\SoundData.cs" />
@@ -234,6 +233,8 @@
     <Compile Include="UI\TextInputNotification.cs" />
     <Compile Include="Support\CrashHandler.cs" />
     <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
+    <Compile Include="Audio\ISoundEffectPlayer.cs" />
+    <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

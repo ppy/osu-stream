@@ -300,7 +300,7 @@ namespace StreamTester
 
                 Environment.CurrentDirectory = tempDir;
                 BeatmapCombinator.Analysis = checkBoxAnalysis.Checked;
-                packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, checkBoxm4a.Checked);
+                packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, true);
                 Environment.CurrentDirectory = osusDir;
 
                 GameBase.Instance = game;

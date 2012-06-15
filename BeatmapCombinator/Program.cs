@@ -73,7 +73,6 @@ namespace osum
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
                     Process(args[0], true, true, true, true);
                     Process(args[0], false, true, true, false);
-                    Process(args[0], false, true, false, false);
                 }
                 else
                 {
@@ -92,7 +91,7 @@ namespace osum
             }
         }
 
-        public static string Process(string dir, bool quick = false, bool usem4a = false, bool free = false, bool previewMode = false)
+        public static string Process(string dir, bool quick = false, bool usem4a = true, bool free = false, bool previewMode = false)
         {
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
@@ -706,7 +705,7 @@ namespace osum
 
             Score s = null;
 
-            using (Player p = new Player())
+            using (Player p = new PlayCombinate())
             {
                 p.Initialize();
 
@@ -724,9 +723,13 @@ namespace osum
                     int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; }) - 1;
                     //take one from the index. we need to be at max HP *before* the preempt-take-switch.
 
+                    while (p.HitObjectManager.ActiveStreamObjects[index].EndTime > testStreamSwitch)
+                        index--;
+
                     if (index <= 0)
                         throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
                     switchHpObject = p.HitObjectManager.ActiveStreamObjects[index];
+                    
                 }
 
                 FakeAudioTimeSource source = new FakeAudioTimeSource();
@@ -789,7 +792,7 @@ namespace osum
                     Player.Beatmap.DifficultyInfo[difficulty] = new BeatmapDifficultyInfo(difficulty) { ComboMultiplier = comboMultiplier };
 
                     //let's do some test runs
-                    using (Player p = new Player())
+                    using (Player p = new PlayCombinate())
                     {
                         p.Initialize();
 

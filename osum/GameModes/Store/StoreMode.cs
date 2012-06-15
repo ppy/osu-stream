@@ -199,7 +199,7 @@ namespace osum.GameModes.Store
                                 Console.WriteLine("Local revision is " + localRev + " | Remote revision is " + revision);
 #endif
 
-                                if (float.Parse(localRev) >= float.Parse(revision))
+                                if (float.Parse(localRev, GameBase.nfi) >= float.Parse(revision, GameBase.nfi))
                                     continue;
 
                                 updateChecksum = CryptoHelper.GetMd5String(GameBase.Instance.DeviceIdentifier + (char)0x77 + filename + "-update");
