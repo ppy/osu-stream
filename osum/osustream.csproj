@@ -27,6 +27,7 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <DebugSymbols>true</DebugSymbols>
     <IpaPackageName />
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|iPhone' ">
     <DebugType>none</DebugType>
@@ -50,6 +51,7 @@
     <BundleVersion>20120419</BundleVersion>
     <BundleDisplayName>osu!test</BundleDisplayName>
     <BundleIcon>IconTest.png</BundleIcon>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
@@ -328,6 +330,7 @@
     <Content Include="Localisation\zh-CHT.txt" />
     <Content Include="Localisation\de.txt" />
     <Content Include="Localisation\sv.txt" />
+    <Content Include="Localisation\ru.txt" />
     <Content Include="Localisation\es.txt" />
     <Content Include="Skins\Default\rankbling.wav" />
     <Content Include="Skins\Default\rankfail.wav" />
