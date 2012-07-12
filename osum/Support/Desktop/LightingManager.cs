@@ -31,20 +31,20 @@ namespace osum
     {
         private SerialPort port;
 
-        const int LED_COUNT = 58;
+        int led_count = 50;
         const float intensity = 1;
         const float diminish = 0.99f;
 
         internal static LightingManager Instance;
 
-        LightingColour[] colours = new LightingColour[LED_COUNT];
-        byte[] buffer = new byte[LED_COUNT * 3];
+        LightingColour[] colours;
+        byte[] buffer;
 
         public override void Dispose()
         {
-            for (int i = 0; i < LED_COUNT; i++)
+            /*for (int i = 0; i < led_count; i++)
                 colours[i] = new LightingColour() { R = 1, G = 1, B = 1 };
-            Update();
+            Update();*/
 
             base.Dispose();
         }
@@ -53,17 +53,41 @@ namespace osum
         {
             Instance = this;
 
-            for (int i = 0; i < LED_COUNT; i++)
-                colours[i] = new LightingColour() { R = 1, G = 1, B = 1 };
-
             try
             {
-                port = new SerialPort("COM15", 576000);
-                port.Open();
+                string[] portNames = SerialPort.GetPortNames();
+
+                foreach (string s in portNames)
+                {
+                    try
+                    {
+                        port = new SerialPort(s, 576000);
+                        port.Open();
+                        port.ReadTimeout = 100;
+                        string l = port.ReadLine();
+
+                        if (!string.IsNullOrEmpty(l))
+                        {
+                            led_count = Int32.Parse(l);
+                            break;
+                        }
+
+                        port.Close();
+                    }
+                    catch { }
+                }
             }
             catch
             {
                 port = null;
+            }
+
+            if (port != null)
+            {
+                colours = new LightingColour[led_count];
+                buffer = new byte[led_count * 3];
+                for (int i = 0; i < led_count; i++)
+                    colours[i] = new LightingColour() { R = 1, G = 1, B = 1 };
             }
         }
 
@@ -113,7 +137,7 @@ namespace osum
 
             if (colour > 1)
             {
-                if (colour > 128) currentLight = GameBase.Random.Next(LED_COUNT);
+                if (colour > 128) currentLight = GameBase.Random.Next(led_count);
 
                 colours[currentLight].R = (byte)(colour * r);
                 colours[currentLight].G = (byte)(colour * g);
@@ -140,6 +164,12 @@ namespace osum
         }
 
         public void Blind(Color4 colour)
+        {
+            foreach (LightingColour c in colours)
+                c.FromColor4(colour);
+        }
+
+        internal void Add(Color4 colour)
         {
             foreach (LightingColour c in colours)
                 c.FromColor4(colour);

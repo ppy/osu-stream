@@ -223,28 +223,36 @@ namespace osum.GameplayElements
             float depth = this is Spinner ? SpriteManager.drawOrderBwd(EndTime - 4) : SpriteManager.drawOrderFwdPrio(EndTime + 4);
 
             OsuTexture texture = OsuTexture.None;
+            Color4 colour = Color4.Black;
 
             switch (action & ScoreChange.HitValuesOnly)
             {
                 case ScoreChange.Hit300g:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit300g;
                     break;
                 case ScoreChange.Hit300k:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit300k;
                     break;
                 case ScoreChange.Hit300:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit300;
                     break;
                 case ScoreChange.Hit100k:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit100k;
                     break;
                 case ScoreChange.Hit100:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit100;
                     break;
                 case ScoreChange.Hit50:
+                    colour = new Color4(255, 0, 184, 255);
                     texture = OsuTexture.hit50;
                     break;
                 case ScoreChange.Miss:
+                    colour = new Color4(0, 0, 0, 0);
                     texture = OsuTexture.hit0;
                     break;
             }
@@ -262,6 +270,9 @@ namespace osum.GameplayElements
             Sprites.Add(p);
 
             usableSpriteManager.Add(p);
+
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.Add(colour);
 
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 400;
