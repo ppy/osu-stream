@@ -81,7 +81,7 @@ namespace osum.Input.Sources
             USBInterface usb = new USBInterface("vid_2453", "pid_0100");
 
             if (!usb.Connect())
-                GameBase.Notify("Couldn't connect with touchscreen.");
+                throw new Exception("Couldn't connect with touchscreen.");
 
             usb.enableUsbBufferEvent(incomingData);
             usb.startRead();
