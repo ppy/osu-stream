@@ -14,6 +14,7 @@ using osum.Graphics.Skins;
 using osum.GameplayElements;
 using osum.GameplayElements.Scoring;
 using System.Runtime.InteropServices;
+using osum.Input.Sources;
 
 namespace osum
 {
@@ -39,8 +40,6 @@ namespace osum
         {
             base.OnLoad(e);
 
-            ShowCursor(false);
-
             MakeCurrent();
 
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
@@ -49,6 +48,9 @@ namespace osum
             GL.Enable(EnableCap.Blend);
 
             GameBase.Instance.Initialize();
+
+            if (InputManager.RegisteredSources.Count > 0 && InputManager.RegisteredSources[0] is InputSourceBaanto)
+                ShowCursor(false);
 
             KeyPress += new EventHandler<KeyPressEventArgs>(GameWindowDesktop_KeyPress);
         }
