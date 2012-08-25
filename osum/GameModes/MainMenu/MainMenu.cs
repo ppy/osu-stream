@@ -237,7 +237,9 @@ namespace osum.GameModes
             bool hasAuth = GameBase.HasAuth;
             pText usernameText = new pText(hasAuth ? username : "Guest", 20, new Vector2(hasAuth ? 35 : 2, 0), 1, true, Color4.White);
             usernameText.TextShadow = true;
+#if !ARCADE
             spriteManager.Add(usernameText);
+#endif
 
             if (firstDisplay) usernameText.Transform(fadeIn);
 

@@ -5,9 +5,10 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using osum.GameplayElements.Beatmaps;
+using osum.Helpers.osu_common.Tencho.Objects;
 namespace osum.GameplayElements.Beatmaps
 {
-    public partial class Beatmap
+    public partial class Beatmap : bBeatmap
     {
         public List<ControlPoint> ControlPoints = new List<ControlPoint>();
 

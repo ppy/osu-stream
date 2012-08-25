@@ -84,6 +84,7 @@ namespace osum
             get { return Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING; }
         }
 
+        float originalFrequency = -1;
         public override float Pitch
         {
             get
@@ -92,9 +93,12 @@ namespace osum
             }
             set
             {
-                float audioFrequency = 1;
-                Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref audioFrequency);
-                Bass.BASS_ChannelSetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, audioFrequency * value);
+                value = Math.Max(0.5f, Math.Min(2f, value));
+                if (value == base.Pitch) return;
+
+                if (originalFrequency < 0)
+                    Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref originalFrequency);
+                Bass.BASS_ChannelSetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, originalFrequency * value);
 
                 base.Pitch = value;
             }

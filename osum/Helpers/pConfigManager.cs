@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace osu_common.Helpers
 {
     /// <summary>
-    /// Simple Configuration Manager
+    /// Simple Configurtion Manager
     /// </summary>
     public class pConfigManager : IDisposable
     {
@@ -15,6 +16,14 @@ namespace osu_common.Helpers
         private string configFilename;
         private bool dirty;
         public bool WriteOnChange { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="pConfigManager"/> class with a default filename (same as the host process).
+        /// </summary>
+        public pConfigManager()
+        {
+            LoadConfig();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="pConfigManager"/> class with a custom filename.
@@ -39,7 +48,7 @@ namespace osu_common.Helpers
         {
             object obj;
 
-            if (entriesParsed.TryGetValue(key,out obj))
+            if (entriesParsed.TryGetValue(key, out obj))
                 return (T)obj;
 
             string raw;
@@ -50,7 +59,7 @@ namespace osu_common.Helpers
                 return defaultValue;
             }
 
-            string ty = typeof (T).Name;
+            string ty = typeof(T).Name;
 
             switch (ty)
             {
@@ -71,7 +80,7 @@ namespace osu_common.Helpers
             entriesParsed[key] = obj;
             entriesRaw[key] = raw;
 
-            return (T) obj;
+            return (T)obj;
         }
 
         public void SetValue<T>(string key, T value)
@@ -79,10 +88,7 @@ namespace osu_common.Helpers
             switch (typeof(T).Name)
             {
                 default:
-                    if (value == null)
-                        entriesRaw[key] = null;
-                    else
-                        entriesRaw[key] = value.ToString();
+                    entriesRaw[key] = value == null ? null : value.ToString();
                     break;
                 case "Boolean":
                     entriesRaw[key] = value.ToString() == "True" ? "1" : "0";
@@ -95,6 +101,11 @@ namespace osu_common.Helpers
 
             if (WriteOnChange) SaveConfig();
 
+        }
+
+        public void LoadConfig()
+        {
+            LoadConfig("osu!Tencho.cfg");
         }
 
         public void LoadConfig(string configName)
@@ -110,22 +121,17 @@ namespace osu_common.Helpers
         {
             if (!File.Exists(filename)) return;
 
-            //a failure shouldn't mean a crash.
-            try
-            {
-                using (StreamReader r = File.OpenText(filename))
-                    while (!r.EndOfStream)
-                    {
-                        string line = r.ReadLine();
-                        if (line.Length < 2)
-                            continue;
-                        int equals = line.IndexOf('=');
-                        string key = line.Remove(equals).Trim();
-                        string value = line.Substring(equals + 1).Trim();
-                        entriesRaw[key] = value;
-                    }
-            }
-            catch { }
+            using (StreamReader r = File.OpenText(filename))
+                while (!r.EndOfStream)
+                {
+                    string line = r.ReadLine();
+                    if (line.Length < 2)
+                        continue;
+                    int equals = line.IndexOf('=');
+                    string key = line.Remove(equals).Trim();
+                    string value = line.Substring(equals + 1).Trim();
+                    entriesRaw[key] = value;
+                }
         }
 
         public void SaveConfig()
@@ -141,10 +147,12 @@ namespace osu_common.Helpers
         {
             try
             {
-                using (StreamWriter w = new StreamWriter(filename, false))
-                    foreach (KeyValuePair<string, string> p in entriesRaw)
-                        if (p.Value != null)
-                            w.WriteLine("{0} = {1}", p.Key, p.Value);
+                StringBuilder w = new StringBuilder();
+
+                foreach (KeyValuePair<string, string> p in entriesRaw)
+                    w.AppendLine(p.Key + " = " + p.Value);
+
+                File.WriteAllText(filename, w.ToString());
             }
             catch
             {

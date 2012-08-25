@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using osum.GameModes;
 using osum.GameplayElements.Beatmaps;
 using osum.GameModes.Play;
+using System.Runtime.InteropServices;
 
 
 namespace osum
@@ -14,6 +15,12 @@ namespace osum
         public GameWindowDesktop Window;
 
         LightingManager lighting;
+
+        [DllImport("winmm.dll")]
+        internal static extern uint timeBeginPeriod(uint period);
+
+        [DllImport("winmm.dll")]
+        internal static extern uint timeEndPeriod(uint period);
 
         public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
@@ -27,9 +34,11 @@ namespace osum
         
         override public void Run()
         {
+            timeBeginPeriod(1);
             Window = new GameWindowDesktop();
             Window.Run();
             Director.CurrentMode.Dispose();
+            timeEndPeriod(1);
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()

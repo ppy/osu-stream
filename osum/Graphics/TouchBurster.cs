@@ -42,16 +42,22 @@ namespace osum.Graphics
         };
 
         static int nextRandIndex;
+
         static float nextRand()
         {
+#if iOS
             return random[nextRandIndex++ % random.Length];
+#else
+            return (float)GameBase.Random.NextDouble();
+#endif
         }
 
         int nextBurstSprite;
 
-        public TouchBurster(bool bindInput)
+        public TouchBurster(bool bindInput, Color4 tint)
         {
             BindInput = bindInput;
+            Tint = tint;
         }
 
 #if iOS
@@ -64,7 +70,7 @@ namespace osum.Graphics
         {
             for (int i = 0; i < MAX_BURST; i++)
             {
-                pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
+                pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Tint);
                 burst.Additive = true;
                 burst.Alpha = 0;
                 burstSprites.Add(burst);
@@ -85,6 +91,7 @@ namespace osum.Graphics
         int spacing;
 
         private bool bindInput;
+        private Color4 Tint;
         private bool BindInput
         {
             get { return bindInput; }

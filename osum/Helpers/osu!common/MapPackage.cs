@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using osu_common.Bancho;
+using osu_common.Tencho;
 using osu_common.Helpers;
 using System.Threading;
 

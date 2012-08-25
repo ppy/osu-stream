@@ -8,9 +8,10 @@ using osum.GameplayElements.Beatmaps;
 using osu_common.Libraries.Osz2;
 using System.Globalization;
 using osu_common.Helpers;
+using osum.Helpers.osu_common.Tencho.Objects;
 namespace osum.GameplayElements.Beatmaps
 {
-    public partial class Beatmap : IDisposable, IComparable<Beatmap>
+    public partial class Beatmap : bBeatmap, IDisposable, IComparable<Beatmap>
     {
         public string ContainerFilename;
 
@@ -20,7 +21,7 @@ namespace osum.GameplayElements.Beatmaps
         public int StackLeniency = 1;
         public int CountdownOffset = 0;
 
-        public string BeatmapFilename
+        public override string Filename
         {
             get
             {

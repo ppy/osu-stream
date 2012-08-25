@@ -25,6 +25,7 @@ using osum.GameplayElements.HitObjects.Osu;
 using osum.UI;
 using osu_common.Libraries.Osz2;
 using osum.GameModes.Play;
+using osum.Helpers.osu_common.Tencho.Objects;
 
 namespace osum.GameModes
 {
@@ -51,6 +52,8 @@ namespace osum.GameModes
         private int lastObjectTime;
 
         internal static bool AllowStreamSwitches = true;
+
+        internal virtual bool AllowPause { get { return GameBase.Match == null; } }
 
         /// <summary>
         /// Score which is being played (or watched?)
@@ -130,7 +133,7 @@ namespace osum.GameModes
                 TextureManager.RequireSurfaces = true;
 
             if (!GameBase.IsSlowDevice && GameBase.Instance != null)
-                touchBurster = new TouchBurster(!Player.Autoplay);
+                touchBurster = new TouchBurster(!Player.Autoplay, Color4.White);
 
             loadBeatmap();
 
@@ -234,6 +237,11 @@ namespace osum.GameModes
             //hack: because seek doesn't update iOS player's internal time correctly.
             //in theory the Clock.ModeTimeReset() above should handle this.
 
+            if (GameBase.Match == null) Start();
+        }
+
+        internal void Start()
+        {
             if (hitObjectManager != null)
                 Resume(hitObjectManager.CountdownTime, 8, true, Beatmap.CountdownOffset);
         }
@@ -257,7 +265,7 @@ namespace osum.GameModes
         protected virtual void initializeUIElements()
         {
             if (Difficulty != Difficulty.Easy) healthBar = new HealthBar();
-            scoreDisplay = new ScoreDisplay();
+            scoreDisplay = new ScoreDisplay(AllowPause);
 
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
@@ -271,7 +279,8 @@ namespace osum.GameModes
                                     new Vector2(19, 16.5f), 1, true, Color4.White);
             menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
-            topMostSpriteManager.Add(menuPauseButton);
+            if (AllowPause)
+                topMostSpriteManager.Add(menuPauseButton);
 
             menuPauseButton.Alpha = 0;
             menuPauseButton.Transform(new TransformationBounce(Clock.Time, Clock.Time + 1500, 1, 0.4f, 7));
@@ -493,7 +502,8 @@ namespace osum.GameModes
 
         void Director_OnTransitionEnded()
         {
-
+            if (GameBase.Match != null)
+                GameBase.Match.RequestStateChange(MatchState.Playing);
         }
 
         private void comboPain(bool harsh)
@@ -870,16 +880,14 @@ namespace osum.GameModes
         {
             if (HitObjectManager != null && healthBar != null && !HitObjectManager.StreamChanging)
             {
-                if (HitObjectManager.IsLowestStream &&
-                    CurrentScore.totalHits > 0 &&
-                    healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
+                if (HitObjectManager.IsLowestStream && CurrentScore.totalHits > 0 && healthBar.CurrentHp < HealthBar.HP_BAR_MAXIMUM)
                 {
                     //we are on the lowest available stream difficulty and in failing territory.
                     if (healthBar.CurrentHp == 0 && !Autoplay)
                     {
                         playfieldBackground.ChangeColour(PlayfieldBackground.COLOUR_INTRO);
 
-                        if (!Completed)
+                        if (!Completed && GameBase.Match == null)
                         {
                             Completed = true;
 

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalisationUpdater", "Loca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamTester", "StreamTester\StreamTester.csproj", "{CF0E84BC-44E3-440D-9815-D5E8A3785AE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!Tencho", "osu!Tencho\osu!Tencho.csproj", "{5783A743-C95D-47BA-8ACE-62CD61A85C53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,26 @@ Global
 		{CF0E84BC-44E3-440D-9815-D5E8A3785AE9}.ReleaseNoEncryption|Mixed Platforms.Build.0 = Release|x86
 		{CF0E84BC-44E3-440D-9815-D5E8A3785AE9}.ReleaseNoEncryption|x86.ActiveCfg = Release|x86
 		{CF0E84BC-44E3-440D-9815-D5E8A3785AE9}.ReleaseNoEncryption|x86.Build.0 = Release|x86
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.Release|x86.ActiveCfg = Release|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseLocal|Any CPU.ActiveCfg = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseLocal|Any CPU.Build.0 = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseLocal|Mixed Platforms.ActiveCfg = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseLocal|Mixed Platforms.Build.0 = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseLocal|x86.ActiveCfg = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseNoEncryption|Any CPU.ActiveCfg = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseNoEncryption|Any CPU.Build.0 = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseNoEncryption|Mixed Platforms.ActiveCfg = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseNoEncryption|Mixed Platforms.Build.0 = ReleaseLocal|Any CPU
+		{5783A743-C95D-47BA-8ACE-62CD61A85C53}.ReleaseNoEncryption|x86.ActiveCfg = ReleaseLocal|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

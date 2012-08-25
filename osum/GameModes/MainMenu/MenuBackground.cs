@@ -12,6 +12,7 @@ using osum.Audio;
 using osum.Graphics.Skins;
 using osum.Graphics;
 using osum.GameModes.Store;
+using osum.Helpers.osu_common.Tencho.Objects;
 
 namespace osum.GameModes
 {
@@ -244,7 +245,11 @@ namespace osum.GameModes
             if (sender == yellow)
                 Director.ChangeMode(OsuMode.Tutorial);
             else if (sender == orange)
+            {
                 Director.ChangeMode(OsuMode.SongSelect);
+                if (GameBase.Match != null)
+                    GameBase.Match.RequestStateChange(MatchState.SongSelect);
+            }
             else if (sender == blue)
                 Director.ChangeMode(OsuMode.Store);
             else

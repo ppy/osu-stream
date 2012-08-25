@@ -159,7 +159,7 @@ namespace osum.Helpers
             {
                 currentFrameAudioTime += elapsed;
 
-                if (audioCheckFrame % CHECK_AUDIO_FRAME_COUNT == 0)
+                if (audioCheckFrame < 0 || audioCheckFrame % CHECK_AUDIO_FRAME_COUNT == 0)
                 {
                     double sourceTime = AudioTimeSource.CurrentTime;
 
@@ -189,7 +189,11 @@ namespace osum.Helpers
             else
             {
                 //currentFrameAudioTime = AudioTimeSource.CurrentTime;
-                audioCheckFrame = 0;
+                if (audioCheckFrame >= 0)
+                {
+                    currentFrameAudioTime = AudioTimeSource.CurrentTime;
+                    audioCheckFrame = -1;
+                }
             }
 
             AudioTime = (int)Math.Round(currentFrameAudioTime * 1000) + offset;

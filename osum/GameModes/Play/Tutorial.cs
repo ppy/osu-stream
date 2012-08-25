@@ -1280,7 +1280,7 @@ namespace osum.GameModes.Play
                     break;
 
                 case TutorialSegments.Score_1:
-                    scoreDisplay = new ScoreDisplay();
+                    scoreDisplay = new ScoreDisplay(false);
                     {
                         pDrawable lastFlash = null;
                         currentSegmentDelegate = delegate

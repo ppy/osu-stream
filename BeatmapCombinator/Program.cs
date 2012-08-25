@@ -89,6 +89,8 @@ namespace osum
                 Console.Write("An error occurred during combination:\n" + e.ToString() + "\n");
                 Console.ReadLine();
             }
+
+            Thread.Sleep(2000);
         }
 
         public static string Process(string dir, bool quick = false, bool usem4a = true, bool free = false, bool previewMode = false)
@@ -112,10 +114,12 @@ namespace osum
 
             List<string> orderedDifficulties = new List<string>();
 
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Easy].osu")));
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Normal].osu")));
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
+            orderedDifficulties.AddRange(osuFiles);
+            
+            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Easy].osu")));
+            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Normal].osu")));
+            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
+            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
 
             if (orderedDifficulties.FindAll(t => t != null).Count < 1) return null;
 

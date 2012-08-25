@@ -5,7 +5,7 @@ using System.Text;
 using osum.Graphics.Skins;
 using osu_common.Helpers;
 using System.IO;
-using osu_common.Bancho;
+using osu_common.Tencho;
 using osum.GameplayElements.Beatmaps;
 using osum.GameModes;
 using osum.GameplayElements.Scoring;

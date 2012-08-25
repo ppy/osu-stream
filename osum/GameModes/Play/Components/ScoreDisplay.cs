@@ -22,17 +22,17 @@ namespace osum.GameModes.Play.Components
         protected Vector2 textMeasure;
         protected float scale;
 
-        internal ScoreDisplay()
-            : this(Vector2.Zero, true, 1, true, true)
+        internal ScoreDisplay(bool allowPause)
+            : this(Vector2.Zero, true, 1, true, true, allowPause)
         {
         }
 
-        internal ScoreDisplay(Vector2 position, bool alignRight, float scale, bool showScore, bool showAccuracy)
+        internal ScoreDisplay(Vector2 position, bool alignRight, float scale, bool showScore, bool showAccuracy, bool allowPause)
         {
             this.scale = scale;
 
             float vpos = position.Y;
-            float hOffset = 40;
+            float hOffset = allowPause ? 40 : 5;
 
             textMeasure = Vector2.Zero;
 
@@ -58,7 +58,7 @@ namespace osum.GameModes.Play.Components
                             new Vector2(hOffset, 0), 0.95F, true, Color4.White);
                 s_Accuracy.TextConstantSpacing = true;
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.7f : 1);
-                s_Accuracy.Position = new Vector2(hOffset - 35, vpos);
+                s_Accuracy.Position = new Vector2(allowPause ? hOffset - 35 : 5, vpos);
             }
 
             

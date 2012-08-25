@@ -16,6 +16,7 @@ using System.IO;
 using osum.Resources;
 using osum.UI;
 using osu_common.Libraries.NetLib;
+using osum.Helpers.osu_common.Tencho.Objects;
 #if iOS
 using MonoTouch.Accounts;
 #endif
@@ -59,6 +60,9 @@ namespace osum.GameModes
 
         public override void Initialize()
         {
+            if (GameBase.Match != null)
+                GameBase.Match.RequestStateChange(MatchState.Results);
+
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));

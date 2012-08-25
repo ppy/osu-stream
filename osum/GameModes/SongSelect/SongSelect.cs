@@ -17,6 +17,7 @@ using System.Threading;
 using osum.GameplayElements.Scoring;
 using osum.Resources;
 using osu_common.Helpers;
+using osum.Helpers.osu_common.Tencho.Objects;
 
 namespace osum.GameModes
 {
@@ -149,6 +150,7 @@ namespace osum.GameModes
                 case SelectState.DifficultySelect:
                 case SelectState.LoadingPreview:
                     leaveDifficultySelection(sender, args);
+                    if (GameBase.Match != null) GameBase.Match.RequestSong(null);
                     break;
                 case SelectState.SongInfo:
                     SongInfo_Hide();
@@ -160,7 +162,11 @@ namespace osum.GameModes
             }
         }
 
+#if DEBUG
         public static bool ForceBeatmapRefresh = false;
+#else
+        public static bool ForceBeatmapRefresh = false;
+#endif
 
         /// <summary>
         /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
@@ -253,7 +259,7 @@ namespace osum.GameModes
                 State = SelectState.Exiting;
                 Director.ChangeMode(OsuMode.Store);
             }, index++) { NewSection = true };
-            
+
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = Color4.White;
             panelDownloadMore.s_Text.Offset.Y += 16;
@@ -275,6 +281,13 @@ namespace osum.GameModes
                 BeatmapDatabase.PopulateBeatmap(b);
                 maps.AddInPlace(b);
             }
+
+            foreach (string s in Directory.GetFiles(subdir, "*.osf2"))
+            {
+                Beatmap b = new Beatmap(s);
+                BeatmapDatabase.PopulateBeatmap(b);
+                maps.AddInPlace(b);
+            }
         }
 
         void panelSelected(object sender, EventArgs args)
@@ -283,7 +296,11 @@ namespace osum.GameModes
 
             if (panel == null || State != SelectState.SongSelect) return;
 
+            if (Clock.ModeTime - lastDownTime > time_to_hover) return;
+
             showDifficultySelection(panel);
+
+            if (GameBase.Match != null) GameBase.Match.RequestSong(panel.Beatmap);
         }
 
         /// <summary>
@@ -601,6 +618,19 @@ namespace osum.GameModes
 
                 SelectedPanelHoverGlow.FadeOut(200);
                 SelectedPanelHoverGlow = null;
+            }
+        }
+
+        internal void ChangeMap(bBeatmap beatmap)
+        {
+            if (beatmap == null)
+            {
+                if (State == SelectState.DifficultySelect ||  State == SelectState.LoadingPreview)
+                    leaveDifficultySelection(null, null);
+            }
+            else
+            {
+                showDifficultySelection(panels.Find(p => p.Beatmap != null && p.Beatmap.Filename == beatmap.Filename), false);
             }
         }
     }

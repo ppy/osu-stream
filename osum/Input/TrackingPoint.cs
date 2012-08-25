@@ -1,9 +1,10 @@
 using System;
 using System.Drawing;
 using OpenTK;
+using osu_common.Tencho;
 namespace osum
 {
-    public class TrackingPoint : ICloneable
+    public class TrackingPoint : ICloneable, bSerializable, IComparable<TrackingPoint>
     {
         public object Tag;
         
@@ -18,6 +19,10 @@ namespace osum
                 location = value;
                 UpdatePositions();
             }
+        }
+
+        public TrackingPoint()
+        {
         }
         
         public virtual void UpdatePositions()
@@ -86,6 +91,33 @@ namespace osum
             TrackingPoint clone = MemberwiseClone() as TrackingPoint;
             clone.originalTrackingPoint = originalTrackingPoint;
             return clone;
+        }
+
+        #endregion
+
+        #region bSerializable Members
+
+        public void ReadFromStream(osu_common.Helpers.SerializationReader sr)
+        {
+            BasePosition = new Vector2(sr.ReadSingle(), sr.ReadSingle());
+            WindowDelta = new Vector2(sr.ReadSingle(), sr.ReadSingle());
+        }
+
+        public void WriteToStream(osu_common.Helpers.SerializationWriter sw)
+        {
+            sw.Write(BasePosition.X);
+            sw.Write(BasePosition.Y);
+            sw.Write(WindowDelta.X);
+            sw.Write(WindowDelta.Y);
+        }
+
+        #endregion
+
+        #region IComparable<TrackingPoint> Members
+
+        public int CompareTo(TrackingPoint other)
+        {
+            return 0;
         }
 
         #endregion

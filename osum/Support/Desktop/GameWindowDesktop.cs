@@ -24,16 +24,16 @@ namespace osum
         public GameWindowDesktop()
             : base(480, 320, GraphicsMode.Default, "osu!stream")
         {
-            this.Location = new Point(1920, 0);
             VSync = VSyncMode.Off;
-            
-            WindowState = WindowState.Fullscreen;
+
+            //WindowState = WindowState.Fullscreen;
+            //this.Location = new Point(1920, 0);
             //GameBase.WindowSize = new Size(960,640);
         }
 
         [DllImport("user32.dll")]
         static extern int ShowCursor(bool bShow);
-        
+
         /// <summary>Load resources here.</summary>
         /// <param name="e">Not used.</param>
         protected override void OnLoad(EventArgs e)

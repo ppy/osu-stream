@@ -137,6 +137,9 @@ namespace osum
                 else
                     OnDown(source, point);
             }
+
+            if (GameBase.Match != null)
+                GameBase.Match.SendInput(TrackingPoints);
         }
 
         static public event InputHandler OnUp;
@@ -152,6 +155,9 @@ namespace osum
                 else
                     OnUp(source, point);
             }
+
+            if (GameBase.Match != null)
+                GameBase.Match.SendInput(TrackingPoints);
         }
 
         static public event InputHandler OnMove;
@@ -164,6 +170,9 @@ namespace osum
                 else
                     OnMove(source, point);
             }
+
+            if (GameBase.Match != null)
+                GameBase.Match.SendInput(TrackingPoints);
         }
 
         #endregion

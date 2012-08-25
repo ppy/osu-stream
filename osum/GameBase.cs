@@ -51,6 +51,7 @@ using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
 using System.Text.RegularExpressions;
+using osum.Network;
 #endif
 
 
@@ -110,6 +111,11 @@ namespace osum
         /// </summary>
         public static List<IUpdateable> Components = new List<IUpdateable>();
 
+        /// <summary>
+        /// A list of components which get drawn and updated every frame.
+        /// </summary>
+        public static List<IDrawable> DrawableComponents = new List<IDrawable>();
+        
         /// <summary>
         /// Top-level sprite manager. Draws above everything else.
         /// </summary>
@@ -371,6 +377,10 @@ namespace osum
 #endif
 
             Clock.Start();
+
+            Client = new Client();
+            Client.Initialize();
+            DrawableComponents.Add(Client);
         }
 
         public virtual string DeviceIdentifier
@@ -442,6 +452,7 @@ namespace osum
                 InputManager.Update();
 
             Components.ForEach(c => c.Update());
+            DrawableComponents.ForEach(c => c.Update());
 
             if (ActiveNotification != null) ActiveNotification.Update();
 
@@ -462,6 +473,8 @@ namespace osum
             Director.Draw();
 
             MainSpriteManager.Draw();
+
+            DrawableComponents.ForEach(c => c.Draw());
         }
 
         static pDrawable loadingText;
@@ -542,7 +555,10 @@ namespace osum
         public static float InputToFixedWidthAlign;
         public static float SpriteToBaseRatioAligned;
 
-        public static bool Mapper;
+        public static bool Mapper = true;
+        public static string ClientId = "osustream-" + Random.Next();
+        internal static Client Client;
+        internal static ClientMatch Match;
 
         public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }
 
@@ -586,7 +602,7 @@ namespace osum
 
         public virtual void OpenUrl(string url)
         {
-            Process.Start(url);
+            //Process.Start(url);
         }
 
         public virtual string PathConfig { get { return string.Empty; } }

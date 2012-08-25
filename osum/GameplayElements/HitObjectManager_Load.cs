@@ -35,7 +35,7 @@ namespace osum.GameplayElements
 
             List<string> readableFiles = new List<string>();
 
-            readableFiles.Add(beatmap.BeatmapFilename);
+            readableFiles.Add(beatmap.Filename);
 
             string storyBoardFile = beatmap.StoryboardFilename;
 

@@ -19,6 +19,7 @@ using osu_common.Libraries.Osz2;
 using osum.Resources;
 using osum.GameplayElements.Scoring;
 using osum.Graphics;
+using osum.Helpers.osu_common.Tencho.Objects;
 
 namespace osum.GameModes
 {
@@ -41,7 +42,7 @@ namespace osum.GameModes
         {
             get
             {
-#if !DIST
+#if !DIST || ARCADE
                 return false;
 #else
                 DifficultyScoreInfo sc = Player.Beatmap.BeatmapInfo.DifficultyScores[Difficulty.Normal];
@@ -53,8 +54,6 @@ namespace osum.GameModes
         private void showDifficultySelection(BeatmapPanel panel, bool instant = false)
         {
             if (!instant && State != SelectState.SongSelect && State != SelectState.SongInfo) return;
-
-            if (Clock.ModeTime - lastDownTime > time_to_hover) return;
 
             cancelHoverPreview();
             cancelLockedHoverPreview();
@@ -521,10 +520,18 @@ namespace osum.GameModes
 
             s_Footer.AdditiveFlash(500, 0.5f);
 
-            GameBase.Scheduler.Add(delegate
+            if (GameBase.Match != null)
             {
-                Director.ChangeMode(OsuMode.Play);
-            }, 800);
+                GameBase.Match.RequestStateChange(MatchState.Preparing);
+            }
+            else
+            {
+                GameBase.Scheduler.Add(delegate
+                {
+                    Director.ChangeMode(OsuMode.Play);
+                }, 800);
+            }
+
         }
     }
 }

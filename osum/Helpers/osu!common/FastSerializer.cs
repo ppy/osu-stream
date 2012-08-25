@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using osu_common.Helpers;
-using osu_common.Bancho;
+using osu_common.Tencho;
 
 namespace osu_common.Helpers
 {

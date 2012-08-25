@@ -25,13 +25,20 @@ namespace osum
             G = (byte)Math.Round(colour.G * 255);
             B = (byte)Math.Round(colour.B * 255);
         }
+
+        internal void AddColor4(Color4 colour)
+        {
+            R = (byte)Math.Min(255, R + (byte)Math.Round(colour.R * 255));
+            G = (byte)Math.Min(255, G + (byte)Math.Round(colour.G * 255));
+            B = (byte)Math.Min(255, B + (byte)Math.Round(colour.B * 255));
+        }
     }
 
     public class LightingManager : GameComponent, IDisposable
     {
         private SerialPort port;
 
-        int led_count = 50;
+        int led_count = 160;
         const float intensity = 1;
         const float diminish = 0.99f;
 
@@ -95,7 +102,7 @@ namespace osum
 
         public override void Update()
         {
-            if (port == null)
+            if (port == null || !port.IsOpen)
                 return;
 
             float power = AudioEngine.Music.CurrentPower;
@@ -147,9 +154,14 @@ namespace osum
             int i = 0;
             foreach (LightingColour c in colours)
             {
-                if (c.R > 1) c.R = (byte)(c.R * diminish);
-                if (c.G > 1) c.G = (byte)(c.G * diminish);
-                if (c.B > 1) c.B = (byte)(c.B * diminish);
+                //if (c.R > 1) c.R = (byte)(c.R * diminish);
+                //if (c.G > 1) c.G = (byte)(c.G * diminish);
+                //if (c.B > 1) c.B = (byte)(c.B * diminish);
+
+                c.R = (byte)(c.R * diminish);
+                c.G = (byte)(c.G * diminish);
+                c.B = (byte)(c.B * diminish);
+
 
                 buffer[i * 3] = c.B;
                 buffer[i * 3 + 1] = c.G;
@@ -165,14 +177,16 @@ namespace osum
 
         public void Blind(Color4 colour)
         {
+            if (colours == null) return;
             foreach (LightingColour c in colours)
                 c.FromColor4(colour);
         }
 
         internal void Add(Color4 colour)
         {
+            if (colours == null) return;
             foreach (LightingColour c in colours)
-                c.FromColor4(colour);
+                c.AddColor4(colour);
         }
     }
 }
