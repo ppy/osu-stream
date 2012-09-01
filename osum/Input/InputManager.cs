@@ -139,7 +139,7 @@ namespace osum
             }
 
             if (GameBase.Match != null)
-                GameBase.Match.SendInput(TrackingPoints);
+                GameBase.Match.SendInput(TrackingPoints, true);
         }
 
         static public event InputHandler OnUp;

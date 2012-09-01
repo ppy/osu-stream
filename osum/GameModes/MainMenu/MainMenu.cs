@@ -132,7 +132,9 @@ namespace osum.GameModes
             spriteManager.Add(osuLogoSmall);
 
             NewsButton = new NewsButton();
+#if !ARCADE
             spriteManager.Add(NewsButton);
+#endif
             NewsButton.Alpha = 0;
 
             menuBackgroundNew.Transform(fadeIn);

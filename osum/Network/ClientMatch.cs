@@ -8,6 +8,7 @@ using osu_common.Tencho.Requests;
 using osum.GameModes;
 using osu_common.Tencho.Objects;
 using osum.GameplayElements.Beatmaps;
+using OpenTK;
 
 namespace osum.Network
 {
@@ -73,10 +74,26 @@ namespace osum.Network
             GameBase.Client.SendRequest(RequestType.Stream_RequestSong, beatmap ?? new bBeatmap());
         }
 
-        internal void SendInput(List<TrackingPoint> TrackingPoints)
+        internal void SendInput(List<TrackingPoint> TrackingPoints, bool isDown = false)
         {
             bPlayerData data = new bPlayerData();
-            data.Input.AddRange(TrackingPoints);
+
+            //if (isDown)
+                data.Input.AddRange(TrackingPoints);
+            //else
+            //{
+            //    foreach (TrackingPoint p in TrackingPoints)
+            //    {
+            //        if (p.WindowDelta == Vector2.Zero)
+            //        {
+            //            TrackingPoint clone = (TrackingPoint)p.Clone();
+            //            clone.WindowDelta = new Vector2(-1, -1);
+            //            data.Input.Add(clone);
+            //        }
+            //        else
+            //            data.Input.Add(p);
+            //    }
+            //}
 
             GameBase.Client.SendRequest(RequestType.Stream_InputUpdate, data);
         }

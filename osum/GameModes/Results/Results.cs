@@ -685,6 +685,8 @@ namespace osum.GameModes
         void returnToSelect(object sender, EventArgs args)
         {
             Director.ChangeMode(OsuMode.SongSelect);
+            if (GameBase.Match != null)
+                GameBase.Match.RequestStateChange(MatchState.SongSelect);
         }
 
         public override void Dispose()

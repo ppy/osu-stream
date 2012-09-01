@@ -58,6 +58,8 @@ namespace osum.Graphics
         {
             BindInput = bindInput;
             Tint = tint;
+            if (Tint != Color4.White)
+                burstSprites.ForEach(p => p.Colour = tint);
         }
 
 #if iOS
@@ -70,7 +72,7 @@ namespace osum.Graphics
         {
             for (int i = 0; i < MAX_BURST; i++)
             {
-                pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Tint);
+                pSprite burst = new pSprite(TextureManager.Load(OsuTexture.mouse_burst), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
                 burst.Additive = true;
                 burst.Alpha = 0;
                 burstSprites.Add(burst);
@@ -112,18 +114,19 @@ namespace osum.Graphics
                 }
             }
         }
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        
+        internal void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
 #if iOS
             if (InputManager.IsPressed && spacing++ % 1 == 0)
                 Burst(trackingPoint.BasePosition, 20, 0.5f, 1);
 #else
-            if (InputManager.IsPressed)
-                Burst(trackingPoint.BasePosition, 20, 0.5f, 2);
+            if (InputManager.IsPressed || source == null)
+                Burst(trackingPoint.BasePosition, 20, 0.5f, 4);
 #endif
         }
 
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        internal void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
 #if iOS
             Burst(trackingPoint.BasePosition, 100, 1, 5);

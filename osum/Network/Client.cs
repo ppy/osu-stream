@@ -49,8 +49,6 @@ namespace osum.Network
             thread.Start();
 
             InitializeOverlay();
-
-
         }
 
         private void Run()

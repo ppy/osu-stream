@@ -50,10 +50,13 @@ namespace osum.Network
             {
                 overlayIcon.Text = GameBase.Match.State.ToString() + " (" + GameBase.Match.Players.Count + ")";
                 foreach (bPlayerData d in GameBase.Match.Players)
-                    //if (d.Username != GameBase.ClientId)
+                    if (d.Username != GameBase.ClientId)
                     {
                         foreach (TrackingPoint p in d.Input)
-                            burster.Burst(p.BasePosition);
+                            if (p.WindowDelta == Vector2.Zero)
+                                burster.InputManager_OnDown(null, p);
+                            else
+                                burster.InputManager_OnMove(null, p);
                     }
             }
 

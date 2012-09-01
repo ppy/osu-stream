@@ -124,7 +124,7 @@ namespace osu_Tencho
 
                     int aimTime = 1000 / divide_interval;
 
-                    int sleepTime = aimTime - elapsed;
+                    int sleepTime = Math.Min(1,aimTime - elapsed);
 
                     if (sleepTime > 0)
                         Thread.Sleep(sleepTime);

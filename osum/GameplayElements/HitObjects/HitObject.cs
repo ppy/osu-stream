@@ -228,23 +228,23 @@ namespace osum.GameplayElements
             switch (action & ScoreChange.HitValuesOnly)
             {
                 case ScoreChange.Hit300g:
-                    colour = new Color4(255, 0, 184, 255);
+                    colour = new Color4(255, 162, 2, 255);
                     texture = OsuTexture.hit300g;
                     break;
                 case ScoreChange.Hit300k:
-                    colour = new Color4(255, 0, 184, 255);
+                    colour = new Color4(255, 162, 2, 255);
                     texture = OsuTexture.hit300k;
                     break;
                 case ScoreChange.Hit300:
-                    colour = new Color4(255, 0, 184, 255);
+                    colour = new Color4(255, 162, 2, 255);
                     texture = OsuTexture.hit300;
                     break;
                 case ScoreChange.Hit100k:
-                    colour = new Color4(255, 0, 184, 255);
+                    colour = new Color4(138, 212, 0, 255);
                     texture = OsuTexture.hit100k;
                     break;
                 case ScoreChange.Hit100:
-                    colour = new Color4(255, 0, 184, 255);
+                    colour = new Color4(138, 212, 0, 255);
                     texture = OsuTexture.hit100;
                     break;
                 case ScoreChange.Hit50:
