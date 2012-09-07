@@ -145,7 +145,11 @@ namespace osu_common.Libraries.NetLib
                 req.HttpMethod = method;
                 if (method == "POST")
                 {
-                    req.Headers.SetValueForKey(new NSString("application/x-www-form-urlencoded"), new NSString("content-type"));
+                    NSMutableDictionary headers = (NSMutableDictionary)req.Headers.MutableCopy();
+                    headers.SetValueForKey(new NSString("application/x-www-form-urlencoded"), new NSString("content-type"));
+
+                    req.Headers = headers;
+
                     req.Body = NSData.FromString(postData);
                 }
                 NSUrlConnection conn = new NSUrlConnection(req, del, true);
