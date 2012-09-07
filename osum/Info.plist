@@ -14,7 +14,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osutest</string>
 	<key>CFBundleVersion</key>
-	<string>20120607</string>
+	<string>20120905</string>
 	<key>MinimumOSVersion</key>
 	<string>3.2</string>
 	<key>UIDeviceFamily</key>
