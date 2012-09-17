@@ -45,17 +45,20 @@ namespace StreamTester
             if (entries == null)
                 entries = new List<ListEntry>();
 
-            foreach (string d in Directory.GetDirectories(p))
-                findMaps(d, entries);
-
-            string[] files = Directory.GetFiles(p, "*.osu");
-            if (files.Length > 0)
+            if (Directory.Exists(p))
             {
-                string displayName = files[0];
-                displayName = displayName.Remove(displayName.IndexOf('['));
-                displayName = displayName.Substring(displayName.LastIndexOf('\\') + 1);
-                displayName = displayName.Replace(".osu", "");
-                entries.Add(new ListEntry(p, displayName));
+                foreach (string d in Directory.GetDirectories(p))
+                    findMaps(d, entries);
+
+                string[] files = Directory.GetFiles(p, "*.osu");
+                if (files.Length > 0)
+                {
+                    string displayName = files[0];
+                    displayName = displayName.Remove(displayName.IndexOf('['));
+                    displayName = displayName.Substring(displayName.LastIndexOf('\\') + 1);
+                    displayName = displayName.Replace(".osu", "");
+                    entries.Add(new ListEntry(p, displayName));
+                }
             }
 
             return entries;
