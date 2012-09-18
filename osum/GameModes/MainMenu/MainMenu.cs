@@ -156,7 +156,7 @@ namespace osum.GameModes
                 whiteLayer.Transform(new TransformationF(TransformationType.Fade, 0.125f, 1f, initial_display - 200, initial_display));
                 whiteLayer.Transform(new TransformationF(TransformationType.Fade, 1, 0, initial_display, initial_display + 1200, EasingTypes.In));
 
-                pSprite headphones = new pSprite(TextureManager.Load(OsuTexture.menu_headphones), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.9f, false, Color4.White);
+                pSprite headphones = new pSprite(null, FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.9f, false, Color4.White);
                 headphones.Additive = true;
                 headphones.Transform(new TransformationF(TransformationType.Fade, 0, 1, 50, 200));
                 headphones.Transform(new TransformationF(TransformationType.Fade, 1, 1, 1000, initial_display));
