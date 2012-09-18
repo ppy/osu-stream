@@ -167,7 +167,7 @@ namespace osum.GameModes
             Add(text);
             textSprites.Add(text);
 
-            text = new pSprite(TextureManager.Load(OsuTexture.menu_store), new Vector2(-43, 48));
+            text = new pSprite(TextureManager.Load(OsuTexture.menu_store), new Vector2(-54, 53));
             text.Field = FieldTypes.StandardSnapCentre;
             text.Origin = OriginTypes.Centre;
             text.Rotation = -rotation_offset;
