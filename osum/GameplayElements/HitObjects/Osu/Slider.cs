@@ -810,11 +810,15 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         protected virtual void playTick()
         {
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.Add(new Color4(50, 50, 50, 100), 5);
             AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
         }
 
         protected virtual void playRebound(int lastJudgedEndpoint)
         {
+            if (LightingManager.Instance != null)
+                    LightingManager.Instance.Add(new Color4(50,50,50,100), 5);
             PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                       SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
         }

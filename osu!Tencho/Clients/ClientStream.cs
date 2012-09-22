@@ -67,6 +67,11 @@ namespace osu_Tencho.Clients
                     SendRequest(RequestType.Tencho_MatchFound, m);
                     CurrentMatch = m;
                     break;
+                case RequestType.Stream_CancelMatch:
+                    if (CurrentMatch != null)
+                        CurrentMatch.Leave(this);
+                    CurrentMatch = null;
+                    break;
                 case RequestType.Stream_RequestStateChange:
                     if (CurrentMatch == null) break;
                     CurrentMatch.RequestState(this, (MatchState)new bInt(sr).number);

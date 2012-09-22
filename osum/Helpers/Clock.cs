@@ -61,7 +61,7 @@ namespace osum.Helpers
             Update(true); //do an update now.
         }
 
-        public static int ManualTime;
+        public static double ManualTime;
 
         public static void Start()
         {
@@ -110,7 +110,7 @@ namespace osum.Helpers
                 case ClockTypes.Mode:
                     return ModeTime;
                 case ClockTypes.Manual:
-                    return ManualTime;
+                    return (int)ManualTime;
             }
         }
 
@@ -204,7 +204,7 @@ namespace osum.Helpers
 
         internal static void IncrementManual(float rate = 1)
         {
-            ManualTime += (int)(ElapsedMilliseconds * rate);
+            ManualTime += ElapsedMilliseconds * rate;
         }
 
         internal static void ResetManual()

@@ -55,74 +55,79 @@ namespace osum.Network
         {
             while (true)
             {
-                if (!Connected)
-                    Connect();
-
-                if (!AuthenticationSent)
+                try
                 {
-                    SendRequest(new Request(RequestType.Stream_Authenticate, new bString(GameBase.ClientId)));
-                    AuthenticationSent = true;
-                }
+                    if (!Connected)
+                        Connect();
 
-                if (Clock.Time - lastPingTime > PING_TIMEOUT)
-                {
-                    Reset();
-                    Thread.Sleep(500);
-                    continue;
-                }
-
-                if (Connected && client != null)
-                {
-                    try
+                    if (!AuthenticationSent)
                     {
-                        if (!SendOutgoing())
-                            continue;
+                        SendRequest(new Request(RequestType.Stream_Authenticate, new bString(GameBase.ClientId)));
+                        AuthenticationSent = true;
+                    }
 
-                        while (Connected && stream != null && stream.DataAvailable)
+                    if (Clock.Time - lastPingTime > PING_TIMEOUT)
+                    {
+                        Reset();
+                        Thread.Sleep(500);
+                        continue;
+                    }
+
+                    if (Connected && client != null)
+                    {
+                        try
                         {
-                            lastPingTime = Clock.Time;
+                            if (!SendOutgoing())
+                                continue;
 
-                            int newBytes = stream.Read(readByteArray, readBytes, readByteArray.Length - readBytes);
-
-                            readBytes += newBytes;
-                            ReceivedBytes += newBytes;
-
-                            //Read header data
-                            if (readBytes == readByteArray.Length && readingHeader)
+                            while (Connected && stream != null && stream.DataAvailable)
                             {
-                                readType = (RequestType)BitConverter.ToUInt16(readByteArray, 0);
-                                bool compression = readByteArray[2] == 1;
-                                uint length = BitConverter.ToUInt32(readByteArray, 3);
+                                lastPingTime = Clock.Time;
+
+                                int newBytes = stream.Read(readByteArray, readBytes, readByteArray.Length - readBytes);
+
+                                readBytes += newBytes;
+                                ReceivedBytes += newBytes;
+
+                                //Read header data
+                                if (readBytes == readByteArray.Length && readingHeader)
+                                {
+                                    readType = (RequestType)BitConverter.ToUInt16(readByteArray, 0);
+                                    bool compression = readByteArray[2] == 1;
+                                    uint length = BitConverter.ToUInt32(readByteArray, 3);
 
 #if PEPPY
                             Console.WriteLine("R" + length + ": " + readType + (compression ? " compressed" : ""));
 #endif
 
-                                ResetReadArray(false);
-                                readByteArray = new byte[length];
+                                    ResetReadArray(false);
+                                    readByteArray = new byte[length];
+                                }
+
+                                //Read payload data
+                                if (readBytes != readByteArray.Length) continue;
+
+                                byte[] copy = new byte[readByteArray.Length];
+                                for (int i = 0; i < readByteArray.Length; i++)
+                                    copy[i] = readByteArray[i];
+
+                                IncomingRequest(readType, new SerializationReader(new MemoryStream(copy)));
+
+                                ResetReadArray(true); //reset to read the next packet's header.
                             }
-
-                            //Read payload data
-                            if (readBytes != readByteArray.Length) continue;
-
-                            byte[] copy = new byte[readByteArray.Length];
-                            for (int i = 0; i < readByteArray.Length; i++)
-                                copy[i] = readByteArray[i];
-
-                            IncomingRequest(readType, new SerializationReader(new MemoryStream(copy)));
-
-                            ResetReadArray(true); //reset to read the next packet's header.
+                        }
+                        catch (Exception e)
+                        {
+                            Reset();
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Reset();
-                    }
-                }
 
-                Thread.Sleep(1);
-                sendWaitCurrent += 1;
+                    Thread.Sleep(1);
+                    sendWaitCurrent += 1;
+                }
+                catch { }
             }
+
         }
 
         private void IncomingRequest(RequestType reqType, SerializationReader sr)
@@ -133,10 +138,6 @@ namespace osum.Network
                 {
                     case RequestType.Tencho_Authenticated:
                         if (OnConnect != null) OnConnect();
-
-                        //server has accepted us!
-                        //for now, let's request to be accepted into a match straight away.
-                        SendRequest(RequestType.Stream_RequestMatch, null);
                         break;
                     case RequestType.Tencho_Ping:
                         Console.WriteLine("ping pong!");
@@ -173,7 +174,7 @@ namespace osum.Network
                 } while (returnData == null || !returnData.StartsWith("Tencho"));
 
                 udp.Close();
-                
+
                 Reset();
 
                 IPEndPoint endpoint = new IPEndPoint(recvEndPoint.Address, 16384);
@@ -197,6 +198,8 @@ namespace osum.Network
 
         private void Reset()
         {
+            GameBase.LeaveMatch();
+
             if (client != null && client.Connected)
             {
                 if (OnDisconnect != null)
@@ -237,6 +240,9 @@ namespace osum.Network
 
         internal void SendRequest(RequestType resType, bSerializable obj)
         {
+            if (!Connected)
+                return;
+
             Request r = new Request(resType, obj);
             SendRequest(r);
         }

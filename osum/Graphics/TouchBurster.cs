@@ -114,6 +114,8 @@ namespace osum.Graphics
                 }
             }
         }
+
+        int lastBurstMs = 0;
         
         internal void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
@@ -137,6 +139,11 @@ namespace osum.Graphics
 
         internal void Burst(Vector2 pos, float spread = 100, float scale = 1, int count = 5)
         {
+            int now = Clock.Time;
+            if (now - lastBurstMs < 10)
+                return;
+            lastBurstMs = now;
+
             while (count-- > 0)
             {
                 int randTime = 300 + (int)(nextRand() * 400);

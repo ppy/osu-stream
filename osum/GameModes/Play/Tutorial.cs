@@ -235,6 +235,11 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_3:
+#if ARCADE
+                    loadNextSegment();
+                    break;
+#endif
+
                     showText(LocalisationManager.GetString(OsuString.Introduction3));
                     showTouchToContinue();
                     break;
@@ -522,7 +527,7 @@ namespace osum.GameModes.Play
                             if (Clock.AudioTime > music_offset + 188 * music_beatlength && !warned)
                             {
                                 warned = true;
-                                pText t = showText(LocalisationManager.GetString(OsuString.Hold3));
+                                pText t = showText(LocalisationManager.GetString(OsuString.Hold3), 30);
                                 t.Transform(new TransformationF(TransformationType.Fade, 1, 0, t.ClockingNow + music_beatlength * 4, t.ClockingNow + music_beatlength * 5));
                             }
                         };
@@ -845,6 +850,11 @@ namespace osum.GameModes.Play
                     }
                     break;
                 case TutorialSegments.Multitouch_2:
+#if ARCADE
+                    loadNextSegment();
+                    break;
+#endif
+
                     {
 
                         currentSegmentDelegate = delegate
@@ -1208,7 +1218,7 @@ namespace osum.GameModes.Play
                             }
                             else
                             {
-                                healthBar.SetCurrentHp(healthBar.CurrentHp + 1);
+                                healthBar.SetCurrentHp(healthBar.CurrentHp + 1 * Clock.ElapsedRatioToSixty);
                             }
                         };
                     }
@@ -1241,7 +1251,7 @@ namespace osum.GameModes.Play
                             }
                             else
                             {
-                                healthBar.SetCurrentHp(healthBar.CurrentHp - 1);
+                                healthBar.SetCurrentHp(healthBar.CurrentHp - 1 * Clock.ElapsedRatioToSixty);
                             }
                         };
                     }
@@ -1255,7 +1265,7 @@ namespace osum.GameModes.Play
                     currentSegmentDelegate = delegate
                     {
                         if (playfieldBackground.Velocity == 0)
-                            healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f);
+                            healthBar.SetCurrentHp(healthBar.CurrentHp - 0.5f * Clock.ElapsedRatioToSixty);
                         if (healthBar.CurrentHp == 0)
                         {
 
@@ -1429,14 +1439,16 @@ namespace osum.GameModes.Play
                     backButton.FadeOut(100);
                     break;
                 case TutorialSegments.End:
+#if !ARCADE
                     backButton.HandleInput = false;
                     Options.Options.DisplayFingerGuideDialog();
                     Options.Options.DisplayEasyModeDialog();
+#endif
 
                     currentSegmentDelegate = delegate
                     {
                         if (!Director.IsTransitioning && GameBase.NotificationQueue.Count == 0 && GameBase.ActiveNotification == null)
-                            Director.ChangeMode(OsuMode.MainMenu, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
+                            Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                     };
                     break;
 

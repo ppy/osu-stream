@@ -31,6 +31,10 @@ namespace osum.Network
             {
                 case RequestType.Tencho_MatchPlayerDataChange:
                     Players = newInfo.Players;
+
+                    if (Players.Count < 2 && Director.CurrentOsuMode != OsuMode.Multiplay)
+                        Director.ChangeMode(OsuMode.Multiplay);
+
                     break;
                 case RequestType.Tencho_MatchStateChange:
                     State = newInfo.State;

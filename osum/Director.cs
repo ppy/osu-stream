@@ -9,6 +9,7 @@ using osum.GameModes.Store;
 using osum.GameModes.Play;
 using osum.GameModes.Options;
 using System.Collections.Generic;
+using osum.Helpers.osu_common.Tencho.Objects;
 
 namespace osum
 {
@@ -69,6 +70,14 @@ namespace osum
                 savedStates[CurrentOsuMode] = CurrentMode;
             else
                 savedStates.Remove(CurrentOsuMode);
+
+            switch (mode)
+            {
+                case OsuMode.SongSelect:
+                    if (GameBase.Match != null) GameBase.Match.RequestStateChange(MatchState.SongSelect);
+                    break;
+            }
+
 
             if (transition == null)
             {
@@ -204,6 +213,9 @@ namespace osum
                     else
                         mode = new Player();
                     break;
+                case OsuMode.Multiplay:
+                    mode = new Multiplay();
+                    break;
                 case OsuMode.Store:
 #if iOS
                     mode = new StoreModeIphone();
@@ -289,7 +301,11 @@ namespace osum
             //audio dimming
             if (AudioDimming && AudioEngine.Music != null)
             {
-                if (SpriteManager.UniversalDim > 0)
+                int timeSinceInput = Clock.Time - InputManager.LastInputTime - 10000;
+                
+                if (CurrentOsuMode != OsuMode.Play && timeSinceInput > 0)
+                    AudioEngine.Music.DimmableVolume = 1 - Math.Min(0.95f, (Math.Max(0, timeSinceInput) * 0.00003f));
+                else if (SpriteManager.UniversalDim > 0)
                     AudioEngine.Music.DimmableVolume = Math.Min(1 - SpriteManager.UniversalDim * 0.8f, AudioEngine.Music.DimmableVolume);
                 if (AudioEngine.Music.DimmableVolume < 1)
                     AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);

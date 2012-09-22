@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;OSUM MONO MAPPER ARCADE</DefineConstants>
+    <DefineConstants>OSUM MONO MAPPER ARCADE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -86,6 +86,7 @@
     <Compile Include="GameModes\Play\Components\ProgressDisplay.cs" />
     <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />
     <Compile Include="GameModes\Play\Components\StreamSwitchDisplay.cs" />
+    <Compile Include="GameModes\Multi\Multiplay.cs" />
     <Compile Include="GameModes\Play\PlayCombinate.cs" />
     <Compile Include="GameModes\Play\Player.cs" />
     <Compile Include="GameModes\Play\PlayTest.cs" />

@@ -234,12 +234,6 @@ namespace osum.GameModes
 
             pDrawable d = sender as pDrawable;
 
-            d.Colour = Color4.White;
-            d.FadeColour((Color4)d.Tag, 600);
-
-            ScaleTo(1.3f, 600, EasingTypes.None);
-            MoveTo(new Vector2(-75, 14), 600, EasingTypes.None);
-
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             if (sender == yellow)
@@ -247,15 +241,23 @@ namespace osum.GameModes
             else if (sender == orange)
             {
                 Director.ChangeMode(OsuMode.SongSelect);
-                if (GameBase.Match != null)
-                    GameBase.Match.RequestStateChange(MatchState.SongSelect);
             }
             else if (sender == blue)
-                Director.ChangeMode(OsuMode.Store);
+            {
+                Director.ChangeMode(OsuMode.Multiplay);
+                //Director.ChangeMode(OsuMode.Store);
+                return;
+            }
             else
             {
                 Director.ChangeMode(OsuMode.Options);
             }
+
+            d.Colour = Color4.White;
+            d.FadeColour((Color4)d.Tag, 600);
+
+            ScaleTo(1.3f, 600, EasingTypes.None);
+            MoveTo(new Vector2(-75, 14), 600, EasingTypes.None);
         }
 
         int awesomeStartTime = -1;

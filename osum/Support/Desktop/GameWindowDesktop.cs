@@ -25,7 +25,7 @@ namespace osum
             : base(480, 320, GraphicsMode.Default, "osu!stream")
         {
             VSync = VSyncMode.Off;
-            this.Location = new Point(1920, 0);
+            //this.Location = new Point(1920, 0);
 
             WindowState = WindowState.Fullscreen;
             //GameBase.WindowSize = new Size(960,640);

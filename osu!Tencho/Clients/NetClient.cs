@@ -174,8 +174,7 @@ namespace osu_Tencho.Clients
             if (killPending)
                 kill(killPendingReason);
 
-            if (Tencho.CurrentTime - lastReceiveTime
-                > (RequestTargetType == RequestTarget.Irc ? Tencho.PING_INTERVAL_IRC : Tencho.PING_INTERVAL_OSU))
+            if (Tencho.CurrentTime - lastReceiveTime > (RequestTargetType == RequestTarget.Irc ? Tencho.PING_INTERVAL_IRC : Tencho.PING_INTERVAL_OSU))
                 Ping();
 
             CheckForTimeout();
@@ -305,7 +304,6 @@ namespace osu_Tencho.Clients
                                 }
                             }
 
-                            lastReceiveTime = Tencho.CurrentTime;
                             isReceiving = false;
                         }
                     }
@@ -472,6 +470,7 @@ namespace osu_Tencho.Clients
 
         internal void Pong()
         {
+            lastReceiveTime = Tencho.CurrentTime;
             isPinging = false;
         }
 

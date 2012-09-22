@@ -68,6 +68,7 @@ namespace osum.GameModes.Options
             });
             smd.Add(button);
 
+#if !ARCADE
             vPos += 70;
 
             button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
@@ -97,6 +98,7 @@ namespace osum.GameModes.Options
                 DisplayEasyModeDialog();
             });
             smd.Add(buttonEasyMode);
+#endif
 
             vPos += 60;
 
@@ -105,10 +107,10 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset - 15, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume * 2, new Vector2(button_x_offset - 15, vPos),
                 delegate(float v)
                 {
-                    AudioEngine.Effect.Volume = v;
+                    AudioEngine.Effect.Volume = v * 0.5f;
                     if (Clock.ModeTime / 200 != lastEffectSound)
                     {
                         lastEffectSound = Clock.ModeTime / 200;
@@ -132,10 +134,16 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset - 15, vPos),
-                delegate(float v) { AudioEngine.Music.MaxVolume = v; });
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume * 2, new Vector2(button_x_offset - 15, vPos),
+                delegate(float v) { AudioEngine.Music.MaxVolume = v * 0.5f; });
             smd.Add(soundEffectSlider);
 
+#if ARCADE
+            vPos += 50;
+
+            text = new pText(" ", 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
+            smd.Add(text);
+#else
             vPos += 50;
 
             text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
@@ -202,6 +210,7 @@ namespace osum.GameModes.Options
 
                 smd.Add(button);
             }
+#endif
 
             UpdateButtons();
 
@@ -344,8 +353,10 @@ namespace osum.GameModes.Options
 
         private void UpdateButtons()
         {
-            buttonEasyMode.SetStatus(GameBase.Config.GetValue<bool>(@"EasyMode", false));
-            buttonFingerGuides.SetStatus(GameBase.Config.GetValue<bool>(@"GuideFingers", false));
+            if (buttonEasyMode != null)
+                buttonEasyMode.SetStatus(GameBase.Config.GetValue<bool>(@"EasyMode", false));
+            if (buttonFingerGuides != null)
+                buttonFingerGuides.SetStatus(GameBase.Config.GetValue<bool>(@"GuideFingers", false));
         }
 
         internal static void DisplayEasyModeDialog()

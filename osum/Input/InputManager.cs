@@ -18,6 +18,8 @@ namespace osum
         /// </summary>
         public static Vector2 MainPointerPosition;
 
+        public static int LastInputTime;
+
         /// <summary>
         /// Active tracking point (first pressed). When more than one touches are present, will take the oldest still-valid touch.
         /// When using to track movement, check changes in reference to avoid sudden jumps between tracking points.
@@ -112,6 +114,8 @@ namespace osum
 
         private static void ReceiveMove(InputSource source, TrackingPoint point)
         {
+            LastInputTime = Clock.Time;
+
 #if MONO
             if (PrimaryTrackingPoint == null)
                 PrimaryTrackingPoint = point;
@@ -128,6 +132,8 @@ namespace osum
         static public event InputHandler OnDown;
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
+            LastInputTime = Clock.Time;
+
             point.IncreaseValidity();
 
             if (OnDown != null && !GameBase.GloballyDisableInput)

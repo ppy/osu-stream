@@ -52,6 +52,7 @@ using MonoTouch.UIKit;
 using OpenTK.Graphics.OpenGL;
 using System.Text.RegularExpressions;
 using osum.Network;
+using osu_common.Tencho.Requests;
 #endif
 
 
@@ -115,7 +116,7 @@ namespace osum
         /// A list of components which get drawn and updated every frame.
         /// </summary>
         public static List<IDrawable> DrawableComponents = new List<IDrawable>();
-        
+
         /// <summary>
         /// Top-level sprite manager. Draws above everything else.
         /// </summary>
@@ -314,6 +315,12 @@ namespace osum
 
             InitializeInput();
 
+#if ARCADE
+            //sane default for arcade
+            Config.SetValue<bool>(@"EasyMode", true);
+            Config.SetValue<bool>(@"GuideFingers", false);
+#endif
+
             if (InputManager.RegisteredSources.Count == 0)
                 throw new Exception("No input sources registered");
 
@@ -368,12 +375,12 @@ namespace osum
             Director.ChangeMode(OsuMode.Results, null);
 #else
             //Load the main menu initially.
-            #if MONO && DEBUG
+#if MONO && DEBUG
             if (Director.PendingOsuMode == OsuMode.Unknown)
                 Director.ChangeMode(startupMode != OsuMode.Unknown ? startupMode : OsuMode.MainMenu, null);
-            #else
+#else
             Director.ChangeMode(OsuMode.MainMenu, null);
-            #endif
+#endif
 #endif
 
             Clock.Start();
@@ -477,10 +484,18 @@ namespace osum
             DrawableComponents.ForEach(c => c.Draw());
         }
 
-        static pDrawable loadingText;
+        static pText loadingText;
         static pDrawable loadingCircle;
 
         static bool showLoadingOverlay;
+
+        public static bool ShowLoadingOverlayWithText(string text)
+        {
+            ShowLoadingOverlay = true;
+            loadingText.Text = text;
+            return true;
+        }
+
         public static bool ShowLoadingOverlay
         {
             get { return showLoadingOverlay; }
@@ -609,6 +624,16 @@ namespace osum
 
         public virtual void Dispose()
         {
+        }
+
+        internal static void LeaveMatch()
+        {
+            if (Client == null || Match == null)
+                return;
+
+            Client.SendRequest(RequestType.Stream_CancelMatch, null);
+            Match = null;
+            Director.ChangeMode(OsuMode.MainMenu);
         }
     }
 }

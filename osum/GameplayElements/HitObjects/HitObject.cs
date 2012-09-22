@@ -272,7 +272,7 @@ namespace osum.GameplayElements
             usableSpriteManager.Add(p);
 
             if (LightingManager.Instance != null)
-                LightingManager.Instance.Add(colour);
+                LightingManager.Instance.Add(colour, 3);
 
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 400;

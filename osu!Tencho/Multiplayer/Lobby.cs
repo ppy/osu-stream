@@ -24,7 +24,6 @@ namespace osu_Tencho.Multiplayer
         internal static bool EndMatch(ServerMatch match)
         {
             bool removed = Matches.Remove(match);
-
             return removed;
         }
 

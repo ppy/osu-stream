@@ -162,6 +162,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 base.playRebound(lastJudgedEndpoint);
             else
             {
+                if (LightingManager.Instance != null)
+                    LightingManager.Instance.Add(new Color4(169,38,251,100), 10);
                 SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
                 PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,ss);
             }

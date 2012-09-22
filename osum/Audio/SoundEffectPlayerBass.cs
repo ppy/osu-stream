@@ -106,7 +106,7 @@ namespace osum
 
         internal override void Play()
         {
-            Bass.BASS_ChannelPlay(sourceId, true);
+            Bass.BASS_ChannelPlay(sourceId, false);
         }
 
         internal override void Stop()

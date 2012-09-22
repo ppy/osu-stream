@@ -112,7 +112,7 @@ namespace osum.Graphics.Sprites
 
         internal float ScrollPosition { get { return verticalDragOffset; } }
 
-        internal float ScrollPercentage { get { return (float)verticalDragOffset / offset_min; } }
+        internal float ScrollPercentage { get { return offset_min == 0 ? 0 : (float)verticalDragOffset / offset_min; } }
 
         private float verticalDragOffset;
         private float offset_min = 0;

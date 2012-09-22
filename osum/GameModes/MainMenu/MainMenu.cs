@@ -67,6 +67,8 @@ namespace osum.GameModes
 
         public override void Initialize()
         {
+            GameBase.LeaveMatch();
+
             int initial_display = firstDisplay ? 2950 : 0;
 
             //spriteManagerBehind.Add(menuBackground);

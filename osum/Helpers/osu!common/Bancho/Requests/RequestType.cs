@@ -208,6 +208,7 @@ namespace osu_common.Tencho.Requests
         Stream_RequestStateChange,
         Stream_RequestSong,
         Tencho_MatchPlayerDataChange,
-        Stream_InputUpdate
+        Stream_InputUpdate,
+        Stream_CancelMatch
     }
 }

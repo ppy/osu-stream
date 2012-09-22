@@ -222,6 +222,9 @@ namespace osum.GameplayElements
 
             int now = ClockingNow;
             int elapsed = lastScoreCheckTime == 0 ? 0 : now - lastScoreCheckTime;
+
+            if (lastScoreCheckTime > 0 && elapsed == 0) return ScoreChange.Ignore;
+
             lastScoreCheckTime = now;
 
             if (!Player.Autoplay)
@@ -281,6 +284,12 @@ namespace osum.GameplayElements
                 double delta = velocityCurrent * elapsed;
 
                 spriteCircle.Rotation += (float)delta;
+
+                if (LightingManager.Instance != null && Math.Abs(spriteCircle.Rotation) > nextFlash)
+                {
+                    LightingManager.Instance.Add(new Color4(30, 30, 30, 100), 10);
+                    nextFlash = Math.Abs(spriteCircle.Rotation) + 0.4f;
+                }
 
                 currentRotationCount += Math.Abs(delta) * sensitivity_modifier / (MathHelper.Pi * 2);
             }
@@ -391,6 +400,7 @@ namespace osum.GameplayElements
         }
 
         Source sourceSpinning;
+        private float nextFlash;
 
         private void StartSound()
         {

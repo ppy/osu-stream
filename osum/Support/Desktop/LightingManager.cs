@@ -182,11 +182,20 @@ namespace osum
                 c.FromColor4(colour);
         }
 
-        internal void Add(Color4 colour)
+        int spacingCurrent;
+        internal void Add(Color4 colour, int spacingInterval = 0)
         {
             if (colours == null) return;
+
+            int i = spacingCurrent;
             foreach (LightingColour c in colours)
-                c.AddColor4(colour);
+            {
+                if (i % spacingInterval == 0)
+                    c.AddColor4(colour);
+                i = (i + 1) % colours.Length;
+            }
+
+            spacingCurrent = (spacingCurrent + colours.Length - 1) % colours.Length;
         }
     }
 }

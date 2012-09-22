@@ -224,6 +224,12 @@ namespace osum.GameModes
 
         private void footer_onClick(object sender, EventArgs e)
         {
+            if (GameBase.Match != null)
+            {
+                GameBase.Notify("Can't autoplay in multiplay mode!", null);
+                return;
+            }
+
             if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 2)
             {
                 Player.Autoplay = true;
@@ -521,9 +527,7 @@ namespace osum.GameModes
             s_Footer.AdditiveFlash(500, 0.5f);
 
             if (GameBase.Match != null)
-            {
                 GameBase.Match.RequestStateChange(MatchState.Preparing);
-            }
             else
             {
                 GameBase.Scheduler.Add(delegate
