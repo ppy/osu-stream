@@ -38,3 +38,4 @@ Perfect=Perfekcyjnie!
 HitCircle6=Ok! Spróbujmy!\nUderz te 8 okręgów!
 HitCircleJudge1=Hmm, wygląda na to, że potrzebujemy więcej treningu. Spróbujmy jeszcze raz!
 HitCircleJudge2=Nieźle!\nPrzyglądaj się dokładnie atakującemu okręgowi i słuchaj rytmu! Jeszcze raz!
+HitCircleJudge4=Niesamowicie! Dobra robota!
