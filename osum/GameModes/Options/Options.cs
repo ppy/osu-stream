@@ -214,7 +214,7 @@ namespace osum.GameModes.Options
         ACAccountStore accountStore;
         private void HandleTwitterAuth(object sender, EventArgs args)
         {
-            if (HardwareDetection.RunningiOS5)
+            if (HardwareDetection.RunningiOS5OrHigher)
             {
                 //if we are running iOS5 or later, we can use the in-built API for handling twitter authentication.
                 accountStore = new ACAccountStore();

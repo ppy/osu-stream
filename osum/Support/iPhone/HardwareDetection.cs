@@ -28,8 +28,9 @@ namespace osum.Support.iPhone
     {
         public const string HardwareProperty = "hw.machine"; // Change to "hw.model" for getting the model in Mac OS X and not just the CPU model
 
-        public static bool RunningiOS5 {
-            get { return MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."); }
+        public static bool RunningiOS5OrHigher {
+            get { return MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5.") ||
+                MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("6."); }
         }
 
         // Changing the constant to "/usr/lib/libSystem.dylib" makes the P/Invoke work for Mac OS X also (tested), but returns only running arch (that's the thing it's getting in the simulator)
