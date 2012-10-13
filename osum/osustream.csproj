@@ -13,25 +13,40 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
     <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
-    <MtouchDebug>true</MtouchDebug>
+    <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
-    <Externalconsole>true</Externalconsole>
+    <Externalconsole>True</Externalconsole>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <IpaPackageName />
     <MtouchArch>ARMv7</MtouchArch>
+    <CrashReportingApiKey />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>iOS OSUM DEBUG DIST SIMULATOR</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchProfiling>True</MtouchProfiling>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|iPhone' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\Testflight</OutputPath>
     <DefineConstants>iOS OSUM RELEASE MAPPER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -39,12 +54,12 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <ConsolePause>false</ConsolePause>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
+    <ConsolePause>False</ConsolePause>
     <IpaPackageName />
-    <BuildIpa>true</BuildIpa>
+    <BuildIpa>True</BuildIpa>
     <MtouchLink>Full</MtouchLink>
     <CrashReportingApiKey />
     <BundleIdentifier>sh.ppy.osutest</BundleIdentifier>
@@ -55,14 +70,14 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\Distribution</OutputPath>
     <DefineConstants>iOS OSUM DIST RELEASE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <MtouchI18n />
     <additionalargs>/unsafe</additionalargs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchUseLlvm>True</MtouchUseLlvm>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <MtouchLink>Full</MtouchLink>
     <IpaPackageName />
@@ -343,5 +358,6 @@
     <Content Include="Skins\Default\ranking_1920.png" />
     <Content Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2" />
     <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
+    <Content Include="Support\iPhone\loading-568h%402x.png" />
   </ItemGroup>
 </Project>

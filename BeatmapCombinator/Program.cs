@@ -727,13 +727,16 @@ namespace osum
                     int index = p.HitObjectManager.ActiveStreamObjects.FindIndex(h => { return h.StartTime > testStreamSwitch; }) - 1;
                     //take one from the index. we need to be at max HP *before* the preempt-take-switch.
 
-                    while (p.HitObjectManager.ActiveStreamObjects[index].EndTime > testStreamSwitch)
+                    while (index >= 0 && p.HitObjectManager.ActiveStreamObjects[index].EndTime > testStreamSwitch)
                         index--;
 
                     if (index <= 0)
-                        throw new Exception("Bookmark exists before first object! Please only use bookmarks for stream switch points.");
+                    {
+                        Console.WriteLine("\nERROR: Bookmark exists before first object! Please only use bookmarks for stream switch points.");
+                        index = 0;
+                    }
+
                     switchHpObject = p.HitObjectManager.ActiveStreamObjects[index];
-                    
                 }
 
                 FakeAudioTimeSource source = new FakeAudioTimeSource();
@@ -830,9 +833,6 @@ namespace osum
                 }
             }
 
-
-            Console.WriteLine("Done");
-            Console.WriteLine();
 
             if (!quick)
             {
