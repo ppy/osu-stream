@@ -436,6 +436,7 @@ namespace osum.GameModes
 
         protected virtual void InputManager_OnDown(InputSource source, TrackingPoint point)
         {
+#if !ARCADE
             if (GameBase.Mapper)
             {
                 if (Player.Autoplay)
@@ -446,6 +447,7 @@ namespace osum.GameModes
                         Pause(false);
                 }
             }
+#endif
 
             if (menu != null && menu.MenuDisplayed)
             {
