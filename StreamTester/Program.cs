@@ -13,7 +13,7 @@ namespace StreamTester
         static void Main()
         {
 #if !DIST
-            if (DateTime.Now > new DateTime(2012, 10, 30))
+            if (DateTime.Now > new DateTime(2012, 12, 30))
                 Environment.Exit(-1);
 #endif
 
