@@ -43,7 +43,7 @@ namespace osum.GameModes
             Beatmap beatmap = SelectedPanel.Beatmap;
 
             //256x172
-            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
+            float aspectAdjust = GameBase.BaseSize.Y / (172 * GameBase.SpriteToBaseRatio);
 
             pSprite thumbSprite = new pSpriteDynamic()
             {

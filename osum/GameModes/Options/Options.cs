@@ -53,7 +53,7 @@ namespace osum.GameModes.Options
 
             const int header_x_offset = 60;
 
-            int button_x_offset = GameBase.BaseSize.Width / 2;
+            float button_x_offset = GameBase.BaseSize.X / 2;
 
             int vPos = 70;
 

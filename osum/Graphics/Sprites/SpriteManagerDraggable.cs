@@ -164,7 +164,7 @@ namespace osum.Graphics.Sprites
         {
             get
             {
-                return (int)(GameBase.BaseSizeFixedWidth.Height - Position.Y);
+                return (int)(GameBase.BaseSizeFixedWidth.Y - Position.Y);
             }
         }
 

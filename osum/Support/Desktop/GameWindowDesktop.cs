@@ -91,6 +91,9 @@ namespace osum
                 case 'i':
                     ClientSize = new Size(1024, 768);
                     break;
+                case '5':
+                    ClientSize = new Size(1136, 640);
+                    break;
                 case 'p':
                     {
                         if (Director.CurrentMode is Player)

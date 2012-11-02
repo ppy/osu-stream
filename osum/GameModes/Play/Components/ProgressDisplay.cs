@@ -18,7 +18,7 @@ namespace osum.GameModes.Play.Components
         pRectangle progressRectBg;
         public ProgressDisplay()
         {
-            progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width, HEIGHT), true, 0.99f, Color4.Black);
+            progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X, HEIGHT), true, 0.99f, Color4.Black);
             progressRectBg.Field = FieldTypes.StandardSnapBottomLeft;
             progressRectBg.Origin = OriginTypes.BottomLeft;
             Add(progressRectBg);
@@ -46,7 +46,7 @@ namespace osum.GameModes.Play.Components
 
         internal void SetProgress(float progress, ScoreChange latestChange)
         {
-            progressRect.Scale.X = GameBase.BaseSize.Width * (progress - lastProgressStart);
+            progressRect.Scale.X = GameBase.BaseSize.X * (progress - lastProgressStart);
 
             if (latestChange != lastDisplayedChange)
             {

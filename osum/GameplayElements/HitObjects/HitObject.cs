@@ -424,7 +424,7 @@ namespace osum.GameplayElements
             AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, ssi.Volume);
         }
 
-        protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.Width - 0.5f; } }
+        protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.X - 0.5f; } }
 
         /// <summary>
         /// Gets the hittable end time (valid active object time for sliders etc. - used in taiko to extend when hits are valid).

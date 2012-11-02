@@ -112,14 +112,14 @@ namespace osum.Graphics.Sprites
                 if (ContainingSpriteManager != null)
                 {
                     Vector2 offset = ContainingSpriteManager.ViewOffset * GameBase.InputToFixedWidthAlign;
-                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 - offset.X || rect.Right < -offset.X ||
-                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 - offset.Y || rect.Bottom < -offset.Y)
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.X + 1 - offset.X || rect.Right < -offset.X ||
+                        rect.Top > GameBase.BaseSizeFixedWidth.Y + 1 - offset.Y || rect.Bottom < -offset.Y)
                         return false;
                 }
                 else
                 {
-                    if (rect.Left > GameBase.BaseSizeFixedWidth.Width + 1 || rect.Right < 0 ||
-                        rect.Top > GameBase.BaseSizeFixedWidth.Height + 1 || rect.Bottom < 0)
+                    if (rect.Left > GameBase.BaseSizeFixedWidth.X + 1 || rect.Right < 0 ||
+                        rect.Top > GameBase.BaseSizeFixedWidth.Y + 1 || rect.Bottom < 0)
                         return false;
                 }
 
@@ -297,7 +297,7 @@ namespace osum.Graphics.Sprites
 
                     if (AlignToSprites)
                     {
-                        if (Scale.X != GameBase.BaseSizeFixedWidth.Width)
+                        if (Scale.X != GameBase.BaseSizeFixedWidth.X)
                         {
                             FieldScale = Scale * GameBase.BaseToNativeRatioAligned;
                             return;

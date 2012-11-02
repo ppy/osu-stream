@@ -319,7 +319,7 @@ namespace osum.GameModes.Store
                         }, true);
                     }
 
-                    back.Scale.X = GameBase.BaseSize.Width * ((float)current / total);
+                    back.Scale.X = GameBase.BaseSize.X * ((float)current / total);
                 };
 
                 NetManager.AddRequest(fnr);
@@ -374,7 +374,7 @@ namespace osum.GameModes.Store
 
             pSprite videoPreview = null;
 
-            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 40), true, base_depth, new Color4(40, 40, 40, 0));
+            pRectangle back = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.X, 40), true, base_depth, new Color4(40, 40, 40, 0));
             PackItemSprites.Add(back);
             back.HandleClickOnUp = true;
 

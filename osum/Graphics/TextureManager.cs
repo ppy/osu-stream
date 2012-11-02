@@ -57,7 +57,7 @@ namespace osum.Graphics.Skins
 
         public SpriteSheetTexture(string name, int x, int y, int width, int height)
         {
-            this.SheetName = name + "_" + GameBase.SpriteSheetResolution;
+            this.SheetName = name;
             this.X = x;
             this.Y = y;
             this.Width = width;
@@ -213,7 +213,7 @@ namespace osum.Graphics.Skins
                 return new pTexture(glTexture, glTexture.TextureHeight, glTexture.TextureWidth);
             }
 
-            string path = @"Skins/Default/" + name.Replace(".png", "") + (name.Contains('_') ? string.Empty : "_" + GameBase.SpriteSheetResolution) + ".png";
+            string path = @"Skins/Default/" + name + "_" + GameBase.SpriteSheetResolution + ".png";
 
             if (NativeAssetManager.Instance.FileExists(path))
             {

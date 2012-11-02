@@ -23,7 +23,7 @@ namespace osum
         public virtual void UpdatePositions()
         {
             Vector2 baseLast = BasePosition;
-            BasePosition = new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Height);
+            BasePosition = new Vector2(GameBase.ScaleFactor * Location.X/GameBase.NativeSize.Width * GameBase.BaseSizeFixedWidth.X, GameBase.ScaleFactor * Location.Y/GameBase.NativeSize.Height * GameBase.BaseSizeFixedWidth.Y);
             WindowDelta = BasePosition - baseLast;
         }
 

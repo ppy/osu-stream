@@ -181,7 +181,7 @@ namespace osum.GameModes
             resetScore();
 
             //256x172
-            float aspectAdjust = GameBase.BaseSize.Height / (172 * GameBase.SpriteToBaseRatio);
+            float aspectAdjust = GameBase.BaseSize.Y / (172 * GameBase.SpriteToBaseRatio);
 
             if (Beatmap != null && GameBase.Instance != null)
             {
@@ -224,7 +224,7 @@ namespace osum.GameModes
 
             //gcAtStart = GC.CollectionCount(0);
 
-            s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing_down), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Height), 1, true, Color.White);
+            s_streamSwitchWarningArrow = new pSprite(TextureManager.Load(OsuTexture.stream_changing_down), FieldTypes.StandardSnapBottomRight, OriginTypes.Centre, ClockTypes.Audio, new Vector2(50, GameBase.BaseSizeHalf.Y), 1, true, Color.White);
             s_streamSwitchWarningArrow.Additive = true;
             s_streamSwitchWarningArrow.Alpha = 0;
 

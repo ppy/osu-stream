@@ -20,7 +20,7 @@ namespace osum.Input.Sources
         public override void UpdatePositions()
         {
             Vector2 baseLast = BasePosition;
-            BasePosition = new Vector2(GameBase.ScaleFactor * Location.X * GameBase.BaseSizeFixedWidth.Width, GameBase.ScaleFactor * Location.Y * GameBase.BaseSizeFixedWidth.Height);
+            BasePosition = new Vector2(GameBase.ScaleFactor * Location.X * GameBase.BaseSizeFixedWidth.X, GameBase.ScaleFactor * Location.Y * GameBase.BaseSizeFixedWidth.Y);
             WindowDelta = BasePosition - baseLast;
         }
     }

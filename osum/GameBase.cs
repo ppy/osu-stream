@@ -65,9 +65,9 @@ namespace osum
         /// <summary>
         /// use for input handling, sprites etc.
         /// </summary>
-        internal static Size BaseSizeFixedWidth = new Size(640, 426);
-        internal static Size BaseSize = new Size(640, 426);
-        internal static Size GamefieldBaseSize = new Size(512, 384);
+        internal static Vector2 BaseSizeFixedWidth = new Vector2(640, 640 / 1.5f);
+        internal static Vector2 BaseSize = new Vector2(640, 640 / 1.5f);
+        internal static Vector2 GamefieldBaseSize = new Vector2(512, 384);
 
         //calculations and internally, all textures are at 960-width-compatible sizes.
         internal const float BASE_SPRITE_RES = 960;
@@ -138,9 +138,9 @@ namespace osum
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
         }
 
-        internal static Size BaseSizeHalf
+        internal static Vector2 BaseSizeHalf
         {
-            get { return new Size(BaseSizeFixedWidth.Width / 2, BaseSizeFixedWidth.Height / 2); }
+            get { return new Vector2(BaseSizeFixedWidth.X / 2, BaseSizeFixedWidth.Y / 2); }
         }
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
@@ -195,8 +195,11 @@ namespace osum
         /// </summary>
         public virtual void SetupScreen()
         {
+            float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
+            float aspectAdjust = 1;
+
             //Setup window...
-            BaseSizeFixedWidth.Height = (int)(BaseSizeFixedWidth.Width * (float)NativeSize.Height / NativeSize.Width);
+            BaseSizeFixedWidth.Y = BaseSizeFixedWidth.X / aspectRatio;
 
             GL.Disable(EnableCap.DepthTest);
             GL.EnableClientState(ArrayCap.VertexArray);
@@ -205,7 +208,7 @@ namespace osum
 
             SetViewport();
 
-            BaseToNativeRatio = (float)NativeSize.Width / BaseSizeFixedWidth.Width;
+            BaseToNativeRatio = (float)NativeSize.Width / BaseSizeFixedWidth.X;
 
             int oldResolution = SpriteSheetResolution;
 
@@ -225,7 +228,7 @@ namespace osum
             //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
             int testWidth = NativeSize.Width < 512 ? NativeSize.Width * 2 : NativeSize.Width;
 
-            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1024, testWidth)));
+            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth)));
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
 
@@ -233,13 +236,13 @@ namespace osum
 
             BaseToNativeRatioAligned = BaseToNativeRatio * InputToFixedWidthAlign;
 
-            SpriteToBaseRatio = BaseSizeFixedWidth.Width / BASE_SPRITE_RES;
-            SpriteToBaseRatioAligned = (float)BaseSizeFixedWidth.Width / SpriteResolution;
+            SpriteToBaseRatio = BaseSizeFixedWidth.X / BASE_SPRITE_RES;
+            SpriteToBaseRatioAligned = (float)BaseSizeFixedWidth.X / SpriteResolution;
 
-            BaseSize = new Size((int)(NativeSize.Width / BaseToNativeRatioAligned), (int)(NativeSize.Height / BaseToNativeRatioAligned));
+            BaseSize = new Vector2((NativeSize.Width / BaseToNativeRatioAligned), (NativeSize.Height / BaseToNativeRatioAligned));
 
-            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.Width - GamefieldBaseSize.Width) / 2,
-                                     (float)Math.Max(31.5f, (BaseSize.Height - GamefieldBaseSize.Height) / 2));
+            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.X - GamefieldBaseSize.X) / 2,
+                                     (float)Math.Max(31.5f, (BaseSize.Y - GamefieldBaseSize.Y) / 2));
 
             SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1

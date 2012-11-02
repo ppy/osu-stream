@@ -60,7 +60,7 @@ namespace osum.GameModes
 
             GameBase.ShowLoadingOverlay = true;
 
-            loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width + 1, 0), true, 0, new Color4(0, 97, 115, 180));
+            loadingBackground = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X + 1, 0), true, 0, new Color4(0, 97, 115, 180));
             loadingBackground.Additive = true;
             loadingBackground.Field = FieldTypes.StandardSnapBottomLeft;
             loadingBackground.Origin = OriginTypes.BottomLeft;
@@ -148,7 +148,7 @@ namespace osum.GameModes
             Beatmap beatmap = Player.Beatmap;
 
             //256x172
-            float aspectAdjust = GameBase.BaseSize.Width / (256 * GameBase.SpriteToBaseRatio);
+            float aspectAdjust = GameBase.BaseSize.X / (256 * GameBase.SpriteToBaseRatio);
 
             pSprite thumbSprite = new pSpriteDynamic()
             {
@@ -268,7 +268,7 @@ namespace osum.GameModes
             base.Update();
             mb.Update();
 
-            loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSize.Height * downloadProgress);
+            loadingBackground.Scale.Y = loadingBackground.Scale.Y * 0.9f + 0.1f * (GameBase.BaseSize.Y * downloadProgress);
         }
     }
 }

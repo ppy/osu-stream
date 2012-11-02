@@ -86,7 +86,7 @@ namespace osum.GameplayElements
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
             if (SpinnerCentre == Vector2.Zero)
-                SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.Width / 2, GameBase.BaseSize.Height - SpinnerCentreFromBottom.Y));
+                SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.X / 2, GameBase.BaseSize.Y - SpinnerCentreFromBottom.Y));
 
             Position = SpinnerCentre;
             EndTime = endTime;
@@ -110,7 +110,7 @@ namespace osum.GameplayElements
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.
             spriteScoreMetreBackground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, GameBase.BaseSize.Height), false, SpriteManager.drawOrderFwdLowPrio(0), new Color4(20, 20, 20, 255))
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.X, GameBase.BaseSize.Y), false, SpriteManager.drawOrderFwdLowPrio(0), new Color4(20, 20, 20, 255))
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -120,7 +120,7 @@ namespace osum.GameplayElements
             Sprites.Add(spriteScoreMetreBackground);
 
             spriteScoreMetreForeground =
-                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.Width, 0), false, SpriteManager.drawOrderFwdLowPrio(1), Color4.OrangeRed)
+                new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSizeFixedWidth.X, 0), false, SpriteManager.drawOrderFwdLowPrio(1), Color4.OrangeRed)
                 {
                     Clocking = ClockTypes.Audio,
                     Field = FieldTypes.StandardSnapBottomCentre,
@@ -156,7 +156,7 @@ namespace osum.GameplayElements
             SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             Sprites.Add(SpriteSpin);
 
-            ApproachCircle.Transform(new TransformationF(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Height * 0.47f, 0.1f, StartTime, EndTime));
+            ApproachCircle.Transform(new TransformationF(TransformationType.Scale, GameBase.BaseSizeFixedWidth.Y * 0.47f, 0.1f, StartTime, EndTime));
 
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
@@ -420,14 +420,14 @@ namespace osum.GameplayElements
         {
             percent = Math.Min(99, percent);
 
-            int randomAmount = percent % 10;
-            int barCount = percent / 10;
+            int randomAmount = percent % 9;
+            int barCount = percent / 9;
 
 
-            if (randomizer.NextDouble() < (float)randomAmount / 10) // || SkinManager.Current.SpinnerNoBlink)
+            if (randomizer.NextDouble() < (float)randomAmount / 9) // || SkinManager.Current.SpinnerNoBlink)
                 barCount++;
 
-            spriteScoreMetreForeground.Scale.Y = 42.6f * barCount;
+            spriteScoreMetreForeground.Scale.Y = 38.73f * barCount;
         }
 
         internal override bool HitTestInitial(TrackingPoint tracking)

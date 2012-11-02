@@ -16,8 +16,8 @@ namespace osum
 
             Vector2 oldBase = BasePosition;
             BasePosition = new Vector2(
-                (x / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.Width,
-                GameBase.BaseSizeFixedWidth.Height - ((y / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Height));
+                (x / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.X,
+                GameBase.BaseSizeFixedWidth.Y - ((y / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Y));
             WindowDelta = BasePosition - oldBase;
         }
 	}

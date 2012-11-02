@@ -225,12 +225,12 @@ namespace osum.GameModes
 
         private void footer_onClick(object sender, EventArgs e)
         {
-            if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 2)
+            if (InputManager.PrimaryTrackingPoint.BasePosition.X / GameBase.BaseSizeFixedWidth.X > (GameBase.BaseSize.X - 214) / GameBase.BaseSize.X)
             {
                 Player.Autoplay = true;
                 onStartButtonPressed(null, null);
             }
-            else if (InputManager.PrimaryTrackingPoint.BasePosition.X > GameBase.BaseSize.Width / 3f * 1)
+            else if (InputManager.PrimaryTrackingPoint.BasePosition.X / GameBase.BaseSizeFixedWidth.X > (GameBase.BaseSize.X - 214 * 2) / GameBase.BaseSize.X)
             {
                 Ranking_Show();
             }

@@ -196,8 +196,8 @@ namespace osum.GameModes.Play.Components
         {
             pDrawable preferred = null;
 
-            float leftPart = GameBase.GamefieldBaseSize.Width / 11f * 4;
-            float rightPart = GameBase.GamefieldBaseSize.Width / 11f * 7;
+            float leftPart = GameBase.GamefieldBaseSize.X / 11f * 4;
+            float rightPart = GameBase.GamefieldBaseSize.X / 11f * 7;
 
             float distFromLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
             float distFromRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);

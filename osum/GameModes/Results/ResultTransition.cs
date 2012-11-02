@@ -112,7 +112,7 @@ namespace osum.GameModes
 
         internal override void FadeIn()
         {
-            spriteManager.MoveTo(new Vector2(0, -GameBase.BaseSize.Height), 1300, EasingTypes.InOut);
+            spriteManager.MoveTo(new Vector2(0, -GameBase.BaseSize.Y), 1300, EasingTypes.InOut);
             AudioEngine.PlaySample(OsuSamples.RankWhoosh);
             base.FadeIn();
         }
@@ -128,7 +128,7 @@ namespace osum.GameModes
             {
                 pDrawable fill = fillSprites[i];
 
-                fill.Scale.Y = GameBase.BaseSizeFixedWidth.Height + 1;
+                fill.Scale.Y = GameBase.BaseSizeFixedWidth.Y + 1;
 
                 if (lastPos != 0) fill.Position.X = lastPos;
                 lastPos = fill.Position.X + fill.Scale.X;
@@ -138,7 +138,7 @@ namespace osum.GameModes
             }
 
             float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
-            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSizeFixedWidth.Width));
+            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSizeFixedWidth.X));
         }
     }
 }

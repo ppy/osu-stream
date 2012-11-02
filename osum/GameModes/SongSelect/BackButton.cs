@@ -129,7 +129,7 @@ namespace osum.GameModes.SongSelect
 
                 dist = 6f * (float)Math.Pow(Math.Abs(l.p2.X - l.p1.X) / 2 + Math.Abs(l.p2.Y - l.p1.Y) / 2, 0.5f);
 
-                Vector2 subd = trackingPoint.BasePosition - new Vector2(hiddenPosition.X, GameBase.BaseSizeFixedWidth.Height - hiddenPosition.Y);
+                Vector2 subd = trackingPoint.BasePosition - new Vector2(hiddenPosition.X, GameBase.BaseSizeFixedWidth.Y - hiddenPosition.Y);
 
                 if (dist > hit_pull_distance)
                     FadeColour(Color4.White, 100);
@@ -164,7 +164,7 @@ namespace osum.GameModes.SongSelect
         {
             if (Alpha == 0) return false;
 
-            return position.X < 100 && position.Y > GameBase.BaseSizeFixedWidth.Height - 100 || tp != null;
+            return position.X < 100 && position.Y > GameBase.BaseSizeFixedWidth.Y - 100 || tp != null;
         }
 
         void OnBackgroundOnClick(object sender, EventArgs e)

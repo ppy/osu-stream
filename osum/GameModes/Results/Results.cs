@@ -743,7 +743,7 @@ namespace osum.GameModes
 
                 if (fallingSprites.Count < 20 && frameCount++ % 5 == 0)
                 {
-                    float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.Width;
+                    float pos = (float)GameBase.Random.NextDouble() * GameBase.BaseSizeFixedWidth.X;
 
                     pTexture tex = null;
                     if (pos < fillSprites[1].Position.X)

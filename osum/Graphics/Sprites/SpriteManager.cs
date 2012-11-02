@@ -87,8 +87,8 @@ namespace osum.Graphics.Sprites
 
             if (Rotation != 0)
             {
-                pos.X -= GameBase.BaseSizeFixedWidth.Width / 2f;
-                pos.Y -= GameBase.BaseSizeFixedWidth.Height / 2f;
+                pos.X -= GameBase.BaseSizeFixedWidth.X / 2f;
+                pos.Y -= GameBase.BaseSizeFixedWidth.Y / 2f;
 
                 float cos = (float)Math.Cos(-Rotation);
                 float sin = (float)Math.Sin(-Rotation);
@@ -102,8 +102,8 @@ namespace osum.Graphics.Sprites
                 pos.X /= Scale.X;
                 pos.Y /= Scale.Y;
 
-                pos.X += GameBase.BaseSizeFixedWidth.Width / 2f;
-                pos.Y += GameBase.BaseSizeFixedWidth.Height / 2f;
+                pos.X += GameBase.BaseSizeFixedWidth.X / 2f;
+                pos.Y += GameBase.BaseSizeFixedWidth.Y / 2f;
             }
 
             pos -= (Position + Offset) * GameBase.InputToFixedWidthAlign;

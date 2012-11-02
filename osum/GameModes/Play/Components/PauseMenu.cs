@@ -251,7 +251,9 @@ namespace osum.GameModes.Play.Components
 
             if (MenuDisplayed)
             {
-                if (pos > 100 && pos < 180)
+                float relativePosition = pos / GameBase.BaseSizeFixedWidth.Y;
+
+                if (relativePosition > 0.22 && relativePosition < 0.42)
                 {
                     validPoint = trackingPoint;
                     validPointOffset = getPos(validPoint);
@@ -272,7 +274,7 @@ namespace osum.GameModes.Play.Components
 
         float getPos(TrackingPoint point)
         {
-            return FromBottom ? GameBase.BaseSizeFixedWidth.Height - point.BasePosition.Y : point.BasePosition.Y;
+            return FromBottom ? GameBase.BaseSizeFixedWidth.Y - point.BasePosition.Y : point.BasePosition.Y;
         }
 
         public override void Update()
@@ -328,7 +330,7 @@ namespace osum.GameModes.Play.Components
         /// <returns></returns>
         internal bool CheckHitObjectBlocksMenu(float pos)
         {
-            return (FromBottom ? GameBase.BaseSizeFixedWidth.Height - pos : pos) < (GameBase.IsHandheld ? 45 : 30);
+            return (FromBottom ? GameBase.BaseSizeFixedWidth.Y - pos : pos) < (GameBase.IsHandheld ? 45 : 30);
         }
     }
 }

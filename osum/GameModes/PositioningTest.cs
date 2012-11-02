@@ -18,8 +18,8 @@ namespace osum.GameModes
 
             spriteManager = new SpriteManagerDraggable();
 
-            pointAt(new Vector2(GameBase.BaseSizeFixedWidth.Width - 1, GameBase.BaseSizeFixedWidth.Height - 1));
-            pointAt(new Vector2(GameBase.BaseSize.Width - 1, GameBase.BaseSize.Height - 1));
+            pointAt(new Vector2(GameBase.BaseSizeFixedWidth.X - 1, GameBase.BaseSizeFixedWidth.Y - 1));
+            pointAt(new Vector2(GameBase.BaseSize.X - 1, GameBase.BaseSize.Y - 1));
         }
 
         private void pointAt(Vector2 vector2)

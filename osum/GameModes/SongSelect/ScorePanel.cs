@@ -34,7 +34,7 @@ namespace osum.GameModes.SongSelect
 
             base_depth += 0.0001f * score.OnlineRank;
 
-            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.Width,PANEL_HEIGHT), true, base_depth, new Color4(0,0,0,40))
+            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X,PANEL_HEIGHT), true, base_depth, new Color4(0,0,0,40))
             {
                 Tag = this
             };
