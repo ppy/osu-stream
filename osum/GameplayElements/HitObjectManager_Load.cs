@@ -282,6 +282,9 @@ namespace osum.GameplayElements
                                                 case "L":
                                                     curveType = CurveTypes.Linear;
                                                     break;
+                                                case "P":
+                                                    curveType = CurveTypes.PerfectCurve;
+                                                    break;
                                             }
                                             continue;
                                         }
