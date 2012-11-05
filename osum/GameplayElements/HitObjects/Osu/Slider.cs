@@ -388,6 +388,31 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 case CurveTypes.Linear:
                     smoothPoints = pMathHelper.CreateLinear(controlPoints, 10);
                     break;
+                case CurveTypes.PerfectCurve:
+                    smoothPoints = new List<Vector2>();
+
+                    const int LENGTH_MODIFIER = 4; //allows for easier length adjustment by increasing the sensitivity of points 1 and 2.
+
+                    Vector2 centre = controlPoints[1];
+                    Vector2 start = controlPoints[0];
+                    float radius = pMathHelper.Distance(centre, controlPoints[0]);
+                    float circumference = (float)Math.PI * radius * 2;
+                    float length = controlPoints.Count == 3 ? pMathHelper.Distance(centre, controlPoints[2]) : circumference / 2;
+
+                    float curveLength = LENGTH_MODIFIER * length;
+
+                    double angularLength = curveLength / circumference * Math.PI;
+                    int segments = (int)(curveLength * 20);
+
+                    float startAngle = (float)Math.Atan2(start.Y - centre.Y, start.X - centre.X);
+
+                    Vector2 lastPoint = Vector2.Zero;
+                    for (int i = 0; i < segments; i++)
+                    {
+                        double progress = (float)i / segments * angularLength * 2 + startAngle;
+                        smoothPoints.Add(new Vector2(centre.X + (float)Math.Cos(progress) * radius, centre.Y + (float)Math.Sin(progress) * radius));
+                    }
+                    break;
             }
 
             //adjust the line to be of maximum length specified...
@@ -1102,7 +1127,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// Used by both sliders and hold circles
         /// </summary>
         protected double Velocity;
-        
+
         public Vector2 SnakingEndPosition;
 
 #if iOS
@@ -1273,6 +1298,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
     {
         Catmull,
         Bezier,
-        Linear
+        Linear,
+        PerfectCurve
     } ;
 }
