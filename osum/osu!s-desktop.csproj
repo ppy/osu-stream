@@ -149,6 +149,7 @@
     <Compile Include="Helpers\Audio\SoundData.cs" />
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
+    <Compile Include="Helpers\BoundingBox.cs" />
     <Compile Include="Helpers\ColourHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Helpers\osu!common\Aes.cs" />

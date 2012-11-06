@@ -389,29 +389,70 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     smoothPoints = pMathHelper.CreateLinear(controlPoints, 10);
                     break;
                 case CurveTypes.PerfectCurve:
+
+                    // we may have 2 points when building the circle.
+                    if (controlPoints.Count < 3)
+                        goto case CurveTypes.Linear;
+                    // more than 3 -> ignore them.
+                    if (controlPoints.Count > 3)
+                        goto case CurveTypes.Bezier;
+
+                    Vector2 A = controlPoints[0];
+                    Vector2 B = controlPoints[1];
+                    Vector2 C = controlPoints[2];
+                    // all 3 points are on a straight line, avoid undefined behaviour:
+                    if ((B.X - A.X) * (C.Y - A.Y) - (C.X - A.X) * (B.Y - A.Y) == 0.0f)
+                        goto case CurveTypes.Linear;
+
+                    // Circle through 3 points
+                    // http://en.wikipedia.org/wiki/Circumscribed_circle#Cartesian_coordinates
+                    float D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
+                    float AMagSq = A.LengthSquared;
+                    float BMagSq = B.LengthSquared;
+                    float CMagSq = C.LengthSquared;
+                    Vector2 centre = new Vector2(
+                        (AMagSq * (B.Y - C.Y) + BMagSq * (C.Y - A.Y) + CMagSq * (A.Y - B.Y)) / D,
+                        (AMagSq * (C.X - B.X) + BMagSq * (A.X - C.X) + CMagSq * (B.X - A.X)) / D);
+                    float radius = pMathHelper.Distance(centre, A);
+
+                    double t_initial = Math.Atan2(A.Y - centre.Y, A.X - centre.X);
+                    double t_mid = Math.Atan2(B.Y - centre.Y, B.X - centre.X);
+                    double t_final = Math.Atan2(C.Y - centre.Y, C.X - centre.X);
+
+                    while (t_mid < t_initial) t_mid += 2 * Math.PI;
+                    while (t_final < t_initial) t_final += 2 * Math.PI;
+                    if (t_mid > t_final)
+                    {
+                        t_final -= 2 * Math.PI;
+                    }
+
+                    // Find the circle's bounding box
+                    BoundingBox box = new BoundingBox(CirclePoint(centre, radius, t_initial), CirclePoint(centre, radius, t_final));
+                    double t_low = Math.Min(t_initial, t_final);
+                    double t_high = Math.Max(t_initial, t_final);
+                    int q = (int)(t_low * 2.0d / Math.PI + 1);
+                    while (q * 0.5f * Math.PI < t_high)
+                    {
+                        box.Add(CirclePoint(centre, radius, q * 0.5f * Math.PI));
+                        q++;
+                    }
+
+                    if ((float)box.Width > 640.0f || (float)box.Height > 640.0f) goto case CurveTypes.Linear;
+                    
+                    double curveLength = Math.Abs((t_final - t_initial) * radius);
+                    int _segments = (int)(curveLength * 0.125f);
+
+                    Vector2 lastPoint = A;
+
                     smoothPoints = new List<Vector2>();
 
-                    const int LENGTH_MODIFIER = 4; //allows for easier length adjustment by increasing the sensitivity of points 1 and 2.
-
-                    Vector2 centre = controlPoints[1];
-                    Vector2 start = controlPoints[0];
-                    float radius = pMathHelper.Distance(centre, controlPoints[0]);
-                    float circumference = (float)Math.PI * radius * 2;
-                    float length = controlPoints.Count == 3 ? pMathHelper.Distance(centre, controlPoints[2]) : circumference / 2;
-
-                    float curveLength = LENGTH_MODIFIER * length;
-
-                    double angularLength = curveLength / circumference * Math.PI;
-                    int segments = (int)(curveLength * 20);
-
-                    float startAngle = (float)Math.Atan2(start.Y - centre.Y, start.X - centre.X);
-
-                    Vector2 lastPoint = Vector2.Zero;
-                    for (int i = 0; i < segments; i++)
+                    for (int i = 1; i < _segments; i++)
                     {
-                        double progress = (float)i / segments * angularLength * 2 + startAngle;
-                        smoothPoints.Add(new Vector2(centre.X + (float)Math.Cos(progress) * radius, centre.Y + (float)Math.Sin(progress) * radius));
+                        double progress = (double)i / (double)_segments;
+                        double t = t_final * progress + t_initial * (1 - progress);
+                        smoothPoints.Add(CirclePoint(centre, radius, t));
                     }
+
                     break;
             }
 
@@ -439,6 +480,11 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
 
             EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
+        }
+
+        private Vector2 CirclePoint(Vector2 centre, float radius, double t)
+        {
+            return new Vector2((float)(Math.Cos(t) * radius), (float)(Math.Sin(t) * radius)) + centre;
         }
 
         /// <summary>
