@@ -426,19 +426,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                         t_final -= 2 * Math.PI;
                     }
 
-                    // Find the circle's bounding box
-                    BoundingBox box = new BoundingBox(CirclePoint(centre, radius, t_initial), CirclePoint(centre, radius, t_final));
-                    double t_low = Math.Min(t_initial, t_final);
-                    double t_high = Math.Max(t_initial, t_final);
-                    int q = (int)(t_low * 2.0d / Math.PI + 1);
-                    while (q * 0.5f * Math.PI < t_high)
-                    {
-                        box.Add(CirclePoint(centre, radius, q * 0.5f * Math.PI));
-                        q++;
-                    }
-
-                    if ((float)box.Width > 640.0f || (float)box.Height > 640.0f) goto case CurveTypes.Linear;
-                    
                     double curveLength = Math.Abs((t_final - t_initial) * radius);
                     int _segments = (int)(curveLength * 0.125f);
 
