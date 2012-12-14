@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osustream", "osum\osustream.csproj", "{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!stream", "osu!stream\osu!stream.csproj", "{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,7 +21,7 @@ Global
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Testing|iPhone.Build.0 = Testing|iPhone
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = osum\osustream.csproj
+		StartupItem = osu!stream\osu!stream.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
@@ -57,7 +57,7 @@ Global
 		$4.inheritsScope = text/plain
 		$4.scope = text/plain
 		$0.StandardHeader = $5
-		$5.Text = 
+		$5.Text =
 		$5.IncludeInNewFiles = True
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

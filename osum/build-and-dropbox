@@ -1,7 +1,0 @@
-date=`date "+%Y%m%d-%H%M"`
-cd ~/Dropbox/Projects/osum/osum/bin/iPhone/Release/
-mkdir Payload
-cp -R osum.app Payload/
-zip -r osum-$date.ipa Payload/*
-rm -r Payload
-mv osum-$date.ipa ~/Dropbox/osu\!m/iphone/

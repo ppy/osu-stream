@@ -85,7 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\osum\osu!s-desktop.csproj">
+    <ProjectReference Include="..\osu!stream\osu!stream.csproj">
       <Project>{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}</Project>
       <Name>osu!s-desktop</Name>
     </ProjectReference>
