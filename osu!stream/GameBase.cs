@@ -634,10 +634,14 @@ namespace osum
         internal static void LeaveMatch()
         {
             if (Client == null || Match == null)
+            {
+                Match = null;
                 return;
+            }
+
+            Match = null;
 
             Client.SendRequest(RequestType.Stream_CancelMatch, null);
-            Match = null;
             Director.ChangeMode(OsuMode.MainMenu);
         }
     }

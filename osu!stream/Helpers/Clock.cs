@@ -29,12 +29,12 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET_M4A = -8;
         public const int UNIVERSAL_OFFSET_INPUT = 16;//16 * 2; //roughly four frames
 #else
-        public const int UNIVERSAL_OFFSET_MP3 = 50;
+        public const int UNIVERSAL_OFFSET_MP3 = 23;
         public const int UNIVERSAL_OFFSET_M4A = -55;
         public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
 
-        
+
 
         public static Stopwatch sw = new Stopwatch();
         static double swLast;
@@ -42,7 +42,7 @@ namespace osum.Helpers
 
         static int audioCheckFrame;
         const int CHECK_AUDIO_FRAME_COUNT = 20;
-        public const double ELAPSED_AT_SIXTY_FRAMES = 1000d/60;
+        public const double ELAPSED_AT_SIXTY_FRAMES = 1000d / 60;
 
         /// <summary>
         /// Get the current game time in milliseconds.
@@ -140,7 +140,7 @@ namespace osum.Helpers
             if (!ignoreFrame)
             {
                 double elapsedSinceUpdate = swTime - swLastUpdate;
-                if (elapsedSinceUpdate > 0.1) elapsedSinceUpdate = 1d/60;
+                if (elapsedSinceUpdate > 0.1) elapsedSinceUpdate = 1d / 60;
 
                 ElapsedMilliseconds = elapsedSinceUpdate * 1000;
                 ElapsedRatioToSixty = (float)(ElapsedMilliseconds / ELAPSED_AT_SIXTY_FRAMES);

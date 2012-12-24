@@ -82,7 +82,7 @@ namespace osum.Audio
                 audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
             else
                 audioStream = BassAac.BASS_MP4_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
-            
+
             updateVolume();
 
             return true;

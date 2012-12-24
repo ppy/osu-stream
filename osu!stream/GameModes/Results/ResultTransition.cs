@@ -24,8 +24,10 @@ namespace osum.GameModes
 
         List<pDrawable> fillSprites = new List<pDrawable>();
 
-        public override bool SkipScreenClear {
-            get {
+        public override bool SkipScreenClear
+        {
+            get
+            {
                 return true;
             }
         }
@@ -138,7 +140,7 @@ namespace osum.GameModes
             }
 
             float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
-            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSizeFixedWidth.X));
+            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSize.X));
         }
     }
 }

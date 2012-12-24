@@ -63,7 +63,7 @@ namespace osum
         /// <returns></returns>
         public static bool ChangeMode(OsuMode mode, Transition transition, bool retainState = false)
         {
-            if (mode == OsuMode.Unknown || mode == PendingOsuMode) return false;
+            if (mode == OsuMode.Unknown || mode == PendingOsuMode || GameBase.Instance == null) return false;
 
             if (retainState)
                 //store a reference to the current mode to show that we want to keep state.
@@ -302,7 +302,7 @@ namespace osum
             if (AudioDimming && AudioEngine.Music != null)
             {
                 int timeSinceInput = Clock.Time - InputManager.LastInputTime - 10000;
-                
+
                 if (CurrentOsuMode != OsuMode.Play && timeSinceInput > 0)
                     AudioEngine.Music.DimmableVolume = 1 - Math.Min(0.95f, (Math.Max(0, timeSinceInput) * 0.00003f));
                 else if (SpriteManager.UniversalDim > 0)
@@ -310,6 +310,11 @@ namespace osum
                 if (AudioEngine.Music.DimmableVolume < 1)
                     AudioEngine.Music.DimmableVolume = Math.Min(1, AudioEngine.Music.DimmableVolume + 0.02f);
             }
+
+#if ARCADE && !DEBUG
+            if (Clock.Time - InputManager.LastInputTime > 20000 && CurrentOsuMode != OsuMode.MainMenu && ActiveTransition == null && !Player.Autoplay)
+                Director.ChangeMode(OsuMode.MainMenu);
+#endif
 
             if (modeChangePending) return true;
             //Save the first mode updates after we purge this frame away.

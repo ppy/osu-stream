@@ -69,6 +69,8 @@ namespace osum.GameModes
         {
             GameBase.LeaveMatch();
 
+            Player.ResetBeatmap();
+
             int initial_display = firstDisplay ? 2950 : 0;
 
             //spriteManagerBehind.Add(menuBackground);

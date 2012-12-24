@@ -15,7 +15,7 @@ namespace osum.Graphics
     {
         List<pSprite> burstSprites = new List<pSprite>();
 
-       static float[] random = new float[] {
+        static float[] random = new float[] {
             0.54668277924985f,
             0.63373556682948f,
             0.52338286143199f,
@@ -99,9 +99,9 @@ namespace osum.Graphics
             get { return bindInput; }
             set
             {
-                if (value == BindInput)
-                    return;
+                if (value == BindInput) return;
                 bindInput = value;
+
                 if (bindInput)
                 {
                     InputManager.OnDown += InputManager_OnDown;
@@ -116,7 +116,7 @@ namespace osum.Graphics
         }
 
         int lastBurstMs = 0;
-        
+
         internal void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
 #if iOS

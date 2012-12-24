@@ -19,6 +19,8 @@ using osum.Audio;
 using osum.GameModes.Play;
 using OpenTK;
 using osum.GameplayElements.HitObjects.Osu;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace osum
 {
@@ -58,6 +60,9 @@ namespace osum
 
         static bool DistBuild;
         public static bool Analysis;
+        private static string BackgroundImage;
+
+        private static bool IsStreamMap;
 
         /// <summary>
         /// Combines many .osu files into one .osc
@@ -70,9 +75,30 @@ namespace osum
                 if (args.Length > 0)
                 {
                     DistBuild = true;
+
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    Process(args[0], true, true, true, true);
-                    Process(args[0], false, true, true, false);
+
+                    if (Directory.GetFiles(args[0]).Length == 0)
+                    {
+                        foreach (string dir in Directory.GetDirectories(args[0]))
+                        {
+                            try
+                            {
+                                Process(dir, false, true, true, false);
+                            }
+                            catch
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("error on " + dir);
+                                Console.ResetColor();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Process(args[0], true, true, true, true);
+                        Process(args[0], false, true, true, false);
+                    }
                 }
                 else
                 {
@@ -95,6 +121,8 @@ namespace osum
 
         public static string Process(string dir, bool quick = false, bool usem4a = true, bool free = false, bool previewMode = false)
         {
+            BackgroundImage = null;
+
             Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
             Console.WriteLine();
 
@@ -114,14 +142,21 @@ namespace osum
 
             List<string> orderedDifficulties = new List<string>();
 
-            orderedDifficulties.AddRange(osuFiles);
-            
-            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Easy].osu")));
-            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Normal].osu")));
-            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Hard].osu")));
-            //orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith("[Expert].osu")));
+            string metadata = dir + "\\metadata.txt";
 
-            if (orderedDifficulties.FindAll(t => t != null).Count < 1) return null;
+            IsStreamMap = File.Exists(metadata);
+
+            //orderedDifficulties.AddRange(osuFiles);
+
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Easy")));
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Normal")));
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Hard")));
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Insane")));
+
+            if (orderedDifficulties.FindAll(t => t != null).Count < 1)
+            {
+                orderedDifficulties.AddRange(osuFiles.FindAll(f => f.EndsWith(".osu")));
+            }
 
             Console.WriteLine("Files found:");
             foreach (string s in orderedDifficulties)
@@ -130,6 +165,7 @@ namespace osum
             Console.WriteLine();
 
             List<BeatmapDifficulty> difficulties = new List<BeatmapDifficulty>();
+            string Artist = "", Title = "", Creator = "";
 
             foreach (string f in orderedDifficulties)
             {
@@ -175,6 +211,29 @@ namespace osum
                                 {
                                     case "AudioFilename":
                                         writeLine = "AudioFilename: audio.mp3";
+                                        break;
+                                }
+                                break;
+                            case "Metadata":
+                                switch (key)
+                                {
+                                    case "Artist":
+                                        Artist = val;
+                                        break;
+                                    case "Title":
+                                        Title = val;
+                                        break;
+                                    case "Creator":
+                                        Creator = val;
+                                        break;
+                                }
+                                break;
+                            case "Events":
+                                switch (line[0])
+                                {
+                                    case '0': //EventType.Background
+                                        split = line.Split(',');
+                                        BackgroundImage = split[2].Trim('"');
                                         break;
                                 }
                                 break;
@@ -377,9 +436,6 @@ namespace osum
                 }
             }
 
-
-            string metadata = dir + "\\metadata.txt";
-            string Artist = "", Title = "", Creator = "";
             if (File.Exists(metadata))
             {
                 foreach (string line in File.ReadAllLines(metadata))
@@ -422,18 +478,22 @@ namespace osum
 
             string osz2Filename;
 
-            string baseFileWithLocation = baseName.Substring(baseName.LastIndexOf("\\") + 1);
+            if (!Directory.Exists("out"))
+                Directory.CreateDirectory("out");
+
+            string baseFileWithLocation = "out\\" + baseName.Substring(baseName.LastIndexOf("\\") + 1);
 
             if (free && DistBuild)
                 osz2Filename = baseFileWithLocation + ".osf2";
             else
                 osz2Filename = baseFileWithLocation + (usem4a && !DistBuild ? ".m4a.osz2" : ".osz2");
 
+            File.Delete(osz2Filename);
+
             string audioFilename = null;
 
             if (usem4a)
             {
-                audioFilename = "";
                 foreach (string s in Directory.GetFiles(dir, "*.m4a"))
                 {
                     if (s.Contains("_lq")) continue;
@@ -442,13 +502,13 @@ namespace osum
                     break;
                 }
             }
-            else
-                audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
+
+            if (audioFilename == null) audioFilename = Directory.GetFiles(dir, "*.mp3")[0];
 
             File.Delete(osz2Filename);
 
             //write the package initially so we can use it for score testing purposes.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Title, Creator);
 
             //scoring
 
@@ -513,12 +573,12 @@ namespace osum
             if (previewMode) osz2Filename = osz2Filename.Replace(".osf2", "_preview.osf2");
 
             //write the package a second time with new multiplier header data.
-            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties);
+            writePackage(oscFilename, osz2Filename, audioFilename, difficulties, orderedDifficulties, Artist, Title, Creator);
 
             return osz2Filename;
         }
 
-        private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered)
+        private static void writePackage(string oscFilename, string osz2Filename, string audioFilename, List<BeatmapDifficulty> difficulties, List<string> ordered, string artist, string title, string creator)
         {
             bool isPreview = osz2Filename.Contains("_preview");
 
@@ -531,7 +591,7 @@ namespace osum
                 {
                     if (isPreview)
                     {
-                        if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview"))
+                        if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview") && IsStreamMap)
                         {
                             //may need to double up on bookmarks if they don't occur often often
 
@@ -604,13 +664,7 @@ namespace osum
             using (MapPackage package = new MapPackage(osz2Filename, true))
             {
                 package.AddMetadata(MapMetaType.BeatmapSetID, "0");
-
-                string versionsAvailable = "";
-                if (ordered[0] != null) versionsAvailable += "|Easy";
-                if (ordered[1] != null) versionsAvailable += "|Normal";
-                if (ordered[2] != null) versionsAvailable += "|Hard";
-                if (ordered[3] != null) versionsAvailable += "|Expert";
-                package.AddMetadata(MapMetaType.Version, versionsAvailable.Trim('|'));
+                package.AddMetadata(MapMetaType.Version, (ordered[0] != null ? "Easy" : "") + (ordered[1] != null ? "Normal" : "") + (ordered[2] != null ? "Hard" : "") + (ordered[3] != null ? "Expert" : ""));
 
                 if (string.IsNullOrEmpty(audioFilename))
                     throw new Exception("FATAL ERROR: audio file not found");
@@ -629,6 +683,10 @@ namespace osum
                     package.AddFile(audioFilename.EndsWith(".m4a") ? "audio.m4a" : "audio.mp3", audioFilename, DateTime.MinValue, DateTime.MinValue);
 
                 string dir = Path.GetDirectoryName(audioFilename);
+
+                package.AddMetadata(MapMetaType.Artist, artist);
+                package.AddMetadata(MapMetaType.Title, title);
+                package.AddMetadata(MapMetaType.Creator, creator);
 
                 string metadata = dir + "\\metadata.txt";
                 if (File.Exists(metadata))
@@ -653,6 +711,8 @@ namespace osum
 
                 if (isPreview)
                     package.AddMetadata(MapMetaType.Revision, "preview");
+                else if (!IsStreamMap)
+                    package.AddMetadata(MapMetaType.Revision, "osuconversion");
 
                 string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))
@@ -660,6 +720,24 @@ namespace osum
                 thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-256.jpg";
                 if (File.Exists(thumb))
                     package.AddFile("thumb-256.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
+
+                if (BackgroundImage != null)
+                {
+                    package.AddFile("bg.jpg", dir + '\\' + BackgroundImage, DateTime.MinValue, DateTime.MinValue);
+
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        Image.FromFile(dir + '\\' + BackgroundImage).GetThumbnailImage(256, 172, null, IntPtr.Zero).Save(ms, ImageFormat.Jpeg);
+                        package.AddFile("thumb-256.jpg", ms.ToArray(), DateTime.MinValue, DateTime.MinValue);
+                    }
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        Image.FromFile(dir + '\\' + BackgroundImage).GetThumbnailImage(128, 86, null, IntPtr.Zero).Save(ms, ImageFormat.Jpeg);
+                        package.AddFile("thumb-128.jpg", ms.ToArray(), DateTime.MinValue, DateTime.MinValue);
+                    }
+
+                }
 
                 package.Save();
             }
@@ -836,7 +914,7 @@ namespace osum
 
             if (!quick)
             {
-                Console.WriteLine("HP multiplier: ".PadRight(25) + healthMultiplier);
+                Console.WriteLine("HP multiplier: ".PadRight(25) + (IsStreamMap ? healthMultiplier : 1));
                 Console.WriteLine("Using combo multiplier: ".PadRight(25) + comboMultiplier);
                 Console.WriteLine("Hitobject score: ".PadRight(25) + s.hitScore);
                 Console.WriteLine("Combo score: ".PadRight(25) + s.comboBonusScore);

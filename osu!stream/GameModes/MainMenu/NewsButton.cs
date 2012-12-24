@@ -24,7 +24,7 @@ namespace osum.GameModes
             newsButton.OnClick += new EventHandler(newsButton_OnClick);
             Add(newsButton);
 
-            newsLight = new pSprite(TextureManager.Load(OsuTexture.news_light), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(3,13f), 0.81f, true, Color4.White);
+            newsLight = new pSprite(TextureManager.Load(OsuTexture.news_light), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(3, 13f), 0.81f, true, Color4.White);
             newsLight.Additive = true;
 
             newsLight.Transform(new TransformationF(TransformationType.Fade, 0, 1, 0, 300, EasingTypes.Out) { Looping = true, LoopDelay = 1500 });
@@ -41,7 +41,9 @@ namespace osum.GameModes
 
             StringNetRequest nr = new StringNetRequest(@"http://osustream.com/misc/news.php?v=2");
             nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
+#if !ARCADE
             NetManager.AddRequest(nr);
+#endif
         }
 
         void newsButton_OnClick(object sender, EventArgs e)

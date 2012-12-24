@@ -61,6 +61,9 @@ namespace osum.GameModes
             SelectedPanel = panel;
             Player.Beatmap = panel.Beatmap;
 
+            string versions = Player.Beatmap.Package.GetMetadata(MapMetaType.Version);
+            hasExpertDifficulty = versions != null && versions.Contains("Expert");
+
             panel.s_BackingPlate2.Alpha = 1;
             panel.s_BackingPlate2.AdditiveFlash(400, 1, true);
             panel.s_BackingPlate2.FadeColour(Color4.White, 0);
@@ -112,7 +115,7 @@ namespace osum.GameModes
             if (s_ModeButtonStream == null)
                 initializeDifficultySelection();
 
-            s_ModeButtonExpert.Colour = mapRequiresUnlock ? Color4.Gray : Color4.White;
+            s_ModeButtonExpert.Colour = mapRequiresUnlock || !hasExpertDifficulty ? Color4.Gray : Color4.White;
 
             int animationTime = instant ? 0 : 500;
 
@@ -299,8 +302,16 @@ namespace osum.GameModes
                 if (!force) AudioEngine.PlaySample(OsuSamples.ButtonTap);
 
                 string versions = package.GetMetadata(MapMetaType.Version);
-                if (versions != null && !versions.Contains(newDifficulty.ToString()))
+                bool missingDifficulty = versions != null && newDifficulty != Difficulty.Normal && !versions.Contains(newDifficulty.ToString());
+
+                if (force && missingDifficulty)
                 {
+                    newDifficulty = Difficulty.Normal;
+                    Player.Difficulty = newDifficulty;
+                }
+                else if (missingDifficulty)
+                {
+
 
                     /*if (Player.Difficulty == Difficulty.Easy)
                         //came from easy -> expert; drop back on normal!
@@ -353,6 +364,7 @@ namespace osum.GameModes
         private pText s_ScoreInfo;
         private pSprite s_ScoreRank;
         private pSprite s_SongInfo;
+        private bool hasExpertDifficulty;
 
         /// <summary>
         /// Updates the states of mode selection arrows depending on the current mode selection.
@@ -531,10 +543,7 @@ namespace osum.GameModes
                 GameBase.Match.RequestStateChange(MatchState.Preparing);
             else
             {
-                GameBase.Scheduler.Add(delegate
-                {
-                    Director.ChangeMode(OsuMode.Play);
-                }, 800);
+                GameBase.Scheduler.Add(delegate { Director.ChangeMode(OsuMode.Play); }, 800);
             }
 
         }

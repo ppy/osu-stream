@@ -134,27 +134,43 @@ namespace osum.Network
         {
             GameBase.Scheduler.Add(delegate
             {
-                switch (reqType)
+                try
                 {
-                    case RequestType.Tencho_Authenticated:
-                        if (OnConnect != null) OnConnect();
-                        break;
-                    case RequestType.Tencho_Ping:
-                        Console.WriteLine("ping pong!");
-                        SendRequest(RequestType.Osu_Pong, null);
-                        break;
-                    case RequestType.Tencho_MatchFound:
-                        ClientMatch m = new ClientMatch(sr);
-                        if (m != null)
-                        {
-                            GameBase.Match = m;
-                            Console.WriteLine("We have a match!");
-                        }
-                        break;
-                    case RequestType.Tencho_MatchStateChange:
-                    case RequestType.Tencho_MatchPlayerDataChange:
-                        GameBase.Match.Update(reqType, new ClientMatch(sr));
-                        break;
+                    switch (reqType)
+                    {
+                        case RequestType.Tencho_Authenticated:
+                            if (OnConnect != null) OnConnect();
+                            break;
+                        case RequestType.Tencho_Ping:
+                            Console.WriteLine("ping pong!");
+                            SendRequest(RequestType.Osu_Pong, null);
+                            break;
+                        case RequestType.Tencho_MatchFound:
+                            {
+                                ClientMatch m = new ClientMatch(sr);
+                                if (m != null)
+                                {
+                                    GameBase.Match = m;
+                                    Console.WriteLine("We have a match!");
+                                }
+                            }
+                            break;
+                        case RequestType.Tencho_MatchStateChange:
+                        case RequestType.Tencho_MatchPlayerDataChange:
+                            {
+                                ClientMatch m = GameBase.Match;
+                                if (m != null)
+                                    m.Update(reqType, new ClientMatch(sr));
+                                else
+                                    GameBase.LeaveMatch();
+                                lastStateChange = Clock.Time;
+                            }
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    File.WriteAllText("network-error.txt", e.ToString());
                 }
             }, true);
         }
@@ -262,6 +278,7 @@ namespace osum.Network
         private int ReceivedBytes;
         private bool readingHeader;
         private int sendWaitCurrent;
+        private int lastStateChange;
 
 
         /// <summary>

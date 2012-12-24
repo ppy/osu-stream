@@ -653,6 +653,6 @@ namespace osum.GameplayElements
         Easy = 0,
         Normal = 1,
         Hard = 2,
-        Expert = 3
+        Expert = 3,
     }
 }

@@ -278,14 +278,20 @@ namespace osum.GameModes
             s_ButtonBack.Alpha = 0;
             topMostLayer.Add(s_ButtonBack);
 
+
             s_Footer = new pSprite(TextureManager.Load(OsuTexture.ranking_footer), FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Mode, new Vector2(0, -100), 0.98f, true, Color4.White);
             s_Footer.Alpha = 0;
+
             s_Footer.OnClick += delegate
             {
                 Director.ChangeMode(OsuMode.Play);
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
             };
-            topMostLayer.Add(s_Footer);
+#if ARCADE
+            if (GameBase.Match == null)
+#endif
+                topMostLayer.Add(s_Footer);
+
 
             if (!cameFromSongSelect)
             {
@@ -311,7 +317,7 @@ namespace osum.GameModes
 
                 //Average Timing
                 avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
-                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + Math.Round(Math.Abs(avg),1) + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
+                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + Math.Round(Math.Abs(avg), 1) + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
                     Origin = OriginTypes.BottomCentre
@@ -613,7 +619,7 @@ namespace osum.GameModes
                 GameBase.Notify(rankingNotification);
             finishedDisplaying = true;
 
-                showNavigation();
+            showNavigation();
         }
 
         private void showNavigation()

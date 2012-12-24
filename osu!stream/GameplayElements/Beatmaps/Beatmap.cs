@@ -79,7 +79,7 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
-                return "audio.m4a";
+                return Package.FileExists("audio.m4a") ? "audio.m4a" : "audio.mp3";
             }
         }
 #endif
@@ -88,7 +88,7 @@ namespace osum.GameplayElements.Beatmaps
         {
             get
             {
-                return Artist + Title;
+                return Artist + Title + AudioFilename;
             }
         }
 

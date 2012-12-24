@@ -13,6 +13,7 @@ using osum.Graphics.Skins;
 using osum.Graphics;
 using osum.GameModes.Store;
 using osum.Helpers.osu_common.Tencho.Objects;
+using osum.UI;
 
 namespace osum.GameModes
 {
@@ -250,6 +251,14 @@ namespace osum.GameModes
             }
             else
             {
+#if ARCADE
+                if (Clock.Time > 20000)
+                {
+                    Notification notification = new Notification("Locked", "Options have been locked on this machine.", NotificationStyle.Okay, null);
+                    GameBase.Notify(notification);
+                    return;
+                }
+#endif
                 Director.ChangeMode(OsuMode.Options);
             }
 

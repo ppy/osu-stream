@@ -184,7 +184,6 @@ namespace osum.GameModes
             resetScore();
 
             //256x172
-            float aspectAdjust = GameBase.BaseSize.Y / (172 * GameBase.SpriteToBaseRatio);
 
             if (Beatmap != null && GameBase.Instance != null)
             {
@@ -193,22 +192,24 @@ namespace osum.GameModes
                     LoadDelegate = delegate
                     {
                         pTexture thumb = null;
-                        byte[] bytes = Beatmap.GetFileBytes("thumb-256.jpg");
-                        if (bytes != null)
-                            thumb = pTexture.FromBytes(bytes);
+                        byte[] bytes = Beatmap.GetFileBytes("bg.jpg");
+                        if (bytes == null) bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                        if (bytes != null) thumb = pTexture.FromBytes(bytes);
+
+                        if (thumb == null) return null;
+
+                        mapBackgroundImage.ScaleScalar = GameBase.BaseSize.X / (thumb.Width * GameBase.SpriteToBaseRatio);
+                        mapBackgroundImage.FadeIn(3000, 0.05f);
+                        mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.00005f, 1, EasingTypes.Out);
                         return thumb;
                     },
                     DrawDepth = 0.005f,
                     Field = FieldTypes.StandardSnapCentre,
                     Origin = OriginTypes.Centre,
-                    ScaleScalar = aspectAdjust,
                     Alpha = 0.0005f,
                     Additive = true,
                     RemoveOldTransformations = false
                 };
-
-                mapBackgroundImage.FadeIn(3000, 0.05f);
-                mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
 
                 spriteManager.Add(mapBackgroundImage);
             }
@@ -1056,6 +1057,11 @@ namespace osum.GameModes
         private pSpriteDynamic mapBackgroundImage;
         private pSprite menuPauseButton;
         private ScoreChange lastJudgeType = ScoreChange.Ignore;
+
+        internal static void ResetBeatmap()
+        {
+            Beatmap = null;
+        }
     }
 }
 

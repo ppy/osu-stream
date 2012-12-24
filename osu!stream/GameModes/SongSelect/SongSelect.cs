@@ -353,6 +353,7 @@ namespace osum.GameModes
             lastDownTime = Clock.ModeTime;
         }
 
+        TrackingPoint changeTrackingPoint;
         private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || inputStolen) return;
@@ -363,13 +364,19 @@ namespace osum.GameModes
             {
                 case SelectState.SongSelect:
                     {
-                        float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+                        if (changeTrackingPoint != InputManager.PrimaryTrackingPoint)
+                        {
+                            changeTrackingPoint = InputManager.PrimaryTrackingPoint;
+                            break;
+                        }
+
+                        float change = changeTrackingPoint.WindowDelta.Y * 1.2f;
                         float bound = offsetBound;
 
                         if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
                         songSelectOffset = songSelectOffset + change;
-                        velocity = change;
+                        velocity = change > velocity ? change * 1.3f : change;
                     }
                     break;
                 case SelectState.DifficultySelect:
@@ -467,9 +474,9 @@ namespace osum.GameModes
                         songSelectOffset = songSelectOffset * (1 - 0.2f * Clock.ElapsedRatioToSixty) + bound * 0.2f * Clock.ElapsedRatioToSixty + velocity * Clock.ElapsedRatioToSixty;
 
                         if (songSelectOffset != bound)
-                            velocity *= (1 - 0.3f * Clock.ElapsedRatioToSixty);
+                            velocity *= (1 - 0.04f * Clock.ElapsedRatioToSixty);
                         else
-                            velocity *= (1 - 0.06f * Clock.ElapsedRatioToSixty);
+                            velocity *= (1 - 0.5f * Clock.ElapsedRatioToSixty);
                     }
 
                     float panelHeightPadded = BeatmapPanel.PANEL_HEIGHT + 10;
@@ -556,16 +563,18 @@ namespace osum.GameModes
                         if (SelectedPanelHoverGlow != null)
                             AudioEngine.Music.DimmableVolume = 1 - SelectedPanelHoverGlow.Alpha;
 
-                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0.5f + songSelectOffset * 0.5f);
+                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0.1f + songSelectOffset * 0.9f);
 
                         foreach (BeatmapPanel p in panels)
                         {
                             if (p.NewSection)
                                 pos.Y += 20;
 
+#if !ARCADE
                             if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
-                                //todo: change this to use a draggable spritemanager instead. better performance and will move smoother on lower fps.
-                                p.MoveTo(pos, touchingBegun ? 50 : 300);
+#endif
+                            p.MoveTo(pos, touchingBegun ? 50 : 300);
+                            //todo: change this to use a draggable spritemanager instead. better performance and will move smoother on lower fps.
                             pos.Y += 63;
                         }
                     }
@@ -625,7 +634,7 @@ namespace osum.GameModes
         {
             if (beatmap == null)
             {
-                if (State == SelectState.DifficultySelect ||  State == SelectState.LoadingPreview)
+                if (State == SelectState.DifficultySelect || State == SelectState.LoadingPreview)
                     leaveDifficultySelection(null, null);
             }
             else

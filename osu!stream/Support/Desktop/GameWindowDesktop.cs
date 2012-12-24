@@ -22,12 +22,14 @@ namespace osum
     {
         /// <summary>Creates a 1024x768 window with the specified title.</summary>
         public GameWindowDesktop()
-            : base(480, 320, GraphicsMode.Default, "osu!stream")
+            : base(960, 640, GraphicsMode.Default, "osu!stream")
         {
             VSync = VSyncMode.Off;
             //this.Location = new Point(1920, 0);
 
+#if !DEBUG
             WindowState = WindowState.Fullscreen;
+#endif
             //GameBase.WindowSize = new Size(960,640);
         }
 

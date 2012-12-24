@@ -86,6 +86,8 @@ namespace osum.GameModes.SongSelect
         {
             base.HandleOnUp(source, trackingPoint);
 
+            if (Director.IsTransitioning) return;
+
             if (tp != null)
             {
                 bool success = (minimumHitPossible && dist < hit_minimum_distance) || (dist > hit_pull_distance);
