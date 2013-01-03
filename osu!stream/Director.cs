@@ -312,7 +312,7 @@ namespace osum
             }
 
 #if ARCADE && !DEBUG
-            if (Clock.Time - InputManager.LastInputTime > 20000 && CurrentOsuMode != OsuMode.MainMenu && ActiveTransition == null && !Player.Autoplay)
+            if (Clock.Time - InputManager.LastInputTime > 60000 && CurrentOsuMode != OsuMode.MainMenu && ActiveTransition == null && !Player.Autoplay)
                 Director.ChangeMode(OsuMode.MainMenu);
 #endif
 
