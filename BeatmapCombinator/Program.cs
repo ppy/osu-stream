@@ -151,7 +151,7 @@ namespace osum
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Easy")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Normal")));
             orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Hard")));
-            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && f.Contains("Insane")));
+            orderedDifficulties.Add(osuFiles.Find(f => f.EndsWith(".osu") && (f.Contains("Insane") || f.Contains("Expert"))));
 
             if (orderedDifficulties.FindAll(t => t != null).Count < 1)
             {
