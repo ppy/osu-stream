@@ -122,12 +122,13 @@ namespace osum
                     break;
             }
 
-            initialOrientation = UIApplication.SharedApplication.StatusBarOrientation;
+            if (!HardwareDetection.RunningiOS6OrHigher)
+                initialOrientation = UIApplication.SharedApplication.StatusBarOrientation;
             base.Initialize();
         }
 
         const UIInterfaceOrientation DEFAULT_ORIENTATION = UIInterfaceOrientation.LandscapeRight;
-        UIInterfaceOrientation initialOrientation;
+        UIInterfaceOrientation initialOrientation = DEFAULT_ORIENTATION;
 
         public void HandleRotationChange(UIInterfaceOrientation orientation)
         {
