@@ -653,9 +653,14 @@ namespace osum
                 string thumb = dir + "\\thumb-128.jpg";
                 if (File.Exists(thumb))
                     package.AddFile("thumb-128.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
+
                 thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-256.jpg";
                 if (File.Exists(thumb))
                     package.AddFile("thumb-256.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
+
+                thumb = Path.GetDirectoryName(audioFilename) + "\\thumb-512.jpg";
+                if (File.Exists(thumb))
+                    package.AddFile("thumb-512.jpg", thumb, DateTime.MinValue, DateTime.MinValue);
 
                 package.Save();
             }
