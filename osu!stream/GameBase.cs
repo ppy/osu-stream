@@ -136,6 +136,8 @@ namespace osum
 
             //initialise config before everything, because it may be used in Initialize() override.
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
+
+            Clock.USER_OFFSET = Config.GetValue<int>("offset", 0);
         }
 
         internal static Vector2 BaseSizeHalf

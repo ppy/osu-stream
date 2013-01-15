@@ -13,43 +13,43 @@ namespace osum.UI
     class SliderControl : SpriteManager
     {
         private FloatDelegate action;
-        private pSprite s_BackingPlate;
+        private pSprite BackingPlate;
 
         public SliderControl(string text, float initialValue, Vector2 position, FloatDelegate onValueChanged)
         {
             action = onValueChanged;
 
-            s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position) { Colour = new Color4(50,50,50,255) };
-            Add(s_BackingPlate);
+            BackingPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position) { Colour = new Color4(50,50,50,255) };
+            Add(BackingPlate);
 
-            s_FrontPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position)
+            FrontPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position)
             {
-                DrawDepth = s_BackingPlate.DrawDepth + 0.01f,
+                DrawDepth = BackingPlate.DrawDepth + 0.01f,
                 Colour = new Color4(97,159,0,255),
                 Additive = true
             };
-            Add(s_FrontPlate);
+            Add(FrontPlate);
 
-            Vector2 offset = new Vector2(-s_BackingPlate.DisplayRectangle.Width / 2, -s_BackingPlate.DisplayRectangle.Height / 2);
+            Vector2 offset = new Vector2(-BackingPlate.DisplayRectangle.Width / 2, -BackingPlate.DisplayRectangle.Height / 2);
 
-            s_BackingPlate.Offset = offset;
-            s_FrontPlate.Offset = offset;
+            BackingPlate.Offset = offset;
+            FrontPlate.Offset = offset;
 
-            s_Text = new pText(text, 24, position, s_BackingPlate.DrawDepth + 0.02f, true, Color4.White)
+            Text = new pText(text, 24, position, BackingPlate.DrawDepth + 0.02f, true, Color4.White)
             {
                 Origin = OriginTypes.Centre,
                 TextShadow = true
             };
-            Add(s_Text);
+            Add(Text);
 
-            s_BackingPlate.OnClick += SliderControl_OnClick;
+            BackingPlate.OnClick += SliderControl_OnClick;
 
             UpdateValue(initialValue);
         }
 
         bool wasClicked;
-        private pText s_Text;
-        private pSprite s_FrontPlate;
+        internal pText Text;
+        private pSprite FrontPlate;
 
         void SliderControl_OnClick(object sender, EventArgs e)
         {
@@ -74,7 +74,7 @@ namespace osum.UI
         {
             if (trackingPoint.originalTrackingPoint == this.trackingPoint)
             {
-                Box2 displayRect = s_BackingPlate.DisplayRectangle;
+                Box2 displayRect = BackingPlate.DisplayRectangle;
                 float fill = pMathHelper.ClampToOne((trackingPoint.BasePosition.X - displayRect.Left) / displayRect.Width);
                 UpdateValue(fill);
             }
@@ -85,8 +85,8 @@ namespace osum.UI
         private void UpdateValue(float value)
         {
             Value = value;
-            s_FrontPlate.DrawWidth = (int)(s_BackingPlate.TextureWidth * value);
-            s_FrontPlate.FlashColour(new Color4(131,240,0,255), 150);
+            FrontPlate.DrawWidth = (int)(BackingPlate.TextureWidth * value);
+            FrontPlate.FlashColour(new Color4(131,240,0,255), 150);
             action(value);
         }
 

@@ -34,7 +34,7 @@ namespace osum.Helpers
         public const int UNIVERSAL_OFFSET_INPUT = 0; //unknown
 #endif
 
-        
+        public static int USER_OFFSET;
 
         public static Stopwatch sw = new Stopwatch();
         static double swLast;
@@ -153,7 +153,7 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.lastLoaded != null && AudioEngine.Music.lastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A);
+            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.lastLoaded != null && AudioEngine.Music.lastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A) + USER_OFFSET;
 
             if (AudioTimeSource.IsElapsing)
             {
