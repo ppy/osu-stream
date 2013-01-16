@@ -382,7 +382,7 @@ namespace osum.GameModes
             return true;
         }
 
-        const int time_to_hover = 600;
+        const int time_to_hover = 400;
 
         public override void Update()
         {
