@@ -62,6 +62,7 @@ namespace osum.GameModes
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
+            background.ScaleScalar = (float)background.DrawWidth / GameBase.BaseSize.X;
 
             background.AlphaBlend = false;
             spriteManager.Add(background);
@@ -307,7 +308,7 @@ namespace osum.GameModes
 
                 //Average Timing
                 avg = (float)RankableScore.hitOffsetMilliseconds / Math.Max(1, RankableScore.hitOffsetCount);
-                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + Math.Round(Math.Abs(avg),1) + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
+                pText heading = new pText(LocalisationManager.GetString(OsuString.AvgTiming) + Math.Round(Math.Abs(avg), 1) + (RankableScore.hitOffsetMilliseconds > 0 ? "ms late" : "ms early"), 16, new Vector2(0, 20), 0.5f, true, Color4.White)
                 {
                     Field = FieldTypes.StandardSnapBottomCentre,
                     Origin = OriginTypes.BottomCentre
@@ -609,7 +610,7 @@ namespace osum.GameModes
                 GameBase.Notify(rankingNotification);
             finishedDisplaying = true;
 
-                showNavigation();
+            showNavigation();
         }
 
         private void showNavigation()
