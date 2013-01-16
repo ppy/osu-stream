@@ -142,9 +142,11 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (Clock.USER_OFFSET + 32) / 64f , new Vector2(button_x_offset - 15, vPos),
+            const int offset_range = 32;
+
+            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2) , new Vector2(button_x_offset - 15, vPos),
                 delegate(float v) {
-                    GameBase.Config.SetValue<int>("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * 64)));
+                GameBase.Config.SetValue<int>("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
                     if (universalOffsetSlider != null) //will be null on first run.
                         universalOffsetSlider.Text.Text = Clock.USER_OFFSET.ToString() + "ms";
                  });

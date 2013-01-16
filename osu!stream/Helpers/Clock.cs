@@ -153,7 +153,7 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.lastLoaded != null && AudioEngine.Music.lastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A) + USER_OFFSET;
+            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.lastLoaded != null && AudioEngine.Music.lastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A) - USER_OFFSET;
 
             if (AudioTimeSource.IsElapsing)
             {
