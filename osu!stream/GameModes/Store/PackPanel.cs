@@ -469,7 +469,7 @@ namespace osum.GameModes.Store
 
             pText title = new pText(titleString, 26, Vector2.Zero, Vector2.Zero, base_depth + 0.01f, true, Color4.White, false);
 
-            title.Offset = new Vector2(textOffset + 15 + artist.MeasureText().X / GameBase.BaseToNativeRatio, ExpandedHeight + 4);
+            title.Offset = new Vector2(textOffset + 15 + artist.MeasureText().X / GameBase.BaseToNativeRatioAligned, ExpandedHeight + 4);
             PackItemSprites.Add(title);
             Sprites.Add(title);
 
