@@ -108,7 +108,7 @@ namespace osum.GameModes
                 p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));
             }
 
-            GameBase.Scheduler.Add(delegate { AudioEngine.PlaySample(OsuSamples.RankBling); }, 1400);
+            GameBase.Scheduler.Add(delegate { AudioEngine.PlaySample(OsuSamples.RankBling); }, 1600);
 
             spriteManager.Add(fillSprites);
 
