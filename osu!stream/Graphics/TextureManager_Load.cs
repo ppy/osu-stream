@@ -143,7 +143,7 @@ namespace osum.Graphics.Skins
             textureLocations.Add(OsuTexture.notification_button_no, new SpriteSheetTexture("notification", 0, 598, 360, 80));
             textureLocations.Add(OsuTexture.notification_button_yes, new SpriteSheetTexture("notification", 0, 680, 360, 80));
             textureLocations.Add(OsuTexture.notification_button_toggle, new SpriteSheetTexture("notification", 0, 762, 86, 80));
-            textureLocations.Add(OsuTexture.ranking_footer, new SpriteSheetTexture("ranking", 0, 0, 1024, 94));
+            textureLocations.Add(OsuTexture.ranking_footer, new SpriteSheetTexture("ranking", 0, 0, 1136, 94));
             textureLocations.Add(OsuTexture.ranking_background, new SpriteSheetTexture("ranking", 0, 96, 814, 528));
             textureLocations.Add(OsuTexture.rank_x, new SpriteSheetTexture("ranking", 816, 96, 324, 380));
             textureLocations.Add(OsuTexture.rank_a, new SpriteSheetTexture("ranking", 1142, 0, 318, 360));
