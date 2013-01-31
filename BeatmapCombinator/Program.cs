@@ -71,8 +71,10 @@ namespace osum
                 {
                     DistBuild = true;
                     Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    Process(args[0], true, true, true, true);
-                    Process(args[0], false, true, true, false);
+                    //Process(args[0], true, true, true, true);
+                    //Process(args[0], false, true, false, false);
+
+                    Process(args[0], false, true, false, false);
                 }
                 else
                 {
