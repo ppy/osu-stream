@@ -143,3 +143,5 @@ TwitterLinkQuestion=Twitter Connect
 TwitterLinkQuestionDetails=Connect with {0}?
 TwitterSuccess=Connection successful!
 TwitterSuccessDetails=Now connected with {0}.
+UniversalOffset=Universal Offset
+UniversalOffsetDetails=Set lower to make beats appear earlier.\nIn most cases you should not touch this.

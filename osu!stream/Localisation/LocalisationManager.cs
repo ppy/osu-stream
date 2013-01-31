@@ -204,6 +204,8 @@ namespace osum.Resources
         TwitterLinkQuestion,
         TwitterLinkQuestionDetails,
         TwitterSuccess,
-        TwitterSuccessDetails
+        TwitterSuccessDetails,
+        UniversalOffset,
+        UniversalOffsetDetails
     }
 }

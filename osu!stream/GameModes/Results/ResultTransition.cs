@@ -57,8 +57,11 @@ namespace osum.GameModes
             startTime = Clock.Time;
 
             background = new pSprite(TextureManager.Load(OsuTexture.cleared), FieldTypes.StandardSnapCentre, OriginTypes.CentreLeft,
-                            ClockTypes.Mode, Vector2.Zero, 1, true, Color4.White);
+                            ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             background.Position.X -= background.DrawWidth * GameBase.SpriteToBaseRatio / 2;
+
+            background.Alpha = 0;
+            background.Transform(new TransformationF(TransformationType.Fade, 0, 1, Clock.Time, Clock.Time + 1700, EasingTypes.OutDouble));
 
             background.Additive = true;
             spriteManager.Add(background);
@@ -98,14 +101,14 @@ namespace osum.GameModes
 
                 int offset = Clock.Time + i++ * time_between_fills;
 
-                p.Transform(new TransformationC(new Color4(23, 51, 71, 255), new Color4(23, 51, 71, 255), Clock.Time, Clock.Time + 1400));
-                p.Transform(new TransformationC(Color4.White, p.Colour, Clock.Time + 1400, Clock.Time + 3000));
+                p.Transform(new TransformationC(ColourHelper.Darken(p.Colour, 0.4f), ColourHelper.Darken(p.Colour, 0.7f), Clock.Time, Clock.Time + 1400));
+                p.Transform(new TransformationC(Color4.White, p.Colour, Clock.Time + 1600, Clock.Time + 3000));
                 //force the initial colour to be an ambiguous gray.
 
                 p.Transform(new TransformationBounce(offset, offset + end_bouncing * 2, p.Scale.X, p.Scale.X, 5));
             }
 
-            GameBase.Scheduler.Add(delegate { AudioEngine.PlaySample(OsuSamples.RankBling); }, 1400);
+            GameBase.Scheduler.Add(delegate { AudioEngine.PlaySample(OsuSamples.RankBling); }, 1600);
 
             spriteManager.Add(fillSprites);
 
@@ -138,9 +141,6 @@ namespace osum.GameModes
                 fill.UpdateFieldPosition();
                 fill.UpdateFieldScale();
             }
-
-            float widthOffset = -background.FieldPosition.X / GameBase.BaseToNativeRatio / GameBase.SpriteToBaseRatio;
-            background.DrawWidth = (int)(widthOffset + (background.Texture.Width - widthOffset * 2) * (lastPos / GameBase.BaseSize.X));
         }
     }
 }

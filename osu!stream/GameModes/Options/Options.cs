@@ -11,6 +11,9 @@ using osum.Audio;
 using osum.UI;
 using osum.Resources;
 using osu_common.Libraries.NetLib;
+using osum.Graphics.Renderers;
+
+
 #if iOS
 using MonoTouch.Accounts;
 using MonoTouch.Foundation;
@@ -26,8 +29,9 @@ namespace osum.GameModes.Options
         {
             Scrollbar = true
         };
-        private SliderControl soundEffectSlider;
 
+        private SliderControl soundEffectSlider;
+        private SliderControl universalOffsetSlider;
 
         SpriteManager topMostSpriteManager = new SpriteManager();
 
@@ -138,14 +142,32 @@ namespace osum.GameModes.Options
                 delegate(float v) { AudioEngine.Music.MaxVolume = v; });
             smd.Add(soundEffectSlider);
 
-#if ARCADE
-            vPos += 50;
+            vPos += 60;
 
-            text = new pText(" ", 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
+            const int offset_range = 32;
+
+            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2), new Vector2(button_x_offset - 15, vPos),
+                delegate(float v)
+                {
+                    GameBase.Config.SetValue<int>("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
+                    if (universalOffsetSlider != null) //will be null on first run.
+                        universalOffsetSlider.Text.Text = Clock.USER_OFFSET.ToString() + "ms";
+                });
+            smd.Add(universalOffsetSlider);
+
+            vPos += 40;
+
+            text = new pText(LocalisationManager.GetString(OsuString.UniversalOffsetDetails), 24, new Vector2(0, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+            text.Field = FieldTypes.StandardSnapTopCentre;
+            text.Origin = OriginTypes.TopCentre;
+            text.TextAlignment = TextAlignment.Centre;
+            text.MeasureText(); //force a measure as this is the last sprite to be added to the draggable area (need height to be precalculated)
+            text.TextBounds.X = 600;
             smd.Add(text);
-#else
-            vPos += 50;
 
+            vPos += (int)text.MeasureText().Y + 50;
+
+#if !ARCADE
             text = new pText(LocalisationManager.GetString(OsuString.OnlineOptions), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
             smd.Add(text);
 
@@ -158,9 +180,14 @@ namespace osum.GameModes.Options
 
                 vPos += 40;
 
-                text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(20, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+                text = new pText(LocalisationManager.GetString(OsuString.Twitter), 24, new Vector2(0, vPos), 1, true, Color4.LightGray) { TextShadow = true };
+
+                text.Field = FieldTypes.StandardSnapTopCentre;
+                text.Origin = OriginTypes.TopCentre;
+                text.TextAlignment = TextAlignment.Centre;
                 text.MeasureText(); //force a measure as this is the last sprite to be added to the draggable area (need height to be precalculated)
                 text.TextBounds.X = 600;
+
                 smd.Add(text);
 
                 /*vPos += (int)text.MeasureText().Y + 50;

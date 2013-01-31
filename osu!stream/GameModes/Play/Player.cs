@@ -182,18 +182,27 @@ namespace osum.GameModes
             }
 
             resetScore();
-
-            //256x172
-
+           
             if (Beatmap != null && GameBase.Instance != null)
             {
                 mapBackgroundImage = new pSpriteDynamic()
                 {
                     LoadDelegate = delegate
                     {
+                        float availableHeight = 344;
                         pTexture thumb = null;
-                        byte[] bytes = Beatmap.GetFileBytes("bg.jpg");
-                        if (bytes == null) bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+
+                        byte[] bytes = Beatmap.GetFileBytes("thumb-512.jpg");
+
+                        if (bytes == null)
+                        {
+                            bytes = Beatmap.GetFileBytes("thumb-256.jpg");
+                            availableHeight = 172;
+                        }
+
+                        if (bytes == null) 
+                            bytes = Beatmap.GetFileBytes("bg.jpg");
+
                         if (bytes != null) thumb = pTexture.FromBytes(bytes);
 
                         if (thumb == null) return null;
@@ -201,6 +210,12 @@ namespace osum.GameModes
                         mapBackgroundImage.ScaleScalar = GameBase.BaseSize.X / (thumb.Width * GameBase.SpriteToBaseRatio);
                         mapBackgroundImage.FadeIn(3000, 0.05f);
                         mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.00005f, 1, EasingTypes.Out);
+
+                        mapBackgroundImage.ScaleScalar = GameBase.BaseSize.Y / (availableHeight * GameBase.SpriteToBaseRatio);
+
+                        mapBackgroundImage.FadeIn(3000, 0.05f);
+                        mapBackgroundImage.ScaleTo(mapBackgroundImage.ScaleScalar + 0.0001f, 1, EasingTypes.Out);
+
                         return thumb;
                     },
                     DrawDepth = 0.005f,
