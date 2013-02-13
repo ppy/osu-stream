@@ -141,7 +141,6 @@ namespace osum.GameModes
             pink.Field = FieldTypes.StandardSnapCentre;
             pink.Origin = OriginTypes.Centre;
             pink.OnClick += Option_OnClick;
-            pink.OnClick += Option_OnClick;
             pink.OnHover += Option_OnHover;
             pink.OnHoverLost += Option_OnHoverLost;
             Add(pink);
@@ -247,7 +246,7 @@ namespace osum.GameModes
                 Director.ChangeMode(OsuMode.SongSelect);
             else if (sender == blue)
                 Director.ChangeMode(OsuMode.Store);
-            else
+            else if (sender == pink)
             {
                 Director.ChangeMode(OsuMode.Options);
             }
