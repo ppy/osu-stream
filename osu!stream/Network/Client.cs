@@ -142,7 +142,6 @@ namespace osum.Network
                             if (OnConnect != null) OnConnect();
                             break;
                         case RequestType.Tencho_Ping:
-                            Console.WriteLine("ping pong!");
                             SendRequest(RequestType.Osu_Pong, null);
                             break;
                         case RequestType.Tencho_MatchFound:

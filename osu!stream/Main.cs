@@ -25,13 +25,13 @@ namespace osum
                 GameBase game = new GameBaseIphone();
                 game.Run();
 #else
-            GameBase game = new GameBaseDesktop();
+                GameBase game = new GameBaseDesktop();
 
-            FileSystemWatcher fsw = new FileSystemWatcher(Environment.CurrentDirectory);
-            fsw.EnableRaisingEvents = true;
-            fsw.Changed += fsw_Changed;
+                fsw = new FileSystemWatcher(Environment.CurrentDirectory);
+                fsw.EnableRaisingEvents = true;
+                fsw.Changed += fsw_Changed;
 
-            game.Run();
+                game.Run();
 #endif
 #if !DEBUG
             }
@@ -43,17 +43,21 @@ namespace osum
         }
 
         static bool restartPending;
+        private static FileSystemWatcher fsw;
         static void fsw_Changed(object sender, FileSystemEventArgs e)
         {
             if (e.FullPath.Contains("stream.exe"))
-                GameBase.Scheduler.Add(restart, 2000);
+            {
+                GameBase.Scheduler.Add(restart, 10000);
+                fsw.EnableRaisingEvents = false;
+            }
         }
 
         private static void restart()
         {
             if (restartPending) return;
 
-            if (Director.CurrentOsuMode == OsuMode.Play || Director.CurrentOsuMode == OsuMode.Results || GameBase.Match != null)
+            if (Director.CurrentOsuMode != OsuMode.Play && Director.CurrentOsuMode != OsuMode.Results && GameBase.Match != null)
             {
                 GameBase.Scheduler.Add(restart, 2000);
                 return;
@@ -67,7 +71,11 @@ namespace osum
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            File.WriteAllText("error-otherthread.txt", e.ToString());
+            try
+            {
+                File.WriteAllText("error-otherthread.txt", e.ToString());
+            }
+            catch { }
             Environment.Exit(-1);
         }
     }

@@ -31,7 +31,7 @@ namespace USBHIDDRIVER.USB
     /// <summary>
     ///
     /// </summary>
-   public class HIDUSBDevice: IDisposable
+    public class HIDUSBDevice : IDisposable
     {
         bool disposed = false;
 
@@ -48,7 +48,7 @@ namespace USBHIDDRIVER.USB
         //recieve Buffer (Each report is one Element)
         //this one was replaced by the receive Buffer in the interface
         //public static ArrayList receiveBuffer = new ArrayList();
-        
+
         //USB Object
         private USBSharp myUSB = new USBSharp();
         //thread for read operations
@@ -72,7 +72,7 @@ namespace USBHIDDRIVER.USB
         /// <param name="vID">The vendor ID of the USB device.</param>
         /// <param name="pID">The product ID of the USB device.</param>
         public HIDUSBDevice(String vID, String pID)
-        { 
+        {
             //set vid and pid
             setDeviceData(vID, pID);
             //try to establish connection
@@ -93,7 +93,7 @@ namespace USBHIDDRIVER.USB
         /// </summary>
         /// <returns>true if connection is established</returns>
         public bool connectDevice()
-        { 
+        {
             //searchDevice
             searchDevice();
             //return connection state
@@ -117,7 +117,7 @@ namespace USBHIDDRIVER.USB
             bool deviceFound = false;
             this.deviceCount = 0;
             this.devicePath = string.Empty;
-            
+
             myUSB.CT_HidGuid();
             myUSB.CT_SetupDiGetClassDevs();
 
@@ -148,7 +148,7 @@ namespace USBHIDDRIVER.USB
                     this.deviceCount = device_count;
                     this.devicePath = myUSB.DevicePathName;
                     deviceFound = true;
-                    
+
                     //init device
                     myUSB.CT_SetupDiEnumDeviceInterfaces(this.deviceCount);
 
@@ -160,14 +160,14 @@ namespace USBHIDDRIVER.USB
                     resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
                     resultb = 0;
                     //create HID Device Handel
-                    resultb = myUSB.CT_CreateFile(this.devicePath);  
+                    resultb = myUSB.CT_CreateFile(this.devicePath);
 
                     //we have found our device so stop searching
                     break;
                 }
                 device_count++;
             }
-           
+
             //set connection state
             this.setConnectionState(deviceFound);
             //return state
@@ -216,7 +216,7 @@ namespace USBHIDDRIVER.USB
                 string deviceID = this.vendorID + "&" + this.productID;
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
-                   numberOfDevices++;
+                    numberOfDevices++;
                 }
                 device_count++;
             }
@@ -244,8 +244,8 @@ namespace USBHIDDRIVER.USB
                 {
                     //get output report length
                     int myPtrToPreparsedData = -1;
-                   // myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData);
-                   // int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
+                    // myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData);
+                    // int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
 
                     int outputReportByteLength = 65;
 
@@ -255,7 +255,7 @@ namespace USBHIDDRIVER.USB
                     {
 
                         // Set the size of the Output report buffer.
-                       // byte[] OutputReportBuffer = new byte[myUSB.myHIDP_CAPS.OutputReportByteLength - 1 + 1];
+                        // byte[] OutputReportBuffer = new byte[myUSB.myHIDP_CAPS.OutputReportByteLength - 1 + 1];
                         byte[] OutputReportBuffer = new byte[outputReportByteLength - 1 + 1];
                         // Store the report ID in the first byte of the buffer:
                         OutputReportBuffer[0] = 0;
@@ -283,7 +283,7 @@ namespace USBHIDDRIVER.USB
                     success = false;
                 }
             }
-            else 
+            else
             {
                 success = false;
             }
@@ -305,35 +305,39 @@ namespace USBHIDDRIVER.USB
             int receivedNull = 0;
             while (true)
             {
-                int myPtrToPreparsedData = -1;
-
-                if (myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData) != 0)
+                try
                 {
-                    int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
-                    int reportLength = myUSB.myHIDP_CAPS.InputReportByteLength;
+                    int myPtrToPreparsedData = -1;
 
-                    while (true)
-                    {//read until thread is stopped
-                        byte[] myRead = myUSB.CT_ReadFile(myUSB.myHIDP_CAPS.InputReportByteLength);
-                        if (myRead != null)
-                        {
-                            byteCount += myRead.Length;
-                            //lock (USBHIDDRIVER.USBInterface.usbBuffer.SyncRoot)
-                                USBHIDDRIVER.USBInterface.usbBuffer.Add(myRead);
-                        }
-                        else
-                        {
-                            //Recieved a lot of null bytes!
-                            //mybe device disconnected?
-                            if (receivedNull > 100)
+                    if (myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData) != 0)
+                    {
+                        int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
+                        int reportLength = myUSB.myHIDP_CAPS.InputReportByteLength;
+
+                        while (true)
+                        {//read until thread is stopped
+                            byte[] myRead = myUSB.CT_ReadFile(myUSB.myHIDP_CAPS.InputReportByteLength);
+                            if (myRead != null)
                             {
-                                receivedNull = 0;
-                                Thread.Sleep(1);
+                                byteCount += myRead.Length;
+                                //lock (USBHIDDRIVER.USBInterface.usbBuffer.SyncRoot)
+                                USBHIDDRIVER.USBInterface.usbBuffer.Add(myRead);
                             }
-                            receivedNull++;
+                            else
+                            {
+                                //Recieved a lot of null bytes!
+                                //mybe device disconnected?
+                                if (receivedNull > 100)
+                                {
+                                    receivedNull = 0;
+                                    Thread.Sleep(1);
+                                }
+                                receivedNull++;
+                            }
                         }
                     }
                 }
+                catch { }
             }
         }
         //---#+************************************************************************
@@ -360,7 +364,7 @@ namespace USBHIDDRIVER.USB
                 //Stop the Thread
                 dataReadingThread.Abort();
             }
-            else 
+            else
             {
                 //create Read Thread
                 dataReadingThread = new Thread(new ThreadStart(readDataThread)) { Priority = ThreadPriority.Highest, IsBackground = true }; ;
@@ -368,7 +372,7 @@ namespace USBHIDDRIVER.USB
                 dataReadingThread.Start();
                 Thread.Sleep(0);
             }
-            
+
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -489,7 +493,7 @@ namespace USBHIDDRIVER.USB
         /// Gets the state of the connection.
         /// </summary>
         /// <returns>true = connected; false = diconnected</returns>
-        public bool getConnectionState() 
+        public bool getConnectionState()
         {
             return this.connectionState;
         }
@@ -524,7 +528,7 @@ namespace USBHIDDRIVER.USB
             int requiredSize = 0;
             int numberOfDevices = 0;
             //search the device until you have found it or no more devices in list
-            
+
             while (result != 0)
             {
                 //open the device
@@ -594,7 +598,7 @@ namespace USBHIDDRIVER.USB
                 }
                 catch (Exception ex)
                 {
-                    
+
                 }
 
                 return Success;
@@ -602,7 +606,7 @@ namespace USBHIDDRIVER.USB
         }
 
 
-       
+
         internal class OutputReport : HostReport
         {
 
@@ -686,6 +690,6 @@ namespace USBHIDDRIVER.USB
 
         #endregion
 
-      
+
     }
 }

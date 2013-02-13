@@ -34,7 +34,7 @@ namespace osu_Tencho
         {
             if (!LoggingEnabled)
                 return;
-            
+
             Console.WriteLine(str);
         }
 
@@ -42,67 +42,64 @@ namespace osu_Tencho
         {
             if (!LoggingEnabled)
                 return;
-            
+
             Console.WriteLine(format, parms);
         }
 
         internal static void Monitor()
         {
-/*            MainThread = new Thread(Run);
-            MainThread.IsBackground = true;
-            MainThread.Start();*/
         }
 
         internal static void SetStatus(string status)
         {
             if (!LoggingEnabled)
                 return;
-            
+
             Console.WriteLine(status);
             statusText = status;
             requiredUpdate = true;
         }
 
-/*        private static void Run()
-        {
-            while (true)
-            {
-                if (requiredUpdate)
+        /*        private static void Run()
                 {
-                    Console.CursorLeft = 0;
-                    Console.CursorTop = 0;
-
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.Gray;
-
-                    int j = Math.Max(0, consoleText.Count - height);
-                    for (int i = 0; i < height - 2; i++)
+                    while (true)
                     {
-                        if (j < consoleText.Count)
-                            WriteToConsole(consoleText[j++], i);
-                        else
-                            WriteToConsole("", i);
-                    }
+                        if (requiredUpdate)
+                        {
+                            Console.CursorLeft = 0;
+                            Console.CursorTop = 0;
 
-                    Console.BackgroundColor = ConsoleColor.DarkBlue;
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    WriteToConsole(statusText,height - 2);
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.Gray;
 
-                    Console.BackgroundColor = ConsoleColor.Black;
-                    Console.ForegroundColor = ConsoleColor.White;
+                            int j = Math.Max(0, consoleText.Count - height);
+                            for (int i = 0; i < height - 2; i++)
+                            {
+                                if (j < consoleText.Count)
+                                    WriteToConsole(consoleText[j++], i);
+                                else
+                                    WriteToConsole("", i);
+                            }
 
-                    WriteToConsole("", height-1);
-                    requiredUpdate = false;
-                }
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            WriteToConsole(statusText,height - 2);
+
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.White;
+
+                            WriteToConsole("", height-1);
+                            requiredUpdate = false;
+                        }
                     
-                Thread.Sleep(250);
-            }
-        }
+                        Thread.Sleep(250);
+                    }
+                }
 
-        private static void WriteToConsole(string s, int line)
-        {
-            Console.SetCursorPosition(0, line);
-            Console.Write(s.PadRight(line == height ? width - 1 : width));
-        }*/
+                private static void WriteToConsole(string s, int line)
+                {
+                    Console.SetCursorPosition(0, line);
+                    Console.Write(s.PadRight(line == height ? width - 1 : width));
+                }*/
     }
 }
