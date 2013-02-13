@@ -171,7 +171,7 @@ namespace osum.GameModes.SongSelect
 
         void OnBackgroundOnClick(object sender, EventArgs e)
         {
-            tp = InputManager.TrackingPoints.Find(t => t.HoveringObject == this);
+            tp = InputManager.TrackingPoints.Find(t => t != null && t.HoveringObject == this);
             if (tp != null)
             {
                 downPoint = tp.BasePosition;

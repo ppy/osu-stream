@@ -45,7 +45,8 @@ namespace osum.GameplayElements
                             BeatmapInfo = reader.ReadBList<BeatmapInfo>();
                     }
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
 #if DEBUG
                     Console.WriteLine("Error while reading database! " + e);
 #endif
@@ -174,9 +175,10 @@ namespace osum.GameplayElements
     {
         public string Filename;
 
-        public Dictionary<Difficulty,DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty,DifficultyScoreInfo>();
+        public Dictionary<Difficulty, DifficultyScoreInfo> DifficultyScores = new Dictionary<Difficulty, DifficultyScoreInfo>();
 
-        public BeatmapInfo(string filename) : this()
+        public BeatmapInfo(string filename)
+            : this()
         {
             Filename = Path.GetFileName(filename);
         }
@@ -215,6 +217,8 @@ namespace osum.GameplayElements
 
         public Beatmap GetBeatmap()
         {
+            if (Filename == null) return null;
+
             string path = SongSelectMode.BeatmapPath + "/" + Filename;
             if (Filename.EndsWith(".osf2") && !File.Exists(path))
                 path = "Beatmaps/" + Filename;

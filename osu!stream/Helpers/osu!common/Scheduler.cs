@@ -72,15 +72,19 @@ namespace osum.Helpers
 
         public void Add(VoidDelegate d, bool forceDelayed = false)
         {
-            if (!forceDelayed && Thread.CurrentThread.ManagedThreadId == mainThreadID)
+            try
             {
-                //We are on the main thread already - don't need to schedule.
-                d.Invoke();
-                return;
-            }
+                if (!forceDelayed && Thread.CurrentThread.ManagedThreadId == mainThreadID)
+                {
+                    //We are on the main thread already - don't need to schedule.
+                    d.Invoke();
+                    return;
+                }
 
-            lock (schedulerQueue)
-                schedulerQueue.Enqueue(d);
+                lock (schedulerQueue)
+                    schedulerQueue.Enqueue(d);
+            }
+            catch { }
         }
     }
 

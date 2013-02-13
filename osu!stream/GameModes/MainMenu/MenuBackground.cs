@@ -143,7 +143,6 @@ namespace osum.GameModes
             pink.Field = FieldTypes.StandardSnapCentre;
             pink.Origin = OriginTypes.Centre;
             pink.OnClick += Option_OnClick;
-            pink.OnClick += Option_OnClick;
             pink.OnHover += Option_OnHover;
             pink.OnHoverLost += Option_OnHoverLost;
             Add(pink);
@@ -249,7 +248,7 @@ namespace osum.GameModes
                 //Director.ChangeMode(OsuMode.Store);
                 return;
             }
-            else
+            else if (sender == pink)
             {
 #if ARCADE
                 if (Clock.Time > 20000)
