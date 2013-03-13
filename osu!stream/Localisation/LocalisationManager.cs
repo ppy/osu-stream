@@ -24,7 +24,7 @@ namespace osum.Resources
             initialised = true;
 
             readResources("en");
-            string regionalSetting = System.Threading.Thread.CurrentThread.CurrentUICulture.ToString();
+            string regionalSetting = "ja";// System.Threading.Thread.CurrentThread.CurrentUICulture.ToString();
 
             if (regionalSetting == "en") return;
 
