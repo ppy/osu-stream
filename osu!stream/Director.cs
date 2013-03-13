@@ -321,7 +321,7 @@ namespace osum
             return true;
         }
 
-        public static bool IsTransitioning { get { return ActiveTransition != null; } }
+        public static bool IsTransitioning { get { return ActiveTransition != null && GameBase.Instance != null; } }
     }
 }
 

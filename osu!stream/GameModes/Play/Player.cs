@@ -153,7 +153,7 @@ namespace osum.GameModes
 
                 if (HitObjectManager.ActiveStreamObjects == null)
                 {
-                    GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
+                    //GameBase.Scheduler.Add(delegate { GameBase.Notify("Could not load difficulty!\nIt has likely not been mapped yet."); }, 500);
                     Director.ChangeMode(OsuMode.SongSelect);
                     //error while loading.
                     return;
@@ -179,7 +179,7 @@ namespace osum.GameModes
             }
 
             resetScore();
-           
+
             if (Beatmap != null && GameBase.Instance != null)
             {
                 mapBackgroundImage = new pSpriteDynamic()
