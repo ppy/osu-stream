@@ -243,6 +243,8 @@ namespace osum.GameModes
                 Director.ChangeMode(OsuMode.SongSelect);
             }
             else if (sender == blue)
+                Director.ChangeMode(OsuMode.Store);
+            else
             {
                 Director.ChangeMode(OsuMode.Multiplay);
                 //Director.ChangeMode(OsuMode.Store);

@@ -20,15 +20,15 @@ namespace osum.GameplayElements
         {
             get
             {
-                float leniency = 1.4f;
+                float leniency = GameBase.IsHandheld ? 1.6f : 1.4f;
 
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Easy:
-                        leniency = 1.6f;
+                        leniency *= 1.15f;
                         break;
                     case Difficulty.Expert:
-                        leniency = 1.3f;
+                        leniency *= 0.92f;
                         break;
                 }
 

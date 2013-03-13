@@ -426,7 +426,11 @@ namespace StreamTester
         {
             if (listAvailableMaps.SelectedItem == null) return;
 
-            Filename = osusDir + "\\" + ((ListEntry)listAvailableMaps.SelectedItem).Path;
+            string path = ((ListEntry)listAvailableMaps.SelectedItem).Path;
+            if (path.Contains(":"))
+                Filename = path;
+            else
+                Filename = osusDir + "\\" + path;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

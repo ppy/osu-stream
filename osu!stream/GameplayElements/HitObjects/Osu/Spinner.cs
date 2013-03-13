@@ -274,7 +274,10 @@ namespace osum.GameplayElements
                     velocityCurrent = velocityFromInputPerMillisecond * (0.5f * Clock.ElapsedRatioToSixty) + velocityCurrent * (1 - 0.5 * Clock.ElapsedRatioToSixty);
 
                 if (Math.Abs(velocityCurrent) > 0.0001f)
-                    StartSound();
+                {
+                    if (sourceSpinning == null || !sourceSpinning.Playing)
+                        StartSound();
+                }
                 else
                     StopSound(false);
 
