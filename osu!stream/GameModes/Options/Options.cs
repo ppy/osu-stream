@@ -111,10 +111,10 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset - 15, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), 1 - (float)Math.Pow(1 - AudioEngine.Effect.Volume, 10), new Vector2(button_x_offset - 15, vPos),
                 delegate(float v)
                 {
-                    AudioEngine.Effect.Volume = v;
+                    AudioEngine.Effect.Volume = 1 - (float)Math.Pow(1 - v, 0.1);
                     if (Clock.ModeTime / 200 != lastEffectSound)
                     {
                         lastEffectSound = Clock.ModeTime / 200;
@@ -138,8 +138,8 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset - 15, vPos),
-                delegate(float v) { AudioEngine.Music.MaxVolume = v; });
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), 1 - (float)Math.Pow(1 - AudioEngine.Music.MaxVolume, 10), new Vector2(button_x_offset - 15, vPos),
+                delegate(float v) { AudioEngine.Music.MaxVolume = 1 - (float)Math.Pow(1 - v, 0.1); });
             smd.Add(soundEffectSlider);
 
             vPos += 60;
@@ -153,7 +153,10 @@ namespace osum.GameModes.Options
                     if (universalOffsetSlider != null) //will be null on first run.
                         universalOffsetSlider.Text.Text = Clock.USER_OFFSET.ToString() + "ms";
                 });
+
+#if !ARCADE
             smd.Add(universalOffsetSlider);
+#endif
 
             vPos += 40;
 
