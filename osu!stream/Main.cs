@@ -57,9 +57,9 @@ namespace osum
         {
             if (restartPending) return;
 
-            if (Director.CurrentOsuMode != OsuMode.Play && Director.CurrentOsuMode != OsuMode.Results && GameBase.Match != null)
+            if (Director.CurrentOsuMode != OsuMode.Play && Director.CurrentOsuMode != OsuMode.Results && GameBase.Match == null)
             {
-                GameBase.Scheduler.Add(restart, 2000);
+                GameBase.Scheduler.Add(delegate { Environment.Exit(-1); }, 2000);
                 return;
             }
 
