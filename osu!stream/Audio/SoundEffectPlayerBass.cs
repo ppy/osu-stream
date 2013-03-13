@@ -51,7 +51,7 @@ namespace osum
             if (!NativeAssetManager.Instance.FileExists(filename)) return -1;
 #endif
             byte[] bytes = NativeAssetManager.Instance.GetFileBytes(filename);
-            
+
             int address = Bass.BASS_SampleLoad(bytes, 0, bytes.Length, 32, BASSFlag.BASS_SAMPLE_OVER_POS);
 
             return address;
@@ -84,6 +84,8 @@ namespace osum
             get { return Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING; }
         }
 
+        float audioFrequency = -1;
+
         public override float Pitch
         {
             get
@@ -92,8 +94,7 @@ namespace osum
             }
             set
             {
-                float audioFrequency = 1;
-                Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref audioFrequency);
+                if (audioFrequency == -1) Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref audioFrequency);
                 Bass.BASS_ChannelSetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, audioFrequency * value);
 
                 base.Pitch = value;
@@ -125,6 +126,7 @@ namespace osum
             set
             {
                 base.Looping = value;
+
                 if (Looping)
                     Bass.BASS_ChannelFlags(sourceId, BASSFlag.BASS_SAMPLE_LOOP, BASSFlag.BASS_SAMPLE_LOOP);
                 else
