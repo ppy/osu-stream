@@ -143,9 +143,11 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
+#if !ARCADE
                 ShowGuideFingers = GameBase.Instance != null && (this is Tutorial || Autoplay || (GameBase.Config != null && GameBase.Config.GetValue<bool>("GuideFingers", false)));
                 if (ShowGuideFingers)
-                    GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
+#endif
+                GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
 
                 InitializeStream();
 
@@ -200,7 +202,7 @@ namespace osum.GameModes
                             availableHeight = 172;
                         }
 
-                        if (bytes == null) 
+                        if (bytes == null)
                             bytes = Beatmap.GetFileBytes("bg.jpg");
 
                         if (bytes != null) thumb = pTexture.FromBytes(bytes);
@@ -821,6 +823,8 @@ namespace osum.GameModes
                         AudioEngine.Music.DimmableVolume -= (float)(Clock.ElapsedMilliseconds) * 0.001f;
                 }
             }
+
+            if (!(this is Tutorial)) ShowGuideFingers = Autoplay || hitObjectManager.ActiveStream == GameplayElements.Difficulty.Easy;
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Update();
 
