@@ -60,7 +60,7 @@ namespace osum.GameModes
         private bool inputStolen;
 
         float lastIntOffset;
-        private float songSelectOffset;
+        private static float songSelectOffset;
 
         private float difficultySelectOffset;
 

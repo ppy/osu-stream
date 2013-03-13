@@ -243,8 +243,6 @@ namespace osum.GameModes
                 Director.ChangeMode(OsuMode.SongSelect);
             }
             else if (sender == blue)
-                Director.ChangeMode(OsuMode.Store);
-            else
             {
                 Director.ChangeMode(OsuMode.Multiplay);
                 //Director.ChangeMode(OsuMode.Store);
@@ -253,12 +251,14 @@ namespace osum.GameModes
             else if (sender == pink)
             {
 #if ARCADE
+#if LOCK
                 if (Clock.Time > 20000)
                 {
                     Notification notification = new Notification("Locked", "Options have been locked on this machine.", NotificationStyle.Okay, null);
                     GameBase.Notify(notification);
                     return;
                 }
+#endif
 #endif
                 Director.ChangeMode(OsuMode.Options);
             }
