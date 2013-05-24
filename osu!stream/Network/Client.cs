@@ -16,7 +16,7 @@ using osum.GameModes;
 
 namespace osum.Network
 {
-    partial class Client : GameComponent
+    partial class TenchoClient : GameComponent
     {
         private const int PING_TIMEOUT = 10000;
         private const int SEND_INTERVAL = 250;
@@ -193,6 +193,7 @@ namespace osum.Network
                 Reset();
 
                 IPEndPoint endpoint = new IPEndPoint(recvEndPoint.Address, 16384);
+                //IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse("192.168.2.3"), 16384);
 
                 client = ClientHelper.Connect(endpoint, 10000);
 

@@ -11,10 +11,11 @@ using osum.Helpers.osu_common.Tencho.Objects;
 using osum.Graphics;
 using System.Drawing;
 using osum.GameModes.Play;
+using osum.Helpers;
 
 namespace osum.Network
 {
-    partial class Client : GameComponent
+    partial class TenchoClient : GameComponent
     {
         TouchBurster burster = new TouchBurster(false, new Color4(102, 125, 205, 100));
 
@@ -48,6 +49,8 @@ namespace osum.Network
 
         List<PointF> lastFrameBursts = new List<PointF>();
 
+        int lastTouchBurst;
+
         public override void Update()
         {
             if (GameBase.Match != null)
@@ -61,26 +64,31 @@ namespace osum.Network
                     else
                         GameBase.ShowLoadingOverlayWithText("Waiting for other players...");
                 }
-                
+
                 overlayIcon.Text = GameBase.Match.State.ToString() + " (" + GameBase.Match.Players.Count + ")";
 
                 List<PointF> bursts = new List<PointF>();
 
-                foreach (bPlayerData d in GameBase.Match.Players)
-                    if (d.Username != GameBase.ClientId)
-                    {
-                        foreach (TrackingPoint p in d.Input)
+                if (Clock.Time - lastTouchBurst > 10)
+                {
+                    foreach (bPlayerData d in GameBase.Match.Players)
+                        if (d.Username != GameBase.ClientId)
                         {
-                            bursts.Add(p.Location);
+                            foreach (TrackingPoint p in d.Input)
+                            {
+                                bursts.Add(p.Location);
 
-                            if (p.WindowDelta == Vector2.Zero && !lastFrameBursts.Contains(p.Location))
-                                burster.InputManager_OnDown(null, p);
-                            else
-                                burster.InputManager_OnMove(null, p);
+                                if (p.WindowDelta == Vector2.Zero && !lastFrameBursts.Contains(p.Location))
+                                    burster.InputManager_OnDown(null, p);
+                                else
+                                    burster.InputManager_OnMove(null, p);
+                            }
                         }
-                    }
 
-                lastFrameBursts = bursts;
+                    lastTouchBurst = Clock.Time;
+                    lastFrameBursts = bursts;
+                }
+
             }
             else if (GameBase.Client.Connected)
                 overlayIcon.Text = "Connected";

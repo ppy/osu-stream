@@ -43,15 +43,17 @@ namespace osum
         }
 
         static bool restartPending;
+#if !iOS
         private static FileSystemWatcher fsw;
         static void fsw_Changed(object sender, FileSystemEventArgs e)
         {
             if (e.FullPath.Contains("stream.exe"))
             {
-                GameBase.Scheduler.Add(restart, 10000);
+                GameBase.Scheduler.Add(restart, 500);
                 fsw.EnableRaisingEvents = false;
             }
         }
+#endif
 
         private static void restart()
         {
@@ -59,7 +61,7 @@ namespace osum
 
             if (Director.CurrentOsuMode != OsuMode.Play && Director.CurrentOsuMode != OsuMode.Results && GameBase.Match == null)
             {
-                GameBase.Scheduler.Add(delegate { Environment.Exit(-1); }, 2000);
+                GameBase.Scheduler.Add(delegate { Environment.Exit(-1); }, 500);
                 return;
             }
 

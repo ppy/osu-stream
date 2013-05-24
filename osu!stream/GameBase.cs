@@ -18,6 +18,9 @@ using System.Threading;
 using osum.Resources;
 using System.Diagnostics;
 using osu_common.Libraries.NetLib;
+using System.Text.RegularExpressions;
+using osum.Network;
+using osu_common.Tencho.Requests;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -50,9 +53,6 @@ using MonoTouch.CoreGraphics;
 using MonoTouch.UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
-using System.Text.RegularExpressions;
-using osum.Network;
-using osu_common.Tencho.Requests;
 #endif
 
 
@@ -392,7 +392,7 @@ namespace osum
 
             Clock.Start();
 
-            Client = new Client();
+            Client = new TenchoClient();
             Client.Initialize();
             DrawableComponents.Add(Client);
         }
@@ -579,7 +579,7 @@ namespace osum
 
         public static bool Mapper = true;
         public static string ClientId = "osustream-" + Random.Next();
-        internal static Client Client;
+        internal static TenchoClient Client;
         internal static ClientMatch Match;
 
         public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }

@@ -170,7 +170,7 @@ namespace osum.GameModes
                 headphones.OnClick += delegate
                 {
                     GameBase.Mapper = true;
-                    pText t = new pText("ENABLED MAPPER MODE", 24, new Vector2(0,30), 1, false, Color4.Red)
+                    pText t = new pText("ENABLED MAPPER MODE", 24, new Vector2(0, 30), 1, false, Color4.Red)
                     {
                         Field = FieldTypes.StandardSnapTopCentre,
                         Origin = OriginTypes.Centre
@@ -257,7 +257,8 @@ namespace osum.GameModes
             }
             else
             {
-                usernameText.OnClick += delegate {
+                usernameText.OnClick += delegate
+                {
                     //todo: offer link options.
                     Options.Options.ScrollPosition = Int32.MinValue;
                     Director.ChangeMode(OsuMode.Options);
