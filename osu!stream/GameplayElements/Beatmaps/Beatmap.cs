@@ -250,9 +250,9 @@ namespace osum.GameplayElements.Beatmaps
 
         public int CompareTo(Beatmap other)
         {
-            int comp = this.DifficultyStars.CompareTo(other.DifficultyStars);
+            int comp = -this.DifficultyStars.CompareTo(other.DifficultyStars);
             if (comp == 0)
-                return this.ContainerFilename.CompareTo(other.ContainerFilename);
+                return this.Title.CompareTo(other.Title);
             return comp;
         }
 
