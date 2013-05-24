@@ -47,7 +47,7 @@ namespace osum.GameModes.Play
 
             GameBase.ShowLoadingOverlayWithText("Waiting for other players...");
 
-            startButton = new pButton("Start Game!", new Vector2(GameBase.BaseSize.X / 2, 300), new Vector2(280, 50), Color4.SkyBlue, delegate
+            startButton = new pButton("Start Game!", new Vector2(GameBase.BaseSize.X / 2, 350), new Vector2(320, 100), Color4.SkyBlue, delegate
             {
                 Director.ChangeMode(OsuMode.SongSelect);
             });
