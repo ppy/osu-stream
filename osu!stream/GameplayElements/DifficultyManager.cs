@@ -73,19 +73,22 @@ namespace osum.GameplayElements
         public static int SnakeEndLimit { get { return PreEmpt * 3 / 10; } }
 
         // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
-        public static double SnakeSpeedInverse { get
+        public static double SnakeSpeedInverse
         {
-            switch (Player.Difficulty)
+            get
             {
-                case Difficulty.Easy:
-                    return 3.2d;
-                default:
-                    return 2.8d;
-                case Difficulty.Expert:
-                    return 2.4d;
+                switch (Player.Difficulty)
+                {
+                    case Difficulty.Easy:
+                        return 3.2d;
+                    default:
+                        return 2.8d;
+                    case Difficulty.Expert:
+                        return 2.4d;
 
+                }
             }
-        } }
+        }
 
         const int HIT_EXPERT = 25;
         const int HIT_STREAM = 44;
@@ -131,7 +134,7 @@ namespace osum.GameplayElements
                         break;
                 }
 
-                return (window * 5)/2;
+                return (window * 5) / 2;
             }
         }
 
@@ -158,9 +161,9 @@ namespace osum.GameplayElements
                 switch (Player.Difficulty)
                 {
                     case Difficulty.Expert:
-                        return 1.3f;
+                        return 0.9f;
                     default:
-                        return 1;
+                        return 0.8f;
                 }
             }
         }
