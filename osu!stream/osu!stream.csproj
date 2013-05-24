@@ -254,6 +254,20 @@
     <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
+    <Compile Include="Network\Client.cs" />
+    <Compile Include="Network\ClientMatch.cs" />
+    <Compile Include="Network\Client_Overlay.cs" />
+    <Compile Include="Network\TimeoutSocket.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\SlimClient.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\bSerializable.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Objects\bBeatmap.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Objects\bInt.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Objects\bMatch.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Objects\bMessage.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Objects\bString.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Requests\Request.cs" />
+    <Compile Include="Helpers\osu!common\Bancho\Requests\RequestType.cs" />
+    <Compile Include="GameModes\Multi\Multiplay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -276,6 +290,9 @@
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
     <Folder Include="Beatmaps\" />
+    <Folder Include="Network\" />
+    <Folder Include="Helpers\osu!common\Bancho\" />
+    <Folder Include="GameModes\Multi\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
