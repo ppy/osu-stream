@@ -87,6 +87,7 @@ namespace osum.GameModes
         public override void Initialize()
         {
             spriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
+            topmostSpriteManager.CheckSpritesAreOnScreenBeforeRendering = true;
 
             GameBase.Config.SaveConfig();
 
@@ -264,8 +265,10 @@ namespace osum.GameModes
             panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
             panelDownloadMore.s_Text.Colour = Color4.White;
             panelDownloadMore.s_Text.Offset.Y += 16;
+#if iOS
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);
+#endif
         }
 
         private void recursiveBeatmaps(string subdir)
@@ -361,23 +364,31 @@ namespace osum.GameModes
 
             touchingBegun = true;
 
+            if (trackingPoint != InputManager.PrimaryTrackingPoint)
+                return;
+
+            if (changeTrackingPoint != InputManager.PrimaryTrackingPoint)
+            {
+                changeTrackingPoint = InputManager.PrimaryTrackingPoint;
+                return;
+            }
+
+            if (Math.Abs(changeTrackingPoint.WindowDelta.Y) > 40)
+                return;
+
             switch (State)
             {
                 case SelectState.SongSelect:
                     {
-                        if (changeTrackingPoint != InputManager.PrimaryTrackingPoint)
-                        {
-                            changeTrackingPoint = InputManager.PrimaryTrackingPoint;
-                            break;
-                        }
-
                         float change = changeTrackingPoint.WindowDelta.Y * 1.2f;
                         float bound = offsetBound;
 
                         if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
                             change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
+
                         songSelectOffset = songSelectOffset + change;
-                        velocity = change > velocity ? change * 1.3f : change;
+
+                        velocity = Math.Abs(change) > Math.Abs(velocity) ? change * 3.5f : (change * 0.1f + velocity * 0.9f);
                     }
                     break;
                 case SelectState.DifficultySelect:
@@ -554,7 +565,7 @@ namespace osum.GameModes
                         {
                             if (isBound && wasBound)
                             {
-                                AudioEngine.PlaySample(OsuSamples.MenuClick);
+                                AudioEngine.PlaySample(OsuSamples.MenuClick, SampleSet.None, Math.Max(0.2f, Math.Abs(velocity) / 20));
                                 background.FlashColour(new Color4(140, 140, 140, 255), 400);
                             }
 
@@ -564,17 +575,24 @@ namespace osum.GameModes
                         if (SelectedPanelHoverGlow != null)
                             AudioEngine.Music.DimmableVolume = 1 - SelectedPanelHoverGlow.Alpha;
 
-                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0.1f + songSelectOffset * 0.9f);
+                        Vector2 pos = new Vector2(0, 60 + (newIntOffset * panelHeightPadded) * 0f + songSelectOffset * 1f);
 
                         foreach (BeatmapPanel p in panels)
                         {
                             if (p.NewSection)
                                 pos.Y += 20;
 
-#if !ARCADE
-                            if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
-#endif
-                            p.MoveTo(pos, touchingBegun ? 50 : 300);
+                            //#if !ARCADE
+                            //                            if (Math.Abs(p.s_BackingPlate.Position.Y - pos.Y) > 1 || Math.Abs(p.s_BackingPlate.Position.X - pos.X) > 1)
+                            //#endif
+
+                            float progress = touchingBegun ? 0.9f : 0.1f;
+                            float posProgress = pMathHelper.Lerp(1, 0, (1 - progress) * (1 - progress));
+
+                            Vector2 thisNewPos = p.Sprites[0].Position + posProgress * (pos - p.Sprites[0].Position);
+                            p.Sprites.ForEach(s => s.Position = thisNewPos);
+
+                            //p.MoveTo(pos, touchingBegun ? 50 : 300);
                             //todo: change this to use a draggable spritemanager instead. better performance and will move smoother on lower fps.
                             pos.Y += 63;
                         }
