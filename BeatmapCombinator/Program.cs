@@ -488,6 +488,9 @@ namespace osum
             else
                 osz2Filename = baseFileWithLocation + (usem4a && !DistBuild ? ".m4a.osz2" : ".osz2");
 
+            osz2Filename = osz2Filename.Replace("*", "");
+            oscFilename = oscFilename.Replace("*", "");
+
             File.Delete(osz2Filename);
 
             string audioFilename = null;
@@ -589,6 +592,9 @@ namespace osum
                 //write headers first (use first difficulty as arbitrary source)
                 foreach (string l in headerContent)
                 {
+                    if (!IsStreamMap && l.StartsWith("Bookmarks:"))
+                        continue;
+
                     if (isPreview)
                     {
                         if (l.StartsWith("Bookmarks:") && osz2Filename.Contains("_preview") && IsStreamMap)
