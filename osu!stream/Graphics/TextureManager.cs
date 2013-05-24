@@ -573,6 +573,7 @@ namespace osum.Graphics.Skins
         difficulty_bar_colour,
         new_notify,
         pausebutton,
-        songselect_thumb_restore
+        songselect_thumb_restore,
+        fingerreal
     }
 }

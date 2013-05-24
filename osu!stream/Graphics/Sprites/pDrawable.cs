@@ -69,6 +69,8 @@ namespace osum.Graphics.Sprites
 
             switch (Origin)
             {
+                case OriginTypes.Custom:
+                    break;
                 default:
                 case OriginTypes.TopLeft:
                     OriginVector = Vector2.Zero;

@@ -32,15 +32,19 @@ namespace osum.GameModes.Play.Components
         internal pSprite rightFinger2;
         public override void Initialize()
         {
-            leftFinger = new pSprite(TextureManager.Load(OsuTexture.finger_inner), new Vector2(-100, 200))
+            leftFinger = new pSprite(TextureManager.Load(OsuTexture.fingerreal), new Vector2(-100, 200))
             {
                 Field = FieldTypes.GamefieldSprites,
-                Origin = OriginTypes.Centre,
+                Origin = OriginTypes.TopRight,
                 ExactCoordinates = false,
                 Colour = ColourHelper.Lighten2(Color4.LimeGreen, 0.5f),
-                Alpha = 0.3f,
+                Alpha = 1f,
                 Additive = true
             };
+
+            leftFinger.UpdateOriginVector();
+            leftFinger.Offset = leftFinger.OriginVector + new Vector2(-25, 0);
+            leftFinger.Origin = OriginTypes.Custom;
 
             leftFinger2 = new pSprite(TextureManager.Load(OsuTexture.finger_outer), Vector2.Zero)
             {
@@ -48,19 +52,25 @@ namespace osum.GameModes.Play.Components
                 Origin = OriginTypes.Centre,
                 Colour = Color4.LimeGreen,
                 ExactCoordinates = false,
-                Alpha = 0.3f,
+                Alpha = 0f,
+                Bypass = true,
                 Additive = false
             };
 
-            rightFinger = new pSprite(TextureManager.Load(OsuTexture.finger_inner), new Vector2(612, 200))
+            rightFinger = new pSprite(TextureManager.Load(OsuTexture.fingerreal), new Vector2(612, 200))
             {
                 Field = FieldTypes.GamefieldSprites,
-                Origin = OriginTypes.Centre,
+                Origin = OriginTypes.TopLeft,
+                Flip = true,
                 Colour = ColourHelper.Lighten2(Color4.Red, 0.5f),
                 ExactCoordinates = false,
-                Alpha = 0.3f,
+                Alpha = 1f,
                 Additive = true
             };
+
+            rightFinger.UpdateOriginVector();
+            rightFinger.Offset = rightFinger.OriginVector + new Vector2(25, 0);
+            rightFinger.Origin = OriginTypes.Custom;
 
             rightFinger2 = new pSprite(TextureManager.Load(OsuTexture.finger_outer), Vector2.Zero)
             {
@@ -69,6 +79,7 @@ namespace osum.GameModes.Play.Components
                 Colour = Color4.Red,
                 ExactCoordinates = false,
                 Alpha = 0.3f,
+                Bypass = true,
                 Additive = false
             };
 
@@ -94,7 +105,7 @@ namespace osum.GameModes.Play.Components
         Vector2 spinningPositionFor(int time)
         {
             float angle = (float)time / 30;
-            return Spinner.SpinnerCentre + new Vector2((float)Math.Cos(angle) * 50, (float)Math.Sin(angle) * 50);
+            return Spinner.SpinnerCentre + new Vector2((float)Math.Cos(angle) * 50, (float)Math.Sin(angle) * 50 - 40);
         }
 
         public override void Update()
@@ -127,7 +138,7 @@ namespace osum.GameModes.Play.Components
                             finger.Position = obj is Spinner ? spinningPositionFor(obj.ClockingNow) : obj.TrackingPosition;
 
                             if (Player.Autoplay && TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
-                                TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
+                                TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position), 40, 0.5f, 1);
                         }
                         else if (obj.IsVisible)
                         {
@@ -155,7 +166,7 @@ namespace osum.GameModes.Play.Components
                                 }
 
                                 if (Player.Autoplay && TouchBurster != null && AudioEngine.Music != null && AudioEngine.Music.IsElapsing)
-                                    TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position + finger.Offset), 40, 0.5f, 1);
+                                    TouchBurster.Burst(GameBase.GamefieldToStandard(finger.Position), 40, 0.5f, 1);
                             }
                         }
                     }
@@ -171,6 +182,9 @@ namespace osum.GameModes.Play.Components
                     }
                 }
             }
+
+            leftFinger.Rotation = leftFinger.Position.X / GameBase.BaseSize.X * 0.3f + leftFinger.Position.Y / GameBase.BaseSize.Y * 0.5f;
+            rightFinger.Rotation = -(GameBase.BaseSize.X - rightFinger.Position.X) / GameBase.BaseSize.X * 0.3f - rightFinger.Position.Y / GameBase.BaseSize.Y * 0.5f;
 
             leftFinger.Update();
             rightFinger.Update();

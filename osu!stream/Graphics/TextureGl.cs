@@ -157,7 +157,7 @@ namespace osum.Graphics
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
             IsDisposed = true;
-            
+
             Delete();
         }
 
@@ -232,7 +232,7 @@ namespace osum.Graphics
         }
 
         public unsafe void DrawTo(float* coordinates, float* vertices, int startIndex, Vector2 currentPos, Vector2 origin, Vector2 scaleVector, float rotation,
-                                    Box2 drawRect) 
+                                    Box2 drawRect)
         {
             float left = drawRect.Left / potWidth;
             float right = drawRect.Right / potWidth;
@@ -308,14 +308,14 @@ namespace osum.Graphics
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
-                         Box2 drawRect)
+                         Box2 drawRect, bool flip = false)
         {
             if (Id < 0) return;
 
             SpriteManager.SetColour(drawColour);
 
-            float left = drawRect.Left / potWidth;
-            float right = drawRect.Right / potWidth;
+            float left = (flip ? drawRect.Right : drawRect.Left) / potWidth;
+            float right = (flip ? drawRect.Left : drawRect.Right) / potWidth;
             float top = drawRect.Top / potHeight;
             float bottom = drawRect.Bottom / potHeight;
 
@@ -387,7 +387,7 @@ namespace osum.Graphics
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
-            
+
         }
 
         public void SetData(int textureId)
