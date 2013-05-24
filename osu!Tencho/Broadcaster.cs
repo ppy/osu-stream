@@ -31,14 +31,16 @@ namespace osu_Tencho
             {
                 IPHostEntry iphostentry = Dns.GetHostEntry(Dns.GetHostName());
 
+
+
                 foreach (IPAddress addr in iphostentry.AddressList)
                 {
                     try
                     {
                         string bc = addr.ToString();
                         bc = bc.Remove(bc.LastIndexOf('.') + 1) + "255";
-                        
-                        IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Parse(bc), Tencho.PortTencho);
+
+                        IPEndPoint sendEndPoint = new IPEndPoint(IPAddress.Broadcast, Tencho.PortTencho);
                         client.Send(data, data.Length, sendEndPoint);
                     }
                     catch { }

@@ -396,7 +396,7 @@ namespace osu_Tencho
                 WorkerClientsPerSecond = Config.GetValue("WorkerClientsPerSecond", 20000);
                 ReportClientCounts = Config.GetValue("ReportConnectionCounts", true);
                 Bacon.LoggingEnabled = Config.GetValue("Logging", true);
-                WebsiteDomain = Config.GetValue("WebsiteDomain","http://osu.ppy.sh");
+                WebsiteDomain = Config.GetValue("WebsiteDomain", "http://osu.ppy.sh");
 
 
                 Config.SaveConfig();
