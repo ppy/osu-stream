@@ -162,10 +162,12 @@ namespace osum.GameplayElements.HitObjects.Osu
                 base.playRebound(lastJudgedEndpoint);
             else
             {
+#if !iOS
                 if (LightingManager.Instance != null)
-                    LightingManager.Instance.Add(new Color4(169,38,251,100), 10);
+                    LightingManager.Instance.Add(new Color4(169, 38, 251, 100), 10);
+#endif
                 SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
-                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,ss);
+                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType, ss);
             }
         }
 
@@ -222,6 +224,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             inactiveOverlay.FadeOut(160);
             circularProgress.FadeIn(160);
             circularProgress.AlwaysDraw = true;
+#if !iOS
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.Add(new Color4(169, 38, 251, 100), 10);
+#endif
         }
 
         protected override void endTracking()

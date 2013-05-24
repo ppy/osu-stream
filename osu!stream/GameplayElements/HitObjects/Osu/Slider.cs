@@ -868,15 +868,19 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         protected virtual void playTick()
         {
+#if !iOS
             if (LightingManager.Instance != null)
-                LightingManager.Instance.Add(new Color4(50, 50, 50, 100), 5);
+                LightingManager.Instance.Add(new Color4(50, 50, 50, 100), isReversing ? -5 : 5);
+#endif
             AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
         }
 
         protected virtual void playRebound(int lastJudgedEndpoint)
         {
+#if !iOS
             if (LightingManager.Instance != null)
-                    LightingManager.Instance.Add(new Color4(50,50,50,100), 5);
+                LightingManager.Instance.Add(new Color4(80, 80, 80, 100), isReversing ? -5 : 5);
+#endif
             PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
                       SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
         }
@@ -919,6 +923,11 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             source = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SliderSlide, s.SampleSet.SampleSet), s.SampleSet.Volume * 0.8f, true, true);
 
             if (source == null) return;
+
+#if !iOS
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.Add(new Color4(50, 50, 50, 100), 5);
+#endif
 
             source.TagNumeric++;
             source.Play();

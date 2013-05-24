@@ -271,8 +271,10 @@ namespace osum.GameplayElements
 
             usableSpriteManager.Add(p);
 
+#if !iOS
             if (LightingManager.Instance != null)
-                LightingManager.Instance.Add(colour, 3);
+                LightingManager.Instance.Add(TextureManager.LightingColours[ColourIndex], 3);
+#endif
 
             const int HitFadeIn = 120;
             const int HitFadeOutDuration = 400;

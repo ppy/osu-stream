@@ -26,11 +26,24 @@ namespace osum
             B = (byte)Math.Round(colour.B * 255);
         }
 
-        internal void AddColor4(Color4 colour)
+        internal void AddColor4(Color4 colour, bool cap = true)
         {
-            R = (byte)Math.Min(255, R + (byte)Math.Round(colour.R * 255));
-            G = (byte)Math.Min(255, G + (byte)Math.Round(colour.G * 255));
-            B = (byte)Math.Min(255, B + (byte)Math.Round(colour.B * 255));
+            if (cap)
+            {
+                byte newR = (byte)Math.Round(colour.R * 255);
+                byte newG = (byte)Math.Round(colour.G * 255);
+                byte newB = (byte)Math.Round(colour.B * 255);
+
+                if (newR > R) R = (byte)Math.Min(255, R + (byte)Math.Round(colour.R * 255));
+                if (newG > G) G = (byte)Math.Min(255, G + (byte)Math.Round(colour.G * 255));
+                if (newB > B) B = (byte)Math.Min(255, B + (byte)Math.Round(colour.B * 255));
+            }
+            else
+            {
+                R = (byte)Math.Min(255, R + (byte)Math.Round(colour.R * 255));
+                G = (byte)Math.Min(255, G + (byte)Math.Round(colour.G * 255));
+                B = (byte)Math.Min(255, B + (byte)Math.Round(colour.B * 255));
+            }
         }
     }
 
@@ -40,7 +53,7 @@ namespace osum
 
         int led_count = 160;
         const float intensity = 1;
-        const float diminish = 0.99f;
+        const float diminish = 0.96f;
 
         internal static LightingManager Instance;
 
@@ -100,12 +113,14 @@ namespace osum
 
         int currentLight = 0;
 
+        internal bool UseVolume = true;
+
         public override void Update()
         {
             if (port == null || !port.IsOpen)
                 return;
 
-            float power = AudioEngine.Music.CurrentPower;
+            float power = UseVolume ? AudioEngine.Music.CurrentPower : 0;
 
             //byte colour = (byte)Math.Max(1,((power - 0.5) * 2) * (255*intensity));
             byte colour = (byte)Math.Max(1, (power - 0.3f) / 0.7f * (255 * intensity));
@@ -154,13 +169,13 @@ namespace osum
             int i = 0;
             foreach (LightingColour c in colours)
             {
-                //if (c.R > 1) c.R = (byte)(c.R * diminish);
-                //if (c.G > 1) c.G = (byte)(c.G * diminish);
-                //if (c.B > 1) c.B = (byte)(c.B * diminish);
+                if (c.R > 1) c.R = (byte)(c.R * diminish);
+                if (c.G > 1) c.G = (byte)(c.G * diminish);
+                if (c.B > 1) c.B = (byte)(c.B * diminish);
 
-                c.R = (byte)(c.R * diminish);
-                c.G = (byte)(c.G * diminish);
-                c.B = (byte)(c.B * diminish);
+                //c.R = (byte)(c.R * diminish);
+                //c.G = (byte)(c.G * diminish);
+                //c.B = (byte)(c.B * diminish);
 
 
                 buffer[i * 3] = c.B;
@@ -187,6 +202,9 @@ namespace osum
         {
             if (colours == null) return;
 
+            bool reverse = spacingInterval < 0;
+            if (reverse) spacingInterval = Math.Abs(spacingInterval);
+
             int i = spacingCurrent;
             foreach (LightingColour c in colours)
             {
@@ -195,7 +213,7 @@ namespace osum
                 i = (i + 1) % colours.Length;
             }
 
-            spacingCurrent = (spacingCurrent + colours.Length - 1) % colours.Length;
+            spacingCurrent = (spacingCurrent + colours.Length - (reverse ? -1 : 1)) % colours.Length;
         }
     }
 }

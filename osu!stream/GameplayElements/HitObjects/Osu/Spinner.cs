@@ -288,11 +288,13 @@ namespace osum.GameplayElements
 
                 spriteCircle.Rotation += (float)delta;
 
+#if !iOS
                 if (LightingManager.Instance != null && Math.Abs(spriteCircle.Rotation) > nextFlash)
                 {
-                    LightingManager.Instance.Add(new Color4(30, 30, 30, 100), 10);
-                    nextFlash = Math.Abs(spriteCircle.Rotation) + 0.4f;
+                    LightingManager.Instance.Add(new Color4(60, 60, 60, 100), delta > 0 ? 12 : -12);
+                    nextFlash = Math.Abs(spriteCircle.Rotation) + 0.3f;
                 }
+#endif
 
                 currentRotationCount += Math.Abs(delta) * sensitivity_modifier / (MathHelper.Pi * 2);
             }

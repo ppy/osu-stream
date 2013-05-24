@@ -72,14 +72,23 @@ namespace osum.GameModes.Play.Components
                     break;
                 case 1:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_1);
+#if !iOS
+                    if (LightingManager.Instance != null) LightingManager.Instance.Blind(new Color4(0, 30, 40, 255));
+#endif
                     AudioEngine.PlaySample(OsuSamples.count1);
                     break;
                 case 2:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_2);
+#if !iOS
+                    if (LightingManager.Instance != null) LightingManager.Instance.Blind(new Color4(0, 20, 20, 255));
+#endif
                     AudioEngine.PlaySample(OsuSamples.count2);
                     break;
                 case 3:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_3);
+#if !iOS
+                    if (LightingManager.Instance != null) LightingManager.Instance.Blind(new Color4(0, 10, 10, 255));
+#endif
                     AudioEngine.PlaySample(OsuSamples.count3);
                     break;
                 case 4:
@@ -88,6 +97,9 @@ namespace osum.GameModes.Play.Components
                 case 7:
                     text.Texture = TextureManager.Load(OsuTexture.countdown_ready);
                     if (spriteManager.Alpha == 0) spriteManager.FadeIn(200);
+#if !iOS
+                    if (LightingManager.Instance != null && countdown == 7) LightingManager.Instance.Blind(new Color4(0, 20, 20, 255));
+#endif
                     didChangeTexture = countdown == 7;
                     break;
                 default:
@@ -118,7 +130,7 @@ namespace osum.GameModes.Play.Components
         public bool HasFinished = true;
         public override void Update()
         {
-            if (StartTime < 0 || (Clock.AudioTime > StartTime && lastCountdownUpdate < 0)) return;
+            if (StartTime < 0 || (Clock.AudioTime + BeatLength * 8 > StartTime && lastCountdownUpdate < 0)) return;
 
             if (!HasFinished)
             {

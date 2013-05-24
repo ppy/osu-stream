@@ -120,6 +120,11 @@ namespace osum.GameModes
         {
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = true;
 
+#if !iOS
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.UseVolume = false;
+#endif
+
 #if SCORE_TESTING
             File.WriteAllText(scoreTestFilename, "");
 #endif
@@ -405,6 +410,12 @@ namespace osum.GameModes
 #if !DIST && !MONO
             Console.WriteLine("Player.cs produced " + frameCount + " frames.");
 #endif
+
+#if !iOS
+            if (LightingManager.Instance != null)
+                LightingManager.Instance.UseVolume = true;
+#endif
+
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
             if (Beatmap != null)
@@ -734,13 +745,13 @@ namespace osum.GameModes
             if (positive)
             {
                 TransformationF t = mapBackgroundImage.Transformations[1] as TransformationF;
-                t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 0.4f * effect_limit);
+                t.StartFloat = Math.Min(t.CurrentFloat + 0.05f * effect_magnitude, 1);
                 t.StartTime = mapBackgroundImage.ClockingNow;
                 t.EndTime = t.StartTime + 600;
                 t.EndFloat = min;
 
                 TransformationF t2 = mapBackgroundImage.Transformations[0] as TransformationF;
-                t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f * effect_limit);
+                t2.StartFloat = Math.Min(t2.CurrentFloat + 0.012f * effect_magnitude, t2.EndFloat + 0.3f);
                 t2.StartTime = mapBackgroundImage.ClockingNow;
                 t2.EndTime = t.StartTime + 600;
             }
