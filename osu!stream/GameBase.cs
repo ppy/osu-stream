@@ -124,11 +124,6 @@ namespace osum
         OsuMode startupMode;
         public GameBase(OsuMode mode = OsuMode.Unknown)
         {
-#if !DIST
-            if (DateTime.Now > new DateTime(2013, 06, 30))
-                Environment.Exit(-1);
-#endif
-
             startupMode = mode;
             Instance = this;
 
@@ -369,12 +364,12 @@ namespace osum
             Director.ChangeMode(OsuMode.Results, null);
 #else
             //Load the main menu initially.
-            #if MONO && DEBUG
+#if MONO && DEBUG
             if (Director.PendingOsuMode == OsuMode.Unknown)
                 Director.ChangeMode(startupMode != OsuMode.Unknown ? startupMode : OsuMode.MainMenu, null);
-            #else
+#else
             Director.ChangeMode(OsuMode.MainMenu, null);
-            #endif
+#endif
 #endif
 
             Clock.Start();
