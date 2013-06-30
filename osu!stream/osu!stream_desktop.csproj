@@ -241,7 +241,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Bass.Net">
-      <HintPath>.\Bass.Net.dll</HintPath>
+      <HintPath>Bass.Net.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Data" />

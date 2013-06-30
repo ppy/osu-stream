@@ -54,6 +54,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleasePreview|x86'">
     <OutputPath>bin\x86\ReleasePreview\</OutputPath>
@@ -71,6 +73,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -91,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\osu!stream\osu!stream_desktop.csproj">
-      <Project>{2698af2e-f64b-4d61-99f3-52ef2d215f2f}</Project>
+      <Project>{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}</Project>
       <Name>osu!stream_desktop</Name>
     </ProjectReference>
   </ItemGroup>

@@ -34,11 +34,17 @@ namespace osum
         
         override public void Run()
         {
+            try {
             timeBeginPeriod(1);
+            }
+            catch {}
             Window = new GameWindowDesktop();
             Window.Run();
             Director.CurrentMode.Dispose();
+            try {
             timeEndPeriod(1);
+            }
+            catch {}
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()
