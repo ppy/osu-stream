@@ -13,10 +13,8 @@
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osutest</string>
-	<key>CFBundleVersion</key>
-	<string>20130219</string>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>5.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -45,5 +43,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>20130902</string>
 </dict>
 </plist>
