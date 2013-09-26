@@ -69,12 +69,17 @@ namespace osum
             {
                 if (args.Length > 0)
                 {
-                    DistBuild = true;
-                    Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().GetName().CodeBase.Replace("file:///", ""));
-                    //Process(args[0], true, true, true, true);
-                    //Process(args[0], false, true, false, false);
+                    List<string> directories = new List<string>(Directory.GetDirectories(args[0]));
+                    if (directories.Count == 0)
+                        directories.Add(args[0]);
 
-                    Process(args[0], false, true, false, false);
+                    DistBuild = true;
+
+                    foreach (string d in directories)
+                    {
+                        Process(d, true, true, true, true);
+                        Process(d, false, true, false, false);
+                    }
                 }
                 else
                 {
