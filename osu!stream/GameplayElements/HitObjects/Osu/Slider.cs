@@ -404,27 +404,11 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     if ((B.X - A.X) * (C.Y - A.Y) - (C.X - A.X) * (B.Y - A.Y) == 0.0f)
                         goto case CurveTypes.Linear;
 
-                    // Circle through 3 points
-                    // http://en.wikipedia.org/wiki/Circumscribed_circle#Cartesian_coordinates
-                    float D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
-                    float AMagSq = A.LengthSquared;
-                    float BMagSq = B.LengthSquared;
-                    float CMagSq = C.LengthSquared;
-                    Vector2 centre = new Vector2(
-                        (AMagSq * (B.Y - C.Y) + BMagSq * (C.Y - A.Y) + CMagSq * (A.Y - B.Y)) / D,
-                        (AMagSq * (C.X - B.X) + BMagSq * (A.X - C.X) + CMagSq * (B.X - A.X)) / D);
-                    float radius = pMathHelper.Distance(centre, A);
+                    Vector2 centre;
+                    float radius;
+                    double t_initial, t_final;
 
-                    double t_initial = Math.Atan2(A.Y - centre.Y, A.X - centre.X);
-                    double t_mid = Math.Atan2(B.Y - centre.Y, B.X - centre.X);
-                    double t_final = Math.Atan2(C.Y - centre.Y, C.X - centre.X);
-
-                    while (t_mid < t_initial) t_mid += 2 * Math.PI;
-                    while (t_final < t_initial) t_final += 2 * Math.PI;
-                    if (t_mid > t_final)
-                    {
-                        t_final -= 2 * Math.PI;
-                    }
+                    pMathHelper.CircleThroughPoints(A, B, C, out centre, out radius, out t_initial, out t_final);
 
                     double curveLength = Math.Abs((t_final - t_initial) * radius);
                     int _segments = (int)(curveLength * 0.125f);
@@ -437,7 +421,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     {
                         double progress = (double)i / (double)_segments;
                         double t = t_final * progress + t_initial * (1 - progress);
-                        smoothPoints.Add(CirclePoint(centre, radius, t));
+                        smoothPoints.Add(pMathHelper.CirclePoint(centre, radius, t));
                     }
 
                     break;
@@ -467,11 +451,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
 
             EndTime = StartTime + (int)(1000 * PathLength / Velocity * RepeatCount);
-        }
-
-        private Vector2 CirclePoint(Vector2 centre, float radius, double t)
-        {
-            return new Vector2((float)(Math.Cos(t) * radius), (float)(Math.Sin(t) * radius)) + centre;
         }
 
         /// <summary>
