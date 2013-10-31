@@ -417,7 +417,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                     smoothPoints = new List<Vector2>();
 
-                    for (int i = 1; i < _segments; i++)
+                    for (int i = 0; i < _segments; i++)
                     {
                         double progress = (double)i / (double)_segments;
                         double t = t_final * progress + t_initial * (1 - progress);
