@@ -111,7 +111,6 @@ namespace osum
             switch (HardwareDetection.Version)
             {
                 case HardwareVersion.iPad:
-                case HardwareVersion.iPad2:
                     IsHandheld = false;
                     break;
                 case HardwareVersion.iPhone:

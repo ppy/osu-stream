@@ -80,6 +80,9 @@ namespace osum.Support.iPhone
                 var hardwareStr = Marshal.PtrToStringAnsi(pStr);
                 var ret = HardwareVersion.Unknown;
 
+                if (hardwareStr.StartsWith("iPad"))
+                    return HardwareVersion.iPad;
+
                 switch (hardwareStr)
                 {
                 case "iPhone1,1":
