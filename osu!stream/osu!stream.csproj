@@ -18,7 +18,8 @@
     <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -26,9 +27,11 @@
     <Externalconsole>True</Externalconsole>
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <DebugSymbols>True</DebugSymbols>
-    <IpaPackageName />
+    <IpaPackageName>
+    </IpaPackageName>
     <MtouchArch>ARMv7</MtouchArch>
-    <CrashReportingApiKey />
+    <CrashReportingApiKey>
+    </CrashReportingApiKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -42,7 +45,8 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchProfiling>True</MtouchProfiling>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|iPhone' ">
@@ -53,16 +57,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <ConsolePause>False</ConsolePause>
-    <IpaPackageName />
+    <IpaPackageName>
+    </IpaPackageName>
     <BuildIpa>True</BuildIpa>
     <MtouchLink>Full</MtouchLink>
-    <CrashReportingApiKey />
+    <CrashReportingApiKey>
+    </CrashReportingApiKey>
     <BundleIdentifier>sh.ppy.osutest</BundleIdentifier>
     <BundleVersion>20120419</BundleVersion>
     <BundleDisplayName>osu!test</BundleDisplayName>
@@ -75,13 +82,15 @@
     <OutputPath>bin\iPhone\Distribution</OutputPath>
     <DefineConstants>iOS OSUM DIST RELEASE</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <MtouchI18n />
+    <MtouchI18n>
+    </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <MtouchLink>Full</MtouchLink>
-    <IpaPackageName />
+    <IpaPackageName>
+    </IpaPackageName>
     <BundleIdentifier>sh.ppy.osu</BundleIdentifier>
     <BundleVersion>1.2</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
