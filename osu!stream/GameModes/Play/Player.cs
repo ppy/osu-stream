@@ -701,7 +701,8 @@ namespace osum.GameModes
 
         private void PulseBackground(bool positive)
         {
-            if (mapBackgroundImage == null || mapBackgroundImage.Transformations.Count == 0) return;
+            List<Transformation> transforms = new List<Transformation>(mapBackgroundImage.Transformations);
+            if (mapBackgroundImage == null || transforms.Count < 2) return;
 
             const float effect_magnitude = 1.3f;
             const float effect_limit = 1.4f;
