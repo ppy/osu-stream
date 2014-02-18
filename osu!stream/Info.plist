@@ -4,37 +4,19 @@
 <dict>
 	<key>CFBundleDisplayName</key>
 	<string>osu!</string>
-	<key>CFBundleIconFiles</key>
-	<array>
-		<string>IconTest.png</string>
-		<string>IconTest@2x.png</string>
-		<string>IconTest-72.png</string>
-		<string>IconTest-72@2x.png</string>
-	</array>
 	<key>CFBundleIdentifier</key>
-	<string>sh.ppy.osutest</string>
-	<key>CFBundleVersion</key>
-	<string>20130219</string>
+	<string>sh.ppy.osu</string>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>5.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
 		<integer>2</integer>
 	</array>
-	<key>UIFileSharingEnabled</key>
-	<string>YES</string>
-	<key>UILaunchImageFile</key>
-	<string>Support/iPhone/loading</string>
 	<key>UIPrerenderedIcon</key>
 	<string>YES</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -45,5 +27,31 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>CFBundleVersion</key>
+	<string>1.46</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>XSLaunchImageAssets</key>
+	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>UIPrerenderedIcon</key>
+			<true/>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcons57x57</string>
+				<string>AppIcons60x60</string>
+			</array>
+		</dict>
+	</dict>
+	<key>XSAppIconAssets</key>
+	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 </dict>
 </plist>

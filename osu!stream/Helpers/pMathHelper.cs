@@ -208,6 +208,40 @@ namespace osum.Helpers
             return Math.Max(0, Math.Min(1, p));
         }
 
+        internal static void CircleThroughPoints(Vector2 A, Vector2 B, Vector2 C,
+            out Vector2 centre, out float radius, out double t_initial, out double t_final)
+        {
+            // Circle through 3 points
+            // http://en.wikipedia.org/wiki/Circumscribed_circle#Cartesian_coordinates
+            float D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
+            float AMagSq = A.LengthSquared;
+            float BMagSq = B.LengthSquared;
+            float CMagSq = C.LengthSquared;
+            centre = new Vector2(
+                (AMagSq * (B.Y - C.Y) + BMagSq * (C.Y - A.Y) + CMagSq * (A.Y - B.Y)) / D,
+                (AMagSq * (C.X - B.X) + BMagSq * (A.X - C.X) + CMagSq * (B.X - A.X)) / D);
+            radius = Distance(centre, A);
 
+            t_initial = CircleTAt(A, centre);
+            double t_mid = CircleTAt(B, centre);
+            t_final = CircleTAt(C, centre);
+
+            while (t_mid < t_initial) t_mid += 2 * Math.PI;
+            while (t_final < t_initial) t_final += 2 * Math.PI;
+            if (t_mid > t_final)
+            {
+                t_final -= 2 * Math.PI;
+            }
+        }
+
+        internal static double CircleTAt(Vector2 pt, Vector2 centre)
+        {
+            return Math.Atan2(pt.Y - centre.Y, pt.X - centre.X);
+        }
+
+        internal static Vector2 CirclePoint(Vector2 centre, float radius, double t)
+        {
+            return new Vector2((float)(Math.Cos(t) * radius), (float)(Math.Sin(t) * radius)) + centre;
+        }
     }
 }

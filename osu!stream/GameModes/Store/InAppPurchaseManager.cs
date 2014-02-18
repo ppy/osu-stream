@@ -165,7 +165,7 @@ namespace osum.GameModes.Store
 #if !DIST
                 Console.WriteLine("Transaction failed with error code:" + transaction.Error.Code);
 #endif
-                if (transaction.Error.Code != 2)
+                if (transaction.Error != null && transaction.Error.Code != 2)
                 {
                     //there was an actual error during the purchase process.
                 } else
