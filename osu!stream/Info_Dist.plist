@@ -16,7 +16,7 @@
 	<key>CFBundleVersion</key>
 	<string>1.36</string>
 	<key>MinimumOSVersion</key>
-	<string>4.3</string>
+	<string>5.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -38,5 +38,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

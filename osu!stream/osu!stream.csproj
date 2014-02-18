@@ -75,6 +75,7 @@
     <BundleDisplayName>osu!test</BundleDisplayName>
     <BundleIcon>IconTest.png</BundleIcon>
     <MtouchArch>ARMv7</MtouchArch>
+    <CodesignProvision>ABC5C9E5-0496-4AFF-A8E8-4D53A030FE96</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
@@ -104,14 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="Icon.png" />
-    <None Include="Icon%402x.png" />
-    <None Include="Icon-72.png" />
-    <None Include="Icon-72%402x.png" />
-    <None Include="IconTest-72.png" />
-    <None Include="IconTest-72%402x.png" />
-    <None Include="IconTest.png" />
-    <None Include="IconTest%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
@@ -305,7 +298,6 @@
     <Content Include="Skins\Default\soft-sliderslide.wav" />
     <Content Include="Skins\Default\soft-slidertick.wav" />
     <Content Include="Skins\Default\soft-sliderwhistle.wav" />
-    <Content Include="iTunesArtwork" />
     <Content Include="Skins\Default\menuback.wav" />
     <Content Include="Skins\Default\spinnerbonus.wav" />
     <Content Include="Skins\Default\menuclick.wav" />
@@ -370,5 +362,25 @@
     <Content Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2" />
     <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
     <Content Include="Support\iPhone\loading-568h%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40120.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40114.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%4057.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40152.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%4076.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40144.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%4072.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40640x1136.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40640x960.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402048x1536.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401024x768.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40320x480.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork%402x" />
+    <ITunesArtwork Include="iTunesArtwork" />
   </ItemGroup>
 </Project>

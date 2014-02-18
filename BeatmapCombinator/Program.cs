@@ -77,7 +77,13 @@ namespace osum
 
                     foreach (string d in directories)
                     {
+                        //_preview
                         Process(d, true, true, true, true);
+
+                        //.osf
+                        Process(d, false, true, true, false);
+
+                        //.osz
                         Process(d, false, true, false, false);
                     }
                 }
