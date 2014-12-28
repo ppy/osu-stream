@@ -5,13 +5,16 @@ using OpenTK.Graphics.OpenGL;
 using osum.GameModes;
 using osum.GameplayElements.Beatmaps;
 using osum.GameModes.Play;
+using OpenTK.Platform;
+using System.Reflection;
+using System.Drawing;
 
 
 namespace osum
 {
     public class GameBaseDesktop : GameBase
     {
-        public GameWindowDesktop Window;
+        public static GameWindowDesktop Window;
 
         public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
@@ -41,7 +44,13 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSourceMouse source = new InputSourceMouse(Window.Mouse);
+            //InputSourceMouse source = new InputSourceMouse(Window.Mouse);
+
+            IWindowInfo ii = ((OpenTK.NativeWindow)Window).WindowInfo;
+            PropertyInfo pi = (ii.GetType()).GetProperty("WindowHandle");
+            IntPtr handle = ((IntPtr)pi.GetValue(ii, null));
+
+            InputSourceTouch source = new InputSourceTouch(handle);
             InputManager.AddSource(source);
         }
 
