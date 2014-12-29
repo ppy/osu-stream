@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace osum.Input.Sources
 {
@@ -39,12 +40,19 @@ namespace osum.Input.Sources
 
     unsafe class InputSourceRaw : InputSource
     {
+        protected GameWindowDesktop window;
+        protected IntPtr windowHandle;
         private NativeWindowHook windowHook;
 
-        public InputSourceRaw(IntPtr handle)
+        public InputSourceRaw(GameWindowDesktop window)
             : base()
         {
-            windowHook = new NativeWindowHook(handle);
+            this.window = window;
+
+            PropertyInfo pi = (window.WindowInfo.GetType()).GetProperty("WindowHandle");
+            windowHandle = ((IntPtr)pi.GetValue(window.WindowInfo, null));
+
+            windowHook = new NativeWindowHook(windowHandle);
             windowHook.OnWndProc += WindowsForm_OnWndProc;
         }
 

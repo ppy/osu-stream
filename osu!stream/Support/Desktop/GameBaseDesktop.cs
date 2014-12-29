@@ -14,7 +14,7 @@ namespace osum
 {
     public class GameBaseDesktop : GameBase
     {
-        public static GameWindowDesktop Window;
+        public GameWindowDesktop Window;
 
         public GameBaseDesktop(OsuMode mode = OsuMode.Unknown) : base(mode)
         {
@@ -46,11 +46,7 @@ namespace osum
         {
             //InputSourceMouse source = new InputSourceMouse(Window.Mouse);
 
-            IWindowInfo ii = ((OpenTK.NativeWindow)Window).WindowInfo;
-            PropertyInfo pi = (ii.GetType()).GetProperty("WindowHandle");
-            IntPtr handle = ((IntPtr)pi.GetValue(ii, null));
-
-            InputSourceTouch source = new InputSourceTouch(handle);
+            InputSourceTouch source = new InputSourceTouch(Window);
             InputManager.AddSource(source);
         }
 
