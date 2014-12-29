@@ -187,6 +187,18 @@ namespace osum
             GL.LoadIdentity();
         }
 
+        public virtual void UpdateSpriteResolution()
+        {
+            //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
+            int testWidth = NativeSize.Width;
+            if (testWidth < 512) testWidth *= 2;
+            if (testWidth >= 1536) testWidth /= 2;
+
+            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth)));
+            //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
+            //need to consider the WindowScaleFactor value here.
+        }
+
         /// <summary>
         /// Setup viewport and projection matrix. Should be called after a resolution/orientation change.
         /// </summary>
@@ -222,14 +234,7 @@ namespace osum
             if (SpriteSheetResolution != oldResolution && oldResolution > 0)
                 TextureManager.ReloadAll(true);
 
-            //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
-            int testWidth = NativeSize.Width;
-            if (testWidth < 512) testWidth *= 2;
-            if (testWidth >= 1536) testWidth /= 2;
-
-            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth)));
-            //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
-            //need to consider the WindowScaleFactor value here.
+            UpdateSpriteResolution();
 
             InputToFixedWidthAlign = BASE_SPRITE_RES / GameBase.SpriteResolution;
 
