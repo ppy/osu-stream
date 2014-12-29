@@ -41,8 +41,23 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSourceMouse source = new InputSourceMouse(Window.Mouse);
+            InputSource source;
+
+            try
+            {
+                source = new InputSourceRaw(Window);
+            }
+            catch
+            {
+                source = new InputSourceMouse(Window.Mouse);
+            }
+            
             InputManager.AddSource(source);
+        }
+
+        public override void UpdateSpriteResolution()
+        {
+            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, NativeSize.Width / Math.Min((float)NativeSize.Width / NativeSize.Height, GamefieldBaseSize.X / GamefieldBaseSize.Y)));
         }
 
         public override void SetupScreen()
