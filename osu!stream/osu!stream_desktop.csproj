@@ -171,8 +171,8 @@
     <Compile Include="Input\Sources\InputSourceBaanto.cs" />
     <Compile Include="Input\Sources\InputSource.cs" />
     <Compile Include="Input\Sources\InputSourceMouse.cs" />
+    <Compile Include="Input\Sources\InputSourceRawBase.cs" />
     <Compile Include="Input\Sources\InputSourceRaw.cs" />
-    <Compile Include="Input\Sources\InputSourceTouch.cs" />
     <Compile Include="Input\Sources\UsbHID\Interface.cs" />
     <Compile Include="Input\Sources\UsbHID\USB\HidDeclarations.cs" />
     <Compile Include="Input\Sources\UsbHID\USB\HIDUSBDevice.cs" />

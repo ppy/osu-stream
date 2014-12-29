@@ -41,9 +41,17 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            //InputSourceMouse source = new InputSourceMouse(Window.Mouse);
+            InputSource source;
 
-            InputSourceTouch source = new InputSourceTouch(Window);
+            try
+            {
+                source = new InputSourceRaw(Window);
+            }
+            catch
+            {
+                source = new InputSourceMouse(Window.Mouse);
+            }
+            
             InputManager.AddSource(source);
         }
 

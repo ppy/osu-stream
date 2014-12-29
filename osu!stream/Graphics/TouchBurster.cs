@@ -112,7 +112,9 @@ namespace osum.Graphics
                 Burst(trackingPoint.BasePosition, 20, 0.5f, 1);
 #else
             if (InputManager.IsPressed)
+            {
                 Burst(trackingPoint.BasePosition, 20, 0.5f, 2);
+            }
 #endif
         }
 
