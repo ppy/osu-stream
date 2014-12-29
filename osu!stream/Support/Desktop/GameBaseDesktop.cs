@@ -5,9 +5,6 @@ using OpenTK.Graphics.OpenGL;
 using osum.GameModes;
 using osum.GameplayElements.Beatmaps;
 using osum.GameModes.Play;
-using OpenTK.Platform;
-using System.Reflection;
-using System.Drawing;
 
 
 namespace osum
