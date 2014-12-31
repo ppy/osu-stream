@@ -64,6 +64,7 @@ namespace osum.Input.Sources
             }
 
             bind(RawInputType.Mouse, handler);
+            bindPointer(pointerHandler);
 
             registeredTouch = RegisterTouchWindow(windowHandle, TWF_WANTPALM);
             bindTouch(touchHandler);
@@ -94,16 +95,12 @@ namespace osum.Input.Sources
 
         private void handler(RawInput data)
         {
-            // This detects WM_INPUT messages that were generated from WM_TOUCH.
-            // We don't wanna handle them since we handle WM_TOUCH messages by ourself!
-            // If OS tablet support is activated we however don't receive WM_TOUCH messages and DO want to handle WM_INPUT.
-            // See http://the-witness.net/news/2012/10/wm_touch-is-totally-bananas/ for more information.
-            if (registeredTouch && (data.Mouse.ExtraInformation & 0x82) > 0)
+            if (registeredTouch && (trackingPoints.Count > 1 || (trackingPoints.Count == 1 && trackingPoints[0].Tag.ToString() != "m")))
             {
                 return;
             }
 
-            TrackingPoint p = trackingPoints.Find(t => (string)t.Tag == "m");
+            TrackingPoint p = trackingPoints.Find(t => t.Tag.ToString() == "m");
             PointF pos = MousePosition(data.Mouse);
 
             if ((data.Mouse.ButtonFlags & 
@@ -151,18 +148,19 @@ namespace osum.Input.Sources
         {
             // Actual touch
             TrackingPoint p = trackingPoints.Find(t => t.Tag.ToString() == data.ID.ToString());
+            Point pos = window.PointToClient(Point.Round(new PointF((float)data.X / 100, (float)data.Y / 100)));
 
             if ((data.Flags & RawTouchFlags.Down) > 0)
             {
                 if (p == null)
                 {
-                    p = new TrackingPointTouch(new PointF(data.X, data.Y), data.ID, window);
+                    p = new TrackingPoint(new PointF(pos.X, pos.Y), data.ID);
                     TriggerOnDown(p);
                 }
             }
             else if (p != null)
             {
-                p.Location = new PointF(data.X, data.Y);
+                p.Location = new PointF(pos.X, pos.Y);
                 if ((data.Flags & RawTouchFlags.Up) > 0)
                 {
                     TriggerOnUp(p);
@@ -172,7 +170,35 @@ namespace osum.Input.Sources
                     TriggerOnMove(p);
                 }
             }
-            
+        }
+
+
+        private void pointerHandler(RawPointerInput data)
+        {
+            // Actual touch
+            TrackingPoint p = trackingPoints.Find(t => t.Tag.ToString() == data.ID.ToString());
+            Point pos = window.PointToClient(data.PixelLocationRaw);
+
+            if ((data.Flags & RawPointerFlags.Down) > 0)
+            {
+                if (p == null)
+                {
+                    p = new TrackingPoint(new PointF(pos.X, pos.Y), data.ID);
+                    TriggerOnDown(p);
+                }
+            }
+            else if (p != null)
+            {
+                p.Location = new PointF(pos.X, pos.Y);
+                if ((data.Flags & RawPointerFlags.Up) > 0 || (data.Flags & RawPointerFlags.CaptureChanged) > 0)
+                {
+                    TriggerOnUp(p);
+                }
+                else
+                {
+                    TriggerOnMove(p);
+                }
+            }
         }
 
     }
