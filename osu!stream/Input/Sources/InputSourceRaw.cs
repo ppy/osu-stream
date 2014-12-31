@@ -10,42 +10,6 @@ namespace osum.Input.Sources
 {
     unsafe class InputSourceRaw : InputSourceRawBase
     {
-        private class TrackingPointTouch : TrackingPoint
-        {
-            private GameWindowDesktop window;
-
-            public TrackingPointTouch(PointF location, object tag, GameWindowDesktop window)
-                : base(location, tag)
-            {
-                this.window = window;
-
-                // Trigger UpdatePositions now that our window member is valid.
-                Location = location;
-            }
-
-            public override void UpdatePositions()
-            {
-                // This is called in the base constructor sadly and window is not set at this point.
-                // To compensate we manually set location again in our own constructor after setting window.
-                if (window == null)
-                {
-                    return;
-                }
-
-                Vector2 baseLast = BasePosition;
-
-                PointF clientLocation =
-                    window.PointToClient(Point.Round(new PointF(Location.X / 100, Location.Y / 100)));
-
-                BasePosition =
-                    new Vector2(
-                        GameBase.ScaleFactor * (clientLocation.X / GameBase.NativeSize.Width) * GameBase.BaseSizeFixedWidth.X,
-                        GameBase.ScaleFactor * (clientLocation.Y / GameBase.NativeSize.Height) * GameBase.BaseSizeFixedWidth.Y);
-                
-                WindowDelta = BasePosition - baseLast;
-            }
-        }
-
         bool registeredTouch = false;
 
         public InputSourceRaw(GameWindowDesktop window)
