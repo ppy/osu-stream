@@ -49,6 +49,18 @@ namespace osum.Support.iPhone
             }
         }
 
+        public static bool RunningiOS7OrHigher {
+            get { 
+                return BaseOSVersion >= 7 || BaseOSVersion == 0;
+            }
+        }
+
+        public static bool RunningiOS8OrHigher {
+            get { 
+                return BaseOSVersion >= 8 || BaseOSVersion == 0;
+            }
+        }
+
         // Changing the constant to "/usr/lib/libSystem.dylib" makes the P/Invoke work for Mac OS X also (tested), but returns only running arch (that's the thing it's getting in the simulator)
         // For getting the Macintosh computer model property must be "hw.model" instead (and works on ppc, ppc64, i386 and x86_64 Mac OS X)
         [DllImport(MonoTouch.Constants.SystemLibrary)]
