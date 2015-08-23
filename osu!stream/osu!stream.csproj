@@ -256,6 +256,7 @@
     <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
+    <Compile Include="Support\iPhone\ExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />

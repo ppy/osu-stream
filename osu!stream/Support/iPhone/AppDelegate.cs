@@ -80,6 +80,8 @@ namespace osum.Support.iPhone
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
         {
+            RectangleF bounds = UIScreen.MainScreen.BoundsCorrected();
+
             window = new UIWindow(UIScreen.MainScreen.Bounds);
             window.MakeKeyAndVisible();
 
@@ -91,13 +93,12 @@ namespace osum.Support.iPhone
 
             context = Utilities.CreateGraphicsContext(EAGLRenderingAPI.OpenGLES1);
 
-            glView = new EAGLView(window.Bounds);
+            glView = new EAGLView(bounds);
             GameBase.ScaleFactor = UIScreen.MainScreen.Scale;
 
             window.AddSubview(glView);
 
-            GameBase.NativeSize = new Size((int)(UIScreen.MainScreen.Bounds.Size.Height * GameBase.ScaleFactor),
-                                    (int)(UIScreen.MainScreen.Bounds.Size.Width * GameBase.ScaleFactor));
+            GameBase.NativeSize = new Size((int)(bounds.Height * GameBase.ScaleFactor), (int)(bounds.Width * GameBase.ScaleFactor));
 
 #if !DIST
             Console.WriteLine("scale factor " + GameBase.ScaleFactor);
