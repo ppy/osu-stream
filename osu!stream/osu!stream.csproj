@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhone</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -279,7 +279,6 @@
     <Folder Include="Localisation\" />
     <Folder Include="Beatmaps\" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Content Include="Support\iPhone\loading.png" />
     <Content Include="Support\iPhone\loading%402x.png" />
@@ -378,9 +377,12 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402048x1536.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401024x768.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40320x480.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40750x1334.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401242x2208.png" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork%402x" />
     <ITunesArtwork Include="iTunesArtwork" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
 </Project>
