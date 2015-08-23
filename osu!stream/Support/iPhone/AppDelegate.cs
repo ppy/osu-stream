@@ -82,7 +82,7 @@ namespace osum.Support.iPhone
         {
             RectangleF bounds = UIScreen.MainScreen.BoundsCorrected();
 
-            window = new UIWindow(UIScreen.MainScreen.Bounds);
+            window = new UIWindow(bounds);
             window.MakeKeyAndVisible();
 
             UIApplication.SharedApplication.StatusBarHidden = true;
