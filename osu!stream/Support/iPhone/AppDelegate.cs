@@ -80,9 +80,10 @@ namespace osum.Support.iPhone
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
         {
-            RectangleF bounds = UIScreen.MainScreen.BoundsCorrected();
+            RectangleF bounds = UIScreen.MainScreen.Bounds;
 
             window = new UIWindow(bounds);
+            window.RootViewController = new GenericViewController();
             window.MakeKeyAndVisible();
 
             UIApplication.SharedApplication.StatusBarHidden = true;
@@ -98,7 +99,10 @@ namespace osum.Support.iPhone
 
             window.AddSubview(glView);
 
-            GameBase.NativeSize = new Size((int)(bounds.Height * GameBase.ScaleFactor), (int)(bounds.Width * GameBase.ScaleFactor));
+            if (HardwareDetection.RunningiOS8OrHigher)
+                GameBase.NativeSize = new Size((int)(bounds.Width * GameBase.ScaleFactor), (int)(bounds.Height * GameBase.ScaleFactor));
+            else
+                GameBase.NativeSize = new Size((int)(bounds.Height * GameBase.ScaleFactor), (int)(bounds.Width * GameBase.ScaleFactor));
 
 #if !DIST
             Console.WriteLine("scale factor " + GameBase.ScaleFactor);
@@ -191,6 +195,16 @@ namespace osum.Support.iPhone
 
     public class GenericViewController : UIViewController
     {
+        public override bool ShouldAutorotate()
+        {
+            return true;
+        }
+
+        public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
+        {
+            return UIInterfaceOrientationMask.Landscape;
+        }
+
         public override bool ShouldAutorotateToInterfaceOrientation(UIInterfaceOrientation toInterfaceOrientation)
         {
             switch (toInterfaceOrientation)

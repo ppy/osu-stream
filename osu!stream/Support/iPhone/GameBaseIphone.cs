@@ -157,14 +157,24 @@ namespace osum
             GL.MatrixMode(MatrixMode.Projection);
 
             GL.LoadIdentity();
-            GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
-            GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
+            bool fuckAppleFUckIOS8 = HardwareDetection.RunningiOS8OrHigher;
+
+            if (fuckAppleFUckIOS8)
+            {
+                GL.Viewport(0, 0, GameBase.NativeSize.Width, GameBase.NativeSize.Height);
+                GL.Ortho(0, GameBase.NativeSize.Width, GameBase.NativeSize.Height, 0, -1, 1);
+            }
+            else
+            {
+                GL.Viewport(0, 0, GameBase.NativeSize.Height, GameBase.NativeSize.Width);
+                GL.Ortho(0, GameBase.NativeSize.Height, GameBase.NativeSize.Width, 0, -1, 1);
+            }
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            float width = GameBase.NativeSize.Height;
-            float height = GameBase.NativeSize.Width;
+            float width = GameBase.NativeSize.Height; //640
+            float height = GameBase.NativeSize.Width; //960
 
             float[] matrix;
 
@@ -179,7 +189,8 @@ namespace osum
                               0, 0, 1, 0,
                               width, 0, 0, 1};
 
-            GL.LoadMatrix(ref matrix[0]);
+            if (!fuckAppleFUckIOS8)
+                GL.LoadMatrix(ref matrix[0]);
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()

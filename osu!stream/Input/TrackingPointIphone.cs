@@ -1,6 +1,9 @@
 using System;
 using System.Drawing;
 using OpenTK;
+using osum.Support.iPhone;
+
+
 namespace osum
 {
 	public class TrackingPointIphone : TrackingPoint
@@ -11,8 +14,15 @@ namespace osum
 
         public override void UpdatePositions()
         {
-            float x = GameBase.Instance.FlipView ? GameBase.NativeSize.Width - GameBase.ScaleFactor * Location.Y : GameBase.ScaleFactor * Location.Y;
-            float y = GameBase.Instance.FlipView ? GameBase.NativeSize.Height - GameBase.ScaleFactor * Location.X : GameBase.ScaleFactor * Location.X;
+            bool ios8 = HardwareDetection.RunningiOS8OrHigher;
+
+            float x = (ios8 ? Location.X : Location.Y) * GameBase.ScaleFactor;
+            float y = (ios8 ? Location.Y : Location.X) * GameBase.ScaleFactor;
+
+            if (GameBase.Instance.FlipView || ios8)
+                y = GameBase.NativeSize.Height - y;
+            if (GameBase.Instance.FlipView && !ios8)
+                x = GameBase.NativeSize.Width - x;
 
             Vector2 oldBase = BasePosition;
             BasePosition = new Vector2(

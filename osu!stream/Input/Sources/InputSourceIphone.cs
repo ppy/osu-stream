@@ -4,6 +4,9 @@ using MonoTouch.UIKit;
 using System.Collections.Generic;
 using osum.Helpers;
 using osum.Support.iPhone;
+using System.Drawing;
+
+
 namespace osum
 {
 	public class InputSourceIphone : InputSource
@@ -29,11 +32,13 @@ namespace osum
         {
 
             TrackingPoint point = null;
+            PointF location = u.LocationInView(EAGLView.Instance);
+
             switch (u.Phase)
             {
                 case UITouchPhase.Began:
                     if (AppDelegate.UsingViewController) return;
-                    point = new TrackingPointIphone(u.LocationInView(EAGLView.Instance), u);
+                    point = new TrackingPointIphone(location, u);
                     touchDictionary[u] = point;
                     TriggerOnDown(point);
                     break;
@@ -47,7 +52,7 @@ namespace osum
                 case UITouchPhase.Moved:
                     if (!touchDictionary.TryGetValue(u, out point))
                         return;
-                    point.Location = u.LocationInView(EAGLView.Instance);
+                    point.Location = location;
                     TriggerOnMove(point);
                     break;
             }
