@@ -5,9 +5,9 @@ using System.Drawing;
 
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -28,8 +28,8 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
+using UIKit;
+using CoreGraphics;
 #else
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
@@ -441,10 +441,10 @@ namespace osum.Graphics
 #if iOS
             int oldFBO = 0;
 
-            GL.GetInteger(All.FramebufferBindingOes, ref oldFBO);
+            GL.GetInteger(All.FramebufferBindingOes, out oldFBO);
 
             if (fboId < 0)
-                GL.Oes.GenFramebuffers(1, ref fboId);
+                GL.Oes.GenFramebuffers(1, out fboId);
 
             GL.Oes.BindFramebuffer(All.FramebufferOes, fboId);
             GL.Oes.FramebufferTexture2D(All.FramebufferOes, All.ColorAttachment0Oes, All.Texture2D, TextureGl.Id, 0);

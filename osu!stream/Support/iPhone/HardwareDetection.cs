@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using MonoTouch;
-using MonoTouch.UIKit; // Only needed if you use constant instead of hardcoded library name
+using UIKit; // Only needed if you use constant instead of hardcoded library name
 
 namespace osum.Support.iPhone
 {
@@ -31,7 +31,7 @@ namespace osum.Support.iPhone
         public static int BaseOSVersion {
             get {
                 int ver = 0;
-                if (!int.TryParse(MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.Split('.')[0], out ver))
+                if (!int.TryParse(UIKit.UIDevice.CurrentDevice.SystemVersion.Split('.')[0], out ver))
                     return -1;
                 return ver;
             }
@@ -63,7 +63,7 @@ namespace osum.Support.iPhone
 
         // Changing the constant to "/usr/lib/libSystem.dylib" makes the P/Invoke work for Mac OS X also (tested), but returns only running arch (that's the thing it's getting in the simulator)
         // For getting the Macintosh computer model property must be "hw.model" instead (and works on ppc, ppc64, i386 and x86_64 Mac OS X)
-        [DllImport(MonoTouch.Constants.SystemLibrary)]
+        [DllImport(ObjCRuntime.Constants.SystemLibrary)]
         static internal extern int sysctlbyname([MarshalAs(UnmanagedType.LPStr)] string property, IntPtr output, IntPtr oldLen, IntPtr newp, uint newlen);
 
         static HardwareVersion cachedVersion = HardwareVersion.Uncached;

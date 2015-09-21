@@ -13,9 +13,9 @@ using osum;
 
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -1280,7 +1280,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             {
 #if iOS
                 //clear the full buffer before changing the viewport.
-                if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, ref oldFboId);
+                if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, out oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
                 GL.Clear(Constants.COLOR_DEPTH_BUFFER_BIT);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);

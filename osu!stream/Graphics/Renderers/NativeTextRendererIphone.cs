@@ -2,9 +2,9 @@
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
 using System;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
+using UIKit;
+using CoreGraphics;
+using Foundation;
 using OpenTK.Graphics.ES11;
 using System.Drawing;
 using OpenTK;
@@ -27,17 +27,17 @@ namespace osum.Graphics.Renderers
             UIFont font = UIFont.FromName(bold ? "Futura-CondensedExtraBold" : "Futura-Medium",size);
 
             NSString nsstr = new NSString(text);
-            SizeF actualSize = SizeF.Empty;
+            CGSize actualSize = CGSize.Empty;
 
 			if (restrictBounds == Vector2.Zero)
             {
                 actualSize = nsstr.StringSize(font, GameBase.NativeSize, UILineBreakMode.WordWrap);
-                restrictBounds = new Vector2(actualSize.Width, actualSize.Height);
+                restrictBounds = new Vector2((float)actualSize.Width, (float)actualSize.Height);
             }
             else if (restrictBounds.Y == 0)
             {
                 actualSize = nsstr.StringSize(font, new SizeF(restrictBounds.X, GameBase.NativeSize.Height), UILineBreakMode.WordWrap);
-                restrictBounds = new Vector2(actualSize.Width + 5, actualSize.Height);
+                restrictBounds = new Vector2((float)actualSize.Width + 5, (float)actualSize.Height);
                 //note: 5px allowance is givn because when wordwarpping it seems to get cut off otherwise.
             }
 
@@ -53,7 +53,7 @@ namespace osum.Graphics.Renderers
             using (CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray())
             using (CGBitmapContext context = new CGBitmapContext(data, width, height, 8, width, colorSpace,CGImageAlphaInfo.None))
             {
-                context.SetGrayFillColor(1, 1);
+                context.SetFillColor(1, 1);
                 context.TranslateCTM(0, height);
                 context.ScaleCTM(1, -1);
 
@@ -74,7 +74,7 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PopContext();
 
-                measured = new Vector2(actualSize.Width, actualSize.Height);
+                measured = new Vector2((float)actualSize.Width, (float)actualSize.Height);
 
     			SpriteManager.TexturesEnabled = true;
 

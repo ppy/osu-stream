@@ -17,7 +17,7 @@ using osum.Resources;
 using osum.UI;
 using osu_common.Libraries.NetLib;
 #if iOS
-using MonoTouch.Accounts;
+using Accounts;
 #endif
 
 

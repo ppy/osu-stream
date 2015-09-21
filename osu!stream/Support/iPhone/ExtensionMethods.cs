@@ -1,6 +1,7 @@
 ﻿using System;
-using MonoTouch.UIKit;
+using UIKit;
 using System.Drawing;
+using osum.Helpers;
 
 namespace osum.Support.iPhone
 {
@@ -8,7 +9,7 @@ namespace osum.Support.iPhone
     {
         public static RectangleF BoundsCorrected(this UIScreen screen)
         {
-            RectangleF actualBounds = screen.Bounds;
+            RectangleF actualBounds = screen.Bounds.ToRectangleF();
 
             if (HardwareDetection.RunningiOS8OrHigher)
             {

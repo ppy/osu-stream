@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.StoreKit;
-using MonoTouch.Foundation;
+using StoreKit;
+using Foundation;
 using System.Globalization;
 using System.Threading;
 using System.Collections.Generic;

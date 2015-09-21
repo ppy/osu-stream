@@ -1,20 +1,20 @@
 using System;
 using OpenTK.Graphics.ES11;
 using OpenTK.Platform.iPhoneOS;
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
-using MonoTouch.UIKit;
+using CoreAnimation;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
+using UIKit;
 using System.Drawing;
 using OpenTK.Graphics;
 using System.Threading;
 using osum.Helpers;
-using MonoTouch.CoreFoundation;
+using CoreFoundation;
 
 namespace osum
 {
-    [MonoTouch.Foundation.Register("EAGLView")]
+    [Foundation.Register("EAGLView")]
     public partial class EAGLView : UIView
     {
         public static EAGLView Instance;
@@ -48,13 +48,13 @@ namespace osum
             CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;
             context.MakeCurrent(null);
 
-            GL.Oes.GenRenderbuffers(1, ref renderbuffer);
+            GL.Oes.GenRenderbuffers(1, out renderbuffer);
             GL.Oes.BindRenderbuffer(All.RenderbufferOes, renderbuffer);
 
             if (!context.EAGLContext.RenderBufferStorage((uint)All.RenderbufferOes, eaglLayer))
                 throw new InvalidOperationException ("Error with RenderbufferStorage()!");
 
-            GL.Oes.GenFramebuffers(1, ref frameBuffer);
+            GL.Oes.GenFramebuffers(1, out frameBuffer);
             GL.Oes.BindFramebuffer(All.FramebufferOes, frameBuffer);
             GL.Oes.FramebufferRenderbuffer(All.FramebufferOes, All.ColorAttachment0Oes, All.RenderbufferOes, renderbuffer);
 

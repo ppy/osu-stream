@@ -1,12 +1,12 @@
 using System;
-using MonoTouch.UIKit;
+using UIKit;
 using osum.Helpers;
-using MonoTouch.Security;
+using Security;
 using osum.GameplayElements;
 
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
+using Foundation;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -52,7 +52,7 @@ namespace osum
         override public void Run()
         {
             AppDelegate.game = this;
-            MonoTouch.UIKit.UIApplication.Main(new string[]{},"HaxApplication","AppDelegate");
+            UIKit.UIApplication.Main(new string[]{},"HaxApplication","AppDelegate");
         }
 
         bool disableDimming = false;
@@ -238,15 +238,8 @@ namespace osum
                     //to make sure purchased content still works.
 
                     BeatmapDatabase.Initialize();
-                    if (BeatmapDatabase.Version < 10 && BeatmapDatabase.BeatmapInfo.Find(b => b.Filename.Contains(".osp2")) != null)
-                    {
-                        identifier = UIDevice.CurrentDevice.UniqueIdentifier;
-                    }
-                    else
-                    {
-                        //create a new unique identifier
-                        identifier = Guid.NewGuid().ToString();
-                    }
+                    //create a new unique identifier
+                    identifier = Guid.NewGuid().ToString();
 
                     //store to keychain
                     eCode = SecKeyChain.Add(new SecRecord(SecKind.GenericPassword)
@@ -395,7 +388,7 @@ namespace osum
             webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("about:blank")));
             webView.Delegate = null;
             webView = null;
-            DismissModalViewControllerAnimated(true);
+            DismissModalViewController(true);
             AppDelegate.SetUsingViewController(false);
         }
 

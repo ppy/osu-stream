@@ -285,8 +285,8 @@ namespace osum.GameModes.Store
                     BeatmapDatabase.Write();
 
 #if iOS
-                    if (MonoTouch.UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."))
-                        MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(downloadPath,true);
+                    if (UIKit.UIDevice.CurrentDevice.SystemVersion.StartsWith("5."))
+                        Foundation.NSFileManager.SetSkipBackupAttribute(downloadPath,true);
 #endif
 
                     SongSelectMode.ForceBeatmapRefresh = true; //can optimise this away in the future.

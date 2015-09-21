@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.UIKit;
+using UIKit;
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
+using Foundation;
+using OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;
@@ -29,10 +29,11 @@ using osum.GameModes;
 using OpenTK.Graphics;
 using OpenTK.Platform;
 using osum.Helpers;
+using CoreGraphics;
 
 namespace osum.Support.iPhone
 {
-    [MonoTouch.Foundation.Register("HaxApplication")]
+    [Foundation.Register("HaxApplication")]
     public class HaxApplication : UIApplication
     {
         public override void SendEvent(UIEvent e)
@@ -48,7 +49,7 @@ namespace osum.Support.iPhone
         }
     }
 
-    [MonoTouch.Foundation.Register("AppDelegate")]
+    [Foundation.Register("AppDelegate")]
     public class AppDelegate : UIApplicationDelegate
     {
         public static AppDelegate Instance;
@@ -80,7 +81,7 @@ namespace osum.Support.iPhone
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launcOptions)
         {
-            RectangleF bounds = UIScreen.MainScreen.Bounds;
+            RectangleF bounds = UIScreen.MainScreen.Bounds.ToRectangleF();
 
             window = new UIWindow(bounds);
             window.RootViewController = new GenericViewController();
@@ -95,7 +96,7 @@ namespace osum.Support.iPhone
             context = Utilities.CreateGraphicsContext(EAGLRenderingAPI.OpenGLES1);
 
             glView = new EAGLView(bounds);
-            GameBase.ScaleFactor = UIScreen.MainScreen.Scale;
+            GameBase.ScaleFactor = (float)UIScreen.MainScreen.Scale;
 
             window.AddSubview(glView);
 

@@ -1,8 +1,8 @@
 using System;
-using MonoTouch.AVFoundation;
+using AVFoundation;
 using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
+using Foundation;
+using AudioToolbox;
 using System.IO;
 using osum.Helpers;
 

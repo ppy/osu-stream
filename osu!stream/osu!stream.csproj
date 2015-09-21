@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}</ProjectGuid>
-    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>osum</RootNamespace>
     <AssemblyName>osustream</AssemblyName>
@@ -18,8 +18,6 @@
     <DefineConstants>iOS OSUM DEBUG DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchI18n>
-    </MtouchI18n>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -32,6 +30,8 @@
     <MtouchArch>ARMv7</MtouchArch>
     <CrashReportingApiKey>
     </CrashReportingApiKey>
+    <CodesignProvision>33a17a26-3245-4a15-b789-e4958782ef1f</CodesignProvision>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -57,8 +57,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchUseArmv7>false</MtouchUseArmv7>
-    <MtouchI18n>
-    </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -76,6 +74,7 @@
     <BundleIcon>IconTest.png</BundleIcon>
     <MtouchArch>ARMv7</MtouchArch>
     <CodesignProvision>ABC5C9E5-0496-4AFF-A8E8-4D53A030FE96</CodesignProvision>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
     <DebugType>none</DebugType>
@@ -83,8 +82,6 @@
     <OutputPath>bin\iPhone\Distribution</OutputPath>
     <DefineConstants>iOS OSUM DIST RELEASE</DefineConstants>
     <WarningLevel>4</WarningLevel>
-    <MtouchI18n>
-    </MtouchI18n>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>True</MtouchUseLlvm>
@@ -96,12 +93,13 @@
     <BundleVersion>1.2</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
-    <MtouchArch>ARMv7, ARMv7s</MtouchArch>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -257,6 +255,7 @@
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
     <Compile Include="Support\iPhone\ExtensionMethods.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Input\" />
@@ -382,5 +381,5 @@
     <ITunesArtwork Include="iTunesArtwork%402x" />
     <ITunesArtwork Include="iTunesArtwork" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

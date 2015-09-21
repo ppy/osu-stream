@@ -1,6 +1,6 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using Foundation;
+using UIKit;
 using System.Collections.Generic;
 using osum.Helpers;
 using osum.Support.iPhone;
@@ -32,7 +32,8 @@ namespace osum
         {
 
             TrackingPoint point = null;
-            PointF location = u.LocationInView(EAGLView.Instance);
+            var cgLocation = u.LocationInView(EAGLView.Instance);
+            PointF location = new PointF((float)cgLocation.X, (float)cgLocation.Y);
 
             switch (u.Phase)
             {

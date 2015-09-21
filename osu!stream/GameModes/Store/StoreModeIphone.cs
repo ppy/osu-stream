@@ -1,7 +1,7 @@
 using System;
-using MonoTouch.StoreKit;
+using StoreKit;
 using System.Collections.Generic;
-using MonoTouch.Foundation;
+using Foundation;
 using System.Runtime.InteropServices;
 
 namespace osum.GameModes.Store

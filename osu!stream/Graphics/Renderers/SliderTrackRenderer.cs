@@ -7,9 +7,9 @@ using osum.Graphics.Sprites;
 using Color = OpenTK.Graphics.Color4;
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;

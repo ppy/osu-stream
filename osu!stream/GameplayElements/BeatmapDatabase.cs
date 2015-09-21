@@ -69,7 +69,7 @@ namespace osum.GameplayElements
             {
                 if (HardwareDetection.RunningiOS5OrHigher)
                     foreach (string file in Directory.GetFiles(SongSelectMode.BeatmapPath, "*.os*"))
-                        MonoTouch.Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
+                        Foundation.NSFileManager.SetSkipBackupAttribute(file,true);
             }
 #endif
 

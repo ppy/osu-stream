@@ -5,11 +5,11 @@ using System.Text;
 using osum.Helpers;
 
 #if iOS
-using MonoTouch.UIKit;
+using UIKit;
 using osum.Support.iPhone;
 using System.Drawing;
 using osum.Resources;
-using MonoTouch.CoreGraphics;
+using CoreGraphics;
 
 namespace osum.UI
 {
@@ -29,7 +29,7 @@ namespace osum.UI
             AppDelegate.SetUsingViewController(true);
         }
 
-        public override void Dismissed (UIAlertView alertView, int buttonIndex)
+        public override void Dismissed(UIAlertView alertView, nint buttonIndex)
         {
             Text = tav.Text;
 
@@ -56,7 +56,7 @@ namespace osum.UI
             //Transform = CGAffineTransform.MakeTranslation(0,130);
         }
 
-        public override void DismissWithClickedButtonIndex(int index, bool animated)
+        public override void DismissWithClickedButtonIndex(nint index, bool animated)
         {
             Text = textField.Text;
             base.DismissWithClickedButtonIndex(index, animated);

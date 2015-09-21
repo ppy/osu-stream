@@ -9,9 +9,9 @@ using osu_common.Helpers;
 using osum.GameplayElements;
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -32,8 +32,8 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
+using UIKit;
+using CoreGraphics;
 #else
 using OpenTK.Graphics.OpenGL;
 using osum.Input;

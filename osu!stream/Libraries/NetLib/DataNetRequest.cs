@@ -5,14 +5,14 @@ using System.Net;
 using osum;
 using System.Text;
 #if iOS
-using MonoTouch.Foundation;
+using Foundation;
 using System.Runtime.InteropServices;
 #endif
 
 namespace osu_common.Libraries.NetLib
 {
 #if iOS
-    public class NRDelegate : NSUrlConnectionDelegate
+    public class NRDelegate : NSUrlConnectionDataDelegate
     {
         public byte[] result;
         public int written = 0;
@@ -40,9 +40,9 @@ namespace osu_common.Libraries.NetLib
                 result = new byte[data.Length];
                 Marshal.Copy(data.Bytes, result, 0, (int)data.Length);
             }
-            else if (written + data.Length > result.Length)
+            else if (written + (int)data.Length > result.Length)
             {
-                byte[] nb = new byte [result.Length + data.Length];
+                byte[] nb = new byte [result.Length + (int)data.Length];
                 result.CopyTo(nb, 0);
                 Marshal.Copy(data.Bytes, nb, result.Length, (int)data.Length);
                 result = nb;

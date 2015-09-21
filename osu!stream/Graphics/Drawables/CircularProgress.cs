@@ -7,9 +7,9 @@ using OpenTK;
 using System.Runtime.InteropServices;
 #if iOS
 using OpenTK.Graphics.ES11;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
+using Foundation;
+using ObjCRuntime;
+using OpenGLES;
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
 using EnableCap = OpenTK.Graphics.ES11.All;

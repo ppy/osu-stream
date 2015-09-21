@@ -15,8 +15,8 @@ using osum.Graphics.Renderers;
 
 
 #if iOS
-using MonoTouch.Accounts;
-using MonoTouch.Foundation;
+using Accounts;
+using Foundation;
 using osum.Support.iPhone;
 #endif
 
