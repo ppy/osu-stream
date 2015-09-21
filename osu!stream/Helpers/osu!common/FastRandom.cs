@@ -13,7 +13,7 @@ namespace osu_common.Helpers
     /// Key points:
     ///  1) Based on a simple and fast xor-shift pseudo random number generator (RNG) specified in: 
     ///  Marsaglia, George. (2003). Xorshift RNGs.
-    ///  http://www.jstatsoft.org/v08/i14/xorshift.pdf
+    ///  https://www.jstatsoft.org/v08/i14/xorshift.pdf
     ///  
     ///  This particular implementation of xorshift has a period of 2^128-1. See the above paper to see
     ///  how this can be easily extened if you need a longer period. At the time of writing I could find no 

@@ -49,7 +49,7 @@ namespace osum.Support
             contents += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
             contents += "&version=" + MonoTouch.Foundation.NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleVersion").ToString();
 #endif
-            StringNetRequest nr = new StringNetRequest("http://www.osustream.com/admin/crash.php", "POST", "exception=" + contents );
+            StringNetRequest nr = new StringNetRequest("https://www.osustream.com/admin/crash.php", "POST", "exception=" + contents );
             NetManager.AddRequest(nr);
         }
 

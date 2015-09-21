@@ -243,7 +243,7 @@ namespace osum.GameModes
 
             if (hasAuth)
             {
-                pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + username);
+                pSpriteWeb avatar = new pSpriteWeb(@"https://api.twitter.com/1/users/profile_image/" + username);
                 if (firstDisplay) avatar.Transform(fadeIn);
                 spriteManager.Add(avatar);
             }

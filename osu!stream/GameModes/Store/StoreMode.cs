@@ -86,7 +86,7 @@ namespace osum.GameModes.Store
             GameBase.ShowLoadingOverlay = true;
 
             if (fetchRequest != null) fetchRequest.Abort();
-            fetchRequest = new StringNetRequest("http://www.osustream.com/dl/list2.php");
+            fetchRequest = new StringNetRequest("https://www.osustream.com/dl/list2.php");
             fetchRequest.onFinish += handlePackInfo;
             NetManager.AddRequest(fetchRequest);
 

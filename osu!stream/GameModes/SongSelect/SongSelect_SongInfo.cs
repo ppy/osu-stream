@@ -131,7 +131,7 @@ namespace osum.GameModes
 
                 info.OnClick += delegate
                 {
-                    GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"http://twitter.com/"));
+                    GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"https://twitter.com/"));
                 };
                 songInfoSpriteManager.Add(info);
                 vPos += 40;

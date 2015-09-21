@@ -56,7 +56,7 @@ namespace osum.GameModes
 
             int period = 0;
 
-            rankingNetRequest = new StringNetRequest(@"http://osustream.com/score/retrieve.php", "POST",
+            rankingNetRequest = new StringNetRequest(@"https://osustream.com/score/retrieve.php", "POST",
                 "udid=" + GameBase.Instance.DeviceIdentifier +
                 "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
                 "&period=" + period +

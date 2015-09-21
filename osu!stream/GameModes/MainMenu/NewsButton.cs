@@ -39,7 +39,7 @@ namespace osum.GameModes
             if (lastRead == string.Empty || lastRetrieved != lastRead)
                 HasNews = true;
 
-            StringNetRequest nr = new StringNetRequest(@"http://osustream.com/misc/news.php?v=2");
+            StringNetRequest nr = new StringNetRequest(@"https://osustream.com/misc/news.php?v=2");
             nr.onFinish += new StringNetRequest.RequestCompleteHandler(newsCheck_onFinish);
             NetManager.AddRequest(nr);
         }
@@ -48,7 +48,7 @@ namespace osum.GameModes
         {
             HasNews = false;
 
-            GameBase.Instance.ShowWebView(@"http://osustream.com/p/news", "News");
+            GameBase.Instance.ShowWebView(@"https://osustream.com/p/news", "News");
 
             GameBase.Config.SetValue<string>("NewsLastRead", GameBase.Config.GetValue<string>("NewsLastRetrieved", string.Empty));
             GameBase.Config.SaveConfig();

@@ -76,7 +76,7 @@ namespace osum.GameModes.Options
 
             button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
             {
-                GameBase.Instance.ShowWebView("http://www.osustream.com/help/", "Online Help");
+                GameBase.Instance.ShowWebView("https://www.osustream.com/help/", "Online Help");
             });
 
             smd.Add(button);
@@ -207,7 +207,7 @@ namespace osum.GameModes.Options
             {
                 button = new pButton(string.Format(LocalisationManager.GetString(OsuString.TwitterUnlink), GameBase.Config.GetValue<string>("username", null)), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
                 {
-                    StringNetRequest nr = new StringNetRequest("http://osustream.com/twitter/disconnect.php?udid="
+                    StringNetRequest nr = new StringNetRequest("https://osustream.com/twitter/disconnect.php?udid="
                         + GameBase.Instance.DeviceIdentifier + "&cc=" + GameBase.Config.GetValue<string>("hash", null));
                     nr.onFinish += delegate(string _result, Exception e)
                     {
@@ -259,7 +259,7 @@ namespace osum.GameModes.Options
 
         private void HandleTwitterOAuth()
         {
-            GameBase.Instance.ShowWebView("http://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
+            GameBase.Instance.ShowWebView("https://osustream.com/twitter/connect.php?udid=" + GameBase.Instance.DeviceIdentifier,
                 LocalisationManager.GetString(OsuString.TwitterLink),
                 delegate(string url)
                 {

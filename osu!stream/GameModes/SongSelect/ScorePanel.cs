@@ -67,7 +67,7 @@ namespace osum.GameModes.SongSelect
 
             if (!score.guest)
             {
-                pSpriteWeb avatar = new pSpriteWeb(@"http://api.twitter.com/1/users/profile_image/" + score.Username)
+                pSpriteWeb avatar = new pSpriteWeb(@"https://api.twitter.com/1/users/profile_image/" + score.Username)
                 {
                     Offset = new Vector2(80, PANEL_HEIGHT / 2),
                     Origin = OriginTypes.Centre

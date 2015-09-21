@@ -212,7 +212,7 @@ namespace osum.Helpers
             out Vector2 centre, out float radius, out double t_initial, out double t_final)
         {
             // Circle through 3 points
-            // http://en.wikipedia.org/wiki/Circumscribed_circle#Cartesian_coordinates
+            // https://en.wikipedia.org/wiki/Circumscribed_circle#Cartesian_coordinates
             float D = 2 * (A.X * (B.Y - C.Y) + B.X * (C.Y - A.Y) + C.X * (A.Y - B.Y));
             float AMagSq = A.LengthSquared;
             float BMagSq = B.LengthSquared;

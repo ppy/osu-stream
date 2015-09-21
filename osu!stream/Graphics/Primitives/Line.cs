@@ -81,7 +81,7 @@ namespace osum.Graphics.Primitives
         /// Distance squared from an arbitrary point p to this line.
         /// </summary>
         /// <remarks>
-        /// See http://geometryalgorithms.com/Archive/algorithm_0102/algorithm_0102.htm, near the bottom.
+        /// See https://geometryalgorithms.com/Archive/algorithm_0102/algorithm_0102.htm, near the bottom.
         /// </remarks>
         internal float DistanceSquaredToPoint(Vector2 p)
         {

@@ -54,7 +54,7 @@ namespace osum.GameplayElements
             }
 
 #if iOS && DIST
-            //move beatmaps from Documents to Library/Cache/ as per new storage guidelines (see http://www.marco.org/2011/10/13/ios5-caches-cleaning)
+            //move beatmaps from Documents to Library/Cache/ as per new storage guidelines (see https://www.marco.org/2011/10/13/ios5-caches-cleaning)
             if (Version < 8)
             {
                 string newLocation = SongSelectMode.BeatmapPath;

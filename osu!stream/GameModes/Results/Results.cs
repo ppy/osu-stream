@@ -427,7 +427,7 @@ namespace osum.GameModes
                 GameBase.MainSpriteManager.Add(spriteSubmitting);
                 spriteSubmitting.FadeInFromZero(300);
 
-                StringNetRequest nr = new StringNetRequest("http://www.osustream.com/score/submit.php", "POST", postString);
+                StringNetRequest nr = new StringNetRequest("https://www.osustream.com/score/submit.php", "POST", postString);
                 nr.onFinish += delegate(string result, Exception e)
                 {
                     spriteSubmitting.AlwaysDraw = false;
