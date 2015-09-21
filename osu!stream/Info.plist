@@ -7,7 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osu</string>
 	<key>MinimumOSVersion</key>
-	<string>5.0</string>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
