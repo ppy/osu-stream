@@ -93,8 +93,7 @@
     <BundleVersion>1.2</BundleVersion>
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
-    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchArch>ARMv7s, ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
