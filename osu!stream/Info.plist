@@ -13,6 +13,8 @@
 		<integer>1</integer>
 		<integer>2</integer>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<string>YES</string>
 	<key>UIPrerenderedIcon</key>
 	<string>YES</string>
 	<key>UIStatusBarHidden</key>
