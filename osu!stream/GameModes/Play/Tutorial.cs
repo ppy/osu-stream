@@ -55,6 +55,20 @@ namespace osum.GameModes.Play
             s_Demo = new pSprite(TextureManager.Load(OsuTexture.demo), new Vector2(0, 50)) { Alpha = 0, Field = FieldTypes.StandardSnapTopCentre, Origin = OriginTypes.Centre };
             spriteManager.Add(s_Demo);
 
+            GameBase.Scheduler.Add(delegate
+            {
+                backButton = new BackButton(delegate
+                {
+                    GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Notice), LocalisationManager.GetString(OsuString.ExitTutorial), NotificationStyle.YesNo, delegate (bool yes)
+                    {
+                        if (yes)
+                            Director.ChangeMode(OsuMode.MainMenu);
+                    }));
+                }, true);
+                backButton.FadeInFromZero(500);
+                topMostSpriteManager.Add(backButton);
+            }, 500);
+
             loadNextSegment();
         }
 
@@ -213,21 +227,6 @@ namespace osum.GameModes.Play
             {
                 case TutorialSegments.Introduction_1:
                     showText(LocalisationManager.GetString(OsuString.WelcomeToTheWorldOfOsu));
-
-                    GameBase.Scheduler.Add(delegate
-                    {
-                        backButton = new BackButton(delegate
-                        {
-                            GameBase.Notify(new Notification(LocalisationManager.GetString(OsuString.Notice), LocalisationManager.GetString(OsuString.ExitTutorial), NotificationStyle.YesNo, delegate(bool yes)
-                                {
-                                    if (yes)
-                                        Director.ChangeMode(OsuMode.MainMenu);
-                                }));
-                        }, true);
-                        backButton.FadeInFromZero(500);
-                        topMostSpriteManager.Add(backButton);
-                    }, 500);
-
                     showTouchToContinue();
                     break;
                 case TutorialSegments.Introduction_2:
@@ -1338,8 +1337,9 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.TutorialMap_Interact:
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
-                    HitObjectManager = new HitObjectManager(Beatmap);
+                    if (HitObjectManager != null)
+                        HitObjectManager.Dispose();
+                    HitObjectManager = new HitObjectManager (Beatmap);
 
                     prepareInteract();
 
@@ -1381,19 +1381,15 @@ namespace osum.GameModes.Play
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(128, 296), music_offset + 91500, false, 0, HitObjectSoundType.Normal), Difficulty);
                     HitObjectManager.Add(new HitCircle(HitObjectManager, new Vector2(256, 184), music_offset + 92250, false, 0, HitObjectSoundType.Normal), Difficulty);
 
-                    HitObjectManager.Add(new Spinner(HitObjectManager, music_offset + 93000, music_offset + 96000, HitObjectSoundType.Normal), Difficulty);
+                    HitObjectManager.Add(new Spinner(HitObjectManager, music_offset + 93000, music_offset + 95000, HitObjectSoundType.Normal), Difficulty);
 
                     HitObjectManager.PostProcessing();
                     HitObjectManager.SetActiveStream(Difficulty.Easy);
 
-                    bool done = false;
-
                     currentSegmentDelegate = delegate
                     {
-                        if (HitObjectManager.AllNotesHit && !done)
-                        {
+                        if (!touchToContinue && HitObjectManager.AllNotesHit)
                             loadNextSegment();
-                        }
                     };
                     break;
                 case TutorialSegments.TutorialMap_Judge:
