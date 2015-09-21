@@ -281,9 +281,6 @@
     <Folder Include="Beatmaps\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Support\iPhone\loading.png" />
-    <Content Include="Support\iPhone\loading%402x.png" />
-    <Content Include="Support\iPhone\loading-Landscape.png" />
     <Content Include="Skins\Default\normal-hitclap.wav" />
     <Content Include="Skins\Default\normal-hitfinish.wav" />
     <Content Include="Skins\Default\normal-hitnormal.wav" />
@@ -361,7 +358,6 @@
     <Content Include="Skins\Default\ranking_1920.png" />
     <Content Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2" />
     <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
-    <Content Include="Support\iPhone\loading-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
@@ -380,6 +376,7 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40320x480.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40750x1334.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401242x2208.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402208x1242.png" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork%402x" />
