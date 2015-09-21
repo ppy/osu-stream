@@ -53,5 +53,7 @@
 	</dict>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.50</string>
 </dict>
 </plist>
