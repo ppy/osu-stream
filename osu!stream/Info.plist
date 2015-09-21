@@ -50,7 +50,7 @@
 	  </dict>
 	</dict>
 	<key>CFBundleVersion</key>
-	<string>1.50</string>
+	<string>1.51</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -74,6 +74,6 @@
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.50</string>
+	<string>1.51</string>
 </dict>
 </plist>
