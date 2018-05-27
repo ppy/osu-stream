@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using osum.Support;
 using osum.Graphics.Sprites;
@@ -126,7 +126,9 @@ namespace osum.Graphics.Skins
         {
             DisposeDisposable();
 
-            foreach (TextureGl p in SpriteTextureCache.Values.ToArray<TextureGl>())
+            var purgable = new List<TextureGl> (SpriteTextureCache.Values);
+
+            foreach (TextureGl p in purgable)
                 if (!p.usedSinceLastModeChange && p.Loaded)
                 {
 #if !DIST

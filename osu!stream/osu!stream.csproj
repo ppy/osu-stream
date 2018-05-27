@@ -27,7 +27,7 @@
     <DebugSymbols>True</DebugSymbols>
     <IpaPackageName>
     </IpaPackageName>
-    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <CrashReportingApiKey>
     </CrashReportingApiKey>
     <CodesignProvision>33a17a26-3245-4a15-b789-e4958782ef1f</CodesignProvision>
@@ -43,11 +43,13 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <MtouchDebug>True</MtouchDebug>
-    <MtouchProfiling>True</MtouchProfiling>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchI18n>
     </MtouchI18n>
-    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|iPhone' ">
     <DebugType>none</DebugType>
@@ -95,10 +97,14 @@
     <BundleIcon>Icon.png</BundleIcon>
     <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="OpenTK-1.0" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -375,6 +381,7 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40750x1334.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401242x2208.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402208x1242.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402436x1125.png" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork%402x" />
