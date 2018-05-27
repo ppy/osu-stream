@@ -1,6 +1,41 @@
 {
   "images": [
     {
+      "orientation": "landscape",
+      "extent": "full-screen",
+      "size": "1920x1080",
+      "scale": "1x",
+      "idiom": "tv",
+      "minimum-system-version": "9.0"
+    },
+    {
+      "orientation": "landscape",
+      "extent": "full-screen",
+      "size": "1920x1080",
+      "scale": "2x",
+      "idiom": "tv",
+      "minimum-system-version": "11.0"
+    },
+    {
+      "minimum-system-version": "11.0",
+      "orientation": "portrait",
+      "extent": "full-screen",
+      "size": "375x812",
+      "subtype": "2436h",
+      "scale": "3x",
+      "idiom": "iphone"
+    },
+    {
+      "minimum-system-version": "11.0",
+      "orientation": "landscape",
+      "extent": "full-screen",
+      "filename": "loading@2436x1125.png",
+      "size": "812x375",
+      "subtype": "2436h",
+      "scale": "3x",
+      "idiom": "iphone"
+    },
+    {
       "minimum-system-version": "8.0",
       "orientation": "portrait",
       "extent": "full-screen",
@@ -29,6 +64,14 @@
       "subtype": "736h",
       "scale": "3x",
       "idiom": "iphone"
+    },
+    {
+      "minimum-system-version": "7.0",
+      "orientation": "portrait",
+      "extent": "full-screen",
+      "size": "1024x1366",
+      "scale": "2x",
+      "idiom": "ipad"
     },
     {
       "minimum-system-version": "7.0",
