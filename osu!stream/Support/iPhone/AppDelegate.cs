@@ -201,6 +201,8 @@ namespace osum.Support.iPhone
             return true;
         }
 
+        public override UIRectEdge PreferredScreenEdgesDeferringSystemGestures => UIRectEdge.All;
+
         public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations()
         {
             return UIInterfaceOrientationMask.Landscape;
