@@ -7,7 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>sh.ppy.osu</string>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string>9.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -46,8 +46,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>CFBundleVersion</key>
-	<string>1.51</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
