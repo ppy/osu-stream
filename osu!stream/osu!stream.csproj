@@ -19,7 +19,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <additionalargs>/unsafe</additionalargs>
     <Externalconsole>True</Externalconsole>
@@ -30,8 +30,8 @@
     <MtouchArch>ARM64</MtouchArch>
     <CrashReportingApiKey>
     </CrashReportingApiKey>
-    <CodesignProvision>33a17a26-3245-4a15-b789-e4958782ef1f</CodesignProvision>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -48,8 +48,9 @@
     </MtouchI18n>
     <MtouchArch>x86_64</MtouchArch>
     <PlatformTarget>x64</PlatformTarget>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|iPhone' ">
     <DebugType>none</DebugType>
@@ -61,7 +62,7 @@
     <MtouchUseArmv7>false</MtouchUseArmv7>
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <ConsolePause>False</ConsolePause>
     <IpaPackageName>
@@ -75,7 +76,7 @@
     <BundleDisplayName>osu!test</BundleDisplayName>
     <BundleIcon>IconTest.png</BundleIcon>
     <MtouchArch>ARMv7</MtouchArch>
-    <CodesignProvision>ABC5C9E5-0496-4AFF-A8E8-4D53A030FE96</CodesignProvision>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Distribution|iPhone' ">
@@ -87,7 +88,7 @@
     <additionalargs>/unsafe</additionalargs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
     <MtouchLink>Full</MtouchLink>
     <IpaPackageName>
     </IpaPackageName>
@@ -96,15 +97,36 @@
     <BundleDisplayName>osu!</BundleDisplayName>
     <BundleIcon>Icon.png</BundleIcon>
     <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
+    <CodesignKey>iPhone Developer: Dean Herbert (8R8BSRCV48)</CodesignKey>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="OpenTK-1.0" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="mscorlib">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK-1.0">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\OpenTK-1.0.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.iOS">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\Xamarin.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>..\..\..\..\..\Library\Frameworks\Xamarin.iOS.framework\Versions\Current\lib\mono\Xamarin.iOS\System.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

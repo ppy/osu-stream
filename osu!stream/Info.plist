@@ -33,21 +33,18 @@
 	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-	  <key>NSExceptionDomains</key>
-	  <dict>
-	    <key>osustream.com</key>
-	    <dict>
-	      <!--Include to allow subdomains-->
-	      <key>NSIncludesSubdomains</key>
-	      <true/>
-	      <!--Include to allow HTTP requests-->
-	      <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-	      <true/>
-	      <!--Include to specify minimum TLS version-->
-	      <key>NSTemporaryExceptionMinimumTLSVersion</key>
-	      <string>TLSv1.1</string>
-	    </dict>
-	  </dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>osustream.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSTemporaryExceptionMinimumTLSVersion</key>
+				<string>TLSv1.1</string>
+			</dict>
+		</dict>
 	</dict>
 	<key>CFBundleVersion</key>
 	<string>1.51</string>
@@ -75,5 +72,7 @@
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.51</string>
+	<key>CFBundleName</key>
+	<string>osu!</string>
 </dict>
 </plist>
