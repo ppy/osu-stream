@@ -302,6 +302,8 @@ namespace osum
             WebViewController webViewController = new WebViewController(url, title);
             if (checkFinished != null) webViewController.ShouldClose += checkFinished;
             UINavigationController nav = new UINavigationController(webViewController);
+
+            nav.NavigationBar.BarStyle = UIBarStyle.Black;
             nav.NavigationBar.TintColor = new UIColor(0,134/255f, 219/255f, 1);
 
             AppDelegate.SetUsingViewController(true);
