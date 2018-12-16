@@ -386,7 +386,6 @@
     <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40120.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40114.png" />
@@ -395,19 +394,16 @@
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%4076.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40144.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%4072.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40640x1136.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40640x960.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402048x1536.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401024x768.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40320x480.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%40750x1334.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%401242x2208.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402208x1242.png" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\loading%402436x1125.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.imageset\loading2436x1125.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
   </ItemGroup>
   <ItemGroup>
     <ITunesArtwork Include="iTunesArtwork%402x" />
     <ITunesArtwork Include="iTunesArtwork" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
