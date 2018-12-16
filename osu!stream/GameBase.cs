@@ -551,7 +551,7 @@ namespace osum
 
         public static bool Mapper;
 
-        public static bool HasAuth { get { return !string.IsNullOrEmpty(GameBase.Config.GetValue<string>("hash", null)); } }
+        public static bool HasAuth => false;
 
         internal static void Notify(string simple, BoolDelegate action = null)
         {
