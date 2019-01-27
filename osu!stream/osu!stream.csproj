@@ -397,6 +397,7 @@
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.imageset\loading2436x1125.png" />
     <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%40167.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\icon%401024.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
