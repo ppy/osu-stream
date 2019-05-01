@@ -198,8 +198,8 @@ namespace osum
 
             float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
 
-            if (aspectRatio > 1.8f)
-                res *= aspectRatio / 1.8f;
+            if (aspectRatio > 1.775f)
+                res *= aspectRatio / 1.775f;
 
             SpriteResolution = (int)res;
         }
