@@ -69,9 +69,9 @@
 	<key>CFBundleName</key>
 	<string>osu!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.00</string>
+	<string>2.01</string>
 	<key>CFBundleVersion</key>
-	<string>2.00</string>
+	<string>2.01</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 </dict>
