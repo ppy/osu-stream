@@ -63,7 +63,7 @@ namespace sspack
             sb.AppendLine(@"        internal static void LoadSprites()");
             sb.AppendLine(@"        {");
 
-            string skinDir = @"../../../osum/Skins/Default/";
+            string skinDir = @"../../../osu!stream/Skins/Default/";
             foreach (string dir in Directory.GetDirectories(skinDir))
             {
                 if (dir.Contains("_huge")) continue;
@@ -75,7 +75,7 @@ namespace sspack
             sb.AppendLine(@"    }");
             sb.AppendLine(@"}");
 
-            File.WriteAllText(@"..\..\..\osum\Graphics\TextureManager_Load.cs", sb.ToString());
+            File.WriteAllText(@"..\..\..\osu!stream\Graphics\TextureManager_Load.cs", sb.ToString());
 
             Console.WriteLine("------- DONE! -------");
             Console.ReadLine();
