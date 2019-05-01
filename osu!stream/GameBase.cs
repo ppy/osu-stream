@@ -194,7 +194,7 @@ namespace osum
             if (testWidth < 512) testWidth *= 2;
             if (testWidth >= 1536) testWidth /= 2;
 
-            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth)));
+            SpriteResolution = (int)(Math.Max(960, NativeSize.Width / Math.Min((float)NativeSize.Width / NativeSize.Height, GamefieldBaseSize.X / GamefieldBaseSize.Y)));
             //todo: this will fail if there's ever a device with width greater than 480 but less than 512 (ie. half of the range)
             //need to consider the WindowScaleFactor value here.
         }

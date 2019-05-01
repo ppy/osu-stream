@@ -55,11 +55,6 @@ namespace osum
             InputManager.AddSource(source);
         }
 
-        public override void UpdateSpriteResolution()
-        {
-            SpriteResolution = (int)(Math.Max(BASE_SPRITE_RES, NativeSize.Width / Math.Min((float)NativeSize.Width / NativeSize.Height, GamefieldBaseSize.X / GamefieldBaseSize.Y)));
-        }
-
         public override void SetupScreen()
         {
             NativeSize = Window.ClientSize;
