@@ -60,7 +60,7 @@ namespace osum
                 case 's':
                     TextureManager.ReloadAll();
                     break;
-                case 'x':
+                case 'z':
                     TextureManager.DisposeAll();
                     break;
                 case 'o':
@@ -87,6 +87,12 @@ namespace osum
                         ClientSize = new Size(480, 320);
                     else
                         ClientSize = new Size(960, 640);
+                    break;
+                case 'x':
+                    if (ClientSize.Width == 1218)
+                        ClientSize = new Size(2436, 1125); 
+                    else
+                        ClientSize = new Size(1218, 562);
                     break;
                 case 'i':
                     ClientSize = new Size(1024, 768);
