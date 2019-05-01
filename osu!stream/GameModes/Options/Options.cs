@@ -109,7 +109,7 @@ namespace osum.GameModes.Options
 
             vPos += 80;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset - 15, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.EffectVolume), AudioEngine.Effect.Volume, new Vector2(button_x_offset - 30, vPos),
                 delegate(float v)
                 {
                     AudioEngine.Effect.Volume = v;
@@ -136,7 +136,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset - 15, vPos),
+            soundEffectSlider = new SliderControl(LocalisationManager.GetString(OsuString.MusicVolume), AudioEngine.Music.MaxVolume, new Vector2(button_x_offset - 30, vPos),
                 delegate(float v) { AudioEngine.Music.MaxVolume = v; });
             smd.Add(soundEffectSlider);
 
@@ -144,7 +144,7 @@ namespace osum.GameModes.Options
 
             const int offset_range = 32;
 
-            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2) , new Vector2(button_x_offset - 15, vPos),
+            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2) , new Vector2(button_x_offset - 30, vPos),
                 delegate(float v) {
                 GameBase.Config.SetValue<int>("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
                     if (universalOffsetSlider != null) //will be null on first run.
