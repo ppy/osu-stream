@@ -131,7 +131,7 @@ namespace osum.Graphics.Renderers
                                     //if (shadow)
                                     //    g.DrawString(text, f, blackBrush,
                                     //                 new RectangleF(1, 1, measuredSize.Width, measuredSize.Height), sf);
-                                    g.DrawString(text, f, brush, new RectangleF(0, 0, measuredSize.Width, measuredSize.Height), sf);
+                                    g.DrawString(text, f, brush, new RectangleF(0, 0, measuredSize.Width + 1, measuredSize.Height + 1), sf);
                                 }
                             }
 
