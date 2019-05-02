@@ -86,7 +86,7 @@ namespace osum.GameplayElements
             : base(hitObjectManager, Vector2.Zero, startTime, soundType, true, 0)
         {
             if (SpinnerCentre == Vector2.Zero)
-                SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.X / 2, GameBase.BaseSize.Y - SpinnerCentreFromBottom.Y));
+                SpinnerCentre = GameBase.StandardToGamefield(new Vector2(GameBase.BaseSizeFixedWidth.X / 2, GameBase.BaseSizeFixedWidth.Y - (GameBase.BaseSizeFixedWidth.Y / GameBase.BaseSize.Y) * SpinnerCentreFromBottom.Y));
 
             Position = SpinnerCentre;
             EndTime = endTime;
