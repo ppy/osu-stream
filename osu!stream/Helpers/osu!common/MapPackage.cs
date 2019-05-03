@@ -252,6 +252,12 @@ namespace osu_common.Libraries.Osz2
                 //no key is given, we'll generate it from the metadata.
 #if DIST
                 string seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
+
+                if (fFilename.EndsWith(".osz2")) {
+                    if (!fMetadata.ContainsKey (MapMetaType.Creator) || !fMetadata.ContainsKey (MapMetaType.BeatmapSetID))
+                        return;
+                    seed = fMetadata [MapMetaType.Creator] + "yhxyfjo5" + fMetadata [MapMetaType.BeatmapSetID];
+                }
 #else           
                 string seed;
                 #if OSUM
