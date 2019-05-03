@@ -60,6 +60,8 @@ namespace osum.GameplayElements
         public int StartTime;
         public int EndTime;
 
+        public int JudgeTime;
+
         internal ScoreChange hitValue;
 
         internal HitObjectType Type;
@@ -176,7 +178,10 @@ namespace osum.GameplayElements
             ScoreChange action = HitActionInitial();
 
             if (action != ScoreChange.Ignore)
+            {
                 IsHit = true;
+                JudgeTime = Clock.AudioTime;
+            }
 
             return action;
         }

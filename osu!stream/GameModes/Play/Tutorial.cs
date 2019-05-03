@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1491,7 +1491,7 @@ namespace osum.GameModes.Play
                 case ScoreChange.Hit100:
                 case ScoreChange.Hit100m:
                 case ScoreChange.Hit100k:
-                    if (Clock.AudioTime < hitObject.StartTime)
+                    if (hitObject.JudgeTime < hitObject.StartTime)
                         showText(LocalisationManager.GetString(OsuString.TimingEarly), -60).FadeOut(1000);
                     else
                         showText(LocalisationManager.GetString(OsuString.TimingLate), 60).FadeOut(1000);
@@ -1499,7 +1499,7 @@ namespace osum.GameModes.Play
                 case ScoreChange.Hit50:
                 case ScoreChange.Hit50m:
                 case ScoreChange.Miss:
-                    if (Clock.AudioTime < hitObject.StartTime)
+                    if (hitObject.JudgeTime < hitObject.StartTime)
                     {
                         pText t = showText(LocalisationManager.GetString(OsuString.TimingVeryEarly), -60);
                         t.TextSize *= 1.4f;
