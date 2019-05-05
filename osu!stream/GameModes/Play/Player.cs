@@ -278,7 +278,7 @@ namespace osum.GameModes
 
             menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
                                     ClockTypes.Game,
-                                    new Vector2(19, 16.5f), 1, true, Color4.White);
+                                    new Vector2(19 + GameBase.SuperWidePadding, 16.5f), 1, true, Color4.White);
             menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
             topMostSpriteManager.Add(menuPauseButton);

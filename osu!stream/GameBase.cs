@@ -187,6 +187,8 @@ namespace osum
             GL.LoadIdentity();
         }
 
+        public static bool IsSuperWide;
+
         public virtual void UpdateSpriteResolution()
         {
             //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
@@ -199,7 +201,14 @@ namespace osum
             float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
 
             if (aspectRatio > 1.775f)
+            {
                 res *= aspectRatio / 1.775f;
+                IsSuperWide = true;
+            }
+            else
+            {
+                IsSuperWide = false;
+            }
 
             SpriteResolution = (int)res;
         }
@@ -555,6 +564,8 @@ namespace osum
         public static float SpriteToBaseRatioAligned;
 
         public static bool Mapper;
+
+        internal static int SuperWidePadding => IsSuperWide;
 
         public static bool HasAuth => false;
 
