@@ -32,7 +32,7 @@ namespace osum.GameModes.Play.Components
             this.scale = scale;
 
             float vpos = position.Y;
-            float hOffset = 40;
+            float hOffset = 40 + GameBase.SuperWidePadding;
 
             textMeasure = Vector2.Zero;
 

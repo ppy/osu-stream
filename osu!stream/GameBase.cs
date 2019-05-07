@@ -207,7 +207,7 @@ namespace osum
             }
             else
             {
-                IsSuperWide = false;
+                IsSuperWide = true;
             }
 
             SpriteResolution = (int)res;
@@ -565,7 +565,7 @@ namespace osum
 
         public static bool Mapper;
 
-        internal static int SuperWidePadding => IsSuperWide;
+        internal static int SuperWidePadding => IsSuperWide ? 30 : 0;
 
         public static bool HasAuth => false;
 

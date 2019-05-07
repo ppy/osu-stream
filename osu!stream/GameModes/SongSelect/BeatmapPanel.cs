@@ -108,7 +108,7 @@ namespace osum.GameModes.SongSelect
                 s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
                 s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
-            
+                
             s_Thumbnail.AlphaBlend = false;
             s_Thumbnail.Offset = new Vector2(8.5f, 3.8f);
             Sprites.Add(s_Thumbnail);
