@@ -74,6 +74,8 @@ namespace osum.Graphics.Renderers
 
                 UIGraphics.PopContext();
 
+                nsstr.Dispose();
+
                 measured = new Vector2((float)actualSize.Width, (float)actualSize.Height);
 
     			SpriteManager.TexturesEnabled = true;
