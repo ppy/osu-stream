@@ -67,6 +67,9 @@ namespace osum.Graphics.Sprites
                 for (int i = 0; i < textArray.Length; i++)
                     textArray[i] = value[i];
 
+                if (textArray.Length > MAX_LENGTH)
+                    throw new Exception($"STRING TOO LONG");
+
                 textChanged = true;
             }
         }
@@ -85,6 +88,9 @@ namespace osum.Graphics.Sprites
             set
             {
                 bool sameSizeArray = textArray != null && value.Length == textArray.Length;
+
+                if (value?.Length > MAX_LENGTH)
+                    throw new Exception($"STRING TOO LONG ({value})");
 
                 bool sameString = sameSizeArray;
 
