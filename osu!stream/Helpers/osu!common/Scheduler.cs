@@ -27,7 +27,7 @@ namespace osum.Helpers
         {
             VoidDelegate[] runnable;
 
-            lock (timedQueue)
+            lock (schedulerQueue)
             {
                 long currentTime = timer.ElapsedMilliseconds;
 
@@ -36,10 +36,7 @@ namespace osum.Helpers
                     schedulerQueue.Enqueue(timedQueue[0].Task);
                     timedQueue.RemoveAt(0);
                 }
-            }
 
-            lock (schedulerQueue)
-            {
                 int c = schedulerQueue.Count;
                 if (c == 0) return;
                 runnable = new VoidDelegate[c];
@@ -56,9 +53,12 @@ namespace osum.Helpers
 
         public ScheduledDelegate Add(VoidDelegate d, int timeUntilRun)
         {
-            ScheduledDelegate del = new ScheduledDelegate(d, timer.ElapsedMilliseconds + timeUntilRun);
-            timedQueue.Add(del);
-            return del;
+            lock (schedulerQueue)
+            {
+                ScheduledDelegate del = new ScheduledDelegate(d, timer.ElapsedMilliseconds + timeUntilRun);
+                timedQueue.Add(del);
+                return del;
+            }
         }
 
         /// <summary>
@@ -67,7 +67,8 @@ namespace osum.Helpers
         /// <returns>true if the delegate was successfully cancelled.</returns>
         public bool Cancel(ScheduledDelegate d)
         {
-            return timedQueue.Remove(d);
+            lock (schedulerQueue)
+                return timedQueue.Remove(d);
         }
 
         public void Add(VoidDelegate d, bool forceDelayed = false)
