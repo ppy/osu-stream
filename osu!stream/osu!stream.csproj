@@ -98,6 +98,8 @@
     <BundleIcon>Icon.png</BundleIcon>
     <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
     <CodesignProvision>osu-stream-20</CodesignProvision>
+    <MtouchUseThumb>true</MtouchUseThumb>
+    <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
