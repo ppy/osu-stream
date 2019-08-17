@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -366,7 +366,7 @@ namespace osum.GameModes.Store
         internal void AddItem(PackItem item)
         {
             pSprite preview = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_play), Vector2.Zero) { DrawDepth = base_depth + 0.02f, Origin = OriginTypes.Centre };
-            preview.Offset = new Vector2(28, ExpandedHeight + 20);
+            preview.Offset = new Vector2(GameBase.SuperWidePadding + 28, ExpandedHeight + 20);
 
             Sprites.Add(preview);
             PackItemSprites.Add(preview);
@@ -444,7 +444,7 @@ namespace osum.GameModes.Store
 
             string artistString;
             string titleString;
-            float textOffset = 50;
+            float textOffset = 50 + GameBase.SuperWidePadding;
 
             if (item.Title == null)
             {
@@ -480,7 +480,7 @@ namespace osum.GameModes.Store
                 Origin = OriginTypes.CentreRight,
                 Colour = colourVideoPreviewNormal
             };
-            videoPreview.Offset = new Vector2(10, ExpandedHeight + 20);
+            videoPreview.Offset = new Vector2(10 + GameBase.SuperWidePadding, ExpandedHeight + 20);
             videoPreview.OnClick += delegate
             {
                 if (back.TagNumeric != 1)
