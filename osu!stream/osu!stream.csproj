@@ -27,7 +27,7 @@
     <DebugSymbols>True</DebugSymbols>
     <IpaPackageName>
     </IpaPackageName>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARMv7s, ARM64</MtouchArch>
     <CrashReportingApiKey>
     </CrashReportingApiKey>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
