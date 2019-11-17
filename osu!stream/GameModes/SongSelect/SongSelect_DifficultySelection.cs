@@ -198,11 +198,11 @@ namespace osum.GameModes
             s_ModeDescriptionText = new pText(string.Empty, 30, new Vector2(0, 110), 1, true, Color4.White) { Field = FieldTypes.StandardSnapCentre, Origin = OriginTypes.Centre, TextAlignment = TextAlignment.Centre };
             spriteManagerDifficultySelect.Add(s_ModeDescriptionText);
 
-            s_ScoreInfo = new pText(null, 24, new Vector2(GameBase.SuperWidePadding, 64), Vector2.Zero, 1, true, Color4.White, true);
+            s_ScoreInfo = new pText(null, 24, new Vector2(38.5f, 64), Vector2.Zero, 1, true, Color4.White, true);
             s_ScoreInfo.OnClick += Handle_ScoreInfoOnClick;
             spriteManagerDifficultySelect.Add(s_ScoreInfo);
 
-            s_ScoreRank = new pSprite(null, new Vector2(GameBase.SuperWidePadding, 72)) { DrawDepth = 0.95f };
+            s_ScoreRank = new pSprite(null, new Vector2(38.5f, 72)) { DrawDepth = 0.95f };
             s_ScoreRank.OnClick += Handle_ScoreInfoOnClick;
             spriteManagerDifficultySelect.Add(s_ScoreRank);
         }
