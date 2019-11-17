@@ -168,7 +168,7 @@ namespace osum.GameModes.SongSelect
                     Origin = OriginTypes.BottomLeft,
                     Field = FieldTypes.StandardSnapRight,
                     DrawDepth = base_depth + 0.06f,
-                    Offset = new Vector2(174, PANEL_HEIGHT)
+                    Offset = new Vector2(179 + GameBase.SuperWidePadding, PANEL_HEIGHT)
                 };
                 Sprites.Add(s_StarBg);
 
@@ -177,7 +177,7 @@ namespace osum.GameModes.SongSelect
                     Origin = OriginTypes.BottomLeft,
                     Field = FieldTypes.StandardSnapRight,
                     DrawDepth = base_depth + 0.07f,
-                    Offset = new Vector2(174, PANEL_HEIGHT)
+                    Offset = new Vector2(179 + GameBase.SuperWidePadding, PANEL_HEIGHT)
                 };
 
                 if (starCount == 0)
