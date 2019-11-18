@@ -40,7 +40,7 @@ namespace osum.GameModes.SongSelect
             {
                 DrawDepth = base_depth,
                 Colour = new Color4(255, 255, 255, 170),
-                Tag = this,
+                Tag = this
             };
 
             Sprites.Add(s_BackingPlate);
