@@ -162,7 +162,7 @@ namespace osum.GameModes.Store
             Sprites.Add(s_Text = new pText(packTitle, 32, Vector2.Zero, Vector2.Zero, base_depth + 0.02f, true, Color4.White, false)
             {
                 Bold = true,
-                Offset = new Vector2(100, 14)
+                Offset = new Vector2(130, 14)
             });
 
             Sprites.Add(s_PriceBackground = new pSprite(TextureManager.Load(OsuTexture.songselect_store_buy_background), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, Vector2.Zero, base_depth + 0.02f, true, Color4.White)
@@ -176,14 +176,14 @@ namespace osum.GameModes.Store
             {
                 Origin = OriginTypes.Centre,
                 Field = FieldTypes.StandardSnapRight,
-                Offset = new Vector2(75, 30)
+                Offset = new Vector2(75 + GameBase.SuperWidePadding, 30)
             });
 
             if (!free && PackId != RESTORE_PACK_ID)
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
-                    Offset = new Vector2(75, 30),
+                    Offset = new Vector2(75 + GameBase.SuperWidePadding, 30),
                     ExactCoordinates = false
                 };
                 s_LoadingPrice.Transform(new TransformationF(TransformationType.Rotation, 0, MathHelper.Pi * 2, Clock.ModeTime, Clock.ModeTime + 2000) { Looping = true });
@@ -195,7 +195,7 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumb_restore),Vector2.Zero)
                 {
                     DrawDepth = base_depth + 0.02f,
-                    Offset = new Vector2(8.5f, 3.8f)
+                    Offset = new Vector2(38.5f, 3.8f)
                 });
             }
             else
@@ -203,7 +203,7 @@ namespace osum.GameModes.Store
                 Sprites.Add(s_Thumbnail = new pSpriteWeb("https://www.osustream.com/dl/preview.php?filename=" + PackId + "&format=jpg")
                 {
                     DrawDepth = base_depth + 0.02f,
-                    Offset = new Vector2(8.5f, 3.8f)
+                    Offset = new Vector2(38.5f, 3.8f)
                 });
             }
         }
