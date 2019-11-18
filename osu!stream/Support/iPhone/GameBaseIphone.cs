@@ -7,6 +7,8 @@ using osum.GameplayElements;
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
+using WebKit;
+using CoreGraphics;
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -322,7 +324,7 @@ namespace osum
         string Url;
         new string Title;
 
-        UIWebView webView;
+        WKWebView webView;
         UIActivityIndicatorView activity;
 
         public event StringBoolDelegate ShouldClose;
@@ -342,10 +344,9 @@ namespace osum
         {
             base.LoadView();
 
-            webView = new UIWebView();
-            webView.Delegate = new FinishableWebViewDelegate(finished);
+            webView = new WKWebView (CGRect.Empty, new WKWebViewConfiguration());
+            webView.NavigationDelegate = new FinishableWebViewDelegate(finished);
             webView.BackgroundColor = UIColor.Black;
-            webView.ScalesPageToFit = true;
             webView.Opaque = false;
             webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl(Url)));
             View = webView;
@@ -388,7 +389,7 @@ namespace osum
             ShouldClose = null;
 
             webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("about:blank")));
-            webView.Delegate = null;
+            webView.NavigationDelegate = null;
             webView = null;
             DismissModalViewController(true);
             AppDelegate.SetUsingViewController(false);
@@ -406,7 +407,7 @@ namespace osum
         }
     }
 
-    class FinishableWebViewDelegate : UIWebViewDelegate
+    class FinishableWebViewDelegate : WKNavigationDelegate
     {
         StringBoolBoolDelegate finishedDelegate;
 
@@ -415,12 +416,16 @@ namespace osum
             finishedDelegate = finished;
         }
 
-        public override bool ShouldStartLoad(UIWebView webView, NSUrlRequest request, UIWebViewNavigationType navigationType)
+        public override void DecidePolicy(WKWebView webView, WKNavigationAction navigationAction, Action<WKNavigationActionPolicy> decisionHandler)
         {
-            return !finishedDelegate(request.Url.AbsoluteString, false);
+            WKNavigationActionPolicy policy = WKNavigationActionPolicy.Cancel;
+            if (!finishedDelegate(navigationAction.Request.Url.AbsoluteString, false)) {
+                policy = WKNavigationActionPolicy.Allow;
+            }
+            decisionHandler(policy);
         }
 
-        public override void LoadingFinished (UIWebView webView)
+        public override void DidFinishNavigation (WKWebView webView, WKNavigation navigation)
         {
             finishedDelegate(null, true);
         }
