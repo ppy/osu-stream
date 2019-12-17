@@ -26,19 +26,42 @@ namespace osum.Graphics.Renderers
             //UIFont font = bold ? UIFont.BoldSystemFontOfSize(size) : UIFont.SystemFontOfSize(size);
             UIFont font = UIFont.FromName(bold ? "Futura-CondensedExtraBold" : "Futura-Medium",size);
 
-            NSString nsstr = new NSString(text);
             CGSize actualSize = CGSize.Empty;
 
-			if (restrictBounds == Vector2.Zero)
+            // Render the text to a UILabel to calculate sizing
+            // and line-wrapping, and then copy the pixels to our texture buffer.
+            UILabel textLabel = new UILabel();
+            textLabel.Font = font;
+            textLabel.BackgroundColor = UIColor.Clear;
+            textLabel.TextColor = UIColor.White;
+            textLabel.LineBreakMode = UILineBreakMode.WordWrap;
+            textLabel.Lines = 0; // Needed for multiple lines
+            textLabel.Text = text;
+
+            textLabel.TextAlignment = UITextAlignment.Left;
+            switch (alignment) {
+            case TextAlignment.Centre:
+                textLabel.TextAlignment = UITextAlignment.Center;
+                break;
+            case TextAlignment.Right:
+                textLabel.TextAlignment = UITextAlignment.Right;
+                break;
+            }
+
+            if (restrictBounds == Vector2.Zero)
             {
-                actualSize = nsstr.StringSize(font, GameBase.NativeSize, UILineBreakMode.WordWrap);
+                textLabel.SizeToFit();
+                actualSize = textLabel.Frame.Size;
+
                 restrictBounds = new Vector2((float)actualSize.Width, (float)actualSize.Height);
             }
             else if (restrictBounds.Y == 0)
             {
-                actualSize = nsstr.StringSize(font, new SizeF(restrictBounds.X, GameBase.NativeSize.Height), UILineBreakMode.WordWrap);
-                restrictBounds = new Vector2((float)actualSize.Width + 5, (float)actualSize.Height);
-                //note: 5px allowance is givn because when wordwarpping it seems to get cut off otherwise.
+                SizeF boundsSize = new SizeF (restrictBounds.X, GameBase.NativeSize.Height);
+                actualSize = textLabel.SizeThatFits(boundsSize);
+                textLabel.Frame = new CGRect(CGPoint.Empty, actualSize);
+
+                restrictBounds = new Vector2((float)actualSize.Width, (float)actualSize.Height);
             }
 
             int width = TextureGl.GetPotDimension((int)restrictBounds.X);
@@ -53,28 +76,15 @@ namespace osum.Graphics.Renderers
             using (CGColorSpace colorSpace = CGColorSpace.CreateDeviceGray())
             using (CGBitmapContext context = new CGBitmapContext(data, width, height, 8, width, colorSpace,CGImageAlphaInfo.None))
             {
-                context.SetFillColor(1, 1);
                 context.TranslateCTM(0, height);
                 context.ScaleCTM(1, -1);
 
                 UIGraphics.PushContext(context);
 
-                UITextAlignment align = UITextAlignment.Left;
-                switch (alignment)
-                {
-                    case TextAlignment.Centre:
-                        align = UITextAlignment.Center;
-                        break;
-                    case TextAlignment.Right:
-                        align = UITextAlignment.Right;
-                        break;
-                }
-
-                actualSize = nsstr.DrawString(new RectangleF(0,0,restrictBounds.X,restrictBounds.Y),font, UILineBreakMode.WordWrap, align);
-
+                textLabel.SetNeedsDisplay();
+                textLabel.Layer.DrawInContext (context);
+                
                 UIGraphics.PopContext();
-
-                nsstr.Dispose();
 
                 measured = new Vector2((float)actualSize.Width, (float)actualSize.Height);
 

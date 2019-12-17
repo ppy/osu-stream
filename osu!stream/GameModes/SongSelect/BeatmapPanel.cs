@@ -65,11 +65,11 @@ namespace osum.GameModes.SongSelect
 
             s_Text = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, 0.5f, true, Color4.White, false);
             s_Text.Bold = true;
-            s_Text.Offset = new Vector2(100, 0);
+            s_Text.Offset = new Vector2(130, 0);
             Sprites.Add(s_Text);
 
             s_TextArtist = new pText(string.Empty, 26, Vector2.Zero, Vector2.Zero, 0.51f, true, Color4.OrangeRed, false);
-            s_TextArtist.Offset = new Vector2(100, 29);
+            s_TextArtist.Offset = new Vector2(130, 29);
             Sprites.Add(s_TextArtist);
 
 #if !DIST && !iOS
@@ -110,7 +110,7 @@ namespace osum.GameModes.SongSelect
                 s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
                 
             s_Thumbnail.AlphaBlend = false;
-            s_Thumbnail.Offset = new Vector2(8.5f, 3.8f);
+            s_Thumbnail.Offset = new Vector2(38.5f, 3.8f);
             Sprites.Add(s_Thumbnail);
 
             s_BackingPlate2 = new pSprite(TextureManager.Load(OsuTexture.songselect_panel_selected), Vector2.Zero)
@@ -168,7 +168,7 @@ namespace osum.GameModes.SongSelect
                     Origin = OriginTypes.BottomLeft,
                     Field = FieldTypes.StandardSnapRight,
                     DrawDepth = base_depth + 0.06f,
-                    Offset = new Vector2(174, PANEL_HEIGHT)
+                    Offset = new Vector2(179 + GameBase.SuperWidePadding, PANEL_HEIGHT)
                 };
                 Sprites.Add(s_StarBg);
 
@@ -177,7 +177,7 @@ namespace osum.GameModes.SongSelect
                     Origin = OriginTypes.BottomLeft,
                     Field = FieldTypes.StandardSnapRight,
                     DrawDepth = base_depth + 0.07f,
-                    Offset = new Vector2(174, PANEL_HEIGHT)
+                    Offset = new Vector2(179 + GameBase.SuperWidePadding, PANEL_HEIGHT)
                 };
 
                 if (starCount == 0)

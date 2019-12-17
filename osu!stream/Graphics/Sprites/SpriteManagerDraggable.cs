@@ -32,7 +32,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal float EndBufferZone = 60;
 
-        pRectangle scrollbar = new pRectangle(new Vector2(5, 0), new Vector2(4, 0), true, 1, new Color4(255, 255, 255, 255))
+        pRectangle scrollbar = new pRectangle(new Vector2(GameBase.SuperWidePadding + 5, 0), new Vector2(4, 0), true, 1, new Color4(255, 255, 255, 255))
         {
             Field = FieldTypes.StandardSnapRight,
             Origin = OriginTypes.TopRight

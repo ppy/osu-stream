@@ -164,7 +164,7 @@ namespace osum.GameModes
                 songInfoSpriteManager.Add(source);
             }
 
-            pText mapper = new pText("Level design by " + beatmap.Creator, 18, new Vector2(0, 0), 1, true, Color4.White)
+            pText mapper = new pText("Level design by " + beatmap.Creator, 18, new Vector2(0, GameBase.SuperWidePadding), 1, true, Color4.White)
             {
                 Field = FieldTypes.StandardSnapBottomCentre,
                 Origin = OriginTypes.BottomCentre
