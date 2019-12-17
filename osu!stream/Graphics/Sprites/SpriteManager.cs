@@ -267,8 +267,6 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        List<int> removableSprites = new List<int>();
-
         int lastVisibleUpdate;
 
         /// <summary>
@@ -308,16 +306,15 @@ namespace osum.Graphics.Sprites
             }
 
 
-            int count = Sprites.Count;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i >= 0 && i < Sprites.Count; i++)
             {
                 pDrawable p = Sprites[i];
                 p.Update();
 
                 if (p.IsRemovable)
                 {
-                    removableSprites.Add(i);
-                    p.Dispose();
+                    ToDispose.Add (p);
+                    Sprites.RemoveAt (i--);
                 }
             }
 
@@ -325,14 +322,6 @@ namespace osum.Graphics.Sprites
             if (Sprites.Count > 5)
                 DebugOverlay.AddLine("SpriteManager: tracking " + Sprites.Count + " sprites (" + Sprites.FindAll(s => s.IsOnScreen).Count + " on-screen)");
 #endif
-
-            count = removableSprites.Count;
-            if (count > 0)
-            {
-                for (int i = count - 1; i >= 0; i--)
-                    Sprites.RemoveAt(removableSprites[i]);
-                removableSprites.Clear();
-            }
         }
 
         static BlendingFactorDest lastBlendDest = BlendingFactorDest.One;
@@ -471,6 +460,7 @@ namespace osum.Graphics.Sprites
         }
 
         static bool alphaBlend = false;
+        private List<pDrawable> ToDispose = new List<pDrawable>();
 
         public Vector2 ViewOffset
         {
@@ -569,6 +559,12 @@ namespace osum.Graphics.Sprites
             {
                 foreach (pDrawable p in Sprites)
                     p.Dispose();
+            }
+
+            if (ToDispose != null)
+            {
+                foreach (pDrawable p in ToDispose)
+                    p.Dispose ();
             }
 
             if (SpriteQueue != null)
