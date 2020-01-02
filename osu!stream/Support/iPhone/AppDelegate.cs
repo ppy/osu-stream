@@ -201,8 +201,10 @@ namespace osum.Support.iPhone
             return true;
         }
 
-        // Hides the home indicator if the user stops touching the screen for a few seconds
-        public override bool PrefersHomeIndicatorAutoHidden => true;
+        public override bool PrefersStatusBarHidden()
+        {
+            return true;
+        }
 
         public override UIRectEdge PreferredScreenEdgesDeferringSystemGestures => UIRectEdge.All;
 
