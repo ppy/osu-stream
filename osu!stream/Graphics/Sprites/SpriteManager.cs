@@ -40,7 +40,7 @@ using osum.Input.Sources;
 
 namespace osum.Graphics.Sprites
 {
-    public class SpriteManager : pDrawable, IDisposable
+    public class SpriteManager : pDrawable
     {
         internal List<pDrawable> Sprites;
 
@@ -49,6 +49,7 @@ namespace osum.Graphics.Sprites
         internal SpriteManager(List<pDrawable> sprites)
         {
             Sprites = new List<pDrawable>(sprites.Count);
+
             foreach (pSprite s in sprites)
                 Add(s);
 
@@ -321,16 +322,6 @@ namespace osum.Graphics.Sprites
             lastBlendDest = dst;
 
             GL.BlendFunc(lastBlendSrc, lastBlendDest);
-        }
-
-        private void addToBatch(pDrawable p)
-        {
-            //todo: implement batching.
-        }
-
-        private void flushBatch()
-        {
-            //todo: implement batching.
         }
 
         internal override bool ExactCoordinates

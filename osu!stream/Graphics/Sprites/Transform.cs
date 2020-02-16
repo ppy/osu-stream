@@ -206,7 +206,6 @@ namespace osum.Graphics.Sprites
                 case EasingTypes.InOut:
                     return start + (-2 * (progress * progress * progress) + 3 * (progress * progress)) * (end - start);
                 default:
-                case EasingTypes.None:
                     return pMathHelper.Lerp(start, end, progress);
             }
         }
@@ -245,7 +244,7 @@ namespace osum.Graphics.Sprites
 
         public override string ToString()
         {
-            return string.Format("{4} {0}-{1}", StartTime, EndTime, Type);
+            return string.Format("{2} {0}-{1}", StartTime, EndTime, Type);
         }
 
         internal void Update(int time)

@@ -237,7 +237,7 @@ namespace osum.Graphics.Sprites
 
         private pTexture textureFor(char c)
         {
-            pTexture tex = null;
+            pTexture tex;
 
             if (textureCache.TryGetValue(c, out tex) && tex != null && tex.TextureGl != null && tex.TextureGl.Id >= 0)
             //the extra two conditions are only required for the fps counter between modes.
@@ -291,8 +291,6 @@ namespace osum.Graphics.Sprites
 
             int currentX = 0;
             int height = 0;
-
-            int width = 0;
 
             for (int i = 0; i < textArray.Length; i++)
             {
@@ -352,9 +350,7 @@ namespace osum.Graphics.Sprites
                 }
             }
 
-            width = currentX;
-
-            lastMeasure = new Vector2(width, height);
+            lastMeasure = new Vector2(currentX, height);
         }
 
         public override void Update()

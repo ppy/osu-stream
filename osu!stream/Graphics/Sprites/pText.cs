@@ -78,11 +78,6 @@ namespace osum.Graphics.Sprites
             return base.Draw();
         }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
         public pText(string text, float textSize, Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour) :
             this(text, textSize, startPosition, Vector2.Zero, drawDepth, alwaysDraw, colour, false)
         {
@@ -143,7 +138,7 @@ namespace osum.Graphics.Sprites
         /// (this could do with some tidying)
         /// </summary>
         /// <returns></returns>
-        private pTexture refreshTexture()
+        private void refreshTexture()
         {
             if (texture != null && !texture.IsDisposed)
             {
@@ -158,7 +153,7 @@ namespace osum.Graphics.Sprites
             if (string.IsNullOrEmpty(Text) && TextBounds.X == 0)
             {
                 lastMeasure = TextBounds;
-                return null;
+                return;
             }
 
             float size = GameBase.BaseToNativeRatio * TextSize * 960f / GameBase.SpriteResolution;
@@ -172,8 +167,6 @@ namespace osum.Graphics.Sprites
                 TextureManager.RegisterDisposable(texture);
 
             Update();
-
-            return texture;
         }
     }
 }
