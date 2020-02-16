@@ -8,22 +8,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Reflection;
 
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
     /// <summary>
     /// Encapsulates a sound stream and provides decoding and streaming capabilities.
     /// </summary>
     public class AudioReader : IDisposable
     {
-        static object reader_lock = new object();
-        static List<AudioReader> readers = new List<AudioReader>();
+        private static readonly object reader_lock = new object();
+        private static readonly List<AudioReader> readers = new List<AudioReader>();
 
-        bool disposed;
-        Stream stream;
-        AudioReader implementation;
+        private bool disposed;
+        private Stream stream;
+        private readonly AudioReader implementation;
 
         #region --- Constructors ---
 
@@ -63,10 +63,10 @@ namespace OpenTK.Audio
                             s.Position = pos;
                             implementation = (AudioReader)
                                 reader.GetType().GetConstructor(
-                                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public |
-                                    System.Reflection.BindingFlags.Instance,
+                                    BindingFlags.NonPublic | BindingFlags.Public |
+                                    BindingFlags.Instance,
                                     null,
-                                    new Type[] { typeof(Stream) },
+                                    new[] { typeof(Stream) },
                                     null)
                                 .Invoke(new object[] { s });
                             return;
@@ -145,8 +145,7 @@ namespace OpenTK.Audio
             {
                 if (implementation != null)
                     return implementation.Frequency;
-                else
-                    throw new NotImplementedException();
+                throw new NotImplementedException();
             }
             protected set
             {
@@ -171,7 +170,7 @@ namespace OpenTK.Audio
                 if (implementation != null)
                     return implementation.EndOfFile;
 
-                return this.Stream.Position >= this.Stream.Length;
+                return Stream.Position >= Stream.Length;
             }
         }
         #endregion
@@ -196,17 +195,17 @@ namespace OpenTK.Audio
         /// <summary>Closes the underlying Stream and disposes of the AudioReader resources.</summary>
         public virtual void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void Dispose(bool manual)
+        private void Dispose(bool manual)
         {
             if (!disposed)
             {
                 if (manual)
-                    if (this.Stream != null)
-                        this.Stream.Close();
+                    if (Stream != null)
+                        Stream.Close();
 
                 disposed = true;
             }
@@ -217,7 +216,7 @@ namespace OpenTK.Audio
         /// </summary>
         ~AudioReader()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         #endregion

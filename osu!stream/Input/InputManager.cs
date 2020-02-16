@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using OpenTK;
 using osum.Helpers;
-using osum.Support;
-using osum.Graphics.Sprites;
-using osum.Audio;
-using osum.GameplayElements.Beatmaps;
-namespace osum
+using osum.Input.Sources;
+
+namespace osum.Input
 {
     public static class InputManager
     {
@@ -125,7 +121,7 @@ namespace osum
 
         #region Outgoing Events
 
-        static public event InputHandler OnDown;
+        public static event InputHandler OnDown;
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
             point.IncreaseValidity();
@@ -139,7 +135,7 @@ namespace osum
             }
         }
 
-        static public event InputHandler OnUp;
+        public static event InputHandler OnUp;
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             //tracking is no longer valid.
@@ -154,7 +150,7 @@ namespace osum
             }
         }
 
-        static public event InputHandler OnMove;
+        public static event InputHandler OnMove;
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
             if (OnMove != null && !GameBase.GloballyDisableInput)

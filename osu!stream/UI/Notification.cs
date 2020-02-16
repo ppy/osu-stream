@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.GameModes;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
-using osum.Graphics.Renderers;
-using osum.Resources;
 using osum.Audio;
+using osum.Graphics;
+using osum.Graphics.Renderers;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Localisation;
 
 namespace osum.UI
 {
     public class Notification : SpriteManager
     {
         public bool Dismissed;
-        private BoolDelegate Action;
+        private readonly BoolDelegate Action;
 
-        NotificationStyle Style;
+        private NotificationStyle Style;
 
-        pSprite okayButton;
-        pSprite cancelButton;
+        private pSprite okayButton;
+        private pSprite cancelButton;
 
         public Notification(string title, string description, NotificationStyle style, BoolDelegate action = null)
         {
@@ -30,7 +25,7 @@ namespace osum.UI
 
             pSprite back = new pSprite(TextureManager.Load(OsuTexture.notification_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Game, Vector2.Zero, 0.98f, true, Color4.White)
             {
-                DimImmune = true,
+                DimImmune = true
             };
 
             pText titleText = new pText(title, 36, new Vector2(0, -130), new Vector2(500 * GameBase.SpriteToBaseRatio, 0), 1, true, Color4.White, true)

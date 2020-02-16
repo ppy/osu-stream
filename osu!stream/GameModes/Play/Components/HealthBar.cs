@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics;
 using OpenTK;
-using osum.Helpers;
-using osum.Graphics.Skins;
 using OpenTK.Graphics;
-using osum.GameModes;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
-namespace osum.GameplayElements.Scoring
+namespace osum.GameModes.Play.Components
 {
     public class HealthBar : GameComponent
     {
@@ -106,7 +101,7 @@ namespace osum.GameplayElements.Scoring
             s_kiIcon.Transform(new TransformationF(TransformationType.Scale, 1.6f, 1, Clock.Time, Clock.Time + 500));
         }*/
 
-        Transformation initialAppearTransformation;
+        private Transformation initialAppearTransformation;
 
         public override void Update()
         {
@@ -149,8 +144,8 @@ namespace osum.GameplayElements.Scoring
             }
         }
 
-        Transformation burstScale;
-        Transformation burstFade;
+        private Transformation burstScale;
+        private Transformation burstFade;
 
         internal virtual void KiExplode()
         {
@@ -207,7 +202,7 @@ namespace osum.GameplayElements.Scoring
             s_kiExplode.Additive = true;
 
             burstScale = new TransformationF(TransformationType.Scale, 1, 2F, 0, 0, EasingTypes.In);
-            burstFade = new TransformationF(TransformationType.Fade, 1, 0, 0, 0, EasingTypes.None);
+            burstFade = new TransformationF(TransformationType.Fade, 1, 0, 0, 0);
 
             s_kiExplode.Transform(burstScale);
             s_kiExplode.Transform(burstFade);

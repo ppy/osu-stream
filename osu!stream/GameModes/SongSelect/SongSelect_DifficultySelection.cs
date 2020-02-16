@@ -1,26 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using OpenTK;
-using osum.Audio;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using osum.GameModes.SongSelect;
 using OpenTK.Graphics;
-using osum.GameModes.Play.Components;
-using osum.Graphics.Drawables;
+using osum.Audio;
+using osum.GameModes.Play;
 using osum.GameplayElements;
-using System.Threading;
-using osum.Graphics.Renderers;
-using osu_common.Libraries.Osz2;
-using osum.Resources;
-using osum.GameplayElements.Scoring;
 using osum.Graphics;
+using osum.Graphics.Renderers;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Localisation;
 
-namespace osum.GameModes
+namespace osum.GameModes.SongSelect
 {
     public partial class SongSelectMode : GameMode
     {
@@ -37,7 +28,7 @@ namespace osum.GameModes
         /// <summary>
         /// True when expert mode is not yet unlocked for the current map.
         /// </summary>
-        bool mapRequiresUnlock
+        private bool mapRequiresUnlock
         {
             get
             {
@@ -98,7 +89,7 @@ namespace osum.GameModes
                     if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackageIdentifier))
                         AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackageIdentifier);
 
-                    GameBase.Scheduler.Add(delegate { showDifficultySelection2(false); }, true);
+                    GameBase.Scheduler.Add(delegate { showDifficultySelection2(); }, true);
                 }, 400);
             }
         }
@@ -137,7 +128,7 @@ namespace osum.GameModes
             spriteManagerDifficultySelect.FadeInFromZero(animationTime / 2);
 
             if (State == SelectState.LoadingPreview && !instant)
-                SetDifficulty(GameBase.Config.GetValue<bool>("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
+                SetDifficulty(GameBase.Config.GetValue("EasyMode", false) ? Difficulty.Easy : Difficulty.Normal, true);
             else
                 SetDifficulty(Player.Difficulty, true);
 
@@ -165,7 +156,7 @@ namespace osum.GameModes
 
             s_SongInfo = new pSprite(TextureManager.Load(OsuTexture.songselect_songinfo), FieldTypes.StandardSnapRight, OriginTypes.TopRight, ClockTypes.Mode, new Vector2(0, 0), 0.95f, true, Color4.White);
             s_SongInfo.Alpha = 0;
-            s_SongInfo.OnClick += new EventHandler(onSongInfoClick);
+            s_SongInfo.OnClick += onSongInfoClick;
             topmostSpriteManager.Add(s_SongInfo);
 
             s_ModeButtonEasy = new pSprite(TextureManager.Load(OsuTexture.songselect_mode_easy), FieldTypes.StandardSnapCentre, OriginTypes.Centre, ClockTypes.Mode, new Vector2(0, 0), 0.4f, true, Color4.White) { Offset = new Vector2(-mode_button_width, yOffset), HandleClickOnUp = true };
@@ -207,7 +198,7 @@ namespace osum.GameModes
             spriteManagerDifficultySelect.Add(s_ScoreRank);
         }
 
-        void onSongInfoClick(object sender, EventArgs e)
+        private void onSongInfoClick(object sender, EventArgs e)
         {
             s_SongInfo.AdditiveFlash(1000, 0.8f);
 
@@ -238,27 +229,26 @@ namespace osum.GameModes
             else if (GameBase.Mapper)
             {
                 Player.AllowStreamSwitches = !Player.AllowStreamSwitches;
-                GameBase.Notify("Stream switches are now " + (Player.AllowStreamSwitches ? "allowed" : "disallowed"), null);
+                GameBase.Notify("Stream switches are now " + (Player.AllowStreamSwitches ? "allowed" : "disallowed"));
             }
 #endif
         }
 
-        void Handle_ScoreInfoOnClick(object sender, EventArgs e)
+        private void Handle_ScoreInfoOnClick(object sender, EventArgs e)
         {
             if (bmi.HighScore == null || bmi.HighScore.totalScore == 0)
                 return;
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
-            Results.RankableScore = bmi.HighScore;
+            Results.Results.RankableScore = bmi.HighScore;
             Director.ChangeMode(OsuMode.Results);
         }
 
-        void onModeButtonClick(object sender, EventArgs e)
+        private void onModeButtonClick(object sender, EventArgs e)
         {
             if (State == SelectState.Starting) return;
 
-            pDrawable d = sender as pDrawable;
-            if (d == null) return;
+            if (!(sender is pDrawable d)) return;
 
             Difficulty newDifficulty;
 
@@ -312,7 +302,7 @@ namespace osum.GameModes
             updateModeSelectionArrows(isNewDifficulty);
         }
 
-        void onSelectPreviousMode(object sender, EventArgs e)
+        private void onSelectPreviousMode(object sender, EventArgs e)
         {
 
             if (State == SelectState.Starting) return;
@@ -328,7 +318,7 @@ namespace osum.GameModes
             }
         }
 
-        void onSelectNextMode(object sender, EventArgs e)
+        private void onSelectNextMode(object sender, EventArgs e)
         {
             if (State == SelectState.Starting) return;
 
@@ -343,7 +333,7 @@ namespace osum.GameModes
             }
         }
 
-        const float mode_button_width = 300;
+        private const float mode_button_width = 300;
         private pText s_ScoreInfo;
         private pSprite s_ScoreRank;
         private pSprite s_SongInfo;

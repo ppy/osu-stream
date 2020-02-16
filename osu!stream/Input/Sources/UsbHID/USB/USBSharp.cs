@@ -18,11 +18,11 @@
 *                                                                            *
 ******************************************************************************/
 //---------------------------------------------------------------------------
+
 using System;
 using System.Runtime.InteropServices;
-using System.IO;
 
-namespace USBHIDDRIVER.USB
+namespace osum.Input.Sources.UsbHID.USB
 {
 	/// <summary>
 	/// Summary description
@@ -54,18 +54,18 @@ namespace USBHIDDRIVER.USB
 		
 		// GUID structure
 		[StructLayout(LayoutKind.Sequential)]
-		public unsafe struct GUID 
+		public struct GUID 
 		{
 			public int Data1;
-			public System.UInt16 Data2;
-			public System.UInt16 Data3;	
+			public UInt16 Data2;
+			public UInt16 Data3;	
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
 			public byte[] data4;
 		}
 		
 		// Device interface data
 		[StructLayout(LayoutKind.Sequential)]
-		public unsafe struct SP_DEVICE_INTERFACE_DATA 
+		public struct SP_DEVICE_INTERFACE_DATA 
 		{
 			public int cbSize;
 			public GUID InterfaceClassGuid;
@@ -75,7 +75,7 @@ namespace USBHIDDRIVER.USB
 		
 		// Device interface detail data
 		[StructLayout(LayoutKind.Sequential, CharSet= CharSet.Ansi)]
-		public unsafe struct PSP_DEVICE_INTERFACE_DETAIL_DATA
+		public struct PSP_DEVICE_INTERFACE_DETAIL_DATA
 		{
 			public int  cbSize;
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst= 256)]
@@ -84,16 +84,16 @@ namespace USBHIDDRIVER.USB
 
 		// HIDD_ATTRIBUTES
 		[StructLayout(LayoutKind.Sequential)]
-		public unsafe struct HIDD_ATTRIBUTES 
+		public struct HIDD_ATTRIBUTES 
 		{
 			public int   Size; // = sizeof (struct _HIDD_ATTRIBUTES) = 10
 
 			//
 			// Vendor ids of this hid device
 			//
-			public System.UInt16	VendorID;
-			public System.UInt16	ProductID;
-			public System.UInt16	VersionNumber;
+			public UInt16	VendorID;
+			public UInt16	ProductID;
+			public UInt16	VersionNumber;
 
 			//
 			// Additional fields will be added to the end of this structure.
@@ -102,25 +102,25 @@ namespace USBHIDDRIVER.USB
 
 		// HIDP_CAPS
 		[StructLayout(LayoutKind.Sequential)]
-		public unsafe struct HIDP_CAPS 
+		public struct HIDP_CAPS 
 		{
-			public System.UInt16  Usage;					// USHORT
-			public System.UInt16   UsagePage;				// USHORT
-			public System.UInt16   InputReportByteLength;
-			public System.UInt16   OutputReportByteLength;
-			public System.UInt16   FeatureReportByteLength;
+			public UInt16  Usage;					// USHORT
+			public UInt16   UsagePage;				// USHORT
+			public UInt16   InputReportByteLength;
+			public UInt16   OutputReportByteLength;
+			public UInt16   FeatureReportByteLength;
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst=17)]
-			public System.UInt16[] Reserved;				// USHORT  Reserved[17];			
-			public System.UInt16  NumberLinkCollectionNodes;
-			public System.UInt16  NumberInputButtonCaps;
-			public System.UInt16  NumberInputValueCaps;
-			public System.UInt16  NumberInputDataIndices;
-			public System.UInt16  NumberOutputButtonCaps;
-			public System.UInt16  NumberOutputValueCaps;
-			public System.UInt16  NumberOutputDataIndices;
-			public System.UInt16  NumberFeatureButtonCaps;
-			public System.UInt16  NumberFeatureValueCaps;
-			public System.UInt16  NumberFeatureDataIndices;
+			public UInt16[] Reserved;				// USHORT  Reserved[17];			
+			public UInt16  NumberLinkCollectionNodes;
+			public UInt16  NumberInputButtonCaps;
+			public UInt16  NumberInputValueCaps;
+			public UInt16  NumberInputDataIndices;
+			public UInt16  NumberOutputButtonCaps;
+			public UInt16  NumberOutputValueCaps;
+			public UInt16  NumberOutputDataIndices;
+			public UInt16  NumberFeatureButtonCaps;
+			public UInt16  NumberFeatureValueCaps;
+			public UInt16  NumberFeatureDataIndices;
 		}
 		
 		//HIDP_REPORT_TYPE 
@@ -135,69 +135,69 @@ namespace USBHIDDRIVER.USB
 
 		// Range
 		[StructLayout(LayoutKind.Sequential)]
-			public unsafe struct Range 
+			public struct Range 
 		{
-			public System.UInt16 UsageMin;			// USAGE	UsageMin; // USAGE  Usage; 
-			public System.UInt16 UsageMax; 			// USAGE	UsageMax; // USAGE	Reserved1;
-			public System.UInt16 StringMin;			// USHORT  StringMin; // StringIndex; 
-			public System.UInt16 StringMax;			// USHORT	StringMax;// Reserved2;
-			public System.UInt16 DesignatorMin;		// USHORT  DesignatorMin; // DesignatorIndex; 
-			public System.UInt16 DesignatorMax;		// USHORT	DesignatorMax; //Reserved3; 
-			public System.UInt16 DataIndexMin;		// USHORT  DataIndexMin;  // DataIndex; 
-			public System.UInt16 DataIndexMax;		// USHORT	DataIndexMax; // Reserved4;
+			public UInt16 UsageMin;			// USAGE	UsageMin; // USAGE  Usage; 
+			public UInt16 UsageMax; 			// USAGE	UsageMax; // USAGE	Reserved1;
+			public UInt16 StringMin;			// USHORT  StringMin; // StringIndex; 
+			public UInt16 StringMax;			// USHORT	StringMax;// Reserved2;
+			public UInt16 DesignatorMin;		// USHORT  DesignatorMin; // DesignatorIndex; 
+			public UInt16 DesignatorMax;		// USHORT	DesignatorMax; //Reserved3; 
+			public UInt16 DataIndexMin;		// USHORT  DataIndexMin;  // DataIndex; 
+			public UInt16 DataIndexMax;		// USHORT	DataIndexMax; // Reserved4;
 		}
 
 		// Range
 		[StructLayout(LayoutKind.Sequential)]
-			public unsafe struct NotRange 
+			public struct NotRange 
 		{
-			public System.UInt16 Usage; 
-			public System.UInt16 Reserved1;
-			public System.UInt16 StringIndex; 
-			public System.UInt16 Reserved2;
-			public System.UInt16 DesignatorIndex; 
-			public System.UInt16 Reserved3; 
-			public System.UInt16 DataIndex; 
-			public System.UInt16 Reserved4;
+			public UInt16 Usage; 
+			public UInt16 Reserved1;
+			public UInt16 StringIndex; 
+			public UInt16 Reserved2;
+			public UInt16 DesignatorIndex; 
+			public UInt16 Reserved3; 
+			public UInt16 DataIndex; 
+			public UInt16 Reserved4;
 		}
         
         //HIDP_VALUE_CAPS
 		[StructLayout(LayoutKind.Explicit, CharSet= CharSet.Ansi)]
-			public unsafe struct HIDP_VALUE_CAPS 
+			public struct HIDP_VALUE_CAPS 
 		{
 			//
-			[FieldOffset(0)] public System.UInt16  UsagePage;					// USHORT
-			[FieldOffset(2)] public System.Byte ReportID;						// UCHAR  ReportID;
+			[FieldOffset(0)] public UInt16  UsagePage;					// USHORT
+			[FieldOffset(2)] public Byte ReportID;						// UCHAR  ReportID;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(3)] public System.Boolean IsAlias;						// BOOLEAN  IsAlias;
-			[FieldOffset(4)] public System.UInt16 BitField;						// USHORT  BitField;
-			[FieldOffset(6)] public System.UInt16 LinkCollection;				//USHORT  LinkCollection;
-			[FieldOffset(8)] public System.UInt16 LinkUsage;					// USAGE  LinkUsage;
-			[FieldOffset(10)] public System.UInt16 LinkUsagePage;				// USAGE  LinkUsagePage;
+			[FieldOffset(3)] public Boolean IsAlias;						// BOOLEAN  IsAlias;
+			[FieldOffset(4)] public UInt16 BitField;						// USHORT  BitField;
+			[FieldOffset(6)] public UInt16 LinkCollection;				//USHORT  LinkCollection;
+			[FieldOffset(8)] public UInt16 LinkUsage;					// USAGE  LinkUsage;
+			[FieldOffset(10)] public UInt16 LinkUsagePage;				// USAGE  LinkUsagePage;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(12)] public System.Boolean IsRange;					// BOOLEAN  IsRange;
+			[FieldOffset(12)] public Boolean IsRange;					// BOOLEAN  IsRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(13)] public System.Boolean IsStringRange;				// BOOLEAN  IsStringRange;
+			[FieldOffset(13)] public Boolean IsStringRange;				// BOOLEAN  IsStringRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(14)] public System.Boolean IsDesignatorRange;			// BOOLEAN  IsDesignatorRange;
+			[FieldOffset(14)] public Boolean IsDesignatorRange;			// BOOLEAN  IsDesignatorRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(15)] public System.Boolean IsAbsolute;					// BOOLEAN  IsAbsolute;
+			[FieldOffset(15)] public Boolean IsAbsolute;					// BOOLEAN  IsAbsolute;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(16)] public System.Boolean HasNull;					// BOOLEAN  HasNull;
-			[FieldOffset(17)] public System.Char Reserved;						// UCHAR  Reserved;
-			[FieldOffset(18)] public System.UInt16 BitSize;						// USHORT  BitSize;
-			[FieldOffset(20)] public System.UInt16 ReportCount;					// USHORT  ReportCount;
-			[FieldOffset(22)] public System.UInt16  Reserved2a;					// USHORT  Reserved2[5];		
-			[FieldOffset(24)] public System.UInt16  Reserved2b;					// USHORT  Reserved2[5];
-			[FieldOffset(26)] public System.UInt16  Reserved2c;					// USHORT  Reserved2[5];
-			[FieldOffset(28)] public System.UInt16  Reserved2d;					// USHORT  Reserved2[5];
-			[FieldOffset(30)] public System.UInt16  Reserved2e;					// USHORT  Reserved2[5];
-			[FieldOffset(32)] public System.UInt16 UnitsExp;					// ULONG  UnitsExp;
-			[FieldOffset(34)] public System.UInt16 Units;						// ULONG  Units;
-			[FieldOffset(36)] public System.Int16 LogicalMin;					// LONG  LogicalMin;   ;
-			[FieldOffset(38)] public System.Int16 LogicalMax;					// LONG  LogicalMax
-			[FieldOffset(40)] public System.Int16 PhysicalMin;					// LONG  PhysicalMin, 
-			[FieldOffset(42)] public System.Int16 PhysicalMax;					// LONG  PhysicalMax;
+			[FieldOffset(16)] public Boolean HasNull;					// BOOLEAN  HasNull;
+			[FieldOffset(17)] public Char Reserved;						// UCHAR  Reserved;
+			[FieldOffset(18)] public UInt16 BitSize;						// USHORT  BitSize;
+			[FieldOffset(20)] public UInt16 ReportCount;					// USHORT  ReportCount;
+			[FieldOffset(22)] public UInt16  Reserved2a;					// USHORT  Reserved2[5];		
+			[FieldOffset(24)] public UInt16  Reserved2b;					// USHORT  Reserved2[5];
+			[FieldOffset(26)] public UInt16  Reserved2c;					// USHORT  Reserved2[5];
+			[FieldOffset(28)] public UInt16  Reserved2d;					// USHORT  Reserved2[5];
+			[FieldOffset(30)] public UInt16  Reserved2e;					// USHORT  Reserved2[5];
+			[FieldOffset(32)] public UInt16 UnitsExp;					// ULONG  UnitsExp;
+			[FieldOffset(34)] public UInt16 Units;						// ULONG  Units;
+			[FieldOffset(36)] public Int16 LogicalMin;					// LONG  LogicalMin;   ;
+			[FieldOffset(38)] public Int16 LogicalMax;					// LONG  LogicalMax
+			[FieldOffset(40)] public Int16 PhysicalMin;					// LONG  PhysicalMin, 
+			[FieldOffset(42)] public Int16 PhysicalMax;					// LONG  PhysicalMax;
 			// The Structs in the Union			
 			[FieldOffset(44)] public Range Range;
 			[FieldOffset(44)] public Range NotRange;				
@@ -213,7 +213,7 @@ namespace USBHIDDRIVER.USB
 		//
 		//
 
-		private GUID MYguid = new GUID();
+		private GUID MYguid;
 		//
 		// SP_DEVICE_INTERFACE_DATA  mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
 		//
@@ -233,12 +233,12 @@ namespace USBHIDDRIVER.USB
 
 		//Get GUID for the HID Class
 		[DllImport("hid.dll", SetLastError=true)]
-		static extern  unsafe void  HidD_GetHidGuid(
+		private static extern void  HidD_GetHidGuid(
 			ref GUID lpHidGuid);
 
 		//Get array of structures with the HID info
 		[DllImport("setupapi.dll", SetLastError=true)]
-		static extern  unsafe int SetupDiGetClassDevs(
+		private static extern  unsafe int SetupDiGetClassDevs(
 			ref GUID  lpHidGuid,
 			int*  Enumerator,
 			int*  hwndParent,
@@ -253,7 +253,7 @@ namespace USBHIDDRIVER.USB
 		//  about several interfaces exposed by one or more devices.
 		//
 		[DllImport("setupapi.dll", SetLastError=true)]
-		static extern  unsafe int SetupDiEnumDeviceInterfaces(
+		private static extern int SetupDiEnumDeviceInterfaces(
 			int  DeviceInfoSet,
 			int  DeviceInfoData,
 			ref  GUID  lpHidGuid,
@@ -265,7 +265,7 @@ namespace USBHIDDRIVER.USB
 		//  Works for the first pass  --> to get the required size
 		
         [DllImport("setupapi.dll", SetLastError=true)]
-		static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
+        private static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
 			int  DeviceInfoSet,
 			ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
 			int* aPtr,
@@ -277,7 +277,7 @@ namespace USBHIDDRIVER.USB
 		//  Works for second pass (overide), once size value is known
 
 		[DllImport("setupapi.dll", SetLastError=true)]
-		static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
+		private static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
 			int  DeviceInfoSet,
 			ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
 			ref PSP_DEVICE_INTERFACE_DETAIL_DATA myPSP_DEVICE_INTERFACE_DETAIL_DATA,
@@ -305,22 +305,22 @@ namespace USBHIDDRIVER.USB
 
 
 		[DllImport("hid.dll", SetLastError=true)]
-		private unsafe static  extern int HidD_GetPreparsedData(
+		private static extern int HidD_GetPreparsedData(
 			int hObject,								// IN HANDLE  HidDeviceObject,
 			ref int pPHIDP_PREPARSED_DATA);				// OUT PHIDP_PREPARSED_DATA  *PreparsedData
 
 
 		[DllImport("hid.dll", SetLastError=true)]
-		private unsafe static  extern int HidP_GetCaps(
+		private static extern int HidP_GetCaps(
 			int pPHIDP_PREPARSED_DATA,					// IN PHIDP_PREPARSED_DATA  PreparsedData,
 			ref HIDP_CAPS myPHIDP_CAPS);				// OUT PHIDP_CAPS  Capabilities
        
         [DllImport("hid.dll")]
-        public unsafe static extern bool HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength);
+        public static extern bool HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength);
 
 
 		[DllImport("hid.dll", SetLastError=true)]
-		private unsafe static  extern int HidP_GetValueCaps(
+		private static extern int HidP_GetValueCaps(
 			HIDP_REPORT_TYPE ReportType,								// IN HIDP_REPORT_TYPE  ReportType,
 			[In, Out] HIDP_VALUE_CAPS[] ValueCaps,						// OUT PHIDP_VALUE_CAPS  ValueCaps,
 			ref int ValueCapsLength,									// IN OUT PULONG  ValueCapsLength,
@@ -329,7 +329,7 @@ namespace USBHIDDRIVER.USB
 
 
 		[DllImport("kernel32.dll", SetLastError=true)]
-		private unsafe static extern bool ReadFile(
+		private static extern unsafe bool ReadFile(
 			int hFile,						// handle to file
 			byte[] lpBuffer,				// data buffer
 			int nNumberOfBytesToRead,		// number of bytes to read
@@ -340,13 +340,13 @@ namespace USBHIDDRIVER.USB
 			);
 
 		[DllImport("setupapi.dll", SetLastError=true)]
-		static extern  unsafe int SetupDiDestroyDeviceInfoList(
+		private static extern int SetupDiDestroyDeviceInfoList(
 			int DeviceInfoSet				// IN HDEVINFO  DeviceInfoSet
 			);
 
 		// 13
 		[DllImport("hid.dll", SetLastError=true)]
-		static extern  unsafe int HidD_FreePreparsedData(
+		private static extern int HidD_FreePreparsedData(
 			int pPHIDP_PREPARSED_DATA			// IN PHIDP_PREPARSED_DATA  PreparsedData
 			);
 
@@ -387,26 +387,26 @@ namespace USBHIDDRIVER.USB
 
 
         [DllImport("kernel32.dll")]
-        static public extern int CancelIo(int hFile);
+        public static extern int CancelIo(int hFile);
 
         [DllImport("kernel32.dll")]
-        static public extern int CloseHandle(int hObject);
+        public static extern int CloseHandle(int hObject);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        static public extern int CreateEvent(ref SECURITY_ATTRIBUTES SecurityAttributes, int bManualReset, int bInitialState, string lpName);
+        public static extern int CreateEvent(ref SECURITY_ATTRIBUTES SecurityAttributes, int bManualReset, int bInitialState, string lpName);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        static public extern int
+        public static extern int
           CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, ref SECURITY_ATTRIBUTES lpSecurityAttributes, int dwCreationDisposition, uint dwFlagsAndAttributes, int hTemplateFile);
 
         [DllImport("kernel32.dll")]
-        static public extern int ReadFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
+        public static extern int ReadFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
 
         [DllImport("kernel32.dll")]
-        static public extern int WaitForSingleObject(int hHandle, int dwMilliseconds);
+        public static extern int WaitForSingleObject(int hHandle, int dwMilliseconds);
 
         [DllImport("kernel32.dll")]
-        static public extern int WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped);
+        public static extern int WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped);
 		
 
         
@@ -423,7 +423,7 @@ namespace USBHIDDRIVER.USB
         //--  GUID for HID
         //                                                             Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe void CT_HidGuid()
+		public void CT_HidGuid()
 		{		        
 			HidD_GetHidGuid(ref MYguid);	// 
 		}
@@ -454,7 +454,7 @@ namespace USBHIDDRIVER.USB
         //--  
         //                                                             Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe int CT_SetupDiEnumDeviceInterfaces(int memberIndex)
+		public int CT_SetupDiEnumDeviceInterfaces(int memberIndex)
 		{	
 			mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
 			mySP_DEVICE_INTERFACE_DATA.cbSize = Marshal.SizeOf(mySP_DEVICE_INTERFACE_DATA);
@@ -541,7 +541,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-        public unsafe int CT_CreateFile(string DeviceName)
+        public int CT_CreateFile(string DeviceName)
 		{
 		
 			HidHandle = CreateFile(
@@ -556,10 +556,8 @@ namespace USBHIDDRIVER.USB
 			{
 				return 0;
 			}
-			else
-			{
-				return 1;
-			}
+
+			return 1;
 
 		}
 
@@ -572,7 +570,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe int CT_CloseHandle(int hObject) 
+		public int CT_CloseHandle(int hObject) 
 		{
 			HidHandle = -1;
 			return CloseHandle(hObject);
@@ -609,7 +607,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-        public unsafe int CT_HidD_GetPreparsedData(int hObject, ref int pPHIDP_PREPARSED_DATA)
+        public int CT_HidD_GetPreparsedData(int hObject, ref int pPHIDP_PREPARSED_DATA)
 		{
 			return HidD_GetPreparsedData(
 			hObject,
@@ -625,7 +623,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-        public unsafe bool CT_HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength)
+        public bool CT_HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength)
         {
             return HidD_SetOutputReport(HidDeviceObject, ref lpReportBuffer,ReportBufferLength);
         }
@@ -639,7 +637,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-        public unsafe int CT_HidP_GetCaps(int pPreparsedData)
+        public int CT_HidP_GetCaps(int pPreparsedData)
 		{
 			myHIDP_CAPS = new HIDP_CAPS();
 			   return HidP_GetCaps(
@@ -688,10 +686,8 @@ namespace USBHIDDRIVER.USB
 				Array.Copy(BufBytes, OutBytes, BytesRead);
 				return OutBytes;
 			}
-			else
-			{
-				return null;
-			}
+
+			return null;
 		}
 
         //---#+************************************************************************
@@ -703,7 +699,7 @@ namespace USBHIDDRIVER.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-        public unsafe int CT_WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped)
+        public int CT_WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped)
         {
             return WriteFile(hFile, ref lpBuffer,nNumberOfBytesToWrite, ref lpNumberOfBytesWritten,lpOverlapped); ;
         }
@@ -737,11 +733,11 @@ namespace USBHIDDRIVER.USB
 			return SetupDiDestroyDeviceInfoList(pPHIDP_PREPARSED_DATA);			
 		}
 
-        internal USBHIDDRIVER.USB.HidApiDeclarations HidApiDeclarations
+        internal HidApiDeclarations HidApiDeclarations
         {
             get
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
             set
             {

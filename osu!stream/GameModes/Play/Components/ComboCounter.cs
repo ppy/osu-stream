@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using OpenTK;
-using osum.Helpers;
+﻿using OpenTK;
 using OpenTK.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
-    class ComboCounter : GameComponent
+    internal class ComboCounter : GameComponent
     {
         internal pSpriteText s_hitCombo;
         internal pSpriteText s_hitCombo_Incoming;
         internal int displayCombo;
         internal int currentCombo;
-
-        public ComboCounter()
-            : base()
-        {
-        }
 
         public override void Initialize()
         {
@@ -106,7 +97,7 @@ namespace osum.GameModes.Play.Components
             currentCombo = combo;
         }
 
-        int displayComboMainCounter = 0;
+        private int displayComboMainCounter;
 
         private void transferToMainCounter()
         {

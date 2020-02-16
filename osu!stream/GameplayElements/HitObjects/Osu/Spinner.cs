@@ -1,17 +1,15 @@
 using System;
-using System.Collections.Generic;
-using osum.Graphics;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
-using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.GameplayElements.HitObjects;
-using osum.Graphics.Drawables;
-using osum.GameModes;
 using osum.Audio;
+using osum.GameModes.Play;
+using osum.Graphics;
+using osum.Graphics.Drawables;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
 
-namespace osum.GameplayElements
+namespace osum.GameplayElements.HitObjects.Osu
 {
     internal class Spinner : HitObjectSpannable
     {
@@ -195,7 +193,6 @@ namespace osum.GameplayElements
 
         internal override void Shake()
         {
-            return;
         }
 
         internal override int HittableEndTime
@@ -206,10 +203,10 @@ namespace osum.GameplayElements
             }
         }
 
-        TrackingPoint cursorTrackingPoint;
-        Vector2 cursorTrackingPosition;
+        private TrackingPoint cursorTrackingPoint;
+        private Vector2 cursorTrackingPosition;
 
-        int lastScoreCheckTime;
+        private int lastScoreCheckTime;
         internal override ScoreChange CheckScoring()
         {
             //Update the angles
@@ -299,7 +296,7 @@ namespace osum.GameplayElements
                     SpriteClear.Transformations.Clear();
                     SpriteClear.Transform(new TransformationF(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 400), EasingTypes.In));
                     SpriteClear.Transform(new TransformationF(TransformationType.Scale, 2, 0.8f, now, Math.Min(EndTime, now + 240), EasingTypes.In));
-                    SpriteClear.Transform(new TransformationF(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400), EasingTypes.None));
+                    SpriteClear.Transform(new TransformationF(TransformationType.Scale, 0.8f, 1, Math.Min(EndTime, now + 240), Math.Min(EndTime, now + 400)));
                     SpriteClear.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - 50, EndTime));
                 }
             }
@@ -351,7 +348,7 @@ namespace osum.GameplayElements
         }
 
         internal float BonusScore;
-        float hpMultiplier = 1;
+        private float hpMultiplier = 1;
         public override float HpMultiplier
         {
             get
@@ -360,8 +357,8 @@ namespace osum.GameplayElements
             }
         }
 
-        double lastSamplePlayedRotationCount;
-        double lastScoredRotationCount;
+        private double lastSamplePlayedRotationCount;
+        private double lastScoredRotationCount;
 
         public override void Update()
         {
@@ -393,7 +390,7 @@ namespace osum.GameplayElements
             }
         }
 
-        Source sourceSpinning;
+        private Source sourceSpinning;
 
         private void StartSound()
         {

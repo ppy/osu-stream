@@ -5,10 +5,8 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using osu_common.Helpers;
-using osu_common.Bancho;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     internal enum ObjType : byte
     {

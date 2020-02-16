@@ -2,42 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using OpenTK;
-using osum.Audio;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using osum.GameModes.SongSelect;
 using OpenTK.Graphics;
-using osum.GameModes.Play.Components;
-using osum.Graphics.Drawables;
+using osum.Audio;
+using osum.GameModes.Play;
 using osum.GameplayElements;
-using System.Threading;
-using osum.GameplayElements.Scoring;
-using osum.Resources;
-using osu_common.Helpers;
+using osum.GameplayElements.Beatmaps;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
+using osum.Localisation;
 
-namespace osum.GameModes
+namespace osum.GameModes.SongSelect
 {
-    public partial class SongSelectMode : GameMode
+    public partial class SongSelectMode
     {
 #if iOS
-#if !DIST
-        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
+    #if !DIST
+            public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal); } }
+    #else
+            public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
+    #endif
 #else
-        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
-#endif
-#else
-        public static string BeatmapPath { get { return @"Beatmaps/"; } }
+        public static string BeatmapPath => @"Beatmaps/";
 #endif
 
-        private pList<Beatmap> maps = new pList<Beatmap>(new BeatmapPackComparer(), false);
+        private readonly pList<Beatmap> maps = new pList<Beatmap>(new BeatmapPackComparer(), false);
         private readonly List<BeatmapPanel> panels = new List<BeatmapPanel>();
 
-        SpriteManager topmostSpriteManager = new SpriteManager();
-        SpriteManager spriteManagerDifficultySelect = new SpriteManager();
-        SpriteManager songInfoSpriteManager = new SpriteManager();
+        private readonly SpriteManager topmostSpriteManager = new SpriteManager();
+        private readonly SpriteManager spriteManagerDifficultySelect = new SpriteManager();
+        private readonly SpriteManager songInfoSpriteManager = new SpriteManager();
 
         private pSprite s_Header;
         private pSprite s_Footer;
@@ -46,10 +42,10 @@ namespace osum.GameModes
 
         private pDrawable s_ButtonBack;
 
-        SelectState State;
+        private SelectState State;
 
-        bool pendingModeChange;
-        bool isBound;
+        private bool pendingModeChange;
+        private bool isBound;
         private BeatmapPanel panelDownloadMore;
         private pSprite background;
 
@@ -58,29 +54,30 @@ namespace osum.GameModes
         /// </summary>
         private bool inputStolen;
 
-        float lastIntOffset;
+        private float lastIntOffset;
         private static float songSelectOffset;
 
         private float difficultySelectOffset;
 
-        private float offset_min { get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Y - s_Header.DrawHeight - 80; } }
-        private float offset_max = 0;
+        private float offset_min
+        {
+            get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Y - s_Header.DrawHeight - 80; }
+        }
+
+        private readonly float offset_max = 0;
         private float velocity;
 
         /// <summary>
         /// True after the first touch on the song select screen. Changes the way the panels move.
         /// </summary>
-        bool touchingBegun;
+        private bool touchingBegun;
 
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
         private float offsetBound
         {
-            get
-            {
-                return Math.Min(offset_max, Math.Max(offset_min, songSelectOffset));
-            }
+            get { return Math.Min(offset_max, Math.Max(offset_min, songSelectOffset)); }
         }
 
         public override void Initialize()
@@ -96,8 +93,8 @@ namespace osum.GameModes
 
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
-            background.Scale.X = (float)background.DrawWidth / GameBase.BaseSize.X;
+                    ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
+            background.Scale.X = background.DrawWidth / GameBase.BaseSize.X;
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
@@ -141,8 +138,6 @@ namespace osum.GameModes
         {
             switch (State)
             {
-                default:
-                    break;
                 case SelectState.SongSelect:
                     State = SelectState.Exiting;
                     Director.ChangeMode(OsuMode.MainMenu);
@@ -161,7 +156,7 @@ namespace osum.GameModes
             }
         }
 
-        public static bool ForceBeatmapRefresh = false;
+        public static bool ForceBeatmapRefresh;
 
         /// <summary>
         /// Load beatmaps from the database, or by parsing the directory structure in fallback cases.
@@ -180,28 +175,28 @@ namespace osum.GameModes
             }
             else
 #endif
-                if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh && BeatmapDatabase.Version == BeatmapDatabase.DATABASE_VERSION)
+            if (BeatmapDatabase.BeatmapInfo.Count > 0 && !ForceBeatmapRefresh && BeatmapDatabase.Version == BeatmapDatabase.DATABASE_VERSION)
+            {
+                bool hasMissingMaps = false;
+                foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
                 {
-                    bool hasMissingMaps = false;
-                    foreach (BeatmapInfo bmi in BeatmapDatabase.BeatmapInfo)
+                    Beatmap b = bmi.GetBeatmap();
+                    if (!File.Exists(b.ContainerFilename))
                     {
-                        Beatmap b = bmi.GetBeatmap();
-                        if (!File.Exists(b.ContainerFilename))
-                        {
-                            hasMissingMaps = true;
-                            continue;
-                        }
-
-                        maps.AddInPlace(b);
+                        hasMissingMaps = true;
+                        continue;
                     }
+
+                    maps.AddInPlace(b);
                 }
-                else
-                {
+            }
+            else
+            {
 #if !DIST
-                    Console.WriteLine("Regenerating database!");
+                Console.WriteLine("Regenerating database!");
 #endif
 
-                    ForceBeatmapRefresh = false;
+                ForceBeatmapRefresh = false;
 
 #if iOS
                     //bundled maps
@@ -215,19 +210,19 @@ namespace osum.GameModes
                     }
 #endif
 
-                    foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
-                    {
-                        Beatmap b = new Beatmap(s);
+                foreach (string s in Directory.GetFiles(BeatmapPath, "*.os*"))
+                {
+                    Beatmap b = new Beatmap(s);
 
-                        if (b.Package == null)
-                            continue;
+                    if (b.Package == null)
+                        continue;
 
-                        BeatmapDatabase.PopulateBeatmap(b);
-                        maps.AddInPlace(b);
-                    }
-
-                    BeatmapDatabase.Write();
+                    BeatmapDatabase.PopulateBeatmap(b);
+                    maps.AddInPlace(b);
                 }
+
+                BeatmapDatabase.Write();
+            }
 
             int index = 0;
 
@@ -278,11 +273,9 @@ namespace osum.GameModes
             }
         }
 
-        void panelSelected(object sender, EventArgs args)
+        private void panelSelected(object sender, EventArgs args)
         {
-            BeatmapPanel panel = ((pDrawable)sender).Tag as BeatmapPanel;
-
-            if (panel == null || State != SelectState.SongSelect) return;
+            if (!(((pDrawable)sender).Tag is BeatmapPanel panel) || State != SelectState.SongSelect) return;
 
             showDifficultySelection(panel);
         }
@@ -314,7 +307,8 @@ namespace osum.GameModes
             if (rankingSpriteManager != null) rankingSpriteManager.Dispose();
 
             foreach (Beatmap b in maps)
-                if (b != Player.Beatmap) b.Dispose();
+                if (b != Player.Beatmap)
+                    b.Dispose();
 
             if (State == SelectState.Exiting)
                 Player.Beatmap = null;
@@ -331,8 +325,9 @@ namespace osum.GameModes
             s_Footer.Transform(new TransformationF(TransformationType.Fade, 1, 0, Clock.ModeTime + 500, Clock.ModeTime + 500));
         }
 
-        int lastDownTime;
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        private int lastDownTime;
+
+        private void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
             lastDownTime = Clock.ModeTime;
         }
@@ -346,27 +341,27 @@ namespace osum.GameModes
             switch (State)
             {
                 case SelectState.SongSelect:
-                    {
-                        float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
-                        float bound = offsetBound;
+                {
+                    float change = InputManager.PrimaryTrackingPoint.WindowDelta.Y;
+                    float bound = offsetBound;
 
-                        if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
-                            change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
-                        songSelectOffset = songSelectOffset + change;
-                        velocity = change;
-                    }
+                    if ((songSelectOffset - bound < 0 && change < 0) || (songSelectOffset - bound > 0 && change > 0))
+                        change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(songSelectOffset - bound)));
+                    songSelectOffset = songSelectOffset + change;
+                    velocity = change;
+                }
                     break;
                 case SelectState.DifficultySelect:
-                    {
-                        float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
-                        float bound = Math.Min(mode_button_width, Math.Max(-mode_button_width, difficultySelectOffset));
+                {
+                    float change = InputManager.PrimaryTrackingPoint.WindowDelta.X;
+                    float bound = Math.Min(mode_button_width, Math.Max(-mode_button_width, difficultySelectOffset));
 
-                        velocity = change * 4;
+                    velocity = change * 4;
 
-                        if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
-                            change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
-                        difficultySelectOffset = difficultySelectOffset + change;
-                    }
+                    if ((difficultySelectOffset - bound < 0 && change < 0) || (difficultySelectOffset - bound > 0 && change > 0))
+                        change *= Math.Min(1, 10 / Math.Max(0.1f, Math.Abs(difficultySelectOffset - bound)));
+                    difficultySelectOffset = difficultySelectOffset + change;
+                }
                     break;
             }
         }
@@ -383,7 +378,7 @@ namespace osum.GameModes
             return true;
         }
 
-        const int time_to_hover = 400;
+        private const int time_to_hover = 400;
 
         public override void Update()
         {
@@ -464,14 +459,10 @@ namespace osum.GameModes
                     {
                         if (InputManager.PrimaryTrackingPoint != null && InputManager.IsPressed)
                         {
-                            pSprite sprite = InputManager.PrimaryTrackingPoint.HoveringObject as pSprite;
-
-                            if (sprite != null)
+                            if (InputManager.PrimaryTrackingPoint.HoveringObject is pSprite sprite)
                             {
-                                BeatmapPanel panel = sprite.Tag as BeatmapPanel;
-
                                 //check for beatmap present; the store link doesn't have one.
-                                if (panel != null && panel.Beatmap != null)
+                                if (sprite.Tag is BeatmapPanel panel && panel.Beatmap != null)
                                 {
                                     if (SelectedPanel != panel && PreviewingPanel != panel)
                                     {
@@ -553,6 +544,7 @@ namespace osum.GameModes
                             pos.Y += 63;
                         }
                     }
+
                     break;
             }
         }
@@ -606,7 +598,7 @@ namespace osum.GameModes
         }
     }
 
-    enum SelectState
+    internal enum SelectState
     {
         SongSelect,
         DifficultySelect,

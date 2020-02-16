@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public enum EncryptionMethod
     {
@@ -372,7 +372,8 @@ namespace osu_common.Helpers
         }
 
         #region Encrypt Decrypt One
-        unsafe void EncryptWordOne( UInt32* v/*[2]*/, UInt32* o/*[2]*/ ) 
+
+        private unsafe void EncryptWordOne( UInt32* v/*[2]*/, UInt32* o/*[2]*/ ) 
         {
             UInt32 i;
             UInt32 v0=v[0];  UInt32 v1=v[1]; 
@@ -386,8 +387,8 @@ namespace osu_common.Helpers
             }
             o[0]=v0; o[1]=v1;
         }
-         
-        unsafe void DecryptWordOne(UInt32* v/*[2]*/, UInt32* o/*[2]*/) 
+
+        private unsafe void DecryptWordOne(UInt32* v/*[2]*/, UInt32* o/*[2]*/) 
         {
             UInt32 i;
             UInt32 v0=v[0]; UInt32 v1=v[1];  
@@ -434,7 +435,7 @@ namespace osu_common.Helpers
             while (--rounds > 0);
         }
 
-        unsafe private void DecryptWordsTwoSafe(uint[] v, int offset)
+        private void DecryptWordsTwoSafe(uint[] v, int offset)
         {
             UInt32 y, z, sum;
             UInt32 p, e;
@@ -458,7 +459,7 @@ namespace osu_common.Helpers
 
 
         //uses a modified version of Two
-        unsafe private void EncryptWordsTwo(uint* v/*[n]*/) 
+        private unsafe void EncryptWordsTwo(uint* v/*[n]*/) 
         {
             UInt32 y, z, sum;
             UInt32 p, e;
@@ -480,7 +481,7 @@ namespace osu_common.Helpers
             while (--rounds>0);
         }
 
-        unsafe private void DecryptWordsTwo(uint* v/*[n]*/) 
+        private unsafe void DecryptWordsTwo(uint* v/*[n]*/) 
         {
             UInt32 y, z, sum;
             UInt32 p, e;
@@ -550,8 +551,8 @@ namespace osu_common.Helpers
             byte prevE = 0; // previous encrypted
             for (int i = offset; i < count; i++)
             {
-                buf[i] = unchecked((byte)((int)(buf[i] + (kB[i % 16] >> 2)) % 256));
-                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
+                buf[i] = unchecked((byte)((buf[i] + (kB[i % 16] >> 2)) % 256));
+                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)((prevE + count - i - offset) % 7));
                 buf[i] = rotateRight(buf[i], (byte)((~(uint)(prevE)) % 7));
 
                 prevE = buf[i];
@@ -567,8 +568,8 @@ namespace osu_common.Helpers
             {
                 byte tmpE = buf[i];
                 buf[i] = rotateLeft(buf[i], (byte)((~(uint)(prevE)) % 7));
-                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)(((int)(prevE) + count - i - offset) % 7));
-                buf[i] = unchecked((byte)((int)(buf[i] - (kB[i % 16] >> 2) + 256) % 256));
+                buf[i] ^= rotateLeft(kB[15 - (i - offset) % 16], (byte)((prevE + count - i - offset) % 7));
+                buf[i] = unchecked((byte)((buf[i] - (kB[i % 16] >> 2) + 256) % 256));
 
                 prevE = tmpE;
             }

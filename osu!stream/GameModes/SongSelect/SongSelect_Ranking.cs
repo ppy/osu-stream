@@ -3,34 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using OpenTK;
 using osum.Audio;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using osum.GameModes.SongSelect;
-using OpenTK.Graphics;
-using osum.GameModes.Play.Components;
-using osum.Graphics.Drawables;
-using osum.GameplayElements;
-using System.Threading;
-using osum.Graphics.Renderers;
-using osu_common.Libraries.Osz2;
-using osum.Resources;
+using osum.GameModes.Play;
 using osum.GameplayElements.Scoring;
-using osum.Graphics;
-using osu_common.Libraries.NetLib;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Libraries.NetLib;
+using osum.Localisation;
 
-namespace osum.GameModes
+namespace osum.GameModes.SongSelect
 {
     public partial class SongSelectMode : GameMode
     {
-        SpriteManagerDraggable rankingSpriteManager;
+        private SpriteManagerDraggable rankingSpriteManager;
 
-        List<Score> rankingScores;
-        StringNetRequest rankingNetRequest;
+        private List<Score> rankingScores;
+        private StringNetRequest rankingNetRequest;
 
-        void Ranking_Show()
+        private void Ranking_Show()
         {
             State = SelectState.RankingDisplay;
 
@@ -45,7 +34,7 @@ namespace osum.GameModes
             }
             else
             {
-                rankingSpriteManager = new SpriteManagerDraggable() { StartBufferZone = BeatmapPanel.PANEL_HEIGHT + 5 };
+                rankingSpriteManager = new SpriteManagerDraggable { StartBufferZone = BeatmapPanel.PANEL_HEIGHT + 5 };
             }
 
             footerHide();
@@ -67,7 +56,7 @@ namespace osum.GameModes
             NetManager.AddRequest(rankingNetRequest);
         }
 
-        void rankingReceived(string _result, Exception e)
+        private void rankingReceived(string _result, Exception e)
         {
             rankingNetRequest = null;
 
@@ -90,7 +79,7 @@ namespace osum.GameModes
 
                     int i = 0;
 
-                    Score score = new Score()
+                    Score score = new Score
                     {
                         Id = Int32.Parse(split[i++], GameBase.nfi),
                         OnlineRank = Int32.Parse(split[i++], GameBase.nfi),
@@ -128,22 +117,20 @@ namespace osum.GameModes
             catch
             {
                 GameBase.Notify(LocalisationManager.GetString(OsuString.InternetFailed), delegate { Ranking_Hide(); });
-                return;
             }
         }
 
-        void onScoreClicked(object sender, EventArgs args)
+        private void onScoreClicked(object sender, EventArgs args)
         {
-            ScorePanel panel = ((pDrawable)sender).Tag as ScorePanel;
-            if (panel == null) return;
+            if (!(((pDrawable)sender).Tag is ScorePanel panel)) return;
 
-            Results.RankableScore = panel.Score;
+            Results.Results.RankableScore = panel.Score;
             Director.ChangeMode(OsuMode.Results, true);
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
         }
 
-        void Ranking_Hide()
+        private void Ranking_Hide()
         {
             if (rankingNetRequest != null)
             {

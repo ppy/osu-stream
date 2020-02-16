@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
+﻿using OpenTK;
 using OpenTK.Graphics;
-using OpenTK;
 using osum.GameplayElements;
-using osum.Helpers;
+using osum.Graphics.Sprites;
 
 namespace osum.GameModes.Play.Components
 {
     public class ProgressDisplay : SpriteManager
     {
-        const int HEIGHT = 6;
-        pRectangle progressRect;
-        pRectangle progressRectBg;
+        private const int HEIGHT = 6;
+        private pRectangle progressRect;
+        private readonly pRectangle progressRectBg;
         public ProgressDisplay()
         {
             progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X, HEIGHT), true, 0.99f, Color4.Black);
@@ -30,10 +24,10 @@ namespace osum.GameModes.Play.Components
             Add(progressRect);
         }
 
-        ScoreChange lastDisplayedChange;
-        float lastProgressStart;
+        private ScoreChange lastDisplayedChange;
+        private float lastProgressStart;
         
-        private Color4 gray_colour = new Color4(80,80,80,255);
+        private readonly Color4 gray_colour = new Color4(80,80,80,255);
 
         internal void ExtendHeight(int duration, float extent)
         {

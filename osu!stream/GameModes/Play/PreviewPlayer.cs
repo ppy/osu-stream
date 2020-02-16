@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.GameplayElements.Scoring;
-using osum.GameModes.Play.Components;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.GameModes.Play.Components;
 using osum.GameModes.SongSelect;
 using osum.GameplayElements;
-using osum.Support;
+using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Support;
 
 namespace osum.GameModes.Play
 {
-    class PreviewPlayer : Player
+    internal class PreviewPlayer : Player
     {
-        pText t_currentStream;
+        private pText t_currentStream;
 
         public override void Initialize()
         {
@@ -48,7 +44,7 @@ namespace osum.GameModes.Play
 
         public override void Dispose()
         {
-            Player.Beatmap = null;
+            Beatmap = null;
             base.Dispose();
         }
 
@@ -92,11 +88,11 @@ namespace osum.GameModes.Play
                 //if this fails, it will be handled later on in Initialize()
             }
 
-            Difficulty = GameplayElements.Difficulty.Easy;
+            Difficulty = Difficulty.Easy;
             //force back to stream difficulty, as it may be modified during load to get correct AR etc. variables.
         }
 
-        protected override void hitObjectManager_OnStreamChanged(GameplayElements.Difficulty newStream)
+        protected override void hitObjectManager_OnStreamChanged(Difficulty newStream)
         {
             base.hitObjectManager_OnStreamChanged(newStream);
             t_currentStream.Text = HitObjectManager.ActiveStream.ToString();

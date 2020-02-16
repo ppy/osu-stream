@@ -1,6 +1,6 @@
 using System;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     /// <summary>
     /// A fast random number generator for .NET

@@ -25,9 +25,8 @@
 #endregion
 
 using System;
-using System.Runtime.Serialization;
 
-namespace sspack
+namespace sspack.Packing
 {
 	/// <summary>Insufficient space left in packing area to contain a given object</summary>
 	/// <remarks>

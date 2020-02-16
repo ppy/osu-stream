@@ -1,26 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
 using OpenTK;
-using osum.GameplayElements;
-using osum.GameplayElements.HitObjects.Osu;
-using osum.Helpers;
 using OpenTK.Graphics;
-using osum.Graphics;
 using osum.Audio;
+using osum.GameplayElements;
+using osum.GameplayElements.HitObjects;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
-    class GuideFinger : GameComponent
+    internal class GuideFinger : GameComponent
     {
-        List<pDrawable> fingers = new List<pDrawable>();
+        private readonly List<pDrawable> fingers = new List<pDrawable>();
 
 
-        Vector2 idleLeft = new Vector2(30, 200);
-        Vector2 idleRight = new Vector2(512 - 30, 200);
+        private readonly Vector2 idleLeft = new Vector2(30, 200);
+        private readonly Vector2 idleRight = new Vector2(512 - 30, 200);
 
 
         internal HitObjectManager HitObjectManager;
@@ -91,7 +89,7 @@ namespace osum.GameModes.Play.Components
             return base.Draw();
         }
 
-        Vector2 spinningPositionFor(int time)
+        private Vector2 spinningPositionFor(int time)
         {
             float angle = (float)time / 30;
             return Spinner.SpinnerCentre + new Vector2((float)Math.Cos(angle) * 50, (float)Math.Sin(angle) * 50);
@@ -109,9 +107,7 @@ namespace osum.GameModes.Play.Components
 
                 foreach (pDrawable finger in fingers)
                 {
-                    HitObject obj = finger.Tag as HitObject;
-
-                    if (obj != null)
+                    if (finger.Tag is HitObject obj)
                     {
                         if (obj == nextObject) objectHasFinger = true;
                         if (obj == nextObjectConnected) connectedObjectHasFinger = true;
@@ -188,8 +184,8 @@ namespace osum.GameModes.Play.Components
             base.Update();
         }
 
-        pDrawable lastFinger;
-        HitObject lastObject = null;
+        private pDrawable lastFinger;
+        private HitObject lastObject;
         public float MovementSpeed = 1;
 
         private void checkObject(HitObject nextObject)

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
-    class StreamSwitchDisplay : GameComponent
+    internal class StreamSwitchDisplay : GameComponent
     {
-        pDrawable arrowLarge;
-        pDrawable arrowSmall;
-        pDrawable text;
+        private pDrawable arrowLarge;
+        private pDrawable arrowSmall;
+        private pDrawable text;
 
         public override void Initialize()
         {
@@ -41,8 +37,8 @@ namespace osum.GameModes.Play.Components
             base.Initialize();
         }
 
-        bool isSwitching;
-        bool increase;
+        private bool isSwitching;
+        private bool increase;
 
         internal void BeginSwitch(bool increase)
         {

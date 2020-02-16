@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using OpenTK.Input;
-using System.Drawing;
 
 namespace osum.Input.Sources
 {
-    class InputSourceMouse : InputSource
+    internal class InputSourceMouse : InputSource
     {
-        MouseDevice mouse;
+        private MouseDevice mouse;
 
-        public InputSourceMouse(MouseDevice mouse) : base()
+        public InputSourceMouse(MouseDevice mouse)
         {
             this.mouse = mouse;
 
 
             mouse.ButtonDown += mouse_ButtonDown;
-            mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(mouse_ButtonUp);
-            mouse.Move += new EventHandler<MouseMoveEventArgs>(mouse_Move);
+            mouse.ButtonUp += mouse_ButtonUp;
+            mouse.Move += mouse_Move;
         }
 
-        void mouse_Move(object sender, MouseMoveEventArgs e)
+        private void mouse_Move(object sender, MouseMoveEventArgs e)
         {
             if (trackingPoints.Count > 0)
             {
@@ -30,9 +26,9 @@ namespace osum.Input.Sources
             }
         }
 
-        List<MouseButton> pressedButtons = new List<MouseButton>();
+        private readonly List<MouseButton> pressedButtons = new List<MouseButton>();
 
-        void mouse_ButtonUp(object sender, MouseButtonEventArgs e)
+        private void mouse_ButtonUp(object sender, MouseButtonEventArgs e)
         {
             pressedButtons.Remove(e.Button);
 
@@ -43,7 +39,7 @@ namespace osum.Input.Sources
                 trackingPoints.Clear();
         }
 
-        void mouse_ButtonDown(object sender, MouseButtonEventArgs e)
+        private void mouse_ButtonDown(object sender, MouseButtonEventArgs e)
         {
             pressedButtons.Add(e.Button);
             TriggerOnDown(new TrackingPoint(e.Position));

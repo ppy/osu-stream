@@ -1,20 +1,22 @@
 ﻿using System;
-using osum.GameplayElements;
-using osum.Audio;
-using osum.Graphics.Sprites;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Helpers;
-using osum.Graphics.Renderers;
+using osum.Audio;
+using osum.GameModes.Play;
 using osum.GameModes.SongSelect;
-using osum.Graphics.Skins;
+using osum.GameplayElements;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 using osum.Support;
 
 namespace osum.GameModes.Options
 {
     public class Credits : Player
     {
-        string[] creditsRoll = new string[] {
+        private readonly string[] creditsRoll = {
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
             "*Graphics",
@@ -61,14 +63,14 @@ namespace osum.GameModes.Options
             "*Thanks to",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
             "Testers - Special thanks to Cyclone, Doddler, dvorak, Guy-kun, James, mattyu007, nekodex, PJMS, Saphier, tobebuta and my mum (i'm serious)",
-            "#bat - For support and help on various occasions",
+            "#bat - For support and help on various occasions"
         };
 
-        int beatLength = 800;
+        private readonly int beatLength = 800;
 
-        pDrawable lastText;
+        private pDrawable lastText;
 
-        const int height_extra = 200;
+        private const int height_extra = 200;
 
         public override void Initialize()
         {
@@ -196,19 +198,19 @@ namespace osum.GameModes.Options
                 lastText = text;
             }
 
-            InputManager.OnMove += new InputHandler(InputManager_OnMove);
+            InputManager.OnMove += InputManager_OnMove;
         }
 
         public override void Dispose()
         {
-            InputManager.OnMove -= new InputHandler(InputManager_OnMove);
+            InputManager.OnMove -= InputManager_OnMove;
             base.Dispose();
         }
 
-        float incrementalSpeed = 1;
+        private float incrementalSpeed = 1;
         private BackButton s_ButtonBack;
 
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+        private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (!InputManager.IsPressed || InputManager.PrimaryTrackingPoint == null || InputManager.PrimaryTrackingPoint.HoveringObject is BackButton)
                 return;
@@ -245,8 +247,8 @@ namespace osum.GameModes.Options
 
         }
 
-        int lastBeat;
-        int lastBeatNoLoop;
+        private int lastBeat;
+        private int lastBeatNoLoop;
         public override void Update()
         {
             int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;

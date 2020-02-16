@@ -1,10 +1,8 @@
 using System;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
 using OpenTK;
-using osum.Helpers;
+using OpenTK.Graphics;
 using osum.Graphics.Renderers;
-using osum.Graphics.Skins;
+using osum.Helpers;
 
 namespace osum.Graphics.Sprites
 {
@@ -39,7 +37,7 @@ namespace osum.Graphics.Sprites
 #if iOS
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
 #else
-        private static NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();
+        private static readonly NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();
 #endif
 
         internal pText(string text, float textSize, Vector2 startPosition, Vector2 bounds, float drawDepth,
@@ -125,8 +123,8 @@ namespace osum.Graphics.Sprites
                 Vector2 pos = FieldPosition / GameBase.BaseToNativeRatio - OriginVector * GameBase.SpriteToBaseRatio;
 
                 return new Box2(pos.X, pos.Y,
-                    pos.X + (float)DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
-                    pos.Y + (float)DrawHeight / GameBase.BaseToNativeRatio * Scale.Y);
+                    pos.X + DrawWidth / GameBase.BaseToNativeRatio * Scale.X,
+                    pos.Y + DrawHeight / GameBase.BaseToNativeRatio * Scale.Y);
             }
         }
 

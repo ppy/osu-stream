@@ -18,29 +18,29 @@
 *                                                                            *
 ******************************************************************************/
 //---------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
-namespace USBHIDDRIVER
+using System;
+using System.Threading;
+using osum.Input.Sources.UsbHID.USB;
+
+namespace osum.Input.Sources.UsbHID
 {
     /// <summary>
     /// Interface for the HID USB Driver.
     /// </summary>
     public class USBInterface
     {
-        private string usbVID;
-        private string usbPID;
+        private readonly string usbVID;
+        private readonly string usbPID;
         private bool isConnected;
 
-        private USB.HIDUSBDevice usbdevice;
+        private readonly HIDUSBDevice usbdevice;
 
         //USB LIST BUFFER
         /// <summary>
         /// Buffer for incomming data.
         /// </summary>
-        public static List.ListWithEvent usbBuffer = new List.ListWithEvent();
+        public static ListWithEvent usbBuffer = new ListWithEvent();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="USBInterface"/> class.
@@ -49,9 +49,9 @@ namespace USBHIDDRIVER
         /// <param name="pid">The product id of the USB device (e.g. pid_ffff)</param>
        public  USBInterface(string vid, string pid)
         {
-            this.usbVID = vid;
-            this.usbPID = pid;
-            this.usbdevice = new USB.HIDUSBDevice(this.usbVID, this.usbPID);
+            usbVID = vid;
+            usbPID = pid;
+            usbdevice = new HIDUSBDevice(usbVID, usbPID);
         }
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace USBHIDDRIVER
         /// <param name="vid">The vendor id of the USB device (e.g. vid_06ba).</param>
         public USBInterface(string vid)
         {
-            this.usbVID = vid;
-            this.usbdevice = new USB.HIDUSBDevice(this.usbVID, "");
+            usbVID = vid;
+            usbdevice = new HIDUSBDevice(usbVID, "");
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace USBHIDDRIVER
         /// <returns>false if an error occures</returns>
         public bool Connect()
         {
-            isConnected = this.usbdevice.connectDevice();
+            isConnected = usbdevice.connectDevice();
             return isConnected;
         }
 
@@ -85,7 +85,7 @@ namespace USBHIDDRIVER
         {
             if (isConnected)
             {
-                this.usbdevice.disconnectDevice();
+                usbdevice.disconnectDevice();
             }
         }
 
@@ -98,7 +98,7 @@ namespace USBHIDDRIVER
         /// <returns>String list with device paths</returns>
         public String[] getDeviceList()
         {
-            return (String[])this.usbdevice.getDevices().ToArray(typeof(string));
+            return (String[])usbdevice.getDevices().ToArray(typeof(string));
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace USBHIDDRIVER
                         }
                     }
                     //send the report
-                    if (!this.usbdevice.writeData(transfByte))
+                    if (!usbdevice.writeData(transfByte))
                     {
                         success = false;
                     }
@@ -152,7 +152,7 @@ namespace USBHIDDRIVER
         /// </summary>
         public void startRead()
         {
-            this.usbdevice.readData();
+            usbdevice.readData();
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace USBHIDDRIVER
         /// </summary>
         public void stopRead()
         {
-            this.usbdevice.readData();
+            usbdevice.readData();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace USBHIDDRIVER
         /// the event handler method will be called.
         /// </summary>
         /// <param name="eHandler">The event handler method.</param>
-        public void enableUsbBufferEvent(System.EventHandler eHandler)
+        public void enableUsbBufferEvent(EventHandler eHandler)
         {
             usbBuffer.Changed += eHandler;
         }

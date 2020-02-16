@@ -27,7 +27,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace sspack
+namespace sspack.Exporters
 {
 	public class BmpImageExporter : IImageExporter
 	{

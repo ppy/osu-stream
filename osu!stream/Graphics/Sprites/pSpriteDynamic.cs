@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Helpers;
-using osum.Graphics.Skins;
-using OpenTK;
+﻿using OpenTK;
 
 namespace osum.Graphics.Sprites
 {
     public delegate pTexture TextureLoadDelegate();
 
-    class pSpriteDynamic : pSprite
+    internal class pSpriteDynamic : pSprite
     {
         public pSpriteDynamic()
             : base(null, Vector2.Zero)
@@ -35,7 +29,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        bool failedLoad;
+        private bool failedLoad;
         private void LoadTexture()
         {
             if (failedLoad) return;

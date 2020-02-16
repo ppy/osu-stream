@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
-using osu_common.Helpers;
-using osum.GameplayElements;
 using osum.Helpers;
-using osum.Graphics.Skins;
-using osum.Graphics.Drawables;
 
 #if iOS
 using OpenTK.Graphics.ES11;
@@ -36,14 +30,13 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using UIKit;
 using CoreGraphics;
 #else
-using OpenTK.Graphics.OpenGL;
-using osum.Input;
+
 #endif
 
 
 namespace osum.Graphics.Sprites
 {
-    internal partial class pSprite : pDrawable
+    internal class pSprite : pDrawable
     {
         internal int DrawHeight;
         internal int DrawLeft;
@@ -250,8 +243,7 @@ namespace osum.Graphics.Sprites
         {
             if (texture != null)
                 return texture.assetName + "(" + texture.OsuTextureInfo + ")";
-            else
-                return "unknown";
+            return "unknown";
         }
     }
 
@@ -344,7 +336,7 @@ namespace osum.Graphics.Sprites
         NativeSnapRight,
 
         StandardSnapTopCentre,
-        StandardSnapCentreLeft,
+        StandardSnapCentreLeft
     }
 
     internal enum OriginTypes

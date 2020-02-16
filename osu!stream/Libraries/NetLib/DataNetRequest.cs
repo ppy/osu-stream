@@ -1,15 +1,14 @@
 using System;
-using System.IO;
-using System.Threading;
 using System.Net;
-using osum;
 using System.Text;
+using System.Threading;
+
 #if iOS
 using Foundation;
 using System.Runtime.InteropServices;
 #endif
 
-namespace osu_common.Libraries.NetLib
+namespace osum.Libraries.NetLib
 {
 #if iOS
     public class NRDelegate : NSUrlConnectionDataDelegate
@@ -98,8 +97,8 @@ namespace osu_common.Libraries.NetLib
     /// </summary>
     public class DataNetRequest : NetRequest
     {
-        string method;
-        string postData;
+        private readonly string method;
+        private readonly string postData;
 
         public DataNetRequest(string _url, string method = "GET", string postData = null)
             : base(_url)
@@ -194,9 +193,9 @@ namespace osu_common.Libraries.NetLib
         public static String UrlEncode(String s)
         {
             StringBuilder result = new StringBuilder();
-            foreach (char c in s.ToCharArray())
+            foreach (char c in s)
             {
-                ushort u = (ushort)c;
+                ushort u = c;
                 if (u < 32 || badChars.IndexOf(c) >= 0)
                 {
                     result.Append('%');
@@ -221,7 +220,7 @@ namespace osu_common.Libraries.NetLib
             });
         }
 
-        void wc_UploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
+        private void wc_UploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
         {
             GameBase.Scheduler.Add(delegate
             {
@@ -230,7 +229,7 @@ namespace osu_common.Libraries.NetLib
             });
         }
 
-        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             GameBase.Scheduler.Add(delegate
             {
@@ -239,13 +238,13 @@ namespace osu_common.Libraries.NetLib
             });
         }
 
-        void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error == null) data = e.Result;
             error = e.Error;
         }
 
-        void wc_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
+        private void wc_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
         {
             if (e.Error == null) data = e.Result;
             error = e.Error;

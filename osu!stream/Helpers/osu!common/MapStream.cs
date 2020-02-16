@@ -1,11 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using osu_common.Helpers;
 
-
-namespace osu_common.Libraries.Osz2
+namespace osum.Helpers
 {
     public class MapStream : Stream
     {
@@ -22,13 +18,13 @@ namespace osu_common.Libraries.Osz2
 #elif NO_ENCRYPTION
         private Stream internalStream;
 #else
-        private Stream internalStream;
+        private readonly Stream internalStream;
         //private byte[] internalBuffer;
         private byte[] decryptedBuffer;
-        private byte[] skipBuffer = new byte[64];
-        private FastEncryptionProvider encryptor = new FastEncryptionProvider();
+        private readonly byte[] skipBuffer = new byte[64];
+        private readonly FastEncryptionProvider encryptor = new FastEncryptionProvider();
 #endif
-        private int fOffset;
+        private readonly int fOffset;
         private long fPosition;
         
         public MapStream(Stream str, int offset, int length, byte[] iv, byte[] key)
@@ -76,7 +72,7 @@ namespace osu_common.Libraries.Osz2
             
             encryptor.Init(uKey, EncryptionMethod.Two);
 
-            byte[] lengthB = new byte[] { data[0], data[1], data[2], data[3] };
+            byte[] lengthB = { data[0], data[1], data[2], data[3] };
             encryptor.Decrypt(lengthB, 0, 4);
             fLength = lengthB[0] | (lengthB[1] << 8) | (lengthB[2] << 16) | (lengthB[3] << 24);
             fPosition = fOffset;

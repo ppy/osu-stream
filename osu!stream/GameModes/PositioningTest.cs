@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
+﻿using OpenTK;
 using OpenTK.Graphics;
-using OpenTK;
-using osum.Graphics.Drawables;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.GameModes
 {
-    class PositioningTest : GameMode
+    internal class PositioningTest : GameMode
     {
         public override void Initialize()
         {
-            InputManager.OnDown += new Helpers.InputHandler(InputManager_OnDown);
+            InputManager.OnDown += InputManager_OnDown;
 
             spriteManager = new SpriteManagerDraggable();
 
@@ -43,7 +40,7 @@ namespace osum.GameModes
             spriteManager.Add(sp);
         }
 
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        private void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
             pRectangle rect = new pRectangle(Vector2.Zero, new Vector2(GameBase.NativeSize.Width, GameBase.NativeSize.Height), false, 0.2f, Color4.White);
             rect.FadeOutFromOne(500);

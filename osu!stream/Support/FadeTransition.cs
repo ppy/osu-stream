@@ -1,34 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using osum.Graphics.Sprites;
 using osum.Helpers;
 
 namespace osum.Support
 {
-    class FadeTransition : Transition
+    internal class FadeTransition : Transition
     {
         public const int DEFAULT_FADE_OUT = 300;
         public const int DEFAULT_FADE_IN = 300;
 
-        private int FadeOutTime;
-        private int FadeInTime;
+        private readonly int FadeOutTime;
+        private readonly int FadeInTime;
 
         public FadeTransition()
             : this(DEFAULT_FADE_OUT, DEFAULT_FADE_IN)
         { }
 
         public FadeTransition(int fadeOut, int fadeIn)
-            : base()
         {
             FadeOutTime = fadeOut;
             FadeInTime = fadeIn;
         }
 
-        FadeState fadeState = FadeState.FadeOut;
-        
-        float currentValue; //todo: yucky.
+        private FadeState fadeState = FadeState.FadeOut;
+
+        private float currentValue; //todo: yucky.
         private float drawDim;
         public override float CurrentValue {
             get {
@@ -89,7 +85,7 @@ namespace osum.Support
         }
     }
 
-    enum FadeState
+    internal enum FadeState
     {
         FadeOut,
         FadeIn

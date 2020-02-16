@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.Audio;
+using osum.GameModes.Play;
+using osum.GameplayElements.Beatmaps;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics;
 using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Input;
 using osum.Support;
-using osum.Audio;
-using osum.Graphics.Skins;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
 
-namespace osum.GameplayElements
+namespace osum.GameplayElements.HitObjects
 {
     internal delegate void HitCircleDelegate(HitObject h);
 
@@ -79,7 +78,7 @@ namespace osum.GameplayElements
             UpdateDimming();
         }
 
-        bool isDimmed;
+        private bool isDimmed;
 
         //todo: this is horribly memory inefficient.
         protected void UpdateDimming()
@@ -93,12 +92,12 @@ namespace osum.GameplayElements
                 if (isDimmed)
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(new Color4(0.7f, 0.7f, 0.7f, 1), 0, true);
+                        if (p.TagNumeric == DIMMABLE_TAG) p.FadeColour(new Color4(0.7f, 0.7f, 0.7f, 1), 0, true);
                 }
                 else
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == HitObject.DIMMABLE_TAG) p.FadeColour(Color4.White, (int)m_HitObjectManager.FirstBeatLength / 2);
+                        if (p.TagNumeric == DIMMABLE_TAG) p.FadeColour(Color4.White, (int)m_HitObjectManager.FirstBeatLength / 2);
                 }
             }
         }
@@ -276,7 +275,7 @@ namespace osum.GameplayElements
             if (action > ScoreChange.Miss)
             {
                 p.Transform(
-                    new TransformationBounce(now, (int)(now + (HitFadeIn * 2)), 1, 0.2f, 3));
+                    new TransformationBounce(now, now + (HitFadeIn * 2), 1, 0.2f, 3));
                 p.Transform(
                     new TransformationF(TransformationType.Fade, 1, 0,
                                        now + HitFadeOutStart, now + HitFadeOutStart + HitFadeOutDuration));
@@ -307,7 +306,7 @@ namespace osum.GameplayElements
 
         internal virtual void Dispose()
         {
-            StopSound(true);
+            StopSound();
         }
 
         /// <summary>
@@ -489,8 +488,8 @@ namespace osum.GameplayElements
                     pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
 
-        const int TAG_SHAKE_TRANSFORMATION = 54327;
-        internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = osum.GameplayElements.Beatmaps.SampleSet.Normal, CustomSampleSet = CustomSampleSet.Default, Volume = 1, AdditionSampleSet = osum.GameplayElements.Beatmaps.SampleSet.Normal };
+        private const int TAG_SHAKE_TRANSFORMATION = 54327;
+        internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = Beatmaps.SampleSet.Normal, CustomSampleSet = CustomSampleSet.Default, Volume = 1, AdditionSampleSet = Beatmaps.SampleSet.Normal };
 
 
         internal virtual void Shake()
@@ -525,7 +524,7 @@ namespace osum.GameplayElements
 
         public override string ToString()
         {
-            return this.Type + ": " + this.StartTime + "-" + this.EndTime + " stack:" + this.StackCount;
+            return Type + ": " + StartTime + "-" + EndTime + " stack:" + StackCount;
         }
 
         public virtual float HpMultiplier { get { return 1; } }

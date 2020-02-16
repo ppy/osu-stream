@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -32,13 +27,12 @@ using osu_common.Helpers;
 using OpenTK;
 using osum.Helpers;
 #else
-using OpenTK.Input;
-using OpenTK.Graphics.OpenGL;
-using osum.Input;
-using osum.Helpers;
-using osu_common.Helpers;
 using OpenTK;
 #endif
+using System;
+using osum.Input;
+using osum.Input.Sources;
+using osum.Support;
 
 namespace osum.Graphics.Sprites
 {
@@ -112,7 +106,7 @@ namespace osum.Graphics.Sprites
                 rect.Bottom + ClickableMargin >= position.Y;
         }
 
-        void inputUpdateHoverState(TrackingPoint trackingPoint)
+        private void inputUpdateHoverState(TrackingPoint trackingPoint)
         {
             if (!handleInput)
                 return;
@@ -146,7 +140,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        float acceptableUpClick;
+        private float acceptableUpClick;
 
         internal virtual void HandleOnMove(InputSource source, TrackingPoint trackingPoint)
         {
@@ -159,7 +153,7 @@ namespace osum.Graphics.Sprites
         }
 
         //todo: make different for different screen resolutions?
-        const float HANDLE_UP_MOVEMENT_ALLOWANCE = 30;
+        private const float HANDLE_UP_MOVEMENT_ALLOWANCE = 30;
 
         internal virtual void HandleOnDown(InputSource source, TrackingPoint trackingPoint)
         {

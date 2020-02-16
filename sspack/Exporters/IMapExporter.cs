@@ -27,7 +27,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace sspack
+namespace sspack.Exporters
 {
 	/// <summary>
 	/// An object able to save a sprite sheet map.

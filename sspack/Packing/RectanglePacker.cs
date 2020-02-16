@@ -26,7 +26,7 @@
 
 using System.Drawing;
 
-namespace sspack
+namespace sspack.Packing
 {
 	/// <summary>Base class for rectangle packing algorithms</summary>
 	/// <remarks>

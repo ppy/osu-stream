@@ -1,10 +1,3 @@
-using System;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
-using System.Runtime.InteropServices;
-using osum.Helpers;
-using OpenTK.Graphics;
-using OpenTK;
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -34,9 +27,13 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Graphics.Sprites;
 
 
 namespace osum.Graphics.Drawables
@@ -46,8 +43,8 @@ namespace osum.Graphics.Drawables
         internal float Radius;
         internal float Width = 2 / 20f;
 
-        GCHandle handle_vertices;
-        IntPtr handle_vertices_pointer;
+        private GCHandle handle_vertices;
+        private readonly IntPtr handle_vertices_pointer;
 
         public ApproachCircle(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
@@ -80,11 +77,11 @@ namespace osum.Graphics.Drawables
 #endif
         }
 
-        int parts = 48;
+        private readonly int parts = 48;
 
-        static float[] precalculatedAngles;
+        private static float[] precalculatedAngles;
 #if !NO_PIN_SUPPORT
-        float[] vertices;
+        private readonly float[] vertices;
 #endif
 
         public override bool Draw()
@@ -99,41 +96,38 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
                 Color4 c = AlphaAppliedColour;
 
-                unsafe
-                {
 #if NO_PIN_SUPPORT
                     float* vertices = (float*)handle_vertices_pointer.ToPointer();
 #endif
-                    if (precalculatedAngles == null)
-                    {
-                        precalculatedAngles = new float[parts * 2 + 2];
-
-                        for (int v = 0; v < parts; v++)
-                        {
-                            precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * MathHelper.Pi / parts);
-                            precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * MathHelper.Pi / parts);
-                        }
-
-                        precalculatedAngles[parts * 2] = vertices[0];
-                        precalculatedAngles[parts * 2 + 1] = vertices[1];
-                    }
+                if (precalculatedAngles == null)
+                {
+                    precalculatedAngles = new float[parts * 2 + 2];
 
                     for (int v = 0; v < parts; v++)
                     {
-                        float angle1 = precalculatedAngles[v * 2];
-                        float angle2 = precalculatedAngles[v * 2 + 1];
-
-                        vertices[v * 4] = pos.X + angle1 * rad1;
-                        vertices[v * 4 + 1] = pos.Y + angle2 * rad1;
-                        vertices[v * 4 + 2] = pos.X + angle1 * rad2;
-                        vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
+                        precalculatedAngles[v * 2] = (float)Math.Cos(v * 2.0f * MathHelper.Pi / parts);
+                        precalculatedAngles[v * 2 + 1] = (float)Math.Sin(v * 2.0f * MathHelper.Pi / parts);
                     }
 
-                    vertices[parts * 4] = vertices[0];
-                    vertices[parts * 4 + 1] = vertices[1];
-                    vertices[parts * 4 + 2] = vertices[2];
-                    vertices[parts * 4 + 3] = vertices[3];
+                    precalculatedAngles[parts * 2] = vertices[0];
+                    precalculatedAngles[parts * 2 + 1] = vertices[1];
                 }
+
+                for (int v = 0; v < parts; v++)
+                {
+                    float angle1 = precalculatedAngles[v * 2];
+                    float angle2 = precalculatedAngles[v * 2 + 1];
+
+                    vertices[v * 4] = pos.X + angle1 * rad1;
+                    vertices[v * 4 + 1] = pos.Y + angle2 * rad1;
+                    vertices[v * 4 + 2] = pos.X + angle1 * rad2;
+                    vertices[v * 4 + 3] = pos.Y + angle2 * rad2;
+                }
+
+                vertices[parts * 4] = vertices[0];
+                vertices[parts * 4 + 1] = vertices[1];
+                vertices[parts * 4 + 2] = vertices[2];
+                vertices[parts * 4 + 3] = vertices[3];
 
                 SpriteManager.TexturesEnabled = false;
 

@@ -1,25 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.GameModes;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using OpenTK;
-using OpenTK.Graphics;
-using System.Drawing;
-using osum.Audio;
-using osum.Support;
-using osum.Graphics;
-using System.IO;
-using osum.Graphics.Drawables;
-using osum.UI;
-using osum.Resources;
+﻿using osum.Helpers;
 
-namespace osum.GameModes
+namespace osum.GameModes.MainMenu
 {
-    partial class MainMenu : GameMode
+    internal partial class MainMenu : GameMode
     {
         private void updateBeat()
         {

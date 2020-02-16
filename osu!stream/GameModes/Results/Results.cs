@@ -1,35 +1,34 @@
 using System;
-using osum.GameplayElements.Scoring;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
-using System.Collections;
-using System.Collections.Generic;
 using osum.Audio;
+using osum.GameModes.Play;
 using osum.GameModes.SongSelect;
-using osum.Graphics;
-using osu_common.Helpers;
 using osum.GameplayElements;
-using System.IO;
-using osum.Resources;
+using osum.GameplayElements.Scoring;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
+using osum.Localisation;
 using osum.UI;
-using osu_common.Libraries.NetLib;
+
 #if iOS
 using Accounts;
 #endif
 
 
-namespace osum.GameModes
+namespace osum.GameModes.Results
 {
     public class Results : GameMode
     {
         internal static Score RankableScore;
 
-        List<pDrawable> fillSprites = new List<pDrawable>();
-        List<pDrawable> fallingSprites = new List<pDrawable>();
-        List<pDrawable> resultSprites = new List<pDrawable>();
+        private readonly List<pDrawable> fillSprites = new List<pDrawable>();
+        private readonly List<pDrawable> fallingSprites = new List<pDrawable>();
+        private readonly List<pDrawable> resultSprites = new List<pDrawable>();
 
         private BackButton s_ButtonBack;
         private pSprite s_Footer;
@@ -38,11 +37,11 @@ namespace osum.GameModes
         private pSprite modeGraphic;
         private pSprite rankGraphic;
 
-        const int colour_change_length = 500;
-        const int end_bouncing = 600;
-        const int time_between_fills = 600;
+        private const int colour_change_length = 500;
+        private const int end_bouncing = 600;
+        private const int time_between_fills = 600;
 
-        const float fill_height = 5;
+        private const float fill_height = 5;
 
         private pSpriteText countTotalScore;
         private pSpriteText countScoreHit;
@@ -50,19 +49,19 @@ namespace osum.GameModes
         private pSpriteText countScoreAccuracy;
         private pSpriteText countScoreSpin;
 
-        SpriteManager layer1 = new SpriteManager();
-        SpriteManager layer2 = new SpriteManager();
-        SpriteManager topMostLayer = new SpriteManager();
+        private readonly SpriteManager layer1 = new SpriteManager();
+        private readonly SpriteManager layer2 = new SpriteManager();
+        private readonly SpriteManager topMostLayer = new SpriteManager();
 
-        float avg;
-        float offset;
+        private float avg;
+        private float offset;
 
         public override void Initialize()
         {
             background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
                             ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
-            background.Scale.X = (float)background.DrawWidth / GameBase.BaseSize.X;
+            background.Scale.X = background.DrawWidth / GameBase.BaseSize.X;
 
             background.AlphaBlend = false;
             spriteManager.Add(background);
@@ -110,7 +109,7 @@ namespace osum.GameModes
                 {
                     Origin = OriginTypes.TopLeft,
                     Field = FieldTypes.StandardSnapCentreLeft,
-                    Bold = true,
+                    Bold = true
                 };
                 resultSprites.Add(heading);
 
@@ -455,8 +454,8 @@ namespace osum.GameModes
 #endif
         }
 
-        bool cameFromSongSelect;
-        bool unlockedExpert;
+        private bool cameFromSongSelect;
+        private bool unlockedExpert;
 
         /// <summary>
         /// Initializes the song select BGM and starts playing. Static for now so it can be triggered from anywhere.
@@ -473,13 +472,13 @@ namespace osum.GameModes
                 AudioEngine.Music.Play();
         }
 
-        void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
+        private void HandleInputManagerOnMove(InputSource source, TrackingPoint trackingPoint)
         {
             if (InputManager.IsPressed && finishedDisplaying && !s_ButtonBack.IsHovering)
                 offset += trackingPoint.WindowDelta.Y;
         }
 
-        void Director_OnTransitionEnded()
+        private void Director_OnTransitionEnded()
         {
             //hit -> combo -> accuracy -> spin
 
@@ -489,7 +488,7 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(delegate
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
-                countScoreHit.ShowInt(RankableScore.hitScore, 6, false);
+                countScoreHit.ShowInt(RankableScore.hitScore, 6);
                 countScoreHit.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.hitScore;
@@ -502,7 +501,7 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(delegate
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
-                countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6, false);
+                countScoreCombo.ShowInt(RankableScore.comboBonusScore, 6);
                 countScoreCombo.AdditiveFlash(500, 1);
 
 
@@ -516,7 +515,7 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(delegate
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
-                countScoreAccuracy.ShowInt(RankableScore.accuracyBonusScore, 6, false);
+                countScoreAccuracy.ShowInt(RankableScore.accuracyBonusScore, 6);
                 countScoreAccuracy.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.accuracyBonusScore;
@@ -529,7 +528,7 @@ namespace osum.GameModes
             GameBase.Scheduler.Add(delegate
             {
                 AudioEngine.PlaySample(OsuSamples.RankingBam);
-                countScoreSpin.ShowInt(RankableScore.spinnerBonusScore, 6, false);
+                countScoreSpin.ShowInt(RankableScore.spinnerBonusScore, 6);
                 countScoreSpin.AdditiveFlash(500, 1);
 
                 addedScore += RankableScore.spinnerBonusScore;
@@ -625,10 +624,10 @@ namespace osum.GameModes
             }
         }
 
-        bool finishedDisplaying;
+        private bool finishedDisplaying;
 
 
-        int addedScore;
+        private int addedScore;
         private pSpriteText count300;
         private pSpriteText count100;
         private pSpriteText count50;
@@ -679,7 +678,7 @@ namespace osum.GameModes
             spriteManager.Add(fillSprites);
         }
 
-        void returnToSelect(object sender, EventArgs args)
+        private void returnToSelect(object sender, EventArgs args)
         {
             Director.ChangeMode(OsuMode.SongSelect);
         }
@@ -689,10 +688,6 @@ namespace osum.GameModes
             TextureManager.Dispose(OsuTexture.ranking_background);
             InputManager.OnMove -= HandleInputManagerOnMove;
             base.Dispose();
-        }
-
-        public Results()
-        {
         }
 
         public override bool Draw()
@@ -705,7 +700,7 @@ namespace osum.GameModes
             return true;
         }
 
-        int frameCount = 0;
+        private int frameCount;
         private pSprite spriteSubmitting;
         private Notification rankingNotification;
 

@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using OpenTK;
-using osum.Graphics.Primitives;
-using osum.GameplayElements;
-using osum.GameplayElements.HitObjects;
+using osum.Audio;
+using osum.GameModes.Play;
+using osum.GameplayElements.Beatmaps;
 using osum.Graphics;
-using osum.Graphics.Skins;
+using osum.Graphics.Primitives;
 using osum.Graphics.Sprites;
 using osum.Helpers;
+using osum.Input;
 using Color = OpenTK.Graphics.Color4;
-using osum;
-
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -40,17 +40,8 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using osum.Input;
 #endif
-
-using System.Drawing;
-using osum.Graphics.Renderers;
-using OpenTK.Graphics;
-using osum.Audio;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
@@ -160,18 +151,19 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         protected List<pDrawable> spriteCollectionEnd = new List<pDrawable>();
 
-        private List<pDrawable> spriteCollectionScoringPoints = new List<pDrawable>();
+        private readonly List<pDrawable> spriteCollectionScoringPoints = new List<pDrawable>();
 
         /// <summary>
         /// The points in progress that ticks are to be placed (based on decimal values 0 - 1).
         /// </summary>
-        private List<double> scoringPoints = new List<double>();
+        private readonly List<double> scoringPoints = new List<double>();
 
         /// <summary>
         /// cuz snackin' iz chestin'
         /// </summary>
-        const bool NO_SNAKING = false;
-        const bool PRERENDER_ALL = false;
+        private const bool NO_SNAKING = false;
+
+        private const bool PRERENDER_ALL = false;
 
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
@@ -273,7 +265,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             Sprites.Add(spriteFollowCircle);
             Sprites.Add(spriteFollowBallOverlay);
 
-            spriteSliderBody.TagNumeric = HitObject.DIMMABLE_TAG;
+            spriteSliderBody.TagNumeric = DIMMABLE_TAG;
 
             //Start and end circles
 
@@ -343,9 +335,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             Sprites.AddRange(spriteCollectionEnd);
             Sprites.AddRange(spriteCollectionScoringPoints);
 
-            spriteCollectionStart.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
-            spriteCollectionEnd.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
-            spriteCollectionScoringPoints.ForEach(s => s.TagNumeric = HitObject.DIMMABLE_TAG);
+            spriteCollectionStart.ForEach(s => s.TagNumeric = DIMMABLE_TAG);
+            spriteCollectionEnd.ForEach(s => s.TagNumeric = DIMMABLE_TAG);
+            spriteCollectionScoringPoints.ForEach(s => s.TagNumeric = DIMMABLE_TAG);
         }
 
         protected virtual void CalculateSplines()
@@ -419,7 +411,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                     for (int i = 0; i < _segments; i++)
                     {
-                        double progress = (double)i / (double)_segments;
+                        double progress = i / (double)_segments;
                         double t = t_final * progress + t_initial * (1 - progress);
                         smoothPoints.Add(pMathHelper.CirclePoint(centre, radius, t));
                     }
@@ -480,13 +472,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 Bottom = Math.Max(Bottom, l.p2.Y + radius);
             }
 
-            return new System.Drawing.RectangleF(Left, Top, Right - Left, Bottom - Top);
+            return new RectangleF(Left, Top, Right - Left, Bottom - Top);
         }
 
         private void CalculateSnakingTimes()
         {
             // time this slider wants to snake at
-            int DesiredTime = (int)(PathLength * (double)DifficultyManager.SnakeSpeedInverse);
+            int DesiredTime = (int)(PathLength * DifficultyManager.SnakeSpeedInverse);
 
             // time our difficulty allows for const speed snaking
             int AllowedTime = DifficultyManager.SnakeStart - DifficultyManager.SnakeEndDesired;
@@ -546,8 +538,8 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             set
             {
                 HitCircleStart.ColourIndex = value;
-                if (spriteCollectionStart.Count > 0) ((pSprite)spriteCollectionStart[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
-                if (spriteCollectionEnd.Count > 0) ((pSprite)spriteCollectionEnd[0]).Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
+                if (spriteCollectionStart.Count > 0) ((pSprite)spriteCollectionStart[0]).Texture = TextureManager.Load(OsuTexture.hitcircle0 + value);
+                if (spriteCollectionEnd.Count > 0) ((pSprite)spriteCollectionEnd[0]).Texture = TextureManager.Load(OsuTexture.hitcircle0 + value);
                 base.ColourIndex = value;
             }
         }
@@ -642,7 +634,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// <summary>
         /// Tracking point associated with the slider.
         /// </summary>
-        TrackingPoint trackingPoint;
+        private TrackingPoint trackingPoint;
 
         /// <summary>
         /// Gets a value indicating whether this instance is tracking.
@@ -652,17 +644,17 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// </value>
         public bool IsTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
 
-        bool wasTracking;
+        private bool wasTracking;
 
         /// <summary>
         /// Number of successfully hit end-points. Includes the start circle.
         /// </summary>
-        int totalScoreValue;
+        private int totalScoreValue;
 
         /// <summary>
         /// Index of the last end-point to be judged. Used to keep track of judging calculations.
         /// </summary>
-        int lastJudgedEndpoint;
+        private int lastJudgedEndpoint;
 
         public override bool IsHit
         {
@@ -785,61 +777,58 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 return IsTracking ? ScoreChange.SliderRepeat : ScoreChange.MissMinor;
             }
-            else
+            //Check if we've hit a new scoringpoint...
+
+            int judgePointNormalized = isReversing ? scoringPoints.Count - 1 - (lastJudgedScoringPoint + 1) : lastJudgedScoringPoint + 1;
+
+            if (lastJudgedScoringPoint < scoringPoints.Count - 1 &&
+                (
+                    (isReversing && normalizeProgress(progressCurrent) < scoringPoints[judgePointNormalized]) ||
+                    (!isReversing && normalizeProgress(progressCurrent) > scoringPoints[judgePointNormalized])
+                )
+            )
             {
-                //Check if we've hit a new scoringpoint...
-
-                int judgePointNormalized = isReversing ? scoringPoints.Count - 1 - (lastJudgedScoringPoint + 1) : lastJudgedScoringPoint + 1;
-
-                if (lastJudgedScoringPoint < scoringPoints.Count - 1 &&
-                    (
-                        (isReversing && normalizeProgress(progressCurrent) < scoringPoints[judgePointNormalized]) ||
-                        (!isReversing && normalizeProgress(progressCurrent) > scoringPoints[judgePointNormalized])
-                    )
-                   )
+                if (!HitCircleStart.IsHit)
                 {
-                    if (!HitCircleStart.IsHit)
-                    {
-                        HitCircleStart.IsHit = true;
-                        return ScoreChange.MissMinor;
-                    }
-
-                    lastJudgedScoringPoint++;
-
-                    if (IsTracking)
-                    {
-                        totalScoreValue++;
-                        playTick();
-
-                        pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
-
-                        point.Alpha = 0;
-
-
-                        if (spriteFollowCircle.Transformations.Find(t => t.Type == TransformationType.Scale) == null)
-                            spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1.05f, 1, now, now + 100, EasingTypes.OutHalf));
-
-                        if (RepeatCount > progressCurrent + 1)
-                        {
-                            //we still have more repeats to go.
-                            int nextRepeatStartTime = (int)(StartTime + (EndTime - StartTime) * (((int)progressCurrent + 1) / (float)RepeatCount));
-
-                            spriteCollectionScoringPoints[judgePointNormalized].Transform(
-                                new TransformationF(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
-                            spriteCollectionScoringPoints[judgePointNormalized].Transform(
-                                new TransformationF(TransformationType.Scale, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
-                        }
-                        else
-                        {
-                            //done with the point for good.
-                            point.Transformations.Clear();
-                        }
-
-                        return ScoreChange.SliderTick;
-                    }
-
+                    HitCircleStart.IsHit = true;
                     return ScoreChange.MissMinor;
                 }
+
+                lastJudgedScoringPoint++;
+
+                if (IsTracking)
+                {
+                    totalScoreValue++;
+                    playTick();
+
+                    pDrawable point = spriteCollectionScoringPoints[judgePointNormalized];
+
+                    point.Alpha = 0;
+
+
+                    if (spriteFollowCircle.Transformations.Find(t => t.Type == TransformationType.Scale) == null)
+                        spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1.05f, 1, now, now + 100, EasingTypes.OutHalf));
+
+                    if (RepeatCount > progressCurrent + 1)
+                    {
+                        //we still have more repeats to go.
+                        int nextRepeatStartTime = (int)(StartTime + (EndTime - StartTime) * (((int)progressCurrent + 1) / (float)RepeatCount));
+
+                        spriteCollectionScoringPoints[judgePointNormalized].Transform(
+                            new TransformationF(TransformationType.Fade, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
+                        spriteCollectionScoringPoints[judgePointNormalized].Transform(
+                            new TransformationF(TransformationType.Scale, 0, 1, nextRepeatStartTime - 100, nextRepeatStartTime));
+                    }
+                    else
+                    {
+                        //done with the point for good.
+                        point.Transformations.Clear();
+                    }
+
+                    return ScoreChange.SliderTick;
+                }
+
+                return ScoreChange.MissMinor;
             }
 
             return ScoreChange.Ignore;
@@ -874,12 +863,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             {
                 int now = ClockingNow;
                 spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1f, 0.8f, now, now + 240, EasingTypes.In));
-                spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + 240, EasingTypes.None));
+                spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 1, 0, now, now + 240));
             }
         }
 
-        static Dictionary<SampleSet, Source> slidingSources = new Dictionary<SampleSet, Source>();
-        static void startSliding(Slider s)
+        private static readonly Dictionary<SampleSet, Source> slidingSources = new Dictionary<SampleSet, Source>();
+
+        private static void startSliding(Slider s)
         {
             if (AudioEngine.Effect == null) return;
 
@@ -901,7 +891,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             slidingSources.Add(s.SampleSet.SampleSet, source);
         }
 
-        static void stopSliding(Slider s)
+        private static void stopSliding(Slider s)
         {
             if (AudioEngine.Effect == null) return;
 
@@ -945,7 +935,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             int now = ClockingNow;
 
             spriteFollowCircle.Transform(new TransformationBounce(now, Math.Min(EndTime, now + 350), 1, 0.5f, 2));
-            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 100), EasingTypes.None));
+            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, 0, 1, now, Math.Min(EndTime, now + 100)));
         }
 
         protected virtual void endTracking()
@@ -960,7 +950,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             spriteFollowCircle.Transformations.RemoveAll(t => t.Type != TransformationType.None);
 
             spriteFollowCircle.Transform(new TransformationF(TransformationType.Scale, 1, 1.4f, now, now + 150, EasingTypes.In));
-            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, spriteFollowCircle.Alpha, 0, now, now + 150, EasingTypes.None));
+            spriteFollowCircle.Transform(new TransformationF(TransformationType.Fade, spriteFollowCircle.Alpha, 0, now, now + 150));
         }
 
         internal virtual void burstEndpoint()
@@ -1072,7 +1062,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             return positionAtProgress(progress, -1, out line);
         }
 
-        bool isReversing { get { return progressCurrent % 2 >= 1; } }
+        private bool isReversing { get { return progressCurrent % 2 >= 1; } }
 
         /// <summary>
         /// Update all elements of the slider which aren't affected by user input.
@@ -1156,7 +1146,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             // Snaking animation is IN PROGRESS
             int FirstSegmentIndex = lastDrawnSegmentIndex + 1;
 
-            double drawProgress = Math.Max(0, (double)(ClockingNow - snakingBegin) / (double)(snakingEnd - snakingBegin));
+            double drawProgress = Math.Max(0, (ClockingNow - snakingBegin) / (double)(snakingEnd - snakingBegin));
 
             if (drawProgress <= 0) return; //haven't started drawing yet.
 
@@ -1312,5 +1302,5 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         Bezier,
         Linear,
         PerfectCurve
-    } ;
+    }
 }

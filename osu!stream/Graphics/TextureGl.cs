@@ -1,10 +1,3 @@
-using System;
-using System.Runtime.InteropServices;
-using OpenTK;
-using OpenTK.Graphics;
-using osum.Helpers;
-using osum.Graphics.Sprites;
-
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -34,11 +27,13 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
-using osum.Input;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Graphics.Sprites;
 
 namespace osum.Graphics
 {
@@ -73,15 +68,15 @@ namespace osum.Graphics
         public bool Loaded { get { return Id > 0; } }
 
 #if !NO_PIN_SUPPORT
-        float[] coordinates;
-        float[] vertices;
+        private readonly float[] coordinates;
+        private readonly float[] vertices;
 
-        GCHandle handle_vertices;
-        GCHandle handle_coordinates;
+        private GCHandle handle_vertices;
+        private GCHandle handle_coordinates;
 #endif
 
-        IntPtr handle_vertices_pointer;
-        IntPtr handle_coordinates_pointer;
+        private readonly IntPtr handle_vertices_pointer;
+        private readonly IntPtr handle_coordinates_pointer;
 
 #if IPHONE
         static readonly internal bool SUPPORTS_DRAWTEXTURE_EXT;
@@ -227,7 +222,7 @@ namespace osum.Graphics
             if (lastDrawTexture != Id)
             {
                 lastDrawTexture = Id;
-                GL.BindTexture(TextureGl.SURFACE_TYPE, Id);
+                GL.BindTexture(SURFACE_TYPE, Id);
             }
         }
 
@@ -241,34 +236,32 @@ namespace osum.Graphics
 
             startIndex *= 12;
 
-            unsafe
+            coordinates[startIndex + 0] = left;
+            coordinates[startIndex + 1] = top;
+            coordinates[startIndex + 2] = right;
+            coordinates[startIndex + 3] = top;
+            coordinates[startIndex + 4] = right;
+            coordinates[startIndex + 5] = bottom;
+
+            coordinates[startIndex + 6] = right;
+            coordinates[startIndex + 7] = bottom;
+            coordinates[startIndex + 8] = left;
+            coordinates[startIndex + 9] = bottom;
+            coordinates[startIndex + 10] = left;
+            coordinates[startIndex + 11] = top;
+
+            //first move everything so it is centered on (0,0)
+            float vLeft = -(origin.X * scaleVector.X);
+            float vTop = -(origin.Y * scaleVector.Y);
+            float vRight = vLeft + drawRect.Width * scaleVector.X;
+            float vBottom = vTop + drawRect.Height * scaleVector.Y;
+
+            if (rotation != 0)
             {
-                coordinates[startIndex + 0] = left;
-                coordinates[startIndex + 1] = top;
-                coordinates[startIndex + 2] = right;
-                coordinates[startIndex + 3] = top;
-                coordinates[startIndex + 4] = right;
-                coordinates[startIndex + 5] = bottom;
+                //only being used for spritetext atm, which doesn't need rotation.
+                //todo: implement if necessary
 
-                coordinates[startIndex + 6] = right;
-                coordinates[startIndex + 7] = bottom;
-                coordinates[startIndex + 8] = left;
-                coordinates[startIndex + 9] = bottom;
-                coordinates[startIndex + 10] = left;
-                coordinates[startIndex + 11] = top;
-
-                //first move everything so it is centered on (0,0)
-                float vLeft = -(origin.X * scaleVector.X);
-                float vTop = -(origin.Y * scaleVector.Y);
-                float vRight = vLeft + drawRect.Width * scaleVector.X;
-                float vBottom = vTop + drawRect.Height * scaleVector.Y;
-
-                if (rotation != 0)
-                {
-                    //only being used for spritetext atm, which doesn't need rotation.
-                    //todo: implement if necessary
-
-                    /*float cos = (float)Math.Cos(rotation);
+                /*float cos = (float)Math.Cos(rotation);
                     float sin = (float)Math.Sin(rotation);
 
                     vertices[startIndex + 0] = vLeft * cos - vTop * sin + currentPos.X;
@@ -279,28 +272,27 @@ namespace osum.Graphics
                     vertices[startIndex + 5] = vRight * sin + vBottom * cos + currentPos.Y;
                     vertices[startIndex + 6] = vLeft * cos - vBottom * sin + currentPos.X;
                     vertices[startIndex + 7] = vLeft * sin + vBottom * cos + currentPos.Y;*/
-                }
-                else
-                {
-                    vLeft += currentPos.X;
-                    vRight += currentPos.X;
-                    vTop += currentPos.Y;
-                    vBottom += currentPos.Y;
+            }
+            else
+            {
+                vLeft += currentPos.X;
+                vRight += currentPos.X;
+                vTop += currentPos.Y;
+                vBottom += currentPos.Y;
 
-                    vertices[startIndex + 0] = vLeft;
-                    vertices[startIndex + 1] = vTop;
-                    vertices[startIndex + 2] = vRight;
-                    vertices[startIndex + 3] = vTop;
-                    vertices[startIndex + 4] = vRight;
-                    vertices[startIndex + 5] = vBottom;
+                vertices[startIndex + 0] = vLeft;
+                vertices[startIndex + 1] = vTop;
+                vertices[startIndex + 2] = vRight;
+                vertices[startIndex + 3] = vTop;
+                vertices[startIndex + 4] = vRight;
+                vertices[startIndex + 5] = vBottom;
 
-                    vertices[startIndex + 6] = vRight;
-                    vertices[startIndex + 7] = vBottom;
-                    vertices[startIndex + 8] = vLeft;
-                    vertices[startIndex + 9] = vBottom;
-                    vertices[startIndex + 10] = vLeft;
-                    vertices[startIndex + 11] = vTop;
-                }
+                vertices[startIndex + 6] = vRight;
+                vertices[startIndex + 7] = vBottom;
+                vertices[startIndex + 8] = vLeft;
+                vertices[startIndex + 9] = vBottom;
+                vertices[startIndex + 10] = vLeft;
+                vertices[startIndex + 11] = vTop;
             }
         }
 
@@ -329,57 +321,54 @@ namespace osum.Graphics
             }
 #endif
 
-            unsafe
-            {
 #if NO_PIN_SUPPORT
                 float* coordinates = (float*)handle_coordinates_pointer;
                 float* vertices = (float*)handle_vertices_pointer;
 #endif
-                coordinates[0] = left;
-                coordinates[1] = top;
-                coordinates[2] = right;
-                coordinates[3] = top;
-                coordinates[4] = right;
-                coordinates[5] = bottom;
-                coordinates[6] = left;
-                coordinates[7] = bottom;
+            coordinates[0] = left;
+            coordinates[1] = top;
+            coordinates[2] = right;
+            coordinates[3] = top;
+            coordinates[4] = right;
+            coordinates[5] = bottom;
+            coordinates[6] = left;
+            coordinates[7] = bottom;
 
-                //first move everything so it is centered on (0,0)
-                float vLeft = -(origin.X * scaleVector.X);
-                float vTop = -(origin.Y * scaleVector.Y);
-                float vRight = vLeft + drawRect.Width * scaleVector.X;
-                float vBottom = vTop + drawRect.Height * scaleVector.Y;
+            //first move everything so it is centered on (0,0)
+            float vLeft = -(origin.X * scaleVector.X);
+            float vTop = -(origin.Y * scaleVector.Y);
+            float vRight = vLeft + drawRect.Width * scaleVector.X;
+            float vBottom = vTop + drawRect.Height * scaleVector.Y;
 
-                if (rotation != 0)
-                {
-                    float cos = (float)Math.Cos(rotation);
-                    float sin = (float)Math.Sin(rotation);
+            if (rotation != 0)
+            {
+                float cos = (float)Math.Cos(rotation);
+                float sin = (float)Math.Sin(rotation);
 
-                    vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
-                    vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
-                    vertices[2] = vRight * cos - vTop * sin + currentPos.X;
-                    vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
-                    vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
-                    vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
-                    vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
-                    vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
-                }
-                else
-                {
-                    vLeft += currentPos.X;
-                    vRight += currentPos.X;
-                    vTop += currentPos.Y;
-                    vBottom += currentPos.Y;
+                vertices[0] = vLeft * cos - vTop * sin + currentPos.X;
+                vertices[1] = vLeft * sin + vTop * cos + currentPos.Y;
+                vertices[2] = vRight * cos - vTop * sin + currentPos.X;
+                vertices[3] = vRight * sin + vTop * cos + currentPos.Y;
+                vertices[4] = vRight * cos - vBottom * sin + currentPos.X;
+                vertices[5] = vRight * sin + vBottom * cos + currentPos.Y;
+                vertices[6] = vLeft * cos - vBottom * sin + currentPos.X;
+                vertices[7] = vLeft * sin + vBottom * cos + currentPos.Y;
+            }
+            else
+            {
+                vLeft += currentPos.X;
+                vRight += currentPos.X;
+                vTop += currentPos.Y;
+                vBottom += currentPos.Y;
 
-                    vertices[0] = vLeft;
-                    vertices[1] = vTop;
-                    vertices[2] = vRight;
-                    vertices[3] = vTop;
-                    vertices[4] = vRight;
-                    vertices[5] = vBottom;
-                    vertices[6] = vLeft;
-                    vertices[7] = vBottom;
-                }
+                vertices[0] = vLeft;
+                vertices[1] = vTop;
+                vertices[2] = vRight;
+                vertices[3] = vTop;
+                vertices[4] = vRight;
+                vertices[5] = vBottom;
+                vertices[6] = vLeft;
+                vertices[7] = vBottom;
             }
 
             Bind();
@@ -392,7 +381,7 @@ namespace osum.Graphics
 
         public void SetData(int textureId)
         {
-            this.Id = textureId;
+            Id = textureId;
         }
 
         public void SetData(byte[] data)
@@ -457,18 +446,18 @@ namespace osum.Graphics
 
             if (level > 0)
             {
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapNearest);
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.LinearMipmapNearest);
+                GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapNearest);
+                GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.LinearMipmapNearest);
             }
             else
             {
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
+                GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureMagFilter, (int)All.Linear);
             }
 
             //can't determine if this helps
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(TextureGl.SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+            GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(SURFACE_TYPE, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
 
             //doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);

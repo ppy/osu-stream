@@ -1,4 +1,4 @@
-namespace osum.Graphics.Skins
+namespace osum.Graphics
 {
     internal static partial class TextureManager
     {

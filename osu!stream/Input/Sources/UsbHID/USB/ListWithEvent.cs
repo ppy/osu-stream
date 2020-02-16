@@ -18,30 +18,30 @@
 *                                                                            *
 ******************************************************************************/
 //---------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace USBHIDDRIVER.List
+using System;
+using System.Collections;
+
+namespace osum.Input.Sources.UsbHID.USB
 {
     /// <summary>
     /// A class that works just like ArrayList, but sends event
     /// notifications whenever the list changes
     /// </summary>
-    public class ListWithEvent : System.Collections.ArrayList
+    public class ListWithEvent : ArrayList
     {
 
         /// <summary>
         /// An event that clients can use to be notified whenever the
         /// elements of the list change
         /// </summary>
-        public event System.EventHandler Changed;
+        public event EventHandler Changed;
 
         /// <summary>
         /// Invoke the Changed event; called whenever list changes
         /// </summary>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        protected virtual void OnChanged(System.EventArgs e)
+        protected virtual void OnChanged(EventArgs e)
         {
             if (Changed != null)
             {
@@ -52,17 +52,17 @@ namespace USBHIDDRIVER.List
         // Override some of the methods that can change the list;
         // invoke event after each:
         /// <summary>
-        /// Fügt am Ende von <see cref="T:System.Collections.ArrayList"></see> ein Objekt hinzu.
+        /// Fãƒ»t am Ende von <see cref="T:System.Collections.ArrayList"></see> ein Objekt hinzu.
         /// </summary>
-        /// <param name="value">Das <see cref="T:System.Object"></see>, das am Ende der <see cref="T:System.Collections.ArrayList"></see> hinzugefügt werden soll. Der Wert kann null sein.</param>
+        /// <param name="value">Das <see cref="T:System.Object"></see>, das am Ende der <see cref="T:System.Collections.ArrayList"></see> hinzugefãƒ»t werden soll. Der Wert kann null sein.</param>
         /// <returns>
-        /// Der <see cref="T:System.Collections.ArrayList"></see>-Index, an dem value hinzugefügt wurde.
+        /// Der <see cref="T:System.Collections.ArrayList"></see>-Index, an dem value hinzugefãƒ»t wurde.
         /// </returns>
-        /// <exception cref="T:System.NotSupportedException"><see cref="T:System.Collections.ArrayList"></see> ist schreibgeschützt.- oder -<see cref="T:System.Collections.ArrayList"></see> hat eine feste Größe. </exception>
+        /// <exception cref="T:System.NotSupportedException"><see cref="T:System.Collections.ArrayList"></see> ist schreibgeschãƒ»zt.-ï£°oderï£°-<see cref="T:System.Collections.ArrayList"></see> hat eine feste Grî”†e. </exception>
         public override int Add(object value)
         {
             int i = base.Add(value);
-            OnChanged(System.EventArgs.Empty);
+            OnChanged(EventArgs.Empty);
             return i;
         }
     

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace osum.GameplayElements.Events
+﻿namespace osum.GameplayElements.Events
 {
-    class Event
+    internal class Event
     {
         
     }

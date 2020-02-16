@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Security.Permissions;
-using System.Text;
 
-namespace osu_common.Libraries
+namespace osum.Helpers
 {
     [HostProtection(SecurityAction.LinkDemand, MayLeakOnAbort = true)]
     public abstract class Aes : SymmetricAlgorithm
     {
         // Fields
-        private static KeySizes[] s_legalBlockSizes = new KeySizes[] { new KeySizes(0x80, 0x80, 0) };
-        private static KeySizes[] s_legalKeySizes = new KeySizes[] { new KeySizes(0x80, 0x100, 0x40) };
+        private static readonly KeySizes[] s_legalBlockSizes = { new KeySizes(0x80, 0x80, 0) };
+        private static readonly KeySizes[] s_legalKeySizes = { new KeySizes(0x80, 0x100, 0x40) };
 
         // Methods
         protected Aes()
         {
-            base.LegalBlockSizesValue = s_legalBlockSizes;
-            base.LegalKeySizesValue = s_legalKeySizes;
-            base.BlockSizeValue = 0x80;
-            base.FeedbackSizeValue = 8;
-            base.KeySizeValue = 0x100;
-            base.ModeValue = CipherMode.CBC;
+            LegalBlockSizesValue = s_legalBlockSizes;
+            LegalKeySizesValue = s_legalKeySizes;
+            BlockSizeValue = 0x80;
+            FeedbackSizeValue = 8;
+            KeySizeValue = 0x100;
+            ModeValue = CipherMode.CBC;
         }
 
         /*

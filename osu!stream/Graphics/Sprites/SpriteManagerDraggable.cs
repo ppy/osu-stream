@@ -1,16 +1,17 @@
 using System;
-using osum.GameModes;
 using OpenTK;
-using osum.Graphics.Drawables;
 using OpenTK.Graphics;
-using osum.Helpers;
+using osum.GameModes;
 using osum.GameModes.SongSelect;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.Graphics.Sprites
 {
     public class SpriteManagerDraggable : SpriteManager
     {
-        SpriteManager nonDraggableManager = new SpriteManager();
+        private readonly SpriteManager nonDraggableManager = new SpriteManager();
 
         internal bool Scrollbar = true;
         internal bool AutomaticHeight = true;
@@ -32,7 +33,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal float EndBufferZone = 60;
 
-        pRectangle scrollbar = new pRectangle(new Vector2(GameBase.SuperWidePadding + 5, 0), new Vector2(4, 0), true, 1, new Color4(255, 255, 255, 255))
+        private readonly pRectangle scrollbar = new pRectangle(new Vector2(GameBase.SuperWidePadding + 5, 0), new Vector2(4, 0), true, 1, new Color4(255, 255, 255, 255))
         {
             Field = FieldTypes.StandardSnapRight,
             Origin = OriginTypes.TopRight
@@ -74,8 +75,8 @@ namespace osum.Graphics.Sprites
             velocity = change;
         }
 
-        float movedX = 0;
-        float movedY = 0;
+        private float movedX;
+        private float movedY;
 
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {
@@ -112,11 +113,11 @@ namespace osum.Graphics.Sprites
 
         internal float ScrollPosition { get { return verticalDragOffset; } }
 
-        internal float ScrollPercentage { get { return (float)verticalDragOffset / offset_min; } }
+        internal float ScrollPercentage { get { return verticalDragOffset / offset_min; } }
 
         private float verticalDragOffset;
-        private float offset_min = 0;
-        private float offset_max = 0;
+        private float offset_min;
+        private readonly float offset_max = 0;
         private float velocity;
 
         /// <summary>
@@ -150,7 +151,7 @@ namespace osum.Graphics.Sprites
         internal void SetMaxHeight(float newOffset)
         {
             offset_min = Math.Min(offset_min, -newOffset / GameBase.InputToFixedWidthAlign + ActualHeight);
-            scrollbar.Scale.Y = (float)ActualHeight / (-offset_min + ActualHeight) * ActualHeight;
+            scrollbar.Scale.Y = ActualHeight / (-offset_min + ActualHeight) * ActualHeight;
         }
 
         public override bool Draw()
@@ -160,7 +161,7 @@ namespace osum.Graphics.Sprites
             return true;
         }
 
-        int ActualHeight
+        private int ActualHeight
         {
             get
             {
@@ -168,7 +169,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        float lastFrameOffset;
+        private float lastFrameOffset;
         public override void Update()
         {
             float bound = offsetBound;
@@ -208,7 +209,7 @@ namespace osum.Graphics.Sprites
             nonDraggableManager.Update();
         }
 
-        float? aimOffset;
+        private float? aimOffset;
         internal void ScrollTo(pDrawable sprite, float padding = 0)
         {
             ScrollTo(-(sprite.Position.Y - 50 - padding));

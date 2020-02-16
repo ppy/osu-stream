@@ -2,20 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.GameModes.Play;
+using osum.GameplayElements.Beatmaps;
 using osum.GameplayElements.HitObjects;
 using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics;
 using osum.Graphics.Renderers;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics.Skins;
 using osum.Graphics.Sprites;
 using osum.Helpers;
-using osum.GameModes;
-using osu_common.Helpers;
+using osum.Input;
 using osum.Support;
-using OpenTK.Graphics;
-using osum.Graphics.Primitives;
-using OpenTK;
-using osum.Audio;
 
 #endregion
 
@@ -34,12 +32,12 @@ namespace osum.GameplayElements
         /// <summary>
         /// A factory to create necessary hitObjects.
         /// </summary>
-        HitFactory hitFactory;
+        private readonly HitFactory hitFactory;
 
         public pList<HitObject>[] StreamHitObjects = new pList<HitObject>[4];
         internal SpriteManager[] streamSpriteManagers = new SpriteManager[4];
 
-        internal int ProcessFrom = 0;
+        internal int ProcessFrom;
         internal int ProcessTo = -1;
 
         /// <summary>
@@ -67,7 +65,7 @@ namespace osum.GameplayElements
             GameBase.OnScreenLayoutChanged += GameBase_OnScreenLayoutChanged;
         }
 
-        void GameBase_OnScreenLayoutChanged()
+        private void GameBase_OnScreenLayoutChanged()
         {
             if (ActiveStreamObjects != null)
             {
@@ -76,7 +74,7 @@ namespace osum.GameplayElements
             }
         }
 
-        HitObject drawBelowOverlayActiveSpinner;
+        private HitObject drawBelowOverlayActiveSpinner;
         /// <summary>
         /// When we are spinning, we still want to show the score on top of the spinner display.
         /// This should allow for that.
@@ -149,8 +147,8 @@ namespace osum.GameplayElements
         }
 
 
-        int nextPossibleSwitchTime;
-        int removeBeforeObjectIndex;
+        private int nextPossibleSwitchTime;
+        private int removeBeforeObjectIndex;
 
         /// <summary>
         /// Call at the point of judgement. Will switch stream to new difficulty as soon as possible (next new combo).
@@ -316,9 +314,9 @@ namespace osum.GameplayElements
 
             if (diffObjects == null)
             {
-                diffObjects = new pList<HitObject>() { UseBackwardsSearch = true, InsertAfterOnEqual = true };
+                diffObjects = new pList<HitObject> { UseBackwardsSearch = true, InsertAfterOnEqual = true };
                 StreamHitObjects[diffIndex] = diffObjects;
-                streamSpriteManagers[diffIndex] = new SpriteManager() { ForwardPlayOptimisedAdd = true };
+                streamSpriteManagers[diffIndex] = new SpriteManager { ForwardPlayOptimisedAdd = true };
             }
 
             diffObjects.AddInPlace(h);
@@ -328,7 +326,7 @@ namespace osum.GameplayElements
         /// <summary>
         /// Connect two objects that occur at the same time with a line.
         /// </summary>
-        pSprite Connect(HitObject h1, HitObject h2, bool useEnd = false)
+        private pSprite Connect(HitObject h1, HitObject h2, bool useEnd = false)
         {
             Vector2 p1 = useEnd ? h1.EndPosition : h1.Position;
             Vector2 p2 = h2.Position;
@@ -356,8 +354,7 @@ namespace osum.GameplayElements
 
             foreach (Transformation t in (h1.EndTime < h2.EndTime ? h1.Sprites[0].Transformations : h2.Sprites[0].Transformations))
             {
-                TransformationF tf = t as TransformationF;
-                if (tf != null && tf.EndFloat == 0)
+                if (t is TransformationF tf && tf.EndFloat == 0)
                     connectingLine.Transform(t);
             }
 
@@ -438,8 +435,7 @@ namespace osum.GameplayElements
                 }
                 else
                 {
-                    Slider s = h as Slider;
-                    if (s != null && s.EndTime < hitObjectNow)
+                    if (h is Slider s && s.EndTime < hitObjectNow)
                         s.DisposePathTexture();
                 }
 
@@ -532,7 +528,7 @@ namespace osum.GameplayElements
             return true;
         }
 
-        Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
+        private readonly Dictionary<ScoreChange, int> ComboScoreCounts = new Dictionary<ScoreChange, int>();
 
         public event ScoreChangeDelegate OnScoreChanged;
         public event StreamChangeDelegate OnStreamChanged;
@@ -601,7 +597,7 @@ namespace osum.GameplayElements
         internal void StopAllSounds()
         {
             if (ActiveObject != null)
-                ActiveObject.StopSound(true);
+                ActiveObject.StopSound();
         }
     }
 
@@ -618,7 +614,7 @@ namespace osum.GameplayElements
         Difficulty,
         Variables,
         ScoringMultipliers
-    } ;
+    }
 
     [Flags]
     public enum ScoreChange
@@ -644,7 +640,7 @@ namespace osum.GameplayElements
         Hit300k = Hit300 | KatuAddition,
         Hit300g = Hit300 | GekiAddition,
         HitValuesOnly = Miss | Hit50 | Hit100 | Hit300 | GekiAddition | KatuAddition,
-        ComboAddition = MuAddition | KatuAddition | GekiAddition,
+        ComboAddition = MuAddition | KatuAddition | GekiAddition
     }
 
     public enum Difficulty

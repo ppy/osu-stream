@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Helpers;
@@ -39,7 +37,7 @@ namespace osum.Graphics.Sprites
 
     internal static class TransformStore
     {
-        static Queue<Transformation> transformations = new Queue<Transformation>();
+        private static readonly Queue<Transformation> transformations = new Queue<Transformation>();
 
         public static void Initialize()
         {
@@ -216,10 +214,6 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        public Transformation()
-        {
-        }
-
         #region IComparable<Transformation> Members
 
         public int CompareTo(Transformation other)
@@ -277,8 +271,8 @@ namespace osum.Graphics.Sprites
 
     internal class TransformationBounce : TransformationF
     {
-        private float Magnitude;
-        private float Pulses;
+        private readonly float Magnitude;
+        private readonly float Pulses;
 
         internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
             : this(TransformationType.Scale, startTime, endTime, aimSize, magnitude, pulses)
@@ -303,8 +297,7 @@ namespace osum.Graphics.Sprites
 
                 if (Type == TransformationType.Scale)
                     return Math.Max(0, EndFloat + diminishingMagnitude * rawSine);
-                else
-                    return EndFloat + diminishingMagnitude * rawSine;
+                return EndFloat + diminishingMagnitude * rawSine;
             }
         }
     }
@@ -313,8 +306,8 @@ namespace osum.Graphics.Sprites
     {
         public NullTransform(int startTime, int endTime)
         {
-            this.StartTime = startTime;
-            this.EndTime = endTime;
+            StartTime = startTime;
+            EndTime = endTime;
         }
     }
 

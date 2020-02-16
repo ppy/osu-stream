@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Support;
-using osum.Audio;
 using System.Diagnostics;
-using osum.GameModes;
+using osum.Audio;
+using osum.Support;
 
 namespace osum.Helpers
 {
@@ -21,7 +17,7 @@ namespace osum.Helpers
     public static class Clock
     {
         // measured in seconds
-        private static double time = 0;
+        private static double time;
 
 #if iOS
         //higher offset == notes appear earlier
@@ -37,11 +33,11 @@ namespace osum.Helpers
         public static int USER_OFFSET;
 
         public static Stopwatch sw = new Stopwatch();
-        static double swLast;
-        static double swLastUpdate;
+        private static double swLast;
+        private static double swLastUpdate;
 
-        static int audioCheckFrame;
-        const int CHECK_AUDIO_FRAME_COUNT = 20;
+        private static int audioCheckFrame;
+        private const int CHECK_AUDIO_FRAME_COUNT = 20;
         public const double ELAPSED_AT_SIXTY_FRAMES = 1000d/60;
 
         /// <summary>
@@ -79,7 +75,7 @@ namespace osum.Helpers
         public static double ElapsedMilliseconds = ELAPSED_AT_SIXTY_FRAMES;
         public static float ElapsedRatioToSixty = 1;
 
-        static double currentFrameAudioTime;
+        private static double currentFrameAudioTime;
 
         /// <summary>
         /// Gets the current audio time, as according to the active BackgroundAudioPlayer.
@@ -169,18 +165,16 @@ namespace osum.Helpers
                         AudioTimeInputAdjust = 0;
                         return;
                     }
+
+                    double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
+                    if (inaccuracy > 0.05)
+                        currentFrameAudioTime = sourceTime;
+                    else if (inaccuracy > 0.005)
+                        currentFrameAudioTime = currentFrameAudioTime * 0.6 + sourceTime * 0.4;
                     else
                     {
-                        double inaccuracy = Math.Abs(currentFrameAudioTime - sourceTime);
-                        if (inaccuracy > 0.05)
-                            currentFrameAudioTime = sourceTime;
-                        else if (inaccuracy > 0.005)
-                            currentFrameAudioTime = currentFrameAudioTime * 0.6 + sourceTime * 0.4;
-                        else
-                        {
-                            currentFrameAudioTime = currentFrameAudioTime * 0.95 + sourceTime * 0.05;
-                            audioCheckFrame++;
-                        }
+                        currentFrameAudioTime = currentFrameAudioTime * 0.95 + sourceTime * 0.05;
+                        audioCheckFrame++;
                     }
                 }
                 else

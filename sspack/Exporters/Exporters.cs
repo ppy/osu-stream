@@ -30,7 +30,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 
-namespace sspack
+namespace sspack.Exporters
 {
 	public static class Exporters
 	{
@@ -68,14 +68,12 @@ namespace sspack
 				{
 					try
 					{
-						IImageExporter imageExporter = Activator.CreateInstance(type) as IImageExporter;
-						if (imageExporter != null)
+						if (Activator.CreateInstance(type) is IImageExporter imageExporter)
 						{
 							imageExporters.Add(imageExporter);
 						}
 
-						IMapExporter mapExporter = Activator.CreateInstance(type) as IMapExporter;
-						if (mapExporter != null)
+						if (Activator.CreateInstance(type) is IMapExporter mapExporter)
 						{
 							mapExporters.Add(mapExporter);
 						}

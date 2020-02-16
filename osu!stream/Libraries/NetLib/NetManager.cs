@@ -1,9 +1,8 @@
 using System;
-using System.Threading;
-using osum;
 using System.Collections.Generic;
+using System.Threading;
 
-namespace osu_common.Libraries.NetLib
+namespace osum.Libraries.NetLib
 {
     /// <summary>
     /// Updated Netmanager class. Uses a thread pool to service
@@ -11,10 +10,10 @@ namespace osu_common.Libraries.NetLib
     /// </summary>
     public static class NetManager
     {
-        static List<NetRequest> activeRequests = new List<NetRequest>();
-        static Queue<NetRequest> requestQueue = new Queue<NetRequest>();
+        private static readonly List<NetRequest> activeRequests = new List<NetRequest>();
+        private static readonly Queue<NetRequest> requestQueue = new Queue<NetRequest>();
 
-        const int MAX_CONCURRENT_REQUESTS = 3;
+        private const int MAX_CONCURRENT_REQUESTS = 3;
 
         public static bool ReportCompleted(NetRequest request)
         {

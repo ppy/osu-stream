@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
 using System.IO;
 using OpenTK;
-using osum.GameplayElements.HitObjects.Osu;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics;
-using osum.Helpers;
-using osum.Graphics.Skins;
-using osum.GameplayElements.HitObjects;
 using OpenTK.Graphics;
-using osum.GameplayElements.Events;
-using osum.GameModes;
+using osum.GameModes.Play;
+using osum.GameplayElements.Beatmaps;
+using osum.GameplayElements.HitObjects;
+using osum.GameplayElements.HitObjects.Osu;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Support;
 
 namespace osum.GameplayElements
 {
@@ -67,7 +64,7 @@ namespace osum.GameplayElements
                 }
 
                 //using (TextReader reader = (fn == 0 ? (TextReader)new StreamReader(BeatmapManager.Current.GetFileStream(readableFiles[fn])) : new StringReader(osqEngine.Encode())))
-                TextReader reader = (TextReader)new StreamReader(beatmap.GetFileStream(readableFiles[fn]));
+                TextReader reader = new StreamReader(beatmap.GetFileStream(readableFiles[fn]));
                 {
                     linenumber = 0;
 
@@ -113,7 +110,7 @@ namespace osum.GameplayElements
                             try
                             {
                                 currentSection =
-                                    (FileSection)Enum.Parse(typeof(FileSection), line.Trim(new[] { '[', ']' }));
+                                    (FileSection)Enum.Parse(typeof(FileSection), line.Trim('[', ']'));
                                 if (currentSection == FileSection.HitObjects)
                                     headerReadFinished = true;
                             }
@@ -692,7 +689,7 @@ namespace osum.GameplayElements
 
             if (count > 1)
             {
-                float countf = (float)count;
+                float countf = count;
 
                 // the first followpoint appears moments before the destination object appears.
                 float expandStart = Math.Max(time3, time2 - DifficultyManager.PreEmpt - DifficultyManager.FollowLinePreEmptStart);

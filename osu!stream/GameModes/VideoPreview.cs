@@ -1,32 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using OpenTK;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
 using OpenTK.Graphics;
-using osum.Helpers;
-using osu_common.Libraries.Osz2;
+using osum.GameModes.MainMenu;
+using osum.GameModes.Play;
+using osum.GameModes.SongSelect;
 using osum.GameplayElements.Beatmaps;
 using osum.Graphics;
-using osum.Audio;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Libraries.NetLib;
+using osum.Localisation;
 using osum.Support;
-using osu_common.Libraries.NetLib;
-using System.IO;
-using osum.Graphics.Drawables;
-using osum.GameModes.SongSelect;
-using osum.Resources;
 
 namespace osum.GameModes
 {
-    class VideoPreview : GameMode
+    internal class VideoPreview : GameMode
     {
         private MenuBackground mb;
         private pSprite osuLogo;
         private pSprite osuLogoGloss;
 
-        SpriteManager songInfoSpriteManager = new SpriteManager();
+        private readonly SpriteManager songInfoSpriteManager = new SpriteManager();
 
         public static string DownloadLink;
 
@@ -70,7 +65,7 @@ namespace osum.GameModes
             spriteManager.Add(new BackButton(delegate { Director.ChangeMode(OsuMode.Store); }, false));
         }
 
-        void dnr_onFinish(byte[] data, Exception e)
+        private void dnr_onFinish(byte[] data, Exception e)
         {
             GameBase.Scheduler.Add(delegate {
                 if (data == null || e != null)
@@ -85,7 +80,7 @@ namespace osum.GameModes
 
                 try
                 {
-                    Player.Beatmap = new Beatmap() { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
+                    Player.Beatmap = new Beatmap { Package = new MapPackage(new MemoryStream(downloadRequest.data)) };
                 }
                 catch
                 {
@@ -114,8 +109,9 @@ namespace osum.GameModes
         private DataNetRequest downloadRequest;
         private pRectangle loadingBackground;
 
-        float downloadProgress;
-        void dnr_onUpdate(object sender, long current, long total)
+        private float downloadProgress;
+
+        private void dnr_onUpdate(object sender, long current, long total)
         {
             downloadProgress = (float)current / total;
         }
@@ -150,7 +146,7 @@ namespace osum.GameModes
             //256x172
             float aspectAdjust = GameBase.BaseSize.X / (256 * GameBase.SpriteToBaseRatio);
 
-            pSprite thumbSprite = new pSpriteDynamic()
+            pSprite thumbSprite = new pSpriteDynamic
             {
                 LoadDelegate = delegate
                 {

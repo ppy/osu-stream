@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using osu_common;
-using osum.GameModes;
-using osum.Graphics.Sprites;
 using OpenTK;
-using osum.Helpers;
-using osum.Graphics.Skins;
 using OpenTK.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
-    class ScoreDisplay : GameComponent
+    internal class ScoreDisplay : GameComponent
     {
         internal readonly pSpriteText s_Score;
         internal readonly pSpriteText s_Accuracy;

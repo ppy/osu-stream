@@ -29,7 +29,7 @@
 using System;
 using OpenTK.Audio.OpenAL;
 
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
     /// <summary>Describes the format of the SoundData.</summary>
     public struct SoundFormat

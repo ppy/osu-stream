@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using OpenTK;
+using OpenTK.Graphics;
 using osum.Audio;
 using osum.GameplayElements;
-using osu_common.Helpers;
+using osum.GameplayElements.HitObjects;
 using osum.Graphics.Sprites;
-using OpenTK;
-using OpenTK.Graphics;
 using osum.Helpers;
-using osum.Graphics.Renderers;
 
 namespace osum.GameModes.Play
 {
@@ -56,7 +51,7 @@ namespace osum.GameModes.Play
 
         public override void Update()
         {
-            currentTime.Text = Clock.AudioTime.ToString() + "ms";
+            currentTime.Text = Clock.AudioTime + "ms";
             base.Update();
         }
 

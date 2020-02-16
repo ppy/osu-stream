@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Diagnostics;
-using osu_common.Helpers;
+using System.Threading;
 
 namespace osum.Helpers
 {
@@ -12,8 +10,8 @@ namespace osum.Helpers
     {
         private readonly Queue<VoidDelegate> schedulerQueue = new Queue<VoidDelegate>();
         private readonly pList<ScheduledDelegate> timedQueue = new pList<ScheduledDelegate>(null, true);
-        private int mainThreadID;
-        private Stopwatch timer = new Stopwatch();
+        private readonly int mainThreadID;
+        private readonly Stopwatch timer = new Stopwatch();
 
         //we assume that basethread calls the constructor
         public Scheduler()
@@ -46,7 +44,7 @@ namespace osum.Helpers
 
             foreach (VoidDelegate v in runnable)
             {
-                VoidDelegate mi = new VoidDelegate(v);
+                VoidDelegate mi = v;
                 mi.Invoke();
             }
         }

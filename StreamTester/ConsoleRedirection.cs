@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
-namespace ConsoleRedirection
+namespace StreamTester
 {
     public class TextBoxStreamWriter : TextWriter
     {
-        TextBox _output = null;
-        TextBox _mod = null;
+        TextBox _output;
+        TextBox _mod;
 
         public TextBoxStreamWriter(TextBox output, TextBox mod)
         {
@@ -42,7 +42,7 @@ namespace ConsoleRedirection
 
         public override Encoding Encoding
         {
-            get { return System.Text.Encoding.UTF8; }
+            get { return Encoding.UTF8; }
         }
     }
 }

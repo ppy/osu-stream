@@ -1,8 +1,8 @@
-using System;
-using osum.Support;
 using System.IO;
 using osum.Helpers;
-namespace osum
+using osum.Support;
+
+namespace osum.Audio
 {
     /// <summary>
     /// Interface for a class which plays music. Provides access to specific information during playback such as time, levels etc.

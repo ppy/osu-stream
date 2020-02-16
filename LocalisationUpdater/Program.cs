@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Google.GData.Spreadsheets;
-using Google.GData.Client;
 using System.IO;
+using System.Linq;
+using Google.GData.Client;
+using Google.GData.Spreadsheets;
 
 namespace LocalisationUpdater
 {
@@ -103,7 +102,7 @@ namespace LocalisationUpdater
 
                             try
                             {
-                                int argCount = content.Count<char>(c => c == '{');
+                                int argCount = content.Count(c => c == '{');
                                 string[] args = new string[argCount];
                                 for (int i = 0; i < argCount; i++)
                                     args[i] = "test";

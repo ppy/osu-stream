@@ -1,11 +1,4 @@
-﻿using System;
-using osum.Graphics.Sprites;
-using System.Runtime.InteropServices;
-using osum.Graphics.Drawables;
-using osum.Helpers;
-using OpenTK.Graphics;
-using OpenTK;
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -34,12 +27,16 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Helpers;
 
 
-namespace osum.Graphics.Drawables
+namespace osum.Graphics.Sprites
 {
     internal class pQuad : pDrawable
     {
@@ -77,17 +74,17 @@ namespace osum.Graphics.Drawables
         }
 #if !NO_PIN_SUPPORT
         private float[] coordinates;
-        private Vector2[] vertices;
-        private Color4[] colours;
+        private readonly Vector2[] vertices;
+        private readonly Color4[] colours;
 
 
-        GCHandle handle_vertices;
-        GCHandle handle_coordinates;
-        GCHandle handle_colours;
+        private GCHandle handle_vertices;
+        private GCHandle handle_coordinates;
+        private GCHandle handle_colours;
 #endif
-        IntPtr handle_vertices_pointer;
-        IntPtr handle_coordinates_pointer;
-        IntPtr handle_colours_pointer;
+        private IntPtr handle_vertices_pointer;
+        private IntPtr handle_coordinates_pointer;
+        private readonly IntPtr handle_colours_pointer;
 
 
         public Color4[] Colours;
@@ -125,7 +122,7 @@ namespace osum.Graphics.Drawables
 
         }
 
-        static unsafe bool PointInPolygon(Vector2 p, Vector2* poly, int length)
+        private static unsafe bool PointInPolygon(Vector2 p, Vector2* poly, int length)
         {
             Vector2 p1, p2;
 
@@ -180,26 +177,23 @@ namespace osum.Graphics.Drawables
                     SpriteManager.SetColour(c);
                 else
                 {
-                    unsafe
-                    {
 #if NO_PIN_SUPPORT
                         Color4* colours = (Color4*)handle_colours_pointer.ToPointer();
 #endif
-                        for (int i = 0; i < Colours.Length; i++)
-                        {
-                            Color4 col = Colours[i];
+                    for (int i = 0; i < Colours.Length; i++)
+                    {
+                        Color4 col = Colours[i];
 
-                            if (SpriteManager.UniversalDim > 0)
-                            {
-                                float multi = 1 - SpriteManager.UniversalDim;
-                                colours[i] = new Color4(col.R * multi, col.G * multi, col.B * multi, c.A);
-                            }
-                            else
-                                colours[i] = new Color4(col.R, col.G, col.B, c.A);
-                            //todo: optimise
+                        if (SpriteManager.UniversalDim > 0)
+                        {
+                            float multi = 1 - SpriteManager.UniversalDim;
+                            colours[i] = new Color4(col.R * multi, col.G * multi, col.B * multi, c.A);
                         }
+                        else
+                            colours[i] = new Color4(col.R, col.G, col.B, c.A);
+                        //todo: optimise
                     }
-                    
+
                     GL.EnableClientState(ArrayCap.ColorArray);
 
                     GL.ColorPointer(4, ColorPointerType.Float, 0, handle_colours_pointer);
@@ -226,24 +220,21 @@ namespace osum.Graphics.Drawables
                     vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
                 }
                 else*/
-                unsafe
-                {
-                    /*vLeft += pos.X;
+                /*vLeft += pos.X;
                     vRight += pos.X;
                     vTop += pos.Y;
                     vBottom += pos.Y;*/
 #if NO_PIN_SUPPORT
                     Vector2* vertices = (Vector2*)handle_vertices_pointer.ToPointer();
 #endif
-                    vertices[0].X = pos.X + p1.X * scale.X - origin.X;
-                    vertices[0].Y = pos.Y + p1.Y * scale.Y - origin.Y;
-                    vertices[1].X = pos.X + p2.X * scale.X - origin.X;
-                    vertices[1].Y = pos.Y + p2.Y * scale.Y - origin.Y;
-                    vertices[2].X = pos.X + p4.X * scale.X - origin.X;
-                    vertices[2].Y = pos.Y + p4.Y * scale.Y - origin.Y;
-                    vertices[3].X = pos.X + p3.X * scale.X - origin.X;
-                    vertices[3].Y = pos.Y + p3.Y * scale.Y - origin.Y;
-                }
+                vertices[0].X = pos.X + p1.X * scale.X - origin.X;
+                vertices[0].Y = pos.Y + p1.Y * scale.Y - origin.Y;
+                vertices[1].X = pos.X + p2.X * scale.X - origin.X;
+                vertices[1].Y = pos.Y + p2.Y * scale.Y - origin.Y;
+                vertices[2].X = pos.X + p4.X * scale.X - origin.X;
+                vertices[2].Y = pos.Y + p4.Y * scale.Y - origin.Y;
+                vertices[3].X = pos.X + p3.X * scale.X - origin.X;
+                vertices[3].Y = pos.Y + p3.Y * scale.Y - origin.Y;
 
                 if (Texture != null && Texture.TextureGl != null)
                 {
@@ -252,7 +243,7 @@ namespace osum.Graphics.Drawables
 #if !NO_PIN_SUPPORT
                     if (coordinates == null)
                     {
-                        coordinates = new float[] {
+                        coordinates = new[] {
                         (float)Texture.X / Texture.TextureGl.potWidth,
                         (float)Texture.Y / Texture.TextureGl.potHeight,
                         (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,

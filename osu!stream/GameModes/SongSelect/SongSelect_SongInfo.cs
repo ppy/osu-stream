@@ -1,26 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using OpenTK;
-using osum.Audio;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using osum.GameModes.SongSelect;
+﻿using OpenTK;
 using OpenTK.Graphics;
-using osum.GameModes.Play.Components;
-using osum.Graphics.Drawables;
-using osum.GameplayElements;
-using System.Threading;
-using osum.Graphics.Renderers;
-using osu_common.Libraries.Osz2;
-using osum.Resources;
-using osum.GameplayElements.Scoring;
+using osum.GameplayElements.Beatmaps;
 using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
-namespace osum.GameModes
+namespace osum.GameModes.SongSelect
 {
     public partial class SongSelectMode : GameMode
     {
@@ -45,7 +30,7 @@ namespace osum.GameModes
             //256x172
             float aspectAdjust = GameBase.BaseSize.Y / (172 * GameBase.SpriteToBaseRatio);
 
-            pSprite thumbSprite = new pSpriteDynamic()
+            pSprite thumbSprite = new pSpriteDynamic
             {
                 LoadDelegate = delegate
                 {

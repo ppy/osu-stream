@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Skins;
-using osu_common.Helpers;
 using System.IO;
-using osu_common.Bancho;
+using osum.GameModes.SongSelect;
 using osum.GameplayElements.Beatmaps;
-using osum.GameModes;
 using osum.GameplayElements.Scoring;
+using osum.Helpers;
+
 #if iOS
 using osum.Support.iPhone;
 #endif
@@ -18,7 +15,7 @@ namespace osum.GameplayElements
     internal static class BeatmapDatabase
     {
         internal const int DATABASE_VERSION = 12;
-        const string FILENAME = "osu!.db";
+        private const string FILENAME = "osu!.db";
 
         private static string databasePath { get { return GameBase.Instance.PathConfig + FILENAME; } }
 
@@ -189,9 +186,9 @@ namespace osum.GameplayElements
         /// </summary>
         public BeatmapInfo()
         {
-            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo() { difficulty = Difficulty.Easy };
-            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo() { difficulty = Difficulty.Normal };
-            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo() { difficulty = Difficulty.Expert };
+            DifficultyScores[Difficulty.Easy] = new DifficultyScoreInfo { difficulty = Difficulty.Easy };
+            DifficultyScores[Difficulty.Normal] = new DifficultyScoreInfo { difficulty = Difficulty.Normal };
+            DifficultyScores[Difficulty.Expert] = new DifficultyScoreInfo { difficulty = Difficulty.Expert };
         }
 
         #region bSerializable Members

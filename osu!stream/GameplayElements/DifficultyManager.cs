@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.GameModes;
-using osum.GameplayElements.Scoring;
+﻿using osum.GameModes.Play;
+using osum.GameModes.Play.Components;
 
 namespace osum.GameplayElements
 {
@@ -87,9 +83,9 @@ namespace osum.GameplayElements
             }
         } }
 
-        const int HIT_EXPERT = 25;
-        const int HIT_STREAM = 44;
-        const int HIT_EASY = 70;
+        private const int HIT_EXPERT = 25;
+        private const int HIT_STREAM = 44;
+        private const int HIT_EASY = 70;
 
         public static int HitWindow50
         {

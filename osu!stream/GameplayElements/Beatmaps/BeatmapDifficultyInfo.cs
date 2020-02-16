@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace osum.GameplayElements.Beatmaps
+﻿namespace osum.GameplayElements.Beatmaps
 {
     public class BeatmapDifficultyInfo
     {

@@ -27,16 +27,14 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
     /// <summary>Encapsulates a pointer to a decoded sound buffer.</summary>
     public class SoundData
     {
-        byte[] buffer;
-        SoundFormat format;
+        private byte[] buffer;
+        private SoundFormat format;
 
         #region --- Constructors ---
 
@@ -49,7 +47,7 @@ namespace OpenTK.Audio
             if (data == null) throw new ArgumentNullException("buffer", "Must be a valid array of samples.");
             if (data.Length == 0) throw new ArgumentOutOfRangeException("buffer", "Data length must be higher than 0.");
 
-            this.SoundFormat = format;
+            SoundFormat = format;
 
             buffer = new byte[data.Length];
             Array.Copy(data, buffer, data.Length);

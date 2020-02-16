@@ -27,11 +27,12 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Diagnostics;
-using System.Text;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Text;
+using sspack.Exporters;
+using sspack.Packing;
 
 namespace sspack
 {
@@ -84,14 +85,14 @@ namespace sspack
         public static void Launch(string dir)
         {
             // make sure we have our list of exporters
-            Exporters.Load();
+            Exporters.Exporters.Load();
 
             // try to find matching exporters
             IImageExporter imageExporter = null;
             IMapExporter mapExporter = null;
 
             string imageExtension = "png";
-            foreach (var exporter in Exporters.ImageExporters)
+            foreach (var exporter in Exporters.Exporters.ImageExporters)
             {
                 if (exporter.ImageExtension.ToLower() == imageExtension)
                 {
@@ -101,7 +102,7 @@ namespace sspack
             }
 
             string mapExtension = "txt";
-            foreach (var exporter in Exporters.MapExporters)
+            foreach (var exporter in Exporters.Exporters.MapExporters)
             {
                 if (exporter.MapExtension.ToLower() == mapExtension)
                 {
@@ -139,11 +140,11 @@ namespace sspack
 
             Bitmap bmpLowres = new Bitmap(outputImage, new Size(outputImage.Width / 2, outputImage.Height / 2));
             Graphics gfxLowres = Graphics.FromImage(bmpLowres);
-            gfxLowres.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+            gfxLowres.CompositingMode = CompositingMode.SourceCopy;
 
             Bitmap bmpHighres = new Bitmap(outputImage, new Size(outputImage.Width * 2, outputImage.Height * 2));
             Graphics gfxHighres = Graphics.FromImage(bmpHighres);
-            gfxHighres.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+            gfxHighres.CompositingMode = CompositingMode.SourceCopy;
 
             foreach (var m in outputMap)
             {

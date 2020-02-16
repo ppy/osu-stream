@@ -6,12 +6,7 @@
  */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
 #if false
     /// <summary>Defines methods to load and hold sound buffer.</summary>

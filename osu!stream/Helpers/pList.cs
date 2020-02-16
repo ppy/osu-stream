@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public class pList<T> : List<T> where T : IComparable<T>
     {
         private readonly bool forceSortOnAdd;
         internal bool UseBackwardsSearch;
         internal bool InsertAfterOnEqual;
-        private IComparer<T> comparer;
+        private readonly IComparer<T> comparer;
 
         public pList()
         { }
@@ -56,11 +55,11 @@ namespace osu_common.Helpers
                         int compare = base[index].CompareTo(item);
                         if (compare > 0) continue;
 
-                        base.Insert((compare < 0 || InsertAfterOnEqual) ? ++index : index, item);
+                        Insert((compare < 0 || InsertAfterOnEqual) ? ++index : index, item);
                         return index;
                     }
 
-                    base.Insert(0, item);
+                    Insert(0, item);
                     index = 0;
                 }
             }

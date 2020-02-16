@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace StreamTester
 {
     partial class Form1 : Form
@@ -6,7 +8,7 @@ namespace StreamTester
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -509,37 +511,37 @@ namespace StreamTester
 
         #endregion
 
-        private System.Windows.Forms.Button buttonTestOnSave;
-        private System.Windows.Forms.CheckBox streamSwitch;
-        private System.Windows.Forms.RadioButton radioButtonEasy;
-        private System.Windows.Forms.RadioButton radioButtonNormal;
-        private System.Windows.Forms.RadioButton radioButtonHard;
-        private System.Windows.Forms.RadioButton radioButtonExpert;
-        private System.Windows.Forms.Button buttonTestOnce;
-        private System.Windows.Forms.CheckBox checkBoxAutoplay;
-        private System.Windows.Forms.GroupBox groupBoxDifficulty;
-        private System.Windows.Forms.TextBox textBoxStartTime;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox checkBoxQuick;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.Panel panelDrop;
-        private System.Windows.Forms.Label labelBeatmapTitle;
-        private System.Windows.Forms.TextBox console;
-        private System.Windows.Forms.Label labelBeatmapArtist;
-        private System.Windows.Forms.GroupBox groupBoxStreamSwitch;
-        private System.Windows.Forms.RadioButton radioButtonStreamNormal;
-        private System.Windows.Forms.RadioButton radioButtonStreamUp;
-        private System.Windows.Forms.RadioButton radioButtonStreamDown;
-        private System.Windows.Forms.Panel panelButtons;
-        private System.Windows.Forms.PictureBox beatmapLayout;
-        private System.Windows.Forms.PictureBox arrow;
-        private System.Windows.Forms.CheckBox checkBoxm4a;
-        private System.Windows.Forms.CheckBox checkBoxEditorTime;
-        private System.Windows.Forms.CheckBox checkBoxEditorDifficulty;
+        private Button buttonTestOnSave;
+        private CheckBox streamSwitch;
+        private RadioButton radioButtonEasy;
+        private RadioButton radioButtonNormal;
+        private RadioButton radioButtonHard;
+        private RadioButton radioButtonExpert;
+        private Button buttonTestOnce;
+        private CheckBox checkBoxAutoplay;
+        private GroupBox groupBoxDifficulty;
+        private TextBox textBoxStartTime;
+        private Label label1;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private ToolTip toolTip1;
+        private GroupBox groupBox2;
+        private CheckBox checkBoxQuick;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private Panel panelDrop;
+        private Label labelBeatmapTitle;
+        private TextBox console;
+        private Label labelBeatmapArtist;
+        private GroupBox groupBoxStreamSwitch;
+        private RadioButton radioButtonStreamNormal;
+        private RadioButton radioButtonStreamUp;
+        private RadioButton radioButtonStreamDown;
+        private Panel panelButtons;
+        private PictureBox beatmapLayout;
+        private PictureBox arrow;
+        private CheckBox checkBoxm4a;
+        private CheckBox checkBoxEditorTime;
+        private CheckBox checkBoxEditorDifficulty;
         private ListBox listAvailableMaps;
         private TextBox textBox1;
         private TextBox modconsole;

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
-using osum.Helpers;
-using System.Runtime.InteropServices;
-using osum.GameplayElements;
-
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -38,11 +28,14 @@ using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 using ArrayCap =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
-using osum.Input;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK.Graphics;
+using osum.GameplayElements;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
@@ -50,18 +43,18 @@ namespace osum.GameModes.Play.Components
     /// Vector implementation of a gradient + diagonal sprites background.
     /// Hopefully uses less resources than drawing a massive texture!
     /// </summary>
-    class PlayfieldBackground : pDrawable
+    internal class PlayfieldBackground : pDrawable
     {
-        const int line_count = 5;
+        private const int line_count = 5;
 #if !NO_PIN_SUPPORT
-        float[] vertices;
-        float[] colours;
+        private readonly float[] vertices;
+        private readonly float[] colours;
 
-        GCHandle handle_vertices;
-        GCHandle handle_colours;
+        private GCHandle handle_vertices;
+        private GCHandle handle_colours;
 #endif
-        IntPtr handle_vertices_pointer;
-        IntPtr handle_colours_pointer;
+        private readonly IntPtr handle_vertices_pointer;
+        private readonly IntPtr handle_colours_pointer;
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_EASY = new Color4(90, 135, 42, 255);
@@ -73,7 +66,6 @@ namespace osum.GameModes.Play.Components
         private Color4 currentColour;
 
         public PlayfieldBackground()
-            : base()
         {
 #if !NO_PIN_SUPPORT
             vertices = new float[(line_count + 1) * 4 * 2];
@@ -102,8 +94,8 @@ namespace osum.GameModes.Play.Components
             GameBase.OnScreenLayoutChanged += initialize;
         }
 
-        float curentXOffset;
-        float lineWidth;
+        private float curentXOffset;
+        private float lineWidth;
 
         private void initialize()
         {
@@ -115,22 +107,19 @@ namespace osum.GameModes.Play.Components
             float bottom = GameBase.NativeSize.Height;
 
             int j = 0;
-            unsafe
-            {
 #if NO_PIN_SUPPORT
                 float* vertices = (float*)handle_vertices_pointer;
 #endif
 
-                //main background
-                vertices[j++] = left;
-                vertices[j++] = top;
-                vertices[j++] = right;
-                vertices[j++] = top;
-                vertices[j++] = right;
-                vertices[j++] = bottom;
-                vertices[j++] = left;
-                vertices[j++] = bottom;
-            }
+            //main background
+            vertices[j++] = left;
+            vertices[j++] = top;
+            vertices[j++] = right;
+            vertices[j++] = top;
+            vertices[j++] = right;
+            vertices[j++] = bottom;
+            vertices[j++] = left;
+            vertices[j++] = bottom;
 
             //diagonal lines
             
@@ -144,28 +133,25 @@ namespace osum.GameModes.Play.Components
             float diagonalY = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
             float diagonalX = curentXOffset * GameBase.BaseToNativeRatio - lineWidth;
 
-            unsafe
-            {
 #if NO_PIN_SUPPORT
                 float* vertices = (float*)handle_vertices_pointer;
 #endif
-                for (int k = 0; k < line_count; k++)
-                {
-                    vertices[j++] = diagonalX;
-                    vertices[j++] = 0;
+            for (int k = 0; k < line_count; k++)
+            {
+                vertices[j++] = diagonalX;
+                vertices[j++] = 0;
 
-                    vertices[j++] = diagonalX + lineWidth;
-                    vertices[j++] = 0;
+                vertices[j++] = diagonalX + lineWidth;
+                vertices[j++] = 0;
 
-                    vertices[j++] = 0;
-                    vertices[j++] = diagonalY + lineWidth;
+                vertices[j++] = 0;
+                vertices[j++] = diagonalY + lineWidth;
 
-                    vertices[j++] = 0;
-                    vertices[j++] = diagonalY;
+                vertices[j++] = 0;
+                vertices[j++] = diagonalY;
 
-                    diagonalY += lineWidth * 2;
-                    diagonalX += lineWidth * 2;
-                }
+                diagonalY += lineWidth * 2;
+                diagonalX += lineWidth * 2;
             }
         }
 
@@ -218,32 +204,29 @@ namespace osum.GameModes.Play.Components
                 if (Math.Abs(Velocity) < 0.01f) Velocity = 0;
             }
 
-            unsafe
-            {
 #if NO_PIN_SUPPORT
                 float* colours = (float*)handle_colours_pointer;
 #endif
-                Color4 col = Colour;
-                for (int i = 0; i < (line_count + 1) * 4; i++)
-                {
-                    //change to the darker colour for bottom vertices and diagonals
-                    if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
+            Color4 col = Colour;
+            for (int i = 0; i < (line_count + 1) * 4; i++)
+            {
+                //change to the darker colour for bottom vertices and diagonals
+                if (i == 2) col = ColourHelper.Darken(Colour, 0.85f);
 
-                    if (SpriteManager.UniversalDim > 0)
-                    {
-                        float mult = 1 - SpriteManager.UniversalDim;
-                        colours[i * 4] = col.R * mult;
-                        colours[i * 4 + 1] = col.G * mult;
-                        colours[i * 4 + 2] = col.B * mult;
-                        colours[i * 4 + 3] = col.A;
-                    }
-                    else
-                    {
-                        colours[i * 4] = col.R;
-                        colours[i * 4 + 1] = col.G;
-                        colours[i * 4 + 2] = col.B;
-                        colours[i * 4 + 3] = col.A;
-                    }
+                if (SpriteManager.UniversalDim > 0)
+                {
+                    float mult = 1 - SpriteManager.UniversalDim;
+                    colours[i * 4] = col.R * mult;
+                    colours[i * 4 + 1] = col.G * mult;
+                    colours[i * 4 + 2] = col.B * mult;
+                    colours[i * 4 + 3] = col.A;
+                }
+                else
+                {
+                    colours[i * 4] = col.R;
+                    colours[i * 4 + 1] = col.G;
+                    colours[i * 4 + 2] = col.B;
+                    colours[i * 4 + 3] = col.A;
                 }
             }
         }
@@ -276,7 +259,7 @@ namespace osum.GameModes.Play.Components
             return true;
         }
 
-        Difficulty lastDifficulty;
+        private Difficulty lastDifficulty;
         internal void ChangeColour(Difficulty difficulty, bool flash = true)
         {
             if (difficulty != lastDifficulty && flash)

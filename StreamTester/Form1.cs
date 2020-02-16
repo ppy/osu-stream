@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
-using osum;
-using osum.GameModes.Play;
-using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using System.IO;
-using ConsoleRedirection;
-using osum.GameplayElements;
-using osu_common.Helpers;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
+using osum;
+using osum.GameModes;
+using osum.GameModes.Play;
+using osum.GameplayElements;
+using osum.GameplayElements.Beatmaps;
+using osum.GameplayElements.HitObjects;
+using osum.Helpers;
+using osum.Support.Desktop;
 
 namespace StreamTester
 {
@@ -145,8 +144,8 @@ namespace StreamTester
             int width = beatmapLayout.Width;
             int height = (int)(beatmapLayout.Height / 4f);
 
-            int h1 = (int)(height * vOffset);
-            int h2 = (int)(height * (vOffset + 1)) - 1;
+            int h1 = height * vOffset;
+            int h2 = height * (vOffset + 1) - 1;
 
             Pen brush = new Pen(Color.FromArgb(100, color.R, color.G, color.B));
 
@@ -185,7 +184,7 @@ namespace StreamTester
                 return;
 
             textBoxStartTime.Text = time.ToString();
-            arrow.Location = new Point(this.PointToClient(Cursor.Position).X - arrow.Width / 2, arrow.Location.Y);
+            arrow.Location = new Point(PointToClient(Cursor.Position).X - arrow.Width / 2, arrow.Location.Y);
         }
 
 
@@ -302,8 +301,8 @@ namespace StreamTester
                 //this will be restored at the end of processing.
 
                 Environment.CurrentDirectory = tempDir;
-                BeatmapCombinator.Analysis = checkBoxAnalysis.Checked;
-                packageName = tempDir + "\\" + BeatmapCombinator.Process(Filename, checkBoxQuick.Checked, true);
+                BeatmapCombinator.BeatmapCombinator.Analysis = checkBoxAnalysis.Checked;
+                packageName = tempDir + "\\" + BeatmapCombinator.BeatmapCombinator.Process(Filename, checkBoxQuick.Checked);
                 Environment.CurrentDirectory = osusDir;
 
                 GameBase.Instance = game;
@@ -367,7 +366,7 @@ namespace StreamTester
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR:\n" + ex.ToString());
+                Console.WriteLine("ERROR:\n" + ex);
             }
 
             Invoke((MethodInvoker)delegate { panelButtons.Enabled = true; });

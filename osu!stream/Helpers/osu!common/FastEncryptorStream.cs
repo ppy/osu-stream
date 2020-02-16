@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public class FastEncryptorStream : Stream
     {
@@ -11,7 +8,7 @@ namespace osu_common.Helpers
         public static bool instanceActive { get; private set; }
         public Stream internalStream{ get; private set; }
         public bool isClosed { get; private set; }
-        private FastEncryptionProvider FastEncryptionProvider = new FastEncryptionProvider();
+        private readonly FastEncryptionProvider FastEncryptionProvider = new FastEncryptionProvider();
         /// <summary>
         /// Wraps around the fastEncryptionProvider and the given stream and rebounds data.
         /// </summary>

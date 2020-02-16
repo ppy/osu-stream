@@ -1,7 +1,4 @@
 using System;
-using System.IO;
-using System.Runtime.Serialization;
-using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.Beatmaps
 {
@@ -18,7 +15,7 @@ namespace osum.GameplayElements.Beatmaps
         Normal = 1,
         Soft = 2,
         Drum = 3
-    } ;
+    }
 
     public enum TimeSignatures
     {
@@ -76,7 +73,7 @@ namespace osum.GameplayElements.Beatmaps
             this.sampleSet = sampleSet == SampleSet.None ? SampleSet.Soft : sampleSet;
             this.customSamples = customSamples;
             this.volume = volume;
-            this.TimingChange = timingChange;
+            TimingChange = timingChange;
             this.kiaiMode = kiaiMode;
         }
 

@@ -1,9 +1,9 @@
 #region Using Statements
 
 using System;
-using Color = OpenTK.Graphics.Color4;
 using OpenTK;
 using osum.Helpers;
+using Color = OpenTK.Graphics.Color4;
 
 #endregion
 
@@ -149,16 +149,15 @@ namespace osum.Graphics.Primitives
                                    unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
                                    0, 0, 1, 0,
                                    p2.X, p2.Y, 0, 1);
-            else
-                return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
-                                   -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
-                                   0, 0, 1, 0,
-                                   p2.X, p2.Y, 0, 1);
+            return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
+                -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
+                0, 0, 1, 0,
+                p2.X, p2.Y, 0, 1);
         }
 
         internal Vector2 PositionAt(float p)
         {
             return p1 + (p2 - p1) * p;
         }
-    } ;
+    }
 }

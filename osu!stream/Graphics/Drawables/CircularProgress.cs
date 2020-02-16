@@ -1,10 +1,3 @@
-using System;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
-using osum.Helpers;
-using OpenTK.Graphics;
-using OpenTK;
-using System.Runtime.InteropServices;
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -34,9 +27,14 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 
 namespace osum.Graphics.Drawables
@@ -47,17 +45,17 @@ namespace osum.Graphics.Drawables
         internal float Radius;
         internal bool EvenShading;
 
-        int parts = 48;
+        private readonly int parts = 48;
 #if !NO_PIN_SUPPORT
-        float[] vertices;
-        float[] colours;
+        private readonly float[] vertices;
+        private readonly float[] colours;
 #endif
 
-        GCHandle handle_vertices;
-        GCHandle handle_colours;
+        private GCHandle handle_vertices;
+        private GCHandle handle_colours;
 
-        IntPtr handle_vertices_pointer;
-        IntPtr handle_colours_pointer;
+        private IntPtr handle_vertices_pointer;
+        private IntPtr handle_colours_pointer;
 
         public CircularProgress(Vector2 position, float radius, bool alwaysDraw, float drawDepth, Color4 colour)
         {
@@ -108,10 +106,10 @@ namespace osum.Graphics.Drawables
 
                 Color4 c = AlphaAppliedColour;
 
-                float startAngle = (float)(-MathHelper.Pi / 2);
+                float startAngle = -MathHelper.Pi / 2;
                 float cappedProgress = pMathHelper.ClampToOne(Progress);
 
-                float endAngle = (float)(cappedProgress * MathHelper.Pi * 2f + startAngle);
+                float endAngle = cappedProgress * MathHelper.Pi * 2f + startAngle;
 
                 float da = (endAngle - startAngle) / (parts - 1);
 

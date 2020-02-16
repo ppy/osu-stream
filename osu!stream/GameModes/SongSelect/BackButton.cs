@@ -1,33 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Graphics.Skins;
-using osum.Helpers;
 using osum.Audio;
-using osum.GameplayElements;
+using osum.Graphics;
 using osum.Graphics.Primitives;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.GameModes.SongSelect
 {
-    class BackButton : pSprite
+    internal class BackButton : pSprite
     {
-        pAnimation arrow;
+        private readonly pAnimation arrow;
 
-        EventHandler Action;
-        const float offset = 0;
+        private readonly EventHandler Action;
+        private const float offset = 0;
 
-        SpriteManager sm = new SpriteManager();
+        private readonly SpriteManager sm = new SpriteManager();
 
-        static Vector2 hiddenPosition = new Vector2(-80, -218);
-        static Vector2 visiblePosition { get { return positionAtDistance(10); } }
-        static Vector2 fullyVisiblePosition { get { return positionAtDistance(120); } }
+        private static readonly Vector2 hiddenPosition = new Vector2(-80, -218);
+        private static Vector2 visiblePosition { get { return positionAtDistance(10); } }
+        private static Vector2 fullyVisiblePosition { get { return positionAtDistance(120); } }
 
-        static Vector2 positionAtDistance(float distance)
+        private static Vector2 positionAtDistance(float distance)
         {
             return hiddenPosition + new Vector2(distance + 10, distance + 10);
         }
@@ -76,10 +73,10 @@ namespace osum.GameModes.SongSelect
 
         }
 
-        const int hit_minimum_distance = 20;
-        const int hit_pull_distance = 60;
-        const int pull_limit_distance = 100;
-        bool minimumHitPossible;
+        private const int hit_minimum_distance = 20;
+        private const int hit_pull_distance = 60;
+        private const int pull_limit_distance = 100;
+        private bool minimumHitPossible;
 
 
         internal override void HandleOnUp(InputSource source, TrackingPoint trackingPoint)
@@ -155,10 +152,10 @@ namespace osum.GameModes.SongSelect
             }
         }
 
-        Vector2 downPoint;
+        private Vector2 downPoint;
         private TrackingPoint tp;
         private float dist;
-        private float defaultRotation = -MathHelper.Pi / 4;
+        private readonly float defaultRotation = -MathHelper.Pi / 4;
 
         protected override bool checkHover(Vector2 position)
         {
@@ -167,7 +164,7 @@ namespace osum.GameModes.SongSelect
             return position.X < 100 && position.Y > GameBase.BaseSizeFixedWidth.Y - 100 || tp != null;
         }
 
-        void OnBackgroundOnClick(object sender, EventArgs e)
+        private void OnBackgroundOnClick(object sender, EventArgs e)
         {
             tp = InputManager.TrackingPoints.Find(t => t != null && t.HoveringObject == this);
             if (tp != null)

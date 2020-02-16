@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Helpers;
-
-#if iOS
+﻿#if iOS
 using UIKit;
 using osum.Support.iPhone;
 using System.Drawing;

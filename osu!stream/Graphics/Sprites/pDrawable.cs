@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK.Graphics;
-using osum.Helpers;
-using OpenTK;
-using osu_common.Helpers;
-using osum.GameplayElements;
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -36,8 +27,14 @@ using UIKit;
 using CoreGraphics;
 #else
 using OpenTK.Graphics.OpenGL;
-using osum.Input;
 #endif
+using System;
+using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.GameplayElements;
+using osum.Helpers;
+using osum.Support;
 
 namespace osum.Graphics.Sprites
 {
@@ -59,7 +56,7 @@ namespace osum.Graphics.Sprites
         internal FieldTypes Field = FieldTypes.Standard;
         internal OriginTypes Origin;
 
-        int StartTime;
+        private int StartTime;
 
         internal Vector2 OriginVector;
 
@@ -130,8 +127,8 @@ namespace osum.Graphics.Sprites
         public virtual pDrawable Clone()
         {
 
-            pDrawable clone = (pDrawable)this.MemberwiseClone();
-            clone.Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
+            pDrawable clone = (pDrawable)MemberwiseClone();
+            clone.Transformations = new pList<Transformation> { UseBackwardsSearch = true };
             clone.readInitialTransformationsOnce = false;
 
             return clone;
@@ -147,7 +144,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Important: don't use this to add new transformations, use pSprite.Transform() for that.
         /// </summary>
-        internal pList<Transformation> Transformations = new pList<Transformation>() { UseBackwardsSearch = true };
+        internal pList<Transformation> Transformations = new pList<Transformation> { UseBackwardsSearch = true };
 
         internal virtual bool IsRemovable
         {
@@ -336,8 +333,7 @@ namespace osum.Graphics.Sprites
 
                 if (Premultiplied)
                     return new Color4(Colour.R * alpha, Colour.G * alpha, Colour.B * alpha, alpha);
-                else
-                    return new Color4(Colour.R, Colour.G, Colour.B, alpha);
+                return new Color4(Colour.R, Colour.G, Colour.B, alpha);
             }
         }
 
@@ -370,7 +366,7 @@ namespace osum.Graphics.Sprites
             readInitialTransformationsOnce = false;
         }
 
-        bool readInitialTransformationsOnce;
+        private bool readInitialTransformationsOnce;
 
         /// <summary>
         /// Iterates through each tansformation and applies where necessary.
@@ -620,7 +616,7 @@ namespace osum.Graphics.Sprites
 
         internal pDrawable AdditiveFlash(int duration, float brightness, bool keepTransformations = false)
         {
-            pDrawable clone = this.Clone();
+            pDrawable clone = Clone();
 
             clone.UnbindAllEvents();
 
@@ -662,9 +658,7 @@ namespace osum.Graphics.Sprites
         {
             Color4 end = Colour;
 
-            TransformationC last = Transformations.FindLast(t => t is TransformationC) as TransformationC;
-
-            if (last != null)
+            if (Transformations.FindLast(t => t is TransformationC) is TransformationC last)
             {
                 end = last.EndColour;
                 Transformations.RemoveAll(t => t.Type == TransformationType.Colour);

@@ -26,12 +26,12 @@
 
 using System.IO;
 
-namespace sspack
+namespace sspack.Packing
 {
 	public static class MiscHelper
 	{
 		// the valid extensions for images
-		public static readonly string[] AllowedImageExtensions = new[] { "png", "jpg", "bmp", "gif" };
+		public static readonly string[] AllowedImageExtensions = { "png", "jpg", "bmp", "gif" };
 
 		// determines if a file is an image we accept
 		public static bool IsImageFile(string file)

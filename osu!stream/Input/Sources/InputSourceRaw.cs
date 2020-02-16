@@ -1,16 +1,13 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using osum.Support.Desktop;
 
 namespace osum.Input.Sources
 {
-    unsafe class InputSourceRaw : InputSourceRawBase
+    internal unsafe class InputSourceRaw : InputSourceRawBase
     {
-        bool registeredTouch = false;
+        private readonly bool registeredTouch;
 
         public InputSourceRaw(GameWindowDesktop window)
             : base(window)
@@ -48,13 +45,11 @@ namespace osum.Input.Sources
 
                 return window.PointToClient(Point.Round(pos));
             }
-            else
-            {
-                // We cheat here and use absolute mouse position from opentk. Raw input is possible by always starting
-                // at the absolute mouse position on button down, but there is a slight drift detaching our current position
-                // from the windows cursor. Not desired!
-                return window.Mouse == null ? new PointF(0, 0) : new PointF(window.Mouse.X, window.Mouse.Y);
-            }
+
+            // We cheat here and use absolute mouse position from opentk. Raw input is possible by always starting
+            // at the absolute mouse position on button down, but there is a slight drift detaching our current position
+            // from the windows cursor. Not desired!
+            return window.Mouse == null ? new PointF(0, 0) : new PointF(window.Mouse.X, window.Mouse.Y);
         }
 
         private void handler(RawInput data)

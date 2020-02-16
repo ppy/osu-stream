@@ -126,6 +126,7 @@
     <Compile Include="GameplayElements\Scoring\Score.cs" />
     <Compile Include="Graphics\Drawables\CircularProgress.cs" />
     <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
+    <Compile Include="Graphics\SpriteSheetTexture.cs" />
     <Compile Include="Graphics\Sprites\pQuad.cs" />
     <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
     <Compile Include="Graphics\Sprites\pSpriteWeb.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererDesktop.cs" />
-    <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
     <Compile Include="Graphics\Sprites\pButton.cs" />
     <Compile Include="Graphics\Sprites\pDrawable.cs" />

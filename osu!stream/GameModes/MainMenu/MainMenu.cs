@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.GameModes;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
-using System.Drawing;
 using osum.Audio;
-using osum.Support;
 using osum.Graphics;
-using System.IO;
-using osum.Graphics.Drawables;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Localisation;
 using osum.UI;
-using osum.Resources;
+
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -45,25 +38,23 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
-using OpenTK.Graphics.OpenGL;
-using osum.Input;
+
 #endif
 
-namespace osum.GameModes
+namespace osum.GameModes.MainMenu
 {
-    partial class MainMenu : GameMode
+    internal partial class MainMenu : GameMode
     {
-        pSprite osuLogo;
-        pSprite osuLogoGloss;
+        private pSprite osuLogo;
+        private pSprite osuLogoGloss;
 
-        List<pSprite> explosions = new List<pSprite>();
+        private readonly List<pSprite> explosions = new List<pSprite>();
 
         internal SpriteManager spriteManagerBehind = new SpriteManager();
 
-        MenuState State = MenuState.Logo;
+        private MenuState State = MenuState.Logo;
 
-        static bool firstDisplay = true;
+        private static bool firstDisplay = true;
 
         public override void Initialize()
         {
@@ -201,7 +192,7 @@ namespace osum.GameModes
                     GameBase.Scheduler.Add(delegate { if (AudioEngine.Music != null) AudioEngine.Music.Play(); }, 2950);
                 }, true);
 
-                if (GameBase.Config.GetValue<bool>("firstrun", true))
+                if (GameBase.Config.GetValue("firstrun", true))
                 {
                     Notification notification = new Notification(
                         LocalisationManager.GetString(OsuString.FirstRunWelcome),
@@ -214,7 +205,7 @@ namespace osum.GameModes
                                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                                 Director.ChangeMode(OsuMode.Tutorial);
                             }
-                            GameBase.Config.SetValue<bool>("firstrun", false);
+                            GameBase.Config.SetValue("firstrun", false);
                             GameBase.Config.SaveConfig();
                         });
 
@@ -239,7 +230,7 @@ namespace osum.GameModes
             firstDisplay = false;
         }
 
-        void osuLogo_OnClick(object sender, EventArgs e)
+        private void osuLogo_OnClick(object sender, EventArgs e)
         {
             State = MenuState.Select;
 
@@ -302,13 +293,13 @@ namespace osum.GameModes
             base.Dispose();
         }
 
-        double elapsedRotation;
+        private double elapsedRotation;
         private pSprite stream;
 
-        int lastBgmBeat = 0;
-        float between_beats = 375 / 4f;
-        int offset = 0;
-        const int bar = 8;
+        private int lastBgmBeat;
+        private readonly float between_beats = 375 / 4f;
+        private readonly int offset = 0;
+        private const int bar = 8;
         private pDrawable additiveStream;
         private MenuBackground menuBackgroundNew;
         private pSprite osuLogoSmall;
@@ -391,7 +382,7 @@ namespace osum.GameModes
         }
     }
 
-    enum MenuState
+    internal enum MenuState
     {
         Logo,
         Select

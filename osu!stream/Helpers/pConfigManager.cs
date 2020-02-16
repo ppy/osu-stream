@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     /// <summary>
     /// Simple Configuration Manager

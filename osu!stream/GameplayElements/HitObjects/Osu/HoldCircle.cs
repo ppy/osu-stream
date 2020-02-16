@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
-using OpenTK;
-using osum.Graphics.Primitives;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using osum.Graphics.Drawables;
+using OpenTK;
+using OpenTK.Graphics;
 using osum.Audio;
 using osum.GameplayElements.Beatmaps;
+using osum.Graphics;
+using osum.Graphics.Drawables;
+using osum.Graphics.Primitives;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
-    class HoldCircle : Slider
+    internal class HoldCircle : Slider
     {
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
-            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance, sampleSets)
+            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2> { pos, pos }, soundTypes, velocity, tickDistance, sampleSets)
         {
             snakingBegin = StartTime - DifficultyManager.PreEmpt;
             snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
         internal HoldCircle(HitObjectManager hit_object_manager, Vector2 pos, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType, double pathLength, int repeatCount, List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
-            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2>() { pos, pos }, soundTypes, velocity, tickDistance)
+            : base(hit_object_manager, pos, startTime, newCombo, comboOffset, soundType, CurveTypes.Linear, repeatCount, pathLength, new List<Vector2> { pos, pos }, soundTypes, velocity, tickDistance)
         {
             snakingBegin = StartTime - DifficultyManager.PreEmpt;
             snakingEnd = StartTime - DifficultyManager.PreEmpt;
@@ -88,7 +85,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal CircularProgress circularProgress;
 
-        pSprite border;
+        private pSprite border;
 
         internal pSprite inactiveOverlay;
         internal pSprite activeOverlay;
@@ -127,8 +124,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.Transform(new TransformationC(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), ColourHelper.Lighten(new Color4(hold_colour.R, hold_colour.G, hold_colour.B, 0.8f), 0.5f),
                 StartTime, EndTime));
 
-            border.TagNumeric = HitObject.DIMMABLE_TAG;
-            inactiveOverlay.TagNumeric = HitObject.DIMMABLE_TAG;
+            border.TagNumeric = DIMMABLE_TAG;
+            inactiveOverlay.TagNumeric = DIMMABLE_TAG;
         }
 
         protected override void initializeStartCircle()
@@ -168,7 +165,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         }
 
 
-        static Color4 hold_colour = new Color4(0.648f, 0, 244 / 256f, 1);
+        private static readonly Color4 hold_colour = new Color4(0.648f, 0, 244 / 256f, 1);
 
         internal override Color4 Colour
         {

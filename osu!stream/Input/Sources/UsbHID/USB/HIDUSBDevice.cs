@@ -18,22 +18,19 @@
 *                                                                            *
 ******************************************************************************/
 //---------------------------------------------------------------------------
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.IO;
 using System.Threading;
 
-namespace USBHIDDRIVER.USB
+namespace osum.Input.Sources.UsbHID.USB
 {
     /// <summary>
     ///
     /// </summary>
    public class HIDUSBDevice: IDisposable
     {
-        bool disposed = false;
+        private bool disposed;
 
         private Thread usbThread;
 
@@ -44,13 +41,13 @@ namespace USBHIDDRIVER.USB
         private int deviceCount;    //device count
 
         private bool connectionState;   //Connection Status true: connected, false: disconnected
-        public int byteCount = 0;       //Recieved Bytes
+        public int byteCount;       //Recieved Bytes
         //recieve Buffer (Each report is one Element)
         //this one was replaced by the receive Buffer in the interface
         //public static ArrayList receiveBuffer = new ArrayList();
         
         //USB Object
-        private USBSharp myUSB = new USBSharp();
+        private readonly USBSharp myUSB = new USBSharp();
         //thread for read operations
         protected Thread dataReadingThread;
 
@@ -78,7 +75,7 @@ namespace USBHIDDRIVER.USB
             //try to establish connection
             connectDevice();
             //create Read Thread
-            dataReadingThread = new Thread(new ThreadStart(readDataThread)) { Priority = ThreadPriority.Highest, IsBackground = true };
+            dataReadingThread = new Thread(readDataThread) { Priority = ThreadPriority.Highest, IsBackground = true };
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -97,7 +94,7 @@ namespace USBHIDDRIVER.USB
             //searchDevice
             searchDevice();
             //return connection state
-            return this.getConnectionState();
+            return getConnectionState();
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -115,8 +112,8 @@ namespace USBHIDDRIVER.USB
         {
             //no device found yet
             bool deviceFound = false;
-            this.deviceCount = 0;
-            this.devicePath = string.Empty;
+            deviceCount = 0;
+            devicePath = string.Empty;
             
             myUSB.CT_HidGuid();
             myUSB.CT_SetupDiGetClassDevs();
@@ -139,18 +136,18 @@ namespace USBHIDDRIVER.USB
                 resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
 
                 //is this the device i want?
-                string deviceID = this.vendorID + "&" + this.productID;
+                string deviceID = vendorID + "&" + productID;
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
                     //yes it is
 
                     //store device information
-                    this.deviceCount = device_count;
-                    this.devicePath = myUSB.DevicePathName;
+                    deviceCount = device_count;
+                    devicePath = myUSB.DevicePathName;
                     deviceFound = true;
                     
                     //init device
-                    myUSB.CT_SetupDiEnumDeviceInterfaces(this.deviceCount);
+                    myUSB.CT_SetupDiEnumDeviceInterfaces(deviceCount);
 
                     size = 0;
                     requiredSize = 0;
@@ -160,7 +157,7 @@ namespace USBHIDDRIVER.USB
                     resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
                     resultb = 0;
                     //create HID Device Handel
-                    resultb = myUSB.CT_CreateFile(this.devicePath);  
+                    resultb = myUSB.CT_CreateFile(devicePath);  
 
                     //we have found our device so stop searching
                     break;
@@ -169,9 +166,9 @@ namespace USBHIDDRIVER.USB
             }
            
             //set connection state
-            this.setConnectionState(deviceFound);
+            setConnectionState(deviceFound);
             //return state
-            return this.getConnectionState();
+            return getConnectionState();
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -189,8 +186,8 @@ namespace USBHIDDRIVER.USB
         {
             //no device found yet
             bool deviceFound = false;
-            this.deviceCount = 0;
-            this.devicePath = string.Empty;
+            deviceCount = 0;
+            devicePath = string.Empty;
 
             myUSB.CT_HidGuid();
             myUSB.CT_SetupDiGetClassDevs();
@@ -213,7 +210,7 @@ namespace USBHIDDRIVER.USB
                 resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
 
                 //is this the device i want?
-                string deviceID = this.vendorID + "&" + this.productID;
+                string deviceID = vendorID + "&" + productID;
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
                    numberOfDevices++;
@@ -278,7 +275,7 @@ namespace USBHIDDRIVER.USB
                         success = myOutputReport.Write(OutputReportBuffer, myUSB.HidHandle);
                     }
                 }
-                catch (System.AccessViolationException ex)
+                catch (AccessViolationException ex)
                 {
                     success = false;
                 }
@@ -319,7 +316,7 @@ namespace USBHIDDRIVER.USB
                         {
                             byteCount += myRead.Length;
                             //lock (USBHIDDRIVER.USBInterface.usbBuffer.SyncRoot)
-                                USBHIDDRIVER.USBInterface.usbBuffer.Add(myRead);
+                                USBInterface.usbBuffer.Add(myRead);
                         }
                         else
                         {
@@ -363,7 +360,7 @@ namespace USBHIDDRIVER.USB
             else 
             {
                 //create Read Thread
-                dataReadingThread = new Thread(new ThreadStart(readDataThread)) { Priority = ThreadPriority.Highest, IsBackground = true }; ;
+                dataReadingThread = new Thread(readDataThread) { Priority = ThreadPriority.Highest, IsBackground = true }; ;
                 //start the thread
                 dataReadingThread.Start();
                 Thread.Sleep(0);
@@ -425,8 +422,8 @@ namespace USBHIDDRIVER.USB
         /// <param name="pID">The product ID.</param>
         public void setDeviceData(String vID, String pID)
         {
-            this.vendorID = vID;
-            this.productID = pID;
+            vendorID = vID;
+            productID = pID;
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -443,7 +440,7 @@ namespace USBHIDDRIVER.USB
         /// <returns>the vendor ID</returns>
         public String getVendorID()
         {
-            return this.vendorID;
+            return vendorID;
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -459,7 +456,7 @@ namespace USBHIDDRIVER.USB
         /// <returns>the product ID</returns>
         public String getProductID()
         {
-            return this.productID;
+            return productID;
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -475,7 +472,7 @@ namespace USBHIDDRIVER.USB
         /// <param name="state">state</param>
         public void setConnectionState(bool state)
         {
-            this.connectionState = state;
+            connectionState = state;
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -491,7 +488,7 @@ namespace USBHIDDRIVER.USB
         /// <returns>true = connected; false = diconnected</returns>
         public bool getConnectionState() 
         {
-            return this.connectionState;
+            return connectionState;
         }
         //---#+************************************************************************
         //---NOTATION:
@@ -511,8 +508,8 @@ namespace USBHIDDRIVER.USB
 
             //no device found yet
             bool deviceFound = false;
-            this.deviceCount = 0;
-            this.devicePath = string.Empty;
+            deviceCount = 0;
+            devicePath = string.Empty;
 
             myUSB.CT_HidGuid();
             myUSB.CT_SetupDiGetClassDevs();
@@ -536,7 +533,7 @@ namespace USBHIDDRIVER.USB
                 resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
 
                 //is this the device i want?
-                string deviceID = this.vendorID;
+                string deviceID = vendorID;
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
                     devices.Add(myUSB.DevicePathName);
@@ -560,7 +557,7 @@ namespace USBHIDDRIVER.USB
         /// <returns></returns>
         public string getDevicePath()
         {
-            return this.devicePath;
+            return devicePath;
         }
 
         internal abstract class HostReport
@@ -662,7 +659,7 @@ namespace USBHIDDRIVER.USB
 
         protected void Dispose(bool disposeManagedResources)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposeManagedResources)
                 {
@@ -680,7 +677,7 @@ namespace USBHIDDRIVER.USB
                     myUSB.CT_SetupDiDestroyDeviceInfoList();
                 }
 
-                this.disposed = true;
+                disposed = true;
             }
         }
 

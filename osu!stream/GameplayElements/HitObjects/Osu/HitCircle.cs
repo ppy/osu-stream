@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Graphics.Skins;
+using osum.GameModes.Play;
+using osum.Graphics;
+using osum.Graphics.Drawables;
 using osum.Graphics.Sprites;
 using osum.Helpers;
-using osum.Graphics.Drawables;
-using osum.GameModes;
 
-namespace osum.GameplayElements
+namespace osum.GameplayElements.HitObjects.Osu
 {
     internal class HitCircle : HitObject
     {
@@ -27,7 +24,7 @@ namespace osum.GameplayElements
                 new pSprite(TextureManager.Load(OsuTexture.hitcircle0), FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime), false, white);
             Sprites.Add(SpriteHitCircle1);
             //SpriteHitCircle1.TagNumeric = 1;
-            SpriteHitCircle1.TagNumeric = HitObject.DIMMABLE_TAG;
+            SpriteHitCircle1.TagNumeric = DIMMABLE_TAG;
 
 
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
@@ -36,7 +33,7 @@ namespace osum.GameplayElements
                                                     false, white);
             SpriteHitCircleText.TextConstantSpacing = false;
 
-            SpriteHitCircleText.TagNumeric = HitObject.DIMMABLE_TAG;
+            SpriteHitCircleText.TagNumeric = DIMMABLE_TAG;
 
             SpriteApproachCircle = new ApproachCircle(Position, 1, false, 1, white);
             SpriteApproachCircle.Clocking = ClockTypes.Audio;
@@ -173,7 +170,7 @@ namespace osum.GameplayElements
                 return base.ColourIndex;
             }
             set {
-                SpriteHitCircle1.Texture = TextureManager.Load((OsuTexture)(OsuTexture.hitcircle0 + value));
+                SpriteHitCircle1.Texture = TextureManager.Load(OsuTexture.hitcircle0 + value);
                 base.ColourIndex = value;
             }
         }

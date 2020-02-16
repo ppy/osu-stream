@@ -1,14 +1,13 @@
-using System;
 using System.IO;
 
-namespace osu_common.Libraries.NetLib
+namespace osum.Libraries.NetLib
 {
     /// <summary>
     /// Downloads a file from the internet to a specified location
     /// </summary>
     public class FileNetRequest : DataNetRequest
     {
-        private string path;
+        private readonly string path;
 
         public FileNetRequest(string path, string url, string method = "GET", string postData = null) : base(url, method, postData)
         {

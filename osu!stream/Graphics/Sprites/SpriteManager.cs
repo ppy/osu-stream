@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Helpers;
-using osum.Support;
-using OpenTK;
-using System.Drawing;
-using osu_common.Helpers;
-using OpenTK.Graphics;
-
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -39,11 +28,15 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using osum.Input;
-using System.Diagnostics;
 #endif
+using System;
+using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.Graphics.Sprites
 {
@@ -77,7 +70,7 @@ namespace osum.Graphics.Sprites
         {
         }
 
-        void mapToCoordinates(ref TrackingPoint t)
+        private void mapToCoordinates(ref TrackingPoint t)
         {
             t = (TrackingPoint)t.Clone();
 
@@ -109,8 +102,6 @@ namespace osum.Graphics.Sprites
             pos -= (Position + Offset) * GameBase.InputToFixedWidthAlign;
 
             t.BasePosition = pos;
-
-            return;
         }
 
         internal override bool IsOnScreen
@@ -175,7 +166,7 @@ namespace osum.Graphics.Sprites
                 Sprites[i].HandleOnUp(source, trackingPoint);
         }
 
-        pDrawableDepthComparer depth = new pDrawableDepthComparer();
+        private readonly pDrawableDepthComparer depth = new pDrawableDepthComparer();
         public static float UniversalDim;
 
         private bool forwardPlayOptimisedAdd;
@@ -200,7 +191,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal pList<pDrawable> ForwardPlayList = new pList<pDrawable>() { UseBackwardsSearch = true };
+        internal pList<pDrawable> ForwardPlayList = new pList<pDrawable> { UseBackwardsSearch = true };
 
         internal void ResetFirstTransformations()
         {
@@ -267,7 +258,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        int lastVisibleUpdate;
+        private int lastVisibleUpdate;
 
         /// <summary>
         ///   Update all sprites managed by this sprite manager.
@@ -324,8 +315,8 @@ namespace osum.Graphics.Sprites
 #endif
         }
 
-        static BlendingFactorDest lastBlendDest = BlendingFactorDest.One;
-        static BlendingFactorSrc lastBlendSrc = BlendingFactorSrc.OneMinusSrcAlpha;
+        private static BlendingFactorDest lastBlendDest = BlendingFactorDest.One;
+        private static BlendingFactorSrc lastBlendSrc = BlendingFactorSrc.OneMinusSrcAlpha;
 
         internal static void SetBlending(BlendingFactorSrc src, BlendingFactorDest dst)
         {
@@ -338,12 +329,12 @@ namespace osum.Graphics.Sprites
             GL.BlendFunc(lastBlendSrc, lastBlendDest);
         }
 
-        void addToBatch(pDrawable p)
+        private void addToBatch(pDrawable p)
         {
             //todo: implement batching.
         }
 
-        void flushBatch()
+        private void flushBatch()
         {
             //todo: implement batching.
         }
@@ -434,7 +425,7 @@ namespace osum.Graphics.Sprites
 
         private bool matrixOperations;
 
-        static bool texturesEnabled = false;
+        private static bool texturesEnabled;
         internal static bool TexturesEnabled
         {
             get { return texturesEnabled; }
@@ -459,8 +450,8 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        static bool alphaBlend = false;
-        private List<pDrawable> ToDispose = new List<pDrawable>();
+        private static bool alphaBlend;
+        private readonly List<pDrawable> ToDispose = new List<pDrawable>();
 
         public Vector2 ViewOffset
         {
@@ -521,7 +512,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        static internal float drawOrderFwdLowPrio(float number)
+        internal static float drawOrderFwdLowPrio(float number)
         {
             return (number % 200000) / 1000000;
         }
@@ -531,7 +522,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        static internal float drawOrderFwdPrio(float number)
+        internal static float drawOrderFwdPrio(float number)
         {
             return 0.8f + (number % 6000000) / 30000000;
         }
@@ -541,7 +532,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         /// <param name = "number"></param>
         /// <returns></returns>
-        static internal float drawOrderBwd(float number)
+        internal static float drawOrderBwd(float number)
         {
             return 0.8f - (number % 6000000) / 10000000;
         }

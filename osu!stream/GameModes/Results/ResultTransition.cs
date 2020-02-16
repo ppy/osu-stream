@@ -1,28 +1,22 @@
-using System;
-using osum.GameplayElements.Scoring;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
-using System.Collections;
-using System.Collections.Generic;
 using osum.Audio;
-using osum.GameModes.SongSelect;
 using osum.Graphics;
-using osu_common.Helpers;
-using osum.GameplayElements;
-using System.IO;
-namespace osum.GameModes
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Support;
+
+namespace osum.GameModes.Results
 {
     public class ResultTransition : Transition
     {
-        const float fill_height = 5;
-        const int end_bouncing = 600;
-        const int colour_change_length = 500;
-        const int time_between_fills = 300;
+        private const float fill_height = 5;
+        private const int end_bouncing = 600;
+        private const int colour_change_length = 500;
+        private const int time_between_fills = 300;
 
-        List<pDrawable> fillSprites = new List<pDrawable>();
+        private readonly List<pDrawable> fillSprites = new List<pDrawable>();
 
         public override bool SkipScreenClear
         {
@@ -48,9 +42,9 @@ namespace osum.GameModes
             }
         }
 
-        int startTime;
+        private int startTime;
 
-        pSprite background;
+        private pSprite background;
 
         public override void Initialize()
         {

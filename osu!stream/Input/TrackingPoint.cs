@@ -1,7 +1,8 @@
 using System;
 using System.Drawing;
 using OpenTK;
-namespace osum
+
+namespace osum.Input
 {
     public class TrackingPoint : ICloneable
     {
@@ -30,7 +31,7 @@ namespace osum
         /// <summary>
         /// Increased for every press that is associated with the tracking point.
         /// </summary>
-        int validity;
+        private int validity;
         
         public object HoveringObject;
 

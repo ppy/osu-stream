@@ -1,41 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.GameModes.SongSelect;
-using osu_common.Libraries.NetLib;
 using System.IO;
-using osu_common.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Graphics.Renderers;
-using osum.Graphics.Drawables;
 using osum.Audio;
-using osum.Helpers;
-using osum.Graphics.Skins;
-using osum.Resources;
+using osum.GameModes.MainMenu;
+using osum.GameModes.SongSelect;
 using osum.GameplayElements.Beatmaps;
-using osu_common.Libraries.Osz2;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Libraries.NetLib;
+using osum.Localisation;
 
 namespace osum.GameModes.Store
 {
     public class StoreMode : GameMode
     {
-        SpriteManager topMostSpriteManager = new SpriteManager();
-        SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
+        private readonly SpriteManager topMostSpriteManager = new SpriteManager();
+        private readonly SpriteManagerDraggable scrollableSpriteManager = new SpriteManagerDraggable();
 
-        bool playingPreview;
+        private bool playingPreview;
         private pSprite s_Header;
 
         private BackButton s_ButtonBack;
 
         protected List<PackPanel> packs = new List<PackPanel>();
 
-        StringNetRequest fetchRequest;
+        private StringNetRequest fetchRequest;
 
-        const int HEADER_PADDING = 60;
-        float totalHeight = HEADER_PADDING;
+        private const int HEADER_PADDING = 60;
+        private float totalHeight = HEADER_PADDING;
 
         internal static bool HasNewStoreItems
         {
@@ -48,7 +43,7 @@ namespace osum.GameModes.Store
                 if (value)
                     MenuBackground.UpdateStoreNotify();
                 else
-                    GameBase.Config.SetValue<string>("StoreLastRead", GameBase.Config.GetValue<string>("StoreLastRetrieved", string.Empty));
+                    GameBase.Config.SetValue("StoreLastRead", GameBase.Config.GetValue("StoreLastRetrieved", string.Empty));
             }
         }
 
@@ -234,11 +229,10 @@ namespace osum.GameModes.Store
             catch
             {
                 GameBase.Notify(LocalisationManager.GetString(OsuString.ErrorWhileDownloadingSongListing), delegate { Director.ChangeMode(OsuMode.SongSelect); });
-                return;
             }
         }
 
-        void AddPack(PackPanel pp)
+        private void AddPack(PackPanel pp)
         {
             if (pp == null || (pp.PackId != "restore" && pp.BeatmapCount == 0))
                 return;
@@ -265,7 +259,7 @@ namespace osum.GameModes.Store
             packs.Add(pp);
         }
 
-        void RemovePack(PackPanel pp)
+        private void RemovePack(PackPanel pp)
         {
             if (pp == null)
                 return;
@@ -293,8 +287,7 @@ namespace osum.GameModes.Store
 
         public static void ResetAllPreviews(bool isPausing)
         {
-            StoreMode instance = Director.CurrentMode as StoreMode;
-            if (instance == null) return;
+            if (!(Director.CurrentMode is StoreMode instance)) return;
 
             foreach (PackPanel p in instance.packs)
                 p.ResetPreviews();
@@ -311,8 +304,7 @@ namespace osum.GameModes.Store
 
         public static void PlayPreview(byte[] data)
         {
-            StoreMode instance = Director.CurrentMode as StoreMode;
-            if (instance == null) return;
+            if (!(Director.CurrentMode is StoreMode instance)) return;
 
             AudioEngine.Music.Load(data, false);
             AudioEngine.Music.Play();
@@ -321,8 +313,7 @@ namespace osum.GameModes.Store
 
         internal static void PurchaseInitiated(PackPanel packPanel)
         {
-            StoreMode instance = Director.CurrentMode as StoreMode;
-            if (instance == null) return;
+            if (!(Director.CurrentMode is StoreMode instance)) return;
 
             instance.purchase(packPanel);
         }
@@ -335,7 +326,7 @@ namespace osum.GameModes.Store
             if (pack.IsFree)
                 download(pack);
             else
-                GameBase.Notify("Can't download paid packs from this build!", null);
+                GameBase.Notify("Can't download paid packs from this build!");
         }
 
         /// <summary>
@@ -351,8 +342,7 @@ namespace osum.GameModes.Store
 
         public static void DownloadComplete(PackPanel pp)
         {
-            StoreMode instance = Director.CurrentMode as StoreMode;
-            if (instance == null) return;
+            if (!(Director.CurrentMode is StoreMode instance)) return;
 
             instance.RemovePack(pp);
 
@@ -365,8 +355,7 @@ namespace osum.GameModes.Store
 
         public static void ShowPack(PackPanel pack, bool preview = true)
         {
-            StoreMode instance = Director.CurrentMode as StoreMode;
-            if (instance == null) return;
+            if (!(Director.CurrentMode is StoreMode instance)) return;
 
             if (pack.PackId == PackPanel.RESTORE_PACK_ID)
             {

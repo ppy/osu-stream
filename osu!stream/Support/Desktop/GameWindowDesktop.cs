@@ -1,20 +1,20 @@
 using System;
+using System.ComponentModel;
+using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Audio;
-using OpenTK.Audio.OpenAL;
 using OpenTK.Input;
-using System.Drawing;
-using osum.GameModes;
-using osum.Support;
 using osum.Audio;
-using osum.Helpers;
-using osum.Graphics.Skins;
+using osum.GameModes;
+using osum.GameModes.Play;
+using osum.GameModes.Results;
 using osum.GameplayElements;
 using osum.GameplayElements.Scoring;
+using osum.Graphics;
+using osum.Helpers;
 
-namespace osum
+namespace osum.Support.Desktop
 {
     public class GameWindowDesktop : GameWindow
     {
@@ -41,10 +41,10 @@ namespace osum
 
             GameBase.Instance.Initialize();
 
-            KeyPress += new EventHandler<KeyPressEventArgs>(GameWindowDesktop_KeyPress);
+            KeyPress += GameWindowDesktop_KeyPress;
         }
 
-        void GameWindowDesktop_KeyPress(object sender, KeyPressEventArgs e)
+        private void GameWindowDesktop_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar)
             {
@@ -116,8 +116,7 @@ namespace osum
                     break;
                 case 'j':
                     {
-                        Player p = Director.CurrentMode as Player;
-                        if (p != null)
+                        if (Director.CurrentMode is Player p)
                         {
                             Results.RankableScore = p.CurrentScore;
                             Director.ChangeMode(OsuMode.Results, new ResultTransition());
@@ -127,7 +126,7 @@ namespace osum
             }
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (Director.CurrentOsuMode == OsuMode.PlayTest || Director.CurrentOsuMode == OsuMode.PositioningTest)
             {

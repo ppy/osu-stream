@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK.Input;
 using System.Drawing;
-using System.Threading;
-using USBHIDDRIVER;
 using System.Runtime.InteropServices;
 using OpenTK;
+using osum.Input.Sources.UsbHID;
 
 namespace osum.Input.Sources
 {
-    class TrackingPointBaanto : TrackingPoint
+    internal class TrackingPointBaanto : TrackingPoint
     {
         public TrackingPointBaanto(PointF location, object tag) : base(location, tag)
         {
@@ -24,39 +20,39 @@ namespace osum.Input.Sources
             WindowDelta = BasePosition - baseLast;
         }
     }
-    
-    class InputSourceBaanto : InputSource
+
+    internal class InputSourceBaanto : InputSource
     {
-        enum TouchType
+        private enum TouchType
         {
             Release,
             Touch
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct TouchPoint
+        private struct TouchPoint
         {
-            public byte active;
+            public readonly byte active;
 
-            public byte id;
-            byte xposition;
-            byte xsection;
-            byte yposition;
-            byte ysection;
-            byte unknown1;
-            byte threshold;
-            byte unknown2;
-            byte threshold2;
+            public readonly byte id;
+            private readonly byte xposition;
+            private readonly byte xsection;
+            private readonly byte yposition;
+            private readonly byte ysection;
+            private readonly byte unknown1;
+            private readonly byte threshold;
+            private readonly byte unknown2;
+            private readonly byte threshold2;
 
-            const int max_length = 16 * 256;
-            const int section_size = 256;
+            private const int max_length = 16 * 256;
+            private const int section_size = 256;
 
             public TouchType State { get { return active > 0 ? TouchType.Touch : TouchType.Release; } }
             public float X { get { return (float)(xposition + section_size * xsection) / max_length; } }
             public float Y { get { return (float)(yposition + section_size * ysection) / max_length; } }
         }
         
-        public InputSourceBaanto() : base()
+        public InputSourceBaanto()
         {
             USBInterface usb = new USBInterface("vid_2453", "pid_0100");
 

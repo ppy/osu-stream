@@ -149,9 +149,6 @@
             <e p="NativeTextRendererDesktop.cs" t="Include" />
             <e p="SliderTrackRenderer.cs" t="Include" />
           </e>
-          <e p="Skins" t="Include">
-            <e p="SkinManager_Colours.cs" t="Include" />
-          </e>
           <e p="Sprites" t="Include">
             <e p="pAnimation.cs" t="Include" />
             <e p="pButton.cs" t="Include" />
@@ -170,6 +167,7 @@
             <e p="SpriteManagerDraggable.cs" t="Include" />
             <e p="Transform.cs" t="Include" />
           </e>
+          <e p="SpriteSheetTexture.cs" t="Include" />
           <e p="TextureGl.cs" t="Include" />
           <e p="TextureManager.cs" t="Include" />
           <e p="TextureManager_Load.cs" t="Include" />

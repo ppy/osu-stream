@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+using osum.Support.Desktop;
 
 namespace osum
 {
     public class Application
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
 #if iOS
             GameBase game = new GameBaseIphone();

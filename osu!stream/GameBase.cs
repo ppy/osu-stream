@@ -1,24 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using OpenTK;
-using OpenTK.Graphics;
-using osum.Audio;
-using osum.GameModes;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
-using osum.Helpers;
-using osum.Support;
-using osum.Graphics.Renderers;
-using osum.Graphics;
-using osum.UI;
-using osu_common.Helpers;
-using System.Threading;
-using osum.Resources;
-using System.Diagnostics;
-using osu_common.Libraries.NetLib;
-
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -50,8 +29,25 @@ using CoreGraphics;
 using UIKit;
 #else
 using OpenTK.Graphics.OpenGL;
-using System.Text.RegularExpressions;
 #endif
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.Threading;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.AssetManager;
+using osum.Audio;
+using osum.GameModes;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Localisation;
+using osum.Support;
+using osum.UI;
 
 
 namespace osum
@@ -121,7 +117,7 @@ namespace osum
         //true for iphone 3g etc.
         internal static bool IsSlowDevice = false;
 
-        OsuMode startupMode;
+        private readonly OsuMode startupMode;
         public GameBase(OsuMode mode = OsuMode.Unknown)
         {
             startupMode = mode;
@@ -132,7 +128,7 @@ namespace osum
             //initialise config before everything, because it may be used in Initialize() override.
             Config = new pConfigManager(Instance.PathConfig + "osum.cfg");
 
-            Clock.USER_OFFSET = Config.GetValue<int>("offset", 0);
+            Clock.USER_OFFSET = Config.GetValue("offset", 0);
         }
 
         internal static Vector2 BaseSizeHalf
@@ -142,7 +138,7 @@ namespace osum
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
         {
-            return (vec + GameBase.GamefieldOffsetVector1) * (GameBase.BASE_SPRITE_RES / GameBase.SpriteResolution);
+            return (vec + GamefieldOffsetVector1) * (BASE_SPRITE_RES / SpriteResolution);
         }
 
         internal static Vector2 StandardToGamefield(Vector2 vec)
@@ -150,7 +146,7 @@ namespace osum
             //base position is mapped using constant-width 640
             //firstly we need to map this back over variable width
             //*then* remove the offset.
-            return vec / (GameBase.BASE_SPRITE_RES / GameBase.SpriteResolution) - GameBase.GamefieldOffsetVector1;
+            return vec / (BASE_SPRITE_RES / SpriteResolution) - GamefieldOffsetVector1;
         }
 
         /// <summary>
@@ -187,6 +183,9 @@ namespace osum
             GL.LoadIdentity();
         }
 
+        /// <summary>
+        /// Whether we are running on a device the destroys the limits of how wide a screen can be.
+        /// </summary>
         public static bool IsSuperWide;
 
         public virtual void UpdateSpriteResolution()
@@ -231,7 +230,7 @@ namespace osum
 
             SetViewport();
 
-            BaseToNativeRatio = (float)NativeSize.Width / BaseSizeFixedWidth.X;
+            BaseToNativeRatio = NativeSize.Width / BaseSizeFixedWidth.X;
 
             int oldResolution = SpriteSheetResolution;
 
@@ -246,23 +245,23 @@ namespace osum
 
             //if we are switching to a new sprite sheet (resizing window on PC) let's refresh our textures.
             if (SpriteSheetResolution != oldResolution && oldResolution > 0)
-                TextureManager.ReloadAll(true);
+                TextureManager.ReloadAll();
 
             UpdateSpriteResolution();
 
-            InputToFixedWidthAlign = BASE_SPRITE_RES / GameBase.SpriteResolution;
+            InputToFixedWidthAlign = BASE_SPRITE_RES / SpriteResolution;
 
             BaseToNativeRatioAligned = BaseToNativeRatio * InputToFixedWidthAlign;
 
             SpriteToBaseRatio = BaseSizeFixedWidth.X / BASE_SPRITE_RES;
-            SpriteToBaseRatioAligned = (float)BaseSizeFixedWidth.X / SpriteResolution;
+            SpriteToBaseRatioAligned = BaseSizeFixedWidth.X / SpriteResolution;
 
             BaseSize = new Vector2((NativeSize.Width / BaseToNativeRatioAligned), (NativeSize.Height / BaseToNativeRatioAligned));
 
-            GamefieldOffsetVector1 = new Vector2((float)(BaseSize.X - GamefieldBaseSize.X) / 2,
-                                     (float)Math.Max(31.5f, (BaseSize.Y - GamefieldBaseSize.Y) / 2));
+            GamefieldOffsetVector1 = new Vector2((BaseSize.X - GamefieldBaseSize.X) / 2,
+                                     Math.Max(31.5f, (BaseSize.Y - GamefieldBaseSize.Y) / 2));
 
-            SpriteToNativeRatio = (float)NativeSize.Width / SpriteResolution;
+            SpriteToNativeRatio = NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1
             //960x  = 960/960   = 1
             //480x  = 480/960   = 0.5
@@ -485,10 +484,10 @@ namespace osum
             MainSpriteManager.Draw();
         }
 
-        static pDrawable loadingText;
-        static pDrawable loadingCircle;
+        private static pDrawable loadingText;
+        private static pDrawable loadingCircle;
 
-        static bool showLoadingOverlay;
+        private static bool showLoadingOverlay;
         public static bool ShowLoadingOverlay
         {
             get { return showLoadingOverlay; }
@@ -533,7 +532,7 @@ namespace osum
         }
 
 
-        static bool globallyDisableInput;
+        private static bool globallyDisableInput;
         public static bool GloballyDisableInput
         {
             get { return globallyDisableInput; }

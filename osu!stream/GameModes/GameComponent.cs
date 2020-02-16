@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace osum.GameModes
+﻿namespace osum.GameModes
 {
     /// <summary>
     /// An automatically initializing game mode.
@@ -11,7 +6,6 @@ namespace osum.GameModes
     public class GameComponent : GameMode
     {
         public GameComponent()
-            : base()
         {
             Initialize();
         }

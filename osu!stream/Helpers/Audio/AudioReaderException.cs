@@ -6,17 +6,16 @@
  */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OpenTK.Audio;
 
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
     /// <summary>Represents exceptions related to OpenTK.Audio.AudioReader objects.</summary>
     public class AudioReaderException : AudioException
     {
         /// <summary>Constructs a new AudioReaderException.</summary>
-        public AudioReaderException() : base() { }
+        public AudioReaderException()
+        { }
         /// <summary>Constructs a new AudioReaderException with the specified error message.</summary>
         /// <param name="message">The error message of the AudioReaderException.</param>
         public AudioReaderException(string message) : base(message) { } 

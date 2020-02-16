@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using osum.Helpers;
-using OpenTK.Graphics;
 using System.Drawing;
+using OpenTK.Graphics;
 
 namespace osum.Helpers
 {
@@ -57,10 +54,10 @@ namespace osum.Helpers
         /// </summary>
         internal static Color4 ColourLerp(Color4 first, Color4 second, float weight)
         {
-            return new Color4((byte)pMathHelper.Lerp((float)first.R, (float)second.R, weight),
-                             (byte)pMathHelper.Lerp((float)first.G, (float)second.G, weight),
-                             (byte)pMathHelper.Lerp((float)first.B, (float)second.B, weight),
-                             (byte)pMathHelper.Lerp((float)first.A, (float)second.A, weight));
+            return new Color4((byte)pMathHelper.Lerp(first.R, second.R, weight),
+                             (byte)pMathHelper.Lerp(first.G, second.G, weight),
+                             (byte)pMathHelper.Lerp(first.B, second.B, weight),
+                             (byte)pMathHelper.Lerp(first.A, second.A, weight));
         }
 
         internal static Color CConvert(Color4 c)

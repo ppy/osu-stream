@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using osum.Graphics.Skins;
-using osum.Graphics;
-using osum.Helpers;
-using System.Runtime.InteropServices;
-using OpenTK;
-using OpenTK.Graphics;
-
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -33,10 +24,14 @@ using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using osum.Input;
 #endif
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Helpers;
 
 
 namespace osum.Graphics.Sprites
@@ -68,7 +63,7 @@ namespace osum.Graphics.Sprites
                     textArray[i] = value[i];
 
                 if (textArray.Length > MAX_LENGTH)
-                    throw new Exception($"STRING TOO LONG");
+                    throw new Exception("STRING TOO LONG");
 
                 textChanged = true;
             }
@@ -122,9 +117,9 @@ namespace osum.Graphics.Sprites
 
         private bool textChanged;
         private Vector2 lastMeasure;
-        private OsuTexture osuTextureFont;
+        private readonly OsuTexture osuTextureFont;
 
-        const int MAX_LENGTH = 9; // 100.00% (7) 1,000,000 (9)
+        private const int MAX_LENGTH = 9; // 100.00% (7) 1,000,000 (9)
 
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
                              Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
@@ -237,10 +232,10 @@ namespace osum.Graphics.Sprites
         }
 
 
-        Dictionary<char, pTexture> textureCache = new Dictionary<char, pTexture>();
+        private readonly Dictionary<char, pTexture> textureCache = new Dictionary<char, pTexture>();
         public float ZeroAlpha = 1;
 
-        pTexture textureFor(char c)
+        private pTexture textureFor(char c)
         {
             pTexture tex = null;
 
@@ -270,7 +265,7 @@ namespace osum.Graphics.Sprites
                 }
 
                 if (osuTextureFont != OsuTexture.None)
-                    tex = TextureManager.Load((OsuTexture)(osuTextureFont + offset));
+                    tex = TextureManager.Load(osuTextureFont + offset);
                 else
                     tex = TextureManager.Load(TextFont + "-" + c);
 
@@ -369,19 +364,19 @@ namespace osum.Graphics.Sprites
         }
 
 #if !NO_PIN_SUPPORT
-        float[] coordinates;
-        float[] vertices;
+        private readonly float[] coordinates;
+        private readonly float[] vertices;
 
-        GCHandle handle_vertices;
-        GCHandle handle_coordinates;
+        private GCHandle handle_vertices;
+        private GCHandle handle_coordinates;
 #endif
 
-        IntPtr handle_vertices_pointer;
-        IntPtr handle_coordinates_pointer;
+        private readonly IntPtr handle_vertices_pointer;
+        private readonly IntPtr handle_coordinates_pointer;
 
-        Color4 colZeroCached;
+        private Color4 colZeroCached;
 
-        bool updateDrawCache;
+        private bool updateDrawCache;
         private Vector2 drawPos;
         private Vector2 drawScale;
         private Color4 drawCol;

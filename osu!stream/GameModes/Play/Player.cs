@@ -1,32 +1,31 @@
 //  Play.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
+
 using System;
-using osum.GameplayElements;
-using osum.GameplayElements.Beatmaps;
-using osum.Helpers;
-//using osu.Graphics.Renderers;
-using osum.Graphics.Primitives;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using OpenTK;
 using OpenTK.Graphics;
-using System.Drawing;
 using osum.Audio;
-using osum.Graphics.Renderers;
-using osum.GameplayElements.Scoring;
 using osum.GameModes.Play.Components;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Graphics;
-using osum.Support;
-using System.IO;
-using osu_common.Helpers;
+using osum.GameModes.Results;
+using osum.GameplayElements;
+using osum.GameplayElements.Beatmaps;
+using osum.GameplayElements.HitObjects;
 using osum.GameplayElements.HitObjects.Osu;
-using osum.UI;
-using osu_common.Libraries.Osz2;
-using osum.GameModes.Play;
+using osum.GameplayElements.Scoring;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
+using osum.Support;
 
-namespace osum.GameModes
+//using osu.Graphics.Renderers;
+
+namespace osum.GameModes.Play
 {
     public class Player : GameMode
     {
@@ -99,11 +98,7 @@ namespace osum.GameModes
         protected bool isIncreasingStream;
         protected bool Failed;
 
-        public Player()
-            : base()
-        { }
-
-        int frameCount;
+        private int frameCount;
 
 #if SCORE_TESTING
         string scoreTestFilename = "score-" + DateTime.Now.Ticks + ".txt";
@@ -130,7 +125,7 @@ namespace osum.GameModes
                 TextureManager.RequireSurfaces = true;
 
             if (!GameBase.IsSlowDevice && GameBase.Instance != null)
-                touchBurster = new TouchBurster(!Player.Autoplay);
+                touchBurster = new TouchBurster(!Autoplay);
 
             loadBeatmap();
 
@@ -140,9 +135,9 @@ namespace osum.GameModes
 
             if (HitObjectManager != null)
             {
-                ShowGuideFingers = GameBase.Instance != null && (this is Tutorial || Autoplay || (GameBase.Config != null && GameBase.Config.GetValue<bool>("GuideFingers", false)));
+                ShowGuideFingers = GameBase.Instance != null && (this is Tutorial || Autoplay || (GameBase.Config != null && GameBase.Config.GetValue("GuideFingers", false)));
                 if (ShowGuideFingers)
-                    GuideFingers = new GuideFinger() { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
+                    GuideFingers = new GuideFinger { TouchBurster = touchBurster, HitObjectManager = hitObjectManager };
 
                 InitializeStream();
 
@@ -161,7 +156,7 @@ namespace osum.GameModes
 
                 if (GameBase.Instance != null && AudioEngine.Music != null)
                 {
-                    AudioEngine.Music.Stop(true);
+                    AudioEngine.Music.Stop();
 
                     if (AudioEngine.Music.lastLoaded != Beatmap.PackageIdentifier)
                         //could have switched to the results screen bgm.
@@ -182,7 +177,7 @@ namespace osum.GameModes
 
             if (Beatmap != null && GameBase.Instance != null)
             {
-                mapBackgroundImage = new pSpriteDynamic()
+                mapBackgroundImage = new pSpriteDynamic
                 {
                     LoadDelegate = delegate
                     {
@@ -272,7 +267,7 @@ namespace osum.GameModes
             comboCounter = new ComboCounter();
             streamSwitchDisplay = new StreamSwitchDisplay();
             countdown = new CountdownDisplay();
-            countdown.OnPulse += new VoidDelegate(countdown_OnPulse);
+            countdown.OnPulse += countdown_OnPulse;
 
             menu = new PauseMenu();
 
@@ -298,7 +293,7 @@ namespace osum.GameModes
             progressDisplay = new ProgressDisplay();
         }
 
-        void countdown_OnPulse()
+        private void countdown_OnPulse()
         {
             PulseBackground(true);
         }
@@ -317,7 +312,7 @@ namespace osum.GameModes
                 scoreDisplay.SetScore(0);
             }
 
-            CurrentScore = new Score() { UseAccuracyBonus = false };
+            CurrentScore = new Score { UseAccuracyBonus = false };
         }
 
         protected virtual void loadBeatmap()
@@ -422,7 +417,7 @@ namespace osum.GameModes
             if (Director.PendingOsuMode != OsuMode.Play)
             {
                 RestartCount = 0;
-                Player.Autoplay = false;
+                Autoplay = false;
             }
             else
                 RestartCount++;
@@ -439,7 +434,7 @@ namespace osum.GameModes
         {
             if (GameBase.Mapper)
             {
-                if (Player.Autoplay)
+                if (Autoplay)
                 {
                     if (IsPaused)
                         Resume();
@@ -457,7 +452,7 @@ namespace osum.GameModes
             if (!(Clock.AudioTime > 0 && (AudioEngine.Music == null || !AudioEngine.Music.IsElapsing)))
             {
                 //pass on the event to hitObjectManager for handling.
-                if (HitObjectManager != null && !Failed && !Player.Autoplay && HitObjectManager.HandlePressAt(point))
+                if (HitObjectManager != null && !Failed && !Autoplay && HitObjectManager.HandlePressAt(point))
                     return;
             }
 
@@ -466,8 +461,7 @@ namespace osum.GameModes
                 //before passing on input to the menu, do some other checks to make sure we don't accidentally trigger.
                 if (hitObjectManager != null && !Autoplay)
                 {
-                    Slider s = hitObjectManager.ActiveObject as Slider;
-                    if (s != null && s.IsTracking)
+                    if (hitObjectManager.ActiveObject is Slider s && s.IsTracking)
                         return;
 
                     List<HitObject> objects = hitObjectManager.ActiveStreamObjects;
@@ -501,7 +495,7 @@ namespace osum.GameModes
             queuedStreamSwitchTime = 0;
         }
 
-        void Director_OnTransitionEnded()
+        private void Director_OnTransitionEnded()
         {
 
         }
@@ -689,7 +683,7 @@ namespace osum.GameModes
                         healthBar.ReduceCurrentHp(DifficultyManager.HpAdjustment * -healthChange * streamMultiplier);
                 }
                 else
-                    healthBar.IncreaseCurrentHp(healthChange * (Player.Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
+                    healthBar.IncreaseCurrentHp(healthChange * (Difficulty == Difficulty.Normal ? Beatmap.HpStreamAdjustmentMultiplier : 1));
             }
 
             if (scoreDisplay != null)
@@ -811,8 +805,7 @@ namespace osum.GameModes
                 //check whether the map is finished
                 CheckForCompletion();
 
-                Spinner s = HitObjectManager.ActiveObject as Spinner;
-                if (s != null)
+                if (HitObjectManager.ActiveObject is Spinner s)
                     playfieldBackground.Alpha = 1 - s.SpriteBackground.Alpha;
                 else
                     playfieldBackground.Alpha = 1;
@@ -852,14 +845,14 @@ namespace osum.GameModes
 
                 if (GameBase.Instance != null) //combinator
                 {
-                    if (Player.Autoplay)
+                    if (Autoplay)
                     {
                         Director.ChangeMode(OsuMode.SongSelect, new FadeTransition(3000, FadeTransition.DEFAULT_FADE_IN));
                     }
                     else
                     {
-                        Results.RankableScore = CurrentScore;
-                        Results.RankableScore.UseAccuracyBonus = true;
+                        Results.Results.RankableScore = CurrentScore;
+                        Results.Results.RankableScore.UseAccuracyBonus = true;
 
                         GameBase.Scheduler.Add(delegate
                         {
@@ -896,7 +889,7 @@ namespace osum.GameModes
 
                             GameBase.Scheduler.Add(delegate
                             {
-                                Results.RankableScore = CurrentScore;
+                                Results.Results.RankableScore = CurrentScore;
                                 menu.ShowFailMenu();
                             }, 1500);
                         }
@@ -1019,7 +1012,7 @@ namespace osum.GameModes
             if (!increase && HitObjectManager.IsLowestStream)
                 return false;
 
-            int switchTime = HitObjectManager.SetActiveStream((Difficulty)(HitObjectManager.ActiveStream + (increase ? 1 : -1)));
+            int switchTime = HitObjectManager.SetActiveStream(HitObjectManager.ActiveStream + (increase ? 1 : -1));
 
             if (switchTime < 0)
                 return false;
@@ -1037,7 +1030,7 @@ namespace osum.GameModes
 
         internal static string SubmitString
         {
-            get { return CryptoHelper.GetMd5String(Path.GetFileName(Player.Beatmap.ContainerFilename) + "-" + Player.Difficulty.ToString()); }
+            get { return CryptoHelper.GetMd5String(Path.GetFileName(Beatmap.ContainerFilename) + "-" + Difficulty); }
         }
 
         public float Progress

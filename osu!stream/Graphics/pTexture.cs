@@ -1,8 +1,3 @@
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Drawing;
-
 #if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
@@ -31,17 +26,15 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using UIKit;
 using CoreGraphics;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using System.Drawing.Imaging;
-using osum.Input;
 using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 #endif
-
-using System.Text;
-using OpenTK;
-using osum.Graphics.Skins;
-using System.Diagnostics;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Runtime.InteropServices;
+using osum.AssetManager;
 
 
 namespace osum.Graphics
@@ -204,7 +197,7 @@ namespace osum.Graphics
         /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
-        public unsafe static pTexture FromFile(string filename, bool mipmap)
+        public static pTexture FromFile(string filename, bool mipmap)
         {
             //load base texture first...
             if (!NativeAssetManager.Instance.FileExists(filename)) return null;
@@ -345,7 +338,7 @@ namespace osum.Graphics
         /// <summary>
         /// Read a pTexture from an arbritrary file.
         /// </summary>
-        public unsafe static pTexture FromStream(Stream stream, string assetname, bool saveToFile)
+        public static pTexture FromStream(Stream stream, string assetname, bool saveToFile)
         {
             try
             {
@@ -429,7 +422,7 @@ namespace osum.Graphics
             return pt;
         }
 
-        static int fboSingleton = -1;
+        private static int fboSingleton = -1;
         internal int fboId = -1;
         //internal int fboDepthBuffer = -1;
 
@@ -468,7 +461,7 @@ namespace osum.Graphics
 
         internal pTexture Clone()
         {
-            return (pTexture)this.MemberwiseClone();
+            return (pTexture)MemberwiseClone();
         }
 
         #region IComparable<pTexture> Members

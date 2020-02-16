@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Skins;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
 using OpenTK;
+using OpenTK.Graphics;
+using osum.Graphics;
+using osum.Graphics.Sprites;
 using osum.Helpers;
 
 namespace osum.GameModes.SongSelect
@@ -16,14 +14,10 @@ namespace osum.GameModes.SongSelect
 
         internal List<pDrawable> Sprites { get { return spriteManager.Sprites; } }
 
-        List<pDrawable> tabs = new List<pDrawable>();
+        private readonly List<pDrawable> tabs = new List<pDrawable>();
 
-        Dictionary<pDrawable, SpriteManager> spriteManagers = new Dictionary<pDrawable, SpriteManager>();
-        SpriteManager activeSpriteManager;
-
-        internal pTabController()
-        {
-        }
+        private readonly Dictionary<pDrawable, SpriteManager> spriteManagers = new Dictionary<pDrawable, SpriteManager>();
+        private SpriteManager activeSpriteManager;
 
         public override void Dispose()
         {
@@ -67,7 +61,8 @@ namespace osum.GameModes.SongSelect
         }
 
         internal pSprite SelectedTab;
-        void onTabClick(object sender, EventArgs e)
+
+        private void onTabClick(object sender, EventArgs e)
         {
             if (SelectedTab != null)
             {
@@ -75,8 +70,7 @@ namespace osum.GameModes.SongSelect
                 SelectedTab.HandleInput = true;
             }
 
-            pSprite s = sender as pSprite;
-            if (s == null) return;
+            if (!(sender is pSprite s)) return;
 
             SelectedTab = s;
             activeSpriteManager = spriteManagers[SelectedTab];

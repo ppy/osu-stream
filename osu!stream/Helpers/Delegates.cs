@@ -1,4 +1,7 @@
 ﻿using osum.GameplayElements;
+using osum.GameplayElements.HitObjects;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.Helpers
 {

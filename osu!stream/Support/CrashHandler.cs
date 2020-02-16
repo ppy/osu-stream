@@ -1,18 +1,17 @@
 using System;
-using System.Threading;
 using System.IO;
+using osum.Libraries.NetLib;
+using osum.Localisation;
 using osum.UI;
-using osu_common.Libraries.NetLib;
-using osum.Resources;
 
 namespace osum.Support
 {
     public static class CrashHandler
     {
-        const string LOG_FILE = "error.log";
-        static string LogFileFullPath { get { return GameBase.Instance.PathConfig + LOG_FILE; } }
+        private const string LOG_FILE = "error.log";
+        private static string LogFileFullPath { get { return GameBase.Instance.PathConfig + LOG_FILE; } }
 
-        static bool isInitialized;
+        private static bool isInitialized;
         public static void Initialize()
         {
             if (isInitialized) return;
@@ -30,8 +29,7 @@ namespace osum.Support
                     Notification notification = new Notification(
                             "Oops...",
                             LocalisationManager.GetString(OsuString.Crashed) ?? "A serious crash happened and has been reported",
-                            NotificationStyle.Okay,
-                            null);
+                            NotificationStyle.Okay);
                     GameBase.Notify(notification);
                 },true);
 
@@ -53,7 +51,7 @@ namespace osum.Support
             NetManager.AddRequest(nr);
         }
 
-        static void HandleException(object sender, UnhandledExceptionEventArgs e)
+        private static void HandleException(object sender, UnhandledExceptionEventArgs e)
         {
             File.WriteAllText(LogFileFullPath, e.ExceptionObject.ToString());
         }

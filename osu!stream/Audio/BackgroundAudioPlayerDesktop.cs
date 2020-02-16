@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Un4seen.Bass;
-using System.IO;
 using System.Runtime.InteropServices;
 using osum.Helpers;
+using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Aac;
 
 namespace osum.Audio
 {
-    class BackgroundAudioPlayerDesktop : BackgroundAudioPlayer
+    internal class BackgroundAudioPlayerDesktop : BackgroundAudioPlayer
     {
         private GCHandle audioHandle;
         private static int audioStream;

@@ -1,14 +1,17 @@
 using System;
-using osum.GameModes;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Support;
-using osum.Helpers;
-using osum.Audio;
-using osum.GameModes.Store;
-using osum.GameModes.Play;
-using osum.GameModes.Options;
 using System.Collections.Generic;
+using osum.Audio;
+using osum.GameModes;
+using osum.GameModes.MainMenu;
+using osum.GameModes.Options;
+using osum.GameModes.Play;
+using osum.GameModes.Results;
+using osum.GameModes.SongSelect;
+using osum.GameModes.Store;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Support;
 
 namespace osum
 {
@@ -52,7 +55,7 @@ namespace osum
             return ChangeMode(mode, new FadeTransition(), retainState);
         }
 
-        static Dictionary<OsuMode, GameMode> savedStates = new Dictionary<OsuMode, GameMode>();
+        private static readonly Dictionary<OsuMode, GameMode> savedStates = new Dictionary<OsuMode, GameMode>();
 
         /// <summary>
         /// Changes the active game mode to a new requested mode, with a possible transition.
@@ -236,7 +239,7 @@ namespace osum
             PendingMode = mode;
         }
 
-        static bool modeChangePending;
+        private static bool modeChangePending;
         private static GameMode PendingMode;
 
         public static bool AudioDimming = true;
@@ -264,7 +267,7 @@ namespace osum
                 ActiveTransition.Update();
 
                 if (AudioDimming && !ActiveTransition.FadeOutDone && AudioEngine.Music != null)
-                    AudioEngine.Music.DimmableVolume = 0.2f + Director.ActiveTransition.CurrentValue * 0.8f;
+                    AudioEngine.Music.DimmableVolume = 0.2f + ActiveTransition.CurrentValue * 0.8f;
 
                 if (ActiveTransition.FadeOutDone)
                 {

@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using OpenTK;
+using OpenTK.Graphics;
 using osum.GameModes;
 using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
 using osum.Helpers;
-using OpenTK.Graphics;
-using OpenTK;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.Graphics
 {
-    class TouchBurster : GameComponent
+    internal class TouchBurster : GameComponent
     {
-        List<pSprite> burstSprites = new List<pSprite>();
+        private readonly List<pSprite> burstSprites = new List<pSprite>();
 
-       static float[] random = new float[] {
+        private static readonly float[] random = {
             0.54668277924985f,
             0.63373556682948f,
             0.52338286143199f,
@@ -41,13 +39,14 @@ namespace osum.Graphics
             0.35293735193193f
         };
 
-        static int nextRandIndex;
-        static float nextRand()
+        private static int nextRandIndex;
+
+        private static float nextRand()
         {
             return random[nextRandIndex++ % random.Length];
         }
 
-        int nextBurstSprite;
+        private int nextBurstSprite;
 
         public TouchBurster(bool bindInput)
         {
@@ -57,7 +56,7 @@ namespace osum.Graphics
 #if iOS
         const int MAX_BURST = 32;
 #else
-        const int MAX_BURST = 512;
+        private const int MAX_BURST = 512;
 #endif
 
         public override void Initialize()
@@ -74,15 +73,15 @@ namespace osum.Graphics
                 burst.AlignToSprites = false;
 
                 //make transformations beforehand to avoid creating many.
-                burst.Transform(new TransformationV() { Type = TransformationType.Movement },
-                    new TransformationF() { Type = TransformationType.Scale },
-                    new TransformationF() { Type = TransformationType.Fade });
+                burst.Transform(new TransformationV { Type = TransformationType.Movement },
+                    new TransformationF { Type = TransformationType.Scale },
+                    new TransformationF { Type = TransformationType.Fade });
             }
 
             base.Initialize();
         }
 
-        int spacing;
+        private int spacing;
 
         private bool bindInput;
         private bool BindInput
@@ -105,7 +104,8 @@ namespace osum.Graphics
                 }
             }
         }
-        void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
+
+        private void InputManager_OnMove(InputSource source, TrackingPoint trackingPoint)
         {
 #if iOS
             if (InputManager.IsPressed && spacing++ % 1 == 0)
@@ -118,7 +118,7 @@ namespace osum.Graphics
 #endif
         }
 
-        void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
+        private void InputManager_OnDown(InputSource source, TrackingPoint trackingPoint)
         {
 #if iOS
             Burst(trackingPoint.BasePosition, 100, 1, 5);
@@ -137,8 +137,8 @@ namespace osum.Graphics
 
                 if (spread > 0)
                 {
-                    float randX = (float)(nextRand() * spread);
-                    float randY = (float)(nextRand() * spread);
+                    float randX = nextRand() * spread;
+                    float randY = nextRand() * spread;
 
                     end += new Vector2(randX - spread / 2, randY - spread / 2);
                 }
@@ -156,12 +156,12 @@ namespace osum.Graphics
 
                 tScale.StartTime = Clock.Time;
                 tScale.EndTime = Clock.Time + randTime;
-                tScale.StartFloat = scale * 0.8f + 0.4f * (float)nextRand();
-                tScale.EndFloat = scale * 0.4f + 0.4f * (float)nextRand();
+                tScale.StartFloat = scale * 0.8f + 0.4f * nextRand();
+                tScale.EndFloat = scale * 0.4f + 0.4f * nextRand();
 
                 tFade.StartTime = Clock.Time;
                 tFade.EndTime = Clock.Time + randTime;
-                tFade.StartFloat = (float)nextRand() * 0.6f;
+                tFade.StartFloat = nextRand() * 0.6f;
                 tFade.EndFloat = 0;
 
                 nextBurstSprite = (nextBurstSprite + 1) % burstSprites.Count;

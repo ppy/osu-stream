@@ -1,11 +1,4 @@
-﻿using System;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
-using osum.Helpers;
-using System.Runtime.InteropServices;
-using OpenTK.Graphics;
-using OpenTK;
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -34,12 +27,16 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 #endif
+using System;
+using System.Runtime.InteropServices;
+using OpenTK;
+using OpenTK.Graphics;
+using osum.Helpers;
 
 
-namespace osum.Graphics.Drawables
+namespace osum.Graphics.Sprites
 {
     internal class pRectangle : pDrawable
     {
@@ -67,11 +64,11 @@ namespace osum.Graphics.Drawables
         }
 
 #if !NO_PIN_SUPPORT
-        float[] vertices;
-        GCHandle handle_vertices;
+        private readonly float[] vertices;
+        private GCHandle handle_vertices;
 #endif
 
-        IntPtr handle_vertices_pointer;
+        private readonly IntPtr handle_vertices_pointer;
 
         public bool IsDisposed { get; private set; }
 
@@ -107,43 +104,39 @@ namespace osum.Graphics.Drawables
                 float vRight = -origin.X + scale.X;
                 float vBottom = -origin.Y + scale.Y;
 
-                unsafe
-                {
 #if NO_PIN_SUPPORT
                     float* vertices = (float*)handle_vertices_pointer;
 #endif
 
-                    if (Rotation != 0)
-                    {
-                        float cos = (float)Math.Cos(Rotation);
-                        float sin = (float)Math.Sin(Rotation);
+                if (Rotation != 0)
+                {
+                    float cos = (float)Math.Cos(Rotation);
+                    float sin = (float)Math.Sin(Rotation);
 
-                        vertices[0] = vLeft * cos - vTop * sin + pos.X;
-                        vertices[1] = vLeft * sin + vTop * cos + pos.Y;
-                        vertices[2] = vRight * cos - vTop * sin + pos.X;
-                        vertices[3] = vRight * sin + vTop * cos + pos.Y;
-                        vertices[4] = vRight * cos - vBottom * sin + pos.X;
-                        vertices[5] = vRight * sin + vBottom * cos + pos.Y;
-                        vertices[6] = vLeft * cos - vBottom * sin + pos.X;
-                        vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
-                    }
-                    else
-                    {
-                        vLeft += pos.X;
-                        vRight += pos.X;
-                        vTop += pos.Y;
-                        vBottom += pos.Y;
+                    vertices[0] = vLeft * cos - vTop * sin + pos.X;
+                    vertices[1] = vLeft * sin + vTop * cos + pos.Y;
+                    vertices[2] = vRight * cos - vTop * sin + pos.X;
+                    vertices[3] = vRight * sin + vTop * cos + pos.Y;
+                    vertices[4] = vRight * cos - vBottom * sin + pos.X;
+                    vertices[5] = vRight * sin + vBottom * cos + pos.Y;
+                    vertices[6] = vLeft * cos - vBottom * sin + pos.X;
+                    vertices[7] = vLeft * sin + vBottom * cos + pos.Y;
+                }
+                else
+                {
+                    vLeft += pos.X;
+                    vRight += pos.X;
+                    vTop += pos.Y;
+                    vBottom += pos.Y;
 
-                        vertices[0] = vLeft;
-                        vertices[1] = vTop;
-                        vertices[2] = vRight;
-                        vertices[3] = vTop;
-                        vertices[4] = vRight;
-                        vertices[5] = vBottom;
-                        vertices[6] = vLeft;
-                        vertices[7] = vBottom;
-                    }
-
+                    vertices[0] = vLeft;
+                    vertices[1] = vTop;
+                    vertices[2] = vRight;
+                    vertices[3] = vTop;
+                    vertices[4] = vRight;
+                    vertices[5] = vBottom;
+                    vertices[6] = vLeft;
+                    vertices[7] = vBottom;
                 }
 
                 SpriteManager.TexturesEnabled = false;

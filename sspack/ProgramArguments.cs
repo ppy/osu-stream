@@ -291,7 +291,7 @@ namespace sspack
 		/// The argument is permitted to occur multiple times, but duplicate 
 		/// values will cause an error to be reported.
 		/// </summary>
-		MultipleUnique = Multiple | Unique,
+		MultipleUnique = Multiple | Unique
 	}
 
 	/// <summary>
@@ -316,12 +316,12 @@ namespace sspack
 		/// </summary>
 		public ArgumentType Type
 		{
-			get { return this.type; }
+			get { return type; }
 		}
 		/// <summary>
 		/// Returns true if the argument did not have an explicit short name specified.
 		/// </summary>
-		public bool DefaultShortName { get { return null == this.shortName; } }
+		public bool DefaultShortName { get { return null == shortName; } }
 
 		/// <summary>
 		/// The short name of the argument.
@@ -332,14 +332,14 @@ namespace sspack
 		/// </summary>
 		public string ShortName
 		{
-			get { return this.shortName; }
-			set { Debug.Assert(value == null || !(this is DefaultArgumentAttribute)); this.shortName = value; }
+			get { return shortName; }
+			set { Debug.Assert(value == null || !(this is DefaultArgumentAttribute)); shortName = value; }
 		}
 
 		/// <summary>
 		/// Returns true if the argument did not have an explicit long name specified.
 		/// </summary>
-		public bool DefaultLongName { get { return null == this.longName; } }
+		public bool DefaultLongName { get { return null == longName; } }
 
 		/// <summary>
 		/// The long name of the argument.
@@ -349,8 +349,8 @@ namespace sspack
 		/// </summary>
 		public string LongName
 		{
-			get { Debug.Assert(!this.DefaultLongName); return this.longName; }
-			set { Debug.Assert(value != ""); this.longName = value; }
+			get { Debug.Assert(!DefaultLongName); return longName; }
+			set { Debug.Assert(value != ""); longName = value; }
 		}
 
 		/// <summary>
@@ -358,27 +358,27 @@ namespace sspack
 		/// </summary>
 		public object DefaultValue
 		{
-			get { return this.defaultValue; }
-			set { this.defaultValue = value; }
+			get { return defaultValue; }
+			set { defaultValue = value; }
 		}
 
 		/// <summary>
 		/// Returns true if the argument has a default value.
 		/// </summary>
-		public bool HasDefaultValue { get { return null != this.defaultValue; } }
+		public bool HasDefaultValue { get { return null != defaultValue; } }
 
 		/// <summary>
 		/// Returns true if the argument has help text specified.
 		/// </summary>
-		public bool HasHelpText { get { return null != this.helpText; } }
+		public bool HasHelpText { get { return null != helpText; } }
 
 		/// <summary>
 		/// The help text for the argument.
 		/// </summary>
 		public string HelpText
 		{
-			get { return this.helpText; }
-			set { this.helpText = value; }
+			get { return helpText; }
+			set { helpText = value; }
 		}
 
 		private string shortName;
@@ -455,10 +455,10 @@ namespace sspack
 		/// <returns> true if no errors were detected. </returns>
 		public static bool ParseArgumentsWithUsage(string[] arguments, object destination)
 		{
-			if (Parser.ParseHelp(arguments) || !Parser.ParseArguments(arguments, destination))
+			if (ParseHelp(arguments) || !ParseArguments(arguments, destination))
 			{
 				// error encountered in arguments. Display usage message
-				System.Console.Write(Parser.ArgumentsUsage(destination.GetType()));
+				Console.Write(ArgumentsUsage(destination.GetType()));
 				return false;
 			}
 
@@ -475,7 +475,7 @@ namespace sspack
 		/// <returns> true if no errors were detected. </returns>
 		public static bool ParseArguments(string[] arguments, object destination)
 		{
-			return Parser.ParseArguments(arguments, destination, new ErrorReporter(Console.Error.WriteLine));
+			return ParseArguments(arguments, destination, Console.Error.WriteLine);
 		}
 
 		/// <summary>
@@ -509,7 +509,7 @@ namespace sspack
 		/// <returns> Returns true if args contains /? or /help. </returns>
 		public static bool ParseHelp(string[] args)
 		{
-			Parser helpParser = new Parser(typeof(HelpArgument), new ErrorReporter(NullErrorReporter));
+			Parser helpParser = new Parser(typeof(HelpArgument), NullErrorReporter);
 			HelpArgument helpArgument = new HelpArgument();
 			helpParser.Parse(args, helpArgument);
 			return helpArgument.help;
@@ -525,7 +525,7 @@ namespace sspack
 		/// <returns> Printable string containing a user friendly description of command line arguments. </returns>
 		public static string ArgumentsUsage(Type argumentType)
 		{
-			int screenWidth = Parser.GetConsoleWindowWidth();
+			int screenWidth = GetConsoleWindowWidth();
 			if (screenWidth == 0)
 				screenWidth = 80;
 			return ArgumentsUsage(argumentType, screenWidth);
@@ -635,8 +635,8 @@ namespace sspack
 		public Parser(Type argumentSpecification, ErrorReporter reporter)
 		{
 			this.reporter = reporter;
-			this.arguments = new ArrayList();
-			this.argumentMap = new Hashtable();
+			arguments = new ArrayList();
+			argumentMap = new Hashtable();
 
 			foreach (FieldInfo field in argumentSpecification.GetFields())
 			{
@@ -645,27 +645,27 @@ namespace sspack
 					ArgumentAttribute attribute = GetAttribute(field);
 					if (attribute is DefaultArgumentAttribute)
 					{
-						Debug.Assert(this.defaultArgument == null);
-						this.defaultArgument = new Argument(attribute, field, reporter);
+						Debug.Assert(defaultArgument == null);
+						defaultArgument = new Argument(attribute, field, reporter);
 					}
 					else
 					{
-						this.arguments.Add(new Argument(attribute, field, reporter));
+						arguments.Add(new Argument(attribute, field, reporter));
 					}
 				}
 			}
 
 			// add explicit names to map
-			foreach (Argument argument in this.arguments)
+			foreach (Argument argument in arguments)
 			{
 				Debug.Assert(!argumentMap.ContainsKey(argument.LongName));
-				this.argumentMap[argument.LongName] = argument;
+				argumentMap[argument.LongName] = argument;
 				if (argument.ExplicitShortName)
 				{
 					if (argument.ShortName != null && argument.ShortName.Length > 0)
 					{
 						Debug.Assert(!argumentMap.ContainsKey(argument.ShortName));
-						this.argumentMap[argument.ShortName] = argument;
+						argumentMap[argument.ShortName] = argument;
 					}
 					else
 					{
@@ -675,12 +675,12 @@ namespace sspack
 			}
 
 			// add implicit names which don't collide to map
-			foreach (Argument argument in this.arguments)
+			foreach (Argument argument in arguments)
 			{
 				if (!argument.ExplicitShortName)
 				{
 					if (argument.ShortName != null && argument.ShortName.Length > 0 && !argumentMap.ContainsKey(argument.ShortName))
-						this.argumentMap[argument.ShortName] = argument;
+						argumentMap[argument.ShortName] = argument;
 					else
 						argument.ClearShortName();
 				}
@@ -699,7 +699,7 @@ namespace sspack
 
 		private void ReportUnrecognizedArgument(string argument)
 		{
-			this.reporter(string.Format("Unrecognized command line argument '{0}'", argument));
+			reporter(string.Format("Unrecognized command line argument '{0}'", argument));
 		}
 
 		/// <summary>
@@ -721,7 +721,7 @@ namespace sspack
 						{
 							case '-':
 							case '/':
-								int endIndex = argument.IndexOfAny(new char[] { ':', '+', '-' }, 1);
+								int endIndex = argument.IndexOfAny(new[] { ':', '+', '-' }, 1);
 								string option = argument.Substring(1, endIndex == -1 ? argument.Length - 1 : endIndex - 1);
 								string optionArgument;
 								if (option.Length + 1 == argument.Length)
@@ -737,7 +737,7 @@ namespace sspack
 									optionArgument = argument.Substring(option.Length + 1);
 								}
 
-								Argument arg = (Argument)this.argumentMap[option];
+								Argument arg = (Argument)argumentMap[option];
 								if (arg == null)
 								{
 									ReportUnrecognizedArgument(argument);
@@ -754,9 +754,9 @@ namespace sspack
 								hadError |= ParseArgumentList(nestedArguments, destination);
 								break;
 							default:
-								if (this.defaultArgument != null)
+								if (defaultArgument != null)
 								{
-									hadError |= !this.defaultArgument.SetValue(argument, destination);
+									hadError |= !defaultArgument.SetValue(argument, destination);
 								}
 								else
 								{
@@ -783,13 +783,13 @@ namespace sspack
 			bool hadError = ParseArgumentList(args, destination);
 
 			// check for missing required arguments
-			foreach (Argument arg in this.arguments)
+			foreach (Argument arg in arguments)
 			{
 				hadError |= arg.Finish(destination);
 			}
-			if (this.defaultArgument != null)
+			if (defaultArgument != null)
 			{
-				hadError |= this.defaultArgument.Finish(destination);
+				hadError |= defaultArgument.Finish(destination);
 			}
 
 			return !hadError;
@@ -905,14 +905,14 @@ namespace sspack
 			ArgumentHelpStrings[] strings = new ArgumentHelpStrings[NumberOfParametersToDisplay()];
 
 			int index = 0;
-			foreach (Argument arg in this.arguments)
+			foreach (Argument arg in arguments)
 			{
 				strings[index] = GetHelpStrings(arg);
 				index++;
 			}
 			//strings[index++] = new ArgumentHelpStrings("@<file>", "Read response file for more options");
-			if (this.defaultArgument != null)
-				strings[index++] = GetHelpStrings(this.defaultArgument);
+			if (defaultArgument != null)
+				strings[index++] = GetHelpStrings(defaultArgument);
 
 			return strings;
 		}
@@ -924,7 +924,7 @@ namespace sspack
 
 		private int NumberOfParametersToDisplay()
 		{
-			int numberOfParameters = this.arguments.Count;
+			int numberOfParameters = arguments.Count;
 			if (HasDefaultArgument)
 				numberOfParameters += 1;
 			return numberOfParameters;
@@ -936,7 +936,7 @@ namespace sspack
 		/// <value> Does this parser have a default argument. </value>
 		public bool HasDefaultArgument
 		{
-			get { return this.defaultArgument != null; }
+			get { return defaultArgument != null; }
 		}
 
 		private bool LexFileArguments(string fileName, out string[] arguments)
@@ -952,7 +952,7 @@ namespace sspack
 			}
 			catch (Exception e)
 			{
-				this.reporter(string.Format("Error: Can't open command line argument file '{0}' : '{1}'", fileName, e.Message));
+				reporter(string.Format("Error: Can't open command line argument file '{0}' : '{1}'", fileName, e.Message));
 				arguments = null;
 				return false;
 			}
@@ -1029,12 +1029,12 @@ namespace sspack
 					currentArg.Length = 0;
 				}
 			}
-			catch (System.IndexOutOfRangeException)
+			catch (IndexOutOfRangeException)
 			{
 				// got EOF 
 				if (inQuotes)
 				{
-					this.reporter(string.Format("Error: Unbalanced '\"' in command line argument file '{0}'", fileName));
+					reporter(string.Format("Error: Unbalanced '\"' in command line argument file '{0}'", fileName));
 					hadError = true;
 				}
 				else if (currentArg.Length > 0)
@@ -1066,8 +1066,7 @@ namespace sspack
 		{
 			if (attribute == null)
 				return null;
-			else
-				return attribute.HelpText;
+			return attribute.HelpText;
 		}
 
 		private static bool HasHelpText(ArgumentAttribute attribute)
@@ -1089,18 +1088,16 @@ namespace sspack
 		{
 			if (IsCollectionType(field.FieldType))
 				return field.FieldType.GetElementType();
-			else
-				return null;
+			return null;
 		}
 
 		private static ArgumentType Flags(ArgumentAttribute attribute, FieldInfo field)
 		{
 			if (attribute != null)
 				return attribute.Type;
-			else if (IsCollectionType(field.FieldType))
+			if (IsCollectionType(field.FieldType))
 				return ArgumentType.MultipleUnique;
-			else
-				return ArgumentType.AtMostOnce;
+			return ArgumentType.AtMostOnce;
 		}
 
 		private static bool IsCollectionType(Type type)
@@ -1118,55 +1115,55 @@ namespace sspack
 			type.IsEnum);
 		}
 
-		[System.Diagnostics.DebuggerDisplay("Name = {LongName}")]
+		[DebuggerDisplay("Name = {LongName}")]
 		private class Argument
 		{
 			public Argument(ArgumentAttribute attribute, FieldInfo field, ErrorReporter reporter)
 			{
-				this.longName = Parser.LongName(attribute, field);
-				this.explicitShortName = Parser.ExplicitShortName(attribute);
-				this.shortName = Parser.ShortName(attribute, field);
-				this.hasHelpText = Parser.HasHelpText(attribute);
-				this.helpText = Parser.HelpText(attribute, field);
-				this.defaultValue = Parser.DefaultValue(attribute, field);
-				this.elementType = ElementType(field);
-				this.flags = Flags(attribute, field);
+				longName = LongName(attribute, field);
+				explicitShortName = ExplicitShortName(attribute);
+				shortName = ShortName(attribute, field);
+				hasHelpText = HasHelpText(attribute);
+				helpText = HelpText(attribute, field);
+				defaultValue = DefaultValue(attribute, field);
+				elementType = ElementType(field);
+				flags = Flags(attribute, field);
 				this.field = field;
-				this.seenValue = false;
+				seenValue = false;
 				this.reporter = reporter;
-				this.isDefault = attribute != null && attribute is DefaultArgumentAttribute;
+				isDefault = attribute != null && attribute is DefaultArgumentAttribute;
 
 				if (IsCollection)
 				{
-					this.collectionValues = new ArrayList();
+					collectionValues = new ArrayList();
 				}
 
-				Debug.Assert(this.longName != null && this.longName != "");
-				Debug.Assert(!this.isDefault || !this.ExplicitShortName);
+				Debug.Assert(longName != null && longName != "");
+				Debug.Assert(!isDefault || !ExplicitShortName);
 				Debug.Assert(!IsCollection || AllowMultiple, "Collection arguments must have allow multiple");
 				Debug.Assert(!Unique || IsCollection, "Unique only applicable to collection arguments");
 				Debug.Assert(IsValidElementType(Type) ||
 				IsCollectionType(Type));
 				Debug.Assert((IsCollection && IsValidElementType(elementType)) ||
 				(!IsCollection && elementType == null));
-				Debug.Assert(!(this.IsRequired && this.HasDefaultValue), "Required arguments cannot have default value");
-				Debug.Assert(!this.HasDefaultValue || (this.defaultValue.GetType() == field.FieldType), "Type of default value must match field type");
+				Debug.Assert(!(IsRequired && HasDefaultValue), "Required arguments cannot have default value");
+				Debug.Assert(!HasDefaultValue || (defaultValue.GetType() == field.FieldType), "Type of default value must match field type");
 			}
 
 			public bool Finish(object destination)
 			{
-				if (this.SeenValue)
+				if (SeenValue)
 				{
-					if (this.IsCollection)
+					if (IsCollection)
 					{
-						this.field.SetValue(destination, this.collectionValues.ToArray(this.elementType));
+						field.SetValue(destination, collectionValues.ToArray(elementType));
 					}
 				}
 				else
 				{
-					if (this.HasDefaultValue)
+					if (HasDefaultValue)
 					{
-						this.field.SetValue(destination, this.DefaultValue);
+						field.SetValue(destination, DefaultValue);
 					}
 				}
 
@@ -1175,12 +1172,12 @@ namespace sspack
 
 			private bool ReportMissingRequiredArgument()
 			{
-				if (this.IsRequired && !this.SeenValue)
+				if (IsRequired && !SeenValue)
 				{
-					if (this.IsDefault)
-						reporter(string.Format("Missing required argument '<{0}>'.", this.LongName));
+					if (IsDefault)
+						reporter(string.Format("Missing required argument '<{0}>'.", LongName));
 					else
-						reporter(string.Format("Missing required argument '/{0}'.", this.LongName));
+						reporter(string.Format("Missing required argument '/{0}'.", LongName));
 					return true;
 				}
 				return false;
@@ -1188,36 +1185,34 @@ namespace sspack
 
 			private void ReportDuplicateArgumentValue(string value)
 			{
-				this.reporter(string.Format("Duplicate '{0}' argument '{1}'", this.LongName, value));
+				reporter(string.Format("Duplicate '{0}' argument '{1}'", LongName, value));
 			}
 
 			public bool SetValue(string value, object destination)
 			{
 				if (SeenValue && !AllowMultiple)
 				{
-					this.reporter(string.Format("Duplicate '{0}' argument", this.LongName));
+					reporter(string.Format("Duplicate '{0}' argument", LongName));
 					return false;
 				}
-				this.seenValue = true;
+				seenValue = true;
 
 				object newValue;
-				if (!ParseValue(this.ValueType, value, out newValue))
+				if (!ParseValue(ValueType, value, out newValue))
 					return false;
-				if (this.IsCollection)
+				if (IsCollection)
 				{
-					if (this.Unique && this.collectionValues.Contains(newValue))
+					if (Unique && collectionValues.Contains(newValue))
 					{
 						ReportDuplicateArgumentValue(value);
 						return false;
 					}
-					else
-					{
-						this.collectionValues.Add(newValue);
-					}
+
+					collectionValues.Add(newValue);
 				}
 				else
 				{
-					this.field.SetValue(destination, newValue);
+					field.SetValue(destination, newValue);
 				}
 
 				return true;
@@ -1225,12 +1220,12 @@ namespace sspack
 
 			public Type ValueType
 			{
-				get { return this.IsCollection ? this.elementType : this.Type; }
+				get { return IsCollection ? elementType : Type; }
 			}
 
 			private void ReportBadArgumentValue(string value)
 			{
-				this.reporter(string.Format("'{0}' is not a valid value for the '{1}' command line option", value, this.LongName));
+				reporter(string.Format("'{0}' is not a valid value for the '{1}' command line option", value, LongName));
 			}
 
 			private bool ParseValue(Type type, string stringData, out object value)
@@ -1246,14 +1241,16 @@ namespace sspack
 							value = stringData;
 							return true;
 						}
-						else if (type == typeof(bool))
+
+						if (type == typeof(bool))
 						{
 							if (stringData == null || stringData == "+")
 							{
 								value = true;
 								return true;
 							}
-							else if (stringData == "-")
+
+							if (stringData == "-")
 							{
 								value = false;
 								return true;
@@ -1304,7 +1301,7 @@ namespace sspack
 			{
 				if (value is string || value is int || value is uint || value.GetType().IsEnum)
 				{
-					builder.Append(value.ToString());
+					builder.Append(value);
 				}
 				else if (value is bool)
 				{
@@ -1313,7 +1310,7 @@ namespace sspack
 				else
 				{
 					bool first = true;
-					foreach (object o in (System.Array)value)
+					foreach (object o in (Array)value)
 					{
 						if (!first)
 						{
@@ -1327,47 +1324,47 @@ namespace sspack
 
 			public string LongName
 			{
-				get { return this.longName; }
+				get { return longName; }
 			}
 
 			public bool ExplicitShortName
 			{
-				get { return this.explicitShortName; }
+				get { return explicitShortName; }
 			}
 
 			public string ShortName
 			{
-				get { return this.shortName; }
+				get { return shortName; }
 			}
 
 			public bool HasShortName
 			{
-				get { return this.shortName != null; }
+				get { return shortName != null; }
 			}
 
 			public void ClearShortName()
 			{
-				this.shortName = null;
+				shortName = null;
 			}
 
 			public bool HasHelpText
 			{
-				get { return this.hasHelpText; }
+				get { return hasHelpText; }
 			}
 
 			public string HelpText
 			{
-				get { return this.helpText; }
+				get { return helpText; }
 			}
 
 			public object DefaultValue
 			{
-				get { return this.defaultValue; }
+				get { return defaultValue; }
 			}
 
 			public bool HasDefaultValue
 			{
-				get { return null != this.defaultValue; }
+				get { return null != defaultValue; }
 			}
 
 			public string FullHelpText
@@ -1375,24 +1372,24 @@ namespace sspack
 				get
 				{
 					StringBuilder builder = new StringBuilder();
-					if (this.HasHelpText)
+					if (HasHelpText)
 					{
-						builder.Append(this.HelpText);
+						builder.Append(HelpText);
 					}
-					if (this.HasDefaultValue)
+					if (HasDefaultValue)
 					{
 						if (builder.Length > 0)
 							builder.Append(" ");
 						builder.Append("Default:'");
-						AppendValue(builder, this.DefaultValue);
+						AppendValue(builder, DefaultValue);
 						builder.Append('\'');
 					}
-					if (this.HasShortName)
+					if (HasShortName)
 					{
 						if (builder.Length > 0)
 							builder.Append(" ");
 						builder.Append("(/");
-						builder.Append(this.ShortName);
+						builder.Append(ShortName);
 						builder.Append(")");
 					}
 					return builder.ToString();
@@ -1405,17 +1402,17 @@ namespace sspack
 				{
 					StringBuilder builder = new StringBuilder();
 
-					if (this.IsDefault)
+					if (IsDefault)
 					{
 						builder.Append("<");
-						builder.Append(this.LongName);
+						builder.Append(LongName);
 						builder.Append(">");
 					}
 					else
 					{
 						builder.Append("/");
-						builder.Append(this.LongName);
-						Type valueType = this.ValueType;
+						builder.Append(LongName);
+						Type valueType = ValueType;
 						if (valueType == typeof(int))
 						{
 							builder.Append(":<int>");
@@ -1458,22 +1455,22 @@ namespace sspack
 
 			public bool IsRequired
 			{
-				get { return 0 != (this.flags & ArgumentType.Required); }
+				get { return 0 != (flags & ArgumentType.Required); }
 			}
 
 			public bool SeenValue
 			{
-				get { return this.seenValue; }
+				get { return seenValue; }
 			}
 
 			public bool AllowMultiple
 			{
-				get { return 0 != (this.flags & ArgumentType.Multiple); }
+				get { return 0 != (flags & ArgumentType.Multiple); }
 			}
 
 			public bool Unique
 			{
-				get { return 0 != (this.flags & ArgumentType.Unique); }
+				get { return 0 != (flags & ArgumentType.Unique); }
 			}
 
 			public Type Type
@@ -1488,7 +1485,7 @@ namespace sspack
 
 			public bool IsDefault
 			{
-				get { return this.isDefault; }
+				get { return isDefault; }
 			}
 
 			private string longName;

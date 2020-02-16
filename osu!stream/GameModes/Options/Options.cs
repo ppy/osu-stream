@@ -1,18 +1,14 @@
 using System;
-using osum.GameModes.SongSelect;
-using osum.Graphics.Skins;
 using OpenTK;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics.ES11;
 using OpenTK.Graphics;
-using osum.Helpers;
-using System.Diagnostics;
 using osum.Audio;
-using osum.UI;
-using osum.Resources;
-using osu_common.Libraries.NetLib;
+using osum.GameModes.SongSelect;
+using osum.Graphics;
 using osum.Graphics.Renderers;
-
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Localisation;
+using osum.UI;
 
 #if iOS
 using Accounts;
@@ -24,8 +20,9 @@ namespace osum.GameModes.Options
 {
     public class Options : GameMode
     {
-        BackButton s_ButtonBack;
-        SpriteManagerDraggable smd = new SpriteManagerDraggable()
+        private BackButton s_ButtonBack;
+
+        private readonly SpriteManagerDraggable smd = new SpriteManagerDraggable
         {
             Scrollbar = true
         };
@@ -33,7 +30,7 @@ namespace osum.GameModes.Options
         private SliderControl soundEffectSlider;
         private SliderControl universalOffsetSlider;
 
-        SpriteManager topMostSpriteManager = new SpriteManager();
+        private readonly SpriteManager topMostSpriteManager = new SpriteManager();
 
         internal static float ScrollPosition;
 
@@ -52,7 +49,7 @@ namespace osum.GameModes.Options
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.MainMenu); }, Director.LastOsuMode == OsuMode.MainMenu);
             smd.AddNonDraggable(s_ButtonBack);
 
-            if (MainMenu.InitializeBgm())
+            if (MainMenu.MainMenu.InitializeBgm())
                 AudioEngine.Music.Play();
 
             const int header_x_offset = 60;
@@ -146,9 +143,9 @@ namespace osum.GameModes.Options
 
             universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2) , new Vector2(button_x_offset - 30, vPos),
                 delegate(float v) {
-                GameBase.Config.SetValue<int>("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
+                GameBase.Config.SetValue("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
                     if (universalOffsetSlider != null) //will be null on first run.
-                        universalOffsetSlider.Text.Text = Clock.USER_OFFSET.ToString() + "ms";
+                        universalOffsetSlider.Text.Text = Clock.USER_OFFSET + "ms";
                  });
             smd.Add(universalOffsetSlider);
 
@@ -284,7 +281,7 @@ namespace osum.GameModes.Options
         }
 #endif
 
-        int lastEffectSound;
+        private int lastEffectSound;
         private pButton buttonFingerGuides;
         private pButton buttonEasyMode;
         private pSprite s_Header;
@@ -295,18 +292,17 @@ namespace osum.GameModes.Options
                         NotificationStyle.YesNo,
                         delegate(bool yes)
                         {
-                            GameBase.Config.SetValue<bool>(@"GuideFingers", yes);
+                            GameBase.Config.SetValue(@"GuideFingers", yes);
 
-                            Options o = Director.CurrentMode as Options;
-                            if (o != null) o.UpdateButtons();
+                            if (Director.CurrentMode is Options o) o.UpdateButtons();
                         });
             GameBase.Notify(notification);
         }
 
         private void UpdateButtons()
         {
-            buttonEasyMode.SetStatus(GameBase.Config.GetValue<bool>(@"EasyMode", false));
-            buttonFingerGuides.SetStatus(GameBase.Config.GetValue<bool>(@"GuideFingers", false));
+            buttonEasyMode.SetStatus(GameBase.Config.GetValue(@"EasyMode", false));
+            buttonFingerGuides.SetStatus(GameBase.Config.GetValue(@"GuideFingers", false));
         }
 
         internal static void DisplayEasyModeDialog()
@@ -315,10 +311,9 @@ namespace osum.GameModes.Options
                         NotificationStyle.YesNo,
                         delegate(bool yes)
                         {
-                            GameBase.Config.SetValue<bool>(@"EasyMode", yes);
+                            GameBase.Config.SetValue(@"EasyMode", yes);
 
-                            Options o = Director.CurrentMode as Options;
-                            if (o != null) o.UpdateButtons();
+                            if (Director.CurrentMode is Options o) o.UpdateButtons();
                         });
             GameBase.Notify(notification);
         }
@@ -327,8 +322,8 @@ namespace osum.GameModes.Options
         {
             ScrollPosition = smd.ScrollPosition;
 
-            GameBase.Config.SetValue<int>("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
-            GameBase.Config.SetValue<int>("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
+            GameBase.Config.SetValue("VolumeEffect", (int)(AudioEngine.Effect.Volume * 100));
+            GameBase.Config.SetValue("VolumeMusic", (int)(AudioEngine.Music.MaxVolume * 100));
             GameBase.Config.SaveConfig();
 
             topMostSpriteManager.Dispose();

@@ -1,7 +1,6 @@
-﻿using osum.Graphics.Skins;
-using osum.Helpers;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics;
+using osum.Helpers;
 
 namespace osum.Graphics.Sprites
 {
@@ -69,9 +68,9 @@ namespace osum.Graphics.Sprites
                     TextureCount = textureArray.Length;
                     currentFrame = 0;
                     if (TextureCount > 0)
-                        base.texture = textureArray[0];
+                        texture = textureArray[0];
                     else
-                        base.texture = null;
+                        texture = null;
                 }
             }
         }
@@ -94,7 +93,7 @@ namespace osum.Graphics.Sprites
             if (a != null) a();
         }
 
-        int lastFrame;
+        private int lastFrame;
 
         private void resetAnimation()
         {
@@ -108,9 +107,9 @@ namespace osum.Graphics.Sprites
             base.Update();
         }
 
-        double timeSinceLastFrame;
+        private double timeSinceLastFrame;
 
-        int lastFrameSpriteTime;
+        private int lastFrameSpriteTime;
 
         internal void UpdateFrame()
         {
@@ -161,8 +160,6 @@ namespace osum.Graphics.Sprites
 
         internal void SetFramerateFromSkin()
         {
-            return;
-
             /*
             if (SkinManager.Current == null || textureArray == null) return;
 
@@ -180,7 +177,7 @@ namespace osum.Graphics.Sprites
 
             foreach (Transformation t in Transformations)
                 clone.Transform(t.Clone());
-            return (pDrawable)clone;
+            return clone;
         }
 
         public bool hasCustomSequence { get { return CustomSequence != null; } }

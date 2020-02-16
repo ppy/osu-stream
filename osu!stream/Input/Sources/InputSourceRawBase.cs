@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Windows.Forms;
-using System.Reflection;
 using System.Drawing;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
+using System.Windows.Forms;
+using osum.Support.Desktop;
 
 namespace osum.Input.Sources
 {
-    delegate void RawInputDelegate(RawInput data);
-    delegate void RawTouchDelegate(RawTouchInput data);
-    delegate void RawPointerDelegate(RawPointerInput data);
+    internal delegate void RawInputDelegate(RawInput data);
+
+    internal delegate void RawTouchDelegate(RawTouchInput data);
+
+    internal delegate void RawPointerDelegate(RawPointerInput data);
 
     public delegate void WndProcDelegate(ref Message m);
 
-    unsafe class InputSourceRawBase : InputSource
+    internal unsafe class InputSourceRawBase : InputSource
     {
-        unsafe private class NativeWindowHook : NativeWindow
+        private class NativeWindowHook : NativeWindow
         {
             public event WndProcDelegate OnWndProc;
 
@@ -32,7 +32,7 @@ namespace osum.Input.Sources
                 ReleaseHandle();
             }
 
-            [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+            [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
             protected override void WndProc(ref Message m)
             {
                 if (OnWndProc != null) OnWndProc(ref m);
@@ -50,10 +50,9 @@ namespace osum.Input.Sources
 
         protected GameWindowDesktop window;
         protected IntPtr windowHandle;
-        private NativeWindowHook windowHook;
+        private readonly NativeWindowHook windowHook;
 
         public InputSourceRawBase(GameWindowDesktop window)
-            : base()
         {
             this.window = window;
 
@@ -64,7 +63,7 @@ namespace osum.Input.Sources
             windowHook.OnWndProc += WindowsForm_OnWndProc;
         }
 
-        void WindowsForm_OnWndProc(ref System.Windows.Forms.Message m)
+        private void WindowsForm_OnWndProc(ref Message m)
         {
             switch (m.Msg)
             {
@@ -141,11 +140,11 @@ namespace osum.Input.Sources
             }
         }
 
-        static event RawPointerDelegate OnPointer;
-        static event RawTouchDelegate OnTouch;
-        static event RawInputDelegate OnKeyboard;
-        static event RawInputDelegate OnMouse;
-        static event RawInputDelegate OnHID;
+        private static event RawPointerDelegate OnPointer;
+        private static event RawTouchDelegate OnTouch;
+        private static event RawInputDelegate OnKeyboard;
+        private static event RawInputDelegate OnMouse;
+        private static event RawInputDelegate OnHID;
 
         protected void bindPointer(RawPointerDelegate del)
         {
@@ -229,7 +228,7 @@ namespace osum.Input.Sources
         Touch = 0x00000002,
         Pen = 0x00000003,
         Mouse = 0x00000004,
-        Touchpad = 0x00000005,
+        Touchpad = 0x00000005
     }
 
     public enum RawPointerButtonType : uint
@@ -244,7 +243,7 @@ namespace osum.Input.Sources
         FourthButtonDown,
         FourthButtonUp,
         FifthButtonDown,
-        FifthButtonUp,
+        FifthButtonUp
     }
 
     /// <summary>
@@ -341,7 +340,7 @@ namespace osum.Input.Sources
         /// <summary>
         /// Indicates that this pointer was captured by (associated with) another element and the original element has lost capture (see WM_POINTERCAPTURECHANGED).
         /// </summary>
-        CaptureChanged = 0x00200000,
+        CaptureChanged = 0x00200000
     }
 
     /// <summary>
@@ -449,7 +448,7 @@ namespace osum.Input.Sources
         /// <summary>
         /// The touch event came from the user's palm. 
         /// </summary>
-        Palm = 0x0080,
+        Palm = 0x0080
     }
 
     /// <summary>
@@ -469,7 +468,7 @@ namespace osum.Input.Sources
         /// <summary>
         /// The system time was set in the TOUCHINPUT structure. 
         /// </summary>
-        TimeFromSystem = 0x0001,
+        TimeFromSystem = 0x0001
     }
 
     /// <summary>
@@ -585,7 +584,7 @@ namespace osum.Input.Sources
     /// <summary>
     /// Enumeration containing the flags for raw mouse data.
     /// </summary>
-    [Flags()]
+    [Flags]
     public enum RawMouseFlags
         : ushort
     {
@@ -602,7 +601,7 @@ namespace osum.Input.Sources
     /// <summary>
     /// Enumeration containing the button data for raw mouse input.
     /// </summary>
-    [Flags()]
+    [Flags]
     public enum RawMouseButtons
         : ushort
     {
@@ -696,7 +695,7 @@ namespace osum.Input.Sources
     }
 
     /// <summary>Enumeration containing flags for a raw input device.</summary>
-    [Flags()]
+    [Flags]
     public enum RawInputDeviceFlags
     {
         /// <summary>No flags.</summary>

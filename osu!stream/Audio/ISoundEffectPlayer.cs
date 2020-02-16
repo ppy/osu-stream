@@ -1,12 +1,7 @@
 using System;
-using OpenTK.Audio;
-using OpenTK.Audio.OpenAL;
-using System.Collections.Generic;
 using osum.Support;
-using osum.Audio;
-using System.IO;
 
-namespace osum
+namespace osum.Audio
 {
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
@@ -17,7 +12,7 @@ namespace osum
 
         protected Source[] sourceInfo;
 
-        void CheckUnload()
+        private void CheckUnload()
         {
             foreach (Source s in sourceInfo)
                 if (s.Disposable && !s.Playing)
@@ -121,7 +116,7 @@ namespace osum
             }
         }
 
-        float pitch = 1;
+        private float pitch = 1;
         public virtual float Pitch
         {
             get { return pitch; }
@@ -138,7 +133,7 @@ namespace osum
 
         public bool Reserved;
 
-        protected int bufferId = 0;
+        protected int bufferId;
         public virtual int BufferId
         {
             get { return bufferId; }
@@ -154,7 +149,7 @@ namespace osum
             sourceId = source;
         }
 
-        float volume = 1;
+        private float volume = 1;
         public virtual float Volume
         {
             get { return volume; }
@@ -165,7 +160,7 @@ namespace osum
             }
         }
 
-        bool looping;
+        private bool looping;
         public bool Disposable;
         public virtual bool Looping
         {

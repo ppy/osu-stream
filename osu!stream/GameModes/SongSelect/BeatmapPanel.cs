@@ -1,18 +1,12 @@
 using System;
-using osum.Graphics.Sprites;
-using osum.GameplayElements.Beatmaps;
-using System.IO;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Helpers;
-using System.Text.RegularExpressions;
-using osum.Graphics.Drawables;
-using osum.Graphics.Renderers;
-using osum.Graphics.Skins;
-using osum.Audio;
-using osum.Graphics;
 using osum.GameplayElements;
-using System.Collections.Generic;
+using osum.GameplayElements.Beatmaps;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+
 namespace osum.GameModes.SongSelect
 {
     internal class BeatmapPanel : pSpriteCollection
@@ -25,12 +19,12 @@ namespace osum.GameModes.SongSelect
         internal pText s_TextArtist;
         internal pSprite s_Thumbnail;
 
-        float base_depth = 0.4f;
+        private readonly float base_depth = 0.4f;
 
         internal const int PANEL_HEIGHT = 60;
         public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
-        private pSprite s_Star;
-        private pSprite s_StarBg;
+        private readonly pSprite s_Star;
+        private readonly pSprite s_StarBg;
 
         internal BeatmapPanel(Beatmap beatmap, EventHandler action, int index)
         {
@@ -55,7 +49,7 @@ namespace osum.GameModes.SongSelect
             s_BackingPlate.OnHover += delegate
             {
                 s_BackingPlate.FadeOut(100, 0.01f);
-                s_BackingPlate2.FadeColour(BeatmapPanel.BACKGROUND_COLOUR, 80);
+                s_BackingPlate2.FadeColour(BACKGROUND_COLOUR, 80);
             };
             s_BackingPlate.OnHoverLost += delegate
             {
@@ -107,7 +101,7 @@ namespace osum.GameModes.SongSelect
             if (thumb != null)
                 s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
-                s_Thumbnail = new pSpriteDynamic() { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
+                s_Thumbnail = new pSpriteDynamic { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
                 
             s_Thumbnail.AlphaBlend = false;
             s_Thumbnail.Offset = new Vector2(38.5f, 3.8f);
@@ -224,7 +218,7 @@ namespace osum.GameModes.SongSelect
             }
         }
 
-        List<pDrawable> rankSprites = new List<pDrawable>();
+        private readonly List<pDrawable> rankSprites = new List<pDrawable>();
         public bool NewSection;
 
         private pTexture GetThumbnail()

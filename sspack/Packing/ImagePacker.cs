@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace sspack
+namespace sspack.Packing
 {
 	public class ImagePacker
 	{
@@ -86,8 +86,7 @@ namespace sspack
 			// get the sizes of all the images
 			foreach (var image in files)
 			{
-				Bitmap bitmap = Bitmap.FromFile(image) as Bitmap;
-				if (bitmap == null)
+				if (!(Bitmap.FromFile(image) is Bitmap bitmap))
 					return (int)FailCode.FailedToLoadImage;
 				imageSizes.Add(image, bitmap.Size);
 			}
@@ -292,8 +291,7 @@ namespace sspack
 				foreach (var image in files)
 				{
 					Rectangle location = imagePlacement[image];
-					Bitmap bitmap = Bitmap.FromFile(image) as Bitmap;
-					if (bitmap == null)
+					if (!(Bitmap.FromFile(image) is Bitmap bitmap))
 						return null;
 
 					// copy pixels over to avoid antialiasing or any other side effects of drawing

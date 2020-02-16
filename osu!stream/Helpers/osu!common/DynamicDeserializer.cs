@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public class DynamicDeserializer
     {
@@ -49,7 +49,7 @@ namespace osu_common.Helpers
                 {
                     if (typeName.Contains("System.Collections.Generic") && typeName.Contains("[["))
                     {
-                        string[] splitTyps = typeName.Split(new char[] { '[' });
+                        string[] splitTyps = typeName.Split('[');
 
                         foreach (string typ in splitTyps)
                         {

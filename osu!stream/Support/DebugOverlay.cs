@@ -1,35 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
 using System.Drawing;
-using osum.Helpers;
-using osum.GameModes;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Audio;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.Support
 {
-    static class DebugOverlay
+    internal static class DebugOverlay
     {
 #if FULL_DEBUG
         internal static pText fpsDisplay;
         const int vertical_offset = 40;
 #else
         internal static pSpriteText fpsDisplay;
-        const int vertical_offset = 5;
+        private const int vertical_offset = 5;
 #endif
 
-        const int horizontal_offset = 5;
+        private const int horizontal_offset = 5;
 
         private static double weightedAverageFrameTime;
 
-        static double lastUpdateTime;
-        static bool updateFrame;
+        private static double lastUpdateTime;
+        private static bool updateFrame;
 
-        static internal void Update()
+        internal static void Update()
         {
             if (fpsDisplay == null)
             {

@@ -1,14 +1,9 @@
-using System;
-using osum.Support;
 using osum.GameModes;
-namespace osum
+
+namespace osum.Support
 {
     public class Transition : GameComponent
     {
-        public Transition()
-        {
-        }
-        
         public virtual float CurrentValue
         {
             get { return 0; }

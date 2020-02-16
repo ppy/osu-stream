@@ -1,11 +1,5 @@
-using System;
-using System.Drawing;
-using osu_common.Helpers;
-using Rectangle=System.Drawing.Rectangle;
-using osum.Graphics;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Helpers;
 
 namespace osum.Graphics.Renderers
 {

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using osum.GameModes.Play;
 using osum.GameplayElements.Beatmaps;
-using osum.GameModes;
+using osum.GameplayElements.HitObjects;
 
 namespace osum.GameplayElements
 {
-    class HitObjectManagerPreview : HitObjectManager
+    internal class HitObjectManagerPreview : HitObjectManager
     {
         public HitObjectManagerPreview(Beatmap beatmap)
             : base(beatmap)

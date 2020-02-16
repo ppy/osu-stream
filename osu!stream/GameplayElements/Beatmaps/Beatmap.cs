@@ -1,13 +1,12 @@
 //  Beatmap.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
+
 using System;
-using System.IO;
 using System.Collections.Generic;
-using osum.GameplayElements.Beatmaps;
-using osu_common.Libraries.Osz2;
-using System.Globalization;
-using osu_common.Helpers;
+using System.IO;
+using osum.Helpers;
+
 namespace osum.GameplayElements.Beatmaps
 {
     public partial class Beatmap : IDisposable, IComparable<Beatmap>
@@ -158,7 +157,7 @@ namespace osum.GameplayElements.Beatmaps
 
         #endregion
 
-        BeatmapInfo beatmapInfo;
+        private BeatmapInfo beatmapInfo;
         public BeatmapInfo BeatmapInfo
         {
             get
@@ -249,16 +248,16 @@ namespace osum.GameplayElements.Beatmaps
 
         public int CompareTo(Beatmap other)
         {
-            int comp = this.DifficultyStars.CompareTo(other.DifficultyStars);
+            int comp = DifficultyStars.CompareTo(other.DifficultyStars);
             if (comp == 0)
-                return this.ContainerFilename.CompareTo(other.ContainerFilename);
+                return ContainerFilename.CompareTo(other.ContainerFilename);
             return comp;
         }
 
         #endregion
     }
 
-    class BeatmapPackComparer : IComparer<Beatmap>
+    internal class BeatmapPackComparer : IComparer<Beatmap>
     {
 
         public int Compare(Beatmap a, Beatmap b)

@@ -1,12 +1,11 @@
 using System;
+using System.IO;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
-using System.Collections.Generic;
-using osum.Support;
-using osum.Audio;
-using System.IO;
+using osum.AssetManager;
+using osum.Helpers.Audio;
 
-namespace osum
+namespace osum.Audio
 {
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
@@ -16,7 +15,7 @@ namespace osum
         /// <summary>
         /// Current OpenAL context.
         /// </summary>
-        AudioContext context;
+        private AudioContext context;
 
         public SoundEffectPlayerOpenAL()
         {
@@ -57,7 +56,7 @@ namespace osum
             GameBase.Scheduler.Add(CheckUnload, 1000);
         }
 
-        void CheckUnload()
+        private void CheckUnload()
         {
             foreach (Source s in sourceInfo)
                 if (s.Disposable && !s.Playing)

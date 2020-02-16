@@ -1,29 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Drawables;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Graphics.Primitives;
-using osum.Helpers;
 using osum.Audio;
-using osum.Graphics.Skins;
-using osum.Graphics;
 using osum.GameModes.Store;
+using osum.Graphics;
+using osum.Graphics.Primitives;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
-namespace osum.GameModes
+namespace osum.GameModes.MainMenu
 {
-    class MenuBackground : SpriteManagerDraggable
+    internal class MenuBackground : SpriteManagerDraggable
     {
-        Vector2 centre = new Vector2(320, 200);
-        private pQuad yellow;
-        private pQuad orange;
-        private pQuad blue;
-        private pQuad pink;
+        private readonly Vector2 centre = new Vector2(320, 200);
+        private readonly pQuad yellow;
+        private readonly pQuad orange;
+        private readonly pQuad blue;
+        private readonly pQuad pink;
 
-        Source whoosh;
+        private Source whoosh;
 
         internal static MenuBackground Instance;
 
@@ -68,7 +64,7 @@ namespace osum.GameModes
             rect.Field = FieldTypes.StandardSnapCentre;
             rect.AlphaBlend = false;
             rect.Origin = OriginTypes.Centre;
-            rect.Colours = new Color4[] {
+            rect.Colours = new[] {
                 new Color4(40,43,52,255),
                 new Color4(38,40,48,255),
                 new Color4(41,43,51,255),
@@ -198,15 +194,15 @@ namespace osum.GameModes
             textSprites.Add(text);
         }
 
-        List<pSprite> textSprites = new List<pSprite>();
+        private readonly List<pSprite> textSprites = new List<pSprite>();
 
-        void Option_OnHoverLost(object sender, EventArgs e)
+        private void Option_OnHoverLost(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
             d.FadeColour((Color4)d.Tag, 600);
         }
 
-        void Option_OnHover(object sender, EventArgs e)
+        private void Option_OnHover(object sender, EventArgs e)
         {
             pDrawable d = sender as pDrawable;
             d.FadeColour(Color4.White, 150);
@@ -225,7 +221,7 @@ namespace osum.GameModes
             base.Dispose();
         }
 
-        void Option_OnClick(object sender, EventArgs e)
+        private void Option_OnClick(object sender, EventArgs e)
         {
             if (!IsAwesome)
                 return;
@@ -235,8 +231,8 @@ namespace osum.GameModes
             d.Colour = Color4.White;
             d.FadeColour((Color4)d.Tag, 600);
 
-            ScaleTo(1.3f, 600, EasingTypes.None);
-            MoveTo(new Vector2(-75, 14), 600, EasingTypes.None);
+            ScaleTo(1.3f, 600);
+            MoveTo(new Vector2(-75, 14), 600);
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
@@ -252,14 +248,14 @@ namespace osum.GameModes
             }
         }
 
-        int awesomeStartTime = -1;
-        private Line rectangleLineLeft;
+        private int awesomeStartTime = -1;
+        private readonly Line rectangleLineLeft;
         private TransformationBounce awesomeTransformation;
-        private Line rectangleLineRight;
-        const int duration = 3000;
+        private readonly Line rectangleLineRight;
+        private const int duration = 3000;
 
-        const float rotation_offset = 0.35f;
-        const float scale_offset = 4.2f;
+        private const float rotation_offset = 0.35f;
+        private const float scale_offset = 4.2f;
 
         internal void BeAwesome()
         {
@@ -285,7 +281,7 @@ namespace osum.GameModes
 
         internal static void UpdateStoreNotify()
         {
-            MenuBackground mb = MenuBackground.Instance;
+            MenuBackground mb = Instance;
             if (mb == null || mb.awesomeStartTime <= 0)
                 return;
 
@@ -293,10 +289,10 @@ namespace osum.GameModes
                 mb.storeNew.Bypass = false;
         }
 
-        bool first = true;
-        private pQuad rectBorder;
-        private pQuad rect;
-        private pSprite storeNew;
+        private bool first = true;
+        private readonly pQuad rectBorder;
+        private readonly pQuad rect;
+        private readonly pSprite storeNew;
 
         public override void Update()
         {

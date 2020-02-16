@@ -1,10 +1,9 @@
 ﻿//  Beatmap.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
-using System;
-using System.IO;
+
 using System.Collections.Generic;
-using osum.GameplayElements.Beatmaps;
+
 namespace osum.GameplayElements.Beatmaps
 {
     public partial class Beatmap
@@ -91,7 +90,7 @@ namespace osum.GameplayElements.Beatmaps
             ControlPoint pt = controlPointAt(time);
 
             if (pt == null) return 1.0f;
-            else return pt.bpmMultiplier;
+            return pt.bpmMultiplier;
         }
 
         public ControlPoint controlPointAt(double time)

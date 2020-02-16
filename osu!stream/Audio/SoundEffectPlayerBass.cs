@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using osum.Support;
-using osum.Audio;
-using System.IO;
+using osum.AssetManager;
 using Un4seen.Bass;
 
-namespace osum
+namespace osum.Audio
 {
     /// <summary>
     /// Play short-lived sound effects, and handle caching.
@@ -32,7 +28,7 @@ namespace osum
             GameBase.Scheduler.Add(CheckUnload, 1000);
         }
 
-        void CheckUnload()
+        private void CheckUnload()
         {
             foreach (Source s in sourceInfo)
                 if (s.Disposable && !s.Playing)
@@ -84,7 +80,7 @@ namespace osum
             get { return Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING; }
         }
 
-        float audioFrequency = -1;
+        private float audioFrequency = -1;
 
         public override float Pitch
         {

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Threading;
+using osum.AssetManager;
 
-namespace osum.Resources
+namespace osum.Localisation
 {
     public static class LocalisationManager
     {
-        private static Dictionary<OsuString, string> strings = new Dictionary<OsuString, string>();
+        private static readonly Dictionary<OsuString, string> strings = new Dictionary<OsuString, string>();
         private static bool initialised;
 
         public static string GetString(OsuString stringType)
@@ -24,7 +24,7 @@ namespace osum.Resources
             initialised = true;
 
             readResources("en");
-            string regionalSetting = System.Threading.Thread.CurrentThread.CurrentUICulture.ToString();
+            string regionalSetting = Thread.CurrentThread.CurrentUICulture.ToString();
 
             if (regionalSetting == "en") return;
 

@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
-using osum.GameplayElements.Beatmaps;
-using osum.GameplayElements;
-using osu_common.Libraries.Osz2;
-using System.Globalization;
-using osum.GameModes;
-using osum.Helpers;
-using osum.GameplayElements.Scoring;
-using osum;
-using System.Threading;
-using System.Diagnostics;
-using System.Reflection;
-using osum.Support;
+using OpenTK;
 using osum.Audio;
 using osum.GameModes.Play;
-using OpenTK;
+using osum.GameModes.Play.Components;
+using osum.GameplayElements;
+using osum.GameplayElements.Beatmaps;
+using osum.GameplayElements.HitObjects;
 using osum.GameplayElements.HitObjects.Osu;
+using osum.GameplayElements.Scoring;
+using osum.Helpers;
+using osum.Support;
 
-namespace osum
+namespace BeatmapCombinator
 {
     public class BeatmapDifficulty : Beatmap
     {
@@ -81,10 +77,10 @@ namespace osum
                         Process(d, true, true, true, true);
 
                         //.osf
-                        Process(d, false, true, true, false);
+                        Process(d, false, true, true);
 
                         //.osz
-                        Process(d, false, true, false, false);
+                        Process(d);
                     }
                 }
                 else
@@ -99,7 +95,7 @@ namespace osum
             }
             catch (Exception e)
             {
-                Console.Write("An error occurred during combination:\n" + e.ToString() + "\n");
+                Console.Write("An error occurred during combination:\n" + e + "\n");
                 Console.ReadLine();
             }
         }
@@ -360,7 +356,7 @@ namespace osum
                                         builder.Append(split[5]); // end time
                                     }
 
-                                    bd.HitObjectLines.Add(new HitObjectLine() { StringRepresentation = builder.ToString(), Time = Int32.Parse(line.Split(',')[2]) });
+                                    bd.HitObjectLines.Add(new HitObjectLine { StringRepresentation = builder.ToString(), Time = Int32.Parse(line.Split(',')[2]) });
                                     continue; //skip direct output
                                 }
                             case "TimingPoints":
@@ -690,10 +686,10 @@ namespace osum
 
             if (b1 || b2)
             {
-                result += "|" + cp.volume.ToString();
+                result += "|" + cp.volume;
                 if (b2)
                 {
-                    result += "|" + ((int)_ssa).ToString();
+                    result += "|" + ((int)_ssa);
                 }
             }
             return result;

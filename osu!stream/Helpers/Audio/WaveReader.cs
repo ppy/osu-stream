@@ -9,36 +9,32 @@
 using System;
 using System.IO;
 
-using OpenTK.Audio;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-
-namespace OpenTK.Audio
+namespace osum.Helpers.Audio
 {
     internal sealed class WaveReader : AudioReader
     {
-        SoundData decoded_data;
+        private SoundData decoded_data;
 
         //RIFF header
-        string signature;
-        int riff_chunck_size;
-        string format;
+        private string signature;
+        private int riff_chunck_size;
+        private string format;
             
         //WAVE header
-        string format_signature;
-        int format_chunk_size;
-        short audio_format;
-        short channels;
-        int sample_rate;
-        int byte_rate;
-        short block_align;
-        short bits_per_sample;
+        private string format_signature;
+        private int format_chunk_size;
+        private short audio_format;
+        private short channels;
+        private int sample_rate;
+        private int byte_rate;
+        private short block_align;
+        private short bits_per_sample;
             
         //DATA header
-        string data_signature;
-        int data_chunk_size;
+        private string data_signature;
+        private int data_chunk_size;
 
-        BinaryReader reader;
+        private readonly BinaryReader reader;
 
         internal WaveReader() { }
 
@@ -54,7 +50,7 @@ namespace OpenTK.Audio
             if (!s.CanRead) throw new ArgumentException("Cannot read from specified Stream.");
 
             reader = new BinaryReader(s);
-            this.Stream = s;
+            Stream = s;
         }
 
 #if false
@@ -148,7 +144,7 @@ namespace OpenTK.Audio
         public override bool Supports(Stream s)
         {
             BinaryReader reader = new BinaryReader(s);
-            return this.ReadHeaders(reader);
+            return ReadHeaders(reader);
         }
 
         #endregion
@@ -229,7 +225,7 @@ namespace OpenTK.Audio
         #region --- Private Members ---
 
         // Tries to read the WAVE/RIFF headers, and returns true if they are valid.
-        bool ReadHeaders(BinaryReader reader)
+        private bool ReadHeaders(BinaryReader reader)
         {
             // Don't explicitly call reader.Close()/.Dispose(), as that will close the inner stream.
             // There's no such danger if the BinaryReader isn't explicitly destroyed.

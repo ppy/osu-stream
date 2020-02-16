@@ -1,10 +1,9 @@
 //  HitFactoryOsu.cs
 //  Author: Dean Herbert <pe@ppy.sh>
 //  Copyright (c) 2010 2010 Dean Herbert
+
 using System.Collections.Generic;
-using osum.GameplayElements;
 using OpenTK;
-using osum.GameplayElements.HitObjects;
 using osum.GameplayElements.Beatmaps;
 
 namespace osum.GameplayElements.HitObjects.Osu

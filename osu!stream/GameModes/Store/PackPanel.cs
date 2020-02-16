@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using OpenTK.Graphics;
-using osum.Graphics.Drawables;
-using OpenTK;
 using System.IO;
 using System.Text.RegularExpressions;
-using osum.Graphics.Renderers;
-using osum.Graphics.Skins;
-using osum.Helpers;
+using OpenTK;
+using OpenTK.Graphics;
 using osum.Audio;
-using osu_common.Libraries.NetLib;
 using osum.GameModes.SongSelect;
-using osum.Resources;
 using osum.GameplayElements;
 using osum.GameplayElements.Beatmaps;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Libraries.NetLib;
+using osum.Localisation;
 
 namespace osum.GameModes.Store
 {
@@ -31,10 +27,10 @@ namespace osum.GameModes.Store
         internal pSprite s_PriceBackground;
         internal pSprite s_Thumbnail;
 
-        float base_depth = 0.6f;
+        private readonly float base_depth = 0.6f;
 
-        static Color4 colourHover = new Color4(28, 139, 242, 255);
-        static Color4 colourVideoPreviewNormal = new Color4(255, 255, 255, 40);
+        private static readonly Color4 colourHover = new Color4(28, 139, 242, 255);
+        private static readonly Color4 colourVideoPreviewNormal = new Color4(255, 255, 255, 40);
 
         internal const int PANEL_HEIGHT = 60;
         internal const int ITEM_HEIGHT = 40;
@@ -44,7 +40,7 @@ namespace osum.GameModes.Store
 
         internal List<pDrawable> PackItemSprites = new List<pDrawable>();
 
-        bool expanded;
+        private bool expanded;
         internal bool Expanded
         {
             get { return expanded; }
@@ -92,23 +88,23 @@ namespace osum.GameModes.Store
             get { return Expanded ? ExpandedHeight : CondensedHeight; }
         }
 
-        List<pDrawable> songPreviewBacks = new List<pDrawable>();
-        List<pSprite> songPreviewButtons = new List<pSprite>();
+        private readonly List<pDrawable> songPreviewBacks = new List<pDrawable>();
+        private readonly List<pSprite> songPreviewButtons = new List<pSprite>();
         internal List<PackItem> PackItems = new List<PackItem>();
 
-        bool isPreviewing;
-        DataNetRequest previewRequest;
+        private bool isPreviewing;
+        private DataNetRequest previewRequest;
 
-        pSprite s_LoadingPrice;
+        private readonly pSprite s_LoadingPrice;
 
         internal int BeatmapCount { get { return PackItems.Count; } }
 
-        int currentDownload = 0;
+        private int currentDownload;
 
 #if iOS
         const string PREFERRED_FORMAT = "m4a";
 #else
-        const string PREFERRED_FORMAT = "mp3";
+        private const string PREFERRED_FORMAT = "mp3";
 #endif
 
         public string PackId;
@@ -221,7 +217,7 @@ namespace osum.GameModes.Store
             IsFree = isFree;
         }
 
-        void onPurchase(object sender, EventArgs e)
+        private void onPurchase(object sender, EventArgs e)
         {
             StoreMode.PurchaseInitiated(this);
         }
@@ -250,7 +246,7 @@ namespace osum.GameModes.Store
             });
         }
 
-        void startNextDownload()
+        private void startNextDownload()
         {
             Downloading = true;
 
@@ -381,7 +377,7 @@ namespace osum.GameModes.Store
             back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
             back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 0), 200); };
 
-            back.OnClick += delegate(object sender, EventArgs e)
+            back.OnClick += delegate
             {
                 bool isPausing = back.TagNumeric == 1;
 
@@ -389,7 +385,7 @@ namespace osum.GameModes.Store
 
                 if (isPausing) return;
 
-                AudioEngine.Music.Stop(true);
+                AudioEngine.Music.Stop();
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
@@ -422,7 +418,7 @@ namespace osum.GameModes.Store
                 };
                 NetManager.AddRequest(previewRequest);
 
-                back.FadeColour(colourHover, 0, false);
+                back.FadeColour(colourHover, 0);
                 back.Transform(new TransformationV(new Vector2(back.Scale.X, 0), back.Scale, Clock.ModeTime, Clock.ModeTime + 200, EasingTypes.In) { Type = TransformationType.VectorScale });
                 back.TagNumeric = 1;
 

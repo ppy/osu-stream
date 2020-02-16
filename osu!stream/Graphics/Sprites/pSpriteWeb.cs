@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using osum.Helpers;
-using osum.Graphics.Skins;
 using OpenTK;
-using osu_common.Libraries.NetLib;
+using osum.Libraries.NetLib;
 
 namespace osum.Graphics.Sprites
 {
-    class pSpriteWeb : pSprite
+    internal class pSpriteWeb : pSprite
     {
-        string Url;
+        private readonly string Url;
 
         public pSpriteWeb(string url)
             : base(null, Vector2.Zero)
@@ -38,8 +34,8 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        bool failedLoad;
-        bool isLoading;
+        private bool failedLoad;
+        private bool isLoading;
 
         private void LoadTexture()
         {

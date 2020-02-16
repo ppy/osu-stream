@@ -4,13 +4,13 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public static class CryptoHelper
     {
-        private static MD5 md5Hasher = MD5.Create();
-        private static UTF8Encoding utf8Encoding = new UTF8Encoding();
-        private static NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+        private static readonly MD5 md5Hasher = MD5.Create();
+        private static readonly UTF8Encoding utf8Encoding = new UTF8Encoding();
+        private static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
         public static string GetMd5(String path)
         {

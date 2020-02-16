@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using osu_common.Bancho;
-using osu_common.Helpers;
 using System.Threading;
 
-namespace osu_common.Libraries.Osz2
+namespace osum.Helpers
 {
     public class MapPackage : IDisposable
     {
@@ -28,10 +26,10 @@ namespace osu_common.Libraries.Osz2
 
         private static readonly byte[] knownPlain = new byte[64];
 
-        private string fFilename;
+        private readonly string fFilename;
         private Dictionary<string, FileInfo> fFiles;
         private Dictionary<string, byte[]> fFilesToAdd;
-        private long fFilesAddedBytes = 0;
+        private long fFilesAddedBytes;
         private byte[] fIV;
 
         public byte[] hash_meta { get; private set; }
@@ -53,7 +51,7 @@ namespace osu_common.Libraries.Osz2
         private Stream fHandle;
 
         private bool fClosed;
-        private bool fSavable = true;
+        private readonly bool fSavable = true;
         private bool fFiledataChanged;
         private bool fMetadataChanged;
         private bool fNotOnDisk;
@@ -78,7 +76,7 @@ namespace osu_common.Libraries.Osz2
             Dispose(false);
         }
 
-        private long brOffset = 0; //used to store binaryReader position used to do postprocessing later.
+        private long brOffset; //used to store binaryReader position used to do postprocessing later.
 
         /// <summary>
         ///
@@ -1427,7 +1425,7 @@ namespace osu_common.Libraries.Osz2
             fClosed = true;
         }
 
-        object packageLock = new object();
+        private readonly object packageLock = new object();
 
         public bool AcquireLock(int timeOut, bool releaseFileLock)
         {
@@ -1495,13 +1493,13 @@ namespace osu_common.Libraries.Osz2
             public int Compare(string x, string y)
             {
                 //ms std implementation sorts items with themself
-                if (Object.ReferenceEquals(x, y))
+                if (ReferenceEquals(x, y))
                     return 0;
 
-                if (MapPackage.IsVideoFile(x))
+                if (IsVideoFile(x))
                     return 1;
 
-                if (MapPackage.IsVideoFile(y))
+                if (IsVideoFile(y))
                     return -1;
 
                 return x.CompareTo(y);

@@ -1,7 +1,4 @@
-﻿using System.IO;
-using osu_common.Helpers;
-
-namespace osu_common.Bancho
+﻿namespace osum.Helpers
 {
     public interface bSerializable
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using OpenTK;
 
 namespace osum.Graphics.Sprites
@@ -12,15 +9,15 @@ namespace osum.Graphics.Sprites
 
         internal pSpriteCollection()
         {
-            this.Sprites = new List<pDrawable>();
+            Sprites = new List<pDrawable>();
         }
 
         internal pSpriteCollection(IEnumerable<pDrawable> sprites)
         {
-            this.Sprites = new List<pDrawable>(sprites);
+            Sprites = new List<pDrawable>(sprites);
         }
 
-        bool visible = true;
+        private bool visible = true;
         internal bool Visible
         {
             get { return visible; }

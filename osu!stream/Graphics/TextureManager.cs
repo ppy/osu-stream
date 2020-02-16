@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using osum.Support;
-using osum.Graphics.Sprites;
-using OpenTK;
-
-#if iOS
+﻿#if iOS
 using OpenTK.Graphics.ES11;
 using Foundation;
 using ObjCRuntime;
@@ -34,44 +25,34 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 using osu_common.Helpers;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using System.Drawing;
-using osu_common.Helpers;
 #endif
+using System;
+using System.Collections.Generic;
+using OpenTK.Graphics;
+using osum.AssetManager;
+using osum.Helpers;
 
 
-namespace osum.Graphics.Skins
+namespace osum.Graphics
 {
-    internal partial class SpriteSheetTexture
-    {
-        internal string SheetName;
-        internal int X;
-        internal int Y;
-        internal int Width;
-        internal int Height;
-
-
-        public SpriteSheetTexture(string name, int x, int y, int width, int height)
-        {
-            this.SheetName = name;
-            this.X = x;
-            this.Y = y;
-            this.Width = width;
-            this.Height = height;
-        }
-    }
-
     /// <summary>
     /// Handle the loading of textures from various sources.
     /// Caching, reuse, unloading and everything else.
     /// </summary>
     internal static partial class TextureManager
     {
-        static Dictionary<OsuTexture, SpriteSheetTexture> textureLocations = new Dictionary<OsuTexture, SpriteSheetTexture>();
+        internal static Color4[] DefaultColours = {
+            new Color4(237, 0, 140, 255),
+            new Color4(0, 192, 245, 255),
+            new Color4(255, 102, 0, 255),
+            new Color4(254, 242, 0, 255)
+        };
+
+        private static readonly Dictionary<OsuTexture, SpriteSheetTexture> textureLocations = new Dictionary<OsuTexture, SpriteSheetTexture>();
 
         public static void Initialize()
         {
@@ -79,16 +60,12 @@ namespace osum.Graphics.Skins
 
             AnimationCache.Clear();
 
-            GameBase.OnScreenLayoutChanged += delegate
-            {
-                DisposeDisposable();
-            };
+            GameBase.OnScreenLayoutChanged += delegate { DisposeDisposable(); };
         }
 
         public static void Update()
         {
 #if FULLER_DEBUG
-
             int countLoaded = 0;
             foreach (TextureGl t in SpriteTextureCache.Values)
                 if (t.Id >= 0) countLoaded++;
@@ -126,7 +103,7 @@ namespace osum.Graphics.Skins
         {
             DisposeDisposable();
 
-            var purgable = new List<TextureGl> (SpriteTextureCache.Values);
+            var purgable = new List<TextureGl>(SpriteTextureCache.Values);
 
             foreach (TextureGl p in purgable)
                 if (!p.usedSinceLastModeChange && p.Loaded)
@@ -136,6 +113,7 @@ namespace osum.Graphics.Skins
 #endif
                     p.Delete();
                 }
+
             AnimationCache.Clear();
         }
 
@@ -198,11 +176,9 @@ namespace osum.Graphics.Skins
 
                 return tex;
             }
-            else
-            {
-                //fallback to separate files (or don't!)
-                return null;
-            }
+
+            //fallback to separate files (or don't!)
+            return null;
         }
 
         internal static pTexture Load(string name)
@@ -250,7 +226,7 @@ namespace osum.Graphics.Skins
             textures = new pTexture[count];
 
             for (int i = 0; i < count; i++)
-                textures[i] = Load((OsuTexture)(osuTexture + i));
+                textures[i] = Load(osuTexture + i);
 
             AnimationCache.Add(name, textures);
             return textures;
@@ -272,7 +248,7 @@ namespace osum.Graphics.Skins
                 List<pTexture> list = new List<pTexture>();
                 list.Add(texture);
 
-                for (int i = 1; true; i++)
+                for (int i = 1;; i++)
                 {
                     texture = Load(name + "-" + i);
 
@@ -300,15 +276,13 @@ namespace osum.Graphics.Skins
             return null;
         }
 
-        static pList<pTexture> availableSurfaces;
+        private static pList<pTexture> availableSurfaces;
 
-        static bool requireSurfaces;
+        private static bool requireSurfaces;
+
         internal static bool RequireSurfaces
         {
-            get
-            {
-                return requireSurfaces;
-            }
+            get { return requireSurfaces; }
 
             set
             {
@@ -330,7 +304,7 @@ namespace osum.Graphics.Skins
             }
         }
 
-        class widthComp : IComparer<pTexture>
+        private class widthComp : IComparer<pTexture>
         {
             public int Compare(pTexture x, pTexture y)
             {

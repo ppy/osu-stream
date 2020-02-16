@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Helpers;
-using osum.Graphics.Skins;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.UI
 {
-    class SliderControl : SpriteManager
+    internal class SliderControl : SpriteManager
     {
-        private FloatDelegate action;
-        private pSprite BackingPlate;
+        private readonly FloatDelegate action;
+        private readonly pSprite BackingPlate;
 
         public SliderControl(string text, float initialValue, Vector2 position, FloatDelegate onValueChanged)
         {
@@ -47,16 +46,16 @@ namespace osum.UI
             UpdateValue(initialValue);
         }
 
-        bool wasClicked;
+        private bool wasClicked;
         internal pText Text;
-        private pSprite FrontPlate;
+        private readonly pSprite FrontPlate;
 
-        void SliderControl_OnClick(object sender, EventArgs e)
+        private void SliderControl_OnClick(object sender, EventArgs e)
         {
             wasClicked = true;
         }
 
-        TrackingPoint trackingPoint;
+        private TrackingPoint trackingPoint;
 
         internal override void HandleInputManagerOnDown(InputSource source, TrackingPoint trackingPoint)
         {

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Support;
-using osum.Helpers;
 using osum.GameplayElements.Beatmaps;
+using osum.Helpers;
 
 namespace osum.Audio
 {
-    enum OsuSamples
+    internal enum OsuSamples
     {
         HitNormal,
         HitWhistle,
@@ -45,8 +42,7 @@ namespace osum.Audio
 
     public static class AudioEngine
     {
-        static Dictionary<OsuSamples, int>[] loadedSamples = new Dictionary<OsuSamples, int>[]
-        {
+        private static readonly Dictionary<OsuSamples, int>[] loadedSamples = {
             new Dictionary<OsuSamples, int>(), // none
             new Dictionary<OsuSamples, int>(), // normal
             new Dictionary<OsuSamples, int>(), // soft
@@ -79,15 +75,15 @@ namespace osum.Audio
                 }
             }
 
-            Effect.Volume = GameBase.Config.GetValue<int>("VolumeEffect", 90) / 100f;
-            Music.MaxVolume = GameBase.Config.GetValue<int>("VolumeMusic", 90) / 100f;
+            Effect.Volume = GameBase.Config.GetValue("VolumeEffect", 90) / 100f;
+            Music.MaxVolume = GameBase.Config.GetValue("VolumeMusic", 90) / 100f;
         }
 
-        static Dictionary<int, int> lastPlayedTimes = new Dictionary<int, int>();
+        private static readonly Dictionary<int, int> lastPlayedTimes = new Dictionary<int, int>();
 
         internal static Source PlaySample(OsuSamples sample, SampleSet set = SampleSet.Soft, float volume = 1)
         {
-            if (AudioEngine.Effect == null)
+            if (Effect == null)
                 return null;
 
             int buffer = LoadSample(sample, set);
@@ -99,7 +95,7 @@ namespace osum.Audio
                     return null;
             lastPlayedTimes[(int)set + ((int)sample << 8)] = Clock.Time;
 
-            Source src = AudioEngine.Effect.LoadBuffer(buffer, volume);
+            Source src = Effect.LoadBuffer(buffer, volume);
 
             if (src == null) return null;
 
@@ -143,8 +139,8 @@ namespace osum.Audio
 
                 bool oneShot = sample > OsuSamples.PRELOAD_END;
 
-                if (AudioEngine.Effect != null)
-                    buffer = AudioEngine.Effect.Load("Skins/Default/" + setName + sampleName + ".wav");
+                if (Effect != null)
+                    buffer = Effect.Load("Skins/Default/" + setName + sampleName + ".wav");
                 if (!oneShot)
                     loadedSamples[(int)ss].Add(sample, buffer);
 

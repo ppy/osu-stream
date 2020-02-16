@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
+using osum.Graphics;
 using osum.Graphics.Renderers;
-using osum.Resources;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
 
 namespace osum.GameModes.Play.Components
 {
-    class PauseMenu : GameComponent
+    internal class PauseMenu : GameComponent
     {
-        pText menuText;
+        private pText menuText;
 
         private bool menuDisplayed;
-        bool isPaused;
+        private bool isPaused;
         internal bool MenuDisplayed
         {
             get
@@ -134,13 +132,13 @@ namespace osum.GameModes.Play.Components
         private pSprite buttonRestart;
         private pSprite buttonQuit;
 
-        TrackingPoint validPoint;
+        private TrackingPoint validPoint;
         private float validPointOffset;
 
         private pSprite background;
 
-        const float offscreen_y = -160;
-        private Color4 colourInactive = new Color4(200, 200, 200, 255);
+        private const float offscreen_y = -160;
+        private readonly Color4 colourInactive = new Color4(200, 200, 200, 255);
         private pSprite pullnotice;
         internal bool FromBottom;
 
@@ -199,19 +197,19 @@ namespace osum.GameModes.Play.Components
             spriteManager.Add(buttonQuit);
         }
 
-        void HandleButtonHover(object sender, EventArgs e)
+        private void HandleButtonHover(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
             s.FadeColour(Color4.White, 100);
         }
 
-        void HandleButtonHoverLost(object sender, EventArgs e)
+        private void HandleButtonHoverLost(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
             s.FadeColour(colourInactive, 100);
         }
 
-        void ButtonQuit_OnClick(object sender, EventArgs e)
+        private void ButtonQuit_OnClick(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
             s.AdditiveFlash(500, 1);
@@ -220,7 +218,7 @@ namespace osum.GameModes.Play.Components
             AudioEngine.PlaySample(OsuSamples.MenuBack);
         }
 
-        void ButtonRestart_OnClick(object sender, EventArgs e)
+        private void ButtonRestart_OnClick(object sender, EventArgs e)
         {
             pSprite s = sender as pSprite;
             s.AdditiveFlash(500, 1);
@@ -229,7 +227,7 @@ namespace osum.GameModes.Play.Components
             AudioEngine.PlaySample(OsuSamples.MenuHit);
         }
 
-        void ButtonContinue_OnClick(object sender, EventArgs e)
+        private void ButtonContinue_OnClick(object sender, EventArgs e)
         {
             MenuDisplayed = false;
             AudioEngine.PlaySample(OsuSamples.MenuHit);
@@ -272,7 +270,7 @@ namespace osum.GameModes.Play.Components
             }
         }
 
-        float getPos(TrackingPoint point)
+        private float getPos(TrackingPoint point)
         {
             return FromBottom ? GameBase.BaseSizeFixedWidth.Y - point.BasePosition.Y : point.BasePosition.Y;
         }

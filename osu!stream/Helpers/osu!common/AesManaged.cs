@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Permissions;
-using System.Text;
-using osu_common.Libraries;
 
-namespace osu_common.Libraries
+namespace osum.Helpers
 {
     [HostProtection(SecurityAction.LinkDemand, MayLeakOnAbort = true)]
     public sealed class AesManaged : Aes
     {
         // Fields
-        private RijndaelManaged m_rijndael;
+        private readonly RijndaelManaged m_rijndael;
 
         // Methods
         public AesManaged()
@@ -22,14 +19,14 @@ namespace osu_common.Libraries
                 throw new InvalidOperationException(SR.GetString("Cryptography_NonCompliantFIPSAlgorithm"));
             }
             */
-            this.m_rijndael = new RijndaelManaged();
-            this.m_rijndael.BlockSize = this.BlockSize;
-            this.m_rijndael.KeySize = this.KeySize;
+            m_rijndael = new RijndaelManaged();
+            m_rijndael.BlockSize = BlockSize;
+            m_rijndael.KeySize = KeySize;
         }
 
         public override ICryptoTransform CreateDecryptor()
         {
-            return this.m_rijndael.CreateDecryptor();
+            return m_rijndael.CreateDecryptor();
         }
 
         public override ICryptoTransform CreateDecryptor(byte[] key, byte[] iv)
@@ -38,20 +35,20 @@ namespace osu_common.Libraries
             {
                 throw new ArgumentNullException("key");
             }
-            if (!base.ValidKeySize(key.Length * 8))
+            if (!ValidKeySize(key.Length * 8))
             {
                 throw new ArgumentException("Invalid key size", "key");
             }
-            if ((iv != null) && ((iv.Length * 8) != base.BlockSizeValue))
+            if ((iv != null) && ((iv.Length * 8) != BlockSizeValue))
             {
                 throw new ArgumentException("Invalid IV size", "iv");
             }
-            return this.m_rijndael.CreateDecryptor(key, iv);
+            return m_rijndael.CreateDecryptor(key, iv);
         }
 
         public override ICryptoTransform CreateEncryptor()
         {
-            return this.m_rijndael.CreateEncryptor();
+            return m_rijndael.CreateEncryptor();
         }
 
         public override ICryptoTransform CreateEncryptor(byte[] key, byte[] iv)
@@ -60,15 +57,15 @@ namespace osu_common.Libraries
             {
                 throw new ArgumentNullException("key");
             }
-            if (!base.ValidKeySize(key.Length * 8))
+            if (!ValidKeySize(key.Length * 8))
             {
                 throw new ArgumentException("Invalid key size", "key");
             }
-            if ((iv != null) && ((iv.Length * 8) != base.BlockSizeValue))
+            if ((iv != null) && ((iv.Length * 8) != BlockSizeValue))
             {
                 throw new ArgumentException("Invalid IV size", "iv");
             }
-            return this.m_rijndael.CreateEncryptor(key, iv);
+            return m_rijndael.CreateEncryptor(key, iv);
         }
 
         protected override void Dispose(bool disposing)
@@ -76,18 +73,18 @@ namespace osu_common.Libraries
             base.Dispose(disposing);
             if (disposing)
             {
-                ((IDisposable)this.m_rijndael).Dispose();
+                ((IDisposable)m_rijndael).Dispose();
             }
         }
 
         public override void GenerateIV()
         {
-            this.m_rijndael.GenerateIV();
+            m_rijndael.GenerateIV();
         }
 
         public override void GenerateKey()
         {
-            this.m_rijndael.GenerateKey();
+            m_rijndael.GenerateKey();
         }
 
         // Properties
@@ -95,11 +92,11 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.FeedbackSize;
+                return m_rijndael.FeedbackSize;
             }
             set
             {
-                this.m_rijndael.FeedbackSize = value;
+                m_rijndael.FeedbackSize = value;
             }
         }
 
@@ -107,11 +104,11 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.IV;
+                return m_rijndael.IV;
             }
             set
             {
-                this.m_rijndael.IV = value;
+                m_rijndael.IV = value;
             }
         }
 
@@ -119,11 +116,11 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.Key;
+                return m_rijndael.Key;
             }
             set
             {
-                this.m_rijndael.Key = value;
+                m_rijndael.Key = value;
             }
         }
 
@@ -131,11 +128,11 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.KeySize;
+                return m_rijndael.KeySize;
             }
             set
             {
-                this.m_rijndael.KeySize = value;
+                m_rijndael.KeySize = value;
             }
         }
 
@@ -143,7 +140,7 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.Mode;
+                return m_rijndael.Mode;
             }
             set
             {
@@ -151,7 +148,7 @@ namespace osu_common.Libraries
                 {
                     throw new CryptographicException("Invalid cipher mode");
                 }
-                this.m_rijndael.Mode = value;
+                m_rijndael.Mode = value;
             }
         }
 
@@ -159,11 +156,11 @@ namespace osu_common.Libraries
         {
             get
             {
-                return this.m_rijndael.Padding;
+                return m_rijndael.Padding;
             }
             set
             {
-                this.m_rijndael.Padding = value;
+                m_rijndael.Padding = value;
             }
         }
     }

@@ -1,9 +1,8 @@
 ﻿//TODO: change this class to just be a static. singleton is pointless.
 
-using System;
 using System.IO;
 
-namespace osum
+namespace osum.AssetManager
 {
 
     /// <summary>

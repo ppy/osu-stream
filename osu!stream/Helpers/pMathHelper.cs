@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
 using System.Drawing;
-using osum.Graphics.Primitives;
+using OpenTK;
 
 namespace osum.Helpers
 {
@@ -30,7 +27,7 @@ namespace osum.Helpers
             float num2 = value1.X - value2.X;
             float num = value1.Y - value2.Y;
             float num3 = (num2 * num2) + (num * num);
-            return (float)Math.Sqrt((double)num3);
+            return (float)Math.Sqrt(num3);
         }
 
         public static float DistanceSquared(Vector2 value1, Vector2 value2)
@@ -45,7 +42,7 @@ namespace osum.Helpers
             return new Vector2(point.X, point.Y);
         }
 
-        private static List<Vector2> working = new List<Vector2>();
+        private static readonly List<Vector2> working = new List<Vector2>();
 
         internal static Vector2 BezierPoint(ref List<Vector2> input, float t)
         {

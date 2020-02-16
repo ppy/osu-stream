@@ -28,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace sspack
+namespace sspack.Packing
 {
 	/// <summary>Rectangle packer using an algorithm by Javier Arevalo</summary>
 	/// <remarks>

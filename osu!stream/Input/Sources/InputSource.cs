@@ -1,17 +1,11 @@
-using System;
-using System.Drawing;
 using System.Collections.Generic;
 using osum.Helpers;
-namespace osum
+
+namespace osum.Input.Sources
 {
     public class InputSource
     {
         public List<TrackingPoint> trackingPoints = new List<TrackingPoint>();
-
-        public InputSource()
-        {
-
-        }
 
         public bool IsPressed { get { return PressedCount > 0; } }
         public int PressedCount;

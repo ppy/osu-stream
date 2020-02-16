@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 using Microsoft.Win32;
-using System.Runtime.InteropServices;
 
-namespace osu_common.Helpers
+namespace osum.Helpers
 {
     public static class GeneralHelper
     {
@@ -239,7 +238,7 @@ namespace osu_common.Helpers
         {
             foreach (string f in Directory.GetFiles(s))
             {
-                FileInfo myFile = new FileInfo(f);
+                System.IO.FileInfo myFile = new System.IO.FileInfo(f);
                 if ((myFile.Attributes & FileAttributes.ReadOnly) > 0)
                     myFile.Attributes &= ~FileAttributes.ReadOnly;
             }
@@ -331,7 +330,7 @@ namespace osu_common.Helpers
 
         public static string CleanStoryboardFilename(string filename)
         {
-            return filename.Trim(new[] { '"' }).Replace("/", "\\");
+            return filename.Trim('"').Replace("/", "\\");
         }
 
         public static DateTime PerthToLocalTime(DateTime dateTime)
@@ -340,7 +339,7 @@ namespace osu_common.Helpers
         }
 
         //This is better than encoding as it doesn't check for origin specific data or remove invalid chars.
-        public unsafe static string rawBytesToString(byte[] encoded)
+        public static unsafe string rawBytesToString(byte[] encoded)
         {
             if (encoded.Length == 0)
                 return String.Empty;
@@ -363,7 +362,7 @@ namespace osu_common.Helpers
 
 
         //This is better than encoding as it doesn't check for origin specific data or remove invalid chars.
-        public unsafe static byte[] rawStringToBytes(string decoded)
+        public static unsafe byte[] rawStringToBytes(string decoded)
         {
             if (decoded == string.Empty)
                 return new byte[] { };
@@ -407,7 +406,7 @@ namespace osu_common.Helpers
                     if (*((long*)x1) != *((long*)x2)) return false;
                 if ((l & 4) != 0) { if (*((int*)x1) != *((int*)x2)) return false; x1 += 4; x2 += 4; }
                 if ((l & 2) != 0) { if (*((short*)x1) != *((short*)x2)) return false; x1 += 2; x2 += 2; }
-                if ((l & 1) != 0) if (*((byte*)x1) != *((byte*)x2)) return false;
+                if ((l & 1) != 0) if (*x1 != *x2) return false;
                 return true;
             }
         }

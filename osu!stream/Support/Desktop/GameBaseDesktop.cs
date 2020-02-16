@@ -1,13 +1,9 @@
-using System;
-using osum.Input.Sources;
 using osum.Audio;
-using OpenTK.Graphics.OpenGL;
 using osum.GameModes;
-using osum.GameplayElements.Beatmaps;
-using osum.GameModes.Play;
+using osum.Input;
+using osum.Input.Sources;
 
-
-namespace osum
+namespace osum.Support.Desktop
 {
     public class GameBaseDesktop : GameBase
     {
@@ -17,12 +13,7 @@ namespace osum
         {
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-        
-        override public void Run()
+        public override void Run()
         {
             Window = new GameWindowDesktop();
             Window.Run();

@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK;
-using OpenTK.Graphics;
-using osum.Helpers;
+using osum.Graphics.Primitives;
 using osum.Graphics.Sprites;
 using Color = OpenTK.Graphics.Color4;
 #if iOS
@@ -36,17 +36,8 @@ using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
 #else
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 #endif
-
-using osum.Graphics;
-using osum;
-using System.Collections.Generic;
-using osum.GameplayElements;
-using osum.Graphics.Skins;
-using osum.Graphics.Primitives;
-using System.Drawing;
 
 
 namespace osum.Graphics.Renderers
@@ -91,27 +82,27 @@ namespace osum.Graphics.Renderers
         protected float[] vertices_cap;
 #endif
 
-        GCHandle[] coordinates_cap_handle;
-        IntPtr[] coordinates_cap_pointer;
+        private GCHandle[] coordinates_cap_handle;
+        private IntPtr[] coordinates_cap_pointer;
 
-        GCHandle vertices_cap_handle;
-        IntPtr vertices_cap_pointer;
+        private GCHandle vertices_cap_handle;
+        private IntPtr vertices_cap_pointer;
 
 #if !NO_PIN_SUPPORT
         protected float[][] coordinates_quad;
 #endif
-        static protected float[] vertices_quad;
-        static protected object vertices_lock = new object();
+        protected static float[] vertices_quad;
+        protected static object vertices_lock = new object();
 
-        GCHandle[] coordinates_quad_handle;
-        IntPtr[] coordinates_quad_pointer;
+        private GCHandle[] coordinates_quad_handle;
+        private IntPtr[] coordinates_quad_pointer;
 
-        static protected GCHandle vertices_quad_handle;
-        static protected IntPtr vertices_quad_pointer;
+        protected static GCHandle vertices_quad_handle;
+        protected static IntPtr vertices_quad_pointer;
 
         // initialization
-        protected bool am_initted_geom = false;
-        bool boundEvents;
+        protected bool am_initted_geom;
+        private bool boundEvents;
 
         // size of the sprite sheet if this were a retina screen
         private int retinaHeight;
@@ -199,10 +190,8 @@ namespace osum.Graphics.Renderers
             coordinates_cap_pointer = new IntPtr[COLOUR_COUNT];
 
 
-            float maxRes = (float)MAXRES;
+            float maxRes = MAXRES;
             float step = MathHelper.Pi / maxRes;
-            unsafe
-            {
 #if NO_PIN_SUPPORT
 
                 float* vertices_cap = (float*)vertices_cap_pointer.ToPointer();
@@ -212,60 +201,60 @@ namespace osum.Graphics.Renderers
                 vertices_cap[3] = 0.0f;
                 vertices_cap[5] = 0.0f;
 #endif
-                vertices_cap[2] = 1.0f;                
-                vertices_cap[4] = -1.0f;
+            vertices_cap[2] = 1.0f;                
+            vertices_cap[4] = -1.0f;
 
 
-                for (int z = 1; z < MAXRES; z++)
-                {
-                    float angle = (float)z * step;
-                    vertices_cap[z * 3 + 3] = (float)(Math.Sin(angle));
-                    vertices_cap[z * 3 + 4] = -(float)(Math.Cos(angle));
+            for (int z = 1; z < MAXRES; z++)
+            {
+                float angle = z * step;
+                vertices_cap[z * 3 + 3] = (float)(Math.Sin(angle));
+                vertices_cap[z * 3 + 4] = -(float)(Math.Cos(angle));
 #if NO_PIN_SUPPORT
                     vertices_cap[z * 3 + 5] = 0.0f;
 #endif
-                }
+            }
 #if NO_PIN_SUPPORT
                 vertices_cap[MAXRES * 3 + 3] = 0.0f;
                 vertices_cap[MAXRES * 3 + 5] = 0.0f;
 #endif
-                vertices_cap[MAXRES * 3 + 4] = 1.0f;
+            vertices_cap[MAXRES * 3 + 4] = 1.0f;
                 
 
-                for (int x = 0; x < COLOUR_COUNT; x++)
-                {
-                    float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
+            for (int x = 0; x < COLOUR_COUNT; x++)
+            {
+                float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
 
 #if NO_PIN_SUPPORT
                     IntPtr this_coordinates_pointer = Marshal.AllocHGlobal(numVertices_cap * 2 * sizeof(float));
                     float* this_coordinates = (float*)this_coordinates_pointer.ToPointer();
 #else
-                    float[] this_coordinates = new float[(numVertices_cap) * 2];
+                float[] this_coordinates = new float[(numVertices_cap) * 2];
 #endif
-                    this_coordinates[0] = sheetEnd;
-                    this_coordinates[1] = y;
+                this_coordinates[0] = sheetEnd;
+                this_coordinates[1] = y;
 
-                    this_coordinates[2] = sheetStart;
-                    this_coordinates[3] = y;
+                this_coordinates[2] = sheetStart;
+                this_coordinates[3] = y;
 
-                    for (int z = 1; z < MAXRES; z++)
-                    {
-                        this_coordinates[z * 2 + 2] = sheetStart;
-                        this_coordinates[z * 2 + 3] = y;
-                    }
+                for (int z = 1; z < MAXRES; z++)
+                {
+                    this_coordinates[z * 2 + 2] = sheetStart;
+                    this_coordinates[z * 2 + 3] = y;
+                }
 
-                    this_coordinates[MAXRES * 2 + 2] = sheetStart;
-                    this_coordinates[MAXRES * 2 + 3] = y;
+                this_coordinates[MAXRES * 2 + 2] = sheetStart;
+                this_coordinates[MAXRES * 2 + 3] = y;
 
 #if !NO_PIN_SUPPORT
-                    coordinates_cap[x] = this_coordinates;
-                    coordinates_cap_handle[x] = GCHandle.Alloc(coordinates_cap[x], GCHandleType.Pinned);
-                    coordinates_cap_pointer[x] = coordinates_cap_handle[x].AddrOfPinnedObject();
+                coordinates_cap[x] = this_coordinates;
+                coordinates_cap_handle[x] = GCHandle.Alloc(coordinates_cap[x], GCHandleType.Pinned);
+                coordinates_cap_pointer[x] = coordinates_cap_handle[x].AddrOfPinnedObject();
 #else
                     coordinates_cap_pointer[x] = this_coordinates_pointer;
 #endif
-                }
             }
+
 #if !NO_PIN_SUPPORT
             vertices_cap_handle = GCHandle.Alloc(vertices_cap, GCHandleType.Pinned);
             vertices_cap_pointer = vertices_cap_handle.AddrOfPinnedObject();
@@ -539,7 +528,7 @@ namespace osum.Graphics.Renderers
             GameBase.OnScreenLayoutChanged -= GameBase_OnScreenLayoutChanged;
         }
 
-        void GameBase_OnScreenLayoutChanged()
+        private void GameBase_OnScreenLayoutChanged()
         {
             Initialize();
         }
@@ -600,8 +589,8 @@ namespace osum.Graphics.Renderers
                 float theta = lineList[0].theta - prev.theta;
 
                 // keep on the +- pi/2 range.
-                if (theta > MathHelper.Pi) theta -= (float)(MathHelper.Pi * 2);
-                if (theta < -MathHelper.Pi) theta += (float)(MathHelper.Pi * 2);
+                if (theta > MathHelper.Pi) theta -= MathHelper.Pi * 2;
+                if (theta < -MathHelper.Pi) theta += MathHelper.Pi * 2;
                 flip = theta < 0;
             }
 
@@ -637,8 +626,8 @@ namespace osum.Graphics.Renderers
                 float theta = next.theta - curr.theta;
 
                 // keep on the +- pi/2 range.
-                if (theta > MathHelper.Pi) theta -= (float)(MathHelper.Pi * 2);
-                if (theta < -MathHelper.Pi) theta += (float)(MathHelper.Pi * 2);
+                if (theta > MathHelper.Pi) theta -= MathHelper.Pi * 2;
+                if (theta < -MathHelper.Pi) theta += MathHelper.Pi * 2;
 
                 if (theta < 0)
                 {

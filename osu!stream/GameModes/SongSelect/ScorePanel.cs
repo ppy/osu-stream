@@ -1,19 +1,10 @@
 using System;
-using osum.Graphics.Sprites;
-using osum.GameplayElements.Beatmaps;
-using System.IO;
 using OpenTK;
 using OpenTK.Graphics;
-using osum.Helpers;
-using System.Text.RegularExpressions;
-using osum.Graphics.Drawables;
-using osum.Graphics.Renderers;
-using osum.Graphics.Skins;
-using osum.Audio;
-using osum.Graphics;
-using osum.GameplayElements;
-using System.Collections.Generic;
 using osum.GameplayElements.Scoring;
+using osum.Graphics.Sprites;
+using osum.Helpers;
+
 namespace osum.GameModes.SongSelect
 {
     internal class ScorePanel : pSpriteCollection
@@ -21,10 +12,9 @@ namespace osum.GameModes.SongSelect
         internal pDrawable s_BackingPlate;
         internal pText s_Text;
 
-        float base_depth = 0.4f;
+        private readonly float base_depth = 0.4f;
 
-        internal const int PANEL_HEIGHT = 34;
-        public static Color4 BACKGROUND_COLOUR = new Color4(255, 255, 255, 240);
+        internal const float PANEL_HEIGHT = 34;
 
         public Score Score;
 
@@ -34,7 +24,7 @@ namespace osum.GameModes.SongSelect
 
             base_depth += 0.0001f * score.OnlineRank;
 
-            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X,PANEL_HEIGHT), true, base_depth, new Color4(0,0,0,40))
+            s_BackingPlate = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X, PANEL_HEIGHT), true, base_depth, new Color4(0, 0, 0, 40))
             {
                 Tag = this
             };
@@ -61,7 +51,7 @@ namespace osum.GameModes.SongSelect
             {
                 Origin = OriginTypes.CentreLeft,
                 DrawDepth = base_depth + 0.06f,
-                Offset = new Vector2(GameBase.SuperWidePadding + 23, PANEL_HEIGHT / 2),
+                Offset = new Vector2(GameBase.SuperWidePadding + 23, PANEL_HEIGHT / 2)
             };
             Sprites.Add(rankingSprite);
 
@@ -97,4 +87,3 @@ namespace osum.GameModes.SongSelect
         }
     }
 }
-

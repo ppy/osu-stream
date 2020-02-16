@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Threading;
 
-namespace osu_common.Libraries.NetLib
+namespace osum.Libraries.NetLib
 {
     public class AbortedException : Exception
     {
@@ -70,7 +70,7 @@ namespace osu_common.Libraries.NetLib
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (byte i in System.Text.Encoding.UTF8.GetBytes(s))
+            foreach (byte i in Encoding.UTF8.GetBytes(s))
             {
                 if ((i >= 'A' && i <= 'Z') ||
                                 (i >= 'a' && i <= 'z') ||

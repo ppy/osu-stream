@@ -3,19 +3,16 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using osum.Helpers;
-using osu_common.Helpers;
-using Rectangle = System.Drawing.Rectangle;
-using osum.Graphics;
+using System.IO;
 using OpenTK;
 using OpenTK.Graphics;
-using System.IO;
+using osum.Helpers;
 
 namespace osum.Graphics.Renderers
 {
     internal class NativeTextRendererDesktop : NativeTextRenderer
     {
-        static readonly Brush blackBrush = Brushes.Black;
+        private static readonly Brush blackBrush = Brushes.Black;
 
         internal override pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
                                             bool bold, bool underline, TextAlignment alignment, bool forceAa,
@@ -150,6 +147,6 @@ namespace osum.Graphics.Renderers
             }
         }
 
-        private static float dpiRatio = 0;
+        private static float dpiRatio;
     }
 }

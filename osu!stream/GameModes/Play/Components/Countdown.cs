@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using osum.Graphics.Sprites;
-using osum.Graphics.Skins;
-using osum.Helpers;
-using OpenTK.Graphics;
 using OpenTK;
+using OpenTK.Graphics;
 using osum.Audio;
+using osum.Graphics;
+using osum.Graphics.Sprites;
+using osum.Helpers;
 
 namespace osum.GameModes.Play.Components
 {
     internal class CountdownDisplay : GameComponent
     {
-        pSprite background;
+        private pSprite background;
 
-        pSprite text;
+        private pSprite text;
 
-        const float distance_from_bottom = 0;
+        private const float distance_from_bottom = 0;
 
         internal event VoidDelegate OnPulse;
 
@@ -41,7 +38,7 @@ namespace osum.GameModes.Play.Components
         }
 
         internal int StartTime = -1;
-        double BeatLength;
+        private double BeatLength;
 
         internal void SetStartTime(int start, double beatLength)
         {
@@ -114,7 +111,7 @@ namespace osum.GameModes.Play.Components
             }
         }
 
-        int lastCountdownUpdate = -1;
+        private int lastCountdownUpdate = -1;
         public bool HasFinished = true;
         public override void Update()
         {

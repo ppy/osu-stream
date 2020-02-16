@@ -1,11 +1,7 @@
 using System;
-using System.Reflection;
 using System.Text;
-using System.Net;
-using System.Threading;
-using osum;
 
-namespace osu_common.Libraries.NetLib
+namespace osum.Libraries.NetLib
 {
     /// <summary>
     /// request string peforms a web request on a url and returns back the 
@@ -41,6 +37,6 @@ namespace osu_common.Libraries.NetLib
             });
         }
 
-        public new delegate void RequestCompleteHandler(string _result, Exception e);
+        public delegate void RequestCompleteHandler(string _result, Exception e);
     }
 }
