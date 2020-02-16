@@ -100,6 +100,9 @@ namespace osum.Support.Desktop
                 case '5':
                     ClientSize = new Size(1136, 640);
                     break;
+                case '1':
+                    ClientSize = new Size(896, 414);
+                    break;
                 case 'p':
                     {
                         if (Director.CurrentMode is Player)
