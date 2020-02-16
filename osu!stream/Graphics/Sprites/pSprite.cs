@@ -178,25 +178,25 @@ namespace osum.Graphics.Sprites
             switch (Origin)
             {
                 case OriginTypes.TopCentre:
-                    origin.X = DrawWidth / 2;
+                    origin.X = DrawWidth / 2f;
                     break;
                 case OriginTypes.TopRight:
                     origin.X = DrawWidth;
                     break;
                 case OriginTypes.CentreLeft:
-                    origin.Y = DrawHeight / 2;
+                    origin.Y = DrawHeight / 2f;
                     break;
                 case OriginTypes.Centre:
-                    origin = new Vector2(DrawWidth / 2, DrawHeight / 2);
+                    origin = new Vector2(DrawWidth / 2f, DrawHeight / 2f);
                     break;
                 case OriginTypes.CentreRight:
-                    origin = new Vector2(DrawWidth, DrawHeight / 2);
+                    origin = new Vector2(DrawWidth, DrawHeight / 2f);
                     break;
                 case OriginTypes.BottomLeft:
                     origin.Y = DrawHeight;
                     break;
                 case OriginTypes.BottomCentre:
-                    origin = new Vector2(DrawWidth / 2, DrawHeight);
+                    origin = new Vector2(DrawWidth / 2f, DrawHeight);
                     break;
                 case OriginTypes.BottomRight:
                     origin = new Vector2(DrawWidth, DrawHeight);
