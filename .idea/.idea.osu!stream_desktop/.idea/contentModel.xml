@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Dean\.Rider2019.3\config\consoles\db" t="IncludeRecursive" />
+    <e p="C:\Users\Dean\.Rider2019.3\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\Dean\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Dean\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_osu!stream_desktop.1153095706.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Dean\Projects\osu-stream" t="IncludeFlat">
+      <e p="BeatmapCombinator" t="IncludeRecursive">
+        <e p="BeatmapCombinator.csproj" t="IncludeRecursive" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="FakeAudioTimeSource.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="LocalisationUpdater" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="LocalisationUpdater.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+      </e>
+      <e p="osu!stream" t="IncludeRecursive">
+        <e p="AssetManager" t="Include">
+          <e p="NativeAssetManager.cs" t="Include" />
+        </e>
+        <e p="Audio" t="Include">
+          <e p="AudioEngine.cs" t="Include" />
+          <e p="BackgroundAudioPlayerDesktop.cs" t="Include" />
+          <e p="IBackgroundAudioPlayer.cs" t="Include" />
+          <e p="ISoundEffectPlayer.cs" t="Include" />
+          <e p="SoundEffectPlayerBass.cs" t="Include" />
+          <e p="SoundEffectPlayerOpenAL.cs" t="Include" />
+        </e>
+        <e p="bass.dll" t="Include" />
+        <e p="bass_aac.dll" t="Include" />
+        <e p="Beatmaps" t="Include">
+          <e p="nekodex - Liquid Future (mm201).osf2" t="Include" />
+          <e p="tieff &amp; Natteke - Endless Tower (RandomJibberish).osf2" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Constants.cs" t="Include" />
+        <e p="Director.cs" t="Include" />
+        <e p="GameBase.cs" t="Include" />
+        <e p="GameModes" t="Include">
+          <e p="Empty.cs" t="Include" />
+          <e p="GameComponent.cs" t="Include" />
+          <e p="GameMode.cs" t="Include" />
+          <e p="MainMenu" t="Include">
+            <e p="MainMenu.cs" t="Include" />
+            <e p="MainMenu_BeatMatching.cs" t="Include" />
+            <e p="MenuBackground.cs" t="Include" />
+            <e p="NewsButton.cs" t="Include" />
+          </e>
+          <e p="Options" t="Include">
+            <e p="Credits.cs" t="Include" />
+            <e p="Options.cs" t="Include" />
+          </e>
+          <e p="Play" t="Include">
+            <e p="Components" t="Include">
+              <e p="ComboCounter.cs" t="Include" />
+              <e p="Countdown.cs" t="Include" />
+              <e p="GuideFinger.cs" t="Include" />
+              <e p="HealthBar.cs" t="Include" />
+              <e p="PauseMenu.cs" t="Include" />
+              <e p="PlayfieldBackground.cs" t="Include" />
+              <e p="ProgressDisplay.cs" t="Include" />
+              <e p="ScoreDisplay.cs" t="Include" />
+              <e p="StreamSwitchDisplay.cs" t="Include" />
+            </e>
+            <e p="PlayCombinate.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
+            <e p="PlayTest.cs" t="Include" />
+            <e p="PreviewPlayer.cs" t="Include" />
+            <e p="Rulesets" t="Include">
+              <e p="Osu" t="Include" />
+              <e p="Ruleset.cs" t="Include" />
+            </e>
+            <e p="Tutorial.cs" t="Include" />
+          </e>
+          <e p="PositioningTest.cs" t="Include" />
+          <e p="Results" t="Include">
+            <e p="Results.cs" t="Include" />
+            <e p="ResultTransition.cs" t="Include" />
+          </e>
+          <e p="SongSelect" t="Include">
+            <e p="BackButton.cs" t="Include" />
+            <e p="BeatmapPanel.cs" t="Include" />
+            <e p="pTabController.cs" t="Include" />
+            <e p="ScorePanel.cs" t="Include" />
+            <e p="SongSelect.cs" t="Include" />
+            <e p="SongSelect_DifficultySelection.cs" t="Include" />
+            <e p="SongSelect_Ranking.cs" t="Include" />
+            <e p="SongSelect_SongInfo.cs" t="Include" />
+          </e>
+          <e p="Store" t="Include">
+            <e p="PackPanel.cs" t="Include" />
+            <e p="StoreMode.cs" t="Include" />
+          </e>
+          <e p="VideoPreview.cs" t="Include" />
+        </e>
+        <e p="GameplayElements" t="Include">
+          <e p="BeatmapDatabase.cs" t="Include" />
+          <e p="Beatmaps" t="Include">
+            <e p="Beatmap.cs" t="Include" />
+            <e p="Beatmap_Timing.cs" t="Include" />
+            <e p="BeatmapDifficultyInfo.cs" t="Include" />
+            <e p="ControlPoint.cs" t="Include" />
+          </e>
+          <e p="DifficultyManager.cs" t="Include" />
+          <e p="Events" t="Include">
+            <e p="Event.cs" t="Include" />
+          </e>
+          <e p="HitFactory.cs" t="Include" />
+          <e p="HitObjectManager.cs" t="Include" />
+          <e p="HitObjectManager_Load.cs" t="Include" />
+          <e p="HitObjectManagerPreview.cs" t="Include" />
+          <e p="HitObjects" t="Include">
+            <e p="HitObject.cs" t="Include" />
+            <e p="HitObjectSpannable.cs" t="Include" />
+            <e p="Osu" t="Include">
+              <e p="HitCircle.cs" t="Include" />
+              <e p="HitFactoryOsu.cs" t="Include" />
+              <e p="HoldCircle.cs" t="Include" />
+              <e p="Slider.cs" t="Include" />
+              <e p="Spinner.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Scoring" t="Include">
+            <e p="Score.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Graphics" t="Include">
+          <e p="Drawables" t="Include">
+            <e p="ApproachCircle.cs" t="Include" />
+            <e p="CircularProgress.cs" t="Include" />
+          </e>
+          <e p="Primitives" t="Include">
+            <e p="Line.cs" t="Include" />
+          </e>
+          <e p="pTexture.cs" t="Include" />
+          <e p="Renderers" t="Include">
+            <e p="NativeTextRenderer.cs" t="Include" />
+            <e p="NativeTextRendererDesktop.cs" t="Include" />
+            <e p="SliderTrackRenderer.cs" t="Include" />
+          </e>
+          <e p="Skins" t="Include">
+            <e p="SkinManager_Colours.cs" t="Include" />
+          </e>
+          <e p="Sprites" t="Include">
+            <e p="pAnimation.cs" t="Include" />
+            <e p="pButton.cs" t="Include" />
+            <e p="pDrawable.cs" t="Include" />
+            <e p="pDrawable_Interaction.cs" t="Include" />
+            <e p="pQuad.cs" t="Include" />
+            <e p="pRectangle.cs" t="Include" />
+            <e p="pSprite.cs" t="Include" />
+            <e p="pSpriteCollection.cs" t="Include" />
+            <e p="pSpriteDynamic.cs" t="Include" />
+            <e p="pSpriteText.cs" t="Include" />
+            <e p="pSpriteWeb.cs" t="Include" />
+            <e p="pText.cs" t="Include" />
+            <e p="SpriteEffect.cs" t="Include" />
+            <e p="SpriteManager.cs" t="Include" />
+            <e p="SpriteManagerDraggable.cs" t="Include" />
+            <e p="Transform.cs" t="Include" />
+          </e>
+          <e p="TextureGl.cs" t="Include" />
+          <e p="TextureManager.cs" t="Include" />
+          <e p="TextureManager_Load.cs" t="Include" />
+          <e p="TouchBurster.cs" t="Include" />
+        </e>
+        <e p="Helpers" t="Include">
+          <e p="Audio" t="Include">
+            <e p="AudioReader.cs" t="Include" />
+            <e p="AudioReaderException.cs" t="Include" />
+            <e p="Sound.cs" t="Include" />
+            <e p="SoundData.cs" t="Include" />
+            <e p="SoundFormat.cs" t="Include" />
+            <e p="WaveReader.cs" t="Include" />
+          </e>
+          <e p="Clock.cs" t="Include" />
+          <e p="ColourHelper.cs" t="Include" />
+          <e p="Delegates.cs" t="Include" />
+          <e p="ListHelper.cs" t="Include" />
+          <e p="osu!common" t="Include">
+            <e p="Aes.cs" t="Include" />
+            <e p="AesManaged.cs" t="Include" />
+            <e p="bSerializable.cs" t="Include" />
+            <e p="CryptoHelper.cs" t="Include" />
+            <e p="DynamicDeserializer.cs" t="Include" />
+            <e p="FastEncryptionProvider.cs" t="Include" />
+            <e p="FastEncryptorStream.cs" t="Include" />
+            <e p="FastRandom.cs" t="Include" />
+            <e p="FastSerializer.cs" t="Include" />
+            <e p="GeneralHelper.cs" t="Include" />
+            <e p="MapPackage.cs" t="Include" />
+            <e p="MapStream.cs" t="Include" />
+            <e p="Scheduler.cs" t="Include" />
+          </e>
+          <e p="pConfigManager.cs" t="Include" />
+          <e p="pList.cs" t="Include" />
+          <e p="pMathHelper.cs" t="Include" />
+          <e p="UnixTimestamp.cs" t="Include" />
+        </e>
+        <e p="Input" t="Include">
+          <e p="InputManager.cs" t="Include" />
+          <e p="Sources" t="Include">
+            <e p="InputSource.cs" t="Include" />
+            <e p="InputSourceBaanto.cs" t="Include" />
+            <e p="InputSourceMouse.cs" t="Include" />
+            <e p="InputSourceRaw.cs" t="Include" />
+            <e p="InputSourceRawBase.cs" t="Include" />
+            <e p="UsbHID" t="Include">
+              <e p="Interface.cs" t="Include" />
+              <e p="USB" t="Include">
+                <e p="HidDeclarations.cs" t="Include" />
+                <e p="HIDUSBDevice.cs" t="Include" />
+                <e p="ListWithEvent.cs" t="Include" />
+                <e p="USBSharp.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="TrackingPoint.cs" t="Include" />
+        </e>
+        <e p="Libraries" t="Include">
+          <e p="NetLib" t="Include">
+            <e p="DataNetRequest.cs" t="Include" />
+            <e p="FileNetRequest.cs" t="Include" />
+            <e p="NetManager.cs" t="Include" />
+            <e p="NetRequest.cs" t="Include" />
+            <e p="StringNetRequest.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Localisation" t="Include">
+          <e p="da.txt" t="Include" />
+          <e p="de.txt" t="Include" />
+          <e p="en.txt" t="Include" />
+          <e p="es.txt" t="Include" />
+          <e p="fr.txt" t="Include" />
+          <e p="it.txt" t="Include" />
+          <e p="ja.txt" t="Include" />
+          <e p="ko.txt" t="Include" />
+          <e p="LocalisationManager.cs" t="Include" />
+          <e p="sv.txt" t="Include" />
+          <e p="th.txt" t="Include" />
+          <e p="zh-CHS.txt" t="Include" />
+          <e p="zh-CHT.txt" t="Include" />
+        </e>
+        <e p="Main.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="osu!s.ico" t="Include" />
+        <e p="osu!stream_desktop.csproj" t="IncludeRecursive" />
+        <e p="Skins" t="Include">
+          <e p="Default" t="Include">
+            <e p="buttontap.wav" t="Include" />
+            <e p="count1.wav" t="Include" />
+            <e p="count2.wav" t="Include" />
+            <e p="count3.wav" t="Include" />
+            <e p="countgo.wav" t="Include" />
+            <e p="credits.m4a" t="Include" />
+            <e p="credits.mp3" t="Include" />
+            <e p="drum-hitclap.wav" t="Include" />
+            <e p="drum-hitfinish.wav" t="Include" />
+            <e p="drum-hitnormal.wav" t="Include" />
+            <e p="drum-hitwhistle.wav" t="Include" />
+            <e p="drum-sliderslide.wav" t="Include" />
+            <e p="drum-slidertick.wav" t="Include" />
+            <e p="fail.wav" t="Include" />
+            <e p="Futura-CondensedExtraBold.ttf" t="Include" />
+            <e p="Futura-Medium.ttf" t="Include" />
+            <e p="hit_1920.png" t="Include" />
+            <e p="hit_480.png" t="Include" />
+            <e p="hit_960.png" t="Include" />
+            <e p="intro_1920.png" t="Include" />
+            <e p="intro_480.png" t="Include" />
+            <e p="intro_960.png" t="Include" />
+            <e p="mainmenu.m4a" t="Include" />
+            <e p="mainmenu.mp3" t="Include" />
+            <e p="mainmenu_intro.wav" t="Include" />
+            <e p="menu_1920.png" t="Include" />
+            <e p="menu_480.png" t="Include" />
+            <e p="menu_960.png" t="Include" />
+            <e p="menuback.wav" t="Include" />
+            <e p="menubling.wav" t="Include" />
+            <e p="menuclick.wav" t="Include" />
+            <e p="menuhit.wav" t="Include" />
+            <e p="menuwhoosh.wav" t="Include" />
+            <e p="miss.wav" t="Include" />
+            <e p="normal-hitclap.wav" t="Include" />
+            <e p="normal-hitfinish.wav" t="Include" />
+            <e p="normal-hitnormal.wav" t="Include" />
+            <e p="normal-hitwhistle.wav" t="Include" />
+            <e p="normal-sliderslide.wav" t="Include" />
+            <e p="normal-slidertick.wav" t="Include" />
+            <e p="notification_1920.png" t="Include" />
+            <e p="notification_480.png" t="Include" />
+            <e p="notification_960.png" t="Include" />
+            <e p="notify.wav" t="Include" />
+            <e p="rankbling.wav" t="Include" />
+            <e p="rankfail.wav" t="Include" />
+            <e p="ranking_1920.png" t="Include" />
+            <e p="ranking_480.png" t="Include" />
+            <e p="ranking_960.png" t="Include" />
+            <e p="rankingbam.wav" t="Include" />
+            <e p="rankingbam2.wav" t="Include" />
+            <e p="rankpass.wav" t="Include" />
+            <e p="rankwhoosh.wav" t="Include" />
+            <e p="results.m4a" t="Include" />
+            <e p="results.mp3" t="Include" />
+            <e p="soft-hitclap.wav" t="Include" />
+            <e p="soft-hitfinish.wav" t="Include" />
+            <e p="soft-hitnormal.wav" t="Include" />
+            <e p="soft-hitwhistle.wav" t="Include" />
+            <e p="soft-sliderslide.wav" t="Include" />
+            <e p="soft-slidertick.wav" t="Include" />
+            <e p="soft-sliderwhistle.wav" t="Include" />
+            <e p="songselect.m4a" t="Include" />
+            <e p="songselect.mp3" t="Include" />
+            <e p="spinnerbonus.wav" t="Include" />
+            <e p="spinnerspin.wav" t="Include" />
+            <e p="stream_down.wav" t="Include" />
+            <e p="stream_up.wav" t="Include" />
+          </e>
+        </e>
+        <e p="Support" t="Include">
+          <e p="Benchmarker.cs" t="Include" />
+          <e p="CrashHandler.cs" t="Include" />
+          <e p="DebugOverlay.cs" t="Include" />
+          <e p="Desktop" t="Include">
+            <e p="GameBaseDesktop.cs" t="Include" />
+            <e p="GameWindowDesktop.cs" t="Include" />
+          </e>
+          <e p="FadeTransition.cs" t="Include" />
+          <e p="IDrawable.cs" t="Include" />
+          <e p="ITimeSource.cs" t="Include" />
+          <e p="IUpdateable.cs" t="Include" />
+          <e p="Transition.cs" t="Include" />
+        </e>
+        <e p="UI" t="Include">
+          <e p="Notification.cs" t="Include" />
+          <e p="SliderControl.cs" t="Include" />
+          <e p="TextInputNotification.cs" t="Include" />
+        </e>
+      </e>
+      <e p="osu!stream_desktop.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="sspack" t="IncludeRecursive">
+        <e p="app.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Constants.cs" t="Include" />
+        <e p="Exporters" t="Include">
+          <e p="BmpImageExporter.cs" t="Include" />
+          <e p="Exporters.cs" t="Include" />
+          <e p="IImageExporter.cs" t="Include" />
+          <e p="IMapExporter.cs" t="Include" />
+          <e p="JpegImageExporter.cs" t="Include" />
+          <e p="PngImageExporter.cs" t="Include" />
+          <e p="TxtMapExporter.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Packing" t="Include">
+          <e p="ArevaloRectanglePacker.cs" t="Include" />
+          <e p="ImagePacker.cs" t="Include" />
+          <e p="MiscHelper.cs" t="Include" />
+          <e p="OutOfSpaceException.cs" t="Include" />
+          <e p="RectanglePacker.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="ProgramArguments.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="sspack.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="StreamTester" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ConsoleRedirection.cs" t="Include" />
+        <e p="Form1.cs" t="Include" />
+        <e p="Form1.Designer.cs" t="Include" />
+        <e p="Form1.resx" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="osu!s.ico" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+        </e>
+        <e p="StreamTester.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+  </component>
+</project>
