@@ -515,7 +515,7 @@ namespace osum.GameplayElements
                                 //We are no longer within stacking range of the previous object.
                                 break;
 
-                            if (pMathHelper.Distance((spanN != null ? spanN.EndPosition : objectN.Position), objectI.Position) < STACK_LENIENCE)
+                            if (pMathHelper.Distance(spanN?.EndPosition ?? objectN.Position, objectI.Position) < STACK_LENIENCE)
                             {
                                 objectN.StackCount = objectI.StackCount + 1;
                                 objectI = objectN;

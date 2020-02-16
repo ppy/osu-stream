@@ -28,11 +28,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected pSprite spriteCircle;
 
         /// <summary>
-        /// The fastest acceleration that is allowed (depends on length of spinner).
-        /// </summary>
-        private double AccelerationCap;
-
-        /// <summary>
         /// Have we cleared the spinner?
         /// </summary>
         internal bool Cleared;
@@ -165,7 +160,6 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             currentRotationCount = 0;
             rotationRequirement = (int)((float)(EndTime - StartTime) / 1000 * DifficultyManager.SpinnerRotationRatio) * sensitivity_modifier;
-            AccelerationCap = 0.00008 + Math.Max(0, (5000 - (double)(EndTime - StartTime)) / 1000 / 2000);
         }
 
         internal override int ComboNumber
@@ -322,10 +316,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 
                     BonusScore += hpMultiplier;
                 }
-                else if (currentRotationCount - lastScoredRotationCount > sensitivity_modifier / 4)
+                else if (currentRotationCount - lastScoredRotationCount > sensitivity_modifier / 4f)
                 {
                     score = ScoreChange.SpinnerSpinPoints;
-                    lastScoredRotationCount += sensitivity_modifier / 4;
+                    lastScoredRotationCount += sensitivity_modifier / 4f;
                     lastSamplePlayedRotationCount = currentRotationCount;
                 }
             }

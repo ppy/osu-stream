@@ -108,7 +108,7 @@ namespace osum.Graphics.Renderers
         private int retinaHeight;
 
         // ptexture info of where in the sheet our tracks are
-        private int sheetY, sheetHeight;
+        private int sheetY;
 
         // cache actual texel coordinates for x-axis since they are always the same
         private float sheetStart, sheetEnd;
@@ -159,7 +159,6 @@ namespace osum.Graphics.Renderers
             retinaHeight = texture.TextureGl.TextureHeight;
             float sheetX = texture.X;
             sheetY = texture.Y;
-            sheetHeight = texture.Height;
 
             float texel_origin = GameBase.SpriteSheetResolution == 960 ? TEXEL_ORIGIN : 0.375f;
 
@@ -472,6 +471,7 @@ namespace osum.Graphics.Renderers
         /// <param name="radius">Width of the slider</param>
         /// <param name="ColourIndex">Current combo colour index between 0 and 4; -1 for grey; -2 for Tag Multi override.</param>
         /// <param name="prev">The last line which was rendered in the previous iteration, or null if this is the first iteration.</param>
+        /// <param name="next">The next line which will be rendered in the next iteration, or null if this is the last iteration.</param>
         internal void Draw(List<Line> lineList, float radius, int ColourIndex, Line prev, Line next)
         {
             GL.Color4((byte)255, (byte)255, (byte)255, (byte)255);

@@ -52,10 +52,10 @@ namespace osum.Graphics.Primitives
         internal float theta => rhoTheta.Y;
 
 
-        internal void Move(Vector2 p1, Vector2 p2)
+        internal void Move(Vector2 q1, Vector2 q2)
         {
-            this.p1 = p1;
-            this.p2 = p2;
+            p1 = q1;
+            p2 = q2;
             Recalc();
         }
 
@@ -63,9 +63,9 @@ namespace osum.Graphics.Primitives
         internal void Recalc()
         {
             Vector2 delta = p2 - p1;
-            float rho = delta.Length;
-            float theta = (float) Math.Atan2(delta.Y, delta.X);
-            rhoTheta = new Vector2(rho, theta);
+            float l_rho = delta.Length;
+            float l_theta = (float)Math.Atan2(delta.Y, delta.X);
+            rhoTheta = new Vector2(l_rho, l_theta);
             unitAngle = (p2 - p1) / rhoTheta.X;
             if (float.IsNaN(unitAngle.X)) unitAngle = new Vector2(1, 0);
         }
@@ -93,8 +93,8 @@ namespace osum.Graphics.Primitives
                 return pMathHelper.DistanceSquared(p, p2);
 
             // p is closest to point pB, between p1 and p2
-            float b = c1/c2;
-            Vector2 pB = p1 + b*v;
+            float b = c1 / c2;
+            Vector2 pB = p1 + b * v;
             return pMathHelper.DistanceSquared(p, pB);
         }
 
@@ -113,26 +113,26 @@ namespace osum.Graphics.Primitives
         internal Matrix4 QuadMatrix(float radius)
         {
             return new Matrix4(unitAngle.X * rho, unitAngle.Y * rho, 0, 0,
-                               -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
-                               0, 0, 1, 0,
-                               p1.X, p1.Y, 0, 1);
+                -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
+                0, 0, 1, 0,
+                p1.X, p1.Y, 0, 1);
         }
 
         internal Matrix4 CapMatrix(float radius)
         {
             return new Matrix4(-unitAngle.X * radius, -unitAngle.Y * radius, 0, 0,
-                               unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
-                               0, 0, 1, 0,
-                               p1.X, p1.Y, 0, 1);
+                unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
+                0, 0, 1, 0,
+                p1.X, p1.Y, 0, 1);
         }
 
         internal Matrix4 EndCapMatrix(float radius, bool flip)
         {
             if (flip)
                 return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
-                                   unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
-                                   0, 0, 1, 0,
-                                   p2.X, p2.Y, 0, 1);
+                    unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
+                    0, 0, 1, 0,
+                    p2.X, p2.Y, 0, 1);
             return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
                 -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
                 0, 0, 1, 0,

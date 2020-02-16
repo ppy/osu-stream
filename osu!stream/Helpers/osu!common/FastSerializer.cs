@@ -94,7 +94,7 @@ namespace osum.Helpers
             }
         }
 
-        /// <summary> Writes a DateTime to the buffer. <summary>
+        /// <summary> Writes a DateTime to the buffer. </summary>
         public void Write(DateTime dt)
         {
             Write(dt.ToUniversalTime().Ticks);

@@ -99,7 +99,7 @@ namespace osum.GameplayElements.HitObjects
             }
         }
 
-        public virtual bool NewCombo { get; set; }
+        public bool NewCombo { get; }
 
         private ClockTypes clocking;
         internal ClockTypes Clocking
@@ -204,7 +204,6 @@ namespace osum.GameplayElements.HitObjects
         /// <summary>
         /// Trigger a hit animation showing the score overlay above the object.
         /// </summary>
-        /// <param name="action">The ssociated score change action.</param>
         internal virtual void HitAnimation(ScoreChange action, bool animateNumber = false)
         {
             if (m_HitObjectManager == null) return; //is the case for sliders start circles, where we don't want to display this stuff.
@@ -458,9 +457,7 @@ namespace osum.GameplayElements.HitObjects
                     pMathHelper.DistanceSquared(tracking.GamefieldPosition, Position) <= radius * radius);
         }
 
-        private const int TAG_SHAKE_TRANSFORMATION = 54327;
         internal SampleSetInfo SampleSet = new SampleSetInfo { SampleSet = Beatmaps.SampleSet.Normal, CustomSampleSet = CustomSampleSet.Default, Volume = 1, AdditionSampleSet = Beatmaps.SampleSet.Normal };
-
 
         internal virtual void Shake()
         {

@@ -163,8 +163,6 @@ namespace osum.GameplayElements.HitObjects.Osu
         /// </summary>
         private const bool NO_SNAKING = false;
 
-        private const bool PRERENDER_ALL = false;
-
         /// <summary>
         /// The start hitcircle is used for initial judging, and explodes as would be expected of a normal hitcircle. Also handles combo numbering.
         /// </summary>
@@ -214,7 +212,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         protected virtual void initializeStartCircle()
         {
-            HitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList != null ? SoundTypeList[0] : SoundType);
+            HitCircleStart = new HitCircle(null, Position, StartTime, NewCombo, ComboOffset, SoundTypeList?[0] ?? SoundType);
             Sprites.AddRange(HitCircleStart.Sprites);
         }
 
@@ -315,11 +313,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 scoringPoints.Add(progress);
 
-                Line l;
-
                 pSprite scoringDot =
                                     new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
-                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress, out l),
+                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress, out _),
                                                 SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new TransformationF(TransformationType.Fade, 0, 1,
@@ -393,6 +389,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     Vector2 B = controlPoints[1];
                     Vector2 C = controlPoints[2];
                     // all 3 points are on a straight line, avoid undefined behaviour:
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if ((B.X - A.X) * (C.Y - A.Y) - (C.X - A.X) * (B.Y - A.Y) == 0.0f)
                         goto case CurveTypes.Linear;
 
@@ -404,8 +401,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                     double curveLength = Math.Abs((t_final - t_initial) * radius);
                     int _segments = (int)(curveLength * 0.125f);
-
-                    Vector2 lastPoint = A;
 
                     smoothPoints = new List<Vector2>();
 
@@ -517,12 +512,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        internal override Color Colour
-        {
-            get => base.Colour;
-            set => base.Colour = value;
-        }
-
         internal override int ColourIndex
         {
             get => base.ColourIndex;
@@ -568,7 +557,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         protected override ScoreChange HitActionInitial()
         {
             //todo: this is me being HORRIBLY lazy.
-            HitCircleStart.SampleSet = SampleSets == null ? SampleSet : SampleSets[0];
+            HitCircleStart.SampleSet = SampleSets?[0] ?? SampleSet;
 
             ScoreChange startCircleChange = HitCircleStart.Hit();
 
@@ -624,7 +613,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// <summary>
         /// Index of the last end-point to be judged. Used to keep track of judging calculations.
         /// </summary>
-        private int lastJudgedEndpoint;
+        protected int lastJudgedEndpoint;
 
         public override bool IsHit
         {
@@ -704,7 +693,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 if (IsTracking)
                 {
-                    playRebound(lastJudgedEndpoint);
+                    playRebound();
                     if (!finished)
                         burstEndpoint();
                     totalScoreValue++;
@@ -725,7 +714,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     float amountHit = (float)totalScoreValue / (lastJudgedEndpoint + 4 + scoringPoints.Count * RepeatCount);
                     ScoreChange amount;
 
-                    if (amountHit == 1)
+                    if (amountHit >= 1)
                         amount = ScoreChange.Hit300;
                     else if (amountHit > 0.7)
                         amount = ScoreChange.Hit100;
@@ -803,16 +792,16 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             AudioEngine.PlaySample(OsuSamples.SliderTick, SampleSet.SampleSet, SampleSet.Volume);
         }
 
-        protected virtual void playRebound(int lastJudgedEndpoint)
+        protected virtual void playRebound()
         {
-            PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,
-                      SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet);
+            PlaySound(SoundTypeList?[lastJudgedEndpoint] ?? SoundType,
+                      SampleSets?[lastJudgedEndpoint] ?? SampleSet);
         }
 
         internal override void StopSound(bool done = true)
         {
             stopSliding(this);
-            base.StopSound();
+            base.StopSound(done);
         }
 
         protected virtual void lastEndpoint()
@@ -837,7 +826,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         {
             if (AudioEngine.Effect == null) return;
 
-            Source source = null;
+            Source source;
 
             if (slidingSources.TryGetValue(s.SampleSet.SampleSet, out source))
             {
@@ -929,6 +918,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             if (lastJudgedEndpoint % 2 == 0)
             {
+                // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
                 foreach (pSprite p in spriteCollectionStart)
                 {
                     if (p.Alpha == 0) continue;
@@ -951,6 +941,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             if (lastJudgedEndpoint % 2 == 1)
             {
+                // ReSharper disable once PossibleInvalidCastExceptionInForeachLoop
                 foreach (pSprite p in spriteCollectionEnd)
                 {
                     if (p.Alpha == 0) continue;
@@ -1014,7 +1005,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 index = Math.Min(index, count - 1);
             }
 
-            double lengthAtIndex = cumulativeLengths[index];
             line = drawableSegments[index];
 
             //cut back the line to required exact length
@@ -1055,7 +1045,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
                 spriteCollectionEnd[1].Rotation = (lastDrawnSegmentIndex >= 0 ? drawableSegments[lastDrawnSegmentIndex].theta + MathHelper.Pi : endAngle)
-                                                + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                                                         + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
                 spriteCollectionStart[1].Rotation = MathHelper.Pi + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
 
@@ -1137,6 +1127,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             while (lastDrawnSegmentIndex < cumulativeLengths.Count - 1 && cumulativeLengths[lastDrawnSegmentIndex + 1] <= lengthDrawn)
                 lastDrawnSegmentIndex++;
 
+            // ReSharper disable once RedundantLogicalConditionalExpressionOperand
             if (lastDrawnSegmentIndex >= cumulativeLengths.Count - 1 || NO_SNAKING)
             {
                 lengthDrawn = PathLength;
@@ -1144,8 +1135,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 drawProgress = 1.0d;
             }
 
-            Line l;
-            SnakingEndPosition = positionAtProgress(drawProgress, lastDrawnSegmentIndex + 1, out l);
+            SnakingEndPosition = positionAtProgress(drawProgress, lastDrawnSegmentIndex + 1, out _);
             foreach (pDrawable p in spriteCollectionEnd)
                 p.Position = SnakingEndPosition;
 

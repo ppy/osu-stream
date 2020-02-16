@@ -299,6 +299,7 @@ namespace osum.Graphics
             }
             catch
             {
+                // ignored
             }
 
             return null;
@@ -399,6 +400,7 @@ namespace osum.Graphics
             }
             catch
             {
+                // ignored
             }
 
             return pt;
@@ -417,6 +419,7 @@ namespace osum.Graphics
             }
             catch
             {
+                // ignored
             }
 
             return pt;
@@ -468,7 +471,7 @@ namespace osum.Graphics
 
         public int CompareTo(pTexture other)
         {
-            return assetName.CompareTo(other.assetName);
+            return String.Compare(assetName, other.assetName, StringComparison.Ordinal);
         }
 
         #endregion

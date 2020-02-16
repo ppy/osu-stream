@@ -36,7 +36,7 @@ using CoreGraphics;
 
 namespace osum.Graphics.Sprites
 {
-    internal class pSprite : pDrawable
+    public class pSprite : pDrawable
     {
         internal int DrawHeight;
         internal int DrawLeft;
@@ -74,13 +74,13 @@ namespace osum.Graphics.Sprites
         {
         }
 
-        internal int TextureWidth => texture != null ? texture.Width : 0;
+        internal int TextureWidth => texture?.Width ?? 0;
 
-        internal int TextureHeight => texture != null ? texture.Height : 0;
+        internal int TextureHeight => texture?.Height ?? 0;
 
-        internal int TextureX => texture != null ? texture.X : 0;
+        internal int TextureX => texture?.X ?? 0;
 
-        internal int TextureY => texture != null ? texture.Y : 0;
+        internal int TextureY => texture?.Y ?? 0;
 
         internal virtual pTexture Texture
         {
@@ -129,15 +129,6 @@ namespace osum.Graphics.Sprites
                 return whiteLayer;
             }
         }
-
-        #region IDisposable Members
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
-        #endregion
 
         #region IDrawable Members
 

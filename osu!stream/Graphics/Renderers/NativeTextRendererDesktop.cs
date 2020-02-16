@@ -12,8 +12,6 @@ namespace osum.Graphics.Renderers
 {
     internal class NativeTextRendererDesktop : NativeTextRenderer
     {
-        private static readonly Brush blackBrush = Brushes.Black;
-
         internal override pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
                                             bool bold, bool underline, TextAlignment alignment, bool forceAa,
                                             out Vector2 measured,
@@ -125,9 +123,6 @@ namespace osum.Graphics.Renderers
 
                                 using (Brush brush = new SolidBrush(ColourHelper.CConvert(Color4)))
                                 {
-                                    //if (shadow)
-                                    //    g.DrawString(text, f, blackBrush,
-                                    //                 new RectangleF(1, 1, measuredSize.Width, measuredSize.Height), sf);
                                     g.DrawString(text, f, brush, new RectangleF(0, 0, measuredSize.Width + 1, measuredSize.Height + 1), sf);
                                 }
                             }

@@ -168,7 +168,7 @@ namespace osum.Libraries.NetLib
                         wc.UploadDataCompleted += wc_UploadDataCompleted;
                         wc.UploadProgressChanged += wc_UploadProgressChanged;
                         wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
-                        wc.UploadDataAsync(new Uri(m_url), method, UTF8Encoding.UTF8.GetBytes(postData));
+                        wc.UploadDataAsync(new Uri(m_url), method, Encoding.UTF8.GetBytes(postData));
 
                     }
                     else

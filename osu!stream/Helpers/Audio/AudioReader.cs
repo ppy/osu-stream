@@ -64,7 +64,7 @@ namespace osum.Helpers.Audio
                             implementation = (AudioReader)
                                 reader.GetType().GetConstructor(
                                     BindingFlags.NonPublic | BindingFlags.Public |
-                                    BindingFlags.Instance,
+                                                 BindingFlags.Instance,
                                     null,
                                     new[] { typeof(Stream) },
                                     null)

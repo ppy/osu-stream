@@ -47,7 +47,9 @@ namespace osum.Graphics.Drawables
 
         private readonly int parts = 48;
 #if !NO_PIN_SUPPORT
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly float[] vertices;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly float[] colours;
 #endif
 
@@ -117,28 +119,28 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
                 unsafe
                 {
-                    float* vertices = (float*) handle_vertices_pointer.ToPointer();
-                    float* colours = (float*) handle_colours_pointer.ToPointer();
+                    float* l_vertices = (float*) handle_vertices_pointer.ToPointer();
+                    float* l_colours = (float*) handle_colours_pointer.ToPointer();
 
-                    vertices[0] = pos.X;
-                    vertices[1] = pos.Y;
+                    l_vertices[0] = pos.X;
+                    l_vertices[1] = pos.Y;
 
-                    colours[0] = c.R;
-                    colours[1] = c.G;
-                    colours[2] = c.B;
-                    colours[3] = c.A * Progress;
+                    l_colours[0] = c.R;
+                    l_colours[1] = c.G;
+                    l_colours[2] = c.B;
+                    l_colours[3] = c.A * Progress;
 
                     float a = startAngle;
                     for (int v = 1; v <= parts; v++)
                     {
-                        vertices[v * 2] = (float)(pos.X + Math.Cos(a) * radius);
-                        vertices[v * 2 + 1] = (float)(pos.Y + Math.Sin(a) * radius);
+                        l_vertices[v * 2] = (float)(pos.X + Math.Cos(a) * radius);
+                        l_vertices[v * 2 + 1] = (float)(pos.Y + Math.Sin(a) * radius);
                         a += da;
 
-                        colours[v * 4] = c.R;
-                        colours[v * 4 + 1] = c.G;
-                        colours[v * 4 + 2] = c.B;
-                        colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f : (0.2f + 0.4f * ((float)v / parts)));
+                        l_colours[v * 4] = c.R;
+                        l_colours[v * 4 + 1] = c.G;
+                        l_colours[v * 4 + 2] = c.B;
+                        l_colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f : (0.2f + 0.4f * ((float)v / parts)));
                     }
                 }
                 GL.EnableClientState(ArrayCap.ColorArray);

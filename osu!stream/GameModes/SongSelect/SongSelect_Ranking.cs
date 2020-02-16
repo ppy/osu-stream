@@ -47,9 +47,9 @@ namespace osum.GameModes.SongSelect
 
             rankingNetRequest = new StringNetRequest(@"https://osustream.com/score/retrieve.php", "POST",
                 "udid=" + GameBase.Instance.DeviceIdentifier +
-                "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
-                "&period=" + period +
-                "&difficulty=" + (int)Player.Difficulty);
+                          "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
+                          "&period=" + period +
+                          "&difficulty=" + (int)Player.Difficulty);
 
             rankingNetRequest.onFinish += rankingReceived;
 

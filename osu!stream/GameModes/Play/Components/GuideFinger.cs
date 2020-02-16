@@ -100,7 +100,7 @@ namespace osum.GameModes.Play.Components
             if (HitObjectManager != null)
             {
                 HitObject nextObject = HitObjectManager.NextObject;
-                HitObject nextObjectConnected = nextObject != null ? nextObject.connectedObject : null;
+                HitObject nextObjectConnected = nextObject?.connectedObject;
 
                 bool objectHasFinger = false;
                 bool connectedObjectHasFinger = false;
@@ -195,8 +195,8 @@ namespace osum.GameModes.Play.Components
             float leftPart = GameBase.GamefieldBaseSize.X / 11f * 4;
             float rightPart = GameBase.GamefieldBaseSize.X / 11f * 7;
 
-            float distFromLeft = pMathHelper.Distance(nextObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
-            float distFromRight = pMathHelper.Distance(nextObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
+            float distFromLeft = pMathHelper.Distance(nextObject.Position, ((HitObject)leftFinger.Tag)?.EndPosition ?? leftFinger.Position);
+            float distFromRight = pMathHelper.Distance(nextObject.Position, ((HitObject)rightFinger.Tag)?.EndPosition ?? rightFinger.Position);
 
             if (nextObject.connectedObject != null)
             {
@@ -204,8 +204,8 @@ namespace osum.GameModes.Play.Components
                 if (nextObject.Position.X == nextObject.connectedObject.Position.X)
                 {
                     // if same x we'll assign the closest finger to each note
-                    float connectedDistFromLeft = pMathHelper.Distance(nextObject.connectedObject.Position, leftFinger.Tag == null ? leftFinger.Position : ((HitObject)leftFinger.Tag).EndPosition);
-                    float connectedDistFromRight = pMathHelper.Distance(nextObject.connectedObject.Position, rightFinger.Tag == null ? rightFinger.Position : ((HitObject)rightFinger.Tag).EndPosition);
+                    float connectedDistFromLeft = pMathHelper.Distance(nextObject.connectedObject.Position, ((HitObject)leftFinger.Tag)?.EndPosition ?? leftFinger.Position);
+                    float connectedDistFromRight = pMathHelper.Distance(nextObject.connectedObject.Position, ((HitObject)rightFinger.Tag)?.EndPosition ?? rightFinger.Position);
 
                     float smallest = Math.Min(Math.Min(connectedDistFromLeft, connectedDistFromRight), Math.Min(distFromLeft, distFromLeft));
                     preferred = smallest == distFromLeft || smallest == connectedDistFromRight ? leftFinger : rightFinger;

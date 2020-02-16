@@ -147,14 +147,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, volume);
         }
 
-        protected override void playRebound(int lastJudgedEndpoint)
+        protected override void playRebound()
         {
             if (lastJudgedEndpoint == RepeatCount)
-                base.playRebound(lastJudgedEndpoint);
+                base.playRebound();
             else
             {
-                SampleSetInfo ss = SampleSets != null ? SampleSets[lastJudgedEndpoint] : SampleSet;
-                PlaySound(SoundTypeList != null ? SoundTypeList[lastJudgedEndpoint] : SoundType,ss);
+                SampleSetInfo ss = SampleSets?[lastJudgedEndpoint] ?? SampleSet;
+                PlaySound(SoundTypeList?[lastJudgedEndpoint] ?? SoundType,ss);
             }
         }
 
@@ -164,6 +164,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal override Color4 Colour
         {
             get => base.Colour;
+            // ReSharper disable once ValueParameterNotUsed
             set => base.Colour = hold_colour;
         }
 

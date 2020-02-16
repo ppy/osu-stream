@@ -9,7 +9,7 @@ using osum.Helpers;
 
 namespace osum.GameplayElements.HitObjects.Osu
 {
-    internal class HitCircle : HitObject
+    internal sealed class HitCircle : HitObject
     {
         #region General & Timing
 
@@ -66,9 +66,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteHitCircleText.Transform(fadeOut);
         }
 
-        protected virtual bool ShowCircleText => true;
-
-        protected virtual bool ShowApproachCircle => true;
+        private bool ShowCircleText => true;
 
         protected override ScoreChange HitActionInitial()
         {

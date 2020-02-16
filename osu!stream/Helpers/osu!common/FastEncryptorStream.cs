@@ -6,7 +6,7 @@ namespace osum.Helpers
     {
 
         public static bool instanceActive { get; private set; }
-        public Stream internalStream{ get; private set; }
+        public Stream internalStream{ get; }
         public bool isClosed { get; private set; }
         private readonly FastEncryptionProvider FastEncryptionProvider = new FastEncryptionProvider();
         /// <summary>

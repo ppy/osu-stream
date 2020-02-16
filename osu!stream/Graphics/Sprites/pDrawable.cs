@@ -34,11 +34,10 @@ using OpenTK;
 using OpenTK.Graphics;
 using osum.GameplayElements;
 using osum.Helpers;
-using osum.Support;
 
 namespace osum.Graphics.Sprites
 {
-    public partial class pDrawable : IDrawable, IDisposable, IComparable<pDrawable>
+    public partial class pDrawable : IComparable<pDrawable>
     {
         internal float Alpha;
 
@@ -67,7 +66,6 @@ namespace osum.Graphics.Sprites
             switch (Origin)
             {
                 default:
-                case OriginTypes.TopLeft:
                     OriginVector = Vector2.Zero;
                     break;
                 case OriginTypes.TopCentre:
@@ -244,9 +242,6 @@ namespace osum.Graphics.Sprites
                 case FieldTypes.GamefieldExact:
                     pos += GameBase.GamefieldOffsetVector1;
                     pos *= AlignToSprites ? GameBase.BaseToNativeRatioAligned : GameBase.BaseToNativeRatio;
-                    break;
-                case FieldTypes.Native:
-                default:
                     break;
             }
 

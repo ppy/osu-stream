@@ -32,9 +32,9 @@ namespace osum.Helpers
         private long fFilesAddedBytes;
         private byte[] fIV;
 
-        public byte[] hash_meta { get; private set; }
-        public byte[] hash_info { get; private set; }
-        public byte[] hash_body { get; private set; }
+        private byte[] hash_meta { get; set; }
+        private byte[] hash_info { get; set; }
+        private byte[] hash_body { get; set; }
 
         //private readonly List<string> fMapFiles;
         private SortedDictionary<string, int> fMapIDsFiles;
@@ -59,9 +59,6 @@ namespace osum.Helpers
         private int fOffsetFileinfo;
 
         public int DataOffset => fOffsetData;
-
-        public bool NoVideoVersion {get; private set;}
-
 
         static MapPackage ()
         {

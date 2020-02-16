@@ -323,7 +323,7 @@ namespace osum.Graphics.Sprites
             if (TextConstantSpacing)
             {
                 pTexture spacingTexture = textureFor('6');
-                int charWidth = spacingTexture != null ? spacingTexture.Width : 0;
+                int charWidth = spacingTexture?.Width ?? 0;
 
                 currentX = 0;
 

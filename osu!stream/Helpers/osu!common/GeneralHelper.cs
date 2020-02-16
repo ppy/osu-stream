@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 using System.Text;
 using Microsoft.Win32;
 
@@ -9,138 +7,6 @@ namespace osum.Helpers
 {
     public static class GeneralHelper
     {
-        public static string FormatEnum(string s)
-        {
-            string o = "";
-            for (int i = 0; i < s.Length; i++)
-            {
-                if (i > 0 && char.IsUpper(s[i]))
-                    o += " ";
-                o += s[i];
-            }
-
-            return o;
-        }
-
-        public static string WindowsFilenameStrip(string entry)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-                entry = entry.Replace(c.ToString(), "");
-            return entry;
-        }
-
-        public static string WindowsPathStrip(string entry)
-        {
-            foreach (char c in Path.GetInvalidFileNameChars())
-                entry = entry.Replace(c.ToString(), "");
-            entry = entry.Replace(".", "");
-            return entry;
-        }
-
-#if !iOS
-        public static void RegistryAdd(string extension, string progId, string description, string executable)
-        {
-            try
-            {
-                if (extension.Length != 0)
-                {
-                    if (extension[0] != '.')
-                    {
-                        extension = "." + extension;
-                    }
-
-                    // register the extension, if necessary
-                    using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(extension, true))
-                    {
-                        if (key == null)
-                        {
-                            using (RegistryKey extKey = Registry.ClassesRoot.CreateSubKey(extension))
-                            {
-                                extKey.SetValue(string.Empty, progId);
-                            }
-                        }
-                        else
-                        {
-                            key.SetValue(string.Empty, progId);
-                        }
-                    }
-
-
-                    // register the progId, if necessary
-                    using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(progId))
-                    {
-                        if (key == null || key.OpenSubKey("shell\\open\\command").GetValue(string.Empty).ToString() != string.Format("\"{0}\" \"%1\"", executable))
-                        {
-                            using (RegistryKey progIdKey = Registry.ClassesRoot.CreateSubKey(progId))
-                            {
-                                progIdKey.SetValue(string.Empty, description);
-
-                                using (RegistryKey command = progIdKey.CreateSubKey("shell\\open\\command"))
-                                {
-                                    command.SetValue(string.Empty, string.Format("\"{0}\" \"%1\"", executable));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public static void RegistryDelete(string progId)
-        {
-            try
-            {
-                if (null != Registry.ClassesRoot.OpenSubKey(progId))
-                    Registry.ClassesRoot.DeleteSubKeyTree(progId);
-            }
-            catch (Exception)
-            {
-            }
-
-        }
-
-        // Adds an ACL entry on the specified directory for the specified account. 
-        public static void AddDirectorySecurity(string FileName, string Account, FileSystemRights Rights,
-                                                InheritanceFlags Inheritance, PropagationFlags Propogation,
-                                                AccessControlType ControlType)
-        {
-            // Create a new DirectoryInfo object. 
-            DirectoryInfo dInfo = new DirectoryInfo(FileName);
-            // Get a DirectorySecurity object that represents the  
-            // current security settings. 
-            DirectorySecurity dSecurity = dInfo.GetAccessControl();
-            // Add the FileSystemAccessRule to the security settings.  
-            dSecurity.AddAccessRule(new FileSystemAccessRule(Account,
-                                                             Rights,
-                                                             Inheritance,
-                                                             Propogation,
-                                                             ControlType));
-            // Set the new access settings. 
-            dInfo.SetAccessControl(dSecurity);
-        }
-#endif
-
-        public static string UrlEncode(string str)
-        {
-            if (str == null)
-            {
-                return null;
-            }
-            return UrlEncode(str, Encoding.UTF8, false);
-        }
-
-        public static string UrlEncodeParam(string str)
-        {
-            if (str == null)
-            {
-                return null;
-            }
-            return UrlEncode(str, Encoding.UTF8, true);
-        }
-
         public static string UrlEncode(string str, Encoding e, bool paramEncode)
         {
             if (str == null)
@@ -234,110 +100,6 @@ namespace osum.Helpers
             return (char)((n - 10) + 0x61);
         }
 
-        public static void RemoveReadOnlyRecursive(string s)
-        {
-            foreach (string f in Directory.GetFiles(s))
-            {
-                System.IO.FileInfo myFile = new System.IO.FileInfo(f);
-                if ((myFile.Attributes & FileAttributes.ReadOnly) > 0)
-                    myFile.Attributes &= ~FileAttributes.ReadOnly;
-            }
-
-            foreach (string d in Directory.GetDirectories(s))
-                RemoveReadOnlyRecursive(d);
-        }
-
-        public static bool FileMove(string src, string dest)
-        {
-            try
-            {
-                File.Move(src, dest);
-            }
-            catch
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public static string AsciiOnly(string input)
-        {
-            if (input == null) return null;
-
-            int last = input.LastIndexOf('\\');
-
-            string asc = last >= 0 ? input.Substring(0, last + 1) : "";
-
-            foreach (char c in last >= 0 ? input.Remove(0, last + 1) : input)
-                if (c < 256)
-                    asc += c;
-            return asc;
-        }
-
-        public static void RecursiveMove(string oldFolder, string newFolder)
-        {
-            if (oldFolder == "Songs\\")
-                return;
-
-            foreach (string dir in Directory.GetDirectories(oldFolder))
-            {
-                string newDir = newFolder + "\\" + dir.Remove(0, 1 + dir.LastIndexOf('\\'));
-                try
-                {
-                    Directory.CreateDirectory(newDir);
-                }
-                catch
-                {
-                }
-                RecursiveMove(dir, newDir);
-            }
-
-            bool didExist = Directory.Exists(newFolder);
-            if (!didExist)
-                Directory.CreateDirectory(newFolder);
-
-            foreach (string file in Directory.GetFiles(oldFolder))
-            {
-                string newFile = newFolder + "\\" + Path.GetFileName(file);
-
-                bool didMove = true;
-
-                try
-                {
-                    if (didExist) File.Delete(newFile);
-
-                    try
-                    {
-                        File.Move(file, newFile);
-                    }
-                    catch (Exception)
-                    {
-                        File.Copy(file, newFile);
-                        didMove = false;
-                    }
-                }
-                catch (Exception)
-                {
-                    File.Delete(file);
-                }
-
-                if (!didMove)
-                    File.Delete(file);
-            }
-
-            Directory.Delete(oldFolder, true);
-        }
-
-        public static string CleanStoryboardFilename(string filename)
-        {
-            return filename.Trim('"').Replace("/", "\\");
-        }
-
-        public static DateTime PerthToLocalTime(DateTime dateTime)
-        {
-            return DateTime.SpecifyKind(dateTime.AddHours(-8), DateTimeKind.Utc).ToLocalTime();
-        }
-
         //This is better than encoding as it doesn't check for origin specific data or remove invalid chars.
         public static unsafe string rawBytesToString(byte[] encoded)
         {
@@ -424,9 +186,9 @@ namespace osum.Helpers
             if (sourceType == typeof(char) || destType == typeof(char))
                 throw new NotSupportedException(
                     "Can not convert from/to a char array. Char is special " +
-                    "in a somewhat unknown way (like enums can't be based on " +
-                    "char either), and Marshal.SizeOf returns 1 even when the " +
-                    "values held by a char can be above 255."
+                             "in a somewhat unknown way (like enums can't be based on " +
+                             "char either), and Marshal.SizeOf returns 1 even when the " +
+                             "values held by a char can be above 255."
                 );
     
             var sourceByteSize = Buffer.ByteLength(source);
@@ -434,9 +196,9 @@ namespace osum.Helpers
             if (sourceByteSize % destTypeSize != 0)
                 throw new Exception(
                     "The source array is " + sourceByteSize + " bytes, which can " +
-                    "not be transfered to chunks of " + destTypeSize + ", the size " +
-                    "of type " + typeof(TDest).Name + ". Change destination type or " +
-                    "pad the source array with additional values."
+                             "not be transfered to chunks of " + destTypeSize + ", the size " +
+                             "of type " + typeof(TDest).Name + ". Change destination type or " +
+                             "pad the source array with additional values."
                 );
     
             var destCount = sourceByteSize / destTypeSize;

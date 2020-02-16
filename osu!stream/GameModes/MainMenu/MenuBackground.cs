@@ -301,7 +301,7 @@ namespace osum.GameModes.MainMenu
                 if (awesomeTransformation != null)
                     awesomeTransformation.Update(ClockingNow);
 
-                float progress = awesomeTransformation == null ? 0 : awesomeTransformation.CurrentFloat;
+                float progress = awesomeTransformation?.CurrentFloat ?? 0;
                 yellow.p1 = rectangleLineLeft.PositionAt(0.575f + 0.08f * progress);
                 yellow.p2 = rectangleLineRight.PositionAt(0.575f + 0.08f * progress);
                 yellow.p3 = rectangleLineLeft.PositionAt(0.58f + 0.12f * progress);
