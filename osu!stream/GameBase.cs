@@ -198,7 +198,7 @@ namespace osum
 
             if (aspectRatio > 1.775f)
             {
-                res *= aspectRatio / 1.775f;
+                res *= aspectRatio / 1.5f;
                 IsSuperWide = true;
             }
             else

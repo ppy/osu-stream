@@ -380,24 +380,16 @@ namespace osum.GameplayElements
 
         public bool Draw()
         {
-            float gameplayScale = GameBase.IsSuperWide ? 0.75f : 1;
-
             if (ActiveStream != Difficulty.None)
-            {
-                var currentStreamManager = streamSpriteManagers[(int)ActiveStream];
+                streamSpriteManagers[(int)ActiveStream].Draw();
 
-                currentStreamManager.ScaleScalar = gameplayScale;
-                currentStreamManager.Draw();
-            }
-
-            spriteManager.ScaleScalar = gameplayScale;
             spriteManager.Draw();
 
             return true;
         }
 
         #endregion
-
+1
         #region IUpdateable Members
 
         public bool AllowSpinnerOptimisation;
