@@ -56,9 +56,13 @@ namespace osum.Helpers.Audio
         #endregion
 
         /// <summary>Gets the raw PCM buffer.</summary>
-        public byte[] Data { get { return buffer; } internal set { buffer = value; } }
+        public byte[] Data { get => buffer;
+            internal set => buffer = value;
+        }
 
         /// <summary>Gets the SoundFormat of the SoundData.</summary>
-        public SoundFormat SoundFormat { get { return format; } internal set { format = value; } }
+        public SoundFormat SoundFormat { get => format;
+            internal set => format = value;
+        }
     }    
 }

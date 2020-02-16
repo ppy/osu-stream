@@ -31,13 +31,8 @@ namespace osum.GameplayElements.HitObjects
             }
         }
 
-        public override bool IsVisible
-        {
-            get
-            {
-                return Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
-                   Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
-            }
-        }
+        public override bool IsVisible =>
+            Clock.AudioTime >= StartTime - DifficultyManager.PreEmpt &&
+            Clock.AudioTime <= EndTime + DifficultyManager.FadeOut;
     }
 }

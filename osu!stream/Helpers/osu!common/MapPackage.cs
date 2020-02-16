@@ -58,10 +58,7 @@ namespace osum.Helpers
         private int fOffsetData;
         private int fOffsetFileinfo;
 
-        public int DataOffset
-        {
-            get { return fOffsetData; }
-        }
+        public int DataOffset => fOffsetData;
 
         public bool NoVideoVersion {get; private set;}
 
@@ -665,10 +662,7 @@ namespace osum.Helpers
         /// <summary>
         /// Get the absolute path to this file.
         /// </summary>
-        public string Filename
-        {
-            get { return fFilename; }
-        }
+        public string Filename => fFilename;
 
         /// <summary>
         /// Get a string array containing the filenames of the map files.

@@ -106,7 +106,7 @@ namespace osum.Audio
         protected int sourceId;
         public int SourceId
         {
-            get { return sourceId; }
+            get => sourceId;
             set
             {
                 sourceId = value;
@@ -119,7 +119,7 @@ namespace osum.Audio
         private float pitch = 1;
         public virtual float Pitch
         {
-            get { return pitch; }
+            get => pitch;
             set
             {
                 value = Math.Max(0.5f, Math.Min(2f, value));
@@ -136,7 +136,7 @@ namespace osum.Audio
         protected int bufferId;
         public virtual int BufferId
         {
-            get { return bufferId; }
+            get => bufferId;
             set
             {
                 if (Disposable) DeleteBuffer();
@@ -152,7 +152,7 @@ namespace osum.Audio
         private float volume = 1;
         public virtual float Volume
         {
-            get { return volume; }
+            get => volume;
             set
             {
                 if (value == volume) return;
@@ -164,7 +164,7 @@ namespace osum.Audio
         public bool Disposable;
         public virtual bool Looping
         {
-            get { return looping; }
+            get => looping;
             set
             {
                 if (looping == value) return;

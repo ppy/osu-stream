@@ -47,9 +47,9 @@ namespace osum.Input.Sources
             private const int max_length = 16 * 256;
             private const int section_size = 256;
 
-            public TouchType State { get { return active > 0 ? TouchType.Touch : TouchType.Release; } }
-            public float X { get { return (float)(xposition + section_size * xsection) / max_length; } }
-            public float Y { get { return (float)(yposition + section_size * ysection) / max_length; } }
+            public TouchType State => active > 0 ? TouchType.Touch : TouchType.Release;
+            public float X => (float)(xposition + section_size * xsection) / max_length;
+            public float Y => (float)(yposition + section_size * ysection) / max_length;
         }
         
         public InputSourceBaanto()

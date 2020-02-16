@@ -43,7 +43,7 @@ namespace osum.GameplayElements.Beatmaps
         private bool timingChange = true;
         public bool TimingChange
         {
-            get { return timingChange; }
+            get => timingChange;
             set
             {
                 if (!value && beatLength >= 0) beatLength = -100;
@@ -77,10 +77,7 @@ namespace osum.GameplayElements.Beatmaps
             this.kiaiMode = kiaiMode;
         }
 
-        public double bpm
-        {
-            get { return beatLength == 0 ? 0 : 60000 / beatLength; }
-        }
+        public double bpm => beatLength == 0 ? 0 : 60000 / beatLength;
 
         #region ICloneable Members
 

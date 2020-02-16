@@ -27,10 +27,7 @@ namespace osum.GameplayElements.HitObjects
             throw new NotImplementedException();
         }
 
-        public override bool IsVisible
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override bool IsVisible => throw new NotImplementedException();
     }
 
     public abstract class HitObject : pSpriteCollection, IComparable<HitObject>, IComparable<int>, IUpdateable
@@ -107,7 +104,7 @@ namespace osum.GameplayElements.HitObjects
         private ClockTypes clocking;
         internal ClockTypes Clocking
         {
-            get { return clocking; }
+            get => clocking;
             set
             {
                 if (value == clocking)
@@ -124,24 +121,15 @@ namespace osum.GameplayElements.HitObjects
         private Color4 colour;
         internal virtual Color4 Colour
         {
-            get
-            {
-                return colour;
-            }
+            get => colour;
 
-            set
-            {
-                colour = value;
-            }
+            set => colour = value;
         }
 
         private int colour_index;
         internal virtual int ColourIndex
         {
-            get
-            {
-                return colour_index;
-            }
+            get => colour_index;
             set
             {
                 if (value >= 4) throw new ArgumentOutOfRangeException();
@@ -152,10 +140,7 @@ namespace osum.GameplayElements.HitObjects
 
         public virtual bool IsHit { get; set; }
 
-        internal int ClockingNow
-        {
-            get { return Sprites[0].ClockingNow; }
-        }
+        internal int ClockingNow => Sprites[0].ClockingNow;
 
         /// <summary>
         /// This will cause the hitObject to get hit and scored.
@@ -312,10 +297,7 @@ namespace osum.GameplayElements.HitObjects
         /// <summary>
         /// Is this object currently within an active range?
         /// </summary>
-        internal virtual bool IsActive
-        {
-            get { return false; }
-        }
+        internal virtual bool IsActive => false;
 
         #endregion
 
@@ -324,7 +306,7 @@ namespace osum.GameplayElements.HitObjects
         protected Vector2 position;
         public virtual Vector2 Position
         {
-            get { return position; }
+            get => position;
             set
             {
                 Vector2 change = value - position;
@@ -334,18 +316,12 @@ namespace osum.GameplayElements.HitObjects
             }
         }
 
-        public virtual Vector2 EndPosition
-        {
-            get { return Position; }
-        }
+        public virtual Vector2 EndPosition => Position;
 
         /// <summary>
         /// For objects with two distinct endpoints, this will be the "far" one.
         /// </summary>
-        public virtual Vector2 Position2
-        {
-            get { return Position; }
-        }
+        public virtual Vector2 Position2 => Position;
 
         internal int StackCount;
 
@@ -369,7 +345,7 @@ namespace osum.GameplayElements.HitObjects
 
         internal bool Whistle
         {
-            get { return (HitObjectSoundType.Whistle & SoundType) > 0; }
+            get => (HitObjectSoundType.Whistle & SoundType) > 0;
             set
             {
                 if (value)
@@ -382,7 +358,7 @@ namespace osum.GameplayElements.HitObjects
 
         internal bool Finish
         {
-            get { return (HitObjectSoundType.Finish & SoundType) > 0; }
+            get => (HitObjectSoundType.Finish & SoundType) > 0;
             set
             {
                 if (value)
@@ -394,7 +370,7 @@ namespace osum.GameplayElements.HitObjects
 
         internal bool Clap
         {
-            get { return (HitObjectSoundType.Clap & SoundType) > 0; }
+            get => (HitObjectSoundType.Clap & SoundType) > 0;
             set
             {
                 if (value)
@@ -428,25 +404,19 @@ namespace osum.GameplayElements.HitObjects
             AudioEngine.PlaySample(OsuSamples.HitNormal, ssi.SampleSet, ssi.Volume);
         }
 
-        protected virtual float PositionalSound { get { return Position.X / GameBase.GamefieldBaseSize.X - 0.5f; } }
+        protected virtual float PositionalSound => Position.X / GameBase.GamefieldBaseSize.X - 0.5f;
 
         /// <summary>
         /// Gets the hittable end time (valid active object time for sliders etc. - used in taiko to extend when hits are valid).
         /// </summary>
         /// <value>The hittable end time.</value>
-        internal virtual int HittableEndTime
-        {
-            get { return EndTime + DifficultyManager.HitWindow50; }
-        }
+        internal virtual int HittableEndTime => EndTime + DifficultyManager.HitWindow50;
 
         /// <summary>
         /// Gets the hittable end time (valid active object time for sliders etc. - used in taiko to extend when hits are valid).
         /// </summary>
         /// <value>The hittable end time.</value>
-        internal virtual int HittableStartTime
-        {
-            get { return StartTime; }
-        }
+        internal virtual int HittableStartTime => StartTime;
 
         #endregion
 
@@ -471,7 +441,7 @@ namespace osum.GameplayElements.HitObjects
 
         #endregion
 
-        public virtual bool IncrementCombo { get { return true; } }
+        public virtual bool IncrementCombo => true;
 
 
         internal virtual void StopSound(bool done = true)
@@ -527,9 +497,9 @@ namespace osum.GameplayElements.HitObjects
             return Type + ": " + StartTime + "-" + EndTime + " stack:" + StackCount;
         }
 
-        public virtual float HpMultiplier { get { return 1; } }
+        public virtual float HpMultiplier => 1;
 
-        public virtual Vector2 TrackingPosition { get { return Position; } }
+        public virtual Vector2 TrackingPosition => Position;
     }
 
     [Flags]

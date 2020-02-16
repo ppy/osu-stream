@@ -17,7 +17,7 @@ namespace osum.GameplayElements
         internal const int DATABASE_VERSION = 12;
         private const string FILENAME = "osu!.db";
 
-        private static string databasePath { get { return GameBase.Instance.PathConfig + FILENAME; } }
+        private static string databasePath => GameBase.Instance.PathConfig + FILENAME;
 
         internal static int Version = -1;
 

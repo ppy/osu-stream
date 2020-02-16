@@ -53,7 +53,7 @@ namespace osum.GameModes.MainMenu
         private bool hasNews;
         public bool HasNews
         {
-            get { return hasNews; }
+            get => hasNews;
             set
             {
                 hasNews = value;

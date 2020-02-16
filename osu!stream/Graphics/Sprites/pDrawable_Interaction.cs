@@ -38,14 +38,14 @@ namespace osum.Graphics.Sprites
 {
     public partial class pDrawable : IDrawable, IDisposable
     {
-        internal bool IsClickable { get { return onClick != null; } }
+        internal bool IsClickable => onClick != null;
 
         internal bool HandleClickOnUp;
 
         private bool handleInput;
         internal bool HandleInput
         {
-            get { return handleInput; }
+            get => handleInput;
             set
             {
                 handleInput = value;
@@ -64,21 +64,21 @@ namespace osum.Graphics.Sprites
         internal event EventHandler OnClick
         {
             add { onClick += value; HandleInput = true; }
-            remove { onClick -= value; }
+            remove => onClick -= value;
         }
 
         private event EventHandler onHover;
         internal event EventHandler OnHover
         {
             add { onHover += value; HandleInput = true; }
-            remove { onHover -= value; }
+            remove => onHover -= value;
         }
 
         private event EventHandler onHoverLost;
         internal event EventHandler OnHoverLost
         {
-            add { onHoverLost += value; }
-            remove { onHoverLost -= value; }
+            add => onHoverLost += value;
+            remove => onHoverLost -= value;
         }
 
         internal virtual void UnbindAllEvents()

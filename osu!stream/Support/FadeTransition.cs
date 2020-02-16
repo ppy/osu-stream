@@ -26,11 +26,7 @@ namespace osum.Support
 
         private float currentValue; //todo: yucky.
         private float drawDim;
-        public override float CurrentValue {
-            get {
-                return currentValue;
-            }
-        }
+        public override float CurrentValue => currentValue;
 
         public override bool Draw()
         {
@@ -68,21 +64,9 @@ namespace osum.Support
             base.FadeIn();
         }
 
-        public override bool FadeInDone
-        {
-            get
-            {
-                return drawDim == 0 && fadeState == FadeState.FadeIn;
-            }
-        }
+        public override bool FadeInDone => drawDim == 0 && fadeState == FadeState.FadeIn;
 
-        public override bool FadeOutDone
-        {
-            get
-            {
-                return (drawDim == 1 && fadeState == FadeState.FadeOut) || fadeState == FadeState.FadeIn;
-            }
-        }
+        public override bool FadeOutDone => (drawDim == 1 && fadeState == FadeState.FadeOut) || fadeState == FadeState.FadeIn;
     }
 
     internal enum FadeState

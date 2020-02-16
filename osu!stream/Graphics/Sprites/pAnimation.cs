@@ -20,15 +20,9 @@ namespace osum.Graphics.Sprites
 
         internal double FramesPerSecond
         {
-            get
-            {
-                return 1000 / FrameDelay;
-            }
+            get => 1000 / FrameDelay;
 
-            set
-            {
-                FrameDelay = 1000.0 / value;
-            }
+            set => FrameDelay = 1000.0 / value;
         }
 
         public LoopTypes LoopType = LoopTypes.LoopForever;
@@ -48,16 +42,13 @@ namespace osum.Graphics.Sprites
 
         internal int CurrentFrame
         {
-            get { return currentFrame; }
-            set
-            {
-                currentFrame = value;
-            }
+            get => currentFrame;
+            set => currentFrame = value;
         }
 
         internal pTexture[] TextureArray
         {
-            get { return textureArray; }
+            get => textureArray;
             set
             {
                 textureArray = value;
@@ -180,8 +171,8 @@ namespace osum.Graphics.Sprites
             return clone;
         }
 
-        public bool hasCustomSequence { get { return CustomSequence != null; } }
+        public bool hasCustomSequence => CustomSequence != null;
 
-        public int maxFrame { get { return !hasCustomSequence ? TextureCount - 1 : CustomSequence.Length - 1; } }
+        public int maxFrame => !hasCustomSequence ? TextureCount - 1 : CustomSequence.Length - 1;
     }
 }

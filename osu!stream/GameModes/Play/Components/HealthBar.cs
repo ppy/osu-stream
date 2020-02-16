@@ -48,7 +48,7 @@ namespace osum.GameModes.Play.Components
 
         internal bool Visible
         {
-            get { return visible; }
+            get => visible;
             set
             {
                 if (visible == value) return;
@@ -62,13 +62,7 @@ namespace osum.GameModes.Play.Components
             }
         }
 
-        internal float CurrentXPosition
-        {
-            get
-            {
-                return s_barFill.DisplayRectangle.Right / GameBase.InputToFixedWidthAlign;  
-            }
-        }
+        internal float CurrentXPosition => s_barFill.DisplayRectangle.Right / GameBase.InputToFixedWidthAlign;
 
         internal HealthBar()
         {

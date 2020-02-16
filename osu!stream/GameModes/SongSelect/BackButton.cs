@@ -21,8 +21,8 @@ namespace osum.GameModes.SongSelect
         private readonly SpriteManager sm = new SpriteManager();
 
         private static readonly Vector2 hiddenPosition = new Vector2(-80, -218);
-        private static Vector2 visiblePosition { get { return positionAtDistance(10); } }
-        private static Vector2 fullyVisiblePosition { get { return positionAtDistance(120); } }
+        private static Vector2 visiblePosition => positionAtDistance(10);
+        private static Vector2 fullyVisiblePosition => positionAtDistance(120);
 
         private static Vector2 positionAtDistance(float distance)
         {
@@ -190,13 +190,7 @@ namespace osum.GameModes.SongSelect
             return true;
         }
 
-        internal override bool IsOnScreen
-        {
-            get
-            {
-                return true;
-            }
-        }
+        internal override bool IsOnScreen => true;
 
         public override void Update()
         {

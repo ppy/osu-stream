@@ -67,10 +67,7 @@ namespace osum.Helpers
         /// <summary>
         /// Gets the current game time in milliseconds, accurate to many decimal places.
         /// </summary>
-        public static double TimeAccurate
-        {
-            get { return (time * 1000); }
-        }
+        public static double TimeAccurate => (time * 1000);
 
         public static double ElapsedMilliseconds = ELAPSED_AT_SIXTY_FRAMES;
         public static float ElapsedRatioToSixty = 1;

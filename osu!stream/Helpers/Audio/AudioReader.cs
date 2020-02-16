@@ -184,8 +184,8 @@ namespace osum.Helpers.Audio
         /// </summary>
         protected virtual Stream Stream
         {
-            get { return stream; }
-            set { stream = value; }
+            get => stream;
+            set => stream = value;
         }
 
         #endregion

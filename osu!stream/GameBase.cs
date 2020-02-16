@@ -131,10 +131,7 @@ namespace osum
             Clock.USER_OFFSET = Config.GetValue("offset", 0);
         }
 
-        internal static Vector2 BaseSizeHalf
-        {
-            get { return new Vector2(BaseSizeFixedWidth.X / 2, BaseSizeFixedWidth.Y / 2); }
-        }
+        internal static Vector2 BaseSizeHalf => new Vector2(BaseSizeFixedWidth.X / 2, BaseSizeFixedWidth.Y / 2);
 
         internal static Vector2 GamefieldToStandard(Vector2 vec)
         {
@@ -160,7 +157,7 @@ namespace osum
         private bool flipView;
         public bool FlipView
         {
-            get { return flipView; }
+            get => flipView;
 
             set
             {
@@ -393,13 +390,7 @@ namespace osum
             Clock.Start();
         }
 
-        public virtual string DeviceIdentifier
-        {
-            get
-            {
-                return "1234567890123456789012345678901234567890";
-            }
-        }
+        public virtual string DeviceIdentifier => "1234567890123456789012345678901234567890";
 
         /// <summary>
         /// Initializes the sound effects engine.
@@ -490,7 +481,7 @@ namespace osum
         private static bool showLoadingOverlay;
         public static bool ShowLoadingOverlay
         {
-            get { return showLoadingOverlay; }
+            get => showLoadingOverlay;
             set
             {
                 if (value == showLoadingOverlay) return;
@@ -535,7 +526,7 @@ namespace osum
         private static bool globallyDisableInput;
         public static bool GloballyDisableInput
         {
-            get { return globallyDisableInput; }
+            get => globallyDisableInput;
             set
             {
                 if (value == globallyDisableInput)
@@ -611,6 +602,6 @@ namespace osum
             Process.Start(url);
         }
 
-        public virtual string PathConfig { get { return string.Empty; } }
+        public virtual string PathConfig => string.Empty;
     }
 }

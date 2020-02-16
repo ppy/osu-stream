@@ -10,8 +10,9 @@ namespace osum.GameplayElements
         //these are values as found on the spritesheet
         //they are @2x sizes. half them for gamefield radius
 
-        public static float HitObjectRadiusGamefield { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
-        public static float HitObjectRadiusSolidGamefield { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio; } }
+        public static float HitObjectRadiusGamefield => HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToBaseRatio;
+        public static float HitObjectRadiusSolidGamefield => HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToBaseRatio;
+
         public static float HitObjectRadiusSolidGamefieldHittable
         {
             get
@@ -37,8 +38,9 @@ namespace osum.GameplayElements
         /// <summary>
         /// Radius of hitObjects in the native field.
         /// </summary>
-        public static float HitObjectRadius { get { return HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToNativeRatio; } }
-        public static float HitObjectRadiusFull { get { return HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToNativeRatio; } }
+        public static float HitObjectRadius => HitObjectRadiusSolid * HitObjectSizeModifier * GameBase.SpriteToNativeRatio;
+
+        public static float HitObjectRadiusFull => HitObjectRadiusSprite * HitObjectSizeModifier * GameBase.SpriteToNativeRatio;
 
         public static int SliderVelocity = 300;
 
@@ -60,13 +62,13 @@ namespace osum.GameplayElements
         }
 
         // at what time does the snaking animation of a LONG slider begin?
-        public static int SnakeStart { get { return PreEmpt * 8 / 10; } }
+        public static int SnakeStart => PreEmpt * 8 / 10;
 
         // at what time does the snaking animation of a SHORT slider end?
-        public static int SnakeEndDesired { get { return PreEmpt * 5 / 10; } }
+        public static int SnakeEndDesired => PreEmpt * 5 / 10;
 
         // at what time does the snaking animation of a LONG slider end?
-        public static int SnakeEndLimit { get { return PreEmpt * 3 / 10; } }
+        public static int SnakeEndLimit => PreEmpt * 3 / 10;
 
         // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
         public static double SnakeSpeedInverse { get
@@ -206,11 +208,11 @@ namespace osum.GameplayElements
         /// </summary>
         public static int FollowPointSpeedLimit = 200;
 
-        public static double InitialHp { get { return Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM; } }
+        public static double InitialHp => Player.Difficulty == Difficulty.Normal ? HealthBar.HP_BAR_MAXIMUM / 2 : HealthBar.HP_BAR_MAXIMUM;
 
         /// <summary>
         /// Time taken after hitobject fadein for rebound arrows to fade in
         /// </summary>
-        public static int FadeInReboundArrow { get { return 100; } }
+        public static int FadeInReboundArrow => 100;
     }
 }

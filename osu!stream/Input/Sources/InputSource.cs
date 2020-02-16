@@ -7,7 +7,7 @@ namespace osum.Input.Sources
     {
         public List<TrackingPoint> trackingPoints = new List<TrackingPoint>();
 
-        public bool IsPressed { get { return PressedCount > 0; } }
+        public bool IsPressed => PressedCount > 0;
         public int PressedCount;
 
         public event InputHandler OnDown;

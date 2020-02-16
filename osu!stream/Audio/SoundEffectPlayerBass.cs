@@ -63,10 +63,7 @@ namespace osum.Audio
 
         public override int BufferId
         {
-            get
-            {
-                return base.BufferId;
-            }
+            get => base.BufferId;
             set
             {
                 base.BufferId = value;
@@ -75,19 +72,13 @@ namespace osum.Audio
             }
         }
 
-        public override bool Playing
-        {
-            get { return Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING; }
-        }
+        public override bool Playing => Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING;
 
         private float audioFrequency = -1;
 
         public override float Pitch
         {
-            get
-            {
-                return base.Pitch;
-            }
+            get => base.Pitch;
             set
             {
                 if (audioFrequency == -1) Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref audioFrequency);
@@ -115,10 +106,7 @@ namespace osum.Audio
 
         public override bool Looping
         {
-            get
-            {
-                return base.Looping;
-            }
+            get => base.Looping;
             set
             {
                 base.Looping = value;
@@ -132,10 +120,7 @@ namespace osum.Audio
 
         public override float Volume
         {
-            get
-            {
-                return base.Volume;
-            }
+            get => base.Volume;
             set
             {
                 base.Volume = value;

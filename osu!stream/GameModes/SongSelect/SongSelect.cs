@@ -59,10 +59,7 @@ namespace osum.GameModes.SongSelect
 
         private float difficultySelectOffset;
 
-        private float offset_min
-        {
-            get { return panels.Count * -70 + GameBase.BaseSizeFixedWidth.Y - s_Header.DrawHeight - 80; }
-        }
+        private float offset_min => panels.Count * -70 + GameBase.BaseSizeFixedWidth.Y - s_Header.DrawHeight - 80;
 
         private readonly float offset_max = 0;
         private float velocity;
@@ -75,10 +72,7 @@ namespace osum.GameModes.SongSelect
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
-        private float offsetBound
-        {
-            get { return Math.Min(offset_max, Math.Max(offset_min, songSelectOffset)); }
-        }
+        private float offsetBound => Math.Min(offset_max, Math.Max(offset_min, songSelectOffset));
 
         public override void Initialize()
         {

@@ -170,17 +170,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override int ComboNumber
         {
-            get { return 1; }
+            get => 1;
             set { }
         }
 
-        public override bool IncrementCombo
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IncrementCombo => false;
 
         public override bool IsVisible
         {
@@ -195,13 +189,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
         }
 
-        internal override int HittableEndTime
-        {
-            get
-            {
-                return EndTime;
-            }
-        }
+        internal override int HittableEndTime => EndTime;
 
         private TrackingPoint cursorTrackingPoint;
         private Vector2 cursorTrackingPosition;
@@ -349,13 +337,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal float BonusScore;
         private float hpMultiplier = 1;
-        public override float HpMultiplier
-        {
-            get
-            {
-                return hpMultiplier;
-            }
-        }
+        public override float HpMultiplier => hpMultiplier;
 
         private double lastSamplePlayedRotationCount;
         private double lastScoredRotationCount;

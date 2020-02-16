@@ -4,20 +4,11 @@ namespace osum.Support
 {
     public class Transition : GameComponent
     {
-        public virtual float CurrentValue
-        {
-            get { return 0; }
-        }
-        
-        public virtual bool FadeOutDone
-        {
-            get { return true; }
-        }
+        public virtual float CurrentValue => 0;
 
-        public virtual bool FadeInDone
-        {
-            get { return true; }
-        }
+        public virtual bool FadeOutDone => true;
+
+        public virtual bool FadeInDone => true;
 
         internal virtual void FadeIn()
         {
@@ -27,10 +18,7 @@ namespace osum.Support
         {
         }
 
-        public virtual bool SkipScreenClear
-        {
-            get { return false; }
-        }
+        public virtual bool SkipScreenClear => false;
     }
 }
 

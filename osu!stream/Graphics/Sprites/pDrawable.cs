@@ -145,16 +145,13 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal pList<Transformation> Transformations = new pList<Transformation> { UseBackwardsSearch = true };
 
-        internal virtual bool IsRemovable
-        {
-            get { return !AlwaysDraw && noTransformationsLeft; }
-        }
+        internal virtual bool IsRemovable => !AlwaysDraw && noTransformationsLeft;
 
         internal bool UsesTextures;
 
         internal float ScaleScalar
         {
-            get { return Scale.X; }
+            get => Scale.X;
             set
             {
                 if (Scale.X == value && Scale.Y == value)
@@ -166,8 +163,8 @@ namespace osum.Graphics.Sprites
 
         internal bool Additive
         {
-            get { return BlendingMode == BlendingFactorDest.One; }
-            set { BlendingMode = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha; }
+            get => BlendingMode == BlendingFactorDest.One;
+            set => BlendingMode = value ? BlendingFactorDest.One : BlendingFactorDest.OneMinusSrcAlpha;
         }
 
         /// <summary>
@@ -187,8 +184,8 @@ namespace osum.Graphics.Sprites
 
         internal virtual bool ExactCoordinates
         {
-            get { return !exactCoordinatesOverride && UsesTextures && !hasMovement; }
-            set { exactCoordinatesOverride = !value; }
+            get => !exactCoordinatesOverride && UsesTextures && !hasMovement;
+            set => exactCoordinatesOverride = !value;
         }
 
         internal Vector2 FieldPosition;
@@ -539,10 +536,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal int ClockingNow
-        {
-            get { return Clock.GetTime(Clocking); }
-        }
+        internal int ClockingNow => Clock.GetTime(Clocking);
 
         internal void FadeIn(int duration, float finalAlpha = 1)
         {

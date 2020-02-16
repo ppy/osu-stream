@@ -53,7 +53,7 @@ namespace osum.Graphics.Sprites
         private char[] textArray;
         internal char[] TextArray
         {
-            get { return textArray; }
+            get => textArray;
             set
             {
                 if (value.Length != textArray.Length)

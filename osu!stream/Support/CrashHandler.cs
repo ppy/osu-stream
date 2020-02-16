@@ -9,7 +9,7 @@ namespace osum.Support
     public static class CrashHandler
     {
         private const string LOG_FILE = "error.log";
-        private static string LogFileFullPath { get { return GameBase.Instance.PathConfig + LOG_FILE; } }
+        private static string LogFileFullPath => GameBase.Instance.PathConfig + LOG_FILE;
 
         private static bool isInitialized;
         public static void Initialize()

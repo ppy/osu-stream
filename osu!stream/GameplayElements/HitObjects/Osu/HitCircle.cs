@@ -66,15 +66,9 @@ namespace osum.GameplayElements.HitObjects.Osu
             SpriteHitCircleText.Transform(fadeOut);
         }
 
-        protected virtual bool ShowCircleText
-        {
-            get { return true; }
-        }
+        protected virtual bool ShowCircleText => true;
 
-        protected virtual bool ShowApproachCircle
-        {
-            get { return true; }
-        }
+        protected virtual bool ShowApproachCircle => true;
 
         protected override ScoreChange HitActionInitial()
         {
@@ -143,7 +137,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         private int comboNumber;
         internal override int ComboNumber
         {
-            get { return comboNumber; }
+            get => comboNumber;
             set
             {
                 if (value == comboNumber) return;
@@ -157,18 +151,10 @@ namespace osum.GameplayElements.HitObjects.Osu
             }
         }
 
-        public override bool IsVisible
-        {
-            get
-            {
-                return SpriteHitCircle1.Alpha > 0;
-            }
-        }
+        public override bool IsVisible => SpriteHitCircle1.Alpha > 0;
 
         internal override int ColourIndex {
-            get {
-                return base.ColourIndex;
-            }
+            get => base.ColourIndex;
             set {
                 SpriteHitCircle1.Texture = TextureManager.Load(OsuTexture.hitcircle0 + value);
                 base.ColourIndex = value;
@@ -177,10 +163,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override Color4 Colour
         {
-            get
-            {
-                return base.Colour;
-            }
+            get => base.Colour;
             set
             {
                 SpriteApproachCircle.Colour = value;

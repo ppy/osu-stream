@@ -332,7 +332,7 @@ namespace osum.GameModes.MainMenu
             base.Update();
         }
 
-        public bool IsBeingAwesome { get { return awesomeTransformation != null; } }
-        public bool IsAwesome { get { return awesomeStartTime >= 0 && Clock.ModeTime - awesomeStartTime > 50; } }
+        public bool IsBeingAwesome => awesomeTransformation != null;
+        public bool IsAwesome => awesomeStartTime >= 0 && Clock.ModeTime - awesomeStartTime > 50;
     }
 }

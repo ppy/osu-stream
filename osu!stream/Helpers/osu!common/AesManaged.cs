@@ -90,58 +90,31 @@ namespace osum.Helpers
         // Properties
         public override int FeedbackSize
         {
-            get
-            {
-                return m_rijndael.FeedbackSize;
-            }
-            set
-            {
-                m_rijndael.FeedbackSize = value;
-            }
+            get => m_rijndael.FeedbackSize;
+            set => m_rijndael.FeedbackSize = value;
         }
 
         public override byte[] IV
         {
-            get
-            {
-                return m_rijndael.IV;
-            }
-            set
-            {
-                m_rijndael.IV = value;
-            }
+            get => m_rijndael.IV;
+            set => m_rijndael.IV = value;
         }
 
         public override byte[] Key
         {
-            get
-            {
-                return m_rijndael.Key;
-            }
-            set
-            {
-                m_rijndael.Key = value;
-            }
+            get => m_rijndael.Key;
+            set => m_rijndael.Key = value;
         }
 
         public override int KeySize
         {
-            get
-            {
-                return m_rijndael.KeySize;
-            }
-            set
-            {
-                m_rijndael.KeySize = value;
-            }
+            get => m_rijndael.KeySize;
+            set => m_rijndael.KeySize = value;
         }
 
         public override CipherMode Mode
         {
-            get
-            {
-                return m_rijndael.Mode;
-            }
+            get => m_rijndael.Mode;
             set
             {
                 if ((value == CipherMode.CFB) || (value == CipherMode.OFB))
@@ -154,14 +127,8 @@ namespace osum.Helpers
 
         public override PaddingMode Padding
         {
-            get
-            {
-                return m_rijndael.Padding;
-            }
-            set
-            {
-                m_rijndael.Padding = value;
-            }
+            get => m_rijndael.Padding;
+            set => m_rijndael.Padding = value;
         }
     }
 }

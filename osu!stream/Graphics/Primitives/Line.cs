@@ -47,15 +47,9 @@ namespace osum.Graphics.Primitives
             Recalc();
         }
 
-        internal float rho
-        {
-            get { return rhoTheta.X; }
-        }
+        internal float rho => rhoTheta.X;
 
-        internal float theta
-        {
-            get { return rhoTheta.Y; }
-        }
+        internal float theta => rhoTheta.Y;
 
 
         internal void Move(Vector2 p1, Vector2 p2)
@@ -104,27 +98,17 @@ namespace osum.Graphics.Primitives
             return pMathHelper.DistanceSquared(p, pB);
         }
 
-        internal Matrix4 WorldMatrix
-        {
-            get
-            {
-                return new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
-                                   -unitAngle.Y, unitAngle.X, 0, 0,
-                                   0, 0, 1, 0,
-                                   p1.X, p1.Y, 0, 1);
-            }
-        }
+        internal Matrix4 WorldMatrix =>
+            new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
+                -unitAngle.Y, unitAngle.X, 0, 0,
+                0, 0, 1, 0,
+                p1.X, p1.Y, 0, 1);
 
-        internal Matrix4 EndWorldMatrix
-        {
-            get
-            {
-                return new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
-                                   -unitAngle.Y, unitAngle.X, 0, 0,
-                                   0, 0, 1, 0,
-                                   p2.X, p2.Y, 0, 1);
-            }
-        }
+        internal Matrix4 EndWorldMatrix =>
+            new Matrix4(unitAngle.X, unitAngle.Y, 0, 0,
+                -unitAngle.Y, unitAngle.X, 0, 0,
+                0, 0, 1, 0,
+                p2.X, p2.Y, 0, 1);
 
         internal Matrix4 QuadMatrix(float radius)
         {

@@ -86,7 +86,7 @@ namespace osum.Graphics
         private bool bindInput;
         private bool BindInput
         {
-            get { return bindInput; }
+            get => bindInput;
             set
             {
                 if (value == BindInput)

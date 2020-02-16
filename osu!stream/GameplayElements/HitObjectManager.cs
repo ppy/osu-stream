@@ -129,10 +129,7 @@ namespace osum.GameplayElements
 
         internal int nextStreamChange;
 
-        internal bool StreamChanging
-        {
-            get { return nextStreamChange > 0 && nextStreamChange + 1000 >= Clock.AudioTime; }
-        }
+        internal bool StreamChanging => nextStreamChange > 0 && nextStreamChange + 1000 >= Clock.AudioTime;
 
         /// <summary>
         /// Sets the current stream to the best match found.
@@ -609,15 +606,9 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        public virtual bool IsLowestStream
-        {
-            get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; }
-        }
+        public virtual bool IsLowestStream => ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert;
 
-        public virtual bool IsHighestStream
-        {
-            get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; }
-        } //todo: support easy mode
+        public virtual bool IsHighestStream => ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; //todo: support easy mode
 
         internal void StopAllSounds()
         {

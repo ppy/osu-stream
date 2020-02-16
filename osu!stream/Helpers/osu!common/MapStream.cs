@@ -100,25 +100,13 @@ namespace osum.Helpers
         }
 
 
-        public override bool CanRead
-        {
-            get { return !IsDisposed; }
-        }
+        public override bool CanRead => !IsDisposed;
 
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        public override bool CanSeek => false;
 
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        public override bool CanWrite => false;
 
-        public override long Length
-        {
-            get { return fLength; }
-        }
+        public override long Length => fLength;
 
         public bool IsDisposed { get; protected set; }
 

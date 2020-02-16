@@ -136,10 +136,7 @@ namespace osum.Audio
         #region ITimeSource Members
 
 
-        public override bool IsElapsing
-        {
-            get { return Bass.BASS_ChannelIsActive(audioStream) == BASSActive.BASS_ACTIVE_PLAYING; }
-        }
+        public override bool IsElapsing => Bass.BASS_ChannelIsActive(audioStream) == BASSActive.BASS_ACTIVE_PLAYING;
 
         #endregion
 

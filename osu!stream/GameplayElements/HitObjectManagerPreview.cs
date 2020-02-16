@@ -48,7 +48,7 @@ namespace osum.GameplayElements
             return true;
         }
 
-        public override bool IsLowestStream { get { return ActiveStream == Difficulty.Easy; } }
-        public override bool IsHighestStream { get { return ActiveStream == Difficulty.Expert; } }
+        public override bool IsLowestStream => ActiveStream == Difficulty.Easy;
+        public override bool IsHighestStream => ActiveStream == Difficulty.Expert;
     }
 }

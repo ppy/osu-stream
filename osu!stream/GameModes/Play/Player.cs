@@ -32,7 +32,7 @@ namespace osum.GameModes.Play
         private HitObjectManager hitObjectManager;
         public HitObjectManager HitObjectManager
         {
-            get { return hitObjectManager; }
+            get => hitObjectManager;
             set
             {
                 hitObjectManager = value;
@@ -983,10 +983,7 @@ namespace osum.GameModes.Play
             }
         }
 
-        internal bool IsPaused
-        {
-            get { return GameBase.Mapper ? !AudioEngine.Music.IsElapsing : menu != null && menu.MenuDisplayed; }
-        }
+        internal bool IsPaused => GameBase.Mapper ? !AudioEngine.Music.IsElapsing : menu != null && menu.MenuDisplayed;
 
         internal virtual bool Pause(bool showMenu = true)
         {
@@ -1028,18 +1025,9 @@ namespace osum.GameModes.Play
             return true;
         }
 
-        internal static string SubmitString
-        {
-            get { return CryptoHelper.GetMd5String(Path.GetFileName(Beatmap.ContainerFilename) + "-" + Difficulty); }
-        }
+        internal static string SubmitString => CryptoHelper.GetMd5String(Path.GetFileName(Beatmap.ContainerFilename) + "-" + Difficulty);
 
-        public float Progress
-        {
-            get
-            {
-                return pMathHelper.ClampToOne((float)Clock.AudioTime / lastObjectTime);
-            }
-        }
+        public float Progress => pMathHelper.ClampToOne((float)Clock.AudioTime / lastObjectTime);
 
         protected bool ShowGuideFingers;
         protected ProgressDisplay progressDisplay;

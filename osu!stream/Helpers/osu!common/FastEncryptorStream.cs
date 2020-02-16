@@ -147,10 +147,7 @@ namespace osum.Helpers
         /// true if the stream supports reading; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanRead
-        {
-            get { return internalStream.CanRead; }
-        }
+        public override bool CanRead => internalStream.CanRead;
 
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports seeking.
@@ -159,10 +156,7 @@ namespace osum.Helpers
         /// true if the stream supports seeking; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanSeek
-        {
-            get { return internalStream.CanSeek; }
-        }
+        public override bool CanSeek => internalStream.CanSeek;
 
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports writing.
@@ -171,10 +165,7 @@ namespace osum.Helpers
         /// true if the stream supports writing; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanWrite
-        {
-            get { return internalStream.CanWrite; }
-        }
+        public override bool CanWrite => internalStream.CanWrite;
 
         /// <summary>
         /// When overridden in a derived class, gets the length in bytes of the stream.
@@ -185,10 +176,7 @@ namespace osum.Helpers
         /// <exception cref="T:System.NotSupportedException">A class derived from Stream does not support seeking. 
         ///                 </exception><exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. 
         ///                 </exception><filterpriority>1</filterpriority>
-        public override long Length
-        {
-            get { return internalStream.Length; }
-        }
+        public override long Length => internalStream.Length;
 
         /// <summary>
         /// When overridden in a derived class, gets or sets the position within the current stream.
@@ -202,8 +190,8 @@ namespace osum.Helpers
         ///                 </exception><filterpriority>1</filterpriority>
         public override long Position
         {
-            get { return internalStream.Position; }
-            set { internalStream.Position = value; }
+            get => internalStream.Position;
+            set => internalStream.Position = value;
         }
 
 

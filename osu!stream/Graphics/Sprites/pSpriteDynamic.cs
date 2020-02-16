@@ -23,10 +23,7 @@ namespace osum.Graphics.Sprites
                     LoadTexture();
                 return base.Texture;
             }
-            set
-            {
-                base.Texture = value;
-            }
+            set => base.Texture = value;
         }
 
         private bool failedLoad;

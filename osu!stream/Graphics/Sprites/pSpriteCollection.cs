@@ -20,7 +20,7 @@ namespace osum.Graphics.Sprites
         private bool visible = true;
         internal bool Visible
         {
-            get { return visible; }
+            get => visible;
             set
             {
                 if (value == visible) return;

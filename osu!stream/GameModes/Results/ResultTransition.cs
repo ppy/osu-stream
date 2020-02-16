@@ -18,29 +18,11 @@ namespace osum.GameModes.Results
 
         private readonly List<pDrawable> fillSprites = new List<pDrawable>();
 
-        public override bool SkipScreenClear
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool SkipScreenClear => true;
 
-        public override bool FadeOutDone
-        {
-            get
-            {
-                return Clock.Time - startTime > 3000;
-            }
-        }
+        public override bool FadeOutDone => Clock.Time - startTime > 3000;
 
-        public override bool FadeInDone
-        {
-            get
-            {
-                return spriteManager.Transformations.Count == 0;
-            }
-        }
+        public override bool FadeInDone => spriteManager.Transformations.Count == 0;
 
         private int startTime;
 

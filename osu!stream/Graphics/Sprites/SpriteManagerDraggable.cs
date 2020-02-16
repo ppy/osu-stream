@@ -24,8 +24,8 @@ namespace osum.Graphics.Sprites
         /// </summary>
         internal float StartBufferZone
         {
-            get { return Position.Y; }
-            set { Position.Y = value; }
+            get => Position.Y;
+            set => Position.Y = value;
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace osum.Graphics.Sprites
             scrollbar.Transform(new TransformationF(TransformationType.Fade, scrollbar.Alpha, 0, Clock.ModeTime + 800, Clock.ModeTime + 1000));
         }
 
-        internal float ScrollPosition { get { return verticalDragOffset; } }
+        internal float ScrollPosition => verticalDragOffset;
 
-        internal float ScrollPercentage { get { return verticalDragOffset / offset_min; } }
+        internal float ScrollPercentage => verticalDragOffset / offset_min;
 
         private float verticalDragOffset;
         private float offset_min;
@@ -123,13 +123,7 @@ namespace osum.Graphics.Sprites
         /// <summary>
         /// Offset bound to visible limits.
         /// </summary>
-        private float offsetBound
-        {
-            get
-            {
-                return Math.Min(offset_max + 1, Math.Max(offset_min - EndBufferZone, verticalDragOffset));
-            }
-        }
+        private float offsetBound => Math.Min(offset_max + 1, Math.Max(offset_min - EndBufferZone, verticalDragOffset));
 
         internal void AddNonDraggable(pDrawable sprite)
         {
@@ -161,13 +155,7 @@ namespace osum.Graphics.Sprites
             return true;
         }
 
-        private int ActualHeight
-        {
-            get
-            {
-                return (int)(GameBase.BaseSizeFixedWidth.Y - Position.Y);
-            }
-        }
+        private int ActualHeight => (int)(GameBase.BaseSizeFixedWidth.Y - Position.Y);
 
         private float lastFrameOffset;
         public override void Update()

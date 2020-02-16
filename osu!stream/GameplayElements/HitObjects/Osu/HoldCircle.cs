@@ -28,13 +28,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             snakingEnd = StartTime - DifficultyManager.PreEmpt;
         }
 
-        public override bool IncrementCombo
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool IncrementCombo => false;
 
         protected override void CalculateSplines()
         {
@@ -169,22 +163,13 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         internal override Color4 Colour
         {
-            get
-            {
-                return base.Colour;
-            }
-            set
-            {
-                base.Colour = hold_colour;
-            }
+            get => base.Colour;
+            set => base.Colour = hold_colour;
         }
 
         internal override int ColourIndex
         {
-            get
-            {
-                return base.ColourIndex;
-            }
+            get => base.ColourIndex;
             set
             {
                 //don't pass this down.
@@ -195,13 +180,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
         }
 
-        public override float HpMultiplier
-        {
-            get
-            {
-                return (float)(PathLength / TickDistance);
-            }
-        }
+        public override float HpMultiplier => (float)(PathLength / TickDistance);
 
         public override void Update()
         {
@@ -260,20 +239,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             circularProgress.AlwaysDraw = false;
         }
 
-        public override Vector2 EndPosition
-        {
-            get
-            {
-                return Position;
-            }
-        }
+        public override Vector2 EndPosition => Position;
 
-        public override Vector2 Position2
-        {
-            get
-            {
-                return Position;
-            }
-        }
+        public override Vector2 Position2 => Position;
     }
 }

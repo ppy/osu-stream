@@ -37,13 +37,7 @@ namespace osum.Input
 
         }
 
-        public static bool IsPressed
-        {
-            get
-            {
-                return RegisteredSources[0].IsPressed;
-            }
-        }
+        public static bool IsPressed => RegisteredSources[0].IsPressed;
 
         #region Incoming Events
 

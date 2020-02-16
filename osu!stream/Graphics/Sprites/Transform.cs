@@ -183,10 +183,7 @@ namespace osum.Graphics.Sprites
         /// </summary>
         protected int now;
 
-        internal int Duration
-        {
-            get { return EndTime - StartTime; }
-        }
+        internal int Duration => EndTime - StartTime;
 
         protected virtual float CalculateCurrent(float start, float end)
         {

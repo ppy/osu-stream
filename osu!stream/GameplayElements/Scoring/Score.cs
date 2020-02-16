@@ -31,10 +31,7 @@ namespace osum.GameplayElements.Scoring
         public int hitScore;
         public bool UseAccuracyBonus = true;
 
-        public int totalScore
-        {
-            get { return spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore; }
-        }
+        public int totalScore => spinnerBonusScore + hitScore + comboBonusScore + accuracyBonusScore;
 
         public const int ACCURACY_BONUS_AMOUNT = 400000;
         public const int HIT_PLUS_COMBO_BONUS_AMOUNT = MAX_SCORE - ACCURACY_BONUS_AMOUNT;
@@ -68,7 +65,7 @@ namespace osum.GameplayElements.Scoring
                 return ranking;
             }
 
-            set { ranking = value; }
+            set => ranking = value;
         }
 
         public pTexture RankingTexture
@@ -167,20 +164,11 @@ namespace osum.GameplayElements.Scoring
             }
         }
 
-        internal virtual float accuracy
-        {
-            get { return totalHits > 0 ? (float)(count50 * 1 + count100 * 2 + count300 * 4) / (totalHits * 4) : 0; }
-        }
+        internal virtual float accuracy => totalHits > 0 ? (float)(count50 * 1 + count100 * 2 + count300 * 4) / (totalHits * 4) : 0;
 
-        internal virtual int totalHits
-        {
-            get { return count50 + count100 + count300 + countMiss; }
-        }
+        internal virtual int totalHits => count50 + count100 + count300 + countMiss;
 
-        internal virtual int totalSuccessfulHits
-        {
-            get { return count50 + count100 + count300; }
-        }
+        internal virtual int totalSuccessfulHits => count50 + count100 + count300;
 
         #region bSerializable implementation
         public void ReadFromStream (SerializationReader sr)

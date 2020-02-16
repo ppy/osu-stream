@@ -30,7 +30,7 @@ namespace osum.GameplayElements.Beatmaps
                 return package.MapFiles[0];
             }
         }
-        public string StoryboardFilename { get { return ""; } }
+        public string StoryboardFilename => "";
 
         public Dictionary<Difficulty, BeatmapDifficultyInfo> DifficultyInfo = new Dictionary<Difficulty, BeatmapDifficultyInfo>();
 
@@ -73,22 +73,10 @@ namespace osum.GameplayElements.Beatmaps
 #if DIST || M4A
         public string AudioFilename = "audio.m4a";
 #else
-        public string AudioFilename
-        {
-            get
-            {
-                return "audio.m4a";
-            }
-        }
+        public string AudioFilename => "audio.m4a";
 #endif
 
-        public string PackageIdentifier
-        {
-            get
-            {
-                return Artist + Title;
-            }
-        }
+        public string PackageIdentifier => Artist + Title;
 
         public List<int> StreamSwitchPoints;
 
@@ -166,10 +154,7 @@ namespace osum.GameplayElements.Beatmaps
                     beatmapInfo = BeatmapDatabase.PopulateBeatmap(this);
                 return beatmapInfo;
             }
-            set
-            {
-                beatmapInfo = value;
-            }
+            set => beatmapInfo = value;
         }
 
         public string Artist
@@ -196,7 +181,7 @@ namespace osum.GameplayElements.Beatmaps
             }
         }
 
-        public string Creator { get { return Package.GetMetadata(MapMetaType.Creator); } }
+        public string Creator => Package.GetMetadata(MapMetaType.Creator);
 
         public string Title
         {

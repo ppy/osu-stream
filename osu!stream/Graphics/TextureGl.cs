@@ -45,7 +45,7 @@ namespace osum.Graphics
         private int textureHeight;
         internal int TextureHeight
         {
-            get { return textureHeight; }
+            get => textureHeight;
             set
             {
                 textureHeight = value;
@@ -56,7 +56,7 @@ namespace osum.Graphics
         private int textureWidth;
         internal int TextureWidth
         {
-            get { return textureWidth; }
+            get => textureWidth;
             set
             {
                 textureWidth = value;
@@ -65,7 +65,7 @@ namespace osum.Graphics
         }
 
         public int Id;
-        public bool Loaded { get { return Id > 0; } }
+        public bool Loaded => Id > 0;
 
 #if !NO_PIN_SUPPORT
         private readonly float[] coordinates;

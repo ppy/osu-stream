@@ -43,7 +43,7 @@ namespace osum.GameModes.Store
         private bool expanded;
         internal bool Expanded
         {
-            get { return expanded; }
+            get => expanded;
             set
             {
                 if (value == expanded || Downloading) return;
@@ -83,10 +83,7 @@ namespace osum.GameModes.Store
             }
         }
 
-        internal float Height
-        {
-            get { return Expanded ? ExpandedHeight : CondensedHeight; }
-        }
+        internal float Height => Expanded ? ExpandedHeight : CondensedHeight;
 
         private readonly List<pDrawable> songPreviewBacks = new List<pDrawable>();
         private readonly List<pSprite> songPreviewButtons = new List<pSprite>();
@@ -97,7 +94,7 @@ namespace osum.GameModes.Store
 
         private readonly pSprite s_LoadingPrice;
 
-        internal int BeatmapCount { get { return PackItems.Count; } }
+        internal int BeatmapCount => PackItems.Count;
 
         private int currentDownload;
 

@@ -22,7 +22,7 @@ namespace osum.Graphics.Sprites
         private string text;
         internal string Text
         {
-            get { return text; }
+            get => text;
             set
             {
                 if (text == value) return;
@@ -101,10 +101,7 @@ namespace osum.Graphics.Sprites
 
                 return texture;
             }
-            set
-            {
-                base.Texture = value;
-            }
+            set => base.Texture = value;
         }
 
         private Vector2 lastMeasure;

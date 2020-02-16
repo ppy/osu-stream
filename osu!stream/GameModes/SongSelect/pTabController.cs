@@ -12,7 +12,7 @@ namespace osum.GameModes.SongSelect
     {
         private pSprite s_TabBarBackground;
 
-        internal List<pDrawable> Sprites { get { return spriteManager.Sprites; } }
+        internal List<pDrawable> Sprites => spriteManager.Sprites;
 
         private readonly List<pDrawable> tabs = new List<pDrawable>();
 

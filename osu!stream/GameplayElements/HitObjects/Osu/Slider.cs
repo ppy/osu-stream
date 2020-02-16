@@ -519,22 +519,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         internal override Color Colour
         {
-            get
-            {
-                return base.Colour;
-            }
-            set
-            {
-                base.Colour = value;
-            }
+            get => base.Colour;
+            set => base.Colour = value;
         }
 
         internal override int ColourIndex
         {
-            get
-            {
-                return base.ColourIndex;
-            }
+            get => base.ColourIndex;
             set
             {
                 HitCircleStart.ColourIndex = value;
@@ -546,22 +537,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         internal override int ComboNumber
         {
-            get
-            {
-                return HitCircleStart.ComboNumber;
-            }
-            set
-            {
-                HitCircleStart.ComboNumber = value;
-            }
+            get => HitCircleStart.ComboNumber;
+            set => HitCircleStart.ComboNumber = value;
         }
 
         public override Vector2 Position
         {
-            get
-            {
-                return base.Position;
-            }
+            get => base.Position;
             set
             {
                 Vector2 change = value - position;
@@ -574,21 +556,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             }
         }
 
-        public override Vector2 EndPosition
-        {
-            get
-            {
-                return RepeatCount % 2 == 0 ? Position : Position2;
-            }
-        }
+        public override Vector2 EndPosition => RepeatCount % 2 == 0 ? Position : Position2;
 
-        public override Vector2 Position2
-        {
-            get
-            {
-                return drawableSegments[drawableSegments.Count - 1].p2;
-            }
-        }
+        public override Vector2 Position2 => drawableSegments[drawableSegments.Count - 1].p2;
 
         internal override bool HitTestInitial(TrackingPoint tracking)
         {
@@ -642,7 +612,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         /// <value>
         ///     <c>true</c> if this instance is tracking; otherwise, <c>false</c>.
         /// </value>
-        public bool IsTracking { get { return (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null; } }
+        public bool IsTracking => (Player.Autoplay && ClockingNow >= StartTime) || trackingPoint != null;
 
         private bool wasTracking;
 
@@ -658,18 +628,12 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
         public override bool IsHit
         {
-            get
-            {
-                return IsEndHit;
-            }
-            set
-            {
-                base.IsHit = value;
-            }
+            get => IsEndHit;
+            set => base.IsHit = value;
         }
 
         internal Vector2 trackingPosition; //todo: make this based on input adjusted clocking.
-        public override Vector2 TrackingPosition { get { return trackingPosition; } }
+        public override Vector2 TrackingPosition => trackingPosition;
 
         /// <summary>
         /// This is called every frame that this object is visible to pick up any intermediary scoring that is not associated with the initial hit.
@@ -1062,7 +1026,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             return positionAtProgress(progress, -1, out line);
         }
 
-        private bool isReversing { get { return progressCurrent % 2 >= 1; } }
+        private bool isReversing => progressCurrent % 2 >= 1;
 
         /// <summary>
         /// Update all elements of the slider which aren't affected by user input.

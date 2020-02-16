@@ -28,10 +28,7 @@ namespace osum.Graphics.Sprites
 
                 return base.Texture;
             }
-            set
-            {
-                base.Texture = value;
-            }
+            set => base.Texture = value;
         }
 
         private bool failedLoad;

@@ -735,10 +735,7 @@ namespace osum.Input.Sources.UsbHID.USB
 
         internal HidApiDeclarations HidApiDeclarations
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get => throw new NotImplementedException();
             set
             {
             }

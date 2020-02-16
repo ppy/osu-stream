@@ -74,25 +74,13 @@ namespace osum.Graphics.Sprites
         {
         }
 
-        internal int TextureWidth
-        {
-            get { return texture != null ? texture.Width : 0; }
-        }
+        internal int TextureWidth => texture != null ? texture.Width : 0;
 
-        internal int TextureHeight
-        {
-            get { return texture != null ? texture.Height : 0; }
-        }
+        internal int TextureHeight => texture != null ? texture.Height : 0;
 
-        internal int TextureX
-        {
-            get { return texture != null ? texture.X : 0; }
-        }
+        internal int TextureX => texture != null ? texture.X : 0;
 
-        internal int TextureY
-        {
-            get { return texture != null ? texture.Y : 0; }
-        }
+        internal int TextureY => texture != null ? texture.Y : 0;
 
         internal virtual pTexture Texture
         {
@@ -116,10 +104,7 @@ namespace osum.Graphics.Sprites
             }
         }
 
-        internal Box2 TextureRectangle
-        {
-            get { return new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop); }
-        }
+        internal Box2 TextureRectangle => new Box2(DrawLeft, DrawTop, DrawWidth + DrawLeft, DrawHeight + DrawTop);
 
         internal override Box2 DisplayRectangle
         {

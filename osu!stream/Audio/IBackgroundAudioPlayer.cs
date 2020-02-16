@@ -16,7 +16,7 @@ namespace osum.Audio
         private float dimmableVolume = 1;
         public float DimmableVolume
         {
-            get { return dimmableVolume; }
+            get => dimmableVolume;
             set
             {
                 float clamped = pMathHelper.ClampToOne(value);
@@ -29,7 +29,7 @@ namespace osum.Audio
         private float maxVolume = -1;
         public float MaxVolume
         {
-            get { return maxVolume; }
+            get => maxVolume;
             set
             {
                 float clamped = pMathHelper.ClampToOne(value);

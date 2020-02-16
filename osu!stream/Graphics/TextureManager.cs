@@ -282,7 +282,7 @@ namespace osum.Graphics
 
         internal static bool RequireSurfaces
         {
-            get { return requireSurfaces; }
+            get => requireSurfaces;
 
             set
             {

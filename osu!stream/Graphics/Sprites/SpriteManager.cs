@@ -104,13 +104,7 @@ namespace osum.Graphics.Sprites
             t.BasePosition = pos;
         }
 
-        internal override bool IsOnScreen
-        {
-            get
-            {
-                return true;
-            }
-        }
+        internal override bool IsOnScreen => true;
 
         //the following three overrides pass events on to our actualy SpriteManager handlers.
         //this is the case where we are contained inside another sprite manager.
@@ -172,7 +166,7 @@ namespace osum.Graphics.Sprites
         private bool forwardPlayOptimisedAdd;
         internal bool ForwardPlayOptimisedAdd
         {
-            get { return forwardPlayOptimisedAdd; }
+            get => forwardPlayOptimisedAdd;
             set
             {
                 if (forwardPlayOptimisedAdd && !value)
@@ -341,11 +335,8 @@ namespace osum.Graphics.Sprites
 
         internal override bool ExactCoordinates
         {
-            get { return !exactCoordinatesOverride && !hasMovement; }
-            set
-            {
-                exactCoordinatesOverride = !value;
-            }
+            get => !exactCoordinatesOverride && !hasMovement;
+            set => exactCoordinatesOverride = !value;
         }
 
         /// <summary>
@@ -428,7 +419,7 @@ namespace osum.Graphics.Sprites
         private static bool texturesEnabled;
         internal static bool TexturesEnabled
         {
-            get { return texturesEnabled; }
+            get => texturesEnabled;
 
             set
             {
@@ -465,7 +456,7 @@ namespace osum.Graphics.Sprites
 
         internal new static bool AlphaBlend
         {
-            get { return alphaBlend; }
+            get => alphaBlend;
 
             set
             {

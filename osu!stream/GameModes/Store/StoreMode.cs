@@ -34,10 +34,7 @@ namespace osum.GameModes.Store
 
         internal static bool HasNewStoreItems
         {
-            get
-            {
-                return GameBase.Config.GetValue<string>("StoreLastRead", null) != GameBase.Config.GetValue<string>("StoreLastRetrieved", null);
-            }
+            get => GameBase.Config.GetValue<string>("StoreLastRead", null) != GameBase.Config.GetValue<string>("StoreLastRetrieved", null);
             set
             {
                 if (value)

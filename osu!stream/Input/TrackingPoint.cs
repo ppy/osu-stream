@@ -14,7 +14,7 @@ namespace osum.Input
         /// </summary>
         public PointF Location
         {
-            get	{ return location; }
+            get => location;
             set { 
                 location = value;
                 UpdatePositions();
@@ -46,8 +46,8 @@ namespace osum.Input
         /// <summary>
         /// Is this point still valid (active)?
         /// </summary>
-        public bool Valid { get { return validity > 0; } }
-        
+        public bool Valid => validity > 0;
+
         public TrackingPoint(PointF location) : this(location,null)
         {}
             
@@ -62,13 +62,7 @@ namespace osum.Input
         public Vector2 BasePosition;
         public Vector2 WindowDelta;
 
-        public virtual Vector2 GamefieldPosition
-        {
-            get
-            {
-                return GameBase.StandardToGamefield(BasePosition);
-            }
-        }
+        public virtual Vector2 GamefieldPosition => GameBase.StandardToGamefield(BasePosition);
 
         internal void IncreaseValidity()
         {

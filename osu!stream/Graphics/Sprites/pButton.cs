@@ -75,7 +75,7 @@ namespace osum.Graphics.Sprites
 
         internal Color4 Colour
         {
-            get { return colour; }
+            get => colour;
             set
             {
                 colour = value;
@@ -103,13 +103,7 @@ namespace osum.Graphics.Sprites
                 action(this, null);
         }
 
-        public Vector2 Position
-        {
-            get
-            {
-                return s_BackingPlate.Position;
-            }
-        }
+        public Vector2 Position => s_BackingPlate.Position;
 
         internal void SetStatus(bool status)
         {

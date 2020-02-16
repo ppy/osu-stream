@@ -100,10 +100,7 @@ namespace osum.Audio
 
         public override float Pitch
         {
-            get
-            {
-                return base.Pitch;
-            }
+            get => base.Pitch;
             set
             {
                 value = Math.Max(0.5f, Math.Min(2f, value));
@@ -113,17 +110,11 @@ namespace osum.Audio
             }
         }
 
-        public override bool Playing
-        {
-            get { return AL.GetSourceState(sourceId) == ALSourceState.Playing; }
-        }
+        public override bool Playing => AL.GetSourceState(sourceId) == ALSourceState.Playing;
 
         public override int BufferId
         {
-            get
-            {
-                return base.BufferId;
-            }
+            get => base.BufferId;
             set
             {
                 base.BufferId = value;
@@ -133,10 +124,7 @@ namespace osum.Audio
 
         public override float Volume
         {
-            get
-            {
-                return base.Volume;
-            }
+            get => base.Volume;
             set
             {
                 if (value == Volume) return;
@@ -148,10 +136,7 @@ namespace osum.Audio
 
         public override bool Looping
         {
-            get
-            {
-                return base.Looping;
-            }
+            get => base.Looping;
             set
             {
                 base.Looping = value;
