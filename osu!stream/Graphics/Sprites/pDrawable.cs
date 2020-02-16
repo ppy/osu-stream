@@ -126,7 +126,6 @@ namespace osum.Graphics.Sprites
 
         public virtual pDrawable Clone()
         {
-
             pDrawable clone = (pDrawable)MemberwiseClone();
             clone.Transformations = new pList<Transformation> { UseBackwardsSearch = true };
             clone.readInitialTransformationsOnce = false;
@@ -156,7 +155,13 @@ namespace osum.Graphics.Sprites
         internal float ScaleScalar
         {
             get { return Scale.X; }
-            set { Scale = new Vector2(value, value); }
+            set
+            {
+                if (Scale.X == value && Scale.Y == value)
+                    return;
+
+                Scale = new Vector2(value, value);
+            }
         }
 
         internal bool Additive
@@ -179,13 +184,11 @@ namespace osum.Graphics.Sprites
         }
 
         protected bool exactCoordinatesOverride;
+
         internal virtual bool ExactCoordinates
         {
             get { return !exactCoordinatesOverride && UsesTextures && !hasMovement; }
-            set
-            {
-                exactCoordinatesOverride = !value;
-            }
+            set { exactCoordinatesOverride = !value; }
         }
 
         internal Vector2 FieldPosition;
@@ -216,15 +219,15 @@ namespace osum.Graphics.Sprites
             {
                 case FieldTypes.StandardSnapCentre:
                     pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                GameBase.NativeSize.Height / 2 + pos.Y);
+                        GameBase.NativeSize.Height / 2 + pos.Y);
                     break;
                 case FieldTypes.StandardSnapBottomCentre:
                     pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                GameBase.NativeSize.Height - pos.Y);
+                        GameBase.NativeSize.Height - pos.Y);
                     break;
                 case FieldTypes.StandardSnapTopCentre:
                     pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                                                pos.Y);
+                        pos.Y);
                     break;
                 case FieldTypes.StandardSnapCentreRight:
                     pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
@@ -240,7 +243,7 @@ namespace osum.Graphics.Sprites
                     break;
                 case FieldTypes.StandardSnapBottomRight:
                     pos = new Vector2(GameBase.NativeSize.Width - pos.X,
-                                                GameBase.NativeSize.Height - pos.Y);
+                        GameBase.NativeSize.Height - pos.Y);
                     break;
                 case FieldTypes.GamefieldStandardScale:
                 case FieldTypes.GamefieldSprites:
@@ -314,6 +317,7 @@ namespace osum.Graphics.Sprites
         /// If true, this sprite is not affected by universal dimming.
         /// </summary>
         internal bool DimImmune;
+
         public bool Bypass;
 
         internal Color4 AlphaAppliedColour
@@ -572,8 +576,8 @@ namespace osum.Graphics.Sprites
 
             int now = ClockingNow;
             Transform(new TransformationF(TransformationType.Fade,
-                                         0, (Colour.A != 0 ? Colour.A : 1),
-                                         now, now + duration));
+                0, (Colour.A != 0 ? Colour.A : 1),
+                now, now + duration));
         }
 
         internal void FadeOut(int duration, float finalAlpha = 0)
@@ -649,9 +653,9 @@ namespace osum.Graphics.Sprites
             }
 
             Transform(
-                      new TransformationC(Colour, colour,
-                                         ClockingNow - (int)Clock.ElapsedMilliseconds,
-                                         ClockingNow + duration));
+                new TransformationC(Colour, colour,
+                    ClockingNow - (int)Clock.ElapsedMilliseconds,
+                    ClockingNow + duration));
         }
 
         internal Transformation FlashColour(Color4 colour, int duration)
@@ -665,8 +669,8 @@ namespace osum.Graphics.Sprites
             }
 
             Transformation flash = new TransformationC(colour, end,
-                                   ClockingNow,
-                                   ClockingNow + duration);
+                ClockingNow,
+                ClockingNow + duration);
             Transform(flash);
 
             return flash;

@@ -75,6 +75,7 @@ namespace osum.GameplayElements
         }
 
         private HitObject drawBelowOverlayActiveSpinner;
+
         /// <summary>
         /// When we are spinning, we still want to show the score on top of the spinner display.
         /// This should allow for that.
@@ -110,7 +111,8 @@ namespace osum.GameplayElements
             if (streamSpriteManagers != null)
             {
                 foreach (SpriteManager sm in streamSpriteManagers)
-                    if (sm != null) sm.Dispose();
+                    if (sm != null)
+                        sm.Dispose();
                 streamSpriteManagers = null;
             }
 
@@ -127,7 +129,10 @@ namespace osum.GameplayElements
 
         internal int nextStreamChange;
 
-        internal bool StreamChanging { get { return nextStreamChange > 0 && nextStreamChange + 1000 >= Clock.AudioTime; } }
+        internal bool StreamChanging
+        {
+            get { return nextStreamChange > 0 && nextStreamChange + 1000 >= Clock.AudioTime; }
+        }
 
         /// <summary>
         /// Sets the current stream to the best match found.
@@ -263,7 +268,11 @@ namespace osum.GameplayElements
                             break;
                         }
 
-                        h.Sprites.ForEach(s => { s.Transformations.Clear(); s.Alpha = 0; });
+                        h.Sprites.ForEach(s =>
+                        {
+                            s.Transformations.Clear();
+                            s.Alpha = 0;
+                        });
                         h.Dispose();
                     }
 
@@ -374,9 +383,17 @@ namespace osum.GameplayElements
 
         public bool Draw()
         {
-            if (ActiveStream != Difficulty.None)
-                streamSpriteManagers[(int)ActiveStream].Draw();
+            float gameplayScale = GameBase.IsSuperWide ? 0.75f : 1;
 
+            if (ActiveStream != Difficulty.None)
+            {
+                var currentStreamManager = streamSpriteManagers[(int)ActiveStream];
+
+                currentStreamManager.ScaleScalar = gameplayScale;
+                currentStreamManager.Draw();
+            }
+
+            spriteManager.ScaleScalar = gameplayScale;
             spriteManager.Draw();
 
             return true;
@@ -537,6 +554,7 @@ namespace osum.GameplayElements
         /// Cached value of the first beat length for the current beatmap. Used for general calculations (circle dimming).
         /// </summary>
         public double FirstBeatLength;
+
         public HitObject ActiveObject;
         public HitObject NextObject;
 
@@ -561,8 +579,8 @@ namespace osum.GameplayElements
                 //is next hitObject the end of a combo?
                 if (index == count - 1 //last object in the song.
                     || objects[index + 1].NewCombo //next object is a new combo.
-                    || (multitouchSameEndTime && index < count - 2 && objects[index + 1] == hitObject.connectedObject && objects[index + 2].NewCombo)  //this is part of a multitouch sequence with a new combo following.
-                    )
+                    || (multitouchSameEndTime && index < count - 2 && objects[index + 1] == hitObject.connectedObject && objects[index + 2].NewCombo) //this is part of a multitouch sequence with a new combo following.
+                )
                 {
                     //apply combo addition
                     if (ComboScoreCounts[ScoreChange.Hit100] == 0 && ComboScoreCounts[ScoreChange.Hit50] == 0 && ComboScoreCounts[ScoreChange.Miss] == 0)
@@ -591,8 +609,15 @@ namespace osum.GameplayElements
             ComboScoreCounts[ScoreChange.Hit300] = 0;
         }
 
-        public virtual bool IsLowestStream { get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; } }
-        public virtual bool IsHighestStream { get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; } } //todo: support easy mode
+        public virtual bool IsLowestStream
+        {
+            get { return ActiveStream == Difficulty.Easy || ActiveStream == Difficulty.Expert; }
+        }
+
+        public virtual bool IsHighestStream
+        {
+            get { return ActiveStream == Difficulty.Hard || ActiveStream == Difficulty.Expert; }
+        } //todo: support easy mode
 
         internal void StopAllSounds()
         {

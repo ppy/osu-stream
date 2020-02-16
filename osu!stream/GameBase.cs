@@ -206,7 +206,7 @@ namespace osum
             }
             else
             {
-                IsSuperWide = true;
+                IsSuperWide = false;
             }
 
             SpriteResolution = (int)res;
