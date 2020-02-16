@@ -215,22 +215,19 @@ namespace osum.Graphics.Sprites
             switch (Field)
             {
                 case FieldTypes.StandardSnapCentre:
-                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                        GameBase.NativeSize.Height / 2 + pos.Y);
+                    pos = new Vector2(GameBase.NativeSize.Width / 2f + pos.X, GameBase.NativeSize.Height / 2f + pos.Y);
                     break;
                 case FieldTypes.StandardSnapBottomCentre:
-                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                        GameBase.NativeSize.Height - pos.Y);
+                    pos = new Vector2(GameBase.NativeSize.Width / 2f + pos.X, GameBase.NativeSize.Height - pos.Y);
                     break;
                 case FieldTypes.StandardSnapTopCentre:
-                    pos = new Vector2(GameBase.NativeSize.Width / 2 + pos.X,
-                        pos.Y);
+                    pos = new Vector2(GameBase.NativeSize.Width / 2f + pos.X, pos.Y);
                     break;
                 case FieldTypes.StandardSnapCentreRight:
-                    pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                    pos = new Vector2(GameBase.NativeSize.Width - pos.X, GameBase.NativeSize.Height / 2f + pos.Y);
                     break;
                 case FieldTypes.StandardSnapCentreLeft:
-                    pos = new Vector2(pos.X, GameBase.NativeSize.Height / 2 + pos.Y);
+                    pos = new Vector2(pos.X, GameBase.NativeSize.Height / 2f + pos.Y);
                     break;
                 case FieldTypes.StandardSnapRight:
                     pos = new Vector2(GameBase.NativeSize.Width - pos.X, pos.Y);
