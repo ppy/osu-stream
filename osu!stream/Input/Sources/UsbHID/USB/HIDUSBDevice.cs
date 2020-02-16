@@ -35,9 +35,9 @@ namespace osum.Input.Sources.UsbHID.USB
         private Thread usbThread;
 
         /*Variables --------------------------------------------------------------------*/
-        private String vendorID;    //Vendor ID of the Device
-        private String productID;   //Product ID of the Device
-        private String devicePath;  //device path
+        private string vendorID;    //Vendor ID of the Device
+        private string productID;   //Product ID of the Device
+        private string devicePath;  //device path
         private int deviceCount;    //device count
 
         private bool connectionState;   //Connection Status true: connected, false: disconnected
@@ -68,7 +68,7 @@ namespace osum.Input.Sources.UsbHID.USB
         /// </summary>
         /// <param name="vID">The vendor ID of the USB device.</param>
         /// <param name="pID">The product ID of the USB device.</param>
-        public HIDUSBDevice(String vID, String pID)
+        public HIDUSBDevice(string vID, string pID)
         { 
             //set vid and pid
             setDeviceData(vID, pID);
@@ -420,7 +420,7 @@ namespace osum.Input.Sources.UsbHID.USB
         /// </summary>
         /// <param name="vID">The vendor ID.</param>
         /// <param name="pID">The product ID.</param>
-        public void setDeviceData(String vID, String pID)
+        public void setDeviceData(string vID, string pID)
         {
             vendorID = vID;
             productID = pID;
@@ -438,7 +438,7 @@ namespace osum.Input.Sources.UsbHID.USB
         /// Gets the vendor ID.
         /// </summary>
         /// <returns>the vendor ID</returns>
-        public String getVendorID()
+        public string getVendorID()
         {
             return vendorID;
         }
@@ -454,7 +454,7 @@ namespace osum.Input.Sources.UsbHID.USB
         /// Gets the product ID.
         /// </summary>
         /// <returns>the product ID</returns>
-        public String getProductID()
+        public string getProductID()
         {
             return productID;
         }

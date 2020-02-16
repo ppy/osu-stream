@@ -22,7 +22,7 @@ namespace osum.Helpers
             formatter.Binder = versionBinder;
         }
 
-        public static Object Deserialize(Stream stream)
+        public static object Deserialize(Stream stream)
         {
             if (formatter == null)
                 Initialize();

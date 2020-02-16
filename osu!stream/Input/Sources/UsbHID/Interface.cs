@@ -96,9 +96,9 @@ namespace osum.Input.Sources.UsbHID
         /// vendor id are plugged in.
         /// </summary>
         /// <returns>String list with device paths</returns>
-        public String[] getDeviceList()
+        public string[] getDeviceList()
         {
-            return (String[])usbdevice.getDevices().ToArray(typeof(string));
+            return (string[])usbdevice.getDevices().ToArray(typeof(string));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace osum.Input.Sources.UsbHID
         /// </summary>
         /// <param name="bytes">The bytes to send.</param>
         /// <returns>Returns true if all bytes have been written successfully</returns>
-        public bool write(Byte[] bytes)
+        public bool write(byte[] bytes)
         {
                 int byteCount = bytes.Length;
                 int bytePos = 0;
@@ -123,7 +123,7 @@ namespace osum.Input.Sources.UsbHID
                     {
                         Thread.Sleep(5);
                     }
-                    Byte[] transfByte = new byte[64];
+                    byte[] transfByte = new byte[64];
                     for (int u = 0; u < 64; u++)
                     {
                         if (bytePos < byteCount)

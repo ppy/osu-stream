@@ -205,7 +205,7 @@ namespace osum.GameplayElements.Beatmaps
                 try
                 {
                     if (difficultyStars == -1)
-                        Int32.TryParse(Package.GetMetadata(MapMetaType.Difficulty), out difficultyStars);
+                        int.TryParse(Package.GetMetadata(MapMetaType.Difficulty), out difficultyStars);
                 }
                 catch { difficultyStars = 0; }
 
@@ -219,7 +219,7 @@ namespace osum.GameplayElements.Beatmaps
             get
             {
                 if (previewPoint == -1)
-                    Int32.TryParse(Package.GetMetadata(MapMetaType.PreviewTime), out previewPoint);
+                    int.TryParse(Package.GetMetadata(MapMetaType.PreviewTime), out previewPoint);
 
                 if (previewPoint < 10000)
                     previewPoint = 30000;

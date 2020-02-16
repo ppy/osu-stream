@@ -81,18 +81,18 @@ namespace osum.GameModes.SongSelect
 
                     Score score = new Score
                     {
-                        Id = Int32.Parse(split[i++], GameBase.nfi),
-                        OnlineRank = Int32.Parse(split[i++], GameBase.nfi),
+                        Id = int.Parse(split[i++], GameBase.nfi),
+                        OnlineRank = int.Parse(split[i++], GameBase.nfi),
                         Username = split[i++],
-                        hitScore = Int32.Parse(split[i++], GameBase.nfi),
-                        comboBonusScore = Int32.Parse(split[i++], GameBase.nfi),
-                        spinnerBonusScore = Int32.Parse(split[i++], GameBase.nfi),
-                        count300 = UInt16.Parse(split[i++], GameBase.nfi),
-                        count100 = UInt16.Parse(split[i++], GameBase.nfi),
-                        count50 = UInt16.Parse(split[i++], GameBase.nfi),
-                        countMiss = UInt16.Parse(split[i++], GameBase.nfi),
-                        maxCombo = UInt16.Parse(split[i++], GameBase.nfi),
-                        date = UnixTimestamp.Parse(Int32.Parse(split[i++], GameBase.nfi)),
+                        hitScore = int.Parse(split[i++], GameBase.nfi),
+                        comboBonusScore = int.Parse(split[i++], GameBase.nfi),
+                        spinnerBonusScore = int.Parse(split[i++], GameBase.nfi),
+                        count300 = ushort.Parse(split[i++], GameBase.nfi),
+                        count100 = ushort.Parse(split[i++], GameBase.nfi),
+                        count50 = ushort.Parse(split[i++], GameBase.nfi),
+                        countMiss = ushort.Parse(split[i++], GameBase.nfi),
+                        maxCombo = ushort.Parse(split[i++], GameBase.nfi),
+                        date = UnixTimestamp.Parse(int.Parse(split[i++], GameBase.nfi)),
                         guest = split[i++] == "1"
                     };
 

@@ -67,7 +67,7 @@ namespace osum.Graphics.Primitives
             float theta = (float) Math.Atan2(delta.Y, delta.X);
             rhoTheta = new Vector2(rho, theta);
             unitAngle = (p2 - p1) / rhoTheta.X;
-            if (Single.IsNaN(unitAngle.X)) unitAngle = new Vector2(1, 0);
+            if (float.IsNaN(unitAngle.X)) unitAngle = new Vector2(1, 0);
         }
 
 

@@ -12,7 +12,7 @@ namespace osum.Helpers
         private static readonly UTF8Encoding utf8Encoding = new UTF8Encoding();
         private static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
 
-        public static string GetMd5(String path)
+        public static string GetMd5(string path)
         {
             lock (md5Hasher)
             {
@@ -39,7 +39,7 @@ namespace osum.Helpers
             }
         }
 
-        public static string GetMd5String(String instr)
+        public static string GetMd5String(string instr)
         {
             return GetMd5String(utf8Encoding.GetBytes(instr));
         }
@@ -63,7 +63,7 @@ namespace osum.Helpers
             for (int i = 0; i < data.Length; i++)
                 data[i].ToString("x2", nfi).CopyTo(0, str, i * 2, 2);
 
-            return new String(str);
+            return new string(str);
         }
 
         public static byte[] GetMd5ByteArray(byte[] data)
@@ -84,7 +84,7 @@ namespace osum.Helpers
             return data;
         }
 
-        public static byte[] GetMd5ByteArrayString(String instr)
+        public static byte[] GetMd5ByteArrayString(string instr)
         {
 
             byte[] data;

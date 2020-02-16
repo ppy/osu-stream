@@ -57,10 +57,10 @@ namespace osum.Helpers
                     obj = raw[0] == '1';
                     break;
                 case "Int32":
-                    obj = Int32.Parse(raw);
+                    obj = int.Parse(raw);
                     break;
                 case "Int64":
-                    obj = Int64.Parse(raw);
+                    obj = long.Parse(raw);
                     break;
                 case "String":
                     obj = raw;

@@ -203,7 +203,7 @@ namespace osum.GameplayElements
                         if (!foundPoint)
                         {
                             //exhausted all stream switch points.
-                            nextPossibleSwitchTime = Int32.MaxValue;
+                            nextPossibleSwitchTime = int.MaxValue;
                             return -1;
                         }
                     }
@@ -224,7 +224,7 @@ namespace osum.GameplayElements
                 if (removeBeforeObjectIndex == 0)
                 {
                     //failed to find a suitable stream switch point.
-                    nextPossibleSwitchTime = Int32.MaxValue;
+                    nextPossibleSwitchTime = int.MaxValue;
                     return -1;
                 }
 
@@ -636,7 +636,7 @@ namespace osum.GameplayElements
     public enum ScoreChange
     {
         Ignore = 0,
-        MissMinor = 1 << 0,
+        MissMinor = 1,
         Miss = 1 << 1,
         MuAddition = 1 << 3,
         KatuAddition = 1 << 4,

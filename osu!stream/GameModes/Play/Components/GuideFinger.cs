@@ -158,7 +158,7 @@ namespace osum.GameModes.Play.Components
                 }
 
                 {
-                    int timeUntilObject = nextObject == null ? Int32.MaxValue : nextObject.StartTime - nextObject.ClockingNow;
+                    int timeUntilObject = nextObject == null ? int.MaxValue : nextObject.StartTime - nextObject.ClockingNow;
 
                     if (timeUntilObject < 450)
                     {

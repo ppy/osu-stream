@@ -117,6 +117,7 @@ namespace osum.GameplayElements
                             catch (Exception)
                             {
                             }
+
                             continue;
                         }
 
@@ -129,9 +130,10 @@ namespace osum.GameplayElements
                                 }
                                 else
                                 {
-                                    Difficulty diff = (Difficulty)Int32.Parse(key);
+                                    Difficulty diff = (Difficulty)int.Parse(key);
                                     beatmap.DifficultyInfo[diff] = new BeatmapDifficultyInfo(diff) { ComboMultiplier = double.Parse(val, GameBase.nfi) };
                                 }
+
                                 break;
                             case FileSection.General:
                                 switch (key)
@@ -139,31 +141,31 @@ namespace osum.GameplayElements
                                     case "CountdownOffset":
                                         if (val.Length > 0)
                                         {
-                                            beatmap.CountdownOffset = Int32.Parse(val);
+                                            beatmap.CountdownOffset = int.Parse(val);
                                         }
+
                                         break;
                                 }
 
                                 break;
                             case FileSection.TimingPoints:
-                                {
-                                    string[] split = line.Split(',');
+                            {
+                                string[] split = line.Split(',');
 
-                                    if (split.Length > 2)
-                                        beatmap.ControlPoints.Add(
-                                            new ControlPoint(Double.Parse(split[0], GameBase.nfi),
-                                                             Double.Parse(split[1], GameBase.nfi),
-                                                             split[2][0] == '0' ? TimeSignatures.SimpleQuadruple :
-                                                             (TimeSignatures)Int32.Parse(split[2]),
-                                                             (SampleSet)Int32.Parse(split[3]),
-                                                             split.Length > 4
-                                                                 ? (CustomSampleSet)Int32.Parse(split[4])
-                                                                 : CustomSampleSet.Default,
-                                                             Int32.Parse(split[5]),
-                                                             split.Length > 6 ? split[6][0] == '1' : true,
-                                                             split.Length > 7 ? split[7][0] == '1' : false));
-                                    break;
-                                }
+                                if (split.Length > 2)
+                                    beatmap.ControlPoints.Add(
+                                        new ControlPoint(double.Parse(split[0], GameBase.nfi),
+                                            double.Parse(split[1], GameBase.nfi),
+                                            split[2][0] == '0' ? TimeSignatures.SimpleQuadruple : (TimeSignatures)int.Parse(split[2]),
+                                            (SampleSet)int.Parse(split[3]),
+                                            split.Length > 4
+                                                ? (CustomSampleSet)int.Parse(split[4])
+                                                : CustomSampleSet.Default,
+                                            int.Parse(split[5]),
+                                            split.Length > 6 ? split[6][0] == '1' : true,
+                                            split.Length > 7 ? split[7][0] == '1' : false));
+                                break;
+                            }
                             case FileSection.Editor:
                                 switch (key)
                                 {
@@ -173,8 +175,9 @@ namespace osum.GameplayElements
                                             beatmap.StreamSwitchPoints = new List<int>();
                                             string[] points = val.Split(',');
                                             foreach (string point in points)
-                                                beatmap.StreamSwitchPoints.Add(Int32.Parse(point.Trim()));
+                                                beatmap.StreamSwitchPoints.Add(int.Parse(point.Trim()));
                                         }
+
                                         break;
                                 }
 
@@ -195,20 +198,21 @@ namespace osum.GameplayElements
                                         break;
                                     case "SliderMultiplier":
                                         beatmap.DifficultySliderMultiplier =
-                                            Math.Max(0.4, Math.Min(3.6, Double.Parse(val, GameBase.nfi)));
+                                            Math.Max(0.4, Math.Min(3.6, double.Parse(val, GameBase.nfi)));
                                         break;
                                     case "SliderTickRate":
                                         beatmap.DifficultySliderTickRate =
-                                            Math.Max(0.5, Math.Min(8, Double.Parse(val, GameBase.nfi)));
+                                            Math.Max(0.5, Math.Min(8, double.Parse(val, GameBase.nfi)));
                                         break;
                                     /*case "ApproachRate":
                                         beatmap.DifficultyApproachRate = Math.Min((byte)10, Math.Max((byte)0, byte.Parse(val)));
                                         hasApproachRate = true;
                                         break;*/
                                 }
+
                                 break;
                             case FileSection.HitObjects:
-                                {
+                            {
                                 if (fn > 0)
                                     continue;
 
@@ -222,14 +226,14 @@ namespace osum.GameplayElements
 
                                 int offset = 0;
 
-                                Difficulty difficulty = (Difficulty)Int32.Parse(split[offset++]);
+                                Difficulty difficulty = (Difficulty)int.Parse(split[offset++]);
 
 
                                 SampleSetInfo ssi = parseSampleSet(split[offset++]);
 
-                                int x = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
-                                int y = (int)Math.Max(0, Math.Min(512, Decimal.Parse(split[offset++], GameBase.nfi)));
-                                int time = (int)Decimal.Parse(split[offset++], GameBase.nfi);
+                                int x = (int)Math.Max(0, Math.Min(512, decimal.Parse(split[offset++], GameBase.nfi)));
+                                int y = (int)Math.Max(0, Math.Min(512, decimal.Parse(split[offset++], GameBase.nfi)));
+                                int time = (int)decimal.Parse(split[offset++], GameBase.nfi);
 
                                 if (objnumber == 0) CountdownTime = time;
                                 else CountdownTime = Math.Min(CountdownTime, time);
@@ -238,9 +242,9 @@ namespace osum.GameplayElements
                                 if (!shouldLoadDifficulty(difficulty))
                                     continue;
 
-                                HitObjectType type = (HitObjectType)Int32.Parse(split[offset], GameBase.nfi) & ~HitObjectType.ColourHax;
+                                HitObjectType type = (HitObjectType)int.Parse(split[offset], GameBase.nfi) & ~HitObjectType.ColourHax;
                                 int comboOffset = (Convert.ToInt32(split[offset++], GameBase.nfi) >> 4) & 7; // mask out bits 5-7 for combo offset.
-                                HitObjectSoundType soundType = (HitObjectSoundType)Int32.Parse(split[offset++], GameBase.nfi);
+                                HitObjectSoundType soundType = (HitObjectSoundType)int.Parse(split[offset++], GameBase.nfi);
 
                                 Vector2 pos = new Vector2(x, y);
 
@@ -250,7 +254,7 @@ namespace osum.GameplayElements
 
                                 //used for new combo forcing after a spinner.
                                 lastAddedSpinner = h is Spinner;
-                                
+
                                 if ((type & HitObjectType.Circle) > 0)
                                 {
                                     h = hitFactory.CreateHitCircle(pos, time, newCombo, soundType, newCombo ? comboOffset : 0);
@@ -283,12 +287,13 @@ namespace osum.GameplayElements
                                                     curveType = CurveTypes.PerfectCurve;
                                                     break;
                                             }
+
                                             continue;
                                         }
 
                                         string[] temp = pointsplit[i].Split(':');
                                         Vector2 v = new Vector2((float)Convert.ToDouble(temp[0], GameBase.nfi),
-                                                                (float)Convert.ToDouble(temp[1], GameBase.nfi));
+                                            (float)Convert.ToDouble(temp[1], GameBase.nfi));
                                         points.Add(v);
                                     }
 
@@ -302,14 +307,14 @@ namespace osum.GameplayElements
                                     if (split[offset].Length > 0)
                                     {
                                         string[] adds = split[offset++].Split('|');
-                                        
+
                                         if (adds.Length > 0)
                                         {
                                             sounds = new List<HitObjectSoundType>(adds.Length);
                                             for (int i = 0; i < adds.Length; i++)
                                             {
                                                 int sound;
-                                                Int32.TryParse(adds[i], out sound);
+                                                int.TryParse(adds[i], out sound);
                                                 sounds.Add((HitObjectSoundType)sound);
                                             }
                                         }
@@ -329,7 +334,7 @@ namespace osum.GameplayElements
                                     }
 
                                     if ((repeatCount > 1 && length < 50) ||
-                                        (repeatCount > 4 && length < 100) || 
+                                        (repeatCount > 4 && length < 100) ||
                                         (type & HitObjectType.Hold) > 0)
                                     {
                                         h = hitFactory.CreateHoldCircle(pos, time, newCombo, soundType, repeatCount, length, sounds, newCombo ? comboOffset : 0, Convert.ToDouble(split[offset++], GameBase.nfi), Convert.ToDouble(split[offset++], GameBase.nfi), listSampleSets);
@@ -350,7 +355,7 @@ namespace osum.GameplayElements
                                     h.SampleSet = ssi;
                                     Add(h, difficulty);
                                 }
-                                    }
+                            }
                                 break;
                             case FileSection.Unknown:
                                 continue; //todo: readd this?  not sure if we need it anymore.
@@ -394,7 +399,7 @@ namespace osum.GameplayElements
             float volume = 1;
 
             if (split.Length > 1)
-                volume = Int32.Parse(split[1]) / 100f;
+                volume = int.Parse(split[1]) / 100f;
             if (split.Length > 2 && split[2].Length > 0)
                 normalSampleSet = (SampleSet)Convert.ToInt32(split[2]);
 
@@ -713,8 +718,8 @@ namespace osum.GameplayElements
 
                     pSprite dot =
                         new pSprite(fptexture,
-                                       FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
-                                       0.005f, false, Color4.White);
+                            FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, pos,
+                            0.005f, false, Color4.White);
 
                     dot.Transform(
                         new TransformationF(TransformationType.Fade, 0, 1, fadein, fadein + DifficultyManager.FadeIn));
@@ -732,6 +737,5 @@ namespace osum.GameplayElements
         {
             return (first.EndTime < second.StartTime) && !(first is Spinner) && !(second is Spinner) && !(first.connectedObject == second) && !second.NewCombo;
         }
-
     }
 }

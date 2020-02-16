@@ -57,8 +57,8 @@ namespace osum.Input.Sources.UsbHID.USB
 		public struct GUID 
 		{
 			public int Data1;
-			public UInt16 Data2;
-			public UInt16 Data3;	
+			public ushort Data2;
+			public ushort Data3;	
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
 			public byte[] data4;
 		}
@@ -91,9 +91,9 @@ namespace osum.Input.Sources.UsbHID.USB
 			//
 			// Vendor ids of this hid device
 			//
-			public UInt16	VendorID;
-			public UInt16	ProductID;
-			public UInt16	VersionNumber;
+			public ushort	VendorID;
+			public ushort	ProductID;
+			public ushort	VersionNumber;
 
 			//
 			// Additional fields will be added to the end of this structure.
@@ -104,23 +104,23 @@ namespace osum.Input.Sources.UsbHID.USB
 		[StructLayout(LayoutKind.Sequential)]
 		public struct HIDP_CAPS 
 		{
-			public UInt16  Usage;					// USHORT
-			public UInt16   UsagePage;				// USHORT
-			public UInt16   InputReportByteLength;
-			public UInt16   OutputReportByteLength;
-			public UInt16   FeatureReportByteLength;
+			public ushort  Usage;					// USHORT
+			public ushort   UsagePage;				// USHORT
+			public ushort   InputReportByteLength;
+			public ushort   OutputReportByteLength;
+			public ushort   FeatureReportByteLength;
 			[MarshalAs(UnmanagedType.ByValArray, SizeConst=17)]
-			public UInt16[] Reserved;				// USHORT  Reserved[17];			
-			public UInt16  NumberLinkCollectionNodes;
-			public UInt16  NumberInputButtonCaps;
-			public UInt16  NumberInputValueCaps;
-			public UInt16  NumberInputDataIndices;
-			public UInt16  NumberOutputButtonCaps;
-			public UInt16  NumberOutputValueCaps;
-			public UInt16  NumberOutputDataIndices;
-			public UInt16  NumberFeatureButtonCaps;
-			public UInt16  NumberFeatureValueCaps;
-			public UInt16  NumberFeatureDataIndices;
+			public ushort[] Reserved;				// USHORT  Reserved[17];			
+			public ushort  NumberLinkCollectionNodes;
+			public ushort  NumberInputButtonCaps;
+			public ushort  NumberInputValueCaps;
+			public ushort  NumberInputDataIndices;
+			public ushort  NumberOutputButtonCaps;
+			public ushort  NumberOutputValueCaps;
+			public ushort  NumberOutputDataIndices;
+			public ushort  NumberFeatureButtonCaps;
+			public ushort  NumberFeatureValueCaps;
+			public ushort  NumberFeatureDataIndices;
 		}
 		
 		//HIDP_REPORT_TYPE 
@@ -137,28 +137,28 @@ namespace osum.Input.Sources.UsbHID.USB
 		[StructLayout(LayoutKind.Sequential)]
 			public struct Range 
 		{
-			public UInt16 UsageMin;			// USAGE	UsageMin; // USAGE  Usage; 
-			public UInt16 UsageMax; 			// USAGE	UsageMax; // USAGE	Reserved1;
-			public UInt16 StringMin;			// USHORT  StringMin; // StringIndex; 
-			public UInt16 StringMax;			// USHORT	StringMax;// Reserved2;
-			public UInt16 DesignatorMin;		// USHORT  DesignatorMin; // DesignatorIndex; 
-			public UInt16 DesignatorMax;		// USHORT	DesignatorMax; //Reserved3; 
-			public UInt16 DataIndexMin;		// USHORT  DataIndexMin;  // DataIndex; 
-			public UInt16 DataIndexMax;		// USHORT	DataIndexMax; // Reserved4;
+			public ushort UsageMin;			// USAGE	UsageMin; // USAGE  Usage; 
+			public ushort UsageMax; 			// USAGE	UsageMax; // USAGE	Reserved1;
+			public ushort StringMin;			// USHORT  StringMin; // StringIndex; 
+			public ushort StringMax;			// USHORT	StringMax;// Reserved2;
+			public ushort DesignatorMin;		// USHORT  DesignatorMin; // DesignatorIndex; 
+			public ushort DesignatorMax;		// USHORT	DesignatorMax; //Reserved3; 
+			public ushort DataIndexMin;		// USHORT  DataIndexMin;  // DataIndex; 
+			public ushort DataIndexMax;		// USHORT	DataIndexMax; // Reserved4;
 		}
 
 		// Range
 		[StructLayout(LayoutKind.Sequential)]
 			public struct NotRange 
 		{
-			public UInt16 Usage; 
-			public UInt16 Reserved1;
-			public UInt16 StringIndex; 
-			public UInt16 Reserved2;
-			public UInt16 DesignatorIndex; 
-			public UInt16 Reserved3; 
-			public UInt16 DataIndex; 
-			public UInt16 Reserved4;
+			public ushort Usage; 
+			public ushort Reserved1;
+			public ushort StringIndex; 
+			public ushort Reserved2;
+			public ushort DesignatorIndex; 
+			public ushort Reserved3; 
+			public ushort DataIndex; 
+			public ushort Reserved4;
 		}
         
         //HIDP_VALUE_CAPS
@@ -166,38 +166,38 @@ namespace osum.Input.Sources.UsbHID.USB
 			public struct HIDP_VALUE_CAPS 
 		{
 			//
-			[FieldOffset(0)] public UInt16  UsagePage;					// USHORT
-			[FieldOffset(2)] public Byte ReportID;						// UCHAR  ReportID;
+			[FieldOffset(0)] public ushort  UsagePage;					// USHORT
+			[FieldOffset(2)] public byte ReportID;						// UCHAR  ReportID;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(3)] public Boolean IsAlias;						// BOOLEAN  IsAlias;
-			[FieldOffset(4)] public UInt16 BitField;						// USHORT  BitField;
-			[FieldOffset(6)] public UInt16 LinkCollection;				//USHORT  LinkCollection;
-			[FieldOffset(8)] public UInt16 LinkUsage;					// USAGE  LinkUsage;
-			[FieldOffset(10)] public UInt16 LinkUsagePage;				// USAGE  LinkUsagePage;
+			[FieldOffset(3)] public bool IsAlias;						// BOOLEAN  IsAlias;
+			[FieldOffset(4)] public ushort BitField;						// USHORT  BitField;
+			[FieldOffset(6)] public ushort LinkCollection;				//USHORT  LinkCollection;
+			[FieldOffset(8)] public ushort LinkUsage;					// USAGE  LinkUsage;
+			[FieldOffset(10)] public ushort LinkUsagePage;				// USAGE  LinkUsagePage;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(12)] public Boolean IsRange;					// BOOLEAN  IsRange;
+			[FieldOffset(12)] public bool IsRange;					// BOOLEAN  IsRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(13)] public Boolean IsStringRange;				// BOOLEAN  IsStringRange;
+			[FieldOffset(13)] public bool IsStringRange;				// BOOLEAN  IsStringRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(14)] public Boolean IsDesignatorRange;			// BOOLEAN  IsDesignatorRange;
+			[FieldOffset(14)] public bool IsDesignatorRange;			// BOOLEAN  IsDesignatorRange;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(15)] public Boolean IsAbsolute;					// BOOLEAN  IsAbsolute;
+			[FieldOffset(15)] public bool IsAbsolute;					// BOOLEAN  IsAbsolute;
 			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(16)] public Boolean HasNull;					// BOOLEAN  HasNull;
-			[FieldOffset(17)] public Char Reserved;						// UCHAR  Reserved;
-			[FieldOffset(18)] public UInt16 BitSize;						// USHORT  BitSize;
-			[FieldOffset(20)] public UInt16 ReportCount;					// USHORT  ReportCount;
-			[FieldOffset(22)] public UInt16  Reserved2a;					// USHORT  Reserved2[5];		
-			[FieldOffset(24)] public UInt16  Reserved2b;					// USHORT  Reserved2[5];
-			[FieldOffset(26)] public UInt16  Reserved2c;					// USHORT  Reserved2[5];
-			[FieldOffset(28)] public UInt16  Reserved2d;					// USHORT  Reserved2[5];
-			[FieldOffset(30)] public UInt16  Reserved2e;					// USHORT  Reserved2[5];
-			[FieldOffset(32)] public UInt16 UnitsExp;					// ULONG  UnitsExp;
-			[FieldOffset(34)] public UInt16 Units;						// ULONG  Units;
-			[FieldOffset(36)] public Int16 LogicalMin;					// LONG  LogicalMin;   ;
-			[FieldOffset(38)] public Int16 LogicalMax;					// LONG  LogicalMax
-			[FieldOffset(40)] public Int16 PhysicalMin;					// LONG  PhysicalMin, 
-			[FieldOffset(42)] public Int16 PhysicalMax;					// LONG  PhysicalMax;
+			[FieldOffset(16)] public bool HasNull;					// BOOLEAN  HasNull;
+			[FieldOffset(17)] public char Reserved;						// UCHAR  Reserved;
+			[FieldOffset(18)] public ushort BitSize;						// USHORT  BitSize;
+			[FieldOffset(20)] public ushort ReportCount;					// USHORT  ReportCount;
+			[FieldOffset(22)] public ushort  Reserved2a;					// USHORT  Reserved2[5];		
+			[FieldOffset(24)] public ushort  Reserved2b;					// USHORT  Reserved2[5];
+			[FieldOffset(26)] public ushort  Reserved2c;					// USHORT  Reserved2[5];
+			[FieldOffset(28)] public ushort  Reserved2d;					// USHORT  Reserved2[5];
+			[FieldOffset(30)] public ushort  Reserved2e;					// USHORT  Reserved2[5];
+			[FieldOffset(32)] public ushort UnitsExp;					// ULONG  UnitsExp;
+			[FieldOffset(34)] public ushort Units;						// ULONG  Units;
+			[FieldOffset(36)] public short LogicalMin;					// LONG  LogicalMin;   ;
+			[FieldOffset(38)] public short LogicalMax;					// LONG  LogicalMax
+			[FieldOffset(40)] public short PhysicalMin;					// LONG  PhysicalMin, 
+			[FieldOffset(42)] public short PhysicalMax;					// LONG  PhysicalMax;
 			// The Structs in the Union			
 			[FieldOffset(44)] public Range Range;
 			[FieldOffset(44)] public Range NotRange;				

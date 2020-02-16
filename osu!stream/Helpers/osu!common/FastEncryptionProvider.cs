@@ -21,8 +21,8 @@ namespace osum.Helpers
 
         private uint[] k;
         private byte[] kB;
-        private const UInt32 d = 0x9e3779b9;
-        private const UInt32 r = 32;
+        private const uint d = 0x9e3779b9;
+        private const uint r = 32;
         public EncryptionMethod m = EncryptionMethod.Four;
 
 
@@ -59,7 +59,7 @@ namespace osum.Helpers
             uint leftover = unchecked((uint)count) % nMAXBytes;
 
             n = nMAX;
-            UInt32 rounds = 6 + 52 / n;
+            uint rounds = 6 + 52 / n;
 
             byte[] bufferCut = new byte[fullWordCount * nMAXBytes];
             Buffer.BlockCopy(buffer, offset, bufferCut, 0, (int) (fullWordCount * nMAXBytes));
@@ -117,7 +117,7 @@ namespace osum.Helpers
             uint* intWordPtr = (uint*) bufferPtr;
             uint na = nMAX;
             n = nMAX;
-            UInt32 rounds = 6 + 52 / n;
+            uint rounds = 6 + 52 / n;
             
             
             if (encrypt)
@@ -130,8 +130,8 @@ namespace osum.Helpers
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
                    // DecryptWordsTwo(intWordPtr);
-                    UInt32 y, z, sum;
-                    UInt32 p, e;
+                    uint y, z, sum;
+                    uint p, e;
                     sum = rounds * d;
                     
                     y = intWordPtr[0];
@@ -373,11 +373,11 @@ namespace osum.Helpers
 
         #region Encrypt Decrypt One
 
-        private unsafe void EncryptWordOne( UInt32* v/*[2]*/, UInt32* o/*[2]*/ ) 
+        private unsafe void EncryptWordOne( uint* v/*[2]*/, uint* o/*[2]*/ ) 
         {
-            UInt32 i;
-            UInt32 v0=v[0];  UInt32 v1=v[1]; 
-            UInt32 sum=0;
+            uint i;
+            uint v0=v[0];  uint v1=v[1]; 
+            uint sum=0;
             for (i=0; i < r; i++) 
             {
                 //todo: cache sum + k for better speed
@@ -388,11 +388,11 @@ namespace osum.Helpers
             o[0]=v0; o[1]=v1;
         }
 
-        private unsafe void DecryptWordOne(UInt32* v/*[2]*/, UInt32* o/*[2]*/) 
+        private unsafe void DecryptWordOne(uint* v/*[2]*/, uint* o/*[2]*/) 
         {
-            UInt32 i;
-            UInt32 v0=v[0]; UInt32 v1=v[1];  
-            UInt32 sum=unchecked(d*r);
+            uint i;
+            uint v0=v[0]; uint v1=v[1];  
+            uint sum=unchecked(d*r);
             for (i=0; i < r; i++) 
             {
                 //todo: cache sum + k for better speed
@@ -415,9 +415,9 @@ namespace osum.Helpers
 
         private void EncryptWordsTwoSafe(uint[] v, int offset)
         {
-            UInt32 y, z, sum;
-            UInt32 p, e;
-            UInt32 rounds = 6 + 52 / n;
+            uint y, z, sum;
+            uint p, e;
+            uint rounds = 6 + 52 / n;
             sum = 0;
             z = v[n - 1 + offset];
             do
@@ -437,9 +437,9 @@ namespace osum.Helpers
 
         private void DecryptWordsTwoSafe(uint[] v, int offset)
         {
-            UInt32 y, z, sum;
-            UInt32 p, e;
-            UInt32 rounds = 6 + 52 / n;
+            uint y, z, sum;
+            uint p, e;
+            uint rounds = 6 + 52 / n;
             sum = rounds * d;
             y = v[offset];
             do
@@ -461,9 +461,9 @@ namespace osum.Helpers
         //uses a modified version of Two
         private unsafe void EncryptWordsTwo(uint* v/*[n]*/) 
         {
-            UInt32 y, z, sum;
-            UInt32 p, e;
-            UInt32 rounds = 6 + 52/n;
+            uint y, z, sum;
+            uint p, e;
+            uint rounds = 6 + 52/n;
             sum = 0;
             z = v[n-1];
             do 
@@ -483,9 +483,9 @@ namespace osum.Helpers
 
         private unsafe void DecryptWordsTwo(uint* v/*[n]*/) 
         {
-            UInt32 y, z, sum;
-            UInt32 p, e;
-            UInt32 rounds = 6 + 52/n;
+            uint y, z, sum;
+            uint p, e;
+            uint rounds = 6 + 52/n;
             sum = rounds*d;
             y = v[0];
             do 

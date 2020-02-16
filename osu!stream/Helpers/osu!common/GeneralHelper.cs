@@ -14,7 +14,7 @@ namespace osum.Helpers
             string o = "";
             for (int i = 0; i < s.Length; i++)
             {
-                if (i > 0 && Char.IsUpper(s[i]))
+                if (i > 0 && char.IsUpper(s[i]))
                     o += " ";
                 o += s[i];
             }
@@ -56,12 +56,12 @@ namespace osum.Helpers
                         {
                             using (RegistryKey extKey = Registry.ClassesRoot.CreateSubKey(extension))
                             {
-                                extKey.SetValue(String.Empty, progId);
+                                extKey.SetValue(string.Empty, progId);
                             }
                         }
                         else
                         {
-                            key.SetValue(String.Empty, progId);
+                            key.SetValue(string.Empty, progId);
                         }
                     }
 
@@ -69,15 +69,15 @@ namespace osum.Helpers
                     // register the progId, if necessary
                     using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(progId))
                     {
-                        if (key == null || key.OpenSubKey("shell\\open\\command").GetValue(String.Empty).ToString() != String.Format("\"{0}\" \"%1\"", executable))
+                        if (key == null || key.OpenSubKey("shell\\open\\command").GetValue(string.Empty).ToString() != string.Format("\"{0}\" \"%1\"", executable))
                         {
                             using (RegistryKey progIdKey = Registry.ClassesRoot.CreateSubKey(progId))
                             {
-                                progIdKey.SetValue(String.Empty, description);
+                                progIdKey.SetValue(string.Empty, description);
 
                                 using (RegistryKey command = progIdKey.CreateSubKey("shell\\open\\command"))
                                 {
-                                    command.SetValue(String.Empty, String.Format("\"{0}\" \"%1\"", executable));
+                                    command.SetValue(string.Empty, string.Format("\"{0}\" \"%1\"", executable));
                                 }
                             }
                         }
@@ -342,7 +342,7 @@ namespace osum.Helpers
         public static unsafe string rawBytesToString(byte[] encoded)
         {
             if (encoded.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             char[] converted = new char[(encoded.Length + 1) / 2];
             fixed (byte* bytePtr = encoded)
@@ -384,7 +384,7 @@ namespace osum.Helpers
             return converted;
         }
 
-        public static byte[] StringToByteArray(String hex)
+        public static byte[] StringToByteArray(string hex)
         {
             int NumberChars = hex.Length;
             byte[] bytes = new byte[NumberChars / 2];

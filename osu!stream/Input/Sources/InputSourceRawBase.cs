@@ -363,7 +363,7 @@ namespace osum.Input.Sources
         public uint HistoryCount;
         public int InputData;
         public uint KeyStates;
-        public UInt64 PerformanceCount;
+        public ulong PerformanceCount;
         public RawPointerButtonType ButtonChangeType;
     }
 

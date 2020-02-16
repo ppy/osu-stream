@@ -190,7 +190,7 @@ namespace osum.Libraries.NetLib
         }
 
         private const string badChars = " \"%'\\";
-        public static String UrlEncode(String s)
+        public static string UrlEncode(string s)
         {
             StringBuilder result = new StringBuilder();
             foreach (char c in s)
