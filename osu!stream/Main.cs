@@ -1,4 +1,5 @@
 using osum.Support;
+using osum.Support.Desktop;
 
 namespace osum
 {
