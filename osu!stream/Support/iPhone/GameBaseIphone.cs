@@ -42,6 +42,10 @@ using System.Globalization;
 using System.Threading;
 using osum.GameModes;
 using osum.Support.iPhone;
+using osum.Input.Sources;
+using osum.Audio;
+using osum.GameModes.Play;
+using osum.Input;
 
 namespace osum
 {

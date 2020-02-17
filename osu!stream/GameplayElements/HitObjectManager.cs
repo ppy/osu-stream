@@ -389,7 +389,7 @@ namespace osum.GameplayElements
         }
 
         #endregion
-1
+
         #region IUpdateable Members
 
         public bool AllowSpinnerOptimisation;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
@@ -12,6 +13,7 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Input;
 using osum.Input.Sources;
+using osum.Libraries.NetLib;
 using osum.Localisation;
 using osum.UI;
 

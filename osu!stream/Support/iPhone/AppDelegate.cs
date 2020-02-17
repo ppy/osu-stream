@@ -23,13 +23,15 @@ using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using System.Drawing;
-using osum.Graphics.Skins;
+using osum.Graphics;
 using osum.Audio;
 using osum.GameModes;
 using OpenTK.Graphics;
 using OpenTK.Platform;
 using osum.Helpers;
 using CoreGraphics;
+using osum.GameModes.Play;
+using osum.Input;
 
 namespace osum.Support.iPhone
 {
