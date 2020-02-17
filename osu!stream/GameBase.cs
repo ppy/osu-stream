@@ -192,13 +192,13 @@ namespace osum
             if (testWidth < 512) testWidth *= 2;
             if (testWidth >= 1536) testWidth /= 2;
 
-            float res = Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth));
+            float res = 1136;//Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth));
 
             float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
 
             if (aspectRatio > 1.775f)
             {
-                res *= aspectRatio / 1.5f;
+                res *= aspectRatio / 1.775f;
                 IsSuperWide = true;
             }
             else
@@ -215,7 +215,6 @@ namespace osum
         public virtual void SetupScreen()
         {
             float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
-            float aspectAdjust = 1;
 
             //Setup window...
             BaseSizeFixedWidth.Y = BaseSizeFixedWidth.X / aspectRatio;
