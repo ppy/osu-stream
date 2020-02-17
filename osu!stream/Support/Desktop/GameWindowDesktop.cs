@@ -78,6 +78,7 @@ namespace osum.Support.Desktop
                         bmi.HighScore = new Score();
                         bmi.HighScore.comboBonusScore = 1000000;
                     }
+
                     break;
                 case 'k':
                     Director.ChangeMode(OsuMode.PositioningTest);
@@ -90,7 +91,7 @@ namespace osum.Support.Desktop
                     break;
                 case 'x':
                     if (ClientSize.Width == 1218)
-                        ClientSize = new Size(2436, 1125); 
+                        ClientSize = new Size(2436, 1125);
                     else
                         ClientSize = new Size(1218, 562);
                     break;
@@ -103,28 +104,34 @@ namespace osum.Support.Desktop
                 case '1':
                     ClientSize = new Size(896, 414);
                     break;
+                case '2':
+                    ClientSize = new Size(896 * 2, 414 * 2);
+                    break;
+                case '3':
+                    ClientSize = new Size(2560, 1182);
+                    break;
                 case 'p':
+                {
+                    if (Director.CurrentMode is Player)
                     {
-                        if (Director.CurrentMode is Player)
-                        {
-                            Player p = Director.CurrentMode as Player;
-                            if (!p.IsPaused)
-                                p.Pause();
-                        }
-                        else
-                        {
-                            Director.ChangeMode(OsuMode.SongSelect);
-                        }
+                        Player p = Director.CurrentMode as Player;
+                        if (!p.IsPaused)
+                            p.Pause();
                     }
+                    else
+                    {
+                        Director.ChangeMode(OsuMode.SongSelect);
+                    }
+                }
                     break;
                 case 'j':
+                {
+                    if (Director.CurrentMode is Player p)
                     {
-                        if (Director.CurrentMode is Player p)
-                        {
-                            Results.RankableScore = p.CurrentScore;
-                            Director.ChangeMode(OsuMode.Results, new ResultTransition());
-                        }
+                        Results.RankableScore = p.CurrentScore;
+                        Director.ChangeMode(OsuMode.Results, new ResultTransition());
                     }
+                }
                     break;
             }
         }
@@ -160,7 +167,6 @@ namespace osum.Support.Desktop
             base.OnResize(e);
 
             if (GameBase.Instance != null) GameBase.Instance.SetupScreen();
-
         }
 
         /// <summary>
