@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
+    <Compile Include="Graphics\SpriteSheetTexture.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="GameBase.cs" />
     <Compile Include="Helpers\Delegates.cs" />
@@ -177,7 +178,6 @@
     <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
     <Compile Include="GameplayElements\HitFactory.cs" />
     <Compile Include="Support\IDrawable.cs" />
-    <Compile Include="Graphics\Skins\SkinManager_Colours.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
     <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
@@ -307,6 +307,7 @@
     <Folder Include="GameModes\Options\" />
     <Folder Include="Localisation\" />
     <Folder Include="Beatmaps\" />
+    <Folder Include="Graphics\Skins\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Skins\Default\normal-hitclap.wav" />
