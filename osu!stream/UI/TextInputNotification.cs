@@ -1,9 +1,11 @@
 ﻿#if iOS
+using System;
 using UIKit;
 using osum.Support.iPhone;
 using System.Drawing;
-using osum.Resources;
 using CoreGraphics;
+using osum.Helpers;
+using osum.Localisation;
 
 namespace osum.UI
 {

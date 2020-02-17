@@ -26,14 +26,16 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget = OpenTK.Graphics.ES11.All;
-using osu_common.Helpers;
+using osu_common;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
 using System;
 using System.Collections.Generic;
+using OpenTK;
 using OpenTK.Graphics;
 using osum.AssetManager;
+using osum.Graphics.Sprites;
 using osum.Helpers;
 
 

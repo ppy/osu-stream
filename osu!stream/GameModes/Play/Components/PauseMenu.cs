@@ -8,6 +8,7 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Input;
 using osum.Input.Sources;
+using osum.Localisation;
 
 namespace osum.GameModes.Play.Components
 {

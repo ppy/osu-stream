@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using osum.Helpers;
 using osum.Support.iPhone;
 using System.Drawing;
+using osum.Input;
+using osum.Input.Sources;
 
 
 namespace osum
