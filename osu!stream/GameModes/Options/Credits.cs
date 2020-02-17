@@ -70,7 +70,7 @@ namespace osum.GameModes.Options
 
         private pDrawable lastText;
 
-        private const int height_extra = 200;
+        private const int height_extra = 225;
 
         public override void Initialize()
         {
