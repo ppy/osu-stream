@@ -70,7 +70,7 @@ namespace osum.GameModes.Options
 
         private pDrawable lastText;
 
-        private const int height_extra = 225;
+        private static int height_extra = 200 + GameBase.SuperWidePadding;
 
         public override void Initialize()
         {
@@ -319,4 +319,3 @@ namespace osum.GameModes.Options
         }
     }
 }
-
