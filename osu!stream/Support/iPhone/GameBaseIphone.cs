@@ -390,18 +390,18 @@ namespace osum
 
         public void Close()
         {
-            ShouldClose = null;
-
-            webView.LoadRequest(NSUrlRequest.FromUrl(new NSUrl("about:blank")));
-            webView.NavigationDelegate = null;
-            webView = null;
-            DismissModalViewController(true);
-            AppDelegate.SetUsingViewController(false);
+            DismissModalViewController (true);
         }
 
-        public override void ViewDidAppear(bool animated)
+        public override void ViewDidDisappear(bool animated)
         {
-            base.ViewDidAppear(animated);
+            base.ViewDidDisappear(animated);
+
+            ShouldClose = null;
+            webView.LoadRequest (NSUrlRequest.FromUrl (new NSUrl ("about:blank")));
+            webView.NavigationDelegate = null;
+            webView = null;
+            AppDelegate.SetUsingViewController (false);
         }
 
         public override void ViewDidUnload()
