@@ -8,8 +8,10 @@
     <e p="C:\Users\Dean\Projects\osu-stream" t="IncludeFlat">
       <e p="BeatmapCombinator" t="IncludeRecursive">
         <e p="BeatmapCombinator.csproj" t="IncludeRecursive" />
+        <e p="BeatmapDifficulty.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="FakeAudioTimeSource.cs" t="Include" />
+        <e p="HitObjectLine.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive" />
         <e p="Program.cs" t="Include" />
         <e p="Properties" t="Include">

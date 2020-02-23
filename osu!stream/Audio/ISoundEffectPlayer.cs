@@ -41,8 +41,6 @@ namespace osum.Audio
         /// <summary>
         /// Plays the sample in provided buffer on a new source.
         /// </summary>
-        /// <param name="buffer">The bufferId.</param>
-        /// <returns></returns>
         public Source LoadBuffer(int buffer, float volume, bool loop = false, bool reserve = false)
         {
             int freeSource = -1;

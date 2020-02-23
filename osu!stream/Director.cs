@@ -39,6 +39,7 @@ namespace osum
 
         /// <summary>
         /// Actions to perform when transition finishes. NOTE: Is cleared after each transition.
+        /// </summary>
         public static event VoidDelegate OnTransitionEnded;
 
         private static void TriggerOnTransitionEnded()
@@ -62,6 +63,7 @@ namespace osum
         /// </summary>
         /// <param name="mode">The new mode.</param>
         /// <param name="transition">The transition (null for instant switching).</param>
+        /// <param name="retainState">Whether we want to save some kind of state.</param>
         /// <returns></returns>
         public static bool ChangeMode(OsuMode mode, Transition transition, bool retainState = false)
         {

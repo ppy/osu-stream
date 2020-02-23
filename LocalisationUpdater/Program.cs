@@ -7,13 +7,13 @@ using Google.GData.Spreadsheets;
 
 namespace LocalisationUpdater
 {
-    class Program
+    static class Program
     {
         static SpreadsheetsService ss = new SpreadsheetsService("stream-localisation");
 
         static void Main(string[] args)
         {
-            Environment.CurrentDirectory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("osum")) + @"\osum\osum\Localisation\";
+            Environment.CurrentDirectory = Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("osum", StringComparison.Ordinal)) + @"\osum\osum\Localisation\";
             ss.setUserCredentials("stream@ppy.sh", "osumisawsum");
 
             SpreadsheetFeed feed = ss.Query(new SpreadsheetQuery());
@@ -21,7 +21,7 @@ namespace LocalisationUpdater
             SpreadsheetEntry sheet = null;
 
             //get spreadsheet
-            foreach (SpreadsheetEntry entry in feed.Entries)
+            foreach (var entry in feed.Entries.OfType<SpreadsheetEntry>())
             {
                 if (entry.Title.Text == "osu!stream localisation")
                 {
@@ -41,7 +41,6 @@ namespace LocalisationUpdater
             WorksheetQuery query = new WorksheetQuery(link.HRef.ToString());
             WorksheetFeed wfeed = ss.Query(query);
 
-            
 
             WorksheetEntry worksheet = wfeed.Entries[0] as WorksheetEntry;
 
@@ -60,9 +59,8 @@ namespace LocalisationUpdater
             Console.WriteLine("Processing cells...");
 
             string currentKey = null;
-            foreach (CellEntry cell in feed.Entries)
+            foreach (var cell in feed.Entries.OfType<CellEntry>())
             {
-                
                 switch (cell.Column)
                 {
                     case 1:
@@ -78,7 +76,7 @@ namespace LocalisationUpdater
                                 currentKey = cell.Value;
                                 break;
                         }
-                        
+
                         break;
                     default:
                         if (cell.Row == 2)
@@ -94,7 +92,7 @@ namespace LocalisationUpdater
 
                             string content = cell.Value.Trim(' ', '\n', '\r', '\t');
 
-                            if (content.IndexOf(@"\\") >= 0)
+                            if (content.IndexOf(@"\\", StringComparison.Ordinal) >= 0)
                             {
                                 Console.WriteLine("key {0} translation {1} failed with excess escape characters", currentKey, content);
                                 Console.ReadLine();
@@ -103,11 +101,12 @@ namespace LocalisationUpdater
                             try
                             {
                                 int argCount = content.Count(c => c == '{');
-                                string[] args = new string[argCount];
+                                object[] args = new object[argCount];
                                 for (int i = 0; i < argCount; i++)
                                     args[i] = "test";
 
-                                string test = string.Format(content,args);
+                                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                                string.Format(content, args);
                             }
                             catch
                             {
@@ -126,13 +125,14 @@ namespace LocalisationUpdater
 
     public class LanguageCodeWriter
     {
-        string Code;
-        string Filename;
+        private string Code;
+        readonly string Filename;
+
         public LanguageCodeWriter(string code)
         {
             Code = code;
             Filename = code + ".txt";
-            File.WriteAllText(Filename,"");
+            File.WriteAllText(Filename, "");
         }
 
         public void Add(string key, string val)

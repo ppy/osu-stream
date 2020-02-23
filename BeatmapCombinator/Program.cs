@@ -18,35 +18,7 @@ using osum.Support;
 
 namespace BeatmapCombinator
 {
-    public class BeatmapDifficulty : Beatmap
-    {
-        internal string VersionName;
-        internal List<HitObjectLine> HitObjectLines = new List<HitObjectLine>();
-        internal List<string> HeaderLines = new List<string>();
-
-        internal double VelocityAt(int time)
-        {
-            return (100000.0f * DifficultySliderMultiplier / beatLengthAt(time, true));
-        }
-
-        internal double ScoringDistanceAt(int time)
-        {
-            return ((100 * DifficultySliderMultiplier / bpmMultiplierAt(time)) / DifficultySliderTickRate);
-        }
-    }
-
-    public class HitObjectLine : IComparable<HitObjectLine>
-    {
-        internal string StringRepresentation;
-        internal int Time;
-
-        public int CompareTo(HitObjectLine h)
-        {
-            return Time.CompareTo(h.Time);
-        }
-    }
-
-    public class BeatmapCombinator
+    public static class BeatmapCombinator
     {
         internal static readonly NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
         private static List<string> headerContent;
@@ -102,7 +74,7 @@ namespace BeatmapCombinator
 
         public static string Process(string dir, bool quick = false, bool usem4a = true, bool free = false, bool previewMode = false)
         {
-            Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last(s => s == s));
+            Console.WriteLine("Combinating beatmap: " + dir.Split('\\').Last());
             Console.WriteLine();
 
             if (dir.Length < 1)
@@ -212,7 +184,7 @@ namespace BeatmapCombinator
                                     bool slider = (type & HitObjectType.Slider) > 0;
                                     bool spinner = (type & HitObjectType.Spinner) > 0;
                                     int time = (int)Decimal.Parse(split[2], nfi);
-                                    int endTime = spinner ? endTime = (int)Decimal.Parse(split[5], nfi) : time;
+                                    int endTime = spinner ? (int)Decimal.Parse(split[5], nfi) : time;
 
                                     int repeatCount = 0; double length = 0; bool hadEndpointSamples = false;
                                     bool hold = false;
@@ -423,11 +395,10 @@ namespace BeatmapCombinator
             headerContent = difficulties.Find(d => d != null).HeaderLines;
 
             string[] splitdir = dir.Split('\\');
-            string upOneDir = string.Join("\\", splitdir, 0, splitdir.Length - 1);
 
             string osz2Filename;
 
-            string baseFileWithLocation = baseName.Substring(baseName.LastIndexOf("\\") + 1);
+            string baseFileWithLocation = baseName.Substring(baseName.LastIndexOf("\\", StringComparison.Ordinal) + 1);
 
             if (free && DistBuild)
                 osz2Filename = baseFileWithLocation + ".osf2";
@@ -864,7 +835,7 @@ namespace BeatmapCombinator
 
         private static void checkOverlaps(Difficulty difficulty)
         {
-            Console.Write("Searching for overlaps", difficulty);
+            Console.Write($"Searching for overlaps in {difficulty}");
             checkOverlaps(difficulty, Difficulty.None);
             Console.WriteLine();
 
@@ -891,7 +862,7 @@ namespace BeatmapCombinator
             }
         }
 
-        private static void checkOverlaps(Difficulty s1, Difficulty s2 = Difficulty.None, int switchTime = 0)
+        private static void checkOverlaps(Difficulty s1, Difficulty s2, int switchTime = 0)
         {
             bool streamSwitch = s2 != Difficulty.None;
             PlayTest.AllowStreamSwitch = streamSwitch;

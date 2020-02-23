@@ -62,6 +62,7 @@ namespace osum
         /// use for input handling, sprites etc.
         /// </summary>
         internal static Vector2 BaseSizeFixedWidth = new Vector2(640, 640 / 1.5f);
+
         internal static Vector2 BaseSize = new Vector2(640, 640 / 1.5f);
         internal static Vector2 GamefieldBaseSize = new Vector2(512, 384);
 
@@ -118,6 +119,7 @@ namespace osum
         internal static bool IsSlowDevice = false;
 
         private readonly OsuMode startupMode;
+
         public GameBase(OsuMode mode = OsuMode.Unknown)
         {
             startupMode = mode;
@@ -155,6 +157,7 @@ namespace osum
         public static event VoidDelegate OnScreenLayoutChanged;
 
         private bool flipView;
+
         public bool FlipView
         {
             get => flipView;
@@ -187,12 +190,7 @@ namespace osum
 
         public virtual void UpdateSpriteResolution()
         {
-            //handle lower resolution devices' aspect ratio band in a similar way with next to no extra effort.
-            int testWidth = NativeSize.Width;
-            if (testWidth < 512) testWidth *= 2;
-            if (testWidth >= 1536) testWidth /= 2;
-
-            float res = 1136;//Math.Max(BASE_SPRITE_RES, Math.Min(1136, testWidth));
+            float res = 1136;
 
             float aspectRatio = (float)NativeSize.Width / NativeSize.Height;
 
@@ -255,7 +253,7 @@ namespace osum
             BaseSize = new Vector2((NativeSize.Width / BaseToNativeRatioAligned), (NativeSize.Height / BaseToNativeRatioAligned));
 
             GamefieldOffsetVector1 = new Vector2((BaseSize.X - GamefieldBaseSize.X) / 2,
-                                     Math.Max(31.5f, (BaseSize.Y - GamefieldBaseSize.Y) / 2));
+                Math.Max(31.5f, (BaseSize.Y - GamefieldBaseSize.Y) / 2));
 
             SpriteToNativeRatio = NativeSize.Width / SpriteResolution;
             //1024x = 1024/1024 = 1
@@ -478,6 +476,7 @@ namespace osum
         private static pDrawable loadingCircle;
 
         private static bool showLoadingOverlay;
+
         public static bool ShowLoadingOverlay
         {
             get => showLoadingOverlay;
@@ -523,6 +522,7 @@ namespace osum
 
 
         private static bool globallyDisableInput;
+
         public static bool GloballyDisableInput
         {
             get => globallyDisableInput;
