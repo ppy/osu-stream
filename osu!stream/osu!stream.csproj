@@ -32,6 +32,7 @@
     </CrashReportingApiKey>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <CodesignProvision>VS: WildCard Development</CodesignProvision>
+    <DeviceSpecificBuild>false</DeviceSpecificBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
