@@ -169,7 +169,7 @@ namespace osum.GameModes.Options
                     }
                     else
                     {
-                        text = new pText(split[0].Trim(), 24, new Vector2(-10, 0), SpriteManager.drawOrderFwdPrio(i), true, i % 2 == 0 ? new Color4(187, 230, 255, 255) : new Color4(255, 187, 253, 255))
+                        text = new pText(split[0].Trim(), 22, new Vector2(-10, 0), SpriteManager.drawOrderFwdPrio(i), true, i % 2 == 0 ? new Color4(187, 230, 255, 255) : new Color4(255, 187, 253, 255))
                         {
                             Field = FieldTypes.StandardSnapTopCentre,
                             Origin = OriginTypes.CentreRight,
