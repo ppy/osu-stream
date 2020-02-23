@@ -112,9 +112,9 @@ namespace osum.GameModes.Store
         public PackPanel(string packTitle, string packId, bool free)
         {
             PackId = packId;
-            IsFree = free;
+            IsFree = true;
 
-            Ready = free;
+            Ready = IsFree;
 
             Sprites.Add(s_BackingPlate = new pSprite(TextureManager.Load(OsuTexture.songselect_panel), Vector2.Zero)
             {
@@ -165,14 +165,14 @@ namespace osum.GameModes.Store
             });
             s_PriceBackground.OnClick += onPurchase;
 
-            Sprites.Add(s_Price = new pText(free ? LocalisationManager.GetString(OsuString.Free) : null, 40, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
+            Sprites.Add(s_Price = new pText(IsFree ? LocalisationManager.GetString(OsuString.Free) : null, 40, Vector2.Zero, Vector2.Zero, base_depth + 0.03f, true, new Color4(255, 255, 255, 128), false)
             {
                 Origin = OriginTypes.Centre,
                 Field = FieldTypes.StandardSnapRight,
                 Offset = new Vector2(75 + GameBase.SuperWidePadding, 30)
             });
 
-            if (!free && PackId != RESTORE_PACK_ID)
+            if (!IsFree && PackId != RESTORE_PACK_ID)
             {
                 s_LoadingPrice = new pSprite(TextureManager.Load(OsuTexture.songselect_audio_preview), FieldTypes.StandardSnapRight, OriginTypes.Centre, ClockTypes.Mode, Vector2.Zero, base_depth + 0.04f, true, Color4.White)
                 {
@@ -262,7 +262,7 @@ namespace osum.GameModes.Store
 
                 string receipt64 = Receipt != null ? Convert.ToBase64String(Receipt) : "";
 
-                string downloadPath = "https://www.osustream.com/dl/download.php";
+                string downloadPath = "https://www.osustream.com/dl/download2.php";
                 string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&recp=" + receipt64;
                 if (item.UpdateChecksum != null)
                     param += "&update=" + item.UpdateChecksum;
