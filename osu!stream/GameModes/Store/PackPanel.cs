@@ -405,7 +405,7 @@ namespace osum.GameModes.Store
                             return;
                         }
 
-                        preview.Transformations.Clear();
+                        preview.Transformations.RemoveAll(t => t.Type == TransformationType.Rotation);
                         preview.Rotation = 0;
 
                         StoreMode.PlayPreview(data);
