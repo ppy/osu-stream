@@ -92,6 +92,7 @@ namespace osum.Helpers
         public MapPackage(Stream stream, bool metadataOnly = false)
         {
             fHandle = stream;
+            fFilename = "preview.osf2";
 
             try {
                 init(metadataOnly);
