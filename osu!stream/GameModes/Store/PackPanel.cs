@@ -485,7 +485,7 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                 StoreMode.ResetAllPreviews(true);
-                VideoPreview.DownloadLink = "https://www.osustream.com/dl/download.php?pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
+                VideoPreview.DownloadLink = "https://www.osustream.com/dl/download2.php?pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&id=" + GameBase.Instance.DeviceIdentifier + "&preview=1";
                 Director.ChangeMode(OsuMode.VideoPreview, true);
             };
 
