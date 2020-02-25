@@ -68,11 +68,11 @@
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleName</key>
 	<string>osu!</string>
-	<key>CFBundleShortVersionString</key>
-	<string>2.01</string>
-	<key>CFBundleVersion</key>
-	<string>2.05</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>CFBundleVersion</key>
+	<string>2020.225.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2020</string>
 </dict>
 </plist>
