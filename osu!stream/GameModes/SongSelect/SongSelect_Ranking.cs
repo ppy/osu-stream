@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using OpenTK;
+using OpenTK.Graphics;
 using osum.Audio;
 using osum.GameModes.Play;
 using osum.GameplayElements.Scoring;
@@ -47,9 +48,9 @@ namespace osum.GameModes.SongSelect
 
             rankingNetRequest = new StringNetRequest(@"https://osustream.com/score/retrieve.php", "POST",
                 "udid=" + GameBase.Instance.DeviceIdentifier +
-                          "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
-                          "&period=" + period +
-                          "&difficulty=" + (int)Player.Difficulty);
+                "&filename=" + NetRequest.UrlEncode(Path.GetFileName(Player.Beatmap.ContainerFilename)) +
+                "&period=" + period +
+                "&difficulty=" + (int)Player.Difficulty);
 
             rankingNetRequest.onFinish += rankingReceived;
 
@@ -99,11 +100,17 @@ namespace osum.GameModes.SongSelect
                     rankingScores.Add(score);
                 }
 
+                var text = new pText("Leaderboards have been frozen. Thanks for participating!", 14, new Vector2(0, 25), Vector2.Zero, 1, true, Color4.White, true);
+                text.Origin = OriginTypes.Centre;
+                text.Field = FieldTypes.StandardSnapTopCentre;
+
+                rankingSpriteManager.Add(text);
+
                 int index = 0;
                 foreach (Score score in rankingScores)
                 {
                     ScorePanel sp = new ScorePanel(score, onScoreClicked);
-                    sp.Sprites.ForEach(s => s.Position = new Vector2(0, (ScorePanel.PANEL_HEIGHT + 3) * index));
+                    sp.Sprites.ForEach(s => s.Position = new Vector2(0, 50 + (ScorePanel.PANEL_HEIGHT + 3) * index));
 
                     rankingSpriteManager.Add(sp);
 
