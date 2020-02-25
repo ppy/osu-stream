@@ -20,6 +20,7 @@ While contributions are welcomed I likely won’t have time to review anything t
 - Bringing the `arcade` branch up-to-date and potentially merging changes back into master.
 - Documentation of any kind.
 - Code quality improvements of any kind (as long as they can easily be reviewed and are guaranteed to not change behaviour). Keep individual PRs under 200 lines of change, optimally.
+- Adding full android support (there's a wip branch but it's so outdated I think starting from zero would be easier). Note that this should not degrade the quality of existing code as much as possible, so above tasks may need to come first.
 
 ## Running
 
