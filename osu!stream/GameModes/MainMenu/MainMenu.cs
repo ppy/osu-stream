@@ -354,7 +354,21 @@ namespace osum.GameModes.MainMenu
             osuLogoGloss.ScaleScalar = osuLogo.ScaleScalar;
         }
 
-        private void explode(int beat)
+        private int lastStrum;
+        
+        private void strum()
+        {
+            int strum = lastStrum;
+
+            while (lastStrum == strum)
+                strum = GameBase.Random.Next(0, menuBackgroundNew.lines.Count);
+
+            menuBackgroundNew.lines[strum].FlashColour(Color4.White, 400);
+
+            lastStrum = strum;
+        }
+
+        private void explode(int beat, float strength = 1)
         {
             pDrawable explosion = explosions[beat];
 
@@ -366,7 +380,7 @@ namespace osum.GameModes.MainMenu
 
             if (!menuBackgroundNew.IsAwesome)
             {
-                float adjust = beat == 0 ? 0.95f : (beat == 1 ? 1.05f : 1);
+                float adjust = beat == 0 ? (1 - 0.1f * strength) : (beat == 1 ? (1 + 0.05f * strength) : 1);
                 if (osuLogo.Transformations.Count != 0 && osuLogo.Transformations[0] is TransformationBounce)
                     ((TransformationBounce)osuLogo.Transformations[0]).EndFloat *= adjust;
                 else
@@ -376,8 +390,8 @@ namespace osum.GameModes.MainMenu
                 }
             }
 
-            explosion.FlashColour(ColourHelper.Lighten2(explosion.Colour, 0.4f), 350);
-            explosion.ScaleScalar *= 1.2f;
+            explosion.FlashColour(ColourHelper.Lighten2(explosion.Colour, 0.4f * strength), 350);
+            explosion.ScaleScalar *= 1 + (0.2f * strength);
             explosion.ScaleTo(sizeForExplosion(beat), 400, EasingTypes.In);
         }
 

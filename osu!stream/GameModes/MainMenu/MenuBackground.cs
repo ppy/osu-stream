@@ -18,6 +18,8 @@ namespace osum.GameModes.MainMenu
         private readonly pQuad orange;
         private readonly pQuad blue;
         private readonly pQuad pink;
+        
+        public List<pQuad> lines = new List<pQuad>();
 
         private Source whoosh;
 
@@ -92,6 +94,7 @@ namespace osum.GameModes.MainMenu
             yellow.OnHover += Option_OnHover;
             yellow.OnHoverLost += Option_OnHoverLost;
             Add(yellow);
+            lines.Add(yellow);
 
             orange = new pQuad(
                 Vector2.Zero,
@@ -109,6 +112,7 @@ namespace osum.GameModes.MainMenu
             orange.OnHoverLost += Option_OnHoverLost;
 
             Add(orange);
+            lines.Add(orange);
 
             blue = new pQuad(
                 Vector2.Zero,
@@ -125,6 +129,7 @@ namespace osum.GameModes.MainMenu
             blue.OnHover += Option_OnHover;
             blue.OnHoverLost += Option_OnHoverLost;
             Add(blue);
+            lines.Add(blue);
 
             pink = new pQuad(
                 Vector2.Zero,
@@ -140,6 +145,7 @@ namespace osum.GameModes.MainMenu
             pink.OnClick += Option_OnClick;
             pink.OnHover += Option_OnHover;
             pink.OnHoverLost += Option_OnHoverLost;
+            lines.Add(pink);
             Add(pink);
 
             ScaleScalar = 1.4f;
