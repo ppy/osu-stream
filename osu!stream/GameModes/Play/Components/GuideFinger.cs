@@ -28,6 +28,7 @@ namespace osum.GameModes.Play.Components
         internal pSprite leftFinger2;
         internal pSprite rightFinger;
         internal pSprite rightFinger2;
+
         public override void Initialize()
         {
             leftFinger = new pSprite(TextureManager.Load(OsuTexture.finger_inner), new Vector2(-100, 200))
@@ -227,7 +228,6 @@ namespace osum.GameModes.Play.Components
                 else if (lastObject != null && lastObject != nextObject && !(lastObject is Slider) && !(nextObject is Slider) && nextObject.StartTime - lastObject.EndTime < 150)
                     //fast hits; always alternate fingers
                     preferred = lastFinger == leftFinger ? rightFinger : leftFinger;
-
                 /*
                 else if (nextObject.Position.X > nextObject.Position2.X && nextObject.Position.X < rightPart && Math.Abs(nextObject.Position.Y - nextObject.Position2.Y) < 20)
                     //sliders that start right and end left, centered towards the left
@@ -289,6 +289,5 @@ namespace osum.GameModes.Play.Components
 
             lastObject = nextObject;
         }
-
     }
 }

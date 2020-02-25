@@ -47,7 +47,8 @@ namespace osum.Graphics
     /// </summary>
     internal static partial class TextureManager
     {
-        internal static Color4[] DefaultColours = {
+        internal static Color4[] DefaultColours =
+        {
             new Color4(237, 0, 140, 255),
             new Color4(0, 192, 245, 255),
             new Color4(255, 102, 0, 255),

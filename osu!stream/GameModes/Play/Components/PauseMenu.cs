@@ -18,12 +18,10 @@ namespace osum.GameModes.Play.Components
 
         private bool menuDisplayed;
         private bool isPaused;
+
         internal bool MenuDisplayed
         {
-            get
-            {
-                return menuDisplayed;
-            }
+            get { return menuDisplayed; }
 
             set
             {
@@ -278,7 +276,6 @@ namespace osum.GameModes.Play.Components
 
         public override void Update()
         {
-
             if (validPoint != null && !Failed)
             {
                 if (pullnotice != null)

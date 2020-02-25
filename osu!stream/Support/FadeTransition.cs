@@ -14,7 +14,8 @@ namespace osum.Support
 
         public FadeTransition()
             : this(DEFAULT_FADE_OUT, DEFAULT_FADE_IN)
-        { }
+        {
+        }
 
         public FadeTransition(int fadeOut, int fadeIn)
         {
@@ -52,7 +53,7 @@ namespace osum.Support
                         SpriteManager.UniversalDim = (float)Math.Min(1, SpriteManager.UniversalDim + Clock.ElapsedMilliseconds / FadeOutTime);
                     break;
             }
-            
+
             currentValue = 1 - SpriteManager.UniversalDim; //todo: yucky.
 
             base.Update();

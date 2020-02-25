@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Dean\.Rider2019.3\config\consoles\db" t="IncludeRecursive" />
-    <e p="C:\Users\Dean\.Rider2019.3\config\extensions" t="IncludeRecursive" />
-    <e p="C:\Users\Dean\.Rider2019.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Dean\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_osu!stream_desktop.1153095706.00" t="ExcludeRecursive" />
-    <e p="C:\Users\Dean\Projects\osu-stream" t="IncludeFlat">
+    <e p="$USER_HOME$/Library/Caches/Rider2019.3/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.3/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_osu!stream_desktop.-509506576.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="BeatmapCombinator" t="IncludeRecursive">
         <e p="BeatmapCombinator.csproj" t="IncludeRecursive" />
         <e p="BeatmapDifficulty.cs" t="Include" />

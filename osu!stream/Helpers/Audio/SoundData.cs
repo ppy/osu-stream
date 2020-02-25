@@ -1,4 +1,5 @@
 ﻿#region License
+
 //
 // The Open Toolkit Library License
 //
@@ -23,6 +24,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #endregion
 
 
@@ -56,13 +58,17 @@ namespace osum.Helpers.Audio
         #endregion
 
         /// <summary>Gets the raw PCM buffer.</summary>
-        public byte[] Data { get => buffer;
+        public byte[] Data
+        {
+            get => buffer;
             internal set => buffer = value;
         }
 
         /// <summary>Gets the SoundFormat of the SoundData.</summary>
-        public SoundFormat SoundFormat { get => format;
+        public SoundFormat SoundFormat
+        {
+            get => format;
             internal set => format = value;
         }
-    }    
+    }
 }

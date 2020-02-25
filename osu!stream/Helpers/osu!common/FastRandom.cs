@@ -40,8 +40,8 @@ namespace osum.Helpers
     public class FastRandom
     {
         // The +1 ensures NextDouble doesn't generate 1.0
-        private const double REAL_UNIT_INT = 1.0/(int.MaxValue + 1.0);
-        private const double REAL_UNIT_UINT = 1.0/(uint.MaxValue + 1.0);
+        private const double REAL_UNIT_INT = 1.0 / (int.MaxValue + 1.0);
+        private const double REAL_UNIT_UINT = 1.0 / (uint.MaxValue + 1.0);
         private const uint W = 273326509;
         private const uint Y = 842502087, Z = 3579807591;
         private uint w;
@@ -82,7 +82,7 @@ namespace osum.Helpers
             // The only stipulation stated for the xorshift RNG is that at least one of
             // the seeds x,y,z,w is non-zero. We fulfill that requirement by only allowing
             // resetting of the x seed
-            x = (uint) seed;
+            x = (uint)seed;
             y = Y;
             z = Z;
             w = W;
@@ -123,7 +123,7 @@ namespace osum.Helpers
             x = y;
             y = z;
             z = w;
-            return (int) (0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))));
+            return (int)(0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace osum.Helpers
 
             // The explicit int cast before the first multiplication gives better performance.
             // See comments in NextDouble.
-            return (int) ((REAL_UNIT_INT*(int) (0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))))*upperBound);
+            return (int)((REAL_UNIT_INT * (int)(0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))))) * upperBound);
         }
 
         /// <summary>
@@ -171,13 +171,13 @@ namespace osum.Helpers
                 // If range is <0 then an overflow has occured and must resort to using long integer arithmetic instead (slower).
                 // We also must use all 32 bits of precision, instead of the normal 31, which again is slower.	
                 return lowerBound +
-                       (int) ((REAL_UNIT_UINT*(w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))))*(upperBound - (long) lowerBound));
+                       (int)((REAL_UNIT_UINT * (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))) * (upperBound - (long)lowerBound));
             }
 
             // 31 bits of precision will suffice if range<=int.MaxValue. This allows us to cast to an int anf gain
             // a little more performance.
             return lowerBound +
-                   (int) ((REAL_UNIT_INT*(int) (0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))))*range);
+                   (int)((REAL_UNIT_INT * (int)(0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))))) * range);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace osum.Helpers
             // this final cast is a lot faster than casting from a uint to a double. The extra cast
             // to an int is very fast (the allocated bits remain the same) and so the overall effect 
             // of the extra cast is a significant performance improvement.
-            return (REAL_UNIT_INT*(int) (0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))));
+            return (REAL_UNIT_INT * (int)(0x7FFFFFFF & (w = (w ^ (w >> 19)) ^ (t ^ (t >> 8)))));
         }
 
         /// <summary>
@@ -221,10 +221,10 @@ namespace osum.Helpers
                 z = w;
                 w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
 
-                buffer[i++] = (byte) (w & 0x000000FF);
-                buffer[i++] = (byte) ((w & 0x0000FF00) >> 8);
-                buffer[i++] = (byte) ((w & 0x00FF0000) >> 16);
-                buffer[i++] = (byte) ((w & 0xFF000000) >> 24);
+                buffer[i++] = (byte)(w & 0x000000FF);
+                buffer[i++] = (byte)((w & 0x0000FF00) >> 8);
+                buffer[i++] = (byte)((w & 0x00FF0000) >> 16);
+                buffer[i++] = (byte)((w & 0xFF000000) >> 24);
             }
 
             // Fill up any remaining bytes in the buffer.
@@ -237,20 +237,21 @@ namespace osum.Helpers
                 z = w;
                 w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
 
-                buffer[i++] = (byte) (w & 0x000000FF);
+                buffer[i++] = (byte)(w & 0x000000FF);
                 if (i < buffer.Length)
                 {
-                    buffer[i++] = (byte) ((w & 0x0000FF00) >> 8);
+                    buffer[i++] = (byte)((w & 0x0000FF00) >> 8);
                     if (i < buffer.Length)
                     {
-                        buffer[i++] = (byte) ((w & 0x00FF0000) >> 16);
+                        buffer[i++] = (byte)((w & 0x00FF0000) >> 16);
                         if (i < buffer.Length)
                         {
-                            buffer[i] = (byte) ((w & 0xFF000000) >> 24);
+                            buffer[i] = (byte)((w & 0xFF000000) >> 24);
                         }
                     }
                 }
             }
+
             this.x = x;
             this.y = y;
             this.z = z;

@@ -74,7 +74,7 @@ namespace osum.GameModes.SongSelect
 #endif
 
             pTexture thumb = null;
-            
+
             float starCount = 0;
 
             if (beatmap != null)
@@ -102,7 +102,7 @@ namespace osum.GameModes.SongSelect
                 s_Thumbnail = new pSprite(thumb, Vector2.Zero) { DrawDepth = base_depth + 0.02f };
             else
                 s_Thumbnail = new pSpriteDynamic { LoadDelegate = GetThumbnail, DrawDepth = 0.49f };
-                
+
             s_Thumbnail.AlphaBlend = false;
             s_Thumbnail.Offset = new Vector2(38.5f, 3.8f);
             Sprites.Add(s_Thumbnail);
@@ -247,4 +247,3 @@ namespace osum.GameModes.SongSelect
         }
     }
 }
-

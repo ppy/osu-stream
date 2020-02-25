@@ -272,7 +272,8 @@ namespace osum.Graphics.Sprites
 
         internal TransformationBounce(int startTime, int endTime, float aimSize, float magnitude, float pulses)
             : this(TransformationType.Scale, startTime, endTime, aimSize, magnitude, pulses)
-        { }
+        {
+        }
 
         internal TransformationBounce(TransformationType type, int startTime, int endTime, float aimSize, float magnitude, float pulses)
             : base(type, aimSize, aimSize, startTime, endTime)
@@ -306,6 +307,4 @@ namespace osum.Graphics.Sprites
             EndTime = endTime;
         }
     }
-
-
 }

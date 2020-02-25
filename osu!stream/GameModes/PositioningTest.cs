@@ -24,12 +24,12 @@ namespace osum.GameModes
             pSprite sp = new pSprite(TextureManager.Load(OsuTexture.finger_inner), vector2)
             {
                 Origin = OriginTypes.Centre,
-                Colour = new Color4(50,50,50,255),
-                ScaleScalar = 0.5f                
+                Colour = new Color4(50, 50, 50, 255),
+                ScaleScalar = 0.5f
             };
 
-            sp.OnHover += delegate { sp.FadeColour(Color4.White,100); };
-            sp.OnHoverLost += delegate { sp.FadeColour(new Color4(50, 50, 50, 255),100); };
+            sp.OnHover += delegate { sp.FadeColour(Color4.White, 100); };
+            sp.OnHoverLost += delegate { sp.FadeColour(new Color4(50, 50, 50, 255), 100); };
 
             pText text = new pText(vector2.ToString(), 12, vector2, 1, true, Color4.White)
             {
@@ -48,6 +48,5 @@ namespace osum.GameModes
 
             pointAt(trackingPoint.BasePosition / GameBase.InputToFixedWidthAlign);
         }
-
     }
 }

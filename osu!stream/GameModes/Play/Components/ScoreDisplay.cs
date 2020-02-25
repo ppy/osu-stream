@@ -48,16 +48,14 @@ namespace osum.GameModes.Play.Components
             if (showAccuracy)
             {
                 s_Accuracy =
-                        new pSpriteText("00.00%", "score", 1,
-                            alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
-                            new Vector2(hOffset, 0), 0.95F, true, Color4.White);
+                    new pSpriteText("00.00%", "score", 1,
+                        alignRight ? FieldTypes.StandardSnapRight : FieldTypes.Standard, alignRight ? OriginTypes.TopRight : OriginTypes.TopLeft, ClockTypes.Game,
+                        new Vector2(hOffset, 0), 0.95F, true, Color4.White);
                 s_Accuracy.TextConstantSpacing = true;
                 s_Accuracy.ScaleScalar = scale * (showScore ? 0.7f : 1);
                 s_Accuracy.Position = new Vector2(hOffset - 35, vpos);
             }
 
-            
-            
 
             spriteManager.Add(s_Score);
             spriteManager.Add(s_Accuracy);
@@ -107,7 +105,6 @@ namespace osum.GameModes.Play.Components
                 s_Score.FadeOut(0);
             if (s_Accuracy != null)
                 s_Accuracy.FadeOut(0);
-
         }
     }
 }

@@ -41,6 +41,7 @@ namespace osum.GameModes.Store
         internal List<pDrawable> PackItemSprites = new List<pDrawable>();
 
         private bool expanded;
+
         internal bool Expanded
         {
             get => expanded;
@@ -143,7 +144,6 @@ namespace osum.GameModes.Store
 
                 s_BackingPlate.FadeIn(60);
                 s_BackingPlate2.FadeColour(Color4.Transparent, 100);
-
             };
 
             Sprites.Add(s_BackingPlate2 = new pSprite(TextureManager.Load(OsuTexture.songselect_panel_selected), Vector2.Zero)
@@ -185,7 +185,7 @@ namespace osum.GameModes.Store
 
             if (PackId == RESTORE_PACK_ID)
             {
-                Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumb_restore),Vector2.Zero)
+                Sprites.Add(s_Thumbnail = new pSprite(TextureManager.Load(OsuTexture.songselect_thumb_restore), Vector2.Zero)
                 {
                     DrawDepth = base_depth + 0.02f,
                     Offset = new Vector2(38.5f, 3.8f)
@@ -371,8 +371,14 @@ namespace osum.GameModes.Store
             PackItemSprites.Add(back);
             back.HandleClickOnUp = true;
 
-            back.OnHover += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200); };
-            back.OnHoverLost += delegate { if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 0), 200); };
+            back.OnHover += delegate
+            {
+                if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 255), 200);
+            };
+            back.OnHoverLost += delegate
+            {
+                if (back.TagNumeric != 1) back.FadeColour(new Color4(40, 40, 40, 0), 200);
+            };
 
             back.OnClick += delegate
             {
@@ -516,7 +522,6 @@ namespace osum.GameModes.Store
             Filename = filename;
             UpdateChecksum = updateChecksum;
             Title = title;
-
         }
     }
 }

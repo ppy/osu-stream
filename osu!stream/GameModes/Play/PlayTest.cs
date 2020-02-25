@@ -23,13 +23,14 @@ namespace osum.GameModes.Play
                 AudioEngine.Music.Stop();
                 Beatmap.Dispose();
             }
+
             base.Dispose();
         }
 
         public override void Initialize()
         {
             Director.ActiveTransition = null; //can get in a weird state if we don't reset this.
-            
+
             Autoplay = true;
 
             base.Initialize();

@@ -25,7 +25,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -55,7 +55,7 @@ namespace osum.Graphics.Drawables
             Radius = radius;
             Colour = colour;
             parts = GameBase.IsSlowDevice ? 36 : 48;
-            
+
 
 #if !NO_PIN_SUPPORT
             vertices = new float[parts * 4 + 4];
@@ -141,10 +141,6 @@ namespace osum.Graphics.Drawables
             }
 
             return false;
-
         }
-
-        
     }
 }
-

@@ -83,7 +83,9 @@ namespace osum.Helpers
                 lock (schedulerQueue)
                     schedulerQueue.Enqueue(d);
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 

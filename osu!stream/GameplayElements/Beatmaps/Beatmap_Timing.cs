@@ -108,4 +108,3 @@ namespace osum.GameplayElements.Beatmaps
         }
     }
 }
-

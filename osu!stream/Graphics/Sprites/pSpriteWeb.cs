@@ -41,7 +41,8 @@ namespace osum.Graphics.Sprites
             isLoading = true;
 
             DataNetRequest dnr = new DataNetRequest(Url);
-            dnr.onFinish += delegate(byte[] data, Exception e) {
+            dnr.onFinish += delegate(byte[] data, Exception e)
+            {
                 if (e != null || data == null || data.Length == 0)
                 {
                     failedLoad = true;

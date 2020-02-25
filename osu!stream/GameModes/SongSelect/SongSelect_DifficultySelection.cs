@@ -286,7 +286,6 @@ namespace osum.GameModes.SongSelect
                 string versions = package.GetMetadata(MapMetaType.Version);
                 if (versions != null && !versions.Contains(newDifficulty.ToString()))
                 {
-
                     /*if (Player.Difficulty == Difficulty.Easy)
                         //came from easy -> expert; drop back on normal!
                         Player.Difficulty = Difficulty.Normal;
@@ -305,7 +304,6 @@ namespace osum.GameModes.SongSelect
 
         private void onSelectPreviousMode(object sender, EventArgs e)
         {
-
             if (State == SelectState.Starting) return;
 
             switch (Player.Difficulty)
@@ -512,10 +510,7 @@ namespace osum.GameModes.SongSelect
 
             s_Footer.AdditiveFlash(500, 0.5f);
 
-            GameBase.Scheduler.Add(delegate
-            {
-                Director.ChangeMode(OsuMode.Play);
-            }, 800);
+            GameBase.Scheduler.Add(delegate { Director.ChangeMode(OsuMode.Play); }, 800);
         }
     }
 }

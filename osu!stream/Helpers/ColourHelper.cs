@@ -55,15 +55,14 @@ namespace osum.Helpers
         internal static Color4 ColourLerp(Color4 first, Color4 second, float weight)
         {
             return new Color4((byte)pMathHelper.Lerp(first.R, second.R, weight),
-                             (byte)pMathHelper.Lerp(first.G, second.G, weight),
-                             (byte)pMathHelper.Lerp(first.B, second.B, weight),
-                             (byte)pMathHelper.Lerp(first.A, second.A, weight));
+                (byte)pMathHelper.Lerp(first.G, second.G, weight),
+                (byte)pMathHelper.Lerp(first.B, second.B, weight),
+                (byte)pMathHelper.Lerp(first.A, second.A, weight));
         }
 
         internal static Color CConvert(Color4 c)
         {
             return Color.FromArgb((int)(c.A * 255), (int)(c.R * 255), (int)(c.G * 255), (int)(c.B * 255));
         }
-
     }
 }

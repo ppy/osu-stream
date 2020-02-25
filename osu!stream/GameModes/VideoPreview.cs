@@ -67,7 +67,8 @@ namespace osum.GameModes
 
         private void dnr_onFinish(byte[] data, Exception e)
         {
-            GameBase.Scheduler.Add(delegate {
+            GameBase.Scheduler.Add(delegate
+            {
                 if (data == null || e != null)
                 {
                     Director.ChangeMode(OsuMode.Store);
@@ -203,10 +204,7 @@ namespace osum.GameModes
                     Origin = OriginTypes.TopLeft
                 };
 
-                info.OnClick += delegate
-                {
-                    GameBase.Instance.OpenUrl(artistWeb);
-                };
+                info.OnClick += delegate { GameBase.Instance.OpenUrl(artistWeb); };
                 songInfoSpriteManager.Add(info);
                 vPos += 30;
             }
@@ -219,10 +217,7 @@ namespace osum.GameModes
                     Origin = OriginTypes.TopLeft
                 };
 
-                info.OnClick += delegate
-                {
-                    GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"https://twitter.com/"));
-                };
+                info.OnClick += delegate { GameBase.Instance.OpenUrl(artistTwitter.Replace(@"@", @"https://twitter.com/")); };
                 songInfoSpriteManager.Add(info);
                 vPos += 40;
             }

@@ -34,7 +34,6 @@ namespace osum.Input
 
         public static void Initialize()
         {
-
         }
 
         public static bool IsPressed => RegisteredSources[0].IsPressed;
@@ -116,6 +115,7 @@ namespace osum.Input
         #region Outgoing Events
 
         public static event InputHandler OnDown;
+
         private static void TriggerOnDown(InputSource source, TrackingPoint point)
         {
             point.IncreaseValidity();
@@ -130,6 +130,7 @@ namespace osum.Input
         }
 
         public static event InputHandler OnUp;
+
         private static void TriggerOnUp(InputSource source, TrackingPoint point)
         {
             //tracking is no longer valid.
@@ -145,6 +146,7 @@ namespace osum.Input
         }
 
         public static event InputHandler OnMove;
+
         private static void TriggerOnMove(InputSource source, TrackingPoint point)
         {
             if (OnMove != null && !GameBase.GloballyDisableInput)
@@ -158,7 +160,4 @@ namespace osum.Input
 
         #endregion
     }
-
-
 }
-

@@ -51,7 +51,6 @@ namespace osum.GameplayElements.HitObjects.Osu
                 burstEndpoint();
 
             return s;
-
         }
 
         internal override void burstEndpoint()
@@ -154,7 +153,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             else
             {
                 SampleSetInfo ss = SampleSets?[lastJudgedEndpoint] ?? SampleSet;
-                PlaySound(SoundTypeList?[lastJudgedEndpoint] ?? SoundType,ss);
+                PlaySound(SoundTypeList?[lastJudgedEndpoint] ?? SoundType, ss);
             }
         }
 
@@ -215,12 +214,10 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             border.Transformations.RemoveAll(t => t.Type == TransformationType.Scale);
             border.Transform(returnto);
-
         }
 
         protected override void newEndpoint()
         {
-
         }
 
         protected override void lastEndpoint()

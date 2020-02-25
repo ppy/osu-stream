@@ -30,12 +30,13 @@ namespace StreamTester
 
                 if (writeable.StartsWith("[mod]"))
                 {
-                    _mod.Invoke((MethodInvoker)delegate { _mod.AppendText(writeable.Replace("[mod] ","")); });
+                    _mod.Invoke((MethodInvoker)delegate { _mod.AppendText(writeable.Replace("[mod] ", "")); });
                 }
                 else
                 {
                     _output.Invoke((MethodInvoker)delegate { _output.AppendText(writeable); });
                 }
+
                 buffer = new StringBuilder();
             }
         }

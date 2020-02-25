@@ -25,7 +25,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -90,7 +90,7 @@ namespace osum.Graphics.Sprites
         public Color4[] Colours;
         public bool IsDisposed { get; private set; }
 
-        public override void Dispose ()
+        public override void Dispose()
         {
             if (IsDisposed)
                 return;
@@ -119,7 +119,6 @@ namespace osum.Graphics.Sprites
                 return PointInPolygon(position * GameBase.BaseToNativeRatio,
                     (Vector2*)handle_vertices_pointer.ToPointer(), 4);
             }
-
         }
 
         private static unsafe bool PointInPolygon(Vector2 p, Vector2* poly, int length)
@@ -134,7 +133,7 @@ namespace osum.Graphics.Sprites
             }
 
             Vector2 oldVector2 = new Vector2(
-            poly[length - 1].X, poly[length - 1].Y);
+                poly[length - 1].X, poly[length - 1].Y);
 
             for (int i = 0; i < length; i++)
             {
@@ -152,8 +151,8 @@ namespace osum.Graphics.Sprites
                 }
 
                 if ((newVector2.X < p.X) == (p.X <= oldVector2.X)
-                && ((long)p.Y - (long)p1.Y) * (long)(p2.X - p1.X)
-                 < ((long)p2.Y - (long)p1.Y) * (long)(p.X - p1.X))
+                    && ((long)p.Y - (long)p1.Y) * (long)(p2.X - p1.X)
+                    < ((long)p2.Y - (long)p1.Y) * (long)(p.X - p1.X))
                 {
                     inside = !inside;
                 }
@@ -191,6 +190,7 @@ namespace osum.Graphics.Sprites
                         }
                         else
                             colours[i] = new Color4(col.R, col.G, col.B, c.A);
+
                         //todo: optimise
                     }
 
@@ -243,15 +243,17 @@ namespace osum.Graphics.Sprites
 #if !NO_PIN_SUPPORT
                     if (coordinates == null)
                     {
-                        coordinates = new[] {
-                        (float)Texture.X / Texture.TextureGl.potWidth,
-                        (float)Texture.Y / Texture.TextureGl.potHeight,
-                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                        (float)Texture.Y / Texture.TextureGl.potHeight,
-                        (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
-                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
-                        (float)Texture.X / Texture.TextureGl.potWidth,
-                        (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight};
+                        coordinates = new[]
+                        {
+                            (float)Texture.X / Texture.TextureGl.potWidth,
+                            (float)Texture.Y / Texture.TextureGl.potHeight,
+                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                            (float)Texture.Y / Texture.TextureGl.potHeight,
+                            (float)(Texture.X + Texture.Width) / Texture.TextureGl.potWidth,
+                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight,
+                            (float)Texture.X / Texture.TextureGl.potWidth,
+                            (float)(Texture.Y + Texture.Height) / Texture.TextureGl.potHeight
+                        };
 
                         handle_coordinates = GCHandle.Alloc(coordinates, GCHandleType.Pinned);
                         handle_coordinates_pointer = handle_coordinates.AddrOfPinnedObject();
@@ -279,8 +281,6 @@ namespace osum.Graphics.Sprites
                     }
 #endif
                     GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
-
-
                 }
                 else
                     SpriteManager.TexturesEnabled = false;
@@ -296,8 +296,6 @@ namespace osum.Graphics.Sprites
             }
 
             return false;
-
         }
     }
 }
-

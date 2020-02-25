@@ -38,7 +38,7 @@ namespace osum.Helpers
         {
             object obj;
 
-            if (entriesParsed.TryGetValue(key,out obj))
+            if (entriesParsed.TryGetValue(key, out obj))
                 return (T)obj;
 
             string raw;
@@ -49,7 +49,7 @@ namespace osum.Helpers
                 return defaultValue;
             }
 
-            string ty = typeof (T).Name;
+            string ty = typeof(T).Name;
 
             switch (ty)
             {
@@ -70,7 +70,7 @@ namespace osum.Helpers
             entriesParsed[key] = obj;
             entriesRaw[key] = raw;
 
-            return (T) obj;
+            return (T)obj;
         }
 
         public void SetValue<T>(string key, T value)
@@ -93,7 +93,6 @@ namespace osum.Helpers
             dirty = true;
 
             if (WriteOnChange) SaveConfig();
-
         }
 
         public void LoadConfig(string configName)
@@ -124,7 +123,9 @@ namespace osum.Helpers
                         entriesRaw[key] = value;
                     }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         public void SaveConfig()
@@ -149,6 +150,7 @@ namespace osum.Helpers
             {
                 return false;
             }
+
             return true;
         }
     }

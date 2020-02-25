@@ -51,7 +51,7 @@ namespace osum.Input.Sources
             public float X => (float)(xposition + section_size * xsection) / max_length;
             public float Y => (float)(yposition + section_size * ysection) / max_length;
         }
-        
+
         public InputSourceBaanto()
         {
             USBInterface usb = new USBInterface("vid_2453", "pid_0100");

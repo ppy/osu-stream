@@ -70,7 +70,6 @@ namespace osum.GameModes.SongSelect
             sm.Add(arrow);
 
             Rotation = -MathHelper.Pi / 4;
-
         }
 
         private const int hit_minimum_distance = 20;
@@ -91,7 +90,6 @@ namespace osum.GameModes.SongSelect
 
                 if (success)
                 {
-
                     RotateTo(defaultRotation, 200, EasingTypes.In);
                     Transform(new TransformationV(Position, fullyVisiblePosition, Clock.ModeTime, Clock.ModeTime + 150, EasingTypes.In));
                     Transform(new TransformationV(fullyVisiblePosition, hiddenPosition, Clock.ModeTime + 150, Clock.ModeTime + 400, EasingTypes.Out));

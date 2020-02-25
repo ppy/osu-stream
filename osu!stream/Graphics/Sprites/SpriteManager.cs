@@ -26,7 +26,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -165,6 +165,7 @@ namespace osum.Graphics.Sprites
         public static float UniversalDim;
 
         private bool forwardPlayOptimisedAdd;
+
         internal bool ForwardPlayOptimisedAdd
         {
             get => forwardPlayOptimisedAdd;
@@ -182,6 +183,7 @@ namespace osum.Graphics.Sprites
                         ForwardPlayList.Clear();
                     }
                 }
+
                 forwardPlayOptimisedAdd = value;
             }
         }
@@ -231,6 +233,7 @@ namespace osum.Graphics.Sprites
         }
 
         internal Queue<pDrawable> SpriteQueue;
+
         internal void OptimizeTimeline(ClockTypes clock)
         {
             List<pDrawable> optimizableSprites = Sprites.FindAll(s => s.Transformations.Count > 0 && !s.AlwaysDraw && s.Clocking == clock);
@@ -287,8 +290,7 @@ namespace osum.Graphics.Sprites
                         Add(SpriteQueue.Dequeue());
                     else
                         break;
-                }
-                while (true);
+                } while (true);
             }
 
 
@@ -299,8 +301,8 @@ namespace osum.Graphics.Sprites
 
                 if (p.IsRemovable)
                 {
-                    ToDispose.Add (p);
-                    Sprites.RemoveAt (i--);
+                    ToDispose.Add(p);
+                    Sprites.RemoveAt(i--);
                 }
             }
 
@@ -373,7 +375,7 @@ namespace osum.Graphics.Sprites
 
                     TexturesEnabled = p.UsesTextures;
                     AlphaBlend = p.AlphaBlend || p.Alpha != 1;
-                    
+
                     if (p.Draw())
                     {
                         //todo: implement batching!
@@ -408,6 +410,7 @@ namespace osum.Graphics.Sprites
         private bool matrixOperations;
 
         private static bool texturesEnabled;
+
         internal static bool TexturesEnabled
         {
             get => texturesEnabled;
@@ -537,7 +540,7 @@ namespace osum.Graphics.Sprites
             if (ToDispose != null)
             {
                 foreach (pDrawable p in ToDispose)
-                    p.Dispose ();
+                    p.Dispose();
             }
 
             if (SpriteQueue != null)

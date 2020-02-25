@@ -25,8 +25,8 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
-using ArrayCap =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
+using ArrayCap = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -58,7 +58,9 @@ namespace osum.GameModes.Play.Components
 
         internal static Color4 COLOUR_INTRO = new Color4(25, 25, 25, 255);
         internal static Color4 COLOUR_EASY = new Color4(90, 135, 42, 255);
+
         internal static Color4 COLOUR_STANDARD = new Color4(43, 80, 136, 255);
+
         //internal static Color4 COLOUR_HARD = new Color4(150, 0, 95, 255);
         internal static Color4 COLOUR_HARD = new Color4(135, 42, 101, 255);
         internal static Color4 COLOUR_EXPERT = new Color4(111, 43, 136, 255);
@@ -122,7 +124,7 @@ namespace osum.GameModes.Play.Components
             vertices[j++] = bottom;
 
             //diagonal lines
-            
+
             calculateDiagonals();
         }
 
@@ -260,6 +262,7 @@ namespace osum.GameModes.Play.Components
         }
 
         private Difficulty lastDifficulty;
+
         internal void ChangeColour(Difficulty difficulty, bool flash = true)
         {
             if (difficulty != lastDifficulty && flash)
@@ -315,7 +318,6 @@ namespace osum.GameModes.Play.Components
             currentColour = colour;
 
             FadeColour(currentColour, 300);
-            
         }
 
         internal void ChangeColour(Color4 colour, bool flash = true)

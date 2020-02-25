@@ -42,7 +42,7 @@ namespace osum.GameModes.Options
 
             pDrawable background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
+                    ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
@@ -63,18 +63,12 @@ namespace osum.GameModes.Options
 
             vPos += 90;
 
-            pButton button = new pButton(LocalisationManager.GetString(OsuString.Credits), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
-            {
-                Director.ChangeMode(OsuMode.Credits);
-            });
+            pButton button = new pButton(LocalisationManager.GetString(OsuString.Credits), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { Director.ChangeMode(OsuMode.Credits); });
             smd.Add(button);
 
             vPos += 70;
 
-            button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
-            {
-                GameBase.Instance.ShowWebView("https://www.osustream.com/help/", "Online Help");
-            });
+            button = new pButton(LocalisationManager.GetString(OsuString.OnlineHelp), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { GameBase.Instance.ShowWebView("https://www.osustream.com/help/", "Online Help"); });
 
             smd.Add(button);
 
@@ -85,18 +79,12 @@ namespace osum.GameModes.Options
 
             vPos += 90;
 
-            buttonFingerGuides = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
-            {
-                DisplayFingerGuideDialog();
-            });
+            buttonFingerGuides = new pButton(LocalisationManager.GetString(OsuString.UseFingerGuides), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { DisplayFingerGuideDialog(); });
             smd.Add(buttonFingerGuides);
 
             vPos += 70;
 
-            buttonEasyMode = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate
-            {
-                DisplayEasyModeDialog();
-            });
+            buttonEasyMode = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { DisplayEasyModeDialog(); });
             smd.Add(buttonEasyMode);
 
             vPos += 60;
@@ -125,7 +113,6 @@ namespace osum.GameModes.Options
                             case 2:
                                 AudioEngine.PlaySample(OsuSamples.HitFinish);
                                 break;
-
                         }
                     }
                 });
@@ -141,12 +128,13 @@ namespace osum.GameModes.Options
 
             const int offset_range = 32;
 
-            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2) , new Vector2(button_x_offset - 30, vPos),
-                delegate(float v) {
-                GameBase.Config.SetValue("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
+            universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2), new Vector2(button_x_offset - 30, vPos),
+                delegate(float v)
+                {
+                    GameBase.Config.SetValue("offset", (Clock.USER_OFFSET = (int)((v - 0.5f) * offset_range * 2)));
                     if (universalOffsetSlider != null) //will be null on first run.
                         universalOffsetSlider.Text.Text = Clock.USER_OFFSET + "ms";
-                 });
+                });
             smd.Add(universalOffsetSlider);
 
             vPos += 40;
@@ -289,13 +277,13 @@ namespace osum.GameModes.Options
         internal static void DisplayFingerGuideDialog()
         {
             Notification notification = new Notification(LocalisationManager.GetString(OsuString.UseFingerGuides), LocalisationManager.GetString(OsuString.UseGuideFingers_Explanation),
-                        NotificationStyle.YesNo,
-                        delegate(bool yes)
-                        {
-                            GameBase.Config.SetValue(@"GuideFingers", yes);
+                NotificationStyle.YesNo,
+                delegate(bool yes)
+                {
+                    GameBase.Config.SetValue(@"GuideFingers", yes);
 
-                            if (Director.CurrentMode is Options o) o.UpdateButtons();
-                        });
+                    if (Director.CurrentMode is Options o) o.UpdateButtons();
+                });
             GameBase.Notify(notification);
         }
 
@@ -308,13 +296,13 @@ namespace osum.GameModes.Options
         internal static void DisplayEasyModeDialog()
         {
             Notification notification = new Notification(LocalisationManager.GetString(OsuString.DefaultToEasyMode), LocalisationManager.GetString(OsuString.DefaultToEasyMode_Explanation),
-                        NotificationStyle.YesNo,
-                        delegate(bool yes)
-                        {
-                            GameBase.Config.SetValue(@"EasyMode", yes);
+                NotificationStyle.YesNo,
+                delegate(bool yes)
+                {
+                    GameBase.Config.SetValue(@"EasyMode", yes);
 
-                            if (Director.CurrentMode is Options o) o.UpdateButtons();
-                        });
+                    if (Director.CurrentMode is Options o) o.UpdateButtons();
+                });
             GameBase.Notify(notification);
         }
 
@@ -350,4 +338,3 @@ namespace osum.GameModes.Options
         }
     }
 }
-

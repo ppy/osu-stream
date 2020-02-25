@@ -14,6 +14,7 @@ namespace osum.Audio
         /// </summary>
         /// <value>The current volume.</value>
         private float dimmableVolume = 1;
+
         public float DimmableVolume
         {
             get => dimmableVolume;
@@ -27,6 +28,7 @@ namespace osum.Audio
         }
 
         private float maxVolume = -1;
+
         public float MaxVolume
         {
             get => maxVolume;
@@ -45,10 +47,7 @@ namespace osum.Audio
         /// Gets the current power of the music.
         /// </summary>
         /// <value>The current power.</value>
-        public abstract float CurrentPower
-        {
-            get;
-        }
+        public abstract float CurrentPower { get; }
 
         /// <summary>
         /// Loads an audio track.
@@ -113,21 +112,15 @@ namespace osum.Audio
         #region IUpdateable Members
 
         public abstract void Update();
+
         #endregion
 
         #region ITimeSource Members
 
-        public abstract double CurrentTime
-        {
-            get;
-        }
+        public abstract double CurrentTime { get; }
 
-        public abstract bool IsElapsing
-        {
-            get;
-        }
+        public abstract bool IsElapsing { get; }
 
         #endregion
     }
 }
-

@@ -102,6 +102,7 @@ namespace osum.Audio
         public int TagNumeric;
 
         protected int sourceId;
+
         public int SourceId
         {
             get => sourceId;
@@ -115,6 +116,7 @@ namespace osum.Audio
         }
 
         private float pitch = 1;
+
         public virtual float Pitch
         {
             get => pitch;
@@ -132,6 +134,7 @@ namespace osum.Audio
         public bool Reserved;
 
         protected int bufferId;
+
         public virtual int BufferId
         {
             get => bufferId;
@@ -148,6 +151,7 @@ namespace osum.Audio
         }
 
         private float volume = 1;
+
         public virtual float Volume
         {
             get => volume;
@@ -160,6 +164,7 @@ namespace osum.Audio
 
         private bool looping;
         public bool Disposable;
+
         public virtual bool Looping
         {
             get => looping;
@@ -173,9 +178,9 @@ namespace osum.Audio
         public abstract bool Playing { get; }
 
         internal abstract void Play();
-        
+
         internal abstract void Stop();
-        
+
         internal virtual void DeleteBuffer()
         {
             bufferId = 0;
@@ -183,4 +188,3 @@ namespace osum.Audio
         }
     }
 }
-

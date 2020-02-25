@@ -51,6 +51,7 @@ namespace osum.Graphics.Sprites
         /// Optimal storage for memory efficiency.
         /// </summary>
         private char[] textArray;
+
         internal char[] TextArray
         {
             get => textArray;
@@ -122,7 +123,7 @@ namespace osum.Graphics.Sprites
         private const int MAX_LENGTH = 9; // 100.00% (7) 1,000,000 (9)
 
         internal pSpriteText(string text, string fontname, int spacingOverlap, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
-                             Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
+            Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(null, fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
             TextFont = fontname;
@@ -146,7 +147,7 @@ namespace osum.Graphics.Sprites
             const int coordinates_per_char = 12;
 
 #if !NO_PIN_SUPPORT
-            coordinates = new float[MAX_LENGTH * coordinates_per_char]; 
+            coordinates = new float[MAX_LENGTH * coordinates_per_char];
             vertices = new float[MAX_LENGTH * coordinates_per_char];
 
             handle_vertices = GCHandle.Alloc(vertices, GCHandleType.Pinned);
@@ -161,6 +162,7 @@ namespace osum.Graphics.Sprites
         }
 
         private bool isDisposed;
+
         public override void Dispose()
         {
             if (isDisposed) return;
@@ -240,9 +242,8 @@ namespace osum.Graphics.Sprites
             pTexture tex;
 
             if (textureCache.TryGetValue(c, out tex) && tex != null && tex.TextureGl != null && tex.TextureGl.Id >= 0)
-            //the extra two conditions are only required for the fps counter between modes.
+                //the extra two conditions are only required for the fps counter between modes.
             {
-
             }
             else
             {
@@ -344,7 +345,8 @@ namespace osum.Graphics.Sprites
                     }
 
                     if (!exactCoordinatesOverride)
-                        if (x % 2 != 0) x++;
+                        if (x % 2 != 0)
+                            x++;
 
                     renderCoordinates[i] = x;
                 }
@@ -423,7 +425,7 @@ namespace osum.Graphics.Sprites
                             float* verticesP = (float*)handle_vertices_pointer;
                             tex.TextureGl.DrawTo(coordinatesP, verticesP, i, thisDrawPos, OriginVector, drawScale, Rotation, new Box2(tex.X, tex.Y, tex.X + tex.Width, tex.Y + tex.Height));
                         }
- 
+
                         i++;
                         // note: no srcRect calculation
                         /*if (ZeroAlpha == 1)
@@ -459,6 +461,7 @@ namespace osum.Graphics.Sprites
         }
 
         internal int LastInt;
+
         internal void ShowInt(int number, int padding = 0, bool separators = false, char suffix = (char)0)
         {
             LastInt = number;

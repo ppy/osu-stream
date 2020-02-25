@@ -54,7 +54,7 @@ namespace osum.GameModes.Store
 
             pSprite background =
                 new pSprite(TextureManager.Load(OsuTexture.songselect_background), FieldTypes.StandardSnapCentre, OriginTypes.Centre,
-                            ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
+                    ClockTypes.Mode, Vector2.Zero, 0, true, new Color4(56, 56, 56, 255));
             background.AlphaBlend = false;
             spriteManager.Add(background);
 
@@ -128,7 +128,6 @@ namespace osum.GameModes.Store
 
             try
             {
-
                 PackPanel pp = null;
                 bool newPack = true;
 

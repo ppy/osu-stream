@@ -64,11 +64,12 @@ namespace osum.GameModes.MainMenu
             rect.Field = FieldTypes.StandardSnapCentre;
             rect.AlphaBlend = false;
             rect.Origin = OriginTypes.Centre;
-            rect.Colours = new[] {
-                new Color4(40,43,52,255),
-                new Color4(38,40,48,255),
-                new Color4(41,43,51,255),
-                new Color4(29,30,34,255)
+            rect.Colours = new[]
+            {
+                new Color4(40, 43, 52, 255),
+                new Color4(38, 40, 48, 255),
+                new Color4(41, 43, 51, 255),
+                new Color4(29, 30, 34, 255)
             };
             Add(rect);
 
@@ -218,6 +219,7 @@ namespace osum.GameModes.MainMenu
                 whoosh.Disposable = true;
                 whoosh = null;
             }
+
             base.Dispose();
         }
 

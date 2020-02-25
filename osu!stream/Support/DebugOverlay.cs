@@ -33,11 +33,11 @@ namespace osum.Support
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
-                #if iOS
+#if iOS
                 fpsDisplay.ScaleScalar = 0.6f;
-                #elif !FULL_DEBUG
+#elif !FULL_DEBUG
                 fpsDisplay.ScaleScalar = 0.3f;
-                #endif
+#endif
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #endif
             }
@@ -83,7 +83,6 @@ namespace osum.Support
 
             if (updateFrame)
             {
-
                 fpsDisplay.Colour = fps < 50 ? Color.OrangeRed : Color.GreenYellow;
 #if FULL_DEBUG
                 int accurateAudio = (int)(AudioEngine.Music.CurrentTime * 1000) + Clock.UNIVERSAL_OFFSET_MP3;

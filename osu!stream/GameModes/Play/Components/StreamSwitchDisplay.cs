@@ -91,11 +91,11 @@ namespace osum.GameModes.Play.Components
             isSwitching = false;
 
             spriteManager.Sprites.ForEach(s =>
-                {
-                    s.Transformations.Clear();
-                    s.Transform(new TransformationF(TransformationType.Fade, s.Alpha, 0, Clock.ModeTime, Clock.ModeTime + 400));
-                    s.ScaleTo(3, 600, EasingTypes.In);
-                });
+            {
+                s.Transformations.Clear();
+                s.Transform(new TransformationF(TransformationType.Fade, s.Alpha, 0, Clock.ModeTime, Clock.ModeTime + 400));
+                s.ScaleTo(3, 600, EasingTypes.In);
+            });
 
             AudioEngine.PlaySample(increase ? OsuSamples.stream_up : OsuSamples.stream_down);
 

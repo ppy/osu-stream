@@ -12,6 +12,7 @@ namespace osum.Support
         private static string LogFileFullPath => GameBase.Instance.PathConfig + LOG_FILE;
 
         private static bool isInitialized;
+
         public static void Initialize()
         {
             if (isInitialized) return;
@@ -25,13 +26,14 @@ namespace osum.Support
                 string contents = File.ReadAllText(LogFileFullPath);
                 File.Delete(LogFileFullPath);
 
-                GameBase.Scheduler.Add(delegate {
+                GameBase.Scheduler.Add(delegate
+                {
                     Notification notification = new Notification(
-                            "Oops...",
-                            LocalisationManager.GetString(OsuString.Crashed) ?? "A serious crash happened and has been reported",
-                            NotificationStyle.Okay);
+                        "Oops...",
+                        LocalisationManager.GetString(OsuString.Crashed) ?? "A serious crash happened and has been reported",
+                        NotificationStyle.Okay);
                     GameBase.Notify(notification);
-                },true);
+                }, true);
 
                 Report(contents);
             }
@@ -47,7 +49,7 @@ namespace osum.Support
             contents += "&device=" + (int)osum.Support.iPhone.HardwareDetection.Version;
             contents += "&version=" + Foundation.NSBundle.MainBundle.ObjectForInfoDictionary("CFBundleVersion").ToString();
 #endif
-            StringNetRequest nr = new StringNetRequest("https://www.osustream.com/admin/crash.php", "POST", "exception=" + contents );
+            StringNetRequest nr = new StringNetRequest("https://www.osustream.com/admin/crash.php", "POST", "exception=" + contents);
             NetManager.AddRequest(nr);
         }
 
@@ -57,4 +59,3 @@ namespace osum.Support
         }
     }
 }
-

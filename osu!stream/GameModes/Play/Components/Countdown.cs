@@ -113,6 +113,7 @@ namespace osum.GameModes.Play.Components
 
         private int lastCountdownUpdate = -1;
         public bool HasFinished = true;
+
         public override void Update()
         {
             if (StartTime < 0 || (Clock.AudioTime > StartTime && lastCountdownUpdate < 0)) return;

@@ -36,7 +36,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 
 #endif
@@ -155,7 +155,7 @@ namespace osum.GameModes.MainMenu
                 headphones.OnClick += delegate
                 {
                     GameBase.Mapper = true;
-                    pText t = new pText("ENABLED MAPPER MODE", 24, new Vector2(0,30), 1, false, Color4.Red)
+                    pText t = new pText("ENABLED MAPPER MODE", 24, new Vector2(0, 30), 1, false, Color4.Red)
                     {
                         Field = FieldTypes.StandardSnapTopCentre,
                         Origin = OriginTypes.Centre
@@ -189,7 +189,10 @@ namespace osum.GameModes.MainMenu
                 GameBase.Scheduler.Add(delegate
                 {
                     AudioEngine.PlaySample(OsuSamples.MainMenu_Intro);
-                    GameBase.Scheduler.Add(delegate { if (AudioEngine.Music != null) AudioEngine.Music.Play(); }, 2950);
+                    GameBase.Scheduler.Add(delegate
+                    {
+                        if (AudioEngine.Music != null) AudioEngine.Music.Play();
+                    }, 2950);
                 }, true);
 
                 if (GameBase.Config.GetValue("firstrun", true))
@@ -205,16 +208,13 @@ namespace osum.GameModes.MainMenu
                                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                                 Director.ChangeMode(OsuMode.Tutorial);
                             }
+
                             GameBase.Config.SetValue("firstrun", false);
                             GameBase.Config.SaveConfig();
                         });
 
-                    GameBase.Scheduler.Add(delegate
-                    {
-                        GameBase.Notify(notification);
-                    }, initial_display + 1500);
+                    GameBase.Scheduler.Add(delegate { GameBase.Notify(notification); }, initial_display + 1500);
                 }
-
             }
             else
             {
@@ -261,9 +261,12 @@ namespace osum.GameModes.MainMenu
 
             osuLogo.FadeOut(800);
 
-            explosions.ForEach(s => { s.Transformations.Clear(); s.FadeOut(100); });
+            explosions.ForEach(s =>
+            {
+                s.Transformations.Clear();
+                s.FadeOut(100);
+            });
         }
-
 
 
         /// <summary>

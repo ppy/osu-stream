@@ -167,4 +167,3 @@ namespace osum.Audio
         }
     }
 }
-

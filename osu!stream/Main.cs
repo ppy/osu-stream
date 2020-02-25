@@ -1,7 +1,7 @@
 using osum.Support;
-
 #if !iOS
 using osum.Support.Desktop;
+
 #endif
 
 namespace osum
@@ -20,4 +20,3 @@ namespace osum
         }
     }
 }
-

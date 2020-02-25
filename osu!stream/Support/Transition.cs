@@ -21,4 +21,3 @@ namespace osum.Support
         public virtual bool SkipScreenClear => false;
     }
 }
-

@@ -13,7 +13,8 @@ namespace osum.Graphics
     {
         private readonly List<pSprite> burstSprites = new List<pSprite>();
 
-        private static readonly float[] random = {
+        private static readonly float[] random =
+        {
             0.54668277924985f,
             0.63373556682948f,
             0.52338286143199f,
@@ -84,6 +85,7 @@ namespace osum.Graphics
         private int spacing;
 
         private bool bindInput;
+
         private bool BindInput
         {
             get => bindInput;

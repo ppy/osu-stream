@@ -2,6 +2,7 @@
 using OpenTK.Graphics.ES11;
 #else
 using OpenTK.Graphics.OpenGL;
+
 #endif
 
 
@@ -14,7 +15,7 @@ namespace osum
 #if iOS
         public const int COLOR_BUFFER_BIT = (int)All.ColorBufferBit;
         public const int COLOR_DEPTH_BUFFER_BIT = (int)(All.ColorBufferBit | All.DepthBufferBit);
-        
+
 #else
         public const ClearBufferMask COLOR_BUFFER_BIT = ClearBufferMask.ColorBufferBit;
         public const ClearBufferMask COLOR_DEPTH_BUFFER_BIT = ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit;

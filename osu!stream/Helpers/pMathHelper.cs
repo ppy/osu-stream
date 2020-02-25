@@ -55,8 +55,8 @@ namespace osum.Helpers
                     working.Add(v);
 
                 for (int level = 0; level < count; level++)
-                    for (int j = 0; j < count - level - 1; j++)
-                        working[j] = Vector2.Lerp(working[j], working[j + 1], t);
+                for (int j = 0; j < count - level - 1; j++)
+                    working[j] = Vector2.Lerp(working[j], working[j + 1], t);
 
                 return working[0];
             }
@@ -79,7 +79,7 @@ namespace osum.Helpers
             }
 
             SortedList<float, Vector2> points = new SortedList<float, Vector2>();
-            
+
             points.Add(0.0f, input[0]);
             points.Add(1.0f, input[input.Count - 1]);
 
@@ -130,7 +130,6 @@ namespace osum.Helpers
 
                 foreach (KeyValuePair<float, Vector2> k in addedPoints)
                     points.Add(k.Key, k.Value);
-
             } while (addedPoints.Count > 0);
 
             output.AddRange(points.Values);
@@ -157,11 +156,11 @@ namespace osum.Helpers
                 Vector2 v1 = (j - 1 >= 0 ? controlPoints[j - 1] : controlPoints[j]);
                 Vector2 v2 = controlPoints[j];
                 Vector2 v3 = (j + 1 < controlPoints.Count
-                                  ? controlPoints[j + 1]
-                                  : v2 + (v2 - v1));
+                    ? controlPoints[j + 1]
+                    : v2 + (v2 - v1));
                 Vector2 v4 = (j + 2 < controlPoints.Count
-                                  ? controlPoints[j + 2]
-                                  : v3 + (v3 - v2));
+                    ? controlPoints[j + 2]
+                    : v3 + (v3 - v2));
 
                 for (int k = 0; k < detailLevel; k++)
                 {

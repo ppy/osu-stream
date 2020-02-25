@@ -24,6 +24,7 @@ namespace osum
         /// The active game mode, which is being drawn to screen.
         /// </summary>
         internal static GameMode CurrentMode;
+
         public static OsuMode CurrentOsuMode;
         internal static OsuMode LastOsuMode;
 
@@ -329,4 +330,3 @@ namespace osum
         public static bool IsTransitioning => ActiveTransition != null && GameBase.Instance != null;
     }
 }
-

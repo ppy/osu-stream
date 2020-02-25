@@ -18,13 +18,13 @@ namespace osum.UI
         {
             action = onValueChanged;
 
-            BackingPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position) { Colour = new Color4(50,50,50,255) };
+            BackingPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position) { Colour = new Color4(50, 50, 50, 255) };
             Add(BackingPlate);
 
             FrontPlate = new pSprite(TextureManager.Load(OsuTexture.sliderbar), position)
             {
                 DrawDepth = BackingPlate.DrawDepth + 0.01f,
-                Colour = new Color4(97,159,0,255),
+                Colour = new Color4(97, 159, 0, 255),
                 Additive = true
             };
             Add(FrontPlate);
@@ -85,7 +85,7 @@ namespace osum.UI
         {
             Value = value;
             FrontPlate.DrawWidth = (int)(BackingPlate.TextureWidth * value);
-            FrontPlate.FlashColour(new Color4(131,240,0,255), 150);
+            FrontPlate.FlashColour(new Color4(131, 240, 0, 255), 150);
             action(value);
         }
 

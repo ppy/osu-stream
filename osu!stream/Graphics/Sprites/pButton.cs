@@ -61,7 +61,7 @@ namespace osum.Graphics.Sprites
             s_Text.Origin = OriginTypes.Centre;
             Sprites.Add(s_Text);
 
-            s_Status = new pSprite(TextureManager.Load(OsuTexture.notification_button_toggle), position + new Vector2(-185,0))
+            s_Status = new pSprite(TextureManager.Load(OsuTexture.notification_button_toggle), position + new Vector2(-185, 0))
             {
                 Origin = OriginTypes.Centre,
                 DrawDepth = base_depth + 0.005f,
@@ -113,7 +113,7 @@ namespace osum.Graphics.Sprites
                 Sprites.ForEach(s => s.Position.X += 15);
             }
 
-            Color4 col = status ? new Color4(184,234,0,255) : new Color4(255,72,1,255);
+            Color4 col = status ? new Color4(184, 234, 0, 255) : new Color4(255, 72, 1, 255);
 
             if (s_Status.Colour != col)
             {
@@ -123,4 +123,3 @@ namespace osum.Graphics.Sprites
         }
     }
 }
-

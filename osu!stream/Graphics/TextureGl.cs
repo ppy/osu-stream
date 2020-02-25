@@ -25,7 +25,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -43,6 +43,7 @@ namespace osum.Graphics
         internal int potWidth;
 
         private int textureHeight;
+
         internal int TextureHeight
         {
             get => textureHeight;
@@ -54,6 +55,7 @@ namespace osum.Graphics
         }
 
         private int textureWidth;
+
         internal int TextureWidth
         {
             get => textureWidth;
@@ -139,6 +141,7 @@ namespace osum.Graphics
         }
 
         private bool IsDisposed;
+
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed)
@@ -152,7 +155,7 @@ namespace osum.Graphics
             Marshal.FreeHGlobal(handle_vertices_pointer);
 #endif
             IsDisposed = true;
-            
+
             Delete();
         }
 
@@ -227,7 +230,7 @@ namespace osum.Graphics
         }
 
         public unsafe void DrawTo(float* coordinates, float* vertices, int startIndex, Vector2 currentPos, Vector2 origin, Vector2 scaleVector, float rotation,
-                                    Box2 drawRect) 
+            Box2 drawRect)
         {
             float left = drawRect.Left / potWidth;
             float right = drawRect.Right / potWidth;
@@ -300,7 +303,7 @@ namespace osum.Graphics
         /// Blits sprite to OpenGL display with specified parameters.
         /// </summary>
         public void Draw(Vector2 currentPos, Vector2 origin, Color4 drawColour, Vector2 scaleVector, float rotation,
-                         Box2 drawRect)
+            Box2 drawRect)
         {
             if (Id < 0) return;
 
@@ -376,7 +379,6 @@ namespace osum.Graphics
             GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, handle_coordinates_pointer);
             GL.DrawArrays(BeginMode.TriangleFan, 0, 4);
-            
         }
 
         public void SetData(int textureId)
@@ -487,27 +489,27 @@ namespace osum.Graphics
                     if (potWidth == TextureWidth && potHeight == TextureHeight || dataPointer == IntPtr.Zero)
                     {
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, dataPointer);
+                            PixelType.UnsignedByte, dataPointer);
                     }
                     else
                     {
                         GL.TexImage2D(SURFACE_TYPE, level, internalFormat, potWidth, potHeight, 0, format,
-                                        PixelType.UnsignedByte, IntPtr.Zero);
+                            PixelType.UnsignedByte, IntPtr.Zero);
 
                         GL.TexSubImage2D(SURFACE_TYPE, level, 0, 0, TextureWidth, TextureHeight, format,
-                                          PixelType.UnsignedByte, dataPointer);
+                            PixelType.UnsignedByte, dataPointer);
                     }
                 }
                 else
                 {
                     GL.TexImage2D(SURFACE_TYPE, level, internalFormat, TextureWidth, TextureHeight, 0, format,
-                                    PixelType.UnsignedByte, dataPointer);
+                        PixelType.UnsignedByte, dataPointer);
                 }
             }
             else
             {
                 GL.TexImage2D(SURFACE_TYPE, level, internalFormat, TextureWidth / (int)Math.Pow(2, level), TextureHeight / (int)Math.Pow(2, level), 0, format,
-                                   PixelType.UnsignedByte, dataPointer);
+                    PixelType.UnsignedByte, dataPointer);
             }
 
             Reset();

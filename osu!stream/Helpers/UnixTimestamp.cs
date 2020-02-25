@@ -8,7 +8,6 @@ namespace osum.Helpers
 
         internal static DateTime Parse(int timestamp)
         {
-            
             return origin.AddSeconds(timestamp);
         }
 

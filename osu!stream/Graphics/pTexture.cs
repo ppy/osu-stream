@@ -131,7 +131,6 @@ namespace osum.Graphics
                 }
 
 
-
                 TextureGl.Dispose();
                 TextureGl = null;
             }
@@ -154,7 +153,6 @@ namespace osum.Graphics
             {
                 if (assetName != null || OsuTextureInfo != OsuTexture.None)
                 {
-
                     pTexture reloadedTexture = OsuTextureInfo != OsuTexture.None ? TextureManager.Load(OsuTextureInfo) : FromFile(assetName);
                     if (TextureGl == null)
                         TextureGl = reloadedTexture.TextureGl;
@@ -165,7 +163,6 @@ namespace osum.Graphics
 
                     return true;
                 }
-
             }
 
             return false;
@@ -276,13 +273,13 @@ namespace osum.Graphics
                     }
                 }
 #else
-                #if iOS
+#if iOS
                 using (UIImage image = UIImage.FromFile(filename))
                     tex = FromUIImage(image,filename);
-                #else
+#else
                 using (Stream stream = NativeAssetManager.Instance.GetFileStream(filename))
                     tex = FromStream(stream, filename);
-                #endif
+#endif
 #endif
 
                 if (tex == null) return null;
@@ -343,7 +340,6 @@ namespace osum.Graphics
         {
             try
             {
-
                 pTexture pt;
 #if iOS
                 pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
@@ -351,7 +347,7 @@ namespace osum.Graphics
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
                     BitmapData data = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.ReadOnly,
-                                                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                        System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
                     if (saveToFile)
                     {
@@ -363,7 +359,6 @@ namespace osum.Graphics
                     pt = FromRawBytes(data.Scan0, b.Width, b.Height);
                     pt.assetName = assetname;
                     b.UnlockBits(data);
-
                 }
 #endif
                 return pt;
@@ -426,6 +421,7 @@ namespace osum.Graphics
         }
 
         private static int fboSingleton = -1;
+
         internal int fboId = -1;
         //internal int fboDepthBuffer = -1;
 
@@ -455,7 +451,10 @@ namespace osum.Graphics
                 GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureGl.SURFACE_TYPE, TextureGl.Id, 0);
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             }
-            catch { return fboId; }
+            catch
+            {
+                return fboId;
+            }
 #endif
 
             fboSingleton = fboId;

@@ -15,8 +15,8 @@ namespace osum.Graphics.Sprites
         private int currentFrame;
         public int[] CustomSequence;
         internal bool Reverse;
-        
-        internal double FrameDelay = 1000/60f;
+
+        internal double FrameDelay = 1000 / 60f;
 
         internal double FramesPerSecond
         {
@@ -33,7 +33,7 @@ namespace osum.Graphics.Sprites
         internal int TextureCount;
 
         internal pAnimation(pTexture[] textures, FieldTypes fieldType, OriginTypes originType, ClockTypes clockType,
-                            Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
+            Vector2 startPosition, float drawDepth, bool alwaysDraw, Color4 colour)
             : base(textures == null || textures.Length == 0 ? null : textures[0], fieldType, originType, clockType, startPosition, drawDepth, alwaysDraw, colour)
         {
             if (textures != null)

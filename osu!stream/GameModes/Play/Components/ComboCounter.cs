@@ -17,16 +17,16 @@ namespace osum.GameModes.Play.Components
             base.Initialize();
 
             s_hitCombo = new pSpriteText("0x", "score", -2,
-                    FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
-                    new Vector2(2 + GameBase.SuperWidePadding, 6), 0.92F, true, Color4.White);
+                FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
+                new Vector2(2 + GameBase.SuperWidePadding, 6), 0.92F, true, Color4.White);
             s_hitCombo.Alpha = 0;
             //s_hitCombo.OriginVector = new Vector2(3, 40);
             s_hitCombo.ScaleScalar = 1.28F;
 
             s_hitCombo_Incoming =
                 new pSpriteText("0x", "score", -2,
-                                FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
-                                new Vector2(2 + GameBase.SuperWidePadding, 6), 0.91F, true, Color4.White);
+                    FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Game,
+                    new Vector2(2 + GameBase.SuperWidePadding, 6), 0.91F, true, Color4.White);
             s_hitCombo_Incoming.Alpha = 0;
             //s_hitCombo_Incoming.OriginVector = new Vector2(3, 40);
             s_hitCombo_Incoming.Additive = true;

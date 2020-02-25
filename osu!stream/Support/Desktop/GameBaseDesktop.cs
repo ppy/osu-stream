@@ -42,7 +42,7 @@ namespace osum.Support.Desktop
             {
                 source = new InputSourceMouse(Window.Mouse);
             }
-            
+
             InputManager.AddSource(source);
         }
 
@@ -59,4 +59,3 @@ namespace osum.Support.Desktop
         }
     }
 }
-

@@ -66,7 +66,6 @@ namespace osum.GameModes.Play.Components
 
         internal HealthBar()
         {
-
         }
 
         /*internal virtual void SlideOut()
@@ -111,7 +110,7 @@ namespace osum.GameModes.Play.Components
                         if (s_kiIcon.Transformations.Count == 0)
                         {
                             if (initialAppearTransformation == null)
-                                initialAppearTransformation = new TransformationF(TransformationType.Scale, 1.2F, 0.8F, Clock.Time,Clock.Time + 150);
+                                initialAppearTransformation = new TransformationF(TransformationType.Scale, 1.2F, 0.8F, Clock.Time, Clock.Time + 150);
                             else
                             {
                                 initialAppearTransformation.StartTime = Clock.Time;
@@ -178,19 +177,19 @@ namespace osum.GameModes.Play.Components
         public override void Initialize()
         {
             s_barFill = new pSprite(TextureManager.Load(OsuTexture.scorebar_colour), FieldTypes.Standard, OriginTypes.TopLeft,
-                   ClockTypes.Game, new Vector2(4, 10f), 0.965F, true, Color4.White);
+                ClockTypes.Game, new Vector2(4, 10f), 0.965F, true, Color4.White);
 
             s_kiIcon =
                 new pSprite(TextureManager.Load(OsuTexture.scorebar_marker), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
-                            new Vector2(0, 14), 0.97F, true, Color4.White);
+                    new Vector2(0, 14), 0.97F, true, Color4.White);
 
             s_barBg = new pSprite(TextureManager.Load(OsuTexture.scorebar_background), FieldTypes.Standard, OriginTypes.TopLeft,
-                                    ClockTypes.Game,
-                                    Vector2.Zero, 0.96F, true, Color4.White);
+                ClockTypes.Game,
+                Vector2.Zero, 0.96F, true, Color4.White);
 
             s_kiExplode =
-                    new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
-                                Vector2.Zero, 1, true, Color4.White);
+                new pSprite(TextureManager.Load(OsuTexture.scorebar_marker_hit), FieldTypes.Standard, OriginTypes.Centre, ClockTypes.Game,
+                    Vector2.Zero, 1, true, Color4.White);
             s_kiExplode.Alpha = 0;
             s_kiExplode.RemoveOldTransformations = false;
             s_kiExplode.Additive = true;

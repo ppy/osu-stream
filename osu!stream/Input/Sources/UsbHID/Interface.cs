@@ -47,7 +47,7 @@ namespace osum.Input.Sources.UsbHID
         /// </summary>
         /// <param name="vid">The vendor id of the USB device (e.g. vid_06ba)</param>
         /// <param name="pid">The product id of the USB device (e.g. pid_ffff)</param>
-       public  USBInterface(string vid, string pid)
+        public USBInterface(string vid, string pid)
         {
             usbVID = vid;
             usbPID = pid;
@@ -111,39 +111,43 @@ namespace osum.Input.Sources.UsbHID
         /// <returns>Returns true if all bytes have been written successfully</returns>
         public bool write(byte[] bytes)
         {
-                int byteCount = bytes.Length;
-                int bytePos = 0;
-               
-                bool success = true;
+            int byteCount = bytes.Length;
+            int bytePos = 0;
 
-                //build hid reports with 64 bytes
-                while (bytePos <= byteCount-1)
+            bool success = true;
+
+            //build hid reports with 64 bytes
+            while (bytePos <= byteCount - 1)
+            {
+                if (bytePos > 0)
                 {
-                    if (bytePos > 0)
-                    {
-                        Thread.Sleep(5);
-                    }
-                    byte[] transfByte = new byte[64];
-                    for (int u = 0; u < 64; u++)
-                    {
-                        if (bytePos < byteCount)
-                        {
-                            transfByte[u] = bytes[bytePos];
-                            bytePos++;
-                        }
-                        else 
-                        {
-                            transfByte[u] = 0;
-                        }
-                    }
-                    //send the report
-                    if (!usbdevice.writeData(transfByte))
-                    {
-                        success = false;
-                    }
                     Thread.Sleep(5);
                 }
-                return success;
+
+                byte[] transfByte = new byte[64];
+                for (int u = 0; u < 64; u++)
+                {
+                    if (bytePos < byteCount)
+                    {
+                        transfByte[u] = bytes[bytePos];
+                        bytePos++;
+                    }
+                    else
+                    {
+                        transfByte[u] = 0;
+                    }
+                }
+
+                //send the report
+                if (!usbdevice.writeData(transfByte))
+                {
+                    success = false;
+                }
+
+                Thread.Sleep(5);
+            }
+
+            return success;
         }
 
         /// <summary>

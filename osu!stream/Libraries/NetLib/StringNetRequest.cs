@@ -24,7 +24,7 @@ namespace osum.Libraries.NetLib
             NetManager.ReportCompleted(this);
 
             if (AbortRequested) return;
-            
+
             GameBase.Scheduler.Add(delegate
             {
                 if (onFinish != null)

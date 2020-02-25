@@ -6,10 +6,11 @@ namespace osum.Helpers
     public class MapStream : Stream
     {
         #region Delegates
+
         public delegate void MapStreamDelegate(MapStream ms);
+
         #endregion
 
-        
 
         private readonly int fLength;
 #if STRONG_ENCRYPTION
@@ -19,6 +20,7 @@ namespace osum.Helpers
         private Stream internalStream;
 #else
         private readonly Stream internalStream;
+
         //private byte[] internalBuffer;
         private byte[] decryptedBuffer;
         private readonly byte[] skipBuffer = new byte[64];
@@ -26,7 +28,7 @@ namespace osum.Helpers
 #endif
         private readonly int fOffset;
         private long fPosition;
-        
+
         public MapStream(Stream str, int offset, int length, byte[] iv, byte[] key)
         {
             internalStream = str;
@@ -49,7 +51,6 @@ namespace osum.Helpers
             fLength = fStream.ReadByte() | (fStream.ReadByte() << 8) | (fStream.ReadByte() << 16) | (fStream.ReadByte() << 24);
             fPosition = 0;
 #elif NO_ENCRYPTION
-
             //fLength = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
             fLength = length - 4;
             fPosition = fOffset;
@@ -62,14 +63,14 @@ namespace osum.Helpers
                 fixed (byte* keyPtr = key)
                 fixed (uint* uKeyPtr = uKey)
                 {
-                    uint* keyPtrWord = (uint*) keyPtr;
+                    uint* keyPtrWord = (uint*)keyPtr;
                     uKeyPtr[0] = keyPtrWord[0];
                     uKeyPtr[1] = keyPtrWord[1];
                     uKeyPtr[2] = keyPtrWord[2];
                     uKeyPtr[3] = keyPtrWord[3];
                 }
             }
-            
+
             encryptor.Init(uKey, EncryptionMethod.Two);
 
             byte[] lengthB = { data[0], data[1], data[2], data[3] };
@@ -117,16 +118,15 @@ namespace osum.Helpers
 #else
             get { return fPosition - fOffset; }
 #endif
-            set 
+            set
             {
-                
 #if !STRONG_ENCRYPTION
                 internalStream.Seek(value, SeekOrigin.Begin);
 #else
                 fPosition = value + fOffset;
 #endif
-            } 
-            
+            }
+
             /*
             get { return fStream.Position - fOffset; }
             set { Seek(value, SeekOrigin.Begin); }
@@ -176,7 +176,7 @@ namespace osum.Helpers
                     break;
 
                 case SeekOrigin.Current:
-                    if ( Position + offset >= 0)
+                    if (Position + offset >= 0)
                         fPosition = Math.Min(fPosition + offset - fOffset, fLength) + fOffset;
                     break;
 
@@ -191,7 +191,6 @@ namespace osum.Helpers
 #else
             return fStream.Seek(fOffset + offset, origin) - fOffset;
 #endif
-            
         }
 
         public override void SetLength(long value)
@@ -213,7 +212,7 @@ namespace osum.Helpers
         {
             // limit count
             if (Position + count > fLength)
-                count = fLength - (int) Position;
+                count = fLength - (int)Position;
 
             if (count == 0)
                 return 0;
@@ -226,8 +225,8 @@ namespace osum.Helpers
             Array.Copy(decryptedBuffer, Position, buffer, offset, count);
 #else
             long rPosition = fPosition - fOffset;
-            long  seekablePosition = rPosition & ~0x3FL;
-            int skipped = (int) rPosition % 64;
+            long seekablePosition = rPosition & ~0x3FL;
+            int skipped = (int)rPosition % 64;
             int bytes = count;
             int seekableBytes = count - (64 - skipped);
 
@@ -246,7 +245,8 @@ namespace osum.Helpers
                     encryptor.Decrypt(buffer, 64 - skipped + offset, seekableBytes);
                 }
             }
-            int firstBytes = Math.Min(64,  fLength - (int) seekablePosition);
+
+            int firstBytes = Math.Min(64, fLength - (int)seekablePosition);
             //Array.Copy(internalBuffer, seekablePosition + 4, skipBuffer, 0, firstBytes);
             internalStream.Position = seekablePosition + fOffset;
             internalStream.Read(skipBuffer, 0, firstBytes);
@@ -260,8 +260,8 @@ namespace osum.Helpers
                 internalStream.Read(skipBuffer, 0, lastBytes);
                 encryptor.Decrypt(skipBuffer, 0, lastBytes);
                 Array.Copy(skipBuffer, 0, buffer, count - endLeftover + offset, endLeftover);
-
             }
+
             internalStream.Position = fPosition;
             //Array.Copy(internalBuffer, fPosition, buffer, offset, count);
 
@@ -289,8 +289,5 @@ namespace osum.Helpers
         {
             throw new NotSupportedException();
         }
-
-
-        
     }
 }

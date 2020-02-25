@@ -2,7 +2,6 @@
 {
     internal class Event
     {
-        
     }
 
     internal enum EventType

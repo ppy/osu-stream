@@ -51,7 +51,6 @@ namespace osum.Localisation
                 }
             }
         }
-
     }
 
     public enum OsuString

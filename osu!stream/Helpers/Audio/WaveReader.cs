@@ -1,9 +1,11 @@
 #region --- License ---
+
 /* Licensed under the MIT/X11 license.
  * Copyright (c) 2006-2008 the OpenTK Team.
  * This notice may not be removed from any source distribution.
  * See license.txt for licensing details.
  */
+
 #endregion
 
 using System;
@@ -19,7 +21,7 @@ namespace osum.Helpers.Audio
         private string signature;
         private int riff_chunck_size;
         private string format;
-            
+
         //WAVE header
         private string format_signature;
         private int format_chunk_size;
@@ -29,14 +31,16 @@ namespace osum.Helpers.Audio
         private int byte_rate;
         private short block_align;
         private short bits_per_sample;
-            
+
         //DATA header
         private string data_signature;
         private int data_chunk_size;
 
         private readonly BinaryReader reader;
 
-        internal WaveReader() { }
+        internal WaveReader()
+        {
+        }
 
         public override void Dispose()
         {
@@ -165,7 +169,7 @@ namespace osum.Helpers.Audio
             //    Array.Resize<byte>(ref decoded_data.Data, decoded_data.Data.Length * 2);
 
             decoded_data = new SoundData(new SoundFormat(channels, bits_per_sample, sample_rate),
-                                                         reader.ReadBytes((int)samples));
+                reader.ReadBytes((int)samples));
 
             return decoded_data;
         }
@@ -186,8 +190,8 @@ namespace osum.Helpers.Audio
                 //decoded_data = new byte[data_chunk_size];
 
                 decoded_data = new SoundData(new SoundFormat(channels, bits_per_sample, sample_rate),
-                                                             reader.ReadBytes((int)reader.BaseStream.Length));
-                
+                    reader.ReadBytes((int)reader.BaseStream.Length));
+
                 //return new SoundData(decoded_data, new SoundFormat(channels, bits_per_sample, sample_rate));
                 return decoded_data;
             }

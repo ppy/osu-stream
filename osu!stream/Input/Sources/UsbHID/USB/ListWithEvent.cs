@@ -30,7 +30,6 @@ namespace osum.Input.Sources.UsbHID.USB
     /// </summary>
     public class ListWithEvent : ArrayList
     {
-
         /// <summary>
         /// An event that clients can use to be notified whenever the
         /// elements of the list change
@@ -65,10 +64,5 @@ namespace osum.Input.Sources.UsbHID.USB
             OnChanged(EventArgs.Empty);
             return i;
         }
-    
     }
-
-    
 }
-    
-

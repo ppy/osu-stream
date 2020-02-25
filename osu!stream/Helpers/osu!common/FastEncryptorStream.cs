@@ -4,11 +4,11 @@ namespace osum.Helpers
 {
     public class FastEncryptorStream : Stream
     {
-
         public static bool instanceActive { get; private set; }
-        public Stream internalStream{ get; }
+        public Stream internalStream { get; }
         public bool isClosed { get; private set; }
         private readonly FastEncryptionProvider FastEncryptionProvider = new FastEncryptionProvider();
+
         /// <summary>
         /// Wraps around the fastEncryptionProvider and the given stream and rebounds data.
         /// </summary>
@@ -16,10 +16,10 @@ namespace osum.Helpers
         /// <param name="EM">It's recommended to use XXTEA, it's the most secure and fastest method.</param>
         /// <param name="Key">Key has to be 4 words long</param>
         /// <exception cref="T:System.AccessViolationException">No access is granted when an instance of this class is already active.</exception>
-        public FastEncryptorStream (Stream InternalStream, EncryptionMethod EM, uint[] Key)
+        public FastEncryptorStream(Stream InternalStream, EncryptionMethod EM, uint[] Key)
         {
             internalStream = InternalStream;
-            FastEncryptionProvider.Init(Key,EM);
+            FastEncryptionProvider.Init(Key, EM);
         }
 
         /// <summary>
@@ -37,18 +37,19 @@ namespace osum.Helpers
                 fixed (byte* keyPtr = Key)
                 fixed (uint* uKeyPtr = uKey)
                 {
-                    uint* keyPtrWord = (uint*) keyPtr;
+                    uint* keyPtrWord = (uint*)keyPtr;
                     uKeyPtr[0] = keyPtrWord[0];
                     uKeyPtr[1] = keyPtrWord[1];
                     uKeyPtr[2] = keyPtrWord[2];
                     uKeyPtr[3] = keyPtrWord[3];
                 }
             }
+
             internalStream = InternalStream;
             FastEncryptionProvider.Init(uKey, EM);
         }
 
-        ~FastEncryptorStream ()
+        ~FastEncryptorStream()
         {
             Close();
         }
@@ -112,11 +113,9 @@ namespace osum.Helpers
         ///                 </exception><filterpriority>1</filterpriority>
         public override int Read(byte[] buffer, int offset, int count)
         {
-
             int sizeRead = internalStream.Read(buffer, offset, count);
-            FastEncryptionProvider.Decrypt(buffer,offset, count);
+            FastEncryptionProvider.Decrypt(buffer, offset, count);
             return sizeRead;
-
         }
 
         /// <summary>
@@ -208,7 +207,5 @@ namespace osum.Helpers
                 isClosed = true;
             }
         }
-
-
     }
 }

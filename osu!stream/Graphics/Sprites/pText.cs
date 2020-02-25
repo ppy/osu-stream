@@ -20,6 +20,7 @@ namespace osum.Graphics.Sprites
         internal string FontFace = "Tahoma";
 
         private string text;
+
         internal string Text
         {
             get => text;
@@ -41,7 +42,7 @@ namespace osum.Graphics.Sprites
 #endif
 
         internal pText(string text, float textSize, Vector2 startPosition, Vector2 bounds, float drawDepth,
-                       bool alwaysDraw, Color4 colour, bool shadow)
+            bool alwaysDraw, Color4 colour, bool shadow)
             : base(
                 null, FieldTypes.Standard, OriginTypes.TopLeft, ClockTypes.Mode, startPosition, drawDepth, alwaysDraw,
                 colour)
@@ -100,6 +101,7 @@ namespace osum.Graphics.Sprites
         }
 
         private Vector2 lastMeasure;
+
         internal Vector2 MeasureText()
         {
             if (textChanged)
@@ -161,7 +163,7 @@ namespace osum.Graphics.Sprites
             Vector2 bounds = TextBounds * GameBase.BaseToNativeRatio;
 
             Texture = TextRenderer.CreateText(Text, size, bounds, TextColour, TextShadow, Bold, false, TextAlignment,
-                                      TextAntialiasing, out lastMeasure, Color4.Transparent, Color4.Transparent, BorderWidth, false, FontFace);
+                TextAntialiasing, out lastMeasure, Color4.Transparent, Color4.Transparent, BorderWidth, false, FontFace);
 
             if (texture != null)
                 TextureManager.RegisterDisposable(texture);

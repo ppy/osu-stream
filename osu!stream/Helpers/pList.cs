@@ -11,11 +11,13 @@ namespace osum.Helpers
         private readonly IComparer<T> comparer;
 
         public pList()
-        { }
+        {
+        }
 
         public pList(int size)
             : base(size)
-        { }
+        {
+        }
 
         public pList(IComparer<T> comparer, bool forceSortOnAdd)
         {
@@ -35,7 +37,7 @@ namespace osum.Helpers
         {
             return AddInPlace(item, UseBackwardsSearch);
         }
-        
+
         public int AddInPlace(T item, bool useBackwardsSearch)
         {
             int index = -1;

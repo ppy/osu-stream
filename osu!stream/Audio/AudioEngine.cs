@@ -42,11 +42,12 @@ namespace osum.Audio
 
     public static class AudioEngine
     {
-        private static readonly Dictionary<OsuSamples, int>[] loadedSamples = {
+        private static readonly Dictionary<OsuSamples, int>[] loadedSamples =
+        {
             new Dictionary<OsuSamples, int>(), // none
             new Dictionary<OsuSamples, int>(), // normal
             new Dictionary<OsuSamples, int>(), // soft
-            new Dictionary<OsuSamples, int>()  // drum
+            new Dictionary<OsuSamples, int>() // drum
         };
 
         public static SoundEffectPlayer Effect;

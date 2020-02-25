@@ -62,12 +62,12 @@ namespace osum.Input.Sources
             TrackingPoint p = trackingPoints.Find(t => t.Tag.ToString() == "m");
             PointF pos = MousePosition(data.Mouse);
 
-            if ((data.Mouse.ButtonFlags & 
-                    (RawMouseButtons.LeftDown |
-                     RawMouseButtons.RightDown |
-                     RawMouseButtons.MiddleDown |
-                     RawMouseButtons.Button4Down |
-                     RawMouseButtons.Button5Down)) > 0)
+            if ((data.Mouse.ButtonFlags &
+                 (RawMouseButtons.LeftDown |
+                  RawMouseButtons.RightDown |
+                  RawMouseButtons.MiddleDown |
+                  RawMouseButtons.Button4Down |
+                  RawMouseButtons.Button5Down)) > 0)
             {
                 if (p != null)
                 {
@@ -86,13 +86,13 @@ namespace osum.Input.Sources
                 {
                     p.Location = pos;
                 }
-                
+
                 if ((data.Mouse.ButtonFlags &
-                    (RawMouseButtons.LeftUp |
-                        RawMouseButtons.RightUp |
-                        RawMouseButtons.MiddleUp |
-                        RawMouseButtons.Button4Up |
-                        RawMouseButtons.Button5Up)) > 0)
+                     (RawMouseButtons.LeftUp |
+                      RawMouseButtons.RightUp |
+                      RawMouseButtons.MiddleUp |
+                      RawMouseButtons.Button4Up |
+                      RawMouseButtons.Button5Up)) > 0)
                 {
                     TriggerOnUp(p);
                 }
@@ -102,7 +102,7 @@ namespace osum.Input.Sources
                 }
             }
         }
-        
+
         private void touchHandler(RawTouchInput data)
         {
             // Actual touch
@@ -159,6 +159,5 @@ namespace osum.Input.Sources
                 }
             }
         }
-
     }
 }

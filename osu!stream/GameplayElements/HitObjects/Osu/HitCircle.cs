@@ -28,9 +28,9 @@ namespace osum.GameplayElements.HitObjects.Osu
 
 
             SpriteHitCircleText = new pSpriteText(null, "default", 3, //SkinManager.Current.FontHitCircle, SkinManager.Current.FontHitCircleOverlap,
-                                                    FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                                                    ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - 1),
-                                                    false, white);
+                FieldTypes.GamefieldSprites, OriginTypes.Centre,
+                ClockTypes.Audio, Position, SpriteManager.drawOrderBwd(StartTime - 1),
+                false, white);
             SpriteHitCircleText.TextConstantSpacing = false;
 
             SpriteHitCircleText.TagNumeric = DIMMABLE_TAG;
@@ -133,6 +133,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal pSpriteText SpriteHitCircleText;
 
         private int comboNumber;
+
         internal override int ComboNumber
         {
             get => comboNumber;
@@ -151,9 +152,11 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         public override bool IsVisible => SpriteHitCircle1.Alpha > 0;
 
-        internal override int ColourIndex {
+        internal override int ColourIndex
+        {
             get => base.ColourIndex;
-            set {
+            set
+            {
                 SpriteHitCircle1.Texture = TextureManager.Load(OsuTexture.hitcircle0 + value);
                 base.ColourIndex = value;
             }
@@ -169,7 +172,5 @@ namespace osum.GameplayElements.HitObjects.Osu
                 base.Colour = value;
             }
         }
-
     }
-
 }

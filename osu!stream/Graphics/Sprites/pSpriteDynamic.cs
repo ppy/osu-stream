@@ -9,7 +9,6 @@ namespace osum.Graphics.Sprites
         public pSpriteDynamic()
             : base(null, Vector2.Zero)
         {
-
         }
 
         public TextureLoadDelegate LoadDelegate;
@@ -27,6 +26,7 @@ namespace osum.Graphics.Sprites
         }
 
         private bool failedLoad;
+
         private void LoadTexture()
         {
             if (failedLoad) return;

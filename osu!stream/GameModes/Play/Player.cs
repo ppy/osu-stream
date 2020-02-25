@@ -30,6 +30,7 @@ namespace osum.GameModes.Play
     public class Player : GameMode
     {
         private HitObjectManager hitObjectManager;
+
         public HitObjectManager HitObjectManager
         {
             get => hitObjectManager;
@@ -211,7 +212,6 @@ namespace osum.GameModes.Play
                 };
 
 
-
                 spriteManager.Add(mapBackgroundImage);
             }
 
@@ -272,8 +272,8 @@ namespace osum.GameModes.Play
             menu = new PauseMenu();
 
             menuPauseButton = new pSprite(TextureManager.Load(OsuTexture.pausebutton), FieldTypes.StandardSnapRight, OriginTypes.Centre,
-                                    ClockTypes.Game,
-                                    new Vector2(19 + GameBase.SuperWidePadding, 16.5f), 1, true, Color4.White);
+                ClockTypes.Game,
+                new Vector2(19 + GameBase.SuperWidePadding, 16.5f), 1, true, Color4.White);
             menuPauseButton.ClickableMargin = 5;
             menuPauseButton.OnClick += delegate { menu.Toggle(); };
             topMostSpriteManager.Add(menuPauseButton);
@@ -497,7 +497,6 @@ namespace osum.GameModes.Play
 
         private void Director_OnTransitionEnded()
         {
-
         }
 
         private void comboPain(bool harsh)
@@ -591,6 +590,7 @@ namespace osum.GameModes.Play
                         comboPain(comboCounter.currentCombo >= 30);
                         comboCounter.SetCombo(0);
                     }
+
                     healthChange = -20 * hitObject.HpMultiplier;
                     break;
                 case ScoreChange.Miss:
@@ -602,6 +602,7 @@ namespace osum.GameModes.Play
                         comboPain(comboCounter.currentCombo >= 30);
                         comboCounter.SetCombo(0);
                     }
+
                     healthChange = -40;
                     break;
             }
@@ -854,11 +855,7 @@ namespace osum.GameModes.Play
                         Results.Results.RankableScore = CurrentScore;
                         Results.Results.RankableScore.UseAccuracyBonus = true;
 
-                        GameBase.Scheduler.Add(delegate
-                        {
-
-                            Director.ChangeMode(OsuMode.Results, new ResultTransition());
-                        }, 500);
+                        GameBase.Scheduler.Add(delegate { Director.ChangeMode(OsuMode.Results, new ResultTransition()); }, 500);
                     }
                 }
             }
@@ -915,7 +912,6 @@ namespace osum.GameModes.Play
 #endif
                 playfieldBackground.Move((isIncreasingStream ? 1 : -1) * Math.Max(0, (2000f - (queuedStreamSwitchTime - Clock.AudioTime)) / 200));
             }
-
         }
 
         protected void hideFailScreen()
@@ -1036,4 +1032,3 @@ namespace osum.GameModes.Play
         private ScoreChange lastJudgeType = ScoreChange.Ignore;
     }
 }
-

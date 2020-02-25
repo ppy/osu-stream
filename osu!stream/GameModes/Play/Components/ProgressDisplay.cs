@@ -10,6 +10,7 @@ namespace osum.GameModes.Play.Components
         private const int HEIGHT = 6;
         private pRectangle progressRect;
         private readonly pRectangle progressRectBg;
+
         public ProgressDisplay()
         {
             progressRectBg = new pRectangle(Vector2.Zero, new Vector2(GameBase.BaseSize.X, HEIGHT), true, 0.99f, Color4.Black);
@@ -26,12 +27,13 @@ namespace osum.GameModes.Play.Components
 
         private ScoreChange lastDisplayedChange;
         private float lastProgressStart;
-        
-        private readonly Color4 gray_colour = new Color4(80,80,80,255);
+
+        private readonly Color4 gray_colour = new Color4(80, 80, 80, 255);
 
         internal void ExtendHeight(int duration, float extent)
         {
-            Sprites.ForEach(s => {
+            Sprites.ForEach(s =>
+            {
                 Transformation t = new TransformationV(TransformationType.VectorScale, s.Scale, new Vector2(s.Scale.X, s == progressRectBg ? extent : extent - 1),
                     s.ClockingNow, s.ClockingNow + duration, EasingTypes.In);
                 s.Transform(t);

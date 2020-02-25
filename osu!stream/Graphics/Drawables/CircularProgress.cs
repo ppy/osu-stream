@@ -25,7 +25,7 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
@@ -49,6 +49,7 @@ namespace osum.Graphics.Drawables
 #if !NO_PIN_SUPPORT
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly float[] vertices;
+
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly float[] colours;
 #endif
@@ -105,7 +106,6 @@ namespace osum.Graphics.Drawables
         {
             if (base.Draw())
             {
-
                 Color4 c = AlphaAppliedColour;
 
                 float startAngle = -MathHelper.Pi / 2;
@@ -119,8 +119,8 @@ namespace osum.Graphics.Drawables
                 Vector2 pos = FieldPosition;
                 unsafe
                 {
-                    float* l_vertices = (float*) handle_vertices_pointer.ToPointer();
-                    float* l_colours = (float*) handle_colours_pointer.ToPointer();
+                    float* l_vertices = (float*)handle_vertices_pointer.ToPointer();
+                    float* l_colours = (float*)handle_colours_pointer.ToPointer();
 
                     l_vertices[0] = pos.X;
                     l_vertices[1] = pos.Y;
@@ -143,6 +143,7 @@ namespace osum.Graphics.Drawables
                         l_colours[v * 4 + 3] = c.A * (EvenShading ? 0.6f : (0.2f + 0.4f * ((float)v / parts)));
                     }
                 }
+
                 GL.EnableClientState(ArrayCap.ColorArray);
 
                 GL.VertexPointer(2, VertexPointerType.Float, 0, handle_vertices_pointer);
@@ -156,8 +157,6 @@ namespace osum.Graphics.Drawables
             }
 
             return false;
-
         }
     }
 }
-

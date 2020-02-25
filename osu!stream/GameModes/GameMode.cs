@@ -75,7 +75,6 @@ namespace osum.GameModes
 
         public virtual void OnFirstUpdate()
         {
-
         }
     }
 }

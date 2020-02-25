@@ -34,9 +34,10 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
+
 #endif
 
 
@@ -112,18 +113,20 @@ namespace osum.Graphics.Renderers
 
         // cache actual texel coordinates for x-axis since they are always the same
         private float sheetStart, sheetEnd;
-        
+
         private pTexture trackTexture;
 
         static SliderTrackRenderer()
         {
-
-            vertices_quad = new[]{-QUAD_OVERLAP_FUDGE, -1, 0,
-                                   1 + QUAD_OVERLAP_FUDGE, -1, 0,
-                                   -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                                   1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
-                                   -QUAD_OVERLAP_FUDGE, 1, 0,
-                                   1 + QUAD_OVERLAP_FUDGE, 1, 0};
+            vertices_quad = new[]
+            {
+                -QUAD_OVERLAP_FUDGE, -1, 0,
+                1 + QUAD_OVERLAP_FUDGE, -1, 0,
+                -QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                1 + QUAD_OVERLAP_FUDGE, QUAD_MIDDLECRACK_FUDGE, 1,
+                -QUAD_OVERLAP_FUDGE, 1, 0,
+                1 + QUAD_OVERLAP_FUDGE, 1, 0
+            };
 
 #if !NO_PIN_SUPPORT
             vertices_quad_handle = GCHandle.Alloc(vertices_quad, GCHandleType.Pinned);
@@ -137,7 +140,6 @@ namespace osum.Graphics.Renderers
                     vertices_quad_p[i] = vertices_quad[i];
             }
 #endif
-
         }
 
         /// <summary>
@@ -192,7 +194,6 @@ namespace osum.Graphics.Renderers
             float maxRes = MAXRES;
             float step = MathHelper.Pi / maxRes;
 #if NO_PIN_SUPPORT
-
                 float* vertices_cap = (float*)vertices_cap_pointer.ToPointer();
 
                 vertices_cap[0] = 0.0f;
@@ -200,7 +201,7 @@ namespace osum.Graphics.Renderers
                 vertices_cap[3] = 0.0f;
                 vertices_cap[5] = 0.0f;
 #endif
-            vertices_cap[2] = 1.0f;                
+            vertices_cap[2] = 1.0f;
             vertices_cap[4] = -1.0f;
 
 
@@ -218,7 +219,7 @@ namespace osum.Graphics.Renderers
                 vertices_cap[MAXRES * 3 + 5] = 0.0f;
 #endif
             vertices_cap[MAXRES * 3 + 4] = 1.0f;
-                
+
 
             for (int x = 0; x < COLOUR_COUNT; x++)
             {
@@ -258,7 +259,6 @@ namespace osum.Graphics.Renderers
             vertices_cap_handle = GCHandle.Alloc(vertices_cap, GCHandleType.Pinned);
             vertices_cap_pointer = vertices_cap_handle.AddrOfPinnedObject();
 #endif
-
         }
 
         private unsafe void CalculateQuadMesh(float* dest, float radius, Line prev, Line cur, Line next, bool flip_start, bool flip_end)
@@ -300,8 +300,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[0] -= (ratiox <= 0.99609375f)
-                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                   : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                            ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                            : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
                     }
 
                     if (p0.Y < 0.00390625f)
@@ -311,8 +311,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[1] += (ratioy <= 0.99609375f)
-                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                   : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                            ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                            : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
                     }
 
                     dest[12] += cur.unitAngle.Y * radius;
@@ -330,8 +330,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[12] += (ratiox <= 0.99609375f)
-                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                    : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
+                            ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                            : (cur.unitAngle.Y + prev.unitAngle.Y) * radius * 0.5f;
                     }
 
                     if (p0.Y < 0.00390625f)
@@ -341,8 +341,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[13] -= (ratioy <= 0.99609375f)
-                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                    : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
+                            ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                            : (cur.unitAngle.X + prev.unitAngle.X) * radius * 0.5f;
                     }
                 }
             }
@@ -375,8 +375,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[3] -= (ratiox <= 0.99609375f)
-                                   ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                   : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                            ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                            : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
                     }
 
                     if (p0.Y < 0.00390625f)
@@ -386,8 +386,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[4] += (ratioy <= 0.99609375f)
-                                   ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                   : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                            ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                            : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
                     }
 
                     dest[15] += cur.unitAngle.Y * radius;
@@ -405,8 +405,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[15] += (ratiox <= 0.99609375f)
-                                    ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
-                                    : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
+                            ? (p1.Y + p0.Y * ratiox) / (1 - ratiox)
+                            : (next.unitAngle.Y + cur.unitAngle.Y) * radius * 0.5f;
                     }
 
                     if (p0.Y < 0.00390625f)
@@ -416,8 +416,8 @@ namespace osum.Graphics.Renderers
                     else
                     {
                         dest[16] -= (ratioy <= 0.99609375f)
-                                    ? (p1.X + p0.X * ratioy) / (1 - ratioy)
-                                    : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
+                            ? (p1.X + p0.X * ratioy) / (1 - ratioy)
+                            : (next.unitAngle.X + cur.unitAngle.X) * radius * 0.5f;
                     }
                 }
             }
@@ -437,12 +437,15 @@ namespace osum.Graphics.Renderers
             {
                 float y = (2.0f + 4.0f * x + sheetY + TEXEL_ORIGIN) / retinaHeight;
 #if !NO_PIN_SUPPORT
-                coordinates_quad[x] = new[]{sheetStart, y,
-                                            sheetStart, y,
-                                            sheetEnd, y,
-                                            sheetEnd, y,
-                                            sheetStart, y,
-                                            sheetStart, y};
+                coordinates_quad[x] = new[]
+                {
+                    sheetStart, y,
+                    sheetStart, y,
+                    sheetEnd, y,
+                    sheetEnd, y,
+                    sheetStart, y,
+                    sheetStart, y
+                };
 
 
                 coordinates_quad_handle[x] = GCHandle.Alloc(coordinates_quad[x], GCHandleType.Pinned);
@@ -458,7 +461,7 @@ namespace osum.Graphics.Renderers
                     coordinates_quad[4] = sheetEnd;     coordinates_quad[5] = y;
                     coordinates_quad[6] = sheetEnd;     coordinates_quad[7] = y;
                     coordinates_quad[8] = sheetStart;   coordinates_quad[9] = y;
-                    coordinates_quad[10]= sheetStart;   coordinates_quad[11] = y;
+                    coordinates_quad[10] = sheetStart;   coordinates_quad[11] = y;
                 }
 #endif
             }
@@ -537,7 +540,6 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawQuad(int ColourIndex)
         {
-
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_quad_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_quad_pointer);
 
@@ -546,7 +548,6 @@ namespace osum.Graphics.Renderers
 
         protected void glDrawHalfCircle(int count, int ColourIndex)
         {
-
             GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, coordinates_cap_pointer[ColourIndex]);
             GL.VertexPointer(3, VertexPointerType.Float, 0, vertices_cap_pointer);
 
@@ -645,6 +646,7 @@ namespace osum.Graphics.Renderers
                     end_triangles = 0;
                 }
             }
+
             end_triangles = Math.Min(end_triangles, numPrimitives_cap);
 
             // Quad
@@ -654,6 +656,7 @@ namespace osum.Graphics.Renderers
                 {
                     CalculateQuadMesh((float*)vertices_quad_pointer, globalRadius, prev, curr, next, prev_flip, flip);
                 }
+
                 GL.LoadIdentity();
                 glDrawQuad(ColourIndex);
             }
@@ -683,5 +686,4 @@ namespace osum.Graphics.Renderers
             }
         }
     }
-
 }

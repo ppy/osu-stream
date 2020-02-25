@@ -28,26 +28,28 @@ namespace osum.Input.Sources.UsbHID.USB
     /// <summary>
     ///
     /// </summary>
-   public class HIDUSBDevice: IDisposable
+    public class HIDUSBDevice : IDisposable
     {
         private bool disposed;
 
         private Thread usbThread;
 
         /*Variables --------------------------------------------------------------------*/
-        private string vendorID;    //Vendor ID of the Device
-        private string productID;   //Product ID of the Device
-        private string devicePath;  //device path
-        private int deviceCount;    //device count
+        private string vendorID; //Vendor ID of the Device
+        private string productID; //Product ID of the Device
+        private string devicePath; //device path
+        private int deviceCount; //device count
 
-        private bool connectionState;   //Connection Status true: connected, false: disconnected
-        public int byteCount;       //Recieved Bytes
+        private bool connectionState; //Connection Status true: connected, false: disconnected
+
+        public int byteCount; //Recieved Bytes
         //recieve Buffer (Each report is one Element)
         //this one was replaced by the receive Buffer in the interface
         //public static ArrayList receiveBuffer = new ArrayList();
-        
+
         //USB Object
         private readonly USBSharp myUSB = new USBSharp();
+
         //thread for read operations
         protected Thread dataReadingThread;
 
@@ -69,7 +71,7 @@ namespace osum.Input.Sources.UsbHID.USB
         /// <param name="vID">The vendor ID of the USB device.</param>
         /// <param name="pID">The product ID of the USB device.</param>
         public HIDUSBDevice(string vID, string pID)
-        { 
+        {
             //set vid and pid
             setDeviceData(vID, pID);
             //try to establish connection
@@ -77,6 +79,7 @@ namespace osum.Input.Sources.UsbHID.USB
             //create Read Thread
             dataReadingThread = new Thread(readDataThread) { Priority = ThreadPriority.Highest, IsBackground = true };
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  bool connectDevice()
@@ -90,12 +93,13 @@ namespace osum.Input.Sources.UsbHID.USB
         /// </summary>
         /// <returns>true if connection is established</returns>
         public bool connectDevice()
-        { 
+        {
             //searchDevice
             searchDevice();
             //return connection state
             return getConnectionState();
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  bool searchDevice()
@@ -114,7 +118,7 @@ namespace osum.Input.Sources.UsbHID.USB
             bool deviceFound = false;
             deviceCount = 0;
             devicePath = string.Empty;
-            
+
             myUSB.CT_HidGuid();
             myUSB.CT_SetupDiGetClassDevs();
 
@@ -145,7 +149,7 @@ namespace osum.Input.Sources.UsbHID.USB
                     deviceCount = device_count;
                     devicePath = myUSB.DevicePathName;
                     deviceFound = true;
-                    
+
                     //init device
                     myUSB.CT_SetupDiEnumDeviceInterfaces(deviceCount);
 
@@ -157,19 +161,21 @@ namespace osum.Input.Sources.UsbHID.USB
                     resultb = myUSB.CT_SetupDiGetDeviceInterfaceDetailx(ref requiredSize, size);
                     resultb = 0;
                     //create HID Device Handel
-                    resultb = myUSB.CT_CreateFile(devicePath);  
+                    resultb = myUSB.CT_CreateFile(devicePath);
 
                     //we have found our device so stop searching
                     break;
                 }
+
                 device_count++;
             }
-           
+
             //set connection state
             setConnectionState(deviceFound);
             //return state
             return getConnectionState();
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  bool getDevices()
@@ -213,12 +219,15 @@ namespace osum.Input.Sources.UsbHID.USB
                 string deviceID = vendorID + "&" + productID;
                 if (myUSB.DevicePathName.IndexOf(deviceID) > 0)
                 {
-                   numberOfDevices++;
+                    numberOfDevices++;
                 }
+
                 device_count++;
             }
+
             return numberOfDevices;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  bool writeData(char[] cDataToWrite)
@@ -241,8 +250,8 @@ namespace osum.Input.Sources.UsbHID.USB
                 {
                     //get output report length
                     int myPtrToPreparsedData = -1;
-                   // myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData);
-                   // int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
+                    // myUSB.CT_HidD_GetPreparsedData(myUSB.HidHandle, ref myPtrToPreparsedData);
+                    // int code = myUSB.CT_HidP_GetCaps(myPtrToPreparsedData);
 
                     int outputReportByteLength = 65;
 
@@ -250,9 +259,8 @@ namespace osum.Input.Sources.UsbHID.USB
                     //if bWriteData is bigger then one report diveide into sevral reports
                     while (bytesSend < bDataToWrite.Length)
                     {
-
                         // Set the size of the Output report buffer.
-                       // byte[] OutputReportBuffer = new byte[myUSB.myHIDP_CAPS.OutputReportByteLength - 1 + 1];
+                        // byte[] OutputReportBuffer = new byte[myUSB.myHIDP_CAPS.OutputReportByteLength - 1 + 1];
                         byte[] OutputReportBuffer = new byte[outputReportByteLength - 1 + 1];
                         // Store the report ID in the first byte of the buffer:
                         OutputReportBuffer[0] = 0;
@@ -280,12 +288,14 @@ namespace osum.Input.Sources.UsbHID.USB
                     success = false;
                 }
             }
-            else 
+            else
             {
                 success = false;
             }
+
             return success;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  readDataThread()
@@ -310,13 +320,14 @@ namespace osum.Input.Sources.UsbHID.USB
                     int reportLength = myUSB.myHIDP_CAPS.InputReportByteLength;
 
                     while (true)
-                    {//read until thread is stopped
+                    {
+                        //read until thread is stopped
                         byte[] myRead = myUSB.CT_ReadFile(myUSB.myHIDP_CAPS.InputReportByteLength);
                         if (myRead != null)
                         {
                             byteCount += myRead.Length;
                             //lock (USBHIDDRIVER.USBInterface.usbBuffer.SyncRoot)
-                                USBInterface.usbBuffer.Add(myRead);
+                            USBInterface.usbBuffer.Add(myRead);
                         }
                         else
                         {
@@ -327,12 +338,14 @@ namespace osum.Input.Sources.UsbHID.USB
                                 receivedNull = 0;
                                 Thread.Sleep(1);
                             }
+
                             receivedNull++;
                         }
                     }
                 }
             }
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  readData()
@@ -346,9 +359,9 @@ namespace osum.Input.Sources.UsbHID.USB
         /// </summary>
         public void readData()
         {
-
             if (dataReadingThread.ThreadState.ToString() == "Unstarted")
-            {   //start the thread
+            {
+                //start the thread
                 dataReadingThread.Start();
                 Thread.Sleep(0);
             }
@@ -357,16 +370,17 @@ namespace osum.Input.Sources.UsbHID.USB
                 //Stop the Thread
                 dataReadingThread.Abort();
             }
-            else 
+            else
             {
                 //create Read Thread
-                dataReadingThread = new Thread(readDataThread) { Priority = ThreadPriority.Highest, IsBackground = true }; ;
+                dataReadingThread = new Thread(readDataThread) { Priority = ThreadPriority.Highest, IsBackground = true };
+                ;
                 //start the thread
                 dataReadingThread.Start();
                 Thread.Sleep(0);
             }
-            
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  abortreadData()
@@ -380,13 +394,11 @@ namespace osum.Input.Sources.UsbHID.USB
         /// </summary>
         public void abortreadData()
         {
-
             if (dataReadingThread.ThreadState.ToString() == "Running")
             {
                 //Stop the Thread
                 dataReadingThread.Abort();
             }
-
         }
 
         //---#+************************************************************************
@@ -442,6 +454,7 @@ namespace osum.Input.Sources.UsbHID.USB
         {
             return vendorID;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  String getProductID()
@@ -458,6 +471,7 @@ namespace osum.Input.Sources.UsbHID.USB
         {
             return productID;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  setConnectionState(bool state)
@@ -474,6 +488,7 @@ namespace osum.Input.Sources.UsbHID.USB
         {
             connectionState = state;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  bool getConnectionState()
@@ -486,10 +501,11 @@ namespace osum.Input.Sources.UsbHID.USB
         /// Gets the state of the connection.
         /// </summary>
         /// <returns>true = connected; false = diconnected</returns>
-        public bool getConnectionState() 
+        public bool getConnectionState()
         {
             return connectionState;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  int getDeviceCount()
@@ -521,7 +537,7 @@ namespace osum.Input.Sources.UsbHID.USB
             int requiredSize = 0;
             int numberOfDevices = 0;
             //search the device until you have found it or no more devices in list
-            
+
             while (result != 0)
             {
                 //open the device
@@ -539,10 +555,13 @@ namespace osum.Input.Sources.UsbHID.USB
                     devices.Add(myUSB.DevicePathName);
                     numberOfDevices++;
                 }
+
                 device_count++;
             }
+
             return devices;
         }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  getDevicePath()
@@ -562,7 +581,6 @@ namespace osum.Input.Sources.UsbHID.USB
 
         internal abstract class HostReport
         {
-
             // For reports the host sends to the device.
 
             // Each report class defines a ProtectedWrite method for writing a type of report.
@@ -572,7 +590,6 @@ namespace osum.Input.Sources.UsbHID.USB
 
             internal bool Write(byte[] reportBuffer, int deviceHandle)
             {
-
                 bool Success = false;
 
                 // Purpose    : Calls the overridden ProtectedWrite routine.
@@ -591,7 +608,6 @@ namespace osum.Input.Sources.UsbHID.USB
                 }
                 catch (Exception ex)
                 {
-                    
                 }
 
                 return Success;
@@ -599,16 +615,13 @@ namespace osum.Input.Sources.UsbHID.USB
         }
 
 
-       
         internal class OutputReport : HostReport
         {
-
             // For Output reports the host sends to the device.
             // Uses interrupt or control transfers depending on the device and OS.
 
             protected override bool ProtectedWrite(int hidHandle, byte[] outputReportBuffer)
             {
-
                 // Purpose    : writes an Output report to the device.
                 // Accepts    : HIDHandle - a handle to the device.
                 //              OutputReportBuffer - contains the report ID and report to send.
@@ -638,7 +651,6 @@ namespace osum.Input.Sources.UsbHID.USB
                     Result = USBSharp.WriteFile(hidHandle, ref outputReportBuffer[0], outputReportBuffer.Length, ref NumberOfBytesWritten, 0);
 
                     Success = (Result == 0) ? false : true;
-
                 }
                 catch (Exception ex)
                 {
@@ -646,7 +658,6 @@ namespace osum.Input.Sources.UsbHID.USB
 
                 return Success;
             }
-
         }
 
         #region IDisposable Members
@@ -682,7 +693,5 @@ namespace osum.Input.Sources.UsbHID.USB
         }
 
         #endregion
-
-      
     }
 }

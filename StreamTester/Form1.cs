@@ -66,6 +66,7 @@ namespace StreamTester
         string filename;
         private bool checkingForChanges;
         private GameBaseDesktop game;
+
         private string Filename
         {
             get { return filename; }
@@ -159,6 +160,7 @@ namespace StreamTester
 
         bool isDragging;
         private List<ListEntry> maps;
+
         private void beatmapLayout_MouseDown(object sender, MouseEventArgs e)
         {
             checkBoxEditorTime.Checked = false;
@@ -210,7 +212,6 @@ namespace StreamTester
                 bool hasChanges = false;
                 ThreadPool.QueueUserWorkItem(w =>
                 {
-
                     FileSystemWatcher fsw = new FileSystemWatcher(filename);
 
                     string changedFilename = null;
@@ -272,7 +273,6 @@ namespace StreamTester
             {
                 buttonTestOnSave.Text = "Automatically test on beatmap save";
             }
-
         }
 
         private string CombinateAndTest(bool runTest = true)
@@ -409,7 +409,6 @@ namespace StreamTester
 
             radioButtonStreamDown.Enabled = sender != radioButtonEasy && sender != radioButtonExpert;
             radioButtonStreamUp.Enabled = sender != radioButtonHard && sender != radioButtonExpert;
-
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -441,7 +440,6 @@ namespace StreamTester
             List<ListEntry> filtered = maps.FindAll(en => en.Display.ToLower().Contains(searchQuery));
             filtered.Sort();
             listAvailableMaps.Items.AddRange(filtered.ToArray());
-
         }
 
         private void textBox1_Enter(object sender, EventArgs e)
@@ -459,7 +457,6 @@ namespace StreamTester
                 textBox1.ForeColor = Color.Gray;
             }
         }
-
     }
 
     public class HitObjectManagerLoadAll : HitObjectManager
@@ -467,8 +464,8 @@ namespace StreamTester
         public HitObjectManagerLoadAll(Beatmap beatmap)
             : base(beatmap)
         {
-
         }
+
         protected override bool shouldLoadDifficulty(Difficulty difficulty)
         {
             return true;
@@ -490,7 +487,6 @@ namespace StreamTester
         {
             return Display;
         }
-
 
 
         #region IComparable<ListEntry> Members

@@ -4,8 +4,6 @@ namespace osum.GameModes
     {
         public override void Initialize()
         {
-
         }
     }
 }
-

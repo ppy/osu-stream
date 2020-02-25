@@ -158,6 +158,7 @@ namespace osum.Graphics.Sprites
         private int ActualHeight => (int)(GameBase.BaseSizeFixedWidth.Y - Position.Y);
 
         private float lastFrameOffset;
+
         public override void Update()
         {
             float bound = offsetBound;
@@ -198,6 +199,7 @@ namespace osum.Graphics.Sprites
         }
 
         private float? aimOffset;
+
         internal void ScrollTo(pDrawable sprite, float padding = 0)
         {
             ScrollTo(-(sprite.Position.Y - 50 - padding));
@@ -210,4 +212,3 @@ namespace osum.Graphics.Sprites
         }
     }
 }
-

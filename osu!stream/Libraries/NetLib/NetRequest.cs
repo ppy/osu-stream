@@ -9,9 +9,7 @@ namespace osum.Libraries.NetLib
         public AbortedException()
             : base("Request has been aborted")
         {
-
         }
-
     }
 
     /// <summary>
@@ -73,9 +71,9 @@ namespace osum.Libraries.NetLib
             foreach (byte i in Encoding.UTF8.GetBytes(s))
             {
                 if ((i >= 'A' && i <= 'Z') ||
-                                (i >= 'a' && i <= 'z') ||
-                                (i >= '0' && i <= '9') ||
-                                i == '-' || i == '_')
+                    (i >= 'a' && i <= 'z') ||
+                    (i >= '0' && i <= '9') ||
+                    i == '-' || i == '_')
                 {
                     sb.Append((char)i);
                 }

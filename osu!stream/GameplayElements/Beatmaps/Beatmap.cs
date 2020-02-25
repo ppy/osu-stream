@@ -30,11 +30,13 @@ namespace osum.GameplayElements.Beatmaps
                 return package.MapFiles[0];
             }
         }
+
         public string StoryboardFilename => "";
 
         public Dictionary<Difficulty, BeatmapDifficultyInfo> DifficultyInfo = new Dictionary<Difficulty, BeatmapDifficultyInfo>();
 
         private MapPackage package;
+
         public MapPackage Package
         {
             get
@@ -43,7 +45,6 @@ namespace osum.GameplayElements.Beatmaps
                 {
                     if (package == null)
                     {
-
                         if (ContainerFilename == null) return null;
 #if iOS && DIST
                         if (ContainerFilename.EndsWith("osf2") || ContainerFilename.EndsWith ("osz2"))
@@ -63,11 +64,7 @@ namespace osum.GameplayElements.Beatmaps
                 return package;
             }
 
-            set
-            {
-                package = value;
-            }
-
+            set { package = value; }
         }
 
 #if DIST || M4A
@@ -126,7 +123,6 @@ namespace osum.GameplayElements.Beatmaps
                     stream.Read(data, 0, data.Length);
                     //stream.Close();
                 }
-
             }
 
             return data;
@@ -146,6 +142,7 @@ namespace osum.GameplayElements.Beatmaps
         #endregion
 
         private BeatmapInfo beatmapInfo;
+
         public BeatmapInfo BeatmapInfo
         {
             get
@@ -165,7 +162,10 @@ namespace osum.GameplayElements.Beatmaps
                 {
                     return Package.GetMetadata(MapMetaType.Artist);
                 }
-                catch { return "error"; }
+                catch
+                {
+                    return "error";
+                }
             }
         }
 
@@ -177,7 +177,10 @@ namespace osum.GameplayElements.Beatmaps
                 {
                     return Package.GetMetadata(MapMetaType.PackId);
                 }
-                catch { return "error"; }
+                catch
+                {
+                    return "error";
+                }
             }
         }
 
@@ -191,13 +194,17 @@ namespace osum.GameplayElements.Beatmaps
                 {
                     return Package.GetMetadata(MapMetaType.Title);
                 }
-                catch { return "error"; }
+                catch
+                {
+                    return "error";
+                }
             }
         }
 
         public double HpStreamAdjustmentMultiplier = 1;
 
         private int difficultyStars = -1;
+
         public int DifficultyStars
         {
             get
@@ -207,13 +214,17 @@ namespace osum.GameplayElements.Beatmaps
                     if (difficultyStars == -1)
                         int.TryParse(Package.GetMetadata(MapMetaType.Difficulty), out difficultyStars);
                 }
-                catch { difficultyStars = 0; }
+                catch
+                {
+                    difficultyStars = 0;
+                }
 
                 return difficultyStars;
             }
         }
 
         private int previewPoint = -1;
+
         public int PreviewPoint
         {
             get
@@ -244,7 +255,6 @@ namespace osum.GameplayElements.Beatmaps
 
     internal class BeatmapPackComparer : IComparer<Beatmap>
     {
-
         public int Compare(Beatmap a, Beatmap b)
         {
             string aId = a.PackId;
@@ -265,4 +275,3 @@ namespace osum.GameplayElements.Beatmaps
         }
     }
 }
-

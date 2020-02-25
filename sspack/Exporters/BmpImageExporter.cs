@@ -29,16 +29,16 @@ using System.Drawing.Imaging;
 
 namespace sspack.Exporters
 {
-	public class BmpImageExporter : IImageExporter
-	{
-		public string ImageExtension
-		{
-			get { return "bmp"; }
-		}
+    public class BmpImageExporter : IImageExporter
+    {
+        public string ImageExtension
+        {
+            get { return "bmp"; }
+        }
 
-		public void Save(string filename, Bitmap image)
-		{
-			image.Save(filename, ImageFormat.Bmp);
-		}
-	}
+        public void Save(string filename, Bitmap image)
+        {
+            image.Save(filename, ImageFormat.Bmp);
+        }
+    }
 }

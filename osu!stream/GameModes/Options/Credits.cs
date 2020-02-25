@@ -16,7 +16,8 @@ namespace osum.GameModes.Options
 {
     public class Credits : Player
     {
-        private readonly string[] creditsRoll = {
+        private readonly string[] creditsRoll =
+        {
             "OsuTexture.menu_logo",
             "Created by Dean \"peppy\" Herbert",
             "*Graphics",
@@ -86,7 +87,7 @@ namespace osum.GameModes.Options
 
             base.Initialize();
 
-            playfieldBackground.Colour = new Color4(33,81,138,255);
+            playfieldBackground.Colour = new Color4(33, 81, 138, 255);
 
             s_ButtonBack = new BackButton(delegate { Director.ChangeMode(OsuMode.Options); }, false);
             topMostSpriteManager.Add(s_ButtonBack);
@@ -117,8 +118,7 @@ namespace osum.GameModes.Options
 
                 if (isHeader)
                 {
-
-                    text = new pText(drawString, 30, Vector2.Zero, SpriteManager.drawOrderFwdPrio(i), true, new Color4(255,168,0,255))
+                    text = new pText(drawString, 30, Vector2.Zero, SpriteManager.drawOrderFwdPrio(i), true, new Color4(255, 168, 0, 255))
                     {
                         Field = FieldTypes.StandardSnapTopCentre,
                         Origin = OriginTypes.Centre,
@@ -135,7 +135,7 @@ namespace osum.GameModes.Options
                 }
                 else if (drawString.StartsWith("OsuTexture."))
                 {
-                    text = new pSprite(TextureManager.Load((OsuTexture)Enum.Parse(typeof(OsuTexture), drawString.Replace("OsuTexture.",""))), Vector2.Zero)
+                    text = new pSprite(TextureManager.Load((OsuTexture)Enum.Parse(typeof(OsuTexture), drawString.Replace("OsuTexture.", ""))), Vector2.Zero)
                     {
                         Field = FieldTypes.StandardSnapTopCentre,
                         Origin = OriginTypes.Centre,
@@ -149,7 +149,6 @@ namespace osum.GameModes.Options
 
                     text.Transform(new TransformationV(new Vector2(text.Position.X, GameBase.BaseSizeFixedWidth.Y + height_extra), new Vector2(0, -100), time, time + speed));
                     time += image_spacing;
-
                 }
                 else
                 {
@@ -178,7 +177,7 @@ namespace osum.GameModes.Options
                             Alpha = 1
                         };
 
-                        pText text2 = new pText(split[1].Trim(), 16, new Vector2(10, 0), new Vector2(300,0), SpriteManager.drawOrderFwdPrio(i), true, i % 2 == 0 ? new Color4(200,200,200,255) : new Color4(240,240,240,255), false)
+                        pText text2 = new pText(split[1].Trim(), 16, new Vector2(10, 0), new Vector2(300, 0), SpriteManager.drawOrderFwdPrio(i), true, i % 2 == 0 ? new Color4(200, 200, 200, 255) : new Color4(240, 240, 240, 255), false)
                         {
                             Field = FieldTypes.StandardSnapTopCentre,
                             Origin = OriginTypes.CentreLeft,
@@ -224,7 +223,6 @@ namespace osum.GameModes.Options
 
         protected override void initializeUIElements()
         {
-
         }
 
         /// <summary>
@@ -245,11 +243,11 @@ namespace osum.GameModes.Options
         {
             base.Draw();
             return true;
-
         }
 
         private int lastBeat;
         private int lastBeatNoLoop;
+
         public override void Update()
         {
             int currentBeat = (int)((Clock.AudioTime) / (beatLength / 4f)) % 16;
@@ -286,8 +284,8 @@ namespace osum.GameModes.Options
                         spriteManager.ScaleScalar = 1.04f;
                         spriteManager.ScaleTo(1, 200, EasingTypes.In);
                         break;
-
                 }
+
                 lastBeat = currentBeat;
             }
 
@@ -300,6 +298,7 @@ namespace osum.GameModes.Options
                         playfieldBackground.FlashColour(Color4.White, 500);
                         break;
                 }
+
                 lastBeatNoLoop = currentBeatNoLoop;
             }
 

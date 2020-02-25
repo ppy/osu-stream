@@ -24,332 +24,349 @@ using System.Runtime.InteropServices;
 
 namespace osum.Input.Sources.UsbHID.USB
 {
-	/// <summary>
-	/// Summary description
-	/// </summary>
-	public class USBSharp
+    /// <summary>
+    /// Summary description
+    /// </summary>
+    public class USBSharp
     {
-
         #region Structs and DLL-Imports
+
         //
-		//
-		// Required constants, pointers, handles and variables 
-		public int HidHandle =						-1;				// file handle for a Hid devices
-		public int hDevInfo =						-1;				// handle for the device infoset
-		public string DevicePathName = "";
-		public const int  DIGCF_PRESENT				= 0x00000002;
-		public const int  DIGCF_DEVICEINTERFACE		= 0x00000010;
-		public const int  DIGCF_INTERFACEDEVICE		= 0x00000010;
-		public const uint GENERIC_READ				= 0x80000000;
-		public const uint GENERIC_WRITE				= 0x40000000;
-		public const uint FILE_SHARE_READ			= 0x00000001;
-		public const uint FILE_SHARE_WRITE			= 0x00000002;
-		public const int  OPEN_EXISTING				= 3;
-		public const int  EV_RXFLAG = 0x0002;    // received certain character
+        //
+        // Required constants, pointers, handles and variables 
+        public int HidHandle = -1; // file handle for a Hid devices
+        public int hDevInfo = -1; // handle for the device infoset
+        public string DevicePathName = "";
+        public const int DIGCF_PRESENT = 0x00000002;
+        public const int DIGCF_DEVICEINTERFACE = 0x00000010;
+        public const int DIGCF_INTERFACEDEVICE = 0x00000010;
+        public const uint GENERIC_READ = 0x80000000;
+        public const uint GENERIC_WRITE = 0x40000000;
+        public const uint FILE_SHARE_READ = 0x00000001;
+        public const uint FILE_SHARE_WRITE = 0x00000002;
+        public const int OPEN_EXISTING = 3;
+        public const int EV_RXFLAG = 0x0002; // received certain character
 
-		// specified in DCB
-		public const int INVALID_HANDLE_VALUE = -1;
-		public const int ERROR_INVALID_HANDLE = 6;
-		public const int FILE_FLAG_OVERLAPED = 0x40000000;
-		
-		// GUID structure
-		[StructLayout(LayoutKind.Sequential)]
-		public struct GUID 
-		{
-			public int Data1;
-			public ushort Data2;
-			public ushort Data3;	
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst=8)]
-			public byte[] data4;
-		}
-		
-		// Device interface data
-		[StructLayout(LayoutKind.Sequential)]
-		public struct SP_DEVICE_INTERFACE_DATA 
-		{
-			public int cbSize;
-			public GUID InterfaceClassGuid;
-			public int Flags;
-			public int Reserved;
-		}
-		
-		// Device interface detail data
-		[StructLayout(LayoutKind.Sequential, CharSet= CharSet.Ansi)]
-		public struct PSP_DEVICE_INTERFACE_DETAIL_DATA
-		{
-			public int  cbSize;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst= 256)]
-			public string DevicePath;
-		}
+        // specified in DCB
+        public const int INVALID_HANDLE_VALUE = -1;
+        public const int ERROR_INVALID_HANDLE = 6;
+        public const int FILE_FLAG_OVERLAPED = 0x40000000;
 
-		// HIDD_ATTRIBUTES
-		[StructLayout(LayoutKind.Sequential)]
-		public struct HIDD_ATTRIBUTES 
-		{
-			public int   Size; // = sizeof (struct _HIDD_ATTRIBUTES) = 10
+        // GUID structure
+        [StructLayout(LayoutKind.Sequential)]
+        public struct GUID
+        {
+            public int Data1;
+            public ushort Data2;
+            public ushort Data3;
 
-			//
-			// Vendor ids of this hid device
-			//
-			public ushort	VendorID;
-			public ushort	ProductID;
-			public ushort	VersionNumber;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            public byte[] data4;
+        }
 
-			//
-			// Additional fields will be added to the end of this structure.
-			//
-		} 
+        // Device interface data
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SP_DEVICE_INTERFACE_DATA
+        {
+            public int cbSize;
+            public GUID InterfaceClassGuid;
+            public int Flags;
+            public int Reserved;
+        }
 
-		// HIDP_CAPS
-		[StructLayout(LayoutKind.Sequential)]
-		public struct HIDP_CAPS 
-		{
-			public ushort  Usage;					// USHORT
-			public ushort   UsagePage;				// USHORT
-			public ushort   InputReportByteLength;
-			public ushort   OutputReportByteLength;
-			public ushort   FeatureReportByteLength;
-			[MarshalAs(UnmanagedType.ByValArray, SizeConst=17)]
-			public ushort[] Reserved;				// USHORT  Reserved[17];			
-			public ushort  NumberLinkCollectionNodes;
-			public ushort  NumberInputButtonCaps;
-			public ushort  NumberInputValueCaps;
-			public ushort  NumberInputDataIndices;
-			public ushort  NumberOutputButtonCaps;
-			public ushort  NumberOutputValueCaps;
-			public ushort  NumberOutputDataIndices;
-			public ushort  NumberFeatureButtonCaps;
-			public ushort  NumberFeatureValueCaps;
-			public ushort  NumberFeatureDataIndices;
-		}
-		
-		//HIDP_REPORT_TYPE 
-		public enum HIDP_REPORT_TYPE 
-		{
-			HidP_Input,		// 0 input
-			HidP_Output,	// 1 output
-			HidP_Feature	// 2 feature
-		}
+        // Device interface detail data
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        public struct PSP_DEVICE_INTERFACE_DETAIL_DATA
+        {
+            public int cbSize;
 
-		// Structures in the union belonging to HIDP_VALUE_CAPS (see below)
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string DevicePath;
+        }
 
-		// Range
-		[StructLayout(LayoutKind.Sequential)]
-			public struct Range 
-		{
-			public ushort UsageMin;			// USAGE	UsageMin; // USAGE  Usage; 
-			public ushort UsageMax; 			// USAGE	UsageMax; // USAGE	Reserved1;
-			public ushort StringMin;			// USHORT  StringMin; // StringIndex; 
-			public ushort StringMax;			// USHORT	StringMax;// Reserved2;
-			public ushort DesignatorMin;		// USHORT  DesignatorMin; // DesignatorIndex; 
-			public ushort DesignatorMax;		// USHORT	DesignatorMax; //Reserved3; 
-			public ushort DataIndexMin;		// USHORT  DataIndexMin;  // DataIndex; 
-			public ushort DataIndexMax;		// USHORT	DataIndexMax; // Reserved4;
-		}
+        // HIDD_ATTRIBUTES
+        [StructLayout(LayoutKind.Sequential)]
+        public struct HIDD_ATTRIBUTES
+        {
+            public int Size; // = sizeof (struct _HIDD_ATTRIBUTES) = 10
 
-		// Range
-		[StructLayout(LayoutKind.Sequential)]
-			public struct NotRange 
-		{
-			public ushort Usage; 
-			public ushort Reserved1;
-			public ushort StringIndex; 
-			public ushort Reserved2;
-			public ushort DesignatorIndex; 
-			public ushort Reserved3; 
-			public ushort DataIndex; 
-			public ushort Reserved4;
-		}
-        
+            //
+            // Vendor ids of this hid device
+            //
+            public ushort VendorID;
+            public ushort ProductID;
+            public ushort VersionNumber;
+
+            //
+            // Additional fields will be added to the end of this structure.
+            //
+        }
+
+        // HIDP_CAPS
+        [StructLayout(LayoutKind.Sequential)]
+        public struct HIDP_CAPS
+        {
+            public ushort Usage; // USHORT
+            public ushort UsagePage; // USHORT
+            public ushort InputReportByteLength;
+            public ushort OutputReportByteLength;
+            public ushort FeatureReportByteLength;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 17)]
+            public ushort[] Reserved; // USHORT  Reserved[17];			
+
+            public ushort NumberLinkCollectionNodes;
+            public ushort NumberInputButtonCaps;
+            public ushort NumberInputValueCaps;
+            public ushort NumberInputDataIndices;
+            public ushort NumberOutputButtonCaps;
+            public ushort NumberOutputValueCaps;
+            public ushort NumberOutputDataIndices;
+            public ushort NumberFeatureButtonCaps;
+            public ushort NumberFeatureValueCaps;
+            public ushort NumberFeatureDataIndices;
+        }
+
+        //HIDP_REPORT_TYPE 
+        public enum HIDP_REPORT_TYPE
+        {
+            HidP_Input, // 0 input
+            HidP_Output, // 1 output
+            HidP_Feature // 2 feature
+        }
+
+        // Structures in the union belonging to HIDP_VALUE_CAPS (see below)
+
+        // Range
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Range
+        {
+            public ushort UsageMin; // USAGE	UsageMin; // USAGE  Usage; 
+            public ushort UsageMax; // USAGE	UsageMax; // USAGE	Reserved1;
+            public ushort StringMin; // USHORT  StringMin; // StringIndex; 
+            public ushort StringMax; // USHORT	StringMax;// Reserved2;
+            public ushort DesignatorMin; // USHORT  DesignatorMin; // DesignatorIndex; 
+            public ushort DesignatorMax; // USHORT	DesignatorMax; //Reserved3; 
+            public ushort DataIndexMin; // USHORT  DataIndexMin;  // DataIndex; 
+            public ushort DataIndexMax; // USHORT	DataIndexMax; // Reserved4;
+        }
+
+        // Range
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NotRange
+        {
+            public ushort Usage;
+            public ushort Reserved1;
+            public ushort StringIndex;
+            public ushort Reserved2;
+            public ushort DesignatorIndex;
+            public ushort Reserved3;
+            public ushort DataIndex;
+            public ushort Reserved4;
+        }
+
         //HIDP_VALUE_CAPS
-		[StructLayout(LayoutKind.Explicit, CharSet= CharSet.Ansi)]
-			public struct HIDP_VALUE_CAPS 
-		{
-			//
-			[FieldOffset(0)] public ushort  UsagePage;					// USHORT
-			[FieldOffset(2)] public byte ReportID;						// UCHAR  ReportID;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(3)] public bool IsAlias;						// BOOLEAN  IsAlias;
-			[FieldOffset(4)] public ushort BitField;						// USHORT  BitField;
-			[FieldOffset(6)] public ushort LinkCollection;				//USHORT  LinkCollection;
-			[FieldOffset(8)] public ushort LinkUsage;					// USAGE  LinkUsage;
-			[FieldOffset(10)] public ushort LinkUsagePage;				// USAGE  LinkUsagePage;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(12)] public bool IsRange;					// BOOLEAN  IsRange;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(13)] public bool IsStringRange;				// BOOLEAN  IsStringRange;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(14)] public bool IsDesignatorRange;			// BOOLEAN  IsDesignatorRange;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(15)] public bool IsAbsolute;					// BOOLEAN  IsAbsolute;
-			[MarshalAs(UnmanagedType.I1)]
-			[FieldOffset(16)] public bool HasNull;					// BOOLEAN  HasNull;
-			[FieldOffset(17)] public char Reserved;						// UCHAR  Reserved;
-			[FieldOffset(18)] public ushort BitSize;						// USHORT  BitSize;
-			[FieldOffset(20)] public ushort ReportCount;					// USHORT  ReportCount;
-			[FieldOffset(22)] public ushort  Reserved2a;					// USHORT  Reserved2[5];		
-			[FieldOffset(24)] public ushort  Reserved2b;					// USHORT  Reserved2[5];
-			[FieldOffset(26)] public ushort  Reserved2c;					// USHORT  Reserved2[5];
-			[FieldOffset(28)] public ushort  Reserved2d;					// USHORT  Reserved2[5];
-			[FieldOffset(30)] public ushort  Reserved2e;					// USHORT  Reserved2[5];
-			[FieldOffset(32)] public ushort UnitsExp;					// ULONG  UnitsExp;
-			[FieldOffset(34)] public ushort Units;						// ULONG  Units;
-			[FieldOffset(36)] public short LogicalMin;					// LONG  LogicalMin;   ;
-			[FieldOffset(38)] public short LogicalMax;					// LONG  LogicalMax
-			[FieldOffset(40)] public short PhysicalMin;					// LONG  PhysicalMin, 
-			[FieldOffset(42)] public short PhysicalMax;					// LONG  PhysicalMax;
-			// The Structs in the Union			
-			[FieldOffset(44)] public Range Range;
-			[FieldOffset(44)] public Range NotRange;				
-		} 
+        [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
+        public struct HIDP_VALUE_CAPS
+        {
+            //
+            [FieldOffset(0)] public ushort UsagePage; // USHORT
+            [FieldOffset(2)] public byte ReportID; // UCHAR  ReportID;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(3)]
+            public bool IsAlias; // BOOLEAN  IsAlias;
+
+            [FieldOffset(4)] public ushort BitField; // USHORT  BitField;
+            [FieldOffset(6)] public ushort LinkCollection; //USHORT  LinkCollection;
+            [FieldOffset(8)] public ushort LinkUsage; // USAGE  LinkUsage;
+            [FieldOffset(10)] public ushort LinkUsagePage; // USAGE  LinkUsagePage;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(12)]
+            public bool IsRange; // BOOLEAN  IsRange;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(13)]
+            public bool IsStringRange; // BOOLEAN  IsStringRange;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(14)]
+            public bool IsDesignatorRange; // BOOLEAN  IsDesignatorRange;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(15)]
+            public bool IsAbsolute; // BOOLEAN  IsAbsolute;
+
+            [MarshalAs(UnmanagedType.I1)] [FieldOffset(16)]
+            public bool HasNull; // BOOLEAN  HasNull;
+
+            [FieldOffset(17)] public char Reserved; // UCHAR  Reserved;
+            [FieldOffset(18)] public ushort BitSize; // USHORT  BitSize;
+            [FieldOffset(20)] public ushort ReportCount; // USHORT  ReportCount;
+            [FieldOffset(22)] public ushort Reserved2a; // USHORT  Reserved2[5];		
+            [FieldOffset(24)] public ushort Reserved2b; // USHORT  Reserved2[5];
+            [FieldOffset(26)] public ushort Reserved2c; // USHORT  Reserved2[5];
+            [FieldOffset(28)] public ushort Reserved2d; // USHORT  Reserved2[5];
+            [FieldOffset(30)] public ushort Reserved2e; // USHORT  Reserved2[5];
+            [FieldOffset(32)] public ushort UnitsExp; // ULONG  UnitsExp;
+            [FieldOffset(34)] public ushort Units; // ULONG  Units;
+            [FieldOffset(36)] public short LogicalMin; // LONG  LogicalMin;   ;
+            [FieldOffset(38)] public short LogicalMax; // LONG  LogicalMax
+            [FieldOffset(40)] public short PhysicalMin; // LONG  PhysicalMin, 
+
+            [FieldOffset(42)] public short PhysicalMax; // LONG  PhysicalMax;
+
+            // The Structs in the Union			
+            [FieldOffset(44)] public Range Range;
+            [FieldOffset(44)] public Range NotRange;
+        }
 
 
-		// ----------------------------------------------------------------------------------
-		//
-		//
-		//
-		// 
-		// Define istances of the structures
-		//
-		//
+        // ----------------------------------------------------------------------------------
+        //
+        //
+        //
+        // 
+        // Define istances of the structures
+        //
+        //
 
-		private GUID MYguid;
-		//
-		// SP_DEVICE_INTERFACE_DATA  mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
-		//
-		public SP_DEVICE_INTERFACE_DATA  mySP_DEVICE_INTERFACE_DATA;
-		//
-		public PSP_DEVICE_INTERFACE_DETAIL_DATA  myPSP_DEVICE_INTERFACE_DETAIL_DATA; 
-		// 
-		public HIDD_ATTRIBUTES myHIDD_ATTRIBUTES;
-		//
-		public HIDP_CAPS myHIDP_CAPS;
-		//
-		public HIDP_VALUE_CAPS[] myHIDP_VALUE_CAPS;
-		
+        private GUID MYguid;
+
+        //
+        // SP_DEVICE_INTERFACE_DATA  mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
+        //
+        public SP_DEVICE_INTERFACE_DATA mySP_DEVICE_INTERFACE_DATA;
+
+        //
+        public PSP_DEVICE_INTERFACE_DETAIL_DATA myPSP_DEVICE_INTERFACE_DETAIL_DATA;
+
+        // 
+        public HIDD_ATTRIBUTES myHIDD_ATTRIBUTES;
+
+        //
+        public HIDP_CAPS myHIDP_CAPS;
+
+        //
+        public HIDP_VALUE_CAPS[] myHIDP_VALUE_CAPS;
+
         // ******************************************************************************
         // DLL Calls
         // ******************************************************************************
 
-		//Get GUID for the HID Class
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern void  HidD_GetHidGuid(
-			ref GUID lpHidGuid);
+        //Get GUID for the HID Class
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern void HidD_GetHidGuid(
+            ref GUID lpHidGuid);
 
-		//Get array of structures with the HID info
-		[DllImport("setupapi.dll", SetLastError=true)]
-		private static extern  unsafe int SetupDiGetClassDevs(
-			ref GUID  lpHidGuid,
-			int*  Enumerator,
-			int*  hwndParent,
-			int  Flags);
+        //Get array of structures with the HID info
+        [DllImport("setupapi.dll", SetLastError = true)]
+        private static extern unsafe int SetupDiGetClassDevs(
+            ref GUID lpHidGuid,
+            int* Enumerator,
+            int* hwndParent,
+            int Flags);
 
 
-		//Get context structure for a device interface element
-		//
-		//  SetupDiEnumDeviceInterfaces returns a context structure for a device 
-		//  interface element of a device information set. Each call returns information 
-		//  about one device interface; the function can be called repeatedly to get information 
-		//  about several interfaces exposed by one or more devices.
-		//
-		[DllImport("setupapi.dll", SetLastError=true)]
-		private static extern int SetupDiEnumDeviceInterfaces(
-			int  DeviceInfoSet,
-			int  DeviceInfoData,
-			ref  GUID  lpHidGuid,
-			int  MemberIndex,
-			ref  SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData);
+        //Get context structure for a device interface element
+        //
+        //  SetupDiEnumDeviceInterfaces returns a context structure for a device 
+        //  interface element of a device information set. Each call returns information 
+        //  about one device interface; the function can be called repeatedly to get information 
+        //  about several interfaces exposed by one or more devices.
+        //
+        [DllImport("setupapi.dll", SetLastError = true)]
+        private static extern int SetupDiEnumDeviceInterfaces(
+            int DeviceInfoSet,
+            int DeviceInfoData,
+            ref GUID lpHidGuid,
+            int MemberIndex,
+            ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData);
 
-	
-		//	Get device Path name
-		//  Works for the first pass  --> to get the required size
-		
-        [DllImport("setupapi.dll", SetLastError=true)]
-        private static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
-			int  DeviceInfoSet,
-			ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
-			int* aPtr,
-			int detailSize,
-			ref int requiredSize,
-			int* bPtr);
-		
-		//	Get device Path name
-		//  Works for second pass (overide), once size value is known
 
-		[DllImport("setupapi.dll", SetLastError=true)]
-		private static extern  unsafe int SetupDiGetDeviceInterfaceDetail(
-			int  DeviceInfoSet,
-			ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
-			ref PSP_DEVICE_INTERFACE_DETAIL_DATA myPSP_DEVICE_INTERFACE_DETAIL_DATA,
-			int detailSize,
-			ref int requiredSize,
-			int* bPtr);
+        //	Get device Path name
+        //  Works for the first pass  --> to get the required size
+
+        [DllImport("setupapi.dll", SetLastError = true)]
+        private static extern unsafe int SetupDiGetDeviceInterfaceDetail(
+            int DeviceInfoSet,
+            ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
+            int* aPtr,
+            int detailSize,
+            ref int requiredSize,
+            int* bPtr);
+
+        //	Get device Path name
+        //  Works for second pass (overide), once size value is known
+
+        [DllImport("setupapi.dll", SetLastError = true)]
+        private static extern unsafe int SetupDiGetDeviceInterfaceDetail(
+            int DeviceInfoSet,
+            ref SP_DEVICE_INTERFACE_DATA lpDeviceInterfaceData,
+            ref PSP_DEVICE_INTERFACE_DETAIL_DATA myPSP_DEVICE_INTERFACE_DETAIL_DATA,
+            int detailSize,
+            ref int requiredSize,
+            int* bPtr);
 
         // Get Create File
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern int CreateFile(
-            string lpFileName,							// file name
-            uint dwDesiredAccess,						// access mode
-            uint dwShareMode,							// share mode
-            uint lpSecurityAttributes,					// SD
-            uint dwCreationDisposition,					// how to create
-            uint dwFlagsAndAttributes,					// file attributes
-            uint hTemplateFile							// handle to template file
-            );
-        
-        
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern int HidD_GetAttributes(
-			int hObject,								// IN HANDLE  HidDeviceObject,
-			ref HIDD_ATTRIBUTES Attributes);			// OUT PHIDD_ATTRIBUTES  Attributes
+            string lpFileName, // file name
+            uint dwDesiredAccess, // access mode
+            uint dwShareMode, // share mode
+            uint lpSecurityAttributes, // SD
+            uint dwCreationDisposition, // how to create
+            uint dwFlagsAndAttributes, // file attributes
+            uint hTemplateFile // handle to template file
+        );
 
 
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern int HidD_GetPreparsedData(
-			int hObject,								// IN HANDLE  HidDeviceObject,
-			ref int pPHIDP_PREPARSED_DATA);				// OUT PHIDP_PREPARSED_DATA  *PreparsedData
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern int HidD_GetAttributes(
+            int hObject, // IN HANDLE  HidDeviceObject,
+            ref HIDD_ATTRIBUTES Attributes); // OUT PHIDD_ATTRIBUTES  Attributes
 
 
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern int HidP_GetCaps(
-			int pPHIDP_PREPARSED_DATA,					// IN PHIDP_PREPARSED_DATA  PreparsedData,
-			ref HIDP_CAPS myPHIDP_CAPS);				// OUT PHIDP_CAPS  Capabilities
-       
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern int HidD_GetPreparsedData(
+            int hObject, // IN HANDLE  HidDeviceObject,
+            ref int pPHIDP_PREPARSED_DATA); // OUT PHIDP_PREPARSED_DATA  *PreparsedData
+
+
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern int HidP_GetCaps(
+            int pPHIDP_PREPARSED_DATA, // IN PHIDP_PREPARSED_DATA  PreparsedData,
+            ref HIDP_CAPS myPHIDP_CAPS); // OUT PHIDP_CAPS  Capabilities
+
         [DllImport("hid.dll")]
         public static extern bool HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength);
 
 
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern int HidP_GetValueCaps(
-			HIDP_REPORT_TYPE ReportType,								// IN HIDP_REPORT_TYPE  ReportType,
-			[In, Out] HIDP_VALUE_CAPS[] ValueCaps,						// OUT PHIDP_VALUE_CAPS  ValueCaps,
-			ref int ValueCapsLength,									// IN OUT PULONG  ValueCapsLength,
-			int pPHIDP_PREPARSED_DATA);									// IN PHIDP_PREPARSED_DATA  PreparsedData
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern int HidP_GetValueCaps(
+            HIDP_REPORT_TYPE ReportType, // IN HIDP_REPORT_TYPE  ReportType,
+            [In, Out] HIDP_VALUE_CAPS[] ValueCaps, // OUT PHIDP_VALUE_CAPS  ValueCaps,
+            ref int ValueCapsLength, // IN OUT PULONG  ValueCapsLength,
+            int pPHIDP_PREPARSED_DATA); // IN PHIDP_PREPARSED_DATA  PreparsedData
 
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern unsafe bool ReadFile(
+            int hFile, // handle to file
+            byte[] lpBuffer, // data buffer
+            int nNumberOfBytesToRead, // number of bytes to read
+            ref int lpNumberOfBytesRead, // number of bytes read
+            int* ptr
+            // 
+            // ref OVERLAPPED lpOverlapped		// overlapped buffer
+        );
 
-		[DllImport("kernel32.dll", SetLastError=true)]
-		private static extern unsafe bool ReadFile(
-			int hFile,						// handle to file
-			byte[] lpBuffer,				// data buffer
-			int nNumberOfBytesToRead,		// number of bytes to read
-			ref int lpNumberOfBytesRead,	// number of bytes read
-			int* ptr
-			// 
-			// ref OVERLAPPED lpOverlapped		// overlapped buffer
-			);
+        [DllImport("setupapi.dll", SetLastError = true)]
+        private static extern int SetupDiDestroyDeviceInfoList(
+            int DeviceInfoSet // IN HDEVINFO  DeviceInfoSet
+        );
 
-		[DllImport("setupapi.dll", SetLastError=true)]
-		private static extern int SetupDiDestroyDeviceInfoList(
-			int DeviceInfoSet				// IN HDEVINFO  DeviceInfoSet
-			);
-
-		// 13
-		[DllImport("hid.dll", SetLastError=true)]
-		private static extern int HidD_FreePreparsedData(
-			int pPHIDP_PREPARSED_DATA			// IN PHIDP_PREPARSED_DATA  PreparsedData
-			);
-
+        // 13
+        [DllImport("hid.dll", SetLastError = true)]
+        private static extern int HidD_FreePreparsedData(
+            int pPHIDP_PREPARSED_DATA // IN PHIDP_PREPARSED_DATA  PreparsedData
+        );
 
 
         // API declarations relating to file I/O.
@@ -397,7 +414,7 @@ namespace osum.Input.Sources.UsbHID.USB
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern int
-          CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, ref SECURITY_ATTRIBUTES lpSecurityAttributes, int dwCreationDisposition, uint dwFlagsAndAttributes, int hTemplateFile);
+            CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, ref SECURITY_ATTRIBUTES lpSecurityAttributes, int dwCreationDisposition, uint dwFlagsAndAttributes, int hTemplateFile);
 
         [DllImport("kernel32.dll")]
         public static extern int ReadFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
@@ -407,14 +424,12 @@ namespace osum.Input.Sources.UsbHID.USB
 
         [DllImport("kernel32.dll")]
         public static extern int WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped);
-		
 
-        
         #endregion
- 
-		//	--------------------------------------
-		// Managed Code wrappers for the DLL Calls
-		// Naming convention ---> same as unmaneged DLL call with prefix CT_xxxx 
+
+        //	--------------------------------------
+        // Managed Code wrappers for the DLL Calls
+        // Naming convention ---> same as unmaneged DLL call with prefix CT_xxxx 
         //---#+************************************************************************
         //---NOTATION:
         //-  CT_HidGuid()
@@ -423,10 +438,10 @@ namespace osum.Input.Sources.UsbHID.USB
         //--  GUID for HID
         //                                                             Autor:      F.L.
         //-*************************************************************************+#*
-		public void CT_HidGuid()
-		{		        
-			HidD_GetHidGuid(ref MYguid);	// 
-		}
+        public void CT_HidGuid()
+        {
+            HidD_GetHidGuid(ref MYguid); // 
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -436,15 +451,15 @@ namespace osum.Input.Sources.UsbHID.USB
         //--  
         //                                                             Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe int CT_SetupDiGetClassDevs()
-		{		        
-			hDevInfo = SetupDiGetClassDevs(
-				ref MYguid,
-				null, 
-				null,
-				DIGCF_INTERFACEDEVICE | DIGCF_PRESENT);
-			return hDevInfo;
-		}
+        public unsafe int CT_SetupDiGetClassDevs()
+        {
+            hDevInfo = SetupDiGetClassDevs(
+                ref MYguid,
+                null,
+                null,
+                DIGCF_INTERFACEDEVICE | DIGCF_PRESENT);
+            return hDevInfo;
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -454,21 +469,21 @@ namespace osum.Input.Sources.UsbHID.USB
         //--  
         //                                                             Autor:      F.L.
         //-*************************************************************************+#*
-		public int CT_SetupDiEnumDeviceInterfaces(int memberIndex)
-		{	
-			mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
-			mySP_DEVICE_INTERFACE_DATA.cbSize = Marshal.SizeOf(mySP_DEVICE_INTERFACE_DATA);
-	        int result =  SetupDiEnumDeviceInterfaces(
-				hDevInfo,
-				0,
-				ref  MYguid,
-				memberIndex,
-				ref mySP_DEVICE_INTERFACE_DATA);
-			return result;
-		}
-		
-		
-		//---#+************************************************************************
+        public int CT_SetupDiEnumDeviceInterfaces(int memberIndex)
+        {
+            mySP_DEVICE_INTERFACE_DATA = new SP_DEVICE_INTERFACE_DATA();
+            mySP_DEVICE_INTERFACE_DATA.cbSize = Marshal.SizeOf(mySP_DEVICE_INTERFACE_DATA);
+            int result = SetupDiEnumDeviceInterfaces(
+                hDevInfo,
+                0,
+                ref MYguid,
+                memberIndex,
+                ref mySP_DEVICE_INTERFACE_DATA);
+            return result;
+        }
+
+
+        //---#+************************************************************************
         //---NOTATION:
         //-  int CT_SetupDiGetDeviceInterfaceDetail(ref int RequiredSize, int DeviceInterfaceDetailDataSize)
         //-
@@ -478,18 +493,18 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe int CT_SetupDiGetDeviceInterfaceDetail(ref int RequiredSize, int DeviceInterfaceDetailDataSize)
-		{	
-			int results =
-			SetupDiGetDeviceInterfaceDetail(
-				hDevInfo,							// IN HDEVINFO  DeviceInfoSet,
-				ref mySP_DEVICE_INTERFACE_DATA,		// IN PSP_DEVICE_INTERFACE_DATA  DeviceInterfaceData,
-				null,								// OUT PSP_DEVICE_INTERFACE_DETAIL_DATA  DeviceInterfaceDetailData,  OPTIONAL
-				DeviceInterfaceDetailDataSize,		// IN DWORD  DeviceInterfaceDetailDataSize,
-				ref RequiredSize,					// OUT PDWORD  RequiredSize,  OPTIONAL
-				null); // 
-			 return results;
-		}
+        public unsafe int CT_SetupDiGetDeviceInterfaceDetail(ref int RequiredSize, int DeviceInterfaceDetailDataSize)
+        {
+            int results =
+                SetupDiGetDeviceInterfaceDetail(
+                    hDevInfo, // IN HDEVINFO  DeviceInfoSet,
+                    ref mySP_DEVICE_INTERFACE_DATA, // IN PSP_DEVICE_INTERFACE_DATA  DeviceInterfaceData,
+                    null, // OUT PSP_DEVICE_INTERFACE_DETAIL_DATA  DeviceInterfaceDetailData,  OPTIONAL
+                    DeviceInterfaceDetailDataSize, // IN DWORD  DeviceInterfaceDetailDataSize,
+                    ref RequiredSize, // OUT PDWORD  RequiredSize,  OPTIONAL
+                    null); // 
+            return results;
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -501,35 +516,35 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe int CT_SetupDiGetDeviceInterfaceDetailx(ref int RequiredSize, int DeviceInterfaceDetailDataSize)
-		{	
-			myPSP_DEVICE_INTERFACE_DETAIL_DATA = new PSP_DEVICE_INTERFACE_DETAIL_DATA();
-			
-			//
-			// This part needs some work
-			
-			// if I use the following line of code 
-			// myPSP_DEVICE_INTERFACE_DETAIL_DATA.cbSize = sizeof(PSP_DEVICE_INTERFACE_DETAIL_DATA);
-			// I get the following error
-			// !! Cannot take the address or size of a variable of a managed type ('USBSharp.USBSharp.PSP_DEVICE_INTERFACE_DETAIL_DATA')
-			// 
+        public unsafe int CT_SetupDiGetDeviceInterfaceDetailx(ref int RequiredSize, int DeviceInterfaceDetailDataSize)
+        {
+            myPSP_DEVICE_INTERFACE_DETAIL_DATA = new PSP_DEVICE_INTERFACE_DETAIL_DATA();
 
-			// As a result.. this is hard coded for now !!! 
-			// for the c struct PSP_DEVICE_INTERFACE_DETAIL_DATA dizeof = DWORD cbSize (size 4) + Char[0] (size 1) = Total size 5 ?
-			//
-			myPSP_DEVICE_INTERFACE_DETAIL_DATA.cbSize = 5;
-			
-			int results =
-				SetupDiGetDeviceInterfaceDetail(
-				hDevInfo,									// IN HDEVINFO  DeviceInfoSet,
-				ref mySP_DEVICE_INTERFACE_DATA,				// IN PSP_DEVICE_INTERFACE_DATA  DeviceInterfaceData,
-				ref myPSP_DEVICE_INTERFACE_DETAIL_DATA,		// DeviceInterfaceDetailData,  OPTIONAL
-				DeviceInterfaceDetailDataSize,				// IN DWORD  DeviceInterfaceDetailDataSize,
-				ref RequiredSize,							// OUT PDWORD  RequiredSize,  OPTIONAL
-				null); // 
-			DevicePathName = myPSP_DEVICE_INTERFACE_DETAIL_DATA.DevicePath;
-			return results;
-		}
+            //
+            // This part needs some work
+
+            // if I use the following line of code 
+            // myPSP_DEVICE_INTERFACE_DETAIL_DATA.cbSize = sizeof(PSP_DEVICE_INTERFACE_DETAIL_DATA);
+            // I get the following error
+            // !! Cannot take the address or size of a variable of a managed type ('USBSharp.USBSharp.PSP_DEVICE_INTERFACE_DETAIL_DATA')
+            // 
+
+            // As a result.. this is hard coded for now !!! 
+            // for the c struct PSP_DEVICE_INTERFACE_DETAIL_DATA dizeof = DWORD cbSize (size 4) + Char[0] (size 1) = Total size 5 ?
+            //
+            myPSP_DEVICE_INTERFACE_DETAIL_DATA.cbSize = 5;
+
+            int results =
+                SetupDiGetDeviceInterfaceDetail(
+                    hDevInfo, // IN HDEVINFO  DeviceInfoSet,
+                    ref mySP_DEVICE_INTERFACE_DATA, // IN PSP_DEVICE_INTERFACE_DATA  DeviceInterfaceData,
+                    ref myPSP_DEVICE_INTERFACE_DETAIL_DATA, // DeviceInterfaceDetailData,  OPTIONAL
+                    DeviceInterfaceDetailDataSize, // IN DWORD  DeviceInterfaceDetailDataSize,
+                    ref RequiredSize, // OUT PDWORD  RequiredSize,  OPTIONAL
+                    null); // 
+            DevicePathName = myPSP_DEVICE_INTERFACE_DETAIL_DATA.DevicePath;
+            return results;
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -542,24 +557,22 @@ namespace osum.Input.Sources.UsbHID.USB
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
         public int CT_CreateFile(string DeviceName)
-		{
-		
-			HidHandle = CreateFile(
-				DeviceName,
-				GENERIC_READ,
-				FILE_SHARE_READ,
-				0,
-				OPEN_EXISTING,
-				0, 
-				0);
-			if (HidHandle == -1)
-			{
-				return 0;
-			}
+        {
+            HidHandle = CreateFile(
+                DeviceName,
+                GENERIC_READ,
+                FILE_SHARE_READ,
+                0,
+                OPEN_EXISTING,
+                0,
+                0);
+            if (HidHandle == -1)
+            {
+                return 0;
+            }
 
-			return 1;
-
-		}
+            return 1;
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -570,12 +583,11 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public int CT_CloseHandle(int hObject) 
-		{
-			HidHandle = -1;
-			return CloseHandle(hObject);
-			
-		}
+        public int CT_CloseHandle(int hObject)
+        {
+            HidHandle = -1;
+            return CloseHandle(hObject);
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -587,16 +599,16 @@ namespace osum.Input.Sources.UsbHID.USB
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
         public unsafe int CT_HidD_GetAttributes(int hObject)
-		{	
-			// Create an instance of HIDD_ATTRIBUTES
-			myHIDD_ATTRIBUTES = new HIDD_ATTRIBUTES();
-			// Calculate its size
-			myHIDD_ATTRIBUTES.Size = sizeof(HIDD_ATTRIBUTES);
-			
-			return HidD_GetAttributes(
-					hObject,
-					ref myHIDD_ATTRIBUTES);
-		}
+        {
+            // Create an instance of HIDD_ATTRIBUTES
+            myHIDD_ATTRIBUTES = new HIDD_ATTRIBUTES();
+            // Calculate its size
+            myHIDD_ATTRIBUTES.Size = sizeof(HIDD_ATTRIBUTES);
+
+            return HidD_GetAttributes(
+                hObject,
+                ref myHIDD_ATTRIBUTES);
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -608,11 +620,11 @@ namespace osum.Input.Sources.UsbHID.USB
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
         public int CT_HidD_GetPreparsedData(int hObject, ref int pPHIDP_PREPARSED_DATA)
-		{
-			return HidD_GetPreparsedData(
-			hObject,
-			ref pPHIDP_PREPARSED_DATA);
-		}
+        {
+            return HidD_GetPreparsedData(
+                hObject,
+                ref pPHIDP_PREPARSED_DATA);
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -625,7 +637,7 @@ namespace osum.Input.Sources.UsbHID.USB
         //-*************************************************************************+#*
         public bool CT_HidD_SetOutputReport(int HidDeviceObject, ref byte lpReportBuffer, int ReportBufferLength)
         {
-            return HidD_SetOutputReport(HidDeviceObject, ref lpReportBuffer,ReportBufferLength);
+            return HidD_SetOutputReport(HidDeviceObject, ref lpReportBuffer, ReportBufferLength);
         }
 
         //---#+************************************************************************
@@ -638,13 +650,13 @@ namespace osum.Input.Sources.UsbHID.USB
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
         public int CT_HidP_GetCaps(int pPreparsedData)
-		{
-			myHIDP_CAPS = new HIDP_CAPS();
-			   return HidP_GetCaps(
-				pPreparsedData,
-				ref myHIDP_CAPS);
-		}
-		
+        {
+            myHIDP_CAPS = new HIDP_CAPS();
+            return HidP_GetCaps(
+                pPreparsedData,
+                ref myHIDP_CAPS);
+        }
+
         //---#+************************************************************************
         //---NOTATION:
         //-  int CT_HidP_GetValueCaps(ref int CalsCapsLength, int pPHIDP_PREPARSED_DATA)
@@ -654,19 +666,17 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public int CT_HidP_GetValueCaps(ref int CalsCapsLength, int pPHIDP_PREPARSED_DATA)
-		{
-			
-			HIDP_REPORT_TYPE myType = 0;
-			myHIDP_VALUE_CAPS = new HIDP_VALUE_CAPS[5];
-			return HidP_GetValueCaps(
-				myType,
-				myHIDP_VALUE_CAPS,
-				ref CalsCapsLength,
-				pPHIDP_PREPARSED_DATA);			
+        public int CT_HidP_GetValueCaps(ref int CalsCapsLength, int pPHIDP_PREPARSED_DATA)
+        {
+            HIDP_REPORT_TYPE myType = 0;
+            myHIDP_VALUE_CAPS = new HIDP_VALUE_CAPS[5];
+            return HidP_GetValueCaps(
+                myType,
+                myHIDP_VALUE_CAPS,
+                ref CalsCapsLength,
+                pPHIDP_PREPARSED_DATA);
+        }
 
-		}
-		
         //---#+************************************************************************
         //---NOTATION:
         //-  byte[] CT_ReadFile(int InputReportByteLength)
@@ -676,19 +686,19 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public unsafe byte[] CT_ReadFile(int InputReportByteLength)
-		{
-			int BytesRead =0;
-			byte[] BufBytes = new byte[InputReportByteLength];
-			if (ReadFile(HidHandle, BufBytes, InputReportByteLength, ref BytesRead, null))
-			{
-				byte[] OutBytes = new byte[BytesRead];
-				Array.Copy(BufBytes, OutBytes, BytesRead);
-				return OutBytes;
-			}
+        public unsafe byte[] CT_ReadFile(int InputReportByteLength)
+        {
+            int BytesRead = 0;
+            byte[] BufBytes = new byte[InputReportByteLength];
+            if (ReadFile(HidHandle, BufBytes, InputReportByteLength, ref BytesRead, null))
+            {
+                byte[] OutBytes = new byte[BytesRead];
+                Array.Copy(BufBytes, OutBytes, BytesRead);
+                return OutBytes;
+            }
 
-			return null;
-		}
+            return null;
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -701,7 +711,8 @@ namespace osum.Input.Sources.UsbHID.USB
         //-*************************************************************************+#*
         public int CT_WriteFile(int hFile, ref byte lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, int lpOverlapped)
         {
-            return WriteFile(hFile, ref lpBuffer,nNumberOfBytesToWrite, ref lpNumberOfBytesWritten,lpOverlapped); ;
+            return WriteFile(hFile, ref lpBuffer, nNumberOfBytesToWrite, ref lpNumberOfBytesWritten, lpOverlapped);
+            ;
         }
 
         //---#+************************************************************************
@@ -713,11 +724,10 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public int CT_SetupDiDestroyDeviceInfoList()
-		{
-			return SetupDiDestroyDeviceInfoList(hDevInfo);
-			
-		}
+        public int CT_SetupDiDestroyDeviceInfoList()
+        {
+            return SetupDiDestroyDeviceInfoList(hDevInfo);
+        }
 
         //---#+************************************************************************
         //---NOTATION:
@@ -728,21 +738,15 @@ namespace osum.Input.Sources.UsbHID.USB
         //
         //                                                              Autor:      F.L.
         //-*************************************************************************+#*
-		public int CT_HidD_FreePreparsedData(int pPHIDP_PREPARSED_DATA)
-		{
-			return SetupDiDestroyDeviceInfoList(pPHIDP_PREPARSED_DATA);			
-		}
+        public int CT_HidD_FreePreparsedData(int pPHIDP_PREPARSED_DATA)
+        {
+            return SetupDiDestroyDeviceInfoList(pPHIDP_PREPARSED_DATA);
+        }
 
         internal HidApiDeclarations HidApiDeclarations
         {
             get => throw new NotImplementedException();
-            set
-            {
-            }
+            set { }
         }
-
-      
-		
-
-	}
+    }
 }

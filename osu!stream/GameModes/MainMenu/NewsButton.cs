@@ -20,7 +20,7 @@ namespace osum.GameModes.MainMenu
             newsButton.OnClick += newsButton_OnClick;
             Add(newsButton);
 
-            newsLight = new pSprite(TextureManager.Load(OsuTexture.news_light), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(3,13f), 0.81f, true, Color4.White);
+            newsLight = new pSprite(TextureManager.Load(OsuTexture.news_light), FieldTypes.StandardSnapBottomLeft, OriginTypes.BottomLeft, ClockTypes.Mode, new Vector2(3, 13f), 0.81f, true, Color4.White);
             newsLight.Additive = true;
 
             newsLight.Transform(new TransformationF(TransformationType.Fade, 0, 1, 0, 300, EasingTypes.Out) { Looping = true, LoopDelay = 1500 });
@@ -51,6 +51,7 @@ namespace osum.GameModes.MainMenu
         }
 
         private bool hasNews;
+
         public bool HasNews
         {
             get => hasNews;

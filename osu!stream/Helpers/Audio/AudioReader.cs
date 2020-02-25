@@ -1,9 +1,11 @@
 ﻿#region --- License ---
+
 /* Licensed under the MIT/X11 license.
  * Copyright (c) 2006-2008 the OpenTK Team.
  * This notice may not be removed from any source distribution.
  * See license.txt for licensing details.
  */
+
 #endregion
 
 using System;
@@ -39,7 +41,9 @@ namespace osum.Helpers.Audio
 
         #region protected AudioReader()
 
-        protected AudioReader() { }
+        protected AudioReader()
+        {
+        }
 
         #endregion
 
@@ -63,14 +67,15 @@ namespace osum.Helpers.Audio
                             s.Position = pos;
                             implementation = (AudioReader)
                                 reader.GetType().GetConstructor(
-                                    BindingFlags.NonPublic | BindingFlags.Public |
-                                                 BindingFlags.Instance,
-                                    null,
-                                    new[] { typeof(Stream) },
-                                    null)
-                                .Invoke(new object[] { s });
+                                        BindingFlags.NonPublic | BindingFlags.Public |
+                                        BindingFlags.Instance,
+                                        null,
+                                        new[] { typeof(Stream) },
+                                        null)
+                                    .Invoke(new object[] { s });
                             return;
                         }
+
                         s.Position = pos;
                     }
                 }
@@ -80,6 +85,7 @@ namespace osum.Helpers.Audio
                 s.Close();
                 throw;
             }
+
             throw new NotSupportedException("Could not find a decoder for the specified sound stream.");
         }
 
@@ -173,6 +179,7 @@ namespace osum.Helpers.Audio
                 return Stream.Position >= Stream.Length;
             }
         }
+
         #endregion
 
         #endregion

@@ -161,15 +161,12 @@ namespace osum.Libraries.NetLib
 #else
                 using (WebClient wc = new WebClient())
                 {
-
-
                     if (postData != null)
                     {
                         wc.UploadDataCompleted += wc_UploadDataCompleted;
                         wc.UploadProgressChanged += wc_UploadProgressChanged;
                         wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
                         wc.UploadDataAsync(new Uri(m_url), method, Encoding.UTF8.GetBytes(postData));
-
                     }
                     else
                     {
@@ -186,10 +183,12 @@ namespace osum.Libraries.NetLib
 #endif
             }
             catch (ThreadAbortException)
-            { }
+            {
+            }
         }
 
         private const string badChars = " \"%'\\";
+
         public static string UrlEncode(string s)
         {
             StringBuilder result = new StringBuilder();

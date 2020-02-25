@@ -33,7 +33,7 @@ namespace osum.GameModes.Results
             startTime = Clock.Time;
 
             background = new pSprite(TextureManager.Load(OsuTexture.cleared), FieldTypes.StandardSnapCentre, OriginTypes.CentreLeft,
-                            ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
+                ClockTypes.Game, Vector2.Zero, 1, true, Color4.White);
             background.Position.X -= background.DrawWidth * GameBase.SpriteToBaseRatio / 2;
 
             background.Alpha = 0;
@@ -120,4 +120,3 @@ namespace osum.GameModes.Results
         }
     }
 }
-

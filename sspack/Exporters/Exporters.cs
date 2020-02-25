@@ -32,55 +32,67 @@ using System.Reflection;
 
 namespace sspack.Exporters
 {
-	public static class Exporters
-	{
-		private static List<IImageExporter> imageExporters = new List<IImageExporter>();
-		private static List<IMapExporter> mapExporters = new List<IMapExporter>();
+    public static class Exporters
+    {
+        private static List<IImageExporter> imageExporters = new List<IImageExporter>();
+        private static List<IMapExporter> mapExporters = new List<IMapExporter>();
 
-		public static ReadOnlyCollection<IImageExporter> ImageExporters { get; private set; }
-		public static ReadOnlyCollection<IMapExporter> MapExporters { get; private set; }
+        public static ReadOnlyCollection<IImageExporter> ImageExporters { get; private set; }
+        public static ReadOnlyCollection<IMapExporter> MapExporters { get; private set; }
 
-		public static void Load() { /* invokes static constructor */ }
+        public static void Load()
+        {
+            /* invokes static constructor */
+        }
 
-		static Exporters()
-		{
-			ImageExporters = new ReadOnlyCollection<IImageExporter>(imageExporters);
-			MapExporters = new ReadOnlyCollection<IMapExporter>(mapExporters);
+        static Exporters()
+        {
+            ImageExporters = new ReadOnlyCollection<IImageExporter>(imageExporters);
+            MapExporters = new ReadOnlyCollection<IMapExporter>(mapExporters);
 
-			// find built in exporters
-			FindExporters(Assembly.GetExecutingAssembly());
+            // find built in exporters
+            FindExporters(Assembly.GetExecutingAssembly());
 
-			// find exporters in any DLLs in the directory with sspack.exe
-			string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-			string[] dlls = Directory.GetFiles(dir, "*.dll", SearchOption.TopDirectoryOnly);
-			foreach (string file in dlls)
-			{
-				try { FindExporters(Assembly.LoadFile(file)); }
-				catch { /* don't care */ }
-			}
-		}
+            // find exporters in any DLLs in the directory with sspack.exe
+            string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string[] dlls = Directory.GetFiles(dir, "*.dll", SearchOption.TopDirectoryOnly);
+            foreach (string file in dlls)
+            {
+                try
+                {
+                    FindExporters(Assembly.LoadFile(file));
+                }
+                catch
+                {
+                    /* don't care */
+                }
+            }
+        }
 
-		private static void FindExporters(Assembly assembly)
-		{
-			foreach (Type type in assembly.GetTypes())
-			{
-				if (!type.IsAbstract && type.IsClass)
-				{
-					try
-					{
-						if (Activator.CreateInstance(type) is IImageExporter imageExporter)
-						{
-							imageExporters.Add(imageExporter);
-						}
+        private static void FindExporters(Assembly assembly)
+        {
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (!type.IsAbstract && type.IsClass)
+                {
+                    try
+                    {
+                        if (Activator.CreateInstance(type) is IImageExporter imageExporter)
+                        {
+                            imageExporters.Add(imageExporter);
+                        }
 
-						if (Activator.CreateInstance(type) is IMapExporter mapExporter)
-						{
-							mapExporters.Add(mapExporter);
-						}
-					}
-					catch { /* don't care */ }
-				}
-			}
-		}
-	}
+                        if (Activator.CreateInstance(type) is IMapExporter mapExporter)
+                        {
+                            mapExporters.Add(mapExporter);
+                        }
+                    }
+                    catch
+                    {
+                        /* don't care */
+                    }
+                }
+            }
+        }
+    }
 }

@@ -126,7 +126,7 @@ namespace sspack
 
             if (Directory.Exists(dir + "_huge"))
                 foreach (string str in Directory.GetFiles(dir + "_huge", "*.png"))
-                    images_highres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".png",""));
+                    images_highres.Add(str.Substring(str.LastIndexOf(@"\") + 1).Replace(".png", ""));
 
             // generate our output
             ImagePacker imagePacker = new ImagePacker();
@@ -153,7 +153,7 @@ namespace sspack
                 if (m.Value.Height % 2 != 0)
                     Console.WriteLine("FATAL: width of " + m.Key + " is not div 2");
 
-                string spriteName = m.Key.Substring(m.Key.LastIndexOf(@"\") + 1).Replace(".png","");
+                string spriteName = m.Key.Substring(m.Key.LastIndexOf(@"\") + 1).Replace(".png", "");
 
                 if (images_lowres.Contains(spriteName))
                 {

@@ -11,6 +11,7 @@ namespace osum.Input.Sources
         public int PressedCount;
 
         public event InputHandler OnDown;
+
         protected void TriggerOnDown(TrackingPoint trackingPoint)
         {
             PressedCount++;
@@ -29,6 +30,7 @@ namespace osum.Input.Sources
         }
 
         public event InputHandler OnUp;
+
         protected void TriggerOnUp(TrackingPoint trackingPoint)
         {
             PressedCount--;
@@ -45,6 +47,7 @@ namespace osum.Input.Sources
         }
 
         public event InputHandler OnClick;
+
         protected void TriggerOnClick(TrackingPoint trackingPoint)
         {
             trackingPoint.HoveringObjectConfirmed = false;
@@ -60,6 +63,7 @@ namespace osum.Input.Sources
         }
 
         public event InputHandler OnMove;
+
         protected void TriggerOnMove(TrackingPoint trackingPoint)
         {
             trackingPoint.HoveringObjectConfirmed = false;
@@ -72,4 +76,3 @@ namespace osum.Input.Sources
         }
     }
 }
-

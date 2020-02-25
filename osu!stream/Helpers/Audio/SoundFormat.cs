@@ -1,4 +1,5 @@
 ﻿#region License
+
 //
 // The Open Toolkit Library License
 //
@@ -23,6 +24,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 //
+
 #endregion
 
 
@@ -55,6 +57,7 @@ namespace osum.Helpers.Audio
                     else if (bitsPerSample == 16) SampleFormat = SampleFormat.Stereo16;
                     break;
             }
+
             SampleRate = sampleRate;
         }
 
@@ -94,10 +97,13 @@ namespace osum.Helpers.Audio
     {
         /// <summary>8 bits per sample, 1 channel.</summary>
         Mono8 = ALFormat.Mono8,
+
         /// <summary>16 bits per sample, 1 channel.</summary>
         Mono16 = ALFormat.Mono16,
+
         /// <summary>8 bits per sample, 2 channels.</summary>
         Stereo8 = ALFormat.Stereo8,
+
         /// <summary>16 bits per sample, 2 channels.</summary>
         Stereo16 = ALFormat.Stereo16
     }

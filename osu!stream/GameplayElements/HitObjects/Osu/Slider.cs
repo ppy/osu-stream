@@ -38,9 +38,10 @@ using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
-using TextureEnvTarget =  OpenTK.Graphics.ES11.All;
+using TextureEnvTarget = OpenTK.Graphics.ES11.All;
 #else
 using OpenTK.Graphics.OpenGL;
+
 #endif
 
 namespace osum.GameplayElements.HitObjects.Osu
@@ -169,8 +170,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         internal HitCircle HitCircleStart;
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
-                        CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
-                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
+            CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
+            List<HitObjectSoundType> soundTypes, double velocity, double tickDistance, List<SampleSetInfo> sampleSets)
             : base(hitObjectManager, startPosition, startTime, soundType, newCombo, comboOffset)
         {
             CurveType = curveType;
@@ -202,8 +203,8 @@ namespace osum.GameplayElements.HitObjects.Osu
         }
 
         internal Slider(HitObjectManager hitObjectManager, Vector2 startPosition, int startTime, bool newCombo, int comboOffset, HitObjectSoundType soundType,
-                        CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
-                        List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
+            CurveTypes curveType, int repeatCount, double pathLength, List<Vector2> sliderPoints,
+            List<HitObjectSoundType> soundTypes, double velocity, double tickDistance)
             : this(hitObjectManager, startPosition, startTime, newCombo, comboOffset, soundType,
                 curveType, repeatCount, pathLength, sliderPoints,
                 soundTypes, velocity, tickDistance, null)
@@ -219,14 +220,14 @@ namespace osum.GameplayElements.HitObjects.Osu
         protected virtual void initializeSprites()
         {
             spriteFollowCircle =
-    new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
-                   OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White) { ExactCoordinates = false };
+                new pSprite(TextureManager.Load(OsuTexture.sliderfollowcircle), FieldTypes.GamefieldSprites,
+                    OriginTypes.Centre, ClockTypes.Audio, Position, 0.98f, false, Color.White) { ExactCoordinates = false };
 
             pTexture[] sliderballtextures = TextureManager.LoadAnimation(OsuTexture.sliderb_0, 10);
 
             spriteFollowBall =
                 new pAnimation(sliderballtextures, FieldTypes.GamefieldSprites, OriginTypes.Centre,
-                               ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White) { ExactCoordinates = false };
+                    ClockTypes.Audio, Position, SpriteManager.drawOrderFwdPrio(EndTime), false, Color.White) { ExactCoordinates = false };
             spriteFollowBall.FramesPerSecond = Velocity / 6;
 
             Transformation fadeInBall = new TransformationF(TransformationType.Fade, 0, 1,
@@ -240,8 +241,8 @@ namespace osum.GameplayElements.HitObjects.Osu
                 snakingBegin);
 
             spriteSliderBody = new pSprite(null, FieldTypes.NativeScaled, OriginTypes.TopLeft,
-                                   ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0.01f : SpriteManager.drawOrderBwd(EndTime + 14),
-                                   false, Color.White);
+                ClockTypes.Audio, Vector2.Zero, GameBase.IsSlowDevice ? 0.01f : SpriteManager.drawOrderBwd(EndTime + 14),
+                false, Color.White);
 
             spriteSliderBody.Transform(fadeInHead);
             spriteSliderBody.Transform(fadeOut);
@@ -252,8 +253,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             spriteFollowCircle.Transform(new NullTransform(StartTime, EndTime + DifficultyManager.HitWindow50));
 
             spriteFollowBallOverlay =
-new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.GamefieldSprites,
-       OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59 / 64), 0.99f, false, Color.White) { ExactCoordinates = false };
+                new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.GamefieldSprites,
+                    OriginTypes.TopCentre, ClockTypes.Audio, Position + new Vector2(0, -DifficultyManager.HitObjectRadiusGamefield * 59 / 64), 0.99f, false, Color.White) { ExactCoordinates = false };
 
             spriteFollowBallOverlay.Transform(fadeInBall);
             spriteFollowBallOverlay.Transform(fadeOutInstant);
@@ -299,7 +300,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             {
                 startAngle = (float)Math.Atan2(drawableSegments[0].p1.Y - drawableSegments[0].p2.Y, drawableSegments[0].p1.X - drawableSegments[0].p2.X);
                 endAngle = (float)Math.Atan2(drawableSegments[drawableSegments.Count - 1].p1.Y - drawableSegments[drawableSegments.Count - 1].p2.Y,
-                                             drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
+                    drawableSegments[drawableSegments.Count - 1].p1.X - drawableSegments[drawableSegments.Count - 1].p2.X);
             }
 
             //tick calculations
@@ -314,9 +315,9 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                 scoringPoints.Add(progress);
 
                 pSprite scoringDot =
-                                    new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
-                                                FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress, out _),
-                                                SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
+                    new pSprite(TextureManager.Load(OsuTexture.sliderscorepoint),
+                        FieldTypes.GamefieldSprites, OriginTypes.Centre, ClockTypes.Audio, positionAtProgress(progress, out _),
+                        SpriteManager.drawOrderBwd(EndTime + 13), false, Color.White);
 
                 scoringDot.Transform(new TransformationF(TransformationType.Fade, 0, 1,
                     snakingBegin + (int)((snakingEnd - snakingBegin) * progress),
@@ -369,6 +370,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                             lastIndex = i;
                         }
                     }
+
                     break;
                 case CurveTypes.Catmull:
                     smoothPoints = pMathHelper.CreateCatmull(controlPoints, 10);
@@ -578,7 +580,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     case ScoreChange.Hit50:
                         totalScoreValue += 1;
                         break;
-
                 }
 
                 HitCircleStart.HitAnimation(startCircleChange, true);
@@ -644,7 +645,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
                 if (trackingPoint == null)
                 {
-
                     if (InputManager.IsPressed)
                     {
                         //todo: isPressed should *probably* be an attribute of a trackingPoint.
@@ -795,7 +795,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
         protected virtual void playRebound()
         {
             PlaySound(SoundTypeList?[lastJudgedEndpoint] ?? SoundType,
-                      SampleSets?[lastJudgedEndpoint] ?? SampleSet);
+                SampleSets?[lastJudgedEndpoint] ?? SampleSet);
         }
 
         internal override void StopSound(bool done = true)
@@ -911,7 +911,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             int now = Clock.Time;
 
             Transformation circleScaleOut = new TransformationF(TransformationType.Scale, 1.1F, 1.4F,
-                    now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
+                now, now + DifficultyManager.FadeOut, EasingTypes.InHalf);
 
             Transformation circleFadeOut = new TransformationF(TransformationType.Fade, 1, 0,
                 now, now + DifficultyManager.FadeOut);
@@ -960,7 +960,6 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
                     usableSpriteManager.Add(clone);
                 }
             }
-
         }
 
         private float startAngle;
@@ -1045,7 +1044,7 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
             //Adjust the angles of the end arrows
             if (RepeatCount > 1)
                 spriteCollectionEnd[1].Rotation = (lastDrawnSegmentIndex >= 0 ? drawableSegments[lastDrawnSegmentIndex].theta + MathHelper.Pi : endAngle)
-                                                         + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
+                                                  + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
             if (RepeatCount > 2)
                 spriteCollectionStart[1].Rotation = MathHelper.Pi + startAngle + (float)((MathHelper.Pi / 32) * ((now % 300) / 300f - 0.5) * 2);
 
@@ -1182,13 +1181,13 @@ new pSprite(TextureManager.Load(OsuTexture.sliderballoverlay), FieldTypes.Gamefi
 
             GL.LoadIdentity();
             GL.Ortho(trackBounds.Left / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                        trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
-                        trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                        trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
-                        -1, 1);
+                trackBounds.Right / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.X,
+                trackBounds.Top / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                trackBounds.Bottom / GameBase.BaseToNativeRatioAligned - GameBase.GamefieldOffsetVector1.Y,
+                -1, 1);
 
             m_HitObjectManager.sliderTrackRenderer.Draw(partialDrawable,
-                                                        DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev, next);
+                DifficultyManager.HitObjectRadiusGamefield, ColourIndex, prev, next);
         }
 
         /// <summary>

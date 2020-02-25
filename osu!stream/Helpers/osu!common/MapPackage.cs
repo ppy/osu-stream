@@ -9,7 +9,6 @@ namespace osum.Helpers
 {
     public class MapPackage : IDisposable
     {
-
 #if OSUM
         private const string EXT_MAP = "osc";
 #else
@@ -60,7 +59,7 @@ namespace osum.Helpers
 
         public int DataOffset => fOffsetData;
 
-        static MapPackage ()
+        static MapPackage()
         {
             new FastRandom(1990).NextBytes(knownPlain);
         }
@@ -94,7 +93,8 @@ namespace osum.Helpers
             fHandle = stream;
             fFilename = "preview.osf2";
 
-            try {
+            try
+            {
                 init(metadataOnly);
             }
             catch (Exception e)
@@ -118,13 +118,14 @@ namespace osum.Helpers
             fNotOnDisk = !File.Exists(filename);
             if (fNotOnDisk && !createIfNotFound)
             {
-                throw new IOException("File does not exist ("+filename+").");
+                throw new IOException("File does not exist (" + filename + ").");
             }
 
             if (key != null)
                 k = key;
 
-            try {
+            try
+            {
                 fFilename = filename;
                 if (!fNotOnDisk)
                     fHandle = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -169,6 +170,7 @@ namespace osum.Helpers
                     Array.Copy(aes.IV, fIV, fIV.Length);
                     aes.Clear();
                 }
+
                 return;
             }
 
@@ -211,6 +213,7 @@ namespace osum.Helpers
                         writer.Write(dKey);
                         writer.Write(dValue);
                     }
+
                     writer.Flush();
 
                     // check hash
@@ -251,9 +254,9 @@ namespace osum.Helpers
                         return;
                     seed = fMetadata [MapMetaType.Creator] + "yhxyfjo5" + fMetadata [MapMetaType.BeatmapSetID];
                 }
-#else           
+#else
                 string seed;
-                #if OSUM
+#if OSUM
                 if (fFilename.EndsWith(".osf2"))
                 {
                     if (!fMetadata.ContainsKey(MapMetaType.Title) || !fMetadata.ContainsKey(MapMetaType.Artist))
@@ -261,7 +264,7 @@ namespace osum.Helpers
                     seed = (char)0x08 + fMetadata[MapMetaType.Title] + "4390gn8931i" + fMetadata[MapMetaType.Artist];
                 }
                 else
-                #endif
+#endif
                 {
                     if (!fMetadata.ContainsKey(MapMetaType.Creator) || !fMetadata.ContainsKey(MapMetaType.BeatmapSetID))
                         return;
@@ -286,7 +289,6 @@ namespace osum.Helpers
                 br.BaseStream.Seek(brOffset, SeekOrigin.Begin);
                 doPostProcessing(br);
             }
-
         }
 
         /// <summary>
@@ -306,7 +308,6 @@ namespace osum.Helpers
                 decryptor.Read(decryptedPlain, 0, 64);
                 if (!GeneralHelper.CompareByteSequence(decryptedPlain, knownPlain))
                     throw new Exception("Invalid key");
-
             }
 #endif
 
@@ -350,7 +351,6 @@ namespace osum.Helpers
                 aes.Key = k; //TODO: key etc etc
 
                 using (MemoryStream memstream = new MemoryStream(fileinfo))
-
 #if STRONG_ENCRYPTION
                 using (CryptoStream cstream = new CryptoStream(memstream, aes.CreateDecryptor(), CryptoStreamMode.Read))
 #elif NO_ENCRYPTION
@@ -401,8 +401,6 @@ namespace osum.Helpers
             }
 
             fHandle.Seek(0, SeekOrigin.Begin);
-
-
         }
 
         #region Data processing methods
@@ -421,7 +419,7 @@ namespace osum.Helpers
 #elif NO_ENCRYPTION
                 using (Stream cstream = memstream)
 #else
-                using (Stream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,k))
+                using (Stream cstream = new FastEncryptorStream(memstream, EncryptionMethod.Two, k))
 #endif
                 using (BinaryWriter writer = new BinaryWriter(cstream))
                 {
@@ -472,7 +470,7 @@ namespace osum.Helpers
 #elif NO_ENCRYPTION
             using (Stream cstream = memstream)
 #else
-            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream,EncryptionMethod.Two,k))
+            using (FastEncryptorStream cstream = new FastEncryptorStream(memstream, EncryptionMethod.Two, k))
 #endif
             using (BinaryWriter writer = new BinaryWriter(cstream))
             {
@@ -489,17 +487,18 @@ namespace osum.Helpers
 #if NO_ENCRYPTION
                     using (Stream decryptor = new MemoryStream(pair.Value, false))
 #else
-                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false),EncryptionMethod.Two,k))
+                    using (FastEncryptorStream decryptor = new FastEncryptorStream(new MemoryStream(pair.Value, false), EncryptionMethod.Two, k))
 #endif
                     {
                         byte[] decrypted = new byte[pair.Value.Length];
-                        decryptor.Read(decrypted,0,pair.Value.Length);
+                        decryptor.Read(decrypted, 0, pair.Value.Length);
                         byte[] hash = fHasher.ComputeHash(decrypted, 4, pair.Value.Length - 4);
                         writer.Write(hash);
                         writer.Write(filesTimeCreated[pair.Key].ToBinary());
                         writer.Write(filesTimeModified[pair.Key].ToBinary());
                         filesHashes[pair.Key] = hash;
                     }
+
                     offset += pair.Value.Length;
                 }
 #if STRONG_ENCRYPTION
@@ -526,7 +525,7 @@ namespace osum.Helpers
                 writer.Write(data.Count);
                 foreach (KeyValuePair<MapMetaType, string> pair in data)
                 {
-                    writer.Write((ushort) pair.Key);
+                    writer.Write((ushort)pair.Key);
                     //todo: do we want to use empty strings or something else here?
                     writer.Write(pair.Value ?? string.Empty);
                 }
@@ -577,13 +576,14 @@ namespace osum.Helpers
                 long VideoLength = Convert.ToInt64(GetMetadata(MapMetaType.VideoDataLength));
                 //ignore video data while hashing
                 toBeHashed = new byte[bytesLeft - VideoLength];
-                data.Read(toBeHashed, 0, (int) (VideoOffset));
+                data.Read(toBeHashed, 0, (int)(VideoOffset));
                 long newPos = data.Position + VideoLength;
                 if (newPos >= data.Length)
                 {
                     data.Position = newPos;
                     data.Read(toBeHashed, (int)(data.Position - strPos - VideoLength), (int)(data.Length - data.Position));
                 }
+
                 pos %= (int)(bytesLeft - VideoLength);
             }
             else
@@ -591,8 +591,8 @@ namespace osum.Helpers
                 toBeHashed = new byte[bytesLeft];
                 data.Read(toBeHashed, 0, toBeHashed.Length);
             }
-            return GetOszHash(toBeHashed, pos, swap);
 
+            return GetOszHash(toBeHashed, pos, swap);
         }
 
         public static byte[] GetMD5Hash(byte[] buffer)
@@ -609,7 +609,6 @@ namespace osum.Helpers
         {
             string ext = Path.GetExtension(name).ToLower();
             return (ext == ".mp3" || ext == ".ogg" || ext == ".m4a");
-
         }
 
         public static bool IsStoryboardFile(string name)
@@ -622,6 +621,7 @@ namespace osum.Helpers
         {
             return Path.GetExtension(name).ToLower() == "." + EXT_PACKAGE;
         }
+
         public static bool IsVideoFile(string name)
         {
             string ext = Path.GetExtension(name).ToLower();
@@ -641,12 +641,13 @@ namespace osum.Helpers
             MapMetaType value;
             try
             {
-                value = (MapMetaType) Enum.Parse(typeof(MapMetaType), meta, true);
+                value = (MapMetaType)Enum.Parse(typeof(MapMetaType), meta, true);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return MapMetaType.Unknown;
             }
+
             return value;
         }
 
@@ -657,6 +658,7 @@ namespace osum.Helpers
         /// If false anything but metadata will be unavailable.
         /// </summary>
         public bool HasPostProcessed { get; private set; }
+
         /// <summary>
         /// Get the absolute path to this file.
         /// </summary>
@@ -671,23 +673,24 @@ namespace osum.Helpers
             {
                 CheckClosed();
                 string[] fMapFiles = new string[fMapIDsFiles.Count];
-                fMapIDsFiles.Keys.CopyTo(fMapFiles,0);
+                fMapIDsFiles.Keys.CopyTo(fMapFiles, 0);
                 return fMapFiles;
             }
         }
 
         public string GetMapByID(int id)
         {
-            foreach(KeyValuePair<string,int> mapIDPair in fMapIDsFiles)
+            foreach (KeyValuePair<string, int> mapIDPair in fMapIDsFiles)
                 if (id == mapIDPair.Value)
                     return mapIDPair.Key;
 
             return string.Empty;
         }
+
         public int GetIDByMap(string map)
         {
             //we don't use tryGetValue as int is not nullable
-            return fMapIDsFiles.ContainsKey(map)? fMapIDsFiles[map] : -2;
+            return fMapIDsFiles.ContainsKey(map) ? fMapIDsFiles[map] : -2;
         }
 
         public void SetMapID(string map, int id)
@@ -737,8 +740,8 @@ namespace osum.Helpers
             }
 
             return GetMD5Hash(buffer);
-
         }
+
         //only works for saved files.
         public byte[] GetCachedFileHash(string filename)
         {
@@ -786,10 +789,10 @@ namespace osum.Helpers
             {
                 //if (!raw)
                 //{
-                    MapStream ms = new MapStream(fHandle, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
-                    //fMapStreamsOpen.Add(ms);
-                    //ms.OnStreamClosed += MapStream_OnStreamClosed;
-                    stream = ms;
+                MapStream ms = new MapStream(fHandle, fOffsetData + fFiles[filename].Offset, fFiles[filename].Length, fIV, k);
+                //fMapStreamsOpen.Add(ms);
+                //ms.OnStreamClosed += MapStream_OnStreamClosed;
+                stream = ms;
                 /*}
                 else
                 {
@@ -799,8 +802,6 @@ namespace osum.Helpers
                     fs.Read(file, 0, file.Length);
                     stream = new MemoryStream(file, false);
                 }*/
-
-
             }
             else if (fFilesToAdd.ContainsKey(filename))
             {
@@ -920,7 +921,7 @@ namespace osum.Helpers
             using (FileStream fs = File.OpenRead(path))
             {
                 data = new byte[fs.Length];
-                fs.Read(data, 0, (int) fs.Length);
+                fs.Read(data, 0, (int)fs.Length);
                 fs.Close();
             }
 
@@ -953,7 +954,7 @@ namespace osum.Helpers
 
 
             if (IsMapFile(filename) && !fMapIDsFiles.ContainsKey(filename))
-                fMapIDsFiles.Add(filename,-1);
+                fMapIDsFiles.Add(filename, -1);
 
             if (IsVideoFile(filename))
             {
@@ -971,7 +972,6 @@ namespace osum.Helpers
                 AddMetadata(MapMetaType.VideoDataLength, Convert.ToString(data.Length));
                 AddMetadata(MapMetaType.VideoHash, BitConverter.ToString(videoHash).Replace("-", ""));
                 fMetadataChanged = true;
-
             }
 
             fFilesToAdd[filename] = data;
@@ -982,7 +982,6 @@ namespace osum.Helpers
 
             if (fFiles.ContainsKey(filename))
                 fFiles.Remove(filename);
-
 
 
             fFiledataChanged = true;
@@ -1043,7 +1042,6 @@ namespace osum.Helpers
                 using (MapPackage p = new MapPackage(path))
                 using (FileStream f = File.OpenRead(path))
                 {
-
                     int oldDataOffset = p.DataOffset;
                     foreach (FileInfo fi in filetable)
                     {
@@ -1062,11 +1060,11 @@ namespace osum.Helpers
                             // so in order to speed up the process only copy if lengths are identical
                             //if (old.Length == fi.Length)
                             //{
-                                byte[] data = new byte[fi.Length];
-                                bw.Seek(fi.Offset + dataOffset, SeekOrigin.Begin);
-                                f.Seek(old.Offset + oldDataOffset, SeekOrigin.Begin);
-                                f.Read(data, 0, data.Length);
-                                bw.Write(data);
+                            byte[] data = new byte[fi.Length];
+                            bw.Seek(fi.Offset + dataOffset, SeekOrigin.Begin);
+                            f.Seek(old.Offset + oldDataOffset, SeekOrigin.Begin);
+                            f.Read(data, 0, data.Length);
+                            bw.Write(data);
                             //}
                         }
                     }
@@ -1076,7 +1074,7 @@ namespace osum.Helpers
                 bw.Seek(0, SeekOrigin.Begin);
                 using (FileStream f = File.Open(path, FileMode.Create))
                 {
-                    const int SIZE = 8*1024;
+                    const int SIZE = 8 * 1024;
                     byte[] buffer = new byte[SIZE];
                     Stream s = bw.BaseStream;
                     int count;
@@ -1084,6 +1082,7 @@ namespace osum.Helpers
                     {
                         f.Write(buffer, 0, count);
                     }
+
                     //we want to have the same filesize as the new mappackage
                     //so we seek to the end of the file and write a byte.
                     if (f.Position != filesize)
@@ -1197,13 +1196,12 @@ namespace osum.Helpers
             using (Aes aes = new AesManaged())
             using (BinaryWriter bw = new BinaryWriter(new MemoryStream())) //we write file to memory first
             {
-
                 // set up encryptor
                 aes.IV = fIV;
                 aes.Key = k; //TODO: key stuff
 
                 // header
-                bw.Write(new byte[] {0xEC, (byte) 'H', (byte) 'O'});
+                bw.Write(new byte[] { 0xEC, (byte)'H', (byte)'O' });
                 bw.Write(VERSION_EXPORT);
 
 
@@ -1230,7 +1228,7 @@ namespace osum.Helpers
                     EncryptData(fFilesToAdd, aes.CreateEncryptor());
                     foreach (KeyValuePair<string, byte[]> pair in fFilesToAdd)
                     {
-                        files.Add(pair.Key, pair.Value );
+                        files.Add(pair.Key, pair.Value);
                         filesDateCreated[pair.Key] = fFilesToAddDateCreated[pair.Key];
                         filesDateModified[pair.Key] = fFilesToAddDateModified[pair.Key];
                     }
@@ -1247,7 +1245,7 @@ namespace osum.Helpers
                 // write iv
                 byte[] iv = new byte[fIV.Length];
                 for (int i = 0; i < iv.Length; i++)
-                    iv[i] = (byte) (fIV[i] ^ file_data[i]);
+                    iv[i] = (byte)(fIV[i] ^ file_data[i]);
                 bw.Write(iv);
 
                 // hashes inserted here when writing to file
@@ -1282,7 +1280,7 @@ namespace osum.Helpers
                 }
 
                 // update offset to fileinfo
-                int tOffsetFileinfo = (int) bw.BaseStream.Position;
+                int tOffsetFileinfo = (int)bw.BaseStream.Position;
 
                 // get fileinfo
                 byte[] info_data;
@@ -1311,7 +1309,7 @@ namespace osum.Helpers
                 }
 
                 // update offset to data
-                int tOffsetData = (int) bw.BaseStream.Position;
+                int tOffsetData = (int)bw.BaseStream.Position;
 
                 // write file data
                 bw.Write(file_data);
@@ -1323,7 +1321,7 @@ namespace osum.Helpers
                 //TODO: maybe an async write while getting the hash to speed things up
                 using (FileStream fs = File.Open(fFilename, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    const int blockSize = 1024*8;
+                    const int blockSize = 1024 * 8;
                     byte[] buffer = new byte[blockSize];
                     int count;
 
@@ -1421,7 +1419,6 @@ namespace osum.Helpers
 
         public bool AcquireLock(int timeOut, bool releaseFileLock)
         {
-
             //is safe from deadlocks as the same thread can enter the same object multiple times
             try
             {
@@ -1436,21 +1433,20 @@ namespace osum.Helpers
                 return false;
             }
 
-            if (releaseFileLock && fHandle!=null)
+            if (releaseFileLock && fHandle != null)
             {
                 fHandle.Close();
                 fHandle = null;
             }
 
             return true;
-
         }
 
         public void Unlock()
         {
-            if(fHandle == null)
+            if (fHandle == null)
                 fHandle = File.Open(fFilename, FileMode.Open, FileAccess.Read, FileShare.Read);
-            lock(packageLock)
+            lock (packageLock)
             {
                 Monitor.Exit(packageLock);
             }
@@ -1479,7 +1475,6 @@ namespace osum.Helpers
 
         public class FileComparer : IComparer<string>
         {
-
             #region IComparer<string> Members
 
             public int Compare(string x, string y)
@@ -1499,17 +1494,15 @@ namespace osum.Helpers
 
             #endregion
         }
-
     }
-
 
 
     public struct FileInfo : bSerializable
     {
-        public string Filename { get; private set;}
+        public string Filename { get; private set; }
         public int Length { get; private set; }
         public int Offset { get; private set; }
-        public byte[/*16*/] Hash  { get; private set; }
+        public byte[ /*16*/] Hash { get; private set; }
         public DateTime CreationTime { get; private set; }
         public DateTime ModifiedTime { get; private set; }
 
@@ -1522,8 +1515,6 @@ namespace osum.Helpers
             Hash = hash;
             CreationTime = creationTime;
             ModifiedTime = modifiedTime;
-
-
         }
 
         public void ReadFromStream(SerializationReader sr)
@@ -1534,8 +1525,6 @@ namespace osum.Helpers
             Hash = sr.ReadByteArray();
             CreationTime = (DateTime)sr.ReadObject();
             ModifiedTime = (DateTime)sr.ReadObject();
-
-
         }
 
         public void WriteToStream(SerializationWriter sw)

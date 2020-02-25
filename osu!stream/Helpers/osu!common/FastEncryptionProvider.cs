@@ -7,6 +7,7 @@ namespace osum.Helpers
         One,
         Two,
         Three,
+
         Four
         //One,
         //Two,
@@ -18,7 +19,6 @@ namespace osum.Helpers
     //made static as an optimalization. (static method calls are faster)
     public class FastEncryptionProvider
     {
-
         private uint[] k;
         private byte[] kB;
         private const uint d = 0x9e3779b9;
@@ -34,7 +34,7 @@ namespace osum.Helpers
         {
             if (EM == EncryptionMethod.Four)
                 throw new ArgumentException("1"); //Encryption method can't be none
-            if (pkey.Length !=4)
+            if (pkey.Length != 4)
                 throw new ArgumentException("2"); //Encryption key has to be 4 words long
 
             k = pkey;
@@ -52,7 +52,6 @@ namespace osum.Helpers
         }
 
 
-
         private void EncryptDecryptTwoSafe(byte[] buffer, bool encrypt, int count, int offset)
         {
             uint fullWordCount = unchecked((uint)count / nMAXBytes);
@@ -62,28 +61,28 @@ namespace osum.Helpers
             uint rounds = 6 + 52 / n;
 
             byte[] bufferCut = new byte[fullWordCount * nMAXBytes];
-            Buffer.BlockCopy(buffer, offset, bufferCut, 0, (int) (fullWordCount * nMAXBytes));
+            Buffer.BlockCopy(buffer, offset, bufferCut, 0, (int)(fullWordCount * nMAXBytes));
             uint[] bufferCutWords = GeneralHelper.ConvertArray<byte, uint>(bufferCut);
 
             if (encrypt)
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                    EncryptWordsTwoSafe(bufferCutWords, (int) (wordCount * nMAX));
+                    EncryptWordsTwoSafe(bufferCutWords, (int)(wordCount * nMAX));
                 }
             else //copy pasta because we dont want to waste time on a cmp each iteration
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                    DecryptWordsTwoSafe(bufferCutWords, (int) (wordCount * nMAX));
+                    DecryptWordsTwoSafe(bufferCutWords, (int)(wordCount * nMAX));
                 }
 
             byte[] bufferProcessed = GeneralHelper.ConvertArray<uint, byte>(bufferCutWords);
-            Buffer.BlockCopy(bufferProcessed, 0, buffer, offset, (int) (fullWordCount * nMAXBytes));
+            Buffer.BlockCopy(bufferProcessed, 0, buffer, offset, (int)(fullWordCount * nMAXBytes));
 
             n = leftover / 4;
-            byte[] leftoverBuffer = new byte[n*4];
-            Buffer.BlockCopy(buffer, (int) (offset + fullWordCount * nMAXBytes), leftoverBuffer, 0, (int) n * 4);
+            byte[] leftoverBuffer = new byte[n * 4];
+            Buffer.BlockCopy(buffer, (int)(offset + fullWordCount * nMAXBytes), leftoverBuffer, 0, (int)n * 4);
             uint[] leftoverBufferWords = GeneralHelper.ConvertArray<byte, uint>(leftoverBuffer);
-            
+
             if (n > 1)
             {
                 if (encrypt)
@@ -95,18 +94,16 @@ namespace osum.Helpers
                 if (leftover == 0)
                     return;
             }
+
             byte[] leftoverBufferProcessed = GeneralHelper.ConvertArray<uint, byte>(leftoverBufferWords);
-            Buffer.BlockCopy(leftoverBufferProcessed, 0, buffer, (int)(offset + fullWordCount * nMAXBytes), (int) n * 4);
+            Buffer.BlockCopy(leftoverBufferProcessed, 0, buffer, (int)(offset + fullWordCount * nMAXBytes), (int)n * 4);
 
 
             if (encrypt)
-                simpleEncryptBytesSafe(buffer, (int) (count - leftover) + offset, count);
+                simpleEncryptBytesSafe(buffer, (int)(count - leftover) + offset, count);
             else
-                simpleDecryptBytesSafe(buffer, (int) (count - leftover) + offset, count);
-
+                simpleDecryptBytesSafe(buffer, (int)(count - leftover) + offset, count);
         }
-
-
 
 
         private unsafe void EncryptDecryptTwo(byte* bufferPtr, int bufferLength, bool encrypt)
@@ -114,26 +111,26 @@ namespace osum.Helpers
             uint fullWordCount = unchecked((uint)bufferLength / nMAXBytes);
             uint leftover = unchecked((uint)bufferLength) % nMAXBytes;
 
-            uint* intWordPtr = (uint*) bufferPtr;
+            uint* intWordPtr = (uint*)bufferPtr;
             uint na = nMAX;
             n = nMAX;
             uint rounds = 6 + 52 / n;
-            
-            
+
+
             if (encrypt)
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
                     EncryptWordsTwo(intWordPtr);
-                    intWordPtr+=nMAX;
+                    intWordPtr += nMAX;
                 }
             else //copy pasta because we dont want to waste time on a cmp each iteration
                 for (uint wordCount = 0; wordCount < fullWordCount; wordCount++)
                 {
-                   // DecryptWordsTwo(intWordPtr);
+                    // DecryptWordsTwo(intWordPtr);
                     uint y, z, sum;
                     uint p, e;
                     sum = rounds * d;
-                    
+
                     y = intWordPtr[0];
                     do
                     {
@@ -143,11 +140,12 @@ namespace osum.Helpers
                             z = intWordPtr[p - 1];
                             y = intWordPtr[p] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                         }
+
                         z = intWordPtr[na - 1];
                         y = intWordPtr[0] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
-                    }
-                    while ((sum -= d) != 0);
-                    intWordPtr+=nMAX;
+                    } while ((sum -= d) != 0);
+
+                    intWordPtr += nMAX;
                 }
 
             if (leftover == 0)
@@ -161,7 +159,7 @@ namespace osum.Helpers
                 else
                     DecryptWordsTwo(intWordPtr);
 
-                leftover -= n*4;
+                leftover -= n * 4;
                 if (leftover == 0)
                     return;
             }
@@ -195,34 +193,33 @@ namespace osum.Helpers
                     }
 
             }*/
-            
         }
 
 
-        private unsafe void EncryptDecryptOne(byte* bufferPtr, byte* resultPtr,int bufferLength, bool encrypt)
+        private unsafe void EncryptDecryptOne(byte* bufferPtr, byte* resultPtr, int bufferLength, bool encrypt)
         {
             uint fullWordCount = unchecked((uint)bufferLength / 8);
             uint leftover = (uint)(bufferLength % 8);
 
 
             uint* intWordPtrB = (uint*)bufferPtr,
-                  intWordPtrO = (uint*)resultPtr;
+                intWordPtrO = (uint*)resultPtr;
             intWordPtrB -= 2;
             intWordPtrO -= 2;
             if (encrypt)
                 for (int wordCount = 0; wordCount < fullWordCount; wordCount++)
-                    EncryptWordOne(intWordPtrB+=2, intWordPtrO+=2);
-            else 
+                    EncryptWordOne(intWordPtrB += 2, intWordPtrO += 2);
+            else
                 for (int wordCount = 0; wordCount < fullWordCount; wordCount++)
-                    DecryptWordOne(intWordPtrB += 2, intWordPtrO+=2);
-            
+                    DecryptWordOne(intWordPtrB += 2, intWordPtrO += 2);
+
             if (leftover == 0)
                 return;
 
             byte* bufferEnd = bufferPtr + bufferLength;
             byte* byteWordPtrB2 = bufferEnd - leftover;
             byte* byteWordPtrO2 = resultPtr + bufferLength - leftover;
-            
+
 
             //copy leftover buffer array to result array
             do
@@ -233,27 +230,22 @@ namespace osum.Helpers
 
             //encrypt / decrypt leftover
             if (encrypt)
-                simpleEncryptBytes(byteWordPtrO2 - leftover, unchecked ((int) leftover));
+                simpleEncryptBytes(byteWordPtrO2 - leftover, unchecked((int)leftover));
             else
-                simpleDecryptBytes(byteWordPtrO2 - leftover, unchecked ((int) leftover));
-
-
-            
-
+                simpleDecryptBytes(byteWordPtrO2 - leftover, unchecked((int)leftover));
         }
 
 
         private unsafe void EncryptDecryptHomebrew(byte* bufferPtr, int bufferLength, bool encrypt)
         {
-
             if (encrypt)
                 simpleEncryptBytes(bufferPtr, bufferLength);
             else
                 simpleDecryptBytes(bufferPtr, bufferLength);
-        }      
+        }
 
 
-        private unsafe void EncryptDecrypt(byte* bufferPtr,int bufferLength, bool encrypt)
+        private unsafe void EncryptDecrypt(byte* bufferPtr, int bufferLength, bool encrypt)
         {
             //if (buffer.Length % 64 != 0)
             //    throw new ArgumentException("buffer size has to be a multiple of 8");
@@ -261,10 +253,10 @@ namespace osum.Helpers
             switch (m)
             {
                 case EncryptionMethod.One:
-                    EncryptDecrypt(bufferPtr, bufferPtr,bufferLength, encrypt);
+                    EncryptDecrypt(bufferPtr, bufferPtr, bufferLength, encrypt);
                     break;
                 case EncryptionMethod.Two:
-                    EncryptDecryptTwo(bufferPtr,bufferLength, encrypt);
+                    EncryptDecryptTwo(bufferPtr, bufferLength, encrypt);
                     break;
                 case EncryptionMethod.Three:
                     EncryptDecryptHomebrew(bufferPtr, bufferLength, encrypt);
@@ -273,7 +265,6 @@ namespace osum.Helpers
                     checkKey();
                     break;
             }
-
         }
 
         private unsafe void EncryptDecrypt(byte* bufferPtr, byte* outputPtr, int bufferLength, bool encrypt)
@@ -300,7 +291,6 @@ namespace osum.Helpers
 
         public unsafe void EncryptDecrypt(byte[] buffer, byte[] output, int bufStart, int outputStart, int count, bool encrypt)
         {
-
 #if !SAFE_ENCRYPTION
 
             fixed (byte* bufferPtr = buffer,
@@ -309,7 +299,7 @@ namespace osum.Helpers
                 if (outputPtr == null)
                     EncryptDecrypt(bufferPtr + bufStart, count, encrypt);
                 else
-                    EncryptDecrypt(bufferPtr + bufStart, outputPtr+outputStart, count, encrypt);
+                    EncryptDecrypt(bufferPtr + bufStart, outputPtr + outputStart, count, encrypt);
             }
 #else
             //only Two is ported to managed code, so the encryption method is ignored
@@ -317,9 +307,7 @@ namespace osum.Helpers
                 throw new NotSupportedException("Custom output is not supported when SAFE_ENCRYPTION is enabled.");
             EncryptDecryptTwoSafe(buffer, encrypt, count, bufStart);
 #endif
-
         }
-    
 
 
         /**
@@ -373,38 +361,46 @@ namespace osum.Helpers
 
         #region Encrypt Decrypt One
 
-        private unsafe void EncryptWordOne( uint* v/*[2]*/, uint* o/*[2]*/ ) 
+        private unsafe void EncryptWordOne(uint* v /*[2]*/, uint* o /*[2]*/)
         {
             uint i;
-            uint v0=v[0];  uint v1=v[1]; 
-            uint sum=0;
-            for (i=0; i < r; i++) 
+            uint v0 = v[0];
+            uint v1 = v[1];
+            uint sum = 0;
+            for (i = 0; i < r; i++)
             {
                 //todo: cache sum + k for better speed
                 v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + k[sum & 3]);
                 sum += d;
-                v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum>>11) & 3]);
+                v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum >> 11) & 3]);
             }
-            o[0]=v0; o[1]=v1;
+
+            o[0] = v0;
+            o[1] = v1;
         }
 
-        private unsafe void DecryptWordOne(uint* v/*[2]*/, uint* o/*[2]*/) 
+        private unsafe void DecryptWordOne(uint* v /*[2]*/, uint* o /*[2]*/)
         {
             uint i;
-            uint v0=v[0]; uint v1=v[1];  
-            uint sum=unchecked(d*r);
-            for (i=0; i < r; i++) 
+            uint v0 = v[0];
+            uint v1 = v[1];
+            uint sum = unchecked(d * r);
+            for (i = 0; i < r; i++)
             {
                 //todo: cache sum + k for better speed
-                v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum>>11) & 3]);
+                v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum >> 11) & 3]);
                 sum -= d;
                 v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + k[sum & 3]);
             }
-            o[0]=v0; o[1]=v1;
+
+            o[0] = v0;
+            o[1] = v1;
         }
 
         #endregion
+
         #region Encrypt Decrypt Word Two
+
         //represents the number of words to be encrypted/decrypted
         //automaticly set to be 16 unless the buffer is smaller than 16
         //or if buffer%16!=0 n will be changed on the last buffer iteration
@@ -429,10 +425,10 @@ namespace osum.Helpers
                     y = v[p + 1 + offset];
                     z = v[p + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
+
                 y = v[offset];
                 z = v[n - 1 + offset] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
-            }
-            while (--rounds > 0);
+            } while (--rounds > 0);
         }
 
         private void DecryptWordsTwoSafe(uint[] v, int offset)
@@ -448,77 +444,77 @@ namespace osum.Helpers
                 for (p = n - 1; p > 0; p--)
                 {
                     z = v[p - 1 + offset];
-                    y = v[p+ offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+                    y = v[p + offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
+
                 z = v[n - 1 + offset];
                 y = v[offset] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
-            }
-            while ((sum -= d) != 0);
-
+            } while ((sum -= d) != 0);
         }
 
 
         //uses a modified version of Two
-        private unsafe void EncryptWordsTwo(uint* v/*[n]*/) 
+        private unsafe void EncryptWordsTwo(uint* v /*[n]*/)
         {
             uint y, z, sum;
             uint p, e;
-            uint rounds = 6 + 52/n;
+            uint rounds = 6 + 52 / n;
             sum = 0;
-            z = v[n-1];
-            do 
+            z = v[n - 1];
+            do
             {
                 sum += d;
                 e = (sum >> 2) & 3;
                 for (p = 0; p < n - 1; p++)
                 {
-                    y = v[p + 1]; 
-                    z = v[p] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
+                    y = v[p + 1];
+                    z = v[p] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
+
                 y = v[0];
-                z = v[n-1] += ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
-            }   
-            while (--rounds>0);
+                z = v[n - 1] += ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+            } while (--rounds > 0);
         }
 
-        private unsafe void DecryptWordsTwo(uint* v/*[n]*/) 
+        private unsafe void DecryptWordsTwo(uint* v /*[n]*/)
         {
             uint y, z, sum;
             uint p, e;
-            uint rounds = 6 + 52/n;
-            sum = rounds*d;
+            uint rounds = 6 + 52 / n;
+            sum = rounds * d;
             y = v[0];
-            do 
+            do
             {
                 e = (sum >> 2) & 3;
-                for (p=n-1; p>0; p--)
+                for (p = n - 1; p > 0; p--)
                 {
-                    z = v[p-1];
-                    y = v[p] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
+                    z = v[p - 1];
+                    y = v[p] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
                 }
-                z = v[n-1];
-                y = v[0] -= ((z>>5^y<<2) + (y>>3^z<<4)) ^ ((sum^y) + (k[(p&3)^e] ^ z));
-            } 
-            while ((sum -= d) != 0);
 
+                z = v[n - 1];
+                y = v[0] -= ((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (k[(p & 3) ^ e] ^ z));
+            } while ((sum -= d) != 0);
         }
-        #endregion 
+
+        #endregion
 
         #region encrypt/decrypt Bytes
+
         //low security homemade byte encryptor / decryptor.
         //used to encrypt // decrypt small data blocks (<8 bytes) and to encrypt
         //cutoffs(last few bytes) from a buffer (buffer % 8 !=0) which can't be encrypted otherwise
 
         private unsafe void simpleEncryptBytes(byte* buf, int length)
         {
-            fixed (uint* keyI = k )
+            fixed (uint* keyI = k)
             {
-                byte* keyB = (byte*) keyI;
+                byte* keyB = (byte*)keyI;
                 byte prevE = 0; // previous encrypted
                 for (int i = 0; i < length; i++)
                 {
-                    buf[i] = unchecked ((byte) ((buf[i] + (keyB[i%16] >> 2))%256));
-                    buf[i] ^= rotateLeft(keyB[15 - i%16], (byte)((prevE + length - i) % 7));
+                    buf[i] = unchecked((byte)((buf[i] + (keyB[i % 16] >> 2)) % 256));
+                    buf[i] ^= rotateLeft(keyB[15 - i % 16], (byte)((prevE + length - i) % 7));
                     buf[i] = rotateRight(buf[i], (byte)((~(uint)(prevE)) % 7));
 
                     prevE = buf[i];
@@ -528,17 +524,16 @@ namespace osum.Helpers
 
         private unsafe void simpleDecryptBytes(byte* buf, int length)
         {
-
             fixed (uint* keyI = k)
             {
-                byte* keyB = (byte*) keyI;
+                byte* keyB = (byte*)keyI;
                 byte prevE = 0; // previous encrypted
                 for (int i = 0; i < length; i++)
                 {
                     byte tmpE = buf[i];
                     buf[i] = rotateLeft(buf[i], (byte)((~(uint)(prevE)) % 7));
-                    buf[i]^= rotateLeft(keyB[15 - i%16], (byte) ((prevE + length - i)%7));
-                    buf[i] = unchecked((byte) ((buf[i] - (keyB[i%16] >> 2))%256));
+                    buf[i] ^= rotateLeft(keyB[15 - i % 16], (byte)((prevE + length - i) % 7));
+                    buf[i] = unchecked((byte)((buf[i] - (keyB[i % 16] >> 2)) % 256));
 
                     prevE = tmpE;
                 }
@@ -547,7 +542,6 @@ namespace osum.Helpers
 
         private void simpleEncryptBytesSafe(byte[] buf, int offset, int count)
         {
-
             byte prevE = 0; // previous encrypted
             for (int i = offset; i < count; i++)
             {
@@ -557,12 +551,10 @@ namespace osum.Helpers
 
                 prevE = buf[i];
             }
-
         }
 
         private void simpleDecryptBytesSafe(byte[] buf, int offset, int count)
         {
-
             byte prevE = 0; // previous encrypted
             for (int i = offset; i < count; i++)
             {
@@ -573,22 +565,19 @@ namespace osum.Helpers
 
                 prevE = tmpE;
             }
-
         }
 
 
         private static byte rotateLeft(byte val, byte n)
         {
-            return (byte) ((val << n) | (val >> (8 - n)));
+            return (byte)((val << n) | (val >> (8 - n)));
         }
 
         private static byte rotateRight(byte val, byte n)
         {
             return (byte)((val >> n) | (val << (8 - n)));
         }
-        #endregion
 
+        #endregion
     }
 }
-
-

@@ -6,6 +6,7 @@ namespace osum.GameplayElements
     public static class DifficultyManager
     {
         public const float HitObjectRadiusSolid = 59;
+
         public const float HitObjectRadiusSprite = 64;
         //these are values as found on the spritesheet
         //they are @2x sizes. half them for gamefield radius
@@ -56,7 +57,6 @@ namespace osum.GameplayElements
                         return 1000;
                     case Difficulty.Expert:
                         return 800;
-
                 }
             }
         }
@@ -71,19 +71,21 @@ namespace osum.GameplayElements
         public static int SnakeEndLimit => PreEmpt * 3 / 10;
 
         // at what speed does the snaking animation of a SHORT slider go? (milliseconds per osupixel)
-        public static double SnakeSpeedInverse { get
+        public static double SnakeSpeedInverse
         {
-            switch (Player.Difficulty)
+            get
             {
-                case Difficulty.Easy:
-                    return 3.2d;
-                default:
-                    return 2.8d;
-                case Difficulty.Expert:
-                    return 2.4d;
-
+                switch (Player.Difficulty)
+                {
+                    case Difficulty.Easy:
+                        return 3.2d;
+                    default:
+                        return 2.8d;
+                    case Difficulty.Expert:
+                        return 2.4d;
+                }
             }
-        } }
+        }
 
         private const int HIT_EXPERT = 25;
         private const int HIT_STREAM = 44;
@@ -129,7 +131,7 @@ namespace osum.GameplayElements
                         break;
                 }
 
-                return (window * 5)/2;
+                return (window * 5) / 2;
             }
         }
 

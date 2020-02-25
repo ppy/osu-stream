@@ -89,12 +89,14 @@ namespace osum.GameplayElements.HitObjects
                 if (isDimmed)
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == DIMMABLE_TAG) p.FadeColour(new Color4(0.7f, 0.7f, 0.7f, 1), 0, true);
+                        if (p.TagNumeric == DIMMABLE_TAG)
+                            p.FadeColour(new Color4(0.7f, 0.7f, 0.7f, 1), 0, true);
                 }
                 else
                 {
                     foreach (pDrawable p in Sprites)
-                        if (p.TagNumeric == DIMMABLE_TAG) p.FadeColour(Color4.White, (int)m_HitObjectManager.FirstBeatLength / 2);
+                        if (p.TagNumeric == DIMMABLE_TAG)
+                            p.FadeColour(Color4.White, (int)m_HitObjectManager.FirstBeatLength / 2);
                 }
             }
         }
@@ -102,6 +104,7 @@ namespace osum.GameplayElements.HitObjects
         public bool NewCombo { get; }
 
         private ClockTypes clocking;
+
         internal ClockTypes Clocking
         {
             get => clocking;
@@ -115,10 +118,10 @@ namespace osum.GameplayElements.HitObjects
                 foreach (pDrawable d in Sprites)
                     d.Clocking = clocking;
             }
-
         }
 
         private Color4 colour;
+
         internal virtual Color4 Colour
         {
             get => colour;
@@ -127,6 +130,7 @@ namespace osum.GameplayElements.HitObjects
         }
 
         private int colour_index;
+
         internal virtual int ColourIndex
         {
             get => colour_index;
@@ -243,9 +247,9 @@ namespace osum.GameplayElements.HitObjects
             //Draw the hit value
             pSprite p =
                 new pSprite(TextureManager.Load(texture),
-                            FieldTypes.GamefieldSprites,
-                            OriginTypes.Centre,
-                            ClockTypes.Audio, EndPosition, depth, false, Color4.White);
+                    FieldTypes.GamefieldSprites,
+                    OriginTypes.Centre,
+                    ClockTypes.Audio, EndPosition, depth, false, Color4.White);
 
             Sprites.Add(p);
 
@@ -262,21 +266,21 @@ namespace osum.GameplayElements.HitObjects
                     new TransformationBounce(now, now + (HitFadeIn * 2), 1, 0.2f, 3));
                 p.Transform(
                     new TransformationF(TransformationType.Fade, 1, 0,
-                                       now + HitFadeOutStart, now + HitFadeOutStart + HitFadeOutDuration));
+                        now + HitFadeOutStart, now + HitFadeOutStart + HitFadeOutDuration));
             }
             else
             {
                 p.Transform(
-                            new TransformationF(TransformationType.Scale, 2, 1, now,
-                                               now + HitFadeIn));
+                    new TransformationF(TransformationType.Scale, 2, 1, now,
+                        now + HitFadeIn));
                 p.Transform(
                     new TransformationF(TransformationType.Fade, 1, 0, now + HitFadeOutStart,
-                                       now + HitFadeOutStart + HitFadeOutDuration));
+                        now + HitFadeOutStart + HitFadeOutDuration));
 
                 p.Transform(
                     new TransformationF(TransformationType.Rotation, 0,
-                                       (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), now,
-                                       now + HitFadeIn));
+                        (float)((GameBase.Random.NextDouble() - 0.5) * 0.2), now,
+                        now + HitFadeIn));
             }
         }
 
@@ -303,6 +307,7 @@ namespace osum.GameplayElements.HitObjects
         #region Drawing
 
         protected Vector2 position;
+
         public virtual Vector2 Position
         {
             get => position;
@@ -430,7 +435,6 @@ namespace osum.GameplayElements.HitObjects
             if (other.NewCombo && !NewCombo) return 1;
 
             return EndTime.CompareTo(other.EndTime);
-
         }
 
         public int CompareTo(int time)
@@ -486,7 +490,6 @@ namespace osum.GameplayElements.HitObjects
                 connectedObject.Shake();
                 connectedObject.connectedObject = this;
             }
-
         }
 
         public override string ToString()

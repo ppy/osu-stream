@@ -18,6 +18,7 @@ namespace osum.Graphics.Sprites
         }
 
         private bool visible = true;
+
         internal bool Visible
         {
             get => visible;

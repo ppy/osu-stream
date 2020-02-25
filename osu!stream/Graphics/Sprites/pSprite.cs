@@ -46,7 +46,7 @@ namespace osum.Graphics.Sprites
         protected pTexture texture;
 
         internal pSprite(pTexture texture, FieldTypes field, OriginTypes origin, ClockTypes clocking, Vector2 position,
-                         float depth, bool alwaysDraw, Color4 colour)
+            float depth, bool alwaysDraw, Color4 colour)
         {
             Field = field;
             Origin = origin;
@@ -84,9 +84,7 @@ namespace osum.Graphics.Sprites
 
         internal virtual pTexture Texture
         {
-            get {
-                return texture;
-            }
+            get { return texture; }
             set
             {
                 if (value == texture)
@@ -238,6 +236,7 @@ namespace osum.Graphics.Sprites
         GamefieldExact,
 
         GamefieldStandardScale,
+
         /// <summary>
         ///   Gamefield "container" resolution.  This is where storyboard and background events sits, and is the same
         ///   scaling/positioning as Standard when in play mode.  It differs in editor design mode where this field

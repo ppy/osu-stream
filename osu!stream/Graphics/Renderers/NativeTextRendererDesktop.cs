@@ -13,9 +13,9 @@ namespace osum.Graphics.Renderers
     internal class NativeTextRendererDesktop : NativeTextRenderer
     {
         internal override pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
-                                            bool bold, bool underline, TextAlignment alignment, bool forceAa,
-                                            out Vector2 measured,
-                                            Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)
+            bool bold, bool underline, TextAlignment alignment, bool forceAa,
+            out Vector2 measured,
+            Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)
         {
             size *= 0.72f;
             //todo: this is a temporary hack to make sizes the same on desktop and iphone.
@@ -69,8 +69,8 @@ namespace osum.Graphics.Renderers
                             {
                                 if (text.Length == 0) text = " ";
                                 measuredSize = restrictBounds != Vector2.Zero
-                                                   ? graphics.MeasureString(text, f, new SizeF(restrictBounds.X, restrictBounds.Y), sf)
-                                                   : graphics.MeasureString(text, f, GameBase.NativeSize.Width);
+                                    ? graphics.MeasureString(text, f, new SizeF(restrictBounds.X, restrictBounds.Y), sf)
+                                    : graphics.MeasureString(text, f, GameBase.NativeSize.Width);
                             }
                             catch (InvalidOperationException)
                             {
@@ -117,8 +117,8 @@ namespace osum.Graphics.Renderers
                                     g.Clear(ColourHelper.CConvert(background));
                                 if (background.A > 0 && borderWidth > 0)
                                     g.DrawRectangle(new Pen(ColourHelper.CConvert(border), borderWidth),
-                                                    new Rectangle(0 + borderWidth / 2, 0 + borderWidth / 2,
-                                                                  width - borderWidth, height - borderWidth));
+                                        new Rectangle(0 + borderWidth / 2, 0 + borderWidth / 2,
+                                            width - borderWidth, height - borderWidth));
 
 
                                 using (Brush brush = new SolidBrush(ColourHelper.CConvert(Color4)))

@@ -31,11 +31,11 @@ namespace osum.GameplayElements
 
             if (lastObjectTime > 0)
                 foreach (List<HitObject> objects in StreamHitObjects)
-                    foreach (HitObject h in objects.FindAll(h => h.StartTime > lastObjectTime))
-                    {
-                        h.Sprites.ForEach(s => s.Bypass = true);
-                        objects.Remove(h);
-                    }
+                foreach (HitObject h in objects.FindAll(h => h.StartTime > lastObjectTime))
+                {
+                    h.Sprites.ForEach(s => s.Bypass = true);
+                    objects.Remove(h);
+                }
 
             base.PostProcessing();
         }

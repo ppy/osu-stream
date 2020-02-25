@@ -91,14 +91,14 @@ namespace osum.GameplayElements.HitObjects.Osu
             //Check for a jpg background for beatmap-based skins (used to reduce filesize), then fallback to png.
             SpriteBackground =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_background),
-                            FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
-                            new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(2), false, white);
+                    FieldTypes.StandardSnapBottomCentre, OriginTypes.BottomCentre, ClockTypes.Audio,
+                    new Vector2(0, 0), SpriteManager.drawOrderFwdLowPrio(2), false, white);
             Sprites.Add(SpriteBackground);
 
             spriteCircle =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_circle),
-                            FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(3), false, white) { ExactCoordinates = false };
+                    FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
+                    SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(3), false, white) { ExactCoordinates = false };
             Sprites.Add(spriteCircle);
 
             //todo: possible optimisation by changing the draw method for filling of spinner metres.
@@ -129,8 +129,8 @@ namespace osum.GameplayElements.HitObjects.Osu
             Sprites.Add(ApproachCircle);
 
             spriteBonus = new pSpriteText("", "score", -5, // SkinManager.Current.FontScore, SkinManager.Current.FontScoreOverlap,
-                                          FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                                          SpinnerCentreFromBottom - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
+                FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
+                SpinnerCentreFromBottom - new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
             spriteBonus.Additive = true;
             Sprites.Add(spriteBonus);
 
@@ -143,8 +143,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             SpriteSpin =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_spin),
-                            FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(5), false, white);
+                    FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
+                    SpinnerCentreFromBottom, SpriteManager.drawOrderFwdLowPrio(5), false, white);
             SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 0, 1, StartTime - DifficultyManager.FadeIn / 2, StartTime));
             SpriteSpin.Transform(new TransformationF(TransformationType.Fade, 1, 0, EndTime - Math.Min(400, endTime - startTime), EndTime));
             Sprites.Add(SpriteSpin);
@@ -153,8 +153,8 @@ namespace osum.GameplayElements.HitObjects.Osu
 
             SpriteClear =
                 new pSprite(TextureManager.Load(OsuTexture.spinner_clear),
-                            FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
-                            SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
+                    FieldTypes.StandardSnapBottomCentre, OriginTypes.Centre, ClockTypes.Audio,
+                    SpinnerCentreFromBottom + new Vector2(0, 80), SpriteManager.drawOrderFwdLowPrio(6), false, white);
             SpriteClear.Transform(new TransformationF(TransformationType.Fade, 0, 0, startTime, endTime));
             Sprites.Add(SpriteClear);
 
@@ -189,6 +189,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         private Vector2 cursorTrackingPosition;
 
         private int lastScoreCheckTime;
+
         internal override ScoreChange CheckScoring()
         {
             //Update the angles

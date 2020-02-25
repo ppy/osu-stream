@@ -86,7 +86,6 @@ namespace osum.Helpers
 
         public static byte[] GetMd5ByteArrayString(string instr)
         {
-
             byte[] data;
 
             lock (md5Hasher)
@@ -106,7 +105,6 @@ namespace osum.Helpers
             //StringBuilder sBuilder = new StringBuilder();
 
             return data;
-
         }
     }
 }

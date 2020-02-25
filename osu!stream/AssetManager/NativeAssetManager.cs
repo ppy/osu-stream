@@ -4,7 +4,6 @@ using System.IO;
 
 namespace osum.AssetManager
 {
-
     /// <summary>
     /// AssetManagers abstract the file IO to manage assets in a multi-platform environment.
     /// Assets are skins, hitsounds, textures that come with the game.
@@ -14,7 +13,7 @@ namespace osum.AssetManager
     /// </summary>
     public class NativeAssetManager
     {
-        internal static NativeAssetManager Instance {get; private set;}
+        internal static NativeAssetManager Instance { get; private set; }
 
         public NativeAssetManager()
         {
@@ -38,6 +37,5 @@ namespace osum.AssetManager
         {
             return File.ReadAllBytes(filename);
         }
-
     }
 }

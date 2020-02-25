@@ -35,14 +35,17 @@ namespace osum.Helpers
             {
                 throw new ArgumentNullException("key");
             }
+
             if (!ValidKeySize(key.Length * 8))
             {
                 throw new ArgumentException("Invalid key size", "key");
             }
+
             if ((iv != null) && ((iv.Length * 8) != BlockSizeValue))
             {
                 throw new ArgumentException("Invalid IV size", "iv");
             }
+
             return m_rijndael.CreateDecryptor(key, iv);
         }
 
@@ -57,14 +60,17 @@ namespace osum.Helpers
             {
                 throw new ArgumentNullException("key");
             }
+
             if (!ValidKeySize(key.Length * 8))
             {
                 throw new ArgumentException("Invalid key size", "key");
             }
+
             if ((iv != null) && ((iv.Length * 8) != BlockSizeValue))
             {
                 throw new ArgumentException("Invalid IV size", "iv");
             }
+
             return m_rijndael.CreateEncryptor(key, iv);
         }
 
@@ -121,6 +127,7 @@ namespace osum.Helpers
                 {
                     throw new CryptographicException("Invalid cipher mode");
                 }
+
                 m_rijndael.Mode = value;
             }
         }

@@ -65,6 +65,7 @@ namespace osum.Helpers
                                 genType = BindToType(assemblyName, typ);
                             }
                         }
+
                         if (genType != null && tmpTypes.Count > 0)
                         {
                             return genType.MakeGenericType(tmpTypes.ToArray());

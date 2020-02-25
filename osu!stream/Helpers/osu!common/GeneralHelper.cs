@@ -13,6 +13,7 @@ namespace osum.Helpers
             {
                 return null;
             }
+
             return Encoding.ASCII.GetString(UrlEncodeToBytes(str, e, paramEncode));
         }
 
@@ -22,6 +23,7 @@ namespace osum.Helpers
             {
                 return null;
             }
+
             byte[] bytes = e.GetBytes(str);
             return UrlEncodeBytesToBytespublic(bytes, 0, bytes.Length, false, paramEncode);
         }
@@ -42,10 +44,12 @@ namespace osum.Helpers
                     num2++;
                 }
             }
+
             if ((!alwaysCreateReturnValue && (num == 0)) && (num2 == 0))
             {
                 return bytes;
             }
+
             byte[] buffer = new byte[count + (num2 * 2)];
             int num4 = 0;
             for (int j = 0; j < count; j++)
@@ -67,6 +71,7 @@ namespace osum.Helpers
                     buffer[num4++] = (byte)IntToHex(num6 & 15);
                 }
             }
+
             return buffer;
         }
 
@@ -76,6 +81,7 @@ namespace osum.Helpers
             {
                 return true;
             }
+
             switch (ch)
             {
                 case '\'':
@@ -88,6 +94,7 @@ namespace osum.Helpers
                 case '!':
                     return true;
             }
+
             return false;
         }
 
@@ -97,6 +104,7 @@ namespace osum.Helpers
             {
                 return (char)(n + 0x30);
             }
+
             return (char)((n - 10) + 0x61);
         }
 
@@ -119,6 +127,7 @@ namespace osum.Helpers
                     stringBytes++;
                 } while (stringBytes != stringEnd);
             }
+
             return new string(converted);
         }
 
@@ -143,6 +152,7 @@ namespace osum.Helpers
                     convertedC++;
                 } while (convertedC != convertedEnd);
             }
+
             return converted;
         }
 
@@ -165,47 +175,62 @@ namespace osum.Helpers
                 byte* x1 = p1, x2 = p2;
                 int l = a1.Length;
                 for (int i = 0; i < l / 8; i++, x1 += 8, x2 += 8)
-                    if (*((long*)x1) != *((long*)x2)) return false;
-                if ((l & 4) != 0) { if (*((int*)x1) != *((int*)x2)) return false; x1 += 4; x2 += 4; }
-                if ((l & 2) != 0) { if (*((short*)x1) != *((short*)x2)) return false; x1 += 2; x2 += 2; }
-                if ((l & 1) != 0) if (*x1 != *x2) return false;
+                    if (*((long*)x1) != *((long*)x2))
+                        return false;
+                if ((l & 4) != 0)
+                {
+                    if (*((int*)x1) != *((int*)x2)) return false;
+                    x1 += 4;
+                    x2 += 4;
+                }
+
+                if ((l & 2) != 0)
+                {
+                    if (*((short*)x1) != *((short*)x2)) return false;
+                    x1 += 2;
+                    x2 += 2;
+                }
+
+                if ((l & 1) != 0)
+                    if (*x1 != *x2)
+                        return false;
                 return true;
             }
         }
 
-         public static TDest[] ConvertArray<TSource, TDest>(TSource[] source)
-        where TSource : struct
-        where TDest : struct {
-    
-        if (source == null)
-            throw new ArgumentNullException("source");
-    
+        public static TDest[] ConvertArray<TSource, TDest>(TSource[] source)
+            where TSource : struct
+            where TDest : struct
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+
             var sourceType = typeof(TSource);
             var destType = typeof(TDest);
-    
+
             if (sourceType == typeof(char) || destType == typeof(char))
                 throw new NotSupportedException(
                     "Can not convert from/to a char array. Char is special " +
-                             "in a somewhat unknown way (like enums can't be based on " +
-                             "char either), and Marshal.SizeOf returns 1 even when the " +
-                             "values held by a char can be above 255."
+                    "in a somewhat unknown way (like enums can't be based on " +
+                    "char either), and Marshal.SizeOf returns 1 even when the " +
+                    "values held by a char can be above 255."
                 );
-    
+
             var sourceByteSize = Buffer.ByteLength(source);
             var destTypeSize = Marshal.SizeOf(destType);
             if (sourceByteSize % destTypeSize != 0)
                 throw new Exception(
                     "The source array is " + sourceByteSize + " bytes, which can " +
-                             "not be transfered to chunks of " + destTypeSize + ", the size " +
-                             "of type " + typeof(TDest).Name + ". Change destination type or " +
-                             "pad the source array with additional values."
+                    "not be transfered to chunks of " + destTypeSize + ", the size " +
+                    "of type " + typeof(TDest).Name + ". Change destination type or " +
+                    "pad the source array with additional values."
                 );
-    
+
             var destCount = sourceByteSize / destTypeSize;
             var destArray = new TDest[destCount];
-    
+
             Buffer.BlockCopy(source, 0, destArray, 0, sourceByteSize);
-    
+
             return destArray;
         }
     }

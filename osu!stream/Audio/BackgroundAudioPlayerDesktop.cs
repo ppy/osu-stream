@@ -10,6 +10,7 @@ namespace osum.Audio
     {
         private GCHandle audioHandle;
         private static int audioStream;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundAudioPlayerDesktop"/> class.
         /// </summary>
@@ -49,7 +50,6 @@ namespace osum.Audio
         /// </summary>
         public override void Update()
         {
-
         }
 
         internal void FreeMusic()
@@ -78,7 +78,7 @@ namespace osum.Audio
                 audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
             else
                 audioStream = BassAac.BASS_MP4_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
-            
+
             updateVolume();
 
             return true;
@@ -113,7 +113,6 @@ namespace osum.Audio
 
             Bass.BASS_ChannelSetPosition(audioStream, milliseconds / 1000d);
             return base.SeekTo(milliseconds);
-
         }
 
         #region IBackgroundAudioPlayer Members
@@ -122,7 +121,6 @@ namespace osum.Audio
         {
             get
             {
-
                 int word = Bass.BASS_ChannelGetLevel(audioStream);
                 int left = Utils.LowWord32(word);
                 int right = Utils.HighWord32(word);
@@ -134,7 +132,6 @@ namespace osum.Audio
         #endregion
 
         #region ITimeSource Members
-
 
         public override bool IsElapsing => Bass.BASS_ChannelIsActive(audioStream) == BASSActive.BASS_ACTIVE_PLAYING;
 

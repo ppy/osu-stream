@@ -19,6 +19,7 @@ namespace osum.GameplayElements.Scoring
         public int hitOffsetMilliseconds;
         public int hitOffsetCount;
         public int comboBonusScore;
+
         public int accuracyBonusScore
         {
             get
@@ -41,6 +42,7 @@ namespace osum.GameplayElements.Scoring
         public int OnlineRank;
 
         private Rank ranking;
+
         public Rank Ranking
         {
             get
@@ -171,7 +173,8 @@ namespace osum.GameplayElements.Scoring
         internal virtual int totalSuccessfulHits => count50 + count100 + count300;
 
         #region bSerializable implementation
-        public void ReadFromStream (SerializationReader sr)
+
+        public void ReadFromStream(SerializationReader sr)
         {
             count300 = sr.ReadUInt16();
             count100 = sr.ReadUInt16();
@@ -185,7 +188,7 @@ namespace osum.GameplayElements.Scoring
             if (BeatmapDatabase.Version > 9) ranking = (Rank)sr.ReadInt32();
         }
 
-        public void WriteToStream (SerializationWriter sw)
+        public void WriteToStream(SerializationWriter sw)
         {
             sw.Write(count300);
             sw.Write(count100);
@@ -197,6 +200,7 @@ namespace osum.GameplayElements.Scoring
             sw.Write(hitScore);
             sw.Write((int)Ranking);
         }
+
         #endregion
     }
 
