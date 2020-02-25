@@ -48,6 +48,16 @@ namespace osum.GameModes.MainMenu
         private pSprite osuLogo;
         private pSprite osuLogoGloss;
 
+#if iOS
+        // the new version of the main menu theme is encoded in AAC, not HE-AAC.
+        // without this offset, things get incorrect (especially after the first seek).
+        public const int MAIN_MENU_OFFSET = -44;
+#else
+        public const int MAIN_MENU_OFFSET = 0;
+#endif
+
+        public const int MAIN_MENU_BEAT_LENGTH = 375;
+
         private readonly List<pSprite> explosions = new List<pSprite>();
 
         internal SpriteManager spriteManagerBehind = new SpriteManager();
@@ -300,8 +310,8 @@ namespace osum.GameModes.MainMenu
         private pSprite stream;
 
         private int lastBgmBeat;
-        private readonly float between_beats = 375 / 4f;
-        private readonly int offset = 0;
+        private readonly float between_beats = MAIN_MENU_BEAT_LENGTH / 4f;
+
         private const int bar = 8;
         private pDrawable additiveStream;
         private MenuBackground menuBackgroundNew;

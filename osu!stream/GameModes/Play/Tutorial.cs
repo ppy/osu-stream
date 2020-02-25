@@ -25,8 +25,8 @@ namespace osum.GameModes.Play
         private BackButton backButton;
         private pText touchToContinueText;
 
-        private const int music_offset = 0;
-        private const int music_beatlength = 375;
+        private const int music_offset = MainMenu.MainMenu.MAIN_MENU_OFFSET;
+        private const int music_beatlength = MainMenu.MainMenu.MAIN_MENU_BEAT_LENGTH;
 
         public override void Initialize()
         {

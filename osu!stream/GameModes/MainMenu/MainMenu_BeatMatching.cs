@@ -6,7 +6,7 @@ namespace osum.GameModes.MainMenu
     {
         private void updateBeat()
         {
-            int newBeat = (int)((Clock.AudioTime - offset) / between_beats);
+            int newBeat = (int)((Clock.AudioTime - MAIN_MENU_OFFSET) / between_beats);
             if (lastBgmBeat != newBeat)
             {
                 switch (newBeat)
