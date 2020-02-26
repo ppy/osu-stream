@@ -10,8 +10,9 @@ tap, slide, hold and spin to a **beat you can feel!**
 
 This is basically a “finished” project to me. For more information on the state and history of osu!stream, here's some further reading:
 
-- Read my [blog post](TBD) about the final release
+- Read my [blog post](https://blog.ppy.sh/osu-stream-2020-release/) about the final release
 - ["osu!stream" on osu! wiki](https://osu.ppy.sh/help/wiki/osu!stream)
+- Visit the [App Store listing page](https://apps.apple.com/us/app/osu-stream/id436952197)
 
 While contributions are welcomed I likely won’t have time to review anything too large. There are some exceptions listed below, mostly which fall under the clean-up umbrella – trying to get things into a good final state:
 
