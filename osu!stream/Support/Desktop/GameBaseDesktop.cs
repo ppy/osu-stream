@@ -59,14 +59,20 @@ namespace osum
 
         protected override void InitializeInput()
         {
+
+            //InputManager.AddSource(new InputSourceMouse(Window.Mouse));
+            InputSource source;
+
             try
             {
-                InputManager.AddSource(new InputSourceBaanto());
+                source = new InputSourceRaw(Window);
             }
             catch
             {
-                InputManager.AddSource(new InputSourceMouse(Window.Mouse));
+                source = new InputSourceMouse(Window.Mouse);
             }
+
+            InputManager.AddSource(source);
         }
 
         public override void SetupScreen()
