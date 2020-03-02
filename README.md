@@ -33,13 +33,13 @@ The primary target of osu!stream is iOS. It should compile with relatively littl
 
 It will also run on desktop (tested only on windows) via `osu!stream_desktop.sln`. Note that the desktop release needs slightly differently packaged beatmaps (as it doesn't support `m4a` of released beatmaps).
 
-In addition, there is an [arcade branch](https://github.com/peppy/osu-stream/tree/arcade) for the osu!arcade specific release. This branch really needs to be merged up-to-date with the latest master.
+In addition, there is an [arcade branch](https://github.com/ppy/osu-stream/tree/arcade) for the osu!arcade specific release. This branch really needs to be merged up-to-date with the latest master.
 
 ## Mapping
 
 The process of mapping for osu!stream is still done via the osu! editor. I believe there was a custom build or mode in the editor to make it easier to place hitobjects at the same point in time, but should be possible out-of-the-box.
 
-Tools for testing beatmaps are included (`StreamTester`) and there is [a branch](https://github.com/peppy/osu-stream/tree/mapper) for building a release of osu!stream with mapper-specific changes (heavily outdated and maybe not useful).
+Tools for testing beatmaps are included (`StreamTester`) and there is [a branch](https://github.com/ppy/osu-stream/tree/mapper) for building a release of osu!stream with mapper-specific changes (heavily outdated and maybe not useful).
 
 Some documentation exists [in this document](https://docs.google.com/document/d/1FYmHhRX-onR-osgTS6uHSOZuu_0JEbfRZePVySvvr9g/edit?usp=sharing) but beware that you will need some level of expertise to get the tools working and learn the process. If anyone decides to try mapping for osu!stream, I highly encourage you to contribute knowledge back in the form of pull requests to this `README` or a separate `MAPPING.md` if it gets too long.
 
