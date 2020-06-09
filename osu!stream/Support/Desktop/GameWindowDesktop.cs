@@ -18,9 +18,9 @@ namespace osum.Support.Desktop
 {
     public class GameWindowDesktop : GameWindow
     {
-        /// <summary>Creates a 1024x768 window with the specified title.</summary>
+        /// <summary>Creates a 1280x720 window with the specified title.</summary>
         public GameWindowDesktop()
-            : base(2436, 1125, GraphicsMode.Default, "osu!stream")
+            : base(1280, 720, GraphicsMode.Default, "osu!stream")
         {
             VSync = VSyncMode.On;
             //GameBase.WindowSize = new Size(960,640);
