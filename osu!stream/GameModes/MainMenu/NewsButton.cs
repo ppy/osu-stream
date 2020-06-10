@@ -44,7 +44,7 @@ namespace osum.GameModes.MainMenu
         {
             HasNews = false;
 
-            GameBase.Instance.ShowWebView(@"https://osustream.com/p/news", "News");
+            GameBase.Instance.ShowWebView(@"https://news.osustream.com/", "News");
 
             GameBase.Config.SetValue("NewsLastRead", GameBase.Config.GetValue("NewsLastRetrieved", string.Empty));
             GameBase.Config.SaveConfig();
