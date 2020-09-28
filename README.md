@@ -49,4 +49,4 @@ Some documentation exists [in this document](https://docs.google.com/document/d/
 
 Please note that this *does not cover* the usage of the "osu!" or "ppy" branding in any software, resources, advertising or promotion, as this is protected by trademark law. As in don't go uploading builds of this without permission.
 
-Also a word of caution that there may be exceptions to this license for specific resources included in this repository. The primary purpose of publicising this source code if for educational purposes; if you plan on using it in another way I ask that you contact me [via email](mailto:pe@ppy.sh) or [open an issue](https://github.com/ppy/osu-stream/issues) first!
+Also a word of caution that there may be exceptions to this license for specific resources included in this repository. The primary purpose of publicising this source code is for educational purposes; if you plan on using it in another way I ask that you contact me [via email](mailto:pe@ppy.sh) or [open an issue](https://github.com/ppy/osu-stream/issues) first!
