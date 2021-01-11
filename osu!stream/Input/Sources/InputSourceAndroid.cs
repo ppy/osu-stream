@@ -35,16 +35,6 @@ namespace osum.Input.Sources
                     TriggerOnDown(point);
                     break;
 
-                case MotionEventActions.Cancel:
-                case MotionEventActions.Up:
-                    if (!touchDictionary.TryGetValue(id, out point))
-                        return;
-
-                    touchDictionary.Remove(id);
-
-                    TriggerOnUp(point);
-                    break;
-
                 case MotionEventActions.Move:
                     for (pointerIndex = 0; pointerIndex < e.PointerCount; pointerIndex++)
                     {
@@ -59,6 +49,17 @@ namespace osum.Input.Sources
 
                         TriggerOnMove(point);
                     }
+                    break;
+
+                case MotionEventActions.Up:
+                case MotionEventActions.Pointer1Up:
+                case MotionEventActions.Cancel:
+                    if (!touchDictionary.TryGetValue(id, out point))
+                        return;
+
+                    touchDictionary.Remove(id);
+
+                    TriggerOnUp(point);
                     break;
             }
         }
