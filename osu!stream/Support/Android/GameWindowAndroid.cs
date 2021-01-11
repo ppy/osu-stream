@@ -50,14 +50,14 @@ namespace osum
 		{
 			base.OnUpdateFrame(e);
 
-			//if (GameBase.Instance != null) GameBase.Instance.Update();
+			if (GameBase.Instance != null) GameBase.Instance.Update();
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			base.OnRenderFrame(e);
 
-			//if (GameBase.Instance != null) GameBase.Instance.Draw();
+			if (GameBase.Instance != null) GameBase.Instance.Draw();
 
 			SwapBuffers();
 		}

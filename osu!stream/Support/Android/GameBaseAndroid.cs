@@ -40,7 +40,7 @@ namespace osum
 
         protected override void InitializeInput()
         {
-            InputSource source = new InputSource();
+            InputSource source = new InputSourceAndroid();
             InputManager.AddSource(source);
         }
 
@@ -50,5 +50,7 @@ namespace osum
 
             base.SetupScreen();
         }
+
+        public override string PathConfig => "/sdcard/";
     }
 }

@@ -52,7 +52,7 @@ namespace osum.GameModes.SongSelect
             cancelLockedHoverPreview();
 
             SelectedPanel = panel;
-            Player.Beatmap = panel.Beatmap;
+            Player.Beatmap = panel?.Beatmap;
 
             panel.s_BackingPlate2.Alpha = 1;
             panel.s_BackingPlate2.AdditiveFlash(400, 1, true);

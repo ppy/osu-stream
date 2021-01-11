@@ -45,7 +45,7 @@ namespace osum.Libraries.NetLib
                 activeRequests.Add(request);
             }
 
-#if iOS || ANDROID
+#if iOS
             if (request.AbortRequested) return false;
             request.Perform();
 #else

@@ -7,6 +7,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Content.PM;
 using Xamarin.Essentials;
+using osum.Input;
+using osum.Input.Sources;
 #endif
 #if !iOS && !ANDROID
 using osum.Support.Desktop;
@@ -15,7 +17,7 @@ using osum.Support.Desktop;
 namespace osum
 {
 #if ANDROID
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.UserLandscape)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", ScreenOrientation = ScreenOrientation.UserLandscape, MainLauncher = true)]
     public class Application : AppCompatActivity
 #else
     public class Application
@@ -68,6 +70,14 @@ namespace osum
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public override bool OnTouchEvent(MotionEvent e)
+        {
+            InputSourceAndroid source = InputManager.RegisteredSources[0] as InputSourceAndroid;
+            source.HandleTouches(e);
+
+            return base.OnTouchEvent(e);
         }
 #endif
     }

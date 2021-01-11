@@ -67,7 +67,7 @@ namespace osum.Audio
         /// </summary>
         public bool Load(string filename, bool looping)
         {
-            return Load(File.ReadAllBytes(filename), looping, filename);
+            return Load(File.ReadAllBytes("/sdcard/" + filename), looping, filename);
         }
 
         /// <summary>
