@@ -74,6 +74,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetManager\NativeAssetManagerAndroid.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerAndroid.cs" />
     <Compile Include="Audio\SoundEffectPlayerBass.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />

@@ -67,7 +67,11 @@ namespace osum.Audio
         /// </summary>
         public bool Load(string filename, bool looping)
         {
+#if ANDROID
             return Load(File.ReadAllBytes("/sdcard/" + filename), looping, filename);
+#else
+            return Load(File.ReadAllBytes(filename), looping, filename);
+#endif
         }
 
         /// <summary>
@@ -109,18 +113,18 @@ namespace osum.Audio
             return true;
         }
 
-        #region IUpdateable Members
+#region IUpdateable Members
 
         public abstract void Update();
 
-        #endregion
+#endregion
 
-        #region ITimeSource Members
+#region ITimeSource Members
 
         public abstract double CurrentTime { get; }
 
         public abstract bool IsElapsing { get; }
 
-        #endregion
+#endregion
     }
 }

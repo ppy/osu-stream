@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Views;
 using OpenTK.Graphics.ES11;
+using osum.AssetManager;
 using osum.Audio;
 using osum.GameModes;
 using osum.Input;
@@ -36,6 +37,11 @@ namespace osum
         protected override SoundEffectPlayer InitializeSoundEffects()
         {
             return new SoundEffectPlayerBass();
+        }
+
+        protected override NativeAssetManager InitializeAssetManager()
+        {
+            return new NativeAssetManagerAndroid();
         }
 
         protected override void InitializeInput()

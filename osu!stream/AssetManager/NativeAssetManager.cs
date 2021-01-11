@@ -25,17 +25,17 @@ namespace osum.AssetManager
 
         internal virtual bool FileExists(string filename)
         {
-            return File.Exists("/sdcard/" + filename);
+            return File.Exists(filename);
         }
 
         internal virtual Stream GetFileStream(string filename)
         {
-            return File.OpenRead("/sdcard/" + filename);
+            return File.OpenRead(filename);
         }
 
         internal virtual byte[] GetFileBytes(string filename)
         {
-            return File.ReadAllBytes("/sdcard/" + filename);
+            return File.ReadAllBytes(filename);
         }
     }
 }
