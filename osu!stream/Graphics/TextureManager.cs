@@ -333,7 +333,7 @@ namespace osum.Graphics
                     pTexture t = new pTexture(gl, width, size);
                     t.BindFramebuffer();
 
-#if iOS
+#if iOS || ANDROID
                     //we need to draw once to screen on iOS in order to avoid lag the first frame they are drawn (some kind of internal optimisation?)
                     using (pSprite p = new pSprite(t, Vector2.Zero))
                         p.Draw();

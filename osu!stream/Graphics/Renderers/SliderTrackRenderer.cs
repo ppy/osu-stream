@@ -66,7 +66,7 @@ namespace osum.Graphics.Renderers
         protected const float TEXTURE_SHRINKAGE_FACTOR = 0.0f;
 
         // how far towards the inside do we slide the texture
-#if iOS
+#if iOS || ANDROID
         protected const float TEXEL_ORIGIN = 0.25f;
 #else
         protected const float TEXEL_ORIGIN = 0.5f;

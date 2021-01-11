@@ -170,7 +170,7 @@ namespace osum.Graphics
             }
         }
 
-#if iOS
+#if iOS || ANDROID
         int fbo;
 
         internal unsafe void drawToTexture(bool begin)

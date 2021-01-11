@@ -98,7 +98,7 @@ namespace osum.Graphics.Sprites
 
                 if (texture != null)
                 {
-#if iOS
+#if iOS || ANDROID
                     Premultiplied |= texture.OsuTextureInfo != OsuTexture.None;
 #endif
                     UpdateTextureSize();
