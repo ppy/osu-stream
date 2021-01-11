@@ -11,15 +11,11 @@ namespace osum.Input
 
         public override void UpdatePositions()
         {
-            bool ios8 = true;
+            float x = Location.X * GameBase.ScaleFactor;
+            float y = Location.Y * GameBase.ScaleFactor;
 
-            float x = (ios8 ? Location.X : Location.Y) * GameBase.ScaleFactor;
-            float y = (ios8 ? Location.Y : Location.X) * GameBase.ScaleFactor;
-
-            if (GameBase.Instance.FlipView || ios8)
+            if (GameBase.Instance.FlipView)
                 y = GameBase.NativeSize.Height - y;
-            if (GameBase.Instance.FlipView && !ios8)
-                x = GameBase.NativeSize.Width - x;
 
             Vector2 oldBase = BasePosition;
             BasePosition = new Vector2(

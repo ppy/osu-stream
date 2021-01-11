@@ -7,6 +7,8 @@ namespace osum.Input.Sources
 {
     internal class InputSourceAndroid : InputSource
     {
+        Dictionary<int, TrackingPoint> touchDictionary = new Dictionary<int, TrackingPoint>();
+
         public InputSourceAndroid() : base()
         {
         }
@@ -15,48 +17,50 @@ namespace osum.Input.Sources
         {
             Clock.Update(true);
 
-            for (int i = 0; i < e.PointerCount; i++)
-            {
-                handleMotionEvent(i, e);
-            }
-        }
-
-        Dictionary<int, TrackingPoint> touchDictionary = new Dictionary<int, TrackingPoint>();
-
-        private void handleMotionEvent(int i, MotionEvent e)
-        {
             TrackingPoint point = null;
-            PointF location = new PointF(e.GetX(i)/* / 2.25f*/, e.GetY(i)/* / 2.25f*/);
 
-            switch (e.Action)
+            int pointerIndex = e.ActionIndex;
+            int id = e.GetPointerId(pointerIndex);
+
+            PointF pointerLocation = new PointF(e.GetX(pointerIndex), e.GetY(pointerIndex));
+
+            switch (e.ActionMasked)
             {
                 case MotionEventActions.Down:
-                    point = new TrackingPointAndroid(location, e);
-                    touchDictionary[e.GetPointerId(i)] = point;
+                case MotionEventActions.PointerDown:
+                    point = new TrackingPointAndroid(pointerLocation, e);
+
+                    touchDictionary[id] = point;
+
                     TriggerOnDown(point);
                     break;
+
                 case MotionEventActions.Cancel:
                 case MotionEventActions.Up:
-                    if (!touchDictionary.TryGetValue(e.GetPointerId(i), out point))
+                    if (!touchDictionary.TryGetValue(id, out point))
                         return;
-                    touchDictionary.Remove(e.GetPointerId(i));
+
+                    touchDictionary.Remove(id);
+
                     TriggerOnUp(point);
                     break;
+
                 case MotionEventActions.Move:
-                    if (!touchDictionary.TryGetValue(e.GetPointerId(i), out point))
-                        return;
-                    point.Location = location;
-                    TriggerOnMove(point);
+                    for (pointerIndex = 0; pointerIndex < e.PointerCount; pointerIndex++)
+                    {
+                        id = e.GetPointerId(pointerIndex);
+
+                        pointerLocation = new PointF(e.GetX(pointerIndex), e.GetY(pointerIndex));
+
+                        if (!touchDictionary.TryGetValue(id, out point))
+                            return;
+
+                        point.Location = pointerLocation;
+
+                        TriggerOnMove(point);
+                    }
                     break;
             }
-        }
-
-        public void ReleaseAllTouches()
-        {
-            foreach (TrackingPoint t in trackingPoints.ToArray())
-                TriggerOnUp(t);
-            trackingPoints.Clear();
-            touchDictionary.Clear();
         }
     }
 }
