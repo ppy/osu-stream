@@ -37,6 +37,8 @@ namespace osum.Graphics.Sprites
 
 #if iOS
         private static NativeTextRenderer TextRenderer = new NativeTextRendererIphone();
+#elif ANDROID
+        private static NativeTextRenderer TextRenderer = new NativeTextRenderer(); // TEMP(Cyuubi): Implement an actual NativeTextRenderer for Android.
 #else
         private static readonly NativeTextRenderer TextRenderer = new NativeTextRendererDesktop();
 #endif

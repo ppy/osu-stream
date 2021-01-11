@@ -1,8 +1,10 @@
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -315,14 +317,14 @@ namespace osum.Graphics
             float bottom = drawRect.Bottom / potHeight;
 
 
-#if ANDROID
+/*#if ANDROID
             if (rotation == 0 && SUPPORTS_DRAWTEXTURE_EXT)
             {
                 Bind();
                 GL.Oes.DrawTex(left, top, 0, (right - left) * scaleVector.X, (bottom - top) * scaleVector.Y);
                 return;
             }
-#endif
+#endif*/
 
 #if NO_PIN_SUPPORT
                 float* coordinates = (float*)handle_coordinates_pointer;
@@ -415,7 +417,7 @@ namespace osum.Graphics
 
         public const TextureTarget SURFACE_TYPE = TextureTarget.Texture2D;
 
-#if iOS
+#if iOS || ANDROID
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Rgba;
 #else
         public const PixelFormat PIXEL_FORMAT = PixelFormat.Bgra;
@@ -464,7 +466,7 @@ namespace osum.Graphics
             //doesn't seem to help much at all? maybe best to test once more...
             //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)All.Replace);
 
-#if iOS
+#if iOS || ANDROID
             int internalFormat = (int)PixelInternalFormat.Rgba;
             switch (format)
             {

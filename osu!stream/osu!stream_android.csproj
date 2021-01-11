@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1B107DE4-8499-4868-B091-F2B02A7A3F8D}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TemplateGuid>{122416d6-6b49-4ee2-a1e8-b825f31c79fe}</TemplateGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>osum</RootNamespace>
+    <AssemblyName>osustream</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>True</Deterministic>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ANDROID OSUM DEBUG DIST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;ANDROID OSUM DIST RELEASE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK-1.0" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\BackgroundAudioPlayerAndroid.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Assets\AboutAssets.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssetManager\NativeAssetManager.cs" />
+    <Compile Include="Graphics\SpriteSheetTexture.cs" />
+    <Compile Include="GameBase.cs" />
+    <Compile Include="Helpers\Delegates.cs" />
+    <Compile Include="Helpers\Clock.cs" />
+    <Compile Include="Graphics\pTexture.cs" />
+    <Compile Include="Graphics\TextureGl.cs" />
+    <Compile Include="Graphics\Sprites\Transform.cs" />
+    <Compile Include="Graphics\Sprites\SpriteManager.cs" />
+    <Compile Include="Graphics\Sprites\SpriteEffect.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteText.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteCollection.cs" />
+    <Compile Include="Graphics\Sprites\pSprite.cs" />
+    <Compile Include="Graphics\Sprites\pAnimation.cs" />
+    <Compile Include="GameplayElements\DifficultyManager.cs" />
+    <Compile Include="Graphics\Color4.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="GameModes\GameMode.cs" />
+    <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
+    <Compile Include="Helpers\pMathHelper.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\Sources\InputSource.cs" />
+    <Compile Include="Input\TrackingPoint.cs" />
+    <Compile Include="Helpers\Audio\AudioReaderException.cs" />
+    <Compile Include="Helpers\Audio\Sound.cs" />
+    <Compile Include="Helpers\Audio\SoundData.cs" />
+    <Compile Include="Helpers\Audio\SoundFormat.cs" />
+    <Compile Include="Helpers\Audio\WaveReader.cs" />
+    <Compile Include="Support\IUpdateable.cs" />
+    <Compile Include="Director.cs" />
+    <Compile Include="Support\Transition.cs" />
+    <Compile Include="Support\ITimeSource.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObject.cs" />
+    <Compile Include="GameplayElements\HitObjectManager.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap.cs" />
+    <Compile Include="GameplayElements\HitFactory.cs" />
+    <Compile Include="Support\IDrawable.cs" />
+    <Compile Include="Audio\AudioEngine.cs" />
+    <Compile Include="GameplayElements\HitObjects\HitObjectSpannable.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitCircle.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HitFactoryOsu.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Slider.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\Spinner.cs" />
+    <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Helpers\ColourHelper.cs" />
+    <Compile Include="Support\FadeTransition.cs" />
+    <Compile Include="GameplayElements\HitObjectManager_Load.cs" />
+    <Compile Include="Graphics\Renderers\SliderTrackRenderer.cs" />
+    <Compile Include="GameplayElements\Events\Event.cs" />
+    <Compile Include="GameplayElements\Beatmaps\ControlPoint.cs" />
+    <Compile Include="GameModes\Play\Player.cs" />
+    <Compile Include="GameModes\Play\Components\HealthBar.cs" />
+    <Compile Include="GameModes\Play\Rulesets\Ruleset.cs" />
+    <Compile Include="GameModes\GameComponent.cs" />
+    <Compile Include="Helpers\pList.cs" />
+    <Compile Include="Graphics\GLES.cs" />
+    <Compile Include="Graphics\TextureManager.cs" />
+    <Compile Include="GameModes\Play\Components\ScoreDisplay.cs" />
+    <Compile Include="GameplayElements\Beatmaps\Beatmap_Timing.cs" />
+    <Compile Include="Graphics\Sprites\pText.cs" />
+    <Compile Include="Graphics\Renderers\NativeTextRenderer.cs" />
+    <Compile Include="GameModes\Play\Components\ComboCounter.cs" />
+    <Compile Include="GameplayElements\Scoring\Score.cs" />
+    <Compile Include="GameModes\SongSelect\BeatmapPanel.cs" />
+    <Compile Include="GameplayElements\HitObjects\Osu\HoldCircle.cs" />
+    <Compile Include="Support\DebugOverlay.cs" />
+    <Compile Include="Graphics\Sprites\pDrawable.cs" />
+    <Compile Include="Graphics\Drawables\CircularProgress.cs" />
+    <Compile Include="Graphics\Drawables\ApproachCircle.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteRenderer.cs" />
+    <Compile Include="GameModes\Play\Components\PlayfieldBackground.cs" />
+    <Compile Include="Graphics\Sprites\pDrawable_Interaction.cs" />
+    <Compile Include="Graphics\Sprites\pRectangle.cs" />
+    <Compile Include="Graphics\Sprites\pButton.cs" />
+    <Compile Include="Helpers\osu!common\Aes.cs" />
+    <Compile Include="Helpers\osu!common\AesManaged.cs" />
+    <Compile Include="Helpers\osu!common\bSerializable.cs" />
+    <Compile Include="Helpers\osu!common\DynamicDeserializer.cs" />
+    <Compile Include="Helpers\osu!common\FastEncryptionProvider.cs" />
+    <Compile Include="Helpers\osu!common\FastEncryptorStream.cs" />
+    <Compile Include="Helpers\osu!common\FastRandom.cs" />
+    <Compile Include="Helpers\osu!common\FastSerializer.cs" />
+    <Compile Include="Helpers\osu!common\GeneralHelper.cs" />
+    <Compile Include="Helpers\osu!common\MapPackage.cs" />
+    <Compile Include="Helpers\osu!common\MapStream.cs" />
+    <Compile Include="Helpers\osu!common\Osz2Factory.cs" />
+    <Compile Include="Helpers\osu!common\Scheduler.cs" />
+    <Compile Include="GameModes\SongSelect\BackButton.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect_DifficultySelection.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect_SongInfo.cs" />
+    <Compile Include="GameModes\SongSelect\pTabController.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect.cs" />
+    <Compile Include="GameModes\Store\StoreMode.cs" />
+    <Compile Include="Libraries\NetLib\DataNetRequest.cs" />
+    <Compile Include="Libraries\NetLib\FileNetRequest.cs" />
+    <Compile Include="Libraries\NetLib\NetManager.cs" />
+    <Compile Include="Libraries\NetLib\NetRequest.cs" />
+    <Compile Include="Libraries\NetLib\StringNetRequest.cs" />
+    <Compile Include="Helpers\osu!common\CryptoHelper.cs" />
+    <Compile Include="GameModes\Store\PackPanel.cs" />
+    <Compile Include="GameModes\Play\Components\PauseMenu.cs" />
+    <Compile Include="GameModes\Play\Components\Countdown.cs" />
+    <Compile Include="Graphics\TouchBurster.cs" />
+    <Compile Include="GameModes\Play\Components\StreamSwitchDisplay.cs" />
+    <Compile Include="GameModes\Play\Tutorial.cs" />
+    <Compile Include="Graphics\TextureManager_Load.cs" />
+    <Compile Include="GameplayElements\BeatmapDatabase.cs" />
+    <Compile Include="Graphics\Sprites\pQuad.cs" />
+    <Compile Include="GameplayElements\Beatmaps\BeatmapDifficultyInfo.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu.cs" />
+    <Compile Include="GameModes\MainMenu\MenuBackground.cs" />
+    <Compile Include="GameModes\Results\ResultTransition.cs" />
+    <Compile Include="GameModes\Results\Results.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteDynamic.cs" />
+    <Compile Include="GameModes\Play\Components\GuideFinger.cs" />
+    <Compile Include="GameModes\Options\Options.cs" />
+    <Compile Include="GameModes\Options\Credits.cs" />
+    <Compile Include="UI\Notification.cs" />
+    <Compile Include="Helpers\pConfigManager.cs" />
+    <Compile Include="Graphics\Sprites\SpriteManagerDraggable.cs" />
+    <Compile Include="UI\SliderControl.cs" />
+    <Compile Include="Localisation\LocalisationManager.cs" />
+    <Compile Include="Helpers\Audio\AudioReader.cs" />
+    <Compile Include="GameModes\Play\Components\ProgressDisplay.cs" />
+    <Compile Include="Graphics\Sprites\pSpriteWeb.cs" />
+    <Compile Include="GameModes\SongSelect\SongSelect_Ranking.cs" />
+    <Compile Include="GameModes\SongSelect\ScorePanel.cs" />
+    <Compile Include="GameModes\MainMenu\NewsButton.cs" />
+    <Compile Include="Helpers\UnixTimestamp.cs" />
+    <Compile Include="GameModes\Empty.cs" />
+    <Compile Include="GameModes\VideoPreview.cs" />
+    <Compile Include="GameModes\Play\PreviewPlayer.cs" />
+    <Compile Include="GameplayElements\HitObjectManagerPreview.cs" />
+    <Compile Include="UI\TextInputNotification.cs" />
+    <Compile Include="Support\CrashHandler.cs" />
+    <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
+    <Compile Include="Audio\ISoundEffectPlayer.cs" />
+    <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics\Skins\" />
+    <Folder Include="Resources\drawable\" />
+    <Folder Include="Support\Android\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Skins\Default\normal-hitclap.wav" />
+    <Content Include="Skins\Default\normal-hitfinish.wav" />
+    <Content Include="Skins\Default\normal-hitnormal.wav" />
+    <Content Include="Skins\Default\normal-hitwhistle.wav" />
+    <Content Include="Skins\Default\menuhit.wav" />
+    <Content Include="Skins\Default\normal-sliderslide.wav" />
+    <Content Include="Skins\Default\normal-slidertick.wav" />
+    <Content Include="Skins\Default\soft-hitclap.wav" />
+    <Content Include="Skins\Default\soft-hitfinish.wav" />
+    <Content Include="Skins\Default\soft-hitnormal.wav" />
+    <Content Include="Skins\Default\soft-hitwhistle.wav" />
+    <Content Include="Skins\Default\soft-sliderslide.wav" />
+    <Content Include="Skins\Default\soft-slidertick.wav" />
+    <Content Include="Skins\Default\soft-sliderwhistle.wav" />
+    <Content Include="Skins\Default\menuback.wav" />
+    <Content Include="Skins\Default\spinnerbonus.wav" />
+    <Content Include="Skins\Default\menuclick.wav" />
+    <Content Include="Skins\Default\spinnerspin.wav" />
+    <Content Include="Skins\Default\hit_480.png" />
+    <Content Include="Skins\Default\hit_960.png" />
+    <Content Include="Skins\Default\menu_480.png" />
+    <Content Include="Skins\Default\menu_960.png" />
+    <Content Include="Skins\Default\notification_480.png" />
+    <Content Include="Skins\Default\notification_960.png" />
+    <Content Include="Skins\Default\ranking_480.png" />
+    <Content Include="Skins\Default\ranking_960.png" />
+    <Content Include="Skins\Default\fail.wav" />
+    <Content Include="Skins\Default\stream_down.wav" />
+    <Content Include="Skins\Default\stream_up.wav" />
+    <Content Include="Skins\Default\menuwhoosh.wav" />
+    <Content Include="Skins\Default\miss.wav" />
+    <Content Include="Skins\Default\count1.wav" />
+    <Content Include="Skins\Default\count2.wav" />
+    <Content Include="Skins\Default\count3.wav" />
+    <Content Include="Skins\Default\countgo.wav" />
+    <Content Include="Skins\Default\mainmenu_intro.wav" />
+    <Content Include="Skins\Default\rankingbam.wav" />
+    <Content Include="Skins\Default\rankingbam2.wav" />
+    <Content Include="Skins\Default\intro_480.png" />
+    <Content Include="Skins\Default\intro_960.png" />
+    <Content Include="Skins\Default\credits.m4a" />
+    <Content Include="Skins\Default\mainmenu.m4a" />
+    <Content Include="Skins\Default\results.m4a" />
+    <Content Include="Skins\Default\songselect.m4a" />
+    <Content Include="Localisation\en.txt" />
+    <Content Include="Localisation\ja.txt" />
+    <Content Include="Skins\Default\buttontap.wav" />
+    <Content Include="Skins\Default\menubling.wav" />
+    <Content Include="Skins\Default\notify.wav" />
+    <Content Include="Skins\Default\drum-hitclap.wav" />
+    <Content Include="Skins\Default\drum-hitfinish.wav" />
+    <Content Include="Skins\Default\drum-hitnormal.wav" />
+    <Content Include="Skins\Default\drum-hitwhistle.wav" />
+    <Content Include="Skins\Default\drum-sliderslide.wav" />
+    <Content Include="Skins\Default\drum-slidertick.wav" />
+    <Content Include="Localisation\da.txt" />
+    <Content Include="Localisation\fr.txt" />
+    <Content Include="Localisation\it.txt" />
+    <Content Include="Localisation\ko.txt" />
+    <Content Include="Localisation\th.txt" />
+    <Content Include="Localisation\zh-CHS.txt" />
+    <Content Include="Localisation\zh-CHT.txt" />
+    <Content Include="Localisation\de.txt" />
+    <Content Include="Localisation\sv.txt" />
+    <Content Include="Localisation\ru.txt" />
+    <Content Include="Localisation\es.txt" />
+    <Content Include="Skins\Default\rankbling.wav" />
+    <Content Include="Skins\Default\rankfail.wav" />
+    <Content Include="Skins\Default\rankpass.wav" />
+    <Content Include="Skins\Default\rankwhoosh.wav" />
+    <Content Include="Skins\Default\hit_1920.png" />
+    <Content Include="Skins\Default\intro_1920.png" />
+    <Content Include="Skins\Default\menu_1920.png" />
+    <Content Include="Skins\Default\notification_1920.png" />
+    <Content Include="Skins\Default\ranking_1920.png" />
+    <Content Include="Beatmaps\nekodex - Liquid Future %28mm201%29.osf2" />
+    <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\activity_main.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\values\colors.xml" />
+    <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
+    <AndroidResource Include="Resources\values\strings.xml" />
+    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher.xml" />
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+    Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+  -->
+</Project>
