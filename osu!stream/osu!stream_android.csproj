@@ -42,6 +42,7 @@
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AndroidSupportedAbis />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -60,24 +61,35 @@
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
     <BundleAssemblies>false</BundleAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bass.Net.Android">
+      <HintPath>.\Bass.Net.Android.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK-1.0" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\BackgroundAudioPlayerAndroid.cs" />
+    <Compile Include="Audio\SoundEffectPlayerBass.cs" />
+    <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AboutResources.txt" />
+    <AndroidNativeLibrary Include="Libraries\Android\arm64-v8a\libbass.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\arm64-v8a\libbass_aac.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\armeabi-v7a\libbass.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\armeabi-v7a\libbass_aac.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\x86\libbass.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\x86\libbass_aac.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\x86_64\libbass.so" />
+    <AndroidNativeLibrary Include="Libraries\Android\x86_64\libbass_aac.so" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
@@ -110,6 +122,8 @@
     <Compile Include="Helpers\Audio\SoundData.cs" />
     <Compile Include="Helpers\Audio\SoundFormat.cs" />
     <Compile Include="Helpers\Audio\WaveReader.cs" />
+    <Compile Include="Support\Android\GameBaseAndroid.cs" />
+    <Compile Include="Support\Android\GameWindowAndroid.cs" />
     <Compile Include="Support\IUpdateable.cs" />
     <Compile Include="Director.cs" />
     <Compile Include="Support\Transition.cs" />
@@ -219,14 +233,13 @@
     <Compile Include="Support\CrashHandler.cs" />
     <Compile Include="GameModes\MainMenu\MainMenu_BeatMatching.cs" />
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
-    <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Graphics\Skins\" />
-    <Folder Include="Resources\drawable\" />
-    <Folder Include="Support\Android\" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable\loading.png" />
     <Content Include="Skins\Default\normal-hitclap.wav" />
     <Content Include="Skins\Default\normal-hitfinish.wav" />
     <Content Include="Skins\Default\normal-hitnormal.wav" />
@@ -306,30 +319,8 @@
     <Content Include="Beatmaps\tieff &amp; Natteke - Endless Tower %28RandomJibberish%29.osf2" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_main.xml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\values\colors.xml" />
-    <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher.xml" />
-    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -15,18 +15,24 @@ using osum.Support.Desktop;
 namespace osum
 {
 #if ANDROID
-    [Activity(Label = "@string/app_name", Theme = "@style/default", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.UserLandscape)]
     public class Application : AppCompatActivity
 #else
     public class Application
 #endif
     {
+#if ANDROID
+        private static Activity _this;
+#endif
+
         private static void Main(string[] args)
         {
 #if iOS
             GameBase game = new GameBaseIphone();
             game.Run();
 #elif ANDROID
+            GameBase game = new GameBaseAndroid(_this);
+            game.Run();
 #else
             GameBase game = new GameBaseDesktop();
             game.Run();
@@ -34,6 +40,11 @@ namespace osum
         }
 
 #if ANDROID
+        public Application()
+        {
+            _this = this;
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             // Hide Status Bar, etc...

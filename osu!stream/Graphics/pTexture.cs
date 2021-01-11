@@ -349,6 +349,13 @@ namespace osum.Graphics
                 pTexture pt;
 #if iOS
                 pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
+#elif ANDROID
+                using (Android.Graphics.Bitmap b = Android.Graphics.BitmapFactory.DecodeStream(stream))
+                {
+                    pt = FromRawBytes(b.LockPixels(), b.Width, b.Height);
+                    pt.assetName = assetname;
+                    b.UnlockPixels();
+                }
 #else
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
