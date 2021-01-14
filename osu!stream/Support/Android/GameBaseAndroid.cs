@@ -75,7 +75,8 @@ namespace osum
 
         public override void SetupScreen()
         {
-            NativeSize = new System.Drawing.Size((int)DeviceDisplay.MainDisplayInfo.Width, (int)DeviceDisplay.MainDisplayInfo.Height);
+            // Because this is always landscape, we'll use the safe width and real height of the display.
+            NativeSize = new System.Drawing.Size(_activity.Resources.DisplayMetrics.WidthPixels, (int)DeviceDisplay.MainDisplayInfo.Height);
 
             base.SetupScreen();
         }

@@ -35,7 +35,7 @@ namespace osum
 
 			try
 			{
-				GraphicsMode = new AndroidGraphicsMode(0, 0, 0, 0, 0, false);
+				GraphicsMode = new AndroidGraphicsMode(ColorFormat.Empty, 0, 0, 0, 0, false);
 
 				base.CreateFrameBuffer();
 				return;
