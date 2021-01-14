@@ -1,4 +1,5 @@
 using System.IO;
+using osum.AssetManager;
 using osum.Helpers;
 using osum.Support;
 
@@ -68,7 +69,7 @@ namespace osum.Audio
         public bool Load(string filename, bool looping)
         {
 #if ANDROID
-            return Load(File.ReadAllBytes("/sdcard/" + filename), looping, filename);
+            return Load(((NativeAssetManagerAndroid)NativeAssetManager.Instance).GetFileBytes(filename), looping, filename); // This probably isn't correct at all, fix?
 #else
             return Load(File.ReadAllBytes(filename), looping, filename);
 #endif

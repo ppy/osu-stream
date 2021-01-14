@@ -25,7 +25,7 @@ namespace osum.GameModes.SongSelect
             public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/../Library/Caches"; } }
     #endif
 #elif ANDROID
-        public static string BeatmapPath => @"/sdcard/Beatmaps/";
+        public static string BeatmapPath { get { return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/Beatmaps"; } }
 #else
         public static string BeatmapPath => @"Beatmaps/";
 #endif
