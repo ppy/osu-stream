@@ -3,6 +3,7 @@ using System.IO;
 using Android.Graphics;
 using OpenTK;
 using OpenTK.Graphics;
+using osum.AssetManager;
 using osum.Helpers;
 
 namespace osum.Graphics.Renderers
@@ -18,6 +19,7 @@ namespace osum.Graphics.Renderers
             {
                 Canvas canvas = new Canvas();
 
+                // The bitmap size should be more flexible, but we're just hardcoding to 1024x1024 for now.
                 using (Bitmap bitmap = Bitmap.CreateBitmap(1024, 1024, Bitmap.Config.Argb8888))
                 {
                     canvas.SetBitmap(bitmap);
@@ -29,6 +31,7 @@ namespace osum.Graphics.Renderers
 
                     canvas.DrawPaint(paint);
 
+                    paint.SetTypeface(Typeface.CreateFromAsset(NativeAssetManagerAndroid.manager, bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
                     paint.SetARGB(255, 255, 255, 255);
                     paint.TextSize = size;
 
@@ -42,8 +45,6 @@ namespace osum.Graphics.Renderers
 
                     using (Bitmap resized = Bitmap.CreateBitmap(bitmap, 0, 0, textBounds.Width(), textBounds.Height()))
                     {
-                        resized.SetConfig(Bitmap.Config.Argb8888);
-
                         pTexture tex = pTexture.FromRawBytes(resized.LockPixels(), resized.Width, resized.Height);
                         resized.UnlockPixels();
                         return tex;

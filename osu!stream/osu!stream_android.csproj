@@ -95,6 +95,8 @@
     <AndroidNativeLibrary Include="Libraries\Android\x86_64\libbass.so" />
     <AndroidNativeLibrary Include="Libraries\Android\x86_64\libbass_aac.so" />
     <None Include="Properties\AndroidManifest.xml" />
+    <AndroidAsset Include="Skins\Default\Futura-CondensedExtraBold.ttf" />
+    <AndroidAsset Include="Skins\Default\Futura-Medium.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManager.cs" />
