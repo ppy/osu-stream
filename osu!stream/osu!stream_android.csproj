@@ -78,6 +78,7 @@
     <Compile Include="Audio\BackgroundAudioPlayerAndroid.cs" />
     <Compile Include="Audio\SoundEffectPlayerBass.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
+    <Compile Include="Graphics\Renderers\NativeTextRendererAndroid.cs" />
     <Compile Include="Input\Sources\InputSourceAndroid.cs" />
     <Compile Include="Input\TrackingPointAndroid.cs" />
     <Compile Include="Main.cs" />
