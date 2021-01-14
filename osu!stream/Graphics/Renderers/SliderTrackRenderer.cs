@@ -5,11 +5,13 @@ using OpenTK;
 using osum.Graphics.Primitives;
 using osum.Graphics.Sprites;
 using Color = OpenTK.Graphics.Color4;
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -64,7 +66,7 @@ namespace osum.Graphics.Renderers
         protected const float TEXTURE_SHRINKAGE_FACTOR = 0.0f;
 
         // how far towards the inside do we slide the texture
-#if iOS
+#if iOS || ANDROID
         protected const float TEXEL_ORIGIN = 0.25f;
 #else
         protected const float TEXEL_ORIGIN = 0.5f;

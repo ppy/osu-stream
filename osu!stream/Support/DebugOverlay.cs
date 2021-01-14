@@ -33,7 +33,7 @@ namespace osum.Support
                 GameBase.MainSpriteManager.Add(fpsDisplay);
 #else
                 fpsDisplay = new pSpriteText("", "default", 0, FieldTypes.StandardSnapBottomRight, OriginTypes.BottomRight, ClockTypes.Game, new Vector2(horizontal_offset, vertical_offset), 1, true, Color4.White);
-#if iOS
+#if iOS || ANDROID
                 fpsDisplay.ScaleScalar = 0.6f;
 #elif !FULL_DEBUG
                 fpsDisplay.ScaleScalar = 0.3f;
@@ -44,7 +44,7 @@ namespace osum.Support
 
             weightedAverageFrameTime = weightedAverageFrameTime * 0.5 + Clock.ElapsedMilliseconds * 0.5;
 
-#if iOS
+#if iOS || ANDROID
             /*if (Clock.ElapsedMilliseconds > 25)
             {
                 fpsDisplay.Position = new Vector2(fpsDisplay.Position.X, fpsDisplay.Position.Y + 5);

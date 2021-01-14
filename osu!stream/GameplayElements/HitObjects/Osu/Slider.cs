@@ -11,11 +11,13 @@ using osum.Graphics.Sprites;
 using osum.Helpers;
 using osum.Input;
 using Color = OpenTK.Graphics.Color4;
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -1085,7 +1087,7 @@ namespace osum.GameplayElements.HitObjects.Osu
 
         public Vector2 SnakingEndPosition;
 
-#if iOS
+#if iOS || ANDROID
         static int oldFboId = -1;
 #endif
 
@@ -1146,7 +1148,7 @@ namespace osum.GameplayElements.HitObjects.Osu
                 List<Line> partialDrawable = drawableSegments.GetRange(FirstSegmentIndex, lastDrawnSegmentIndex - FirstSegmentIndex + 1);
 
                 sliderBodyTexture.BindFramebuffer();
-#if iOS
+#if iOS || ANDROID
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);
                 DrawPath(partialDrawable, prev, next);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, oldFboId);
@@ -1213,7 +1215,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             if (sliderBodyTexture == null)
                 return;
 
-#if iOS
+#if iOS || ANDROID
             spriteSliderBody.Premultiplied = true;
 #endif
             spriteSliderBody.Texture = sliderBodyTexture;
@@ -1221,7 +1223,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             sliderBodyTexture.BindFramebuffer();
             if (sliderBodyTexture.fboId >= 0)
             {
-#if iOS
+#if iOS || ANDROID
                 //clear the full buffer before changing the viewport.
                 if (oldFboId < 0) GL.GetInteger(All.FramebufferBindingOes, out oldFboId);
                 GL.Oes.BindFramebuffer(All.FramebufferOes, sliderBodyTexture.fboId);

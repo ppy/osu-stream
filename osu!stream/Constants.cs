@@ -1,4 +1,4 @@
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
 #else
 using OpenTK.Graphics.OpenGL;

@@ -1,8 +1,10 @@
-﻿#if iOS
+﻿#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -331,7 +333,7 @@ namespace osum.Graphics
                     pTexture t = new pTexture(gl, width, size);
                     t.BindFramebuffer();
 
-#if iOS
+#if iOS || ANDROID
                     //we need to draw once to screen on iOS in order to avoid lag the first frame they are drawn (some kind of internal optimisation?)
                     using (pSprite p = new pSprite(t, Vector2.Zero))
                         p.Draw();

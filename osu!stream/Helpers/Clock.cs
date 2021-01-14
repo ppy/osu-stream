@@ -19,7 +19,7 @@ namespace osum.Helpers
         // measured in seconds
         private static double time;
 
-#if iOS
+#if iOS || ANDROID
         //higher offset == notes appear earlier
         public const int UNIVERSAL_OFFSET_MP3 = 45;
         public const int UNIVERSAL_OFFSET_M4A = -8;

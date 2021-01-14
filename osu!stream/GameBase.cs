@@ -1,8 +1,10 @@
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -25,8 +27,10 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
+#if iOS
 using CoreGraphics;
 using UIKit;
+#endif
 #else
 using OpenTK.Graphics.OpenGL;
 #endif
