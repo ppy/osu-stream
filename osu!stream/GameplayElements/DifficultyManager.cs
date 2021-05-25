@@ -87,9 +87,9 @@ namespace osum.GameplayElements
             }
         }
 
-        private const int HIT_EXPERT = 25;
-        private const int HIT_STREAM = 44;
-        private const int HIT_EASY = 70;
+        private const int HIT_EXPERT = 99999;
+        private const int HIT_STREAM = 99999;
+        private const int HIT_EASY = 99999;
 
         public static int HitWindow50
         {
