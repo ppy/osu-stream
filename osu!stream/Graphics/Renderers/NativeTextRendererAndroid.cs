@@ -18,37 +18,31 @@ namespace osum.Graphics.Renderers
             try
             {
                 Canvas canvas = new Canvas();
+                Paint  paint  = new Paint();
+                
+                paint.SetARGB(0, 0, 0, 0);
+                paint.SetStyle(Paint.Style.Fill);
+                
+                paint.SetTypeface(Typeface.CreateFromAsset(NativeAssetManagerAndroid.manager, bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
+                paint.SetARGB(255, 255, 255, 255);
+                paint.TextSize = size;
+                
+                canvas.DrawPaint(paint);
 
-                // The bitmap size should be more flexible, but we're just hardcoding to 1024x1024 for now.
-                using (Bitmap bitmap = Bitmap.CreateBitmap(1024, 1024, Bitmap.Config.Argb8888))
+                Rect textBounds = new Rect();
+                paint.GetTextBounds(text, 0, text.Length, textBounds);
+
+                if (restrictBounds != Vector2.Zero)
+                    measured = new Vector2(Math.Min(textBounds.Width(), restrictBounds.X), Math.Min(textBounds.Height(), restrictBounds.Y));
+                else
+                    measured = new Vector2(textBounds.Width(), textBounds.Height());
+                
+                using (Bitmap bitmap = Bitmap.CreateBitmap((int) measured.X, (int) measured.Y, Bitmap.Config.Argb8888))
                 {
                     canvas.SetBitmap(bitmap);
-
-                    Paint paint = new Paint();
-
-                    paint.SetARGB(0, 0, 0, 0);
-                    paint.SetStyle(Paint.Style.Fill);
-
-                    canvas.DrawPaint(paint);
-
-                    paint.SetTypeface(Typeface.CreateFromAsset(NativeAssetManagerAndroid.manager, bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
-                    paint.SetARGB(255, 255, 255, 255);
-                    paint.TextSize = size;
-
-                    Rect textBounds = new Rect();
-
-                    paint.GetTextBounds(text, 0, text.Length, textBounds);
-
-                    measured = new Vector2(textBounds.Width(), textBounds.Height());
-
-                    canvas.DrawText(text, 0, textBounds.Height(), paint);
-
-                    using (Bitmap resized = Bitmap.CreateBitmap(bitmap, 0, 0, textBounds.Width(), textBounds.Height()))
-                    {
-                        pTexture tex = pTexture.FromRawBytes(resized.LockPixels(), resized.Width, resized.Height);
-                        resized.UnlockPixels();
-                        return tex;
-                    }
+                    canvas.DrawText(text, 0, measured.Y, paint);
+                    
+                    return BitmapToTex(bitmap);
                 }
             }
             catch (Exception)
@@ -56,6 +50,13 @@ namespace osum.Graphics.Renderers
                 measured = Vector2.Zero;
                 return null;
             }
+        }
+
+        private static pTexture BitmapToTex(Bitmap bitmap) 
+        {
+            pTexture tex = pTexture.FromRawBytes(bitmap.LockPixels(), bitmap.Width, bitmap.Height);
+            bitmap.UnlockPixels();
+            return tex;
         }
 
         private static float dpiRatio;
