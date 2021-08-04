@@ -40,7 +40,7 @@ namespace osum.Graphics.Renderers
                 using (Bitmap bitmap = Bitmap.CreateBitmap((int) measured.X, (int) measured.Y, Bitmap.Config.Argb8888))
                 {
                     canvas.SetBitmap(bitmap);
-                    canvas.DrawText(text, 0, measured.Y, paint);
+                    canvas.DrawText(text, -textBounds.Left, -textBounds.Top, paint);
                     
                     return BitmapToTex(bitmap);
                 }
