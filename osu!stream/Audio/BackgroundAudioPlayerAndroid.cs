@@ -65,7 +65,7 @@ namespace osum.Audio
             }
         }
 
-        public override bool Load(byte[] audio, bool looping, string identifier = null)
+        public override bool Load(byte[] audio, bool looping, string identifier = "apain")
         {
             if (!base.Load(audio, looping, identifier))
                 return false;
@@ -74,6 +74,7 @@ namespace osum.Audio
 
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
 
+            if (identifier == null) identifier = "mp3";
             if (identifier.Contains("mp3"))
                 audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
             else
