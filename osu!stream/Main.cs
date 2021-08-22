@@ -47,6 +47,10 @@ namespace osum
             _this = this;
         }
 
+        public override void OnBackPressed() {
+            return;
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             // Hide Status Bar, etc...
