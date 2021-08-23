@@ -211,7 +211,7 @@ namespace osum.GameModes.Store
                     return;
 
                 AddPack(pp);
-                
+
                 // PackPanel restorePack = new PackPanel(LocalisationManager.GetString(OsuString.RestorePurchases), PackPanel.RESTORE_PACK_ID, false);
                 // AddPack(restorePack);
 
