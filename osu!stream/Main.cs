@@ -56,9 +56,9 @@ namespace osum
             // Hide Status Bar, etc...
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
             {
-                Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen |
-                    SystemUiFlags.ImmersiveSticky | SystemUiFlags.Immersive);
-
+                Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
+                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+                
                 Immersive = true;
             }
 
