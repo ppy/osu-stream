@@ -78,6 +78,8 @@ namespace osum
             // Because this is always landscape, we'll use the safe width and real height of the display.
             NativeSize = new System.Drawing.Size((int)DeviceDisplay.MainDisplayInfo.Width, (int)DeviceDisplay.MainDisplayInfo.Height);
 
+            this.DisableDimming = true;
+            
             base.SetupScreen();
         }
 
