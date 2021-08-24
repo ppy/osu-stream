@@ -32,13 +32,13 @@ namespace osum
         private static void Main(string[] args)
         {
 #if iOS
-            game = new GameBaseIphone();
+            GameBase game = new GameBaseIphone();
             game.Run();
 #elif ANDROID
             GameBase.Instance = new GameBaseAndroid(_this);
             GameBase.Instance.Run();
 #else
-            game = new GameBaseDesktop();
+            GameBase game = new GameBaseDesktop();
             game.Run();
 #endif
         }
@@ -96,12 +96,6 @@ namespace osum
 
             GameBaseAndroid.IsInitialized = false;
             GameBase.Instance = null;
-        }
-
-        protected override void OnRestart() {
-            base.OnRestart();
-            
-            GameBase.Instance = GameBase.Instance;
         }
 
         protected override void OnStart() {
