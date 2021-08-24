@@ -240,9 +240,6 @@
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Graphics\Skins\" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon.png" />
     <AndroidResource Include="Resources\drawable\loading.png" />
     <AndroidAsset Include="Skins\Default\normal-hitclap.wav" />
