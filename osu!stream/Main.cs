@@ -6,6 +6,8 @@ using Android.Support.V7.App;
 using Android.Runtime;
 using Android.Views;
 using Android.Content.PM;
+using osum.GameModes;
+using osum.GameModes.Play;
 using Xamarin.Essentials;
 using osum.Input;
 using osum.Input.Sources;
@@ -48,7 +50,16 @@ namespace osum
         }
 
         public override void OnBackPressed() {
-            return;
+            if (Director.IsTransitioning) return;
+            
+            if(Director.CurrentOsuMode == OsuMode.Play)
+                if (!((Player)Director.CurrentMode).IsPaused)
+                    (Director.CurrentMode as Player)?.Pause();
+                else if(!(bool)(Director.CurrentMode as Player)?.menu.Failed)
+                    (Director.CurrentMode as Player)?.Resume();
+
+            if (Director.CurrentOsuMode == OsuMode.MainMenu)
+                System.Environment.Exit(0);
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
