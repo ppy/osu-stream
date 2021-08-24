@@ -1,4 +1,4 @@
-using osum.Support;
+using osum.Graphics;
 #if ANDROID
 using Android.App;
 using Android.OS;
@@ -32,13 +32,13 @@ namespace osum
         private static void Main(string[] args)
         {
 #if iOS
-            GameBase game = new GameBaseIphone();
+            game = new GameBaseIphone();
             game.Run();
 #elif ANDROID
-            GameBase game = new GameBaseAndroid(_this);
-            game.Run();
+            GameBase.Instance = new GameBaseAndroid(_this);
+            GameBase.Instance.Run();
 #else
-            GameBase game = new GameBaseDesktop();
+            game = new GameBaseDesktop();
             game.Run();
 #endif
         }
@@ -62,13 +62,15 @@ namespace osum
                     break;
                 }
                 case OsuMode.MainMenu:
-                    System.Environment.Exit(0);
+                    this.FinishAffinity();
                     break;
             }
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            base.OnCreate(savedInstanceState);
+            
             // Hide Status Bar, etc...
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
             {
@@ -78,18 +80,43 @@ namespace osum
                 Immersive = true;
             }
 
-            base.OnCreate(savedInstanceState);
-
             Platform.Init(this, savedInstanceState);
+        }
 
-            Main(null);
+        protected override void OnPause() {
+            base.OnPause();
+            
+            TextureManager.DisposeAll();
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            
+            GameBase.Config.SaveConfig();
+
+            GameBaseAndroid.IsInitialized = false;
+            GameBase.Instance = null;
+        }
+
+        protected override void OnRestart() {
+            base.OnRestart();
+            
+            GameBase.Instance = GameBase.Instance;
+        }
+
+        protected override void OnStart() {
+            base.OnStart();
+
+            if (GameBase.Instance == null) Main(null);
+            
+            GameBase.Instance.Run();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
-            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         public override bool OnTouchEvent(MotionEvent e)

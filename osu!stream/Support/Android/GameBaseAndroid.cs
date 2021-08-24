@@ -17,7 +17,8 @@ namespace osum
     {
         private Activity _activity;
 
-        public GameWindowAndroid Window;
+        public static bool              IsInitialized;
+        public        GameWindowAndroid Window;
 
         public GameBaseAndroid(Activity activity, OsuMode mode = OsuMode.Unknown) : base(mode)
         {
@@ -46,10 +47,17 @@ namespace osum
                 }
             }
 
-            Window = new GameWindowAndroid(_activity);
+            if(this.Window == null)
+                Window = new GameWindowAndroid(_activity);
             Window.Run();
 
             _activity.SetContentView(Window);
+        }
+
+        public override void Initialize() {
+            IsInitialized = true;
+            
+            base.Initialize();
         }
 
         protected override BackgroundAudioPlayer InitializeBackgroundAudio()

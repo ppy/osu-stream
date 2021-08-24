@@ -1,9 +1,9 @@
 ﻿using Android.Content;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.ES11;
 using OpenTK.Platform.Android;
 using System;
+using osum.Graphics;
 
 namespace osum
 {
@@ -17,8 +17,13 @@ namespace osum
 			base.OnLoad(e);
 
 			MakeCurrent();
+			
+			// GameBase.Instance.Initialize();
 
-			GameBase.Instance.Initialize();
+			TextureManager.ReloadAll();
+			if (!GameBaseAndroid.IsInitialized)
+				GameBase.Instance.Initialize();
+			
 		}
 
 		protected override void CreateFrameBuffer()
