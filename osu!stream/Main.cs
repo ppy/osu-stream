@@ -52,14 +52,19 @@ namespace osum
         public override void OnBackPressed() {
             if (Director.IsTransitioning) return;
             
-            if(Director.CurrentOsuMode == OsuMode.Play)
-                if (!((Player)Director.CurrentMode).IsPaused)
+            switch (Director.CurrentOsuMode) {
+                case OsuMode.Play when !((Player)Director.CurrentMode).IsPaused:
                     (Director.CurrentMode as Player)?.Pause();
-                else if(!(bool)(Director.CurrentMode as Player)?.menu.Failed)
-                    (Director.CurrentMode as Player)?.Resume();
-
-            if (Director.CurrentOsuMode == OsuMode.MainMenu)
-                System.Environment.Exit(0);
+                    break;
+                case OsuMode.Play: {
+                    if(!(bool)(Director.CurrentMode as Player)?.menu.Failed)
+                        (Director.CurrentMode as Player).menu.MenuDisplayed = false;
+                    break;
+                }
+                case OsuMode.MainMenu:
+                    System.Environment.Exit(0);
+                    break;
+            }
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
