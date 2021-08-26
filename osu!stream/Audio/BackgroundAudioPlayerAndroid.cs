@@ -74,11 +74,11 @@ namespace osum.Audio
             FreeMusic();
 
             audioHandle = GCHandle.Alloc(audio, GCHandleType.Pinned);
+            
+            audioStream = Bass.CreateStream(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BassFlags.Prescan | (looping ? BassFlags.Loop : 0));
 
-            if (identifier == null) identifier = "mp3";
-            if (identifier.Contains("mp3"))
-                audioStream = Bass.CreateStream(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BassFlags.Prescan | (looping ? BassFlags.Loop : 0));
-            else
+            // If loading fails, attempts to load as an AAC based file
+            if(Bass.LastError != Errors.OK)
                 audioStream = BassAac.CreateMp4Stream(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BassFlags.Prescan | (looping ? BassFlags.Loop : 0));
 
             updateVolume();

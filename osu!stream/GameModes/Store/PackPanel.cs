@@ -99,7 +99,7 @@ namespace osum.GameModes.Store
 
         private int currentDownload;
 
-#if iOS
+#if iOS || ANDROID
         const string PREFERRED_FORMAT = "m4a";
 #else
         private const string PREFERRED_FORMAT = "mp3";
