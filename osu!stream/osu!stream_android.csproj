@@ -64,9 +64,9 @@
     <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net.Android">
-      <HintPath>.\Bass.Net.Android.dll</HintPath>
-    </Reference>
+<!--    <Reference Include="Bass.Net.Android">-->
+<!--      <HintPath>.\Bass.Net.Android.dll</HintPath>-->
+<!--    </Reference>-->
     <Reference Include="OpenTK-1.0" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="AssetManager\NativeAssetManagerAndroid.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerAndroid.cs" />
+    <Compile Include="Audio\BassNetUtils\Utils.cs" />
     <Compile Include="Audio\SoundEffectPlayerBass.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
     <Compile Include="Graphics\Renderers\NativeTextRendererAndroid.cs" />
@@ -324,8 +325,9 @@
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <PackageReference Include="ManagedBass" Version="3.1.0" />
+    <PackageReference Include="ManagedBass.Aac" Version="3.1.0" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.CustomTabs" Version="28.0.0.3" />

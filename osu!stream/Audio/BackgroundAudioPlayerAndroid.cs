@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using osum.Helpers;
-using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Aac;
+using ManagedBass;
+using ManagedBass.Aac;
+using osum.Audio.BassNetUtils;
 
 namespace osum.Audio
 {
@@ -16,9 +17,9 @@ namespace osum.Audio
         /// </summary>
         public BackgroundAudioPlayerAndroid()
         {
-            BassNet.Registration("poo@poo.com", "2X25242411252422");
+            // BassNet.Registration("poo@poo.com", "2X25242411252422");
 
-            Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+            Bass.Init(-1, 44100, DeviceInitFlags.Default, IntPtr.Zero);
 
             //Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_BUFFER, 100);
             //Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_UPDATEPERIOD, 10);
@@ -30,7 +31,7 @@ namespace osum.Audio
         /// <returns></returns>
         public override bool Play()
         {
-            Bass.BASS_ChannelPlay(audioStream, false);
+            Bass.ChannelPlay(audioStream);
             return true;
         }
 
@@ -40,7 +41,7 @@ namespace osum.Audio
         /// <returns></returns>
         public override bool Stop(bool reset = true)
         {
-            Bass.BASS_ChannelStop(audioStream);
+            Bass.ChannelStop(audioStream);
             if (reset) SeekTo(0);
             return true;
         }
@@ -59,8 +60,8 @@ namespace osum.Audio
                 if (audioHandle.IsAllocated)
                     audioHandle.Free();
 
-                Bass.BASS_ChannelStop(audioStream);
-                Bass.BASS_StreamFree(audioStream);
+                Bass.ChannelStop(audioStream);
+                Bass.StreamFree(audioStream);
                 audioStream = 0;
             }
         }
@@ -76,9 +77,9 @@ namespace osum.Audio
 
             if (identifier == null) identifier = "mp3";
             if (identifier.Contains("mp3"))
-                audioStream = Bass.BASS_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
+                audioStream = Bass.CreateStream(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BassFlags.Prescan | (looping ? BassFlags.Loop : 0));
             else
-                audioStream = BassAac.BASS_MP4_StreamCreateFile(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BASSFlag.BASS_STREAM_PRESCAN | (looping ? BASSFlag.BASS_MUSIC_LOOP : 0));
+                audioStream = BassAac.CreateMp4Stream(audioHandle.AddrOfPinnedObject(), 0, audio.Length, BassFlags.Prescan | (looping ? BassFlags.Loop : 0));
 
             updateVolume();
 
@@ -97,14 +98,14 @@ namespace osum.Audio
             {
                 if (audioStream == 0) return 0;
 
-                long audioTimeRaw = Bass.BASS_ChannelGetPosition(audioStream);
-                return Bass.BASS_ChannelBytes2Seconds(audioStream, audioTimeRaw);
+                long audioTimeRaw = Bass.ChannelGetPosition(audioStream);
+                return Bass.ChannelBytes2Seconds(audioStream, audioTimeRaw);
             }
         }
 
         public override bool Pause()
         {
-            Bass.BASS_ChannelPause(audioStream);
+            Bass.ChannelPause(audioStream);
             return true;
         }
 
@@ -112,7 +113,7 @@ namespace osum.Audio
         {
             if (audioStream == 0) return false;
 
-            Bass.BASS_ChannelSetPosition(audioStream, milliseconds / 1000d);
+            Bass.ChannelSetPosition(audioStream, milliseconds / 1000);
             return base.SeekTo(milliseconds);
         }
 
@@ -122,7 +123,7 @@ namespace osum.Audio
         {
             get
             {
-                int word = Bass.BASS_ChannelGetLevel(audioStream);
+                int word = Bass.ChannelGetLevel(audioStream);
                 int left = Utils.LowWord32(word);
                 int right = Utils.HighWord32(word);
 
@@ -134,14 +135,14 @@ namespace osum.Audio
 
         #region ITimeSource Members
 
-        public override bool IsElapsing => Bass.BASS_ChannelIsActive(audioStream) == BASSActive.BASS_ACTIVE_PLAYING;
+        public override bool IsElapsing => Bass.ChannelIsActive(audioStream) == PlaybackState.Playing;
 
         #endregion
 
         protected override void updateVolume()
         {
             if (audioStream == 0) return;
-            Bass.BASS_ChannelSetAttribute(audioStream, BASSAttribute.BASS_ATTRIB_VOL, pMathHelper.ClampToOne(DimmableVolume * MaxVolume));
+            Bass.ChannelSetAttribute(audioStream, ChannelAttribute.Volume, pMathHelper.ClampToOne(DimmableVolume * MaxVolume));
         }
     }
 }

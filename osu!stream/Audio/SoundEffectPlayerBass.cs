@@ -1,5 +1,5 @@
+using ManagedBass;
 using osum.AssetManager;
-using Un4seen.Bass;
 
 namespace osum.Audio
 {
@@ -48,7 +48,7 @@ namespace osum.Audio
 #endif
             byte[] bytes = NativeAssetManager.Instance.GetFileBytes(filename);
 
-            int address = Bass.BASS_SampleLoad(bytes, 0, bytes.Length, 32, BASSFlag.BASS_SAMPLE_OVER_POS);
+            int address = Bass.SampleLoad(bytes, 0, bytes.Length, 32, BassFlags.SampleOverrideLongestPlaying);
 
             return address;
         }
@@ -68,11 +68,11 @@ namespace osum.Audio
             {
                 base.BufferId = value;
 
-                sourceId = Bass.BASS_SampleGetChannel(bufferId, false);
+                sourceId = Bass.SampleGetChannel(bufferId);
             }
         }
 
-        public override bool Playing => Bass.BASS_ChannelIsActive(sourceId) == BASSActive.BASS_ACTIVE_PLAYING;
+        public override bool Playing => Bass.ChannelIsActive(sourceId) == PlaybackState.Playing;
 
         private float audioFrequency = -1;
 
@@ -81,8 +81,8 @@ namespace osum.Audio
             get => base.Pitch;
             set
             {
-                if (audioFrequency == -1) Bass.BASS_ChannelGetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, ref audioFrequency);
-                Bass.BASS_ChannelSetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_FREQ, audioFrequency * value);
+                if (audioFrequency == -1) Bass.ChannelGetAttribute(sourceId, ChannelAttribute.Frequency, out audioFrequency);
+                Bass.ChannelSetAttribute(sourceId, ChannelAttribute.Frequency, audioFrequency * value);
 
                 base.Pitch = value;
             }
@@ -90,17 +90,17 @@ namespace osum.Audio
 
         internal override void Play()
         {
-            Bass.BASS_ChannelPlay(sourceId, true);
+            Bass.ChannelPlay(sourceId, true);
         }
 
         internal override void Stop()
         {
-            Bass.BASS_ChannelStop(sourceId);
+            Bass.ChannelStop(sourceId);
         }
 
         internal override void DeleteBuffer()
         {
-            Bass.BASS_SampleFree(bufferId);
+            Bass.SampleFree(bufferId);
             base.DeleteBuffer();
         }
 
@@ -112,9 +112,9 @@ namespace osum.Audio
                 base.Looping = value;
 
                 if (Looping)
-                    Bass.BASS_ChannelFlags(sourceId, BASSFlag.BASS_SAMPLE_LOOP, BASSFlag.BASS_SAMPLE_LOOP);
+                    Bass.ChannelFlags(sourceId, BassFlags.Loop, BassFlags.Loop);
                 else
-                    Bass.BASS_ChannelFlags(sourceId, 0, BASSFlag.BASS_SAMPLE_LOOP);
+                    Bass.ChannelFlags(sourceId, 0, BassFlags.Loop);
             }
         }
 
@@ -124,7 +124,7 @@ namespace osum.Audio
             set
             {
                 base.Volume = value;
-                Bass.BASS_ChannelSetAttribute(sourceId, BASSAttribute.BASS_ATTRIB_VOL, Volume);
+                Bass.ChannelSetAttribute(sourceId, ChannelAttribute.Volume, Volume);
             }
         }
     }
