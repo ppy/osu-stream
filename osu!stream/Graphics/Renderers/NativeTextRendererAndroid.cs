@@ -13,7 +13,7 @@ namespace osum.Graphics.Renderers
     {
         /// <summary>
         /// Creates a pTexture containing text with the specified parameters,
-        /// all variables marked with (leftover) are not used and are from when this function was taken from a very old version of stable
+        /// all variables marked with (leftover) are not used and are from when this function was taken from a very old version of osu!stable
         /// </summary>
         /// <param name="text">The text to render</param>
         /// <param name="size">The text size</param>
@@ -43,7 +43,9 @@ namespace osum.Graphics.Renderers
                 //Create a new TextPaint with the right size (note the colour is always set to white as we change the colour when rendering)
                 TextPaint paint = new TextPaint {
                     Color    = Color.White,
-                    TextSize = size
+                    TextSize = size,
+                    AntiAlias = true,
+                    Dither = true
                 };
 
                 // Sets some parameters of the TextPaint
