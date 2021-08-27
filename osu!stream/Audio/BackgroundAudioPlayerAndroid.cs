@@ -113,7 +113,8 @@ namespace osum.Audio
         {
             if (audioStream == 0) return false;
 
-            Bass.ChannelSetPosition(audioStream, milliseconds / 1000);
+            long byteTime = Bass.ChannelSeconds2Bytes(audioStream, (double)milliseconds / 1000d);
+            Bass.ChannelSetPosition(audioStream, byteTime);
             return base.SeekTo(milliseconds);
         }
 
