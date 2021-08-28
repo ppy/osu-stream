@@ -91,11 +91,6 @@ namespace osum
             base.SetupScreen();
         }
 
-	public override string PathConfig
-+       {
-+           get {
-+               return Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/";
-+           }
-+       }
+	    public override string PathConfig => $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}/";
     }
 }
