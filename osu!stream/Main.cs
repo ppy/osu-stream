@@ -1,3 +1,4 @@
+using osum.Audio;
 using osum.Graphics;
 #if ANDROID
 using Android.App;
@@ -87,6 +88,8 @@ namespace osum
 
         protected override void OnPause() {
             base.OnPause();
+            
+            (Director.CurrentMode as Player)?.Pause();
             
             TextureManager.DisposeAll();
         }
