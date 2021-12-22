@@ -1,30 +1,27 @@
-using System;
-using System.Collections;
+namespace osum.Audio.BassNetUtils
+{
+    public class Utils
+    {
+        public static int LowWord32(int word)
+        {
+            int finalInt = 0;
 
-namespace osum.Audio.BassNetUtils {
-	public class Utils {
-		public static int LowWord32(int word) {
-			int finalInt = 0;
+            for (int i = 0; i <= 15; i++)
+                if ((word & (1 << i)) != 0)
+                    finalInt |= 1 << i;
 
-			BitArray bitArr = new BitArray(word);
+            return finalInt;
+        }
 
-			for(int i = 0; i <= 15; i++)
-				if((word & (1 << i)) != 0)
-					finalInt |= 1 << i;
+        public static int HighWord32(int word)
+        {
+            int finalInt = 0;
 
-			return finalInt;
-		}
-		
-		public static int HighWord32(int word) {
-			int finalInt = 0;
+            for (int i = 15; i <= 32; i++)
+                if ((word & (1 << i)) != 0)
+                    finalInt |= 1 << i;
 
-			BitArray bitArr = new BitArray(word);
-
-			for(int i = 15; i <= 32; i++)
-				if((word & (1 << i)) != 0)
-					finalInt |= 1 << i;
-
-			return finalInt;
-		}
-	}
+            return finalInt;
+        }
+    }
 }

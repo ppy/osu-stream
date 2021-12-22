@@ -1,30 +1,28 @@
-﻿using Android.App;
-using Android.Views;
-using OpenTK.Graphics.ES11;
+﻿using System;
+using System.IO;
+using Android.App;
 using osum.AssetManager;
 using osum.Audio;
 using osum.GameModes;
 using osum.GameModes.SongSelect;
 using osum.Input;
 using osum.Input.Sources;
-using System;
-using System.IO;
 using Xamarin.Essentials;
 
-namespace osum
+namespace osum.Support.Android
 {
-    class GameBaseAndroid : GameBase
+    internal class GameBaseAndroid : GameBase
     {
-        private Activity _activity;
+        private readonly Activity activity;
 
-        public static bool              IsInitialized;
-        public        GameWindowAndroid Window;
+        public static bool IsInitialized;
+        public GameWindowAndroid Window;
 
         public GameBaseAndroid(Activity activity, OsuMode mode = OsuMode.Unknown) : base(mode)
         {
-            _activity = activity;
+            this.activity = activity;
 
-            NativeAssetManagerAndroid.manager = activity.Assets;
+            NativeAssetManagerAndroid.Manager = activity.Assets;
         }
 
         public override void Run()
@@ -34,29 +32,33 @@ namespace osum
             // This is unfortunately required because Android sucks, thanks Google.
             if (Config.GetValue("firstrun", true))
             {
-                string[] beatmapPaths = _activity.Assets.List("Beatmaps/");
+                string[] beatmapPaths = activity.Assets?.List("Beatmaps/");
 
                 Directory.CreateDirectory(SongSelectMode.BeatmapPath); // Create BeatmapPath, if it doesn't exist.
 
-                foreach (string beatmapPath in beatmapPaths)
+                if (beatmapPaths != null)
                 {
-                    using (var fs = File.Create(SongSelectMode.BeatmapPath + "/" + beatmapPath))
+                    foreach (string beatmapPath in beatmapPaths)
                     {
-                        _activity.Assets.Open("Beatmaps/" + beatmapPath).CopyTo(fs);
+                        using (var fs = File.Create(SongSelectMode.BeatmapPath + "/" + beatmapPath))
+                        {
+                            activity.Assets?.Open("Beatmaps/" + beatmapPath)?.CopyTo(fs);
+                        }
                     }
                 }
             }
 
-            if(this.Window == null)
-                Window = new GameWindowAndroid(_activity);
+            if (this.Window == null)
+                Window = new GameWindowAndroid(activity);
             Window.Run();
 
-            _activity.SetContentView(Window);
+            activity.SetContentView(Window);
         }
 
-        public override void Initialize() {
+        public override void Initialize()
+        {
             IsInitialized = true;
-            
+
             base.Initialize();
         }
 
@@ -87,10 +89,10 @@ namespace osum
             NativeSize = new System.Drawing.Size((int)DeviceDisplay.MainDisplayInfo.Width, (int)DeviceDisplay.MainDisplayInfo.Height);
 
             this.DisableDimming = true;
-            
+
             base.SetupScreen();
         }
 
-	    public override string PathConfig => $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}/";
+        public override string PathConfig => $"{Environment.GetFolderPath(Environment.SpecialFolder.Personal)}/";
     }
 }

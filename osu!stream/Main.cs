@@ -1,5 +1,5 @@
-using osum.Audio;
 using osum.Graphics;
+using osum.Support.Android;
 #if ANDROID
 using Android.App;
 using Android.OS;
@@ -13,6 +13,7 @@ using Xamarin.Essentials;
 using osum.Input;
 using osum.Input.Sources;
 #endif
+
 #if !iOS && !ANDROID
 using osum.Support.Desktop;
 #endif
@@ -27,7 +28,7 @@ namespace osum
 #endif
     {
 #if ANDROID
-        private static Activity _this;
+        private static Activity activity;
 #endif
 
         private static void Main(string[] args)
@@ -36,7 +37,7 @@ namespace osum
             GameBase game = new GameBaseIphone();
             game.Run();
 #elif ANDROID
-            GameBase.Instance = new GameBaseAndroid(_this);
+            GameBase.Instance = new GameBaseAndroid(activity);
             GameBase.Instance.Run();
 #else
             GameBase game = new GameBaseDesktop();
@@ -49,18 +50,21 @@ namespace osum
         
         public Application()
         {
-            _this = this;
+            activity = this;
         }
 
-        public override void OnBackPressed() {
+        public override void OnBackPressed()
+        {
             if (Director.IsTransitioning) return;
-            
-            switch (Director.CurrentOsuMode) {
+
+            switch (Director.CurrentOsuMode)
+            {
                 case OsuMode.Play when !((Player)Director.CurrentMode).IsPaused:
                     (Director.CurrentMode as Player)?.Pause();
                     break;
-                case OsuMode.Play: {
-                    if(!(bool)(Director.CurrentMode as Player)?.menu.Failed)
+                case OsuMode.Play:
+                {
+                    if (!(bool)(Director.CurrentMode as Player)?.menu.Failed)
                         (Director.CurrentMode as Player).menu.MenuDisplayed = false;
                     break;
                 }
@@ -73,25 +77,27 @@ namespace osum
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
+
             // Hide Status Bar, etc...
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
             {
                 Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
                 //This feature was only added in SDK version 28, so attempting to use it on older versions would result in a crash
-                if(Build.VERSION.SdkInt >= BuildVersionCodes.P)
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.P)
                     Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
-                
+
                 Immersive = true;
             }
 
             Platform.Init(this, savedInstanceState);
         }
 
-        protected override void OnPause() {
+        protected override void OnPause()
+        {
             base.OnPause();
-            
+
             (Director.CurrentMode as Player)?.Pause();
+
             switch (Director.CurrentOsuMode) {
                 case OsuMode.Play: 
                     break;
@@ -106,16 +112,18 @@ namespace osum
             TextureManager.DisposeAll();
         }
 
-        protected override void OnDestroy() {
+        protected override void OnDestroy()
+        {
             base.OnDestroy();
-            
+
             GameBase.Config.SaveConfig();
 
             GameBaseAndroid.IsInitialized = false;
             GameBase.Instance = null;
         }
 
-        protected override void OnStart() {
+        protected override void OnStart()
+        {
             base.OnStart();
 
             if (GameBase.Instance == null) Main(null);
@@ -126,13 +134,14 @@ namespace osum
                 }
             }
             
+
             GameBase.Instance.Run();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-            
+
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
