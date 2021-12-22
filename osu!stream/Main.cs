@@ -75,7 +75,9 @@ namespace osum
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
             {
                 Window.DecorView.SystemUiVisibility = (StatusBarVisibility)(SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
-                Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+                //This feature was only added in SDK version 28, so attempting to use it on older versions would result in a crash
+                if(Build.VERSION.SdkInt >= BuildVersionCodes.P)
+                    Window.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
                 
                 Immersive = true;
             }
