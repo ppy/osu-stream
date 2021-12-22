@@ -3,23 +3,19 @@ using System.Linq;
 
 namespace osum.AssetManager
 {
-    // this is all TEMPORARY.
     internal class NativeAssetManagerAndroid : NativeAssetManager
     {
-        public static Android.Content.Res.AssetManager manager;
-
-        public NativeAssetManagerAndroid() : base()
-        { }
+        public static Android.Content.Res.AssetManager Manager;
 
         internal override bool FileExists(string filename)
         {
-            return manager.List(Path.GetDirectoryName(filename))
+            return Manager.List(Path.GetDirectoryName(filename))
                 .Any(s => s == Path.GetFileName(filename));
         }
 
         internal override Stream GetFileStream(string filename)
         {
-            return manager.Open(filename);
+            return Manager.Open(filename);
         }
 
         private byte[] GetStreamBytes(Stream stream)
@@ -28,7 +24,7 @@ namespace osum.AssetManager
 
             using (MemoryStream ms = new MemoryStream())
             {
-                int read = 0;
+                int read;
 
                 while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {

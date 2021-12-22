@@ -1,70 +1,71 @@
-﻿using Android.Content;
+﻿using System;
+using Android.Content;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Platform.Android;
-using System;
 using osum.Graphics;
 
-namespace osum
+namespace osum.Support.Android
 {
-	class GameWindowAndroid : AndroidGameView
-	{
-		public GameWindowAndroid(Context context) : base(context)
-		{ }
+    internal class GameWindowAndroid : AndroidGameView
+    {
+        public GameWindowAndroid(Context context) : base(context)
+        {
+        }
 
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
 
-			MakeCurrent();
-			
-			// GameBase.Instance.Initialize();
+            MakeCurrent();
 
-			TextureManager.ReloadAll();
-			if (!GameBaseAndroid.IsInitialized)
-				GameBase.Instance.Initialize();
-			
-		}
+            TextureManager.ReloadAll();
 
-		protected override void CreateFrameBuffer()
-		{
-			ContextRenderingApi = GLVersion.ES1;
+            if (!GameBaseAndroid.IsInitialized)
+                GameBase.Instance.Initialize();
+        }
 
-			try
-			{
-				base.CreateFrameBuffer();
-				return;
-			}
-			catch
-			{ }
+        protected override void CreateFrameBuffer()
+        {
+            ContextRenderingApi = GLVersion.ES1;
 
-			try
-			{
-				GraphicsMode = new AndroidGraphicsMode(ColorFormat.Empty, 0, 0, 0, 0, false);
+            try
+            {
+                base.CreateFrameBuffer();
+                return;
+            }
+            catch
+            {
+            }
 
-				base.CreateFrameBuffer();
-				return;
-			}
-			catch
-			{ }
+            try
+            {
+                GraphicsMode = new AndroidGraphicsMode(ColorFormat.Empty, 0, 0, 0, 0, false);
 
-			throw new Exception("Can't load EGL, aborting...");
-		}
+                base.CreateFrameBuffer();
+                return;
+            }
+            catch
+            {
+            }
 
-		protected override void OnUpdateFrame(FrameEventArgs e)
-		{
-			base.OnUpdateFrame(e);
+            throw new Exception("Can't load EGL, aborting...");
+        }
 
-			if (GameBase.Instance != null) GameBase.Instance.Update();
-		}
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            base.OnUpdateFrame(e);
 
-		protected override void OnRenderFrame(FrameEventArgs e)
-		{
-			base.OnRenderFrame(e);
+            if (GameBase.Instance != null) GameBase.Instance.Update();
+        }
 
-			if (GameBase.Instance != null) GameBase.Instance.Draw();
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
+            base.OnRenderFrame(e);
 
-			SwapBuffers();
-		}
-	}
+            if (GameBase.Instance != null) GameBase.Instance.Draw();
+
+            SwapBuffers();
+        }
+    }
 }

@@ -49,7 +49,7 @@ namespace osum.Graphics.Renderers
                 };
 
                 // Sets some parameters of the TextPaint
-                paint.SetTypeface(Typeface.CreateFromAsset(NativeAssetManagerAndroid.manager, bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
+                paint.SetTypeface(Typeface.CreateFromAsset(NativeAssetManagerAndroid.Manager, bold ? @"Skins/Default/Futura-CondensedExtraBold.ttf" : @"Skins/Default/Futura-Medium.ttf"));
                 paint.UnderlineText = underline;
                 // Gets the first iteration of the text width
                 // If restrictBounds 
