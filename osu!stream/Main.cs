@@ -46,8 +46,8 @@ namespace osum
         }
 
 #if ANDROID
-        private bool _pausedFromSuspend;
-        
+        private bool pausedFromSuspend;
+
         public Application()
         {
             activity = this;
@@ -98,17 +98,19 @@ namespace osum
 
             (Director.CurrentMode as Player)?.Pause();
 
-            switch (Director.CurrentOsuMode) {
-                case OsuMode.Play: 
+            switch (Director.CurrentOsuMode)
+            {
+                case OsuMode.Play:
                     break;
-                default: {
-                    this._pausedFromSuspend = true;
+                default:
+                {
+                    this.pausedFromSuspend = true;
                     AudioEngine.Music.Pause();
-                    
+
                     break;
                 }
             }
-            
+
             TextureManager.DisposeAll();
         }
 
@@ -127,13 +129,15 @@ namespace osum
             base.OnStart();
 
             if (GameBase.Instance == null) Main(null);
-            else {
-                if (this._pausedFromSuspend) {
+            else
+            {
+                if (this.pausedFromSuspend)
+                {
                     AudioEngine.Music.Play();
-                    this._pausedFromSuspend = false;
+                    this.pausedFromSuspend = false;
                 }
             }
-            
+
 
             GameBase.Instance.Run();
         }
