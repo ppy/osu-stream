@@ -1,4 +1,5 @@
 using System.IO;
+using osum.AssetManager;
 using osum.Helpers;
 using osum.Support;
 
@@ -54,20 +55,24 @@ namespace osum.Audio
         /// </summary>
         public virtual bool Load(byte[] audio, bool looping, string identifier = null)
         {
-            if (identifier != null && lastLoaded == identifier) return false;
+            if (identifier != null && LastLoaded == identifier) return false;
 
-            lastLoaded = identifier;
+            LastLoaded = identifier;
             return true;
         }
 
-        public string lastLoaded;
+        public string LastLoaded;
 
         /// <summary>
         /// Loads an audio track directly from a file.
         /// </summary>
         public bool Load(string filename, bool looping)
         {
+#if ANDROID
+            return Load(((NativeAssetManagerAndroid)NativeAssetManager.Instance).GetFileBytes(filename), looping, filename);
+#else
             return Load(File.ReadAllBytes(filename), looping, filename);
+#endif
         }
 
         /// <summary>

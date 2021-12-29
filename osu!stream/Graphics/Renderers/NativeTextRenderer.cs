@@ -13,7 +13,7 @@ namespace osum.Graphics.Renderers
 
     internal class NativeTextRenderer
     {
-        internal virtual pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 Color4, bool shadow,
+        internal virtual pTexture CreateText(string text, float size, Vector2 restrictBounds, Color4 colour, bool shadow,
             bool bold, bool underline, TextAlignment alignment, bool forceAa,
             out Vector2 measured,
             Color4 background, Color4 border, int borderWidth, bool measureOnly, string fontFace)

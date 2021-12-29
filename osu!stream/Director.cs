@@ -240,6 +240,8 @@ namespace osum
             }
 
             PendingMode = mode;
+            
+            GameBase.Instance.SetViewport();
         }
 
         private static bool modeChangePending;

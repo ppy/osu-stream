@@ -159,7 +159,7 @@ namespace osum.GameModes.Play
                 {
                     AudioEngine.Music.Stop();
 
-                    if (AudioEngine.Music.lastLoaded != Beatmap.PackageIdentifier)
+                    if (AudioEngine.Music.LastLoaded != Beatmap.PackageIdentifier)
                         //could have switched to the results screen bgm.
                         AudioEngine.Music.Load(Beatmap.GetFileBytes(Beatmap.AudioFilename), false, Beatmap.PackageIdentifier);
                     else

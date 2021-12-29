@@ -63,9 +63,9 @@
     <Compile Include="AssetManager\NativeAssetManager.cs" />
     <Compile Include="Audio\AudioEngine.cs" />
     <Compile Include="Audio\BackgroundAudioPlayerDesktop.cs" />
-    <Compile Include="Audio\SoundEffectPlayerBass.cs" />
     <Compile Include="Audio\ISoundEffectPlayer.cs" />
     <Compile Include="Audio\IBackgroundAudioPlayer.cs" />
+    <Compile Include="Audio\SoundEffectPlayerBassDesktop.cs" />
     <Compile Include="Audio\SoundEffectPlayerOpenAL.cs" />
     <Compile Include="Director.cs" />
     <Compile Include="GameBase.cs" />

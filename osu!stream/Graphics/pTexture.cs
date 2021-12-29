@@ -1,8 +1,10 @@
-#if iOS
+#if iOS || ANDROID
 using OpenTK.Graphics.ES11;
+#if iOS
 using Foundation;
 using ObjCRuntime;
 using OpenGLES;
+#endif
 
 using TextureTarget = OpenTK.Graphics.ES11.All;
 using TextureParameterName = OpenTK.Graphics.ES11.All;
@@ -23,8 +25,12 @@ using ShaderType = OpenTK.Graphics.ES11.All;
 using VertexAttribPointerType = OpenTK.Graphics.ES11.All;
 using ProgramParameter = OpenTK.Graphics.ES11.All;
 using ShaderParameter = OpenTK.Graphics.ES11.All;
+#if iOS
 using UIKit;
 using CoreGraphics;
+#else
+using System.Drawing.Imaging;
+#endif
 #else
 using OpenTK.Graphics.OpenGL;
 using System.Drawing.Imaging;
@@ -119,7 +125,7 @@ namespace osum.Graphics
 
                 if (fboId >= 0)
                 {
-#if iOS
+#if iOS || ANDROID
                     GL.Oes.DeleteFramebuffers(1,ref fboId);
                     fboId = -1;
 
@@ -343,6 +349,13 @@ namespace osum.Graphics
                 pTexture pt;
 #if iOS
                 pt = FromUIImage(UIImage.LoadFromData(NSData.FromStream(stream)),assetname);
+#elif ANDROID
+                using (Android.Graphics.Bitmap b = Android.Graphics.BitmapFactory.DecodeStream(stream))
+                {
+                    pt = FromRawBytes(b.LockPixels(), b.Width, b.Height);
+                    pt.assetName = assetname;
+                    b.UnlockPixels();
+                }
 #else
                 using (Bitmap b = (Bitmap)Image.FromStream(stream, false, false))
                 {
@@ -430,7 +443,7 @@ namespace osum.Graphics
             if (fboSingleton >= 0)
                 fboId = fboSingleton;
 
-#if iOS
+#if iOS || ANDROID
             int oldFBO = 0;
 
             GL.GetInteger(All.FramebufferBindingOes, out oldFBO);

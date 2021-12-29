@@ -19,7 +19,7 @@ namespace osum.Helpers
         // measured in seconds
         private static double time;
 
-#if iOS
+#if iOS || ANDROID
         //higher offset == notes appear earlier
         public const int UNIVERSAL_OFFSET_MP3 = 45;
         public const int UNIVERSAL_OFFSET_M4A = -8;
@@ -146,7 +146,7 @@ namespace osum.Helpers
             Time = (int)Math.Round(time * 1000);
             ModeTime = (int)Math.Round(modeTime * 1000);
 
-            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.lastLoaded != null && AudioEngine.Music.lastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A) - USER_OFFSET;
+            int offset = AudioEngine.Music == null ? 0 : (AudioEngine.Music.LastLoaded != null && AudioEngine.Music.LastLoaded.Contains("mp3") ? UNIVERSAL_OFFSET_MP3 : UNIVERSAL_OFFSET_M4A) - USER_OFFSET;
 
             if (AudioTimeSource.IsElapsing)
             {

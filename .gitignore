@@ -19,6 +19,7 @@ osum/osu!m-desktop.pidb
 osum/osu!m-desktop.userprefs
 *.vsp
 osum.ipa
+osu!stream/Resources/Resource.designer.cs
 
 Output/*
 *.userprefs
