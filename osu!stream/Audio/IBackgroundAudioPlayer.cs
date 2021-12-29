@@ -55,13 +55,13 @@ namespace osum.Audio
         /// </summary>
         public virtual bool Load(byte[] audio, bool looping, string identifier = null)
         {
-            if (identifier != null && lastLoaded == identifier) return false;
+            if (identifier != null && LastLoaded == identifier) return false;
 
-            lastLoaded = identifier;
+            LastLoaded = identifier;
             return true;
         }
 
-        public string lastLoaded;
+        public string LastLoaded;
 
         /// <summary>
         /// Loads an audio track directly from a file.
@@ -69,7 +69,7 @@ namespace osum.Audio
         public bool Load(string filename, bool looping)
         {
 #if ANDROID
-            return Load(((NativeAssetManagerAndroid)NativeAssetManager.Instance).GetFileBytes(filename), looping, filename); // This probably isn't correct at all, fix?
+            return Load(((NativeAssetManagerAndroid)NativeAssetManager.Instance).GetFileBytes(filename), looping, filename);
 #else
             return Load(File.ReadAllBytes(filename), looping, filename);
 #endif
@@ -114,18 +114,18 @@ namespace osum.Audio
             return true;
         }
 
-#region IUpdateable Members
+        #region IUpdateable Members
 
         public abstract void Update();
 
-#endregion
+        #endregion
 
-#region ITimeSource Members
+        #region ITimeSource Members
 
         public abstract double CurrentTime { get; }
 
         public abstract bool IsElapsing { get; }
 
-#endregion
+        #endregion
     }
 }

@@ -20,7 +20,6 @@ namespace osum.Audio
                     sourceInfo[i] = new SourceBass();
                 else
                 {
-                    //info.SourceId = sources[i];
                     info.BufferId = 0;
                 }
             }

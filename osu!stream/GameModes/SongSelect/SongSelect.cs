@@ -479,7 +479,7 @@ namespace osum.GameModes.SongSelect
 
                                             cancelLockedHoverPreview();
 
-                                            if (AudioEngine.Music != null && (AudioEngine.Music.lastLoaded != panel.Beatmap.PackageIdentifier))
+                                            if (AudioEngine.Music != null && (AudioEngine.Music.LastLoaded != panel.Beatmap.PackageIdentifier))
                                             {
                                                 AudioEngine.Music.Load(panel.Beatmap.GetFileBytes(panel.Beatmap.AudioFilename), false, panel.Beatmap.PackageIdentifier);
                                                 if (!AudioEngine.Music.IsElapsing)
