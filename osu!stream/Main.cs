@@ -1,3 +1,4 @@
+using osum.Audio;
 using osum.Graphics;
 using osum.Support.Android;
 #if ANDROID
