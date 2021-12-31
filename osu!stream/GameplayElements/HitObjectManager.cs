@@ -106,13 +106,15 @@ namespace osum.GameplayElements
         {
             spriteManager.Dispose();
 
-            if (sliderTrackRenderer != null) sliderTrackRenderer.Dispose();
+            sliderTrackRenderer?.Dispose();
 
             if (streamSpriteManagers != null)
             {
                 foreach (SpriteManager sm in streamSpriteManagers)
-                    if (sm != null)
-                        sm.Dispose();
+                {
+                    sm?.Dispose();
+                }
+
                 streamSpriteManagers = null;
             }
 
@@ -458,8 +460,7 @@ namespace osum.GameplayElements
 
             if (nextStreamChange > 0 && nextStreamChange <= Clock.AudioTime)
             {
-                if (OnStreamChanged != null)
-                    OnStreamChanged(ActiveStream);
+                OnStreamChanged?.Invoke(ActiveStream);
 
                 nextStreamChange = 0;
             }
@@ -587,8 +588,7 @@ namespace osum.GameplayElements
 
             hitObject.HitAnimation(change);
 
-            if (OnScoreChanged != null)
-                OnScoreChanged(change, hitObject);
+            OnScoreChanged?.Invoke(change, hitObject);
         }
 
         private void ResetComboCounts()
@@ -605,8 +605,7 @@ namespace osum.GameplayElements
 
         internal void StopAllSounds()
         {
-            if (ActiveObject != null)
-                ActiveObject.StopSound();
+            ActiveObject?.StopSound();
         }
     }
 

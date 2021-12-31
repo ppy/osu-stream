@@ -119,8 +119,7 @@ namespace osum.GameModes
 
         public override void Dispose()
         {
-            if (downloadRequest != null)
-                downloadRequest.Abort();
+            downloadRequest?.Abort();
 
             DownloadLink = null;
             base.Dispose();

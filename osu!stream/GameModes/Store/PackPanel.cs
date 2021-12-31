@@ -393,8 +393,7 @@ namespace osum.GameModes.Store
 
                 AudioEngine.PlaySample(OsuSamples.MenuClick);
 
-                if (previewRequest != null)
-                    previewRequest.Abort();
+                previewRequest?.Abort();
 
                 string downloadPath = "https://www.osustream.com/dl/preview.php";
                 string param = "pack=" + PackId + "&filename=" + NetRequest.UrlEncode(item.Filename) + "&format=" + PREFERRED_FORMAT;

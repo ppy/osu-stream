@@ -82,7 +82,7 @@ namespace osum.Graphics.Sprites
         private void InvokeAnimationFinished()
         {
             VoidDelegate a = AnimationFinished;
-            if (a != null) a();
+            a?.Invoke();
         }
 
         private int lastFrame;

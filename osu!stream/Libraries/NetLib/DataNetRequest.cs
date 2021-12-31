@@ -134,8 +134,7 @@ namespace osum.Libraries.NetLib
             try
             {
                 //inform subscribers that we have started
-                if (onStart != null)
-                    onStart();
+                onStart?.Invoke();
 
 #if iOS
                 del = new NRDelegate(this);
@@ -214,8 +213,7 @@ namespace osum.Libraries.NetLib
 
             GameBase.Scheduler.Add(delegate
             {
-                if (onFinish != null)
-                    onFinish(data, error);
+                onFinish?.Invoke(data, error);
             });
         }
 
@@ -223,8 +221,7 @@ namespace osum.Libraries.NetLib
         {
             GameBase.Scheduler.Add(delegate
             {
-                if (onUpdate != null)
-                    onUpdate(this, e.BytesReceived, e.TotalBytesToReceive);
+                onUpdate?.Invoke(this, e.BytesReceived, e.TotalBytesToReceive);
             });
         }
 
@@ -232,8 +229,7 @@ namespace osum.Libraries.NetLib
         {
             GameBase.Scheduler.Add(delegate
             {
-                if (onUpdate != null)
-                    onUpdate(this, e.BytesReceived, e.TotalBytesToReceive);
+                onUpdate?.Invoke(this, e.BytesReceived, e.TotalBytesToReceive);
             });
         }
 

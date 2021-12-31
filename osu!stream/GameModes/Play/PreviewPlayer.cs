@@ -83,7 +83,7 @@ namespace osum.GameModes.Play
             }
             catch
             {
-                if (HitObjectManager != null) HitObjectManager.Dispose();
+                HitObjectManager?.Dispose();
                 HitObjectManager = null;
                 //if this fails, it will be handled later on in Initialize()
             }

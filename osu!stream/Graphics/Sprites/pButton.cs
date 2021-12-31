@@ -51,7 +51,7 @@ namespace osum.Graphics.Sprites
             {
                 if (!Enabled || !pendingUnhover) return;
 
-                if (additiveButton != null) additiveButton.FadeOut(100);
+                additiveButton?.FadeOut(100);
             };
 
 
@@ -95,14 +95,13 @@ namespace osum.Graphics.Sprites
         {
             if (!Enabled) return;
 
-            if (additiveButton != null) additiveButton.FadeOut(100);
+            additiveButton?.FadeOut(100);
 
             AudioEngine.PlaySample(OsuSamples.MenuHit);
 
             pendingUnhover = false;
 
-            if (action != null)
-                action(this, null);
+            action?.Invoke(this, null);
         }
 
         public Vector2 Position => s_BackingPlate.Position;

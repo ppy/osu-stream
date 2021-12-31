@@ -163,8 +163,7 @@ namespace osum.GameplayElements
         {
             sw.Write(HighScore != null);
 
-            if (HighScore != null)
-                HighScore.WriteToStream(sw);
+            HighScore?.WriteToStream(sw);
 
             sw.Write(Playcount);
         }

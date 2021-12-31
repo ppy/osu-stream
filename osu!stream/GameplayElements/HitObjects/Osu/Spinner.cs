@@ -375,8 +375,7 @@ namespace osum.GameplayElements.HitObjects.Osu
             {
                 if (sourceSpinning == null || sourceSpinning.BufferId == 0)
                     sourceSpinning = AudioEngine.Effect.LoadBuffer(AudioEngine.LoadSample(OsuSamples.SpinnerSpin), 1, true, true);
-                if (sourceSpinning != null)
-                    sourceSpinning.Play();
+                sourceSpinning?.Play();
             }
         }
 

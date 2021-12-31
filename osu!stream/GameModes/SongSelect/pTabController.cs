@@ -82,14 +82,14 @@ namespace osum.GameModes.SongSelect
 
         public override void Update()
         {
-            if (activeSpriteManager != null) activeSpriteManager.Update();
+            activeSpriteManager?.Update();
 
             base.Update();
         }
 
         public override bool Draw()
         {
-            if (activeSpriteManager != null) activeSpriteManager.Draw();
+            activeSpriteManager?.Draw();
 
             //return base.Draw();
             return true;
@@ -97,13 +97,13 @@ namespace osum.GameModes.SongSelect
 
         internal void Hide()
         {
-            if (activeSpriteManager != null) activeSpriteManager.Sprites.ForEach(s => s.FadeOut(250));
+            activeSpriteManager?.Sprites.ForEach(s => s.FadeOut(250));
             spriteManager.Sprites.ForEach(s => s.FadeOut(250));
         }
 
         internal void Show()
         {
-            if (activeSpriteManager != null) activeSpriteManager.Sprites.ForEach(s => s.FadeInFromZero(250));
+            activeSpriteManager?.Sprites.ForEach(s => s.FadeInFromZero(250));
             spriteManager.Sprites.ForEach(s => s.FadeInFromZero(250));
         }
     }

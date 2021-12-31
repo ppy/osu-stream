@@ -25,9 +25,7 @@ namespace osum.GameplayElements.Beatmaps
             {
                 MapPackage package = Package;
 
-                if (package == null) return null;
-
-                return package.MapFiles[0];
+                return package?.MapFiles[0];
             }
         }
 
@@ -107,9 +105,8 @@ namespace osum.GameplayElements.Beatmaps
         public Stream GetFileStream(string filename)
         {
             MapPackage p = Package;
-            if (p == null) return null;
 
-            return p.GetFile(filename);
+            return p?.GetFile(filename);
         }
 
         internal byte[] GetFileBytes(string filename)

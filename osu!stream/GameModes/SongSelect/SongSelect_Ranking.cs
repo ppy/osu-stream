@@ -24,8 +24,7 @@ namespace osum.GameModes.SongSelect
         {
             State = SelectState.RankingDisplay;
 
-            if (spriteManagerDifficultySelect != null)
-                spriteManagerDifficultySelect.FadeOut(200);
+            spriteManagerDifficultySelect?.FadeOut(200);
 
             if (rankingSpriteManager != null)
             {
@@ -42,7 +41,7 @@ namespace osum.GameModes.SongSelect
 
             GameBase.ShowLoadingOverlay = true;
 
-            if (s_SongInfo != null) s_SongInfo.FadeOut(100);
+            s_SongInfo?.FadeOut(100);
 
             int period = 0;
 

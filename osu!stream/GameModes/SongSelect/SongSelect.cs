@@ -300,7 +300,7 @@ namespace osum.GameModes.SongSelect
             topmostSpriteManager.Dispose();
             spriteManagerDifficultySelect.Dispose();
             songInfoSpriteManager.Dispose();
-            if (rankingSpriteManager != null) rankingSpriteManager.Dispose();
+            rankingSpriteManager?.Dispose();
 
             foreach (Beatmap b in maps)
                 if (b != Player.Beatmap)
@@ -366,10 +366,10 @@ namespace osum.GameModes.SongSelect
         {
             base.Draw();
 
-            if (rankingSpriteManager != null) rankingSpriteManager.Draw();
+            rankingSpriteManager?.Draw();
 
             spriteManagerDifficultySelect.Draw();
-            if (songInfoSpriteManager != null) songInfoSpriteManager.Draw();
+            songInfoSpriteManager?.Draw();
             topmostSpriteManager.Draw();
             return true;
         }
@@ -381,8 +381,8 @@ namespace osum.GameModes.SongSelect
             base.Update();
 
             spriteManagerDifficultySelect.Update();
-            if (songInfoSpriteManager != null) songInfoSpriteManager.Update();
-            if (rankingSpriteManager != null) rankingSpriteManager.Update();
+            songInfoSpriteManager?.Update();
+            rankingSpriteManager?.Update();
             topmostSpriteManager.Update();
 
             inputStolen = InputManager.PrimaryTrackingPoint != null && InputManager.PrimaryTrackingPoint.HoveringObject == s_ButtonBack;

@@ -21,8 +21,7 @@ namespace osum.Input.Sources
 
             GameBase.Scheduler.Add(delegate
             {
-                if (OnDown != null)
-                    OnDown(this, trackingPoint);
+                OnDown?.Invoke(this, trackingPoint);
             });
 
             if (!trackingPoint.HoveringObjectConfirmed)
@@ -38,8 +37,7 @@ namespace osum.Input.Sources
 
             GameBase.Scheduler.Add(delegate
             {
-                if (OnUp != null)
-                    OnUp(this, trackingPoint);
+                OnUp?.Invoke(this, trackingPoint);
             });
 
             if (!trackingPoint.HoveringObjectConfirmed)
@@ -54,8 +52,7 @@ namespace osum.Input.Sources
 
             GameBase.Scheduler.Add(delegate
             {
-                if (OnClick != null)
-                    OnClick(this, trackingPoint);
+                OnClick?.Invoke(this, trackingPoint);
             });
 
             if (!trackingPoint.HoveringObjectConfirmed)
@@ -70,8 +67,7 @@ namespace osum.Input.Sources
 
             GameBase.Scheduler.Add(delegate
             {
-                if (OnMove != null)
-                    OnMove(this, trackingPoint);
+                OnMove?.Invoke(this, trackingPoint);
             });
         }
     }

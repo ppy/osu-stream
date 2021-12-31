@@ -265,9 +265,9 @@ namespace osum.Graphics.Renderers
 
         private unsafe void CalculateQuadMesh(float* dest, float radius, Line prev, Line cur, Line next, bool flip_start, bool flip_end)
         {
-            if (prev != null) prev.Recalc();
-            if (cur != null) cur.Recalc();
-            if (next != null) next.Recalc();
+            prev?.Recalc();
+            cur?.Recalc();
+            next?.Recalc();
             Vector2 p = cur.unitAngle * radius;
             dest[6] = cur.p1.X;
             dest[7] = cur.p1.Y;

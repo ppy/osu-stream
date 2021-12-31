@@ -99,8 +99,7 @@ namespace osum.GameModes.Play.Components
                 text.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, text.ScaleScalar), 0.2f, 3));
                 background.Transform(new TransformationBounce(Clock.AudioTime, Clock.AudioTime + 300, Math.Max(1, background.ScaleScalar), 0.2f, 3));
 
-                if (OnPulse != null)
-                    OnPulse();
+                OnPulse?.Invoke();
             }
 
             if (didChangeTexture)

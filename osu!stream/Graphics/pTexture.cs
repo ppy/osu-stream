@@ -149,8 +149,7 @@ namespace osum.Graphics
         /// </summary>
         internal void UnloadTexture()
         {
-            if (TextureGl != null)
-                TextureGl.Dispose();
+            TextureGl?.Dispose();
         }
 
         internal bool ReloadIfPossible()

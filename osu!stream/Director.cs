@@ -260,8 +260,7 @@ namespace osum
                 //There was a mode change last frame.
                 //See below for where this is set.
                 Clock.ModeTimeReset();
-                if (ActiveTransition != null)
-                    ActiveTransition.FadeIn();
+                ActiveTransition?.FadeIn();
                 CurrentMode.OnFirstUpdate();
 
                 modeChangePending = false;
@@ -308,8 +307,7 @@ namespace osum
             //Initialising a mode usually takes a fair amount of time and will throw off timings,
             //so we count this as a null frame.
 
-            if (CurrentMode != null)
-                CurrentMode.Update();
+            CurrentMode?.Update();
 
             return false;
         }
@@ -324,8 +322,7 @@ namespace osum
 
             CurrentMode.Draw();
 
-            if (ActiveTransition != null)
-                ActiveTransition.Draw();
+            ActiveTransition?.Draw();
             return true;
         }
 

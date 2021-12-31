@@ -457,7 +457,7 @@ namespace osum
 
             Components.ForEach(c => c.Update());
 
-            if (ActiveNotification != null) ActiveNotification.Update();
+            ActiveNotification?.Update();
 
             return true;
         }
@@ -548,8 +548,7 @@ namespace osum
 
         public static void TriggerLayoutChanged()
         {
-            if (OnScreenLayoutChanged != null)
-                OnScreenLayoutChanged();
+            OnScreenLayoutChanged?.Invoke();
         }
 
         internal static Notification ActiveNotification;

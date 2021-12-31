@@ -57,8 +57,7 @@ namespace osum.Graphics.Sprites
                     //might have a pending unhover state animation to apply.
                 {
                     IsHovering = false;
-                    if (onHoverLost != null)
-                        onHoverLost(this, null);
+                    onHoverLost?.Invoke(this, null);
                 }
             }
         }
@@ -143,13 +142,11 @@ namespace osum.Graphics.Sprites
 
                 if (IsHovering)
                 {
-                    if (onHover != null)
-                        onHover(this, null);
+                    onHover?.Invoke(this, null);
                 }
                 else
                 {
-                    if (onHoverLost != null)
-                        onHoverLost(this, null);
+                    onHoverLost?.Invoke(this, null);
                 }
             }
         }
@@ -195,8 +192,7 @@ namespace osum.Graphics.Sprites
                 //check HandleInput again here so we can cancel the unhover for the time being.
             {
                 IsHovering = false;
-                if (onHoverLost != null)
-                    onHoverLost(this, null);
+                onHoverLost?.Invoke(this, null);
             }
         }
 
@@ -206,12 +202,10 @@ namespace osum.Graphics.Sprites
             {
                 //force hovering. this is necessary if a click is manually triggered, to get animations etc.
                 IsHovering = true;
-                if (onHover != null)
-                    onHover(this, null);
+                onHover?.Invoke(this, null);
             }
 
-            if (onClick != null)
-                onClick(this, null);
+            onClick?.Invoke(this, null);
 
             acceptableUpClick = 0;
         }

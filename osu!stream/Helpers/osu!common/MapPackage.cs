@@ -1179,8 +1179,7 @@ namespace osum.Helpers
                 throw new IOException("Cannot save an empty package.");
 
             // release lock on file
-            if (fHandle != null)
-                fHandle.Close();
+            fHandle?.Close();
 
             // read current file to memory since we will be overwriting
 
@@ -1402,12 +1401,12 @@ namespace osum.Helpers
                 Array.Clear(fIV, 0, fIV.Length);
             //Array.Clear(k, 0, k.Length); //TODO: key stuff
 
-            if (fFiles != null) fFiles.Clear();
-            if (fFilesToAdd != null) fFilesToAdd.Clear();
-            if (fFilesToAddDateCreated != null) fFilesToAddDateCreated.Clear();
-            if (fFilesToAddDateModified != null) fFilesToAddDateModified.Clear();
-            if (fFilesToAddDateEncrypted != null) fFilesToAddDateEncrypted.Clear();
-            if (fMetadata != null) fMetadata.Clear();
+            fFiles?.Clear();
+            fFilesToAdd?.Clear();
+            fFilesToAddDateCreated?.Clear();
+            fFilesToAddDateModified?.Clear();
+            fFilesToAddDateEncrypted?.Clear();
+            fMetadata?.Clear();
 
             if (fHandle != null)
             {

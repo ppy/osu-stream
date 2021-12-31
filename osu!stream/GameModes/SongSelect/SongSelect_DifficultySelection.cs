@@ -457,8 +457,7 @@ namespace osum.GameModes.SongSelect
                 s_Header.Transform(new TransformationV(s_Header.Position, Vector2.Zero, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
                 s_Header.Transform(new TransformationF(TransformationType.Rotation, s_Header.Rotation, 0, Clock.ModeTime, Clock.ModeTime + 500, EasingTypes.In));
 
-                if (s_SongInfo != null)
-                    s_SongInfo.FadeOut(250);
+                s_SongInfo?.FadeOut(250);
 
                 footerHide();
             }, true);

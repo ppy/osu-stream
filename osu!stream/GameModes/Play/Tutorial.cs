@@ -165,7 +165,7 @@ namespace osum.GameModes.Play
             lastFrameBeat = currentBeat;
             currentBeat = (Clock.AudioTime - music_offset) / music_beatlength;
 
-            if (currentSegmentDelegate != null) currentSegmentDelegate();
+            currentSegmentDelegate?.Invoke();
 
             base.Update();
 
@@ -283,7 +283,7 @@ namespace osum.GameModes.Play
                     showText(LocalisationManager.GetString(OsuString.HitCircle2), -50);
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 700, true, 0, HitObjectSoundType.Normal);
@@ -440,7 +440,7 @@ namespace osum.GameModes.Play
                     showText(LocalisationManager.GetString(OsuString.Hold1), -90);
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new HoldCircle(HitObjectManager, new Vector2(256, 197), 1000, true, 0, HitObjectSoundType.Normal, 50, 20, null, 800, 10);
@@ -554,7 +554,7 @@ namespace osum.GameModes.Play
                     showText(LocalisationManager.GetString(OsuString.Slider1), -80);
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new Slider(HitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 0, 300, new List<Vector2> { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
@@ -600,7 +600,7 @@ namespace osum.GameModes.Play
                     Clock.ResetManual();
                     Autoplay = true;
 
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new Slider(HitObjectManager, new Vector2(100, 192), 2000, true, 0, HitObjectSoundType.Normal, CurveTypes.Bezier, 2, 300, new List<Vector2> { new Vector2(100, 192), new Vector2(400, 192) }, null, 200, 40);
@@ -698,7 +698,7 @@ namespace osum.GameModes.Play
                     Autoplay = true;
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new Spinner(HitObjectManager, 800, 4000, HitObjectSoundType.Normal);
@@ -790,7 +790,7 @@ namespace osum.GameModes.Play
                     showText(LocalisationManager.GetString(OsuString.Multitouch1), -100);
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new HitCircle(HitObjectManager, new Vector2(128, 180), 1500, true, 0, HitObjectSoundType.Normal);
@@ -918,7 +918,7 @@ namespace osum.GameModes.Play
                     Autoplay = true;
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     sampleHitObject = new HitCircle(HitObjectManager, new Vector2(256, 197), 1500, true, 0, HitObjectSoundType.Normal);
@@ -1045,7 +1045,7 @@ namespace osum.GameModes.Play
                     Autoplay = true;
 
                     showDemo();
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     const int vpos = 240;
@@ -1127,8 +1127,9 @@ namespace osum.GameModes.Play
                     playfieldBackground.ChangeColour(Difficulty.Normal);
 
                     foreach (SpriteManager sm in HitObjectManager.streamSpriteManagers)
-                        if (sm != null)
-                            sm.ScaleTo(0.5f, 500, EasingTypes.InOut).MoveTo(new Vector2(0, 150), 500, EasingTypes.In);
+                    {
+                        sm?.ScaleTo(0.5f, 500, EasingTypes.InOut).MoveTo(new Vector2(0, 150), 500, EasingTypes.In);
+                    }
 
                     loadNextSegment();
                     break;
@@ -1314,8 +1315,7 @@ namespace osum.GameModes.Play
                     showTouchToContinue();
                     break;
                 case TutorialSegments.TutorialMap_Interact:
-                    if (HitObjectManager != null)
-                        HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = new HitObjectManager(Beatmap);
 
                     prepareInteract();
@@ -1370,7 +1370,7 @@ namespace osum.GameModes.Play
                     };
                     break;
                 case TutorialSegments.TutorialMap_Judge:
-                    if (HitObjectManager != null) HitObjectManager.Dispose();
+                    HitObjectManager?.Dispose();
                     HitObjectManager = null;
 
                     judge();

@@ -269,7 +269,7 @@ namespace osum.GameModes.MainMenu
         {
             GameBase.Scheduler.Add(delegate
             {
-                if (whoosh != null) whoosh.Play();
+                whoosh?.Play();
 
                 ScaleTo(scale_offset, duration / 2, EasingTypes.InOut);
                 MoveTo(new Vector2(75, -44), duration / 2, EasingTypes.InOut);
@@ -283,8 +283,7 @@ namespace osum.GameModes.MainMenu
 
             UpdateStoreNotify();
 
-            if (textSprites != null)
-                textSprites.ForEach(s => s.FadeIn(500));
+            textSprites?.ForEach(s => s.FadeIn(500));
         }
 
         internal static void UpdateStoreNotify()
@@ -306,8 +305,7 @@ namespace osum.GameModes.MainMenu
         {
             if (awesomeTransformation != null || first)
             {
-                if (awesomeTransformation != null)
-                    awesomeTransformation.Update(ClockingNow);
+                awesomeTransformation?.Update(ClockingNow);
 
                 float progress = awesomeTransformation?.CurrentFloat ?? 0;
                 yellow.p1 = rectangleLineLeft.PositionAt(0.575f + 0.08f * progress);

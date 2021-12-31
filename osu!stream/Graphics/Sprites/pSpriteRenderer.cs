@@ -16,7 +16,7 @@ namespace osum.Graphics.Sprites
 		
 		public override bool Draw()
 		{
-			if (OnDraw != null) OnDraw();
+			OnDraw?.Invoke();
 			return true;
 		}
 	}

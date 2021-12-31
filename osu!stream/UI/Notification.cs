@@ -84,7 +84,7 @@ namespace osum.UI
 
                     okayButton.OnHoverLost += delegate
                     {
-                        if (additiveButton != null) additiveButton.FadeOut(100);
+                        additiveButton?.FadeOut(100);
                     };
 
                     okayButton.OnClick += delegate { dismiss(true); };
@@ -120,7 +120,7 @@ namespace osum.UI
 
                     okayButton.OnHoverLost += delegate
                     {
-                        if (additiveButton != null) additiveButton.FadeOut(100);
+                        additiveButton?.FadeOut(100);
                     };
 
                     okayButton.OnClick += delegate { dismiss(true); };
@@ -153,7 +153,7 @@ namespace osum.UI
 
                     cancelButton.OnHoverLost += delegate
                     {
-                        if (additiveButton != null) additiveButton.FadeOut(100);
+                        additiveButton?.FadeOut(100);
                     };
 
                     cancelButton.OnClick += delegate { dismiss(false); };
@@ -180,7 +180,7 @@ namespace osum.UI
 
             GameBase.Scheduler.Add(delegate
             {
-                if (Action != null) Action(completed);
+                Action?.Invoke(completed);
                 Dismissed = true;
                 AlwaysDraw = false;
             }, 300);

@@ -300,11 +300,9 @@ namespace osum.GameModes.Play
 
         protected virtual void resetScore()
         {
-            if (comboCounter != null)
-                comboCounter.SetCombo(0);
+            comboCounter?.SetCombo(0);
 
-            if (healthBar != null)
-                healthBar.SetCurrentHp(DifficultyManager.InitialHp, true);
+            healthBar?.SetCurrentHp(DifficultyManager.InitialHp, true);
 
             if (scoreDisplay != null)
             {
@@ -320,8 +318,7 @@ namespace osum.GameModes.Play
             if (Beatmap == null)
                 return;
 
-            if (HitObjectManager != null)
-                HitObjectManager.Dispose();
+            HitObjectManager?.Dispose();
 
             if (Beatmap.Package != null && (GameBase.Instance != null && Beatmap.Package.GetMetadata(MapMetaType.Revision) == "preview"))
                 return; //can't load preview in this mode.
@@ -338,7 +335,7 @@ namespace osum.GameModes.Play
             }
             catch
             {
-                if (HitObjectManager != null) HitObjectManager.Dispose();
+                HitObjectManager?.Dispose();
                 HitObjectManager = null;
                 //if this fails, it will be handled later on in Initialize()
             }
@@ -397,22 +394,22 @@ namespace osum.GameModes.Play
             InputManager.OnDown -= InputManager_OnDown;
             Director.OnTransitionEnded -= Director_OnTransitionEnded;
 
-            if (HitObjectManager != null) HitObjectManager.Dispose();
+            HitObjectManager?.Dispose();
 
             TextureManager.RequireSurfaces = false;
 
-            if (healthBar != null) healthBar.Dispose();
-            if (scoreDisplay != null) scoreDisplay.Dispose();
-            if (countdown != null) countdown.Dispose();
-            if (GuideFingers != null) GuideFingers.Dispose();
-            if (menu != null) menu.Dispose();
-            if (comboCounter != null) comboCounter.Dispose();
-            if (touchBurster != null) touchBurster.Dispose();
-            if (streamSwitchDisplay != null) streamSwitchDisplay.Dispose();
-            if (playfieldBackground != null) playfieldBackground.Dispose();
-            if (topMostSpriteManager != null) topMostSpriteManager.Dispose();
+            healthBar?.Dispose();
+            scoreDisplay?.Dispose();
+            countdown?.Dispose();
+            GuideFingers?.Dispose();
+            menu?.Dispose();
+            comboCounter?.Dispose();
+            touchBurster?.Dispose();
+            streamSwitchDisplay?.Dispose();
+            playfieldBackground?.Dispose();
+            topMostSpriteManager?.Dispose();
 
-            if (progressDisplay != null) progressDisplay.Dispose();
+            progressDisplay?.Dispose();
 
             if (Director.PendingOsuMode != OsuMode.Play)
             {
@@ -485,8 +482,7 @@ namespace osum.GameModes.Play
             //incorrect calculations.
             if (healthBar != null && GameBase.Instance != null) healthBar.SetCurrentHp(DifficultyManager.InitialHp);
 
-            if (streamSwitchDisplay != null)
-                streamSwitchDisplay.EndSwitch();
+            streamSwitchDisplay?.EndSwitch();
 
 #if SCORE_TESTING
             File.AppendAllText(scoreTestFilename, "Stream switched at " + Clock.AudioTime + "\n");
@@ -742,38 +738,41 @@ namespace osum.GameModes.Play
 
             frameCount++;
 
-            if (streamSwitchDisplay != null) streamSwitchDisplay.Draw();
+            streamSwitchDisplay?.Draw();
 
-            if (comboCounter != null) comboCounter.Draw();
+            comboCounter?.Draw();
 
-            if (progressDisplay != null) progressDisplay.Draw();
+            progressDisplay?.Draw();
 
-            if (countdown != null) countdown.Draw();
+            countdown?.Draw();
 
             if (HitObjectManager != null)
             {
                 if (hitObjectManager.DrawBelowOverlay)
                 {
                     HitObjectManager.Draw();
-                    if (scoreDisplay != null) scoreDisplay.Draw();
+                    scoreDisplay?.Draw();
                 }
                 else
                 {
-                    if (scoreDisplay != null) scoreDisplay.Draw();
+                    scoreDisplay?.Draw();
                     HitObjectManager.Draw();
                 }
             }
-            else if (scoreDisplay != null) scoreDisplay.Draw();
+            else
+            {
+                scoreDisplay?.Draw();
+            }
 
-            if (healthBar != null) healthBar.Draw();
+            healthBar?.Draw();
 
             if (GuideFingers != null && ShowGuideFingers) GuideFingers.Draw();
 
             topMostSpriteManager.Draw();
 
-            if (menu != null) menu.Draw();
+            menu?.Draw();
 
-            if (touchBurster != null) touchBurster.Draw();
+            touchBurster?.Draw();
 
             return true;
         }
@@ -812,20 +811,20 @@ namespace osum.GameModes.Play
                     playfieldBackground.Alpha = 1;
             }
 
-            if (healthBar != null) healthBar.Update();
+            healthBar?.Update();
 
             UpdateStream();
 
-            if (scoreDisplay != null) scoreDisplay.Update();
-            if (comboCounter != null) comboCounter.Update();
+            scoreDisplay?.Update();
+            comboCounter?.Update();
 
-            if (touchBurster != null) touchBurster.Update();
+            touchBurster?.Update();
 
-            if (countdown != null) countdown.Update();
+            countdown?.Update();
 
             topMostSpriteManager.Update();
 
-            if (streamSwitchDisplay != null) streamSwitchDisplay.Update();
+            streamSwitchDisplay?.Update();
 
             if (menu != null && (!Completed || Failed)) menu.Update();
 
@@ -926,8 +925,7 @@ namespace osum.GameModes.Play
                 HitObjectManager.spriteManager.Position = Vector2.Zero;
             }
 
-            if (failSprite != null)
-                failSprite.FadeOut(100);
+            failSprite?.FadeOut(100);
         }
 
         protected void showFailScreen()
@@ -940,8 +938,7 @@ namespace osum.GameModes.Play
 
             if (GameBase.Instance != null) GameBase.Instance.DisableDimming = false;
 
-            if (HitObjectManager != null)
-                HitObjectManager.StopAllSounds();
+            HitObjectManager?.StopAllSounds();
 
             if (HitObjectManager != null)
             {
@@ -985,8 +982,7 @@ namespace osum.GameModes.Play
         {
             if (!Failed) AudioEngine.Music.Pause();
 
-            if (HitObjectManager != null)
-                HitObjectManager.StopAllSounds();
+            HitObjectManager?.StopAllSounds();
 
             if (menu != null && showMenu) menu.MenuDisplayed = true;
             if (menuPauseButton != null) menuPauseButton.HandleInput = false;
@@ -1014,8 +1010,7 @@ namespace osum.GameModes.Play
             File.AppendAllText(scoreTestFilename, "Switching stream at " + switchTime + "\n");
 #endif
 
-            if (streamSwitchDisplay != null)
-                streamSwitchDisplay.BeginSwitch(increase);
+            streamSwitchDisplay?.BeginSwitch(increase);
 
             queuedStreamSwitchTime = switchTime;
             return true;

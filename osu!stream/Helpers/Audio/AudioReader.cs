@@ -215,8 +215,9 @@ namespace osum.Helpers.Audio
             if (!disposed)
             {
                 if (manual)
-                    if (Stream != null)
-                        Stream.Close();
+                {
+                    Stream?.Close();
+                }
 
                 disposed = true;
             }

@@ -115,8 +115,7 @@ namespace osum.Audio
         {
             lastPlayedTimes.Clear();
 
-            if (Effect != null)
-                Effect.StopAllLooping(true);
+            Effect?.StopAllLooping(true);
         }
 
         internal static int LoadSample(OsuSamples sample, SampleSet set = SampleSet.Soft)
@@ -156,10 +155,7 @@ namespace osum.Audio
 
         internal static void Suspend()
         {
-            if (Effect != null)
-            {
-                Effect.UnloadAll();
-            }
+            Effect?.UnloadAll();
         }
     }
 }

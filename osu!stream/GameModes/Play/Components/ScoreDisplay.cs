@@ -101,10 +101,8 @@ namespace osum.GameModes.Play.Components
 
         internal void Hide()
         {
-            if (s_Score != null)
-                s_Score.FadeOut(0);
-            if (s_Accuracy != null)
-                s_Accuracy.FadeOut(0);
+            s_Score?.FadeOut(0);
+            s_Accuracy?.FadeOut(0);
         }
     }
 }
