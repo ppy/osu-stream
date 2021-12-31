@@ -17,9 +17,11 @@ namespace osum.Helpers
         private static void Initialize()
         {
             versionBinder = new VersionConfigToNamespaceAssemblyObjectBinder();
-            formatter = new BinaryFormatter();
-            formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;
-            formatter.Binder = versionBinder;
+            formatter = new BinaryFormatter
+            {
+                AssemblyFormat = FormatterAssemblyStyle.Simple,
+                Binder = versionBinder
+            };
         }
 
         public static object Deserialize(Stream stream)

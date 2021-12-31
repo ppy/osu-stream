@@ -47,7 +47,7 @@ namespace osum.GameModes.Play.Components
                     if (menuText == null)
                     {
 #if DIST
-                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0,80), 1, true, Color4.White)
+                        menuText = new pText(string.Format(LocalisationManager.GetString(OsuString.PauseInfo), Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.White)
 #else
                         menuText = new pText(string.Format("{0} restarts\n{1}% completed\ncurrent time: {2}", Player.RestartCount, p != null ? Math.Round(p.Progress * 100) : 0, Clock.AudioTime), 24, new Vector2(0, 80), 1, true, Color4.White)
 #endif

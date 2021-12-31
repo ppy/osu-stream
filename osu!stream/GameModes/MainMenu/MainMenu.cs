@@ -39,8 +39,8 @@ using ShaderParameter = OpenTK.Graphics.ES11.All;
 using ErrorCode = OpenTK.Graphics.ES11.All;
 using TextureEnvParameter = OpenTK.Graphics.ES11.All;
 using TextureEnvTarget = OpenTK.Graphics.ES11.All;
-#else
 
+#else
 #endif
 
 namespace osum.GameModes.MainMenu
@@ -357,7 +357,7 @@ namespace osum.GameModes.MainMenu
         }
 
         private int lastStrum;
-        
+
         private void strum()
         {
             int strum = lastStrum;

@@ -244,10 +244,16 @@ namespace osum.GameModes.SongSelect
                 AudioEngine.PlaySample(OsuSamples.MenuHit);
                 State = SelectState.Exiting;
                 Director.ChangeMode(OsuMode.Store);
-            }, index++) { NewSection = true };
+            }, index++)
+            {
+                NewSection = true,
+                s_Text =
+                {
+                    Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs),
+                    Colour = Color4.White
+                }
+            };
 
-            panelDownloadMore.s_Text.Text = LocalisationManager.GetString(OsuString.DownloadMoreSongs);
-            panelDownloadMore.s_Text.Colour = Color4.White;
             panelDownloadMore.s_Text.Offset.Y += 16;
             panels.Add(panelDownloadMore);
             topmostSpriteManager.Add(panelDownloadMore);

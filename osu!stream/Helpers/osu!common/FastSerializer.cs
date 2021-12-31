@@ -235,9 +235,11 @@ namespace osum.Helpers
 
                     default:
                         Write((byte)ObjType.otherType);
-                        BinaryFormatter b = new BinaryFormatter();
-                        b.AssemblyFormat = FormatterAssemblyStyle.Simple;
-                        b.TypeFormat = FormatterTypeStyle.TypesWhenNeeded;
+                        BinaryFormatter b = new BinaryFormatter
+                        {
+                            AssemblyFormat = FormatterAssemblyStyle.Simple,
+                            TypeFormat = FormatterTypeStyle.TypesWhenNeeded
+                        };
                         b.Serialize(BaseStream, obj);
                         break;
                 } // switch

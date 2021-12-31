@@ -590,9 +590,11 @@ namespace osum
 
         public virtual Thread RunInBackground(VoidDelegate task)
         {
-            Thread t = new Thread((ThreadStart)delegate { task(); });
-            t.Priority = ThreadPriority.Highest;
-            t.IsBackground = true;
+            Thread t = new Thread((ThreadStart)delegate { task(); })
+            {
+                Priority = ThreadPriority.Highest,
+                IsBackground = true
+            };
             t.Start();
             return t;
         }

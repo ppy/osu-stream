@@ -205,10 +205,7 @@ namespace osum
                     break;
 #endif
                 case OsuMode.Play:
-                    if (CurrentOsuMode == OsuMode.VideoPreview)
-                        mode = new PreviewPlayer();
-                    else
-                        mode = new Player();
+                    mode = CurrentOsuMode == OsuMode.VideoPreview ? new PreviewPlayer() : new Player();
                     break;
                 case OsuMode.Store:
 #if iOS
@@ -240,7 +237,7 @@ namespace osum
             }
 
             PendingMode = mode;
-            
+
             GameBase.Instance.SetViewport();
         }
 
