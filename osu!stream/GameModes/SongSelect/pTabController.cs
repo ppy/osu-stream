@@ -67,6 +67,7 @@ namespace osum.GameModes.SongSelect
             if (SelectedTab != null)
             {
                 if (SelectedTab == sender) return;
+
                 SelectedTab.HandleInput = true;
             }
 

@@ -1246,6 +1246,7 @@ namespace osum.GameplayElements.HitObjects.Osu
         {
             if (spriteSliderBody == null || spriteSliderBody.Texture == null)
                 return; //don't try and shake before we have drawn the body textre; it will animate in the wrong place.
+
             base.Shake();
         }
     }

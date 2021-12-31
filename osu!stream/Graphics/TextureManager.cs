@@ -34,6 +34,7 @@ using OpenTK.Graphics.OpenGL;
 #endif
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.AssetManager;
@@ -157,6 +158,7 @@ namespace osum.Graphics
         {
             if (t == null)
                 throw new NullReferenceException("tried to add a null texture to DisposableTextures");
+
             DisposableTextures.Add(t);
         }
 
@@ -378,13 +380,7 @@ namespace osum.Graphics
         }
     }
 
-    internal enum TextureSource
-    {
-        Game,
-        Skin,
-        Beatmap
-    }
-
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     internal enum OsuTexture
     {
         None = 0,

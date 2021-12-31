@@ -81,6 +81,7 @@ namespace osum.GameplayElements
                         {
                             line = reader.ReadLine();
                             if (line == null) break;
+
                             linenumber++;
                         }
 
@@ -374,14 +375,17 @@ namespace osum.GameplayElements
                 case Difficulty.Easy:
                     if (difficulty != Difficulty.Easy)
                         return false;
+
                     break;
                 case Difficulty.Normal:
                     if (difficulty == Difficulty.Expert)
                         return false;
+
                     break;
                 case Difficulty.Expert:
                     if (difficulty != Difficulty.Expert)
                         return false;
+
                     break;
             }
 

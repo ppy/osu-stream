@@ -93,6 +93,7 @@ namespace osum.Graphics
             {
                 if (value == BindInput)
                     return;
+
                 bindInput = value;
                 if (bindInput)
                 {

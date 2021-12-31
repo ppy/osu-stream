@@ -294,6 +294,7 @@ namespace osum.Graphics.Sprites
 
                 if (Type == TransformationType.Scale)
                     return Math.Max(0, EndFloat + diminishingMagnitude * rawSine);
+
                 return EndFloat + diminishingMagnitude * rawSine;
             }
         }

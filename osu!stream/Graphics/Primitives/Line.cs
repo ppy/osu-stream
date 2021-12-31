@@ -133,6 +133,7 @@ namespace osum.Graphics.Primitives
                     unitAngle.Y * radius, -unitAngle.X * radius, 0, 0,
                     0, 0, 1, 0,
                     p2.X, p2.Y, 0, 1);
+
             return new Matrix4(unitAngle.X * radius, unitAngle.Y * radius, 0, 0,
                 -unitAngle.Y * radius, unitAngle.X * radius, 0, 0,
                 0, 0, 1, 0,

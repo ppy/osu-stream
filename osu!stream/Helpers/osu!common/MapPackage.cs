@@ -252,6 +252,7 @@ namespace osum.Helpers
                 if (fFilename.EndsWith(".osz2")) {
                     if (!fMetadata.ContainsKey (MapMetaType.Creator) || !fMetadata.ContainsKey (MapMetaType.BeatmapSetID))
                         return;
+
                     seed = fMetadata [MapMetaType.Creator] + "yhxyfjo5" + fMetadata [MapMetaType.BeatmapSetID];
                 }
 #else
@@ -633,6 +634,7 @@ namespace osum.Helpers
         {
             if (dir[dir.Length - 1] != Path.DirectorySeparatorChar)
                 return dir + Path.DirectorySeparatorChar;
+
             return dir;
         }
 
@@ -960,6 +962,7 @@ namespace osum.Helpers
             {
                 if (data.Length < 1024)
                     throw new IOException("Video needs to be atleast 1024 bytes big");
+
                 long offset = fFilesAddedBytes;
                 foreach (KeyValuePair<string, FileInfo> pair in fFiles)
                     offset += pair.Value.Length;

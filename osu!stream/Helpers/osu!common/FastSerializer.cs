@@ -288,6 +288,7 @@ namespace osum.Helpers
         public override string ReadString()
         {
             if (0 == ReadByte()) return null;
+
             return base.ReadString();
         }
 
@@ -297,6 +298,7 @@ namespace osum.Helpers
             int len = ReadInt32();
             if (len > 0) return ReadBytes(len);
             if (len < 0) return null;
+
             return new byte[0];
         }
 
@@ -306,6 +308,7 @@ namespace osum.Helpers
             int len = ReadInt32();
             if (len > 0) return ReadChars(len);
             if (len < 0) return null;
+
             return new char[0];
         }
 
@@ -314,6 +317,7 @@ namespace osum.Helpers
         {
             long ticks = ReadInt64();
             if (ticks < 0) throw new AbandonedMutexException("oops");
+
             return new DateTime(ticks, DateTimeKind.Utc);
         }
 
@@ -322,6 +326,7 @@ namespace osum.Helpers
         {
             int count = ReadInt32();
             if (count < 0) return null;
+
             pList<T> d = new pList<T>(count);
 
             SerializationReader sr = new SerializationReader(BaseStream);
@@ -341,6 +346,7 @@ namespace osum.Helpers
         {
             int count = ReadInt32();
             if (count < 0) return null;
+
             List<T> d = new List<T>(count);
             for (int i = 0; i < count; i++) d.Add((T)ReadObject());
             return d;
@@ -351,6 +357,7 @@ namespace osum.Helpers
         {
             int count = ReadInt32();
             if (count < 0) return null;
+
             IDictionary<T, U> d = new Dictionary<T, U>();
             for (int i = 0; i < count; i++) d[(T)ReadObject()] = (U)ReadObject();
             return d;

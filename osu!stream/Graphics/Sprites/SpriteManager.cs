@@ -446,6 +446,7 @@ namespace osum.Graphics.Sprites
             {
                 if (ContainingSpriteManager != null)
                     return ContainingSpriteManager.ViewOffset + Offset;
+
                 return Offset;
             }
         }

@@ -25,6 +25,7 @@ namespace osum.Graphics.Sprites
             set
             {
                 if (value == visible) return;
+
                 visible = value;
                 Sprites.ForEach(s => s.Alpha = visible ? 1 : 0);
             }

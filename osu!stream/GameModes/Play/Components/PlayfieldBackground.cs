@@ -317,6 +317,7 @@ namespace osum.GameModes.Play.Components
             colour = ColourHelper.Darken(colour, dimAmount * 0.5f);
             if (currentColour == colour)
                 return;
+
             currentColour = colour;
 
             FadeColour(currentColour, 300);

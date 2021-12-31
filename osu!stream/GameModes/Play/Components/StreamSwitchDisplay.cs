@@ -43,6 +43,7 @@ namespace osum.GameModes.Play.Components
         internal void BeginSwitch(bool increase)
         {
             if (isSwitching) return;
+
             isSwitching = true;
 
             this.increase = increase;
@@ -88,6 +89,7 @@ namespace osum.GameModes.Play.Components
         internal void EndSwitch()
         {
             if (!isSwitching) return;
+
             isSwitching = false;
 
             spriteManager.Sprites.ForEach(s =>

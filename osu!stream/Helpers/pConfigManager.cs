@@ -117,6 +117,7 @@ namespace osum.Helpers
                         string line = r.ReadLine();
                         if (line.Length < 2)
                             continue;
+
                         int equals = line.IndexOf('=');
                         string key = line.Remove(equals).Trim();
                         string value = line.Substring(equals + 1).Trim();
@@ -132,6 +133,7 @@ namespace osum.Helpers
         {
             if (configFilename == null)
                 throw new Exception("Not initialized.");
+
             WriteConfigFile(configFilename);
 
             dirty = false;

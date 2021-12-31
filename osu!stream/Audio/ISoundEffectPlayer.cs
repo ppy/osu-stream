@@ -158,6 +158,7 @@ namespace osum.Audio
             set
             {
                 if (value == volume) return;
+
                 volume = value;
             }
         }
@@ -171,6 +172,7 @@ namespace osum.Audio
             set
             {
                 if (looping == value) return;
+
                 looping = value;
             }
         }

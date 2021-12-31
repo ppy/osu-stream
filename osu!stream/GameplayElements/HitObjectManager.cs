@@ -293,6 +293,7 @@ namespace osum.GameplayElements
             {
                 if (ActiveStream == Difficulty.None || streamSpriteManagers == null)
                     return null;
+
                 return streamSpriteManagers[(int)ActiveStream];
             }
         }

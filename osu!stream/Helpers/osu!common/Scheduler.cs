@@ -37,6 +37,7 @@ namespace osum.Helpers
 
                 int c = schedulerQueue.Count;
                 if (c == 0) return;
+
                 runnable = new VoidDelegate[c];
                 schedulerQueue.CopyTo(runnable, 0);
                 schedulerQueue.Clear();

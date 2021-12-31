@@ -108,6 +108,7 @@ namespace osum.GameplayElements.Beatmaps
         {
             MapPackage p = Package;
             if (p == null) return null;
+
             return p.GetFile(filename);
         }
 
@@ -247,6 +248,7 @@ namespace osum.GameplayElements.Beatmaps
             int comp = DifficultyStars.CompareTo(other.DifficultyStars);
             if (comp == 0)
                 return ContainerFilename.CompareTo(other.ContainerFilename);
+
             return comp;
         }
 

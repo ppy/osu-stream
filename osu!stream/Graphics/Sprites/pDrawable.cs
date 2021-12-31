@@ -330,6 +330,7 @@ namespace osum.Graphics.Sprites
 
                 if (Premultiplied)
                     return new Color4(Colour.R * alpha, Colour.G * alpha, Colour.B * alpha, alpha);
+
                 return new Color4(Colour.R, Colour.G, Colour.B, alpha);
             }
         }

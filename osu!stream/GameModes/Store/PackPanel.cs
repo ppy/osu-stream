@@ -328,6 +328,7 @@ namespace osum.GameModes.Store
             }
 
             if (!isPreviewing) return;
+
             isPreviewing = false;
 
             foreach (pSprite p in songPreviewButtons)

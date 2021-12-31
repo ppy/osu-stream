@@ -221,6 +221,7 @@ namespace osum.Graphics.Sprites
         {
             if (texture != null)
                 return texture.assetName + "(" + texture.OsuTextureInfo + ")";
+
             return "unknown";
         }
     }

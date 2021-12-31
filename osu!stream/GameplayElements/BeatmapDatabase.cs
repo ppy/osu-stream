@@ -103,12 +103,14 @@ namespace osum.GameplayElements
         internal static DifficultyScoreInfo GetDifficultyInfo(Beatmap b, Difficulty d)
         {
             if (b == null) return null;
+
             return PopulateBeatmap(b).DifficultyScores[d];
         }
 
         internal static BeatmapInfo PopulateBeatmap(Beatmap beatmap)
         {
             if (beatmap == null) return null;
+
             Initialize();
 
             string filename = Path.GetFileName(beatmap.ContainerFilename);
@@ -234,6 +236,7 @@ namespace osum.GameplayElements
             {
                 if (beatmapThis == null) return 1;
                 if (beatmapOther == null) return -1;
+
                 return beatmapThis.CompareTo(beatmapOther);
             }
         }

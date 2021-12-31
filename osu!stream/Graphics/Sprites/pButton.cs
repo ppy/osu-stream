@@ -42,6 +42,7 @@ namespace osum.Graphics.Sprites
             s_BackingPlate.OnHover += delegate
             {
                 if (!Enabled) return;
+
                 additiveButton = s_BackingPlate.AdditiveFlash(10000, 0.4f);
                 pendingUnhover = true;
             };
@@ -49,6 +50,7 @@ namespace osum.Graphics.Sprites
             s_BackingPlate.OnHoverLost += delegate
             {
                 if (!Enabled || !pendingUnhover) return;
+
                 if (additiveButton != null) additiveButton.FadeOut(100);
             };
 

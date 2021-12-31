@@ -72,6 +72,7 @@ namespace osum.Graphics.Sprites
             {
                 if (TextureArray == null || TextureCount == 0)
                     return null;
+
                 return texture;
             }
         }
@@ -114,6 +115,7 @@ namespace osum.Graphics.Sprites
 
             if (spriteTime == lastFrameSpriteTime)
                 return; //no time has elapsed; the clocking is likely paused.
+
             lastFrameSpriteTime = spriteTime;
 
             timeSinceLastFrame += Clock.ElapsedMilliseconds;

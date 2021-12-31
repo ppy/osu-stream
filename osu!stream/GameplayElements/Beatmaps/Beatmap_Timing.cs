@@ -90,6 +90,7 @@ namespace osum.GameplayElements.Beatmaps
             ControlPoint pt = controlPointAt(time);
 
             if (pt == null) return 1.0f;
+
             return pt.bpmMultiplier;
         }
 

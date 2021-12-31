@@ -54,6 +54,7 @@ namespace osum.Libraries.NetLib
                 try
                 {
                     if (request.AbortRequested) return;
+
                     request.Perform();
                 }
                 catch (ThreadAbortException)

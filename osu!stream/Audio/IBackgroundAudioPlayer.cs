@@ -23,6 +23,7 @@ namespace osum.Audio
             {
                 float clamped = pMathHelper.ClampToOne(value);
                 if (dimmableVolume == clamped) return;
+
                 dimmableVolume = clamped;
                 updateVolume();
             }
@@ -37,6 +38,7 @@ namespace osum.Audio
             {
                 float clamped = pMathHelper.ClampToOne(value);
                 if (maxVolume == clamped) return;
+
                 maxVolume = clamped;
                 updateVolume();
             }

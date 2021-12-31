@@ -39,6 +39,7 @@ namespace osum.Localisation
             string resFile = "Localisation/" + p + ".txt";
             if (!NativeAssetManager.Instance.FileExists(resFile))
                 return;
+
             using (Stream str = NativeAssetManager.Instance.GetFileStream(resFile))
             using (StreamReader sw = new StreamReader(str))
             {
@@ -47,6 +48,7 @@ namespace osum.Localisation
                     string line = sw.ReadLine();
                     int index = line.IndexOf('=');
                     if (index <= 0) continue;
+
                     strings[(OsuString)Enum.Parse(typeof(OsuString), line.Remove(index), false)] = line.Substring(index + 1).Replace("\\n", "\n");
                 }
             }

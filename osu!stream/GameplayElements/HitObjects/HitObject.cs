@@ -137,6 +137,7 @@ namespace osum.GameplayElements.HitObjects
             set
             {
                 if (value >= 4) throw new ArgumentOutOfRangeException();
+
                 colour_index = value;
                 Colour = TextureManager.DefaultColours[value];
             }
@@ -201,6 +202,7 @@ namespace osum.GameplayElements.HitObjects
             {
                 SpriteManager sm = m_HitObjectManager.ActiveStreamSpriteManager;
                 if (sm != null) return sm;
+
                 return m_HitObjectManager.spriteManager;
             }
         }

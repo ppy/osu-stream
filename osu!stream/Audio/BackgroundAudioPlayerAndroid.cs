@@ -143,6 +143,7 @@ namespace osum.Audio
         protected override void updateVolume()
         {
             if (audioStream == 0) return;
+
             Bass.ChannelSetAttribute(audioStream, ChannelAttribute.Volume, pMathHelper.ClampToOne(DimmableVolume * MaxVolume));
         }
     }

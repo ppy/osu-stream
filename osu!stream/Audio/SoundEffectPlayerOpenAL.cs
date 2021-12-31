@@ -105,6 +105,7 @@ namespace osum.Audio
             {
                 value = Math.Max(0.5f, Math.Min(2f, value));
                 if (value == base.Pitch) return;
+
                 base.Pitch = value;
                 AL.Source(sourceId, ALSourcef.Pitch, value);
             }
@@ -128,6 +129,7 @@ namespace osum.Audio
             set
             {
                 if (value == Volume) return;
+
                 base.Volume = value;
 
                 AL.Source(sourceId, ALSourcef.Gain, Volume);

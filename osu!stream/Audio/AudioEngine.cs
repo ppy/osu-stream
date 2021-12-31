@@ -68,10 +68,12 @@ namespace osum.Audio
             {
                 if (set == SampleSet.None)
                     continue;
+
                 foreach (OsuSamples s in Enum.GetValues(typeof(OsuSamples)))
                 {
                     if (s == OsuSamples.PRELOAD_END)
                         break;
+
                     LoadSample(s, set);
                 }
             }
@@ -94,6 +96,7 @@ namespace osum.Audio
             if (lastPlayedTimes.TryGetValue((int)set + ((int)sample << 8), out lastPlayed))
                 if (Math.Abs(Clock.Time - lastPlayed) < 40)
                     return null;
+
             lastPlayedTimes[(int)set + ((int)sample << 8)] = Clock.Time;
 
             Source src = Effect.LoadBuffer(buffer, volume);

@@ -104,6 +104,7 @@ namespace osum.Helpers.Audio
         {
             if (implementation != null)
                 return implementation.Supports(s);
+
             throw new NotImplementedException();
         }
 
@@ -120,6 +121,7 @@ namespace osum.Helpers.Audio
         {
             if (implementation != null)
                 return implementation.ReadSamples(count);
+
             throw new NotImplementedException();
         }
 
@@ -135,6 +137,7 @@ namespace osum.Helpers.Audio
         {
             if (implementation != null)
                 return implementation.ReadToEnd();
+
             throw new NotImplementedException();
         }
 
@@ -151,6 +154,7 @@ namespace osum.Helpers.Audio
             {
                 if (implementation != null)
                     return implementation.Frequency;
+
                 throw new NotImplementedException();
             }
             protected set

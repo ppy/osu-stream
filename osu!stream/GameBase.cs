@@ -332,12 +332,14 @@ namespace osum
             BackgroundAudioPlayer music = InitializeBackgroundAudio();
             if (music == null)
                 throw new Exception("No background audio manager registered");
+
             Clock.AudioTimeSource = music;
             Components.Add(music);
 
             SoundEffectPlayer effect = InitializeSoundEffects();
             if (effect == null)
                 throw new Exception("No sound effect player registered");
+
             Components.Add(effect);
 
             AudioEngine.Initialize(effect, music);
@@ -487,6 +489,7 @@ namespace osum
             set
             {
                 if (value == showLoadingOverlay) return;
+
                 showLoadingOverlay = value;
 
                 if (showLoadingOverlay)
