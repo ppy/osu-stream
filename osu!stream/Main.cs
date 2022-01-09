@@ -1,7 +1,8 @@
 using osum.Audio;
 using osum.Graphics;
-using osum.Support.Android;
+
 #if ANDROID
+using osum.Support.Android;
 using Android.App;
 using Android.OS;
 using Android.Support.V7.App;
