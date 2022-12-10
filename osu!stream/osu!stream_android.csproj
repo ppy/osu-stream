@@ -66,7 +66,6 @@
     <!--    <Reference Include="Bass.Net.Android">-->
     <!--      <HintPath>.\Bass.Net.Android.dll</HintPath>-->
     <!--    </Reference>-->
-    <Reference Include="OpenTK-1.0" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -328,12 +327,13 @@
     <PackageReference Include="ManagedBass" Version="3.1.0" />
     <PackageReference Include="ManagedBass.Aac" Version="3.1.0" />
     <PackageReference Include="Xamarin.Google.Android.Material" Version="1.7.0.1" />
-    <PackageReference Include="Xamarin.AndroidX.Legacy.Support.Core.Utils" Version="1.0.0.15" />
     <PackageReference Include="Xamarin.AndroidX.VectorDrawable">
       <Version>1.1.0.15</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
-    <PackageReference Include="Xamarin.AndroidX.Migration" Version="1.0.10" />
+    <PackageReference Include="Xamarin.Legacy.OpenTK">
+      <Version>1.0.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
