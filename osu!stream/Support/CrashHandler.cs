@@ -17,7 +17,7 @@ namespace osum.Support
         {
             if (isInitialized) return;
 
-#if MONO
+#if MONO || ANDROID || iOS
             return;
 #endif
 
