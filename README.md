@@ -12,7 +12,7 @@ This is basically a “finished” project to me. For more information on the st
 
 - Read my [blog post](https://blog.ppy.sh/osu-stream-2020-release/) about the final release
 - ["osu!stream" on osu! wiki](https://osu.ppy.sh/help/wiki/osu!stream)
-- Visit the [App Store listing page](https://apps.apple.com/us/app/osu-stream/id436952197)
+- Visit the [App Store](https://apps.apple.com/us/app/osu-stream/id436952197) or [Play Store](https://play.google.com/store/apps/details?id=sh.ppy.osustream) listing page
 
 While contributions are welcomed I likely won’t have time to review anything too large. There are some exceptions listed below, mostly which fall under the clean-up umbrella – trying to get things into a good final state:
 
@@ -24,7 +24,7 @@ While contributions are welcomed I likely won’t have time to review anything t
 
 ## Running
 
-If you are looking to play osu!stream, the [app store release](https://apps.apple.com/us/app/osu-stream/id436952197) is the best way to consume it.
+If you are looking to play osu!stream, the [app store](https://apps.apple.com/us/app/osu-stream/id436952197) or [play store](https://play.google.com/store/apps/details?id=sh.ppy.osustream) release is the best way to consume it.
 
 ## Building
 
