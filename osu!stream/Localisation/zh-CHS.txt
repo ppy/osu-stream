@@ -129,3 +129,5 @@ TwitterUnlink=不连接至推特 '{0}'
 Cancel=取消
 ChooseUsername=选择用户名称
 InternetFailed=读取失败\n请确认你是否已联网，并再试一次！
+UniversalOffset=全局Offset
+UniversalOffsetDetails=向下调整来让节拍元素更早出现。\n大部分时候你并不需要动这个设定。
