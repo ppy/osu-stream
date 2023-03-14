@@ -48,7 +48,7 @@ osu!stream maps also require an extra metadata file to specify things in the son
 
 ### Regarding Difficulty Names
 
-  Your beatmap must follow the difficulty naming rules. They can't be named anything else other than Easy, Normal, Hard, or Expert. Not following these rules leads to issues as:
+Your beatmap must follow the difficulty naming rules. They can't be named anything else other than Easy, Normal, Hard, or Expert. Not following these rules leads to issues as:
 
 * Being locked out of certain difficulties (e.g, not being able to access Hard in Stream mode or not being able to play Stream mode at all)
 * Being unable to package your map
@@ -67,15 +67,14 @@ Normally the osu! editor won't allow you to place 2 hitobjects at the same time,
 
 ### Hold circles
 
-  Hold circles are self-explanatory, they're objects that need to be held for a certain amount of time.
+Hold circles are self-explanatory, they're objects that need to be held for a certain amount of time.
 
 **Making a hold circle:**
 Make a short slider with more than 4 repeats. To force a hold circle, add a Finish sound to the slider.  
 
-
 ## Difficulty switches
 
- Difficulty switches (also known as streaming up/down) occur when the player reaches 100% health or 0% health.
+Difficulty switches (also known as streaming up/down) occur when the player reaches 100% health or 0% health.
   
 **Making difficulty switches:**
 Though switches are dynamic, they can be manually done by placing a bookmark at a point in time before the next new combo. The difficulty switching occurs after the bookmark after the next new combo. 
@@ -116,7 +115,7 @@ In your beatmap's folder, create a file named "metadata.txt" and paste in the fo
 
 	Difficulty: 1-10
 
- This metadata is viewable through "Song Info" after selecting a song.
+This metadata is viewable through "Song Info" after selecting a song.
 
 ## Backgrounds
 
