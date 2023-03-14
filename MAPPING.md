@@ -40,13 +40,11 @@ Maps in osu!stream are structured a little differently. There are only 4 difficu
 
 Difficulties in osu!stream are called "streams," but to make this easier to understand they will be referenced as difficulties.
 
-Accessing both Easy and Expert difficulties are self-explanatory. Normal and Hard are both accessed through **Stream mode**. Stream mode initally the Normal difficulty, but "streaming up" is when the Hard difficulty is accessed. When those switches occur is up to the game or mapper to decide and is something  touched on later.
+Accessing both Easy and Expert difficulties are self-explanatory. Normal and Hard are both accessed through **Stream mode**. Stream mode initially loads the Normal difficulty, but "streaming up" is when the Hard difficulty is loaded. When those switches occur is made by the game or up to the mapper to decide and is something touched on later.
 
 Your map can have a .mp3 or .m4a audio file, but **must** be named "audio".
 
 osu!stream maps also require an extra metadata file to specify things in the song info section. 
-
-  
 
 ### Regarding Difficulty Names
 
@@ -121,6 +119,6 @@ In your beatmap's folder, create a file named "metadata.txt" and paste in the fo
 
 osu!stream backgrounds work differently. Resize your background image to both 256x172 and 128x86, and save them as .jpg. Rename both of these files to "thumb-256" and "thumb-128." Afterwards, drop them in your beatmap folder.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MTY0MTIzMTQsLTYwOTg5MDUwMSwtMT
-I5Mzk3MTg0Ml19
+eyJoaXN0b3J5IjpbMTc4NjQyNTAwNSwtNjA5ODkwNTAxLC0xMj
+kzOTcxODQyXX0=
 -->
