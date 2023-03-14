@@ -76,9 +76,6 @@ Normally the osu! editor won't allow you to place 2 hitobjects at the same time,
 **Making a hold circle:**
 Make a short slider with more than 4 repeats. To force a hold circle, add a Finish sound to the slider.  
 
-## Breaks
-
-There are no breaks in osu!stream (for whatever reason). Avoid making sections without hitobjects for 4 seconds, and instead make a cooldown section in your map.  
 
 ## Difficulty switches
 
@@ -126,5 +123,5 @@ In your beatmap's folder, create a file named "metadata.txt" and paste in the fo
 
 osu!stream backgrounds work differently. Resize your background image to both 256x172 and 128x86, and save them as .jpg. Rename both of these files to "thumb-256" and "thumb-128." Afterwards, drop them in your beatmap folder.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyOTM5NzE4NDJdfQ==
+eyJoaXN0b3J5IjpbLTYwOTg5MDUwMSwtMTI5Mzk3MTg0Ml19
 -->
