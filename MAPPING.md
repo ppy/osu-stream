@@ -89,7 +89,7 @@ Though switches are dynamic, they can be manually done by placing a bookmark at 
 
 ## Difficulty settings  
 
-osu!stream ignores your beatmaps difficulty settings, and instead opts to use its own for each difficulty. Below are the settings osu!stream uses.
+osu!stream ignores your beatmaps difficulty settings, and instead uses its own for each difficulty. Below are the settings osu!stream uses.
 
 | Mode | CS | AR |
 |:-----:|----:|--:|
@@ -126,5 +126,5 @@ In your beatmap's folder, create a file named "metadata.txt" and paste in the fo
 
 osu!stream backgrounds work differently. Resize your background image to both 256x172 and 128x86, and save them as .jpg. Rename both of these files to "thumb-256" and "thumb-128." Afterwards, drop them in your beatmap folder.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMDQ3NTcyNDhdfQ==
+eyJoaXN0b3J5IjpbLTEyOTM5NzE4NDJdfQ==
 -->
