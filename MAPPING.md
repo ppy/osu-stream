@@ -56,7 +56,7 @@ osu!stream maps also require an extra metadata file to specify things in the son
 
 ## Hitobjects
 
-Everyone knows how to place a circle, slider, and a spinner, so we'll only cover osu!stream's special hitobjects.
+Everyone knows how to place a circles, sliders, and spinners, so we'll only cover osu!stream's special hitobjects.
 
 ### Multitouch objects
 
@@ -119,6 +119,6 @@ In your beatmap's folder, create a file named "metadata.txt" and paste in the fo
 
 osu!stream backgrounds work differently. Resize your background image to both 256x172 and 128x86, and save them as .jpg. Rename both of these files to "thumb-256" and "thumb-128." Afterwards, drop them in your beatmap folder.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc4NjQyNTAwNSwtNjA5ODkwNTAxLC0xMj
+eyJoaXN0b3J5IjpbMTEzOTQzOTE3MywtNjA5ODkwNTAxLC0xMj
 kzOTcxODQyXX0=
 -->
