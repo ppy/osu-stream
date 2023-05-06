@@ -57,7 +57,7 @@ namespace osum.GameModes.Options
             "Elysion, Dagonpater - French",
             "Nharox, Larto - German",
             "Card N'FoRcE, Inamaru - Italian",
-            "ItsZeanKun - Indonesian"
+            "ItsZeanKun - Indonesian",
             "SiRiRu, dvorak & co. - Japanese",
             "PJMS, wetchan & co. - Korean",
             "Natsuuki, Hector980 - Spanish",
