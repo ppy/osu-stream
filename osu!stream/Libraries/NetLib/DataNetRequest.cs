@@ -1,5 +1,5 @@
 using System;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 
@@ -158,24 +158,46 @@ namespace osum.Libraries.NetLib
 #endif
 
 #else
-                using (WebClient wc = new WebClient())
+                using (HttpClient hc = new HttpClient())
+                using (var request = new HttpRequestMessage(postData != null ? HttpMethod.Post : HttpMethod.Get, m_url))
                 {
                     if (postData != null)
                     {
-                        wc.UploadDataCompleted += wc_UploadDataCompleted;
-                        wc.UploadProgressChanged += wc_UploadProgressChanged;
-                        wc.Headers.Add("Content-Type: application/x-www-form-urlencoded");
-                        wc.UploadDataAsync(new Uri(m_url), method, Encoding.UTF8.GetBytes(postData));
-                    }
-                    else
-                    {
-                        wc.DownloadDataCompleted += wc_DownloadDataCompleted;
-                        wc.DownloadProgressChanged += wc_DownloadProgressChanged;
-                        wc.DownloadDataAsync(new Uri(m_url));
+                        request.Content = new StringContent(postData, System.Text.Encoding.UTF8, "application/x-www-form-urlencoded");
                     }
 
-                    while (wc.IsBusy)
-                        Thread.Sleep(500);
+                    var response = hc.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
+                    response.EnsureSuccessStatusCode();
+
+                    // If server returns Content-Length, support download progress reporting.
+                    if(response.Content.Headers.ContentLength != null)
+                    {
+                        int bytesDownloaded = 0;
+                        int length = (int)response.Content.Headers.ContentLength;
+                        data = new byte[length];
+
+                        using (var stream = response.Content.ReadAsStreamAsync().Result)
+                        {
+                            while (stream.CanRead)
+                            {
+                                bytesDownloaded += stream.Read(data, bytesDownloaded, Math.Min(80 * 1024, (int) length - bytesDownloaded));
+
+                                if (onUpdate != null)
+                                {
+                                    GameBase.Scheduler.Add(delegate
+                                    {
+                                        onUpdate?.Invoke(this, bytesDownloaded, (int)length);
+                                    });
+                                }
+
+                                if (bytesDownloaded == length)
+                                    break;
+                            }
+                        }
+                    } else
+                    {
+                        data = response.Content.ReadAsByteArrayAsync().Result;
+                    }
                 }
 
                 processFinishedRequest();
@@ -183,6 +205,10 @@ namespace osum.Libraries.NetLib
             }
             catch (ThreadAbortException)
             {
+            }
+            catch (Exception e)
+            {
+                error = e;
             }
         }
 
@@ -215,34 +241,6 @@ namespace osum.Libraries.NetLib
             {
                 onFinish?.Invoke(data, error);
             });
-        }
-
-        private void wc_UploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
-        {
-            GameBase.Scheduler.Add(delegate
-            {
-                onUpdate?.Invoke(this, e.BytesReceived, e.TotalBytesToReceive);
-            });
-        }
-
-        private void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            GameBase.Scheduler.Add(delegate
-            {
-                onUpdate?.Invoke(this, e.BytesReceived, e.TotalBytesToReceive);
-            });
-        }
-
-        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
-        {
-            if (e.Error == null) data = e.Result;
-            error = e.Error;
-        }
-
-        private void wc_UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
-        {
-            if (e.Error == null) data = e.Result;
-            error = e.Error;
         }
 
         public override bool Valid()
