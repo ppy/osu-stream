@@ -126,7 +126,7 @@ namespace osum.GameModes.Options
 
             vPos += 60;
 
-            const int offset_range = 32;
+            const int offset_range = 300;
 
             universalOffsetSlider = new SliderControl(LocalisationManager.GetString(OsuString.UniversalOffset), (float)(Clock.USER_OFFSET + offset_range) / (offset_range * 2), new Vector2(button_x_offset - 30, vPos),
                 delegate(float v)

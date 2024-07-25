@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!stream", "osu!stream\osu!stream_desktop.csproj", "{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osu!stream_desktop", "osu!stream\osu!stream_desktop.csproj", "{2698AF2E-F64B-4D61-99F3-52EF2D215F2F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatmapCombinator", "BeatmapCombinator\BeatmapCombinator.csproj", "{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}"
 EndProject
@@ -36,12 +38,12 @@ Global
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|x86.ActiveCfg = ReleaseNoEncryption|x86
 		{EE17F8FB-6F6F-41CC-B384-7CC9FF1B1CCF}.ReleaseNoEncryption|x86.Build.0 = ReleaseNoEncryption|x86
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Release|x86.ActiveCfg = Release|Any CPU
-		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|x86.ActiveCfg = Release|Any CPU
-		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|x86.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Debug|x86.Build.0 = Debug|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Release|x86.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.Release|x86.Build.0 = Release|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|x86.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseLocal|x86.Build.0 = Release|Any CPU
+		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|x86.ActiveCfg = Release|Any CPU
 		{1AC0A15F-98D2-477D-A620-A8F7B79935F4}.ReleaseNoEncryption|x86.Build.0 = Release|Any CPU
 		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|x86.ActiveCfg = Debug|x86
 		{C6404F0D-4669-4D8D-ABD5-22107C83D7D4}.Debug|x86.Build.0 = Debug|x86
@@ -62,6 +64,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D74709A-FB94-425F-B736-0E1EA7D420A7}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = osum\osum.csproj
