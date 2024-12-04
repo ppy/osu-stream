@@ -1,8 +1,0 @@
-{
-    "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "fStreamDecryptor.sln",
-    "files.autoSave": "onFocusChange",
-    "editor.cursorBlinking": "blink",
-    "editor.cursorStyle": "underline",
-    "editor.cursorWidth": 10
-}
