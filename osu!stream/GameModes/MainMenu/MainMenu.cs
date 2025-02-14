@@ -164,7 +164,7 @@ namespace osum.GameModes.MainMenu
                 spriteManager.Add(headphones);
 
 #if !DIST
-                headphones.OnClick += delegate
+                if (GameBase.Config.GetValue(@"MapperMode", true))
                 {
                     GameBase.Mapper = true;
                     pText t = new pText("ENABLED MAPPER MODE", 24, new Vector2(0, 30), 1, false, Color4.Red)
