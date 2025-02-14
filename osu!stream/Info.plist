@@ -19,8 +19,8 @@
 	<string>YES</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
-    <key>CADisableMinimumFrameDurationOnPhone</key>
-    <true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -76,5 +76,7 @@
 	<string>2020.226.0</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2020</string>
+	<key>UIFileSharingEnabled</key>
+	<string>YES</string>
 </dict>
 </plist>
