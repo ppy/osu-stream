@@ -1,6 +1,8 @@
+
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using OpenTK;
 using OpenTK.Graphics;
 using osum.Audio;
@@ -164,10 +166,23 @@ namespace osum.GameModes.SongSelect
             BeatmapDatabase.Initialize();
 
 #if !DIST
-            if (GameBase.Mapper)
+            if (BeatmapDatabase.BeatmapInfo.Count > 0) // Just check if the database has something
             {
-                //desktop/mapper builds.
-                recursiveBeatmaps(BeatmapPath);
+                
+                // Check if the database matches the directory
+                string[] directoryBeatmaps = Directory.GetFiles(BeatmapPath, "*.osz2");
+                string[] databaseBeatmaps = BeatmapDatabase.BeatmapInfo.Select(
+                    info =>
+                    {
+                        return info.GetBeatmap().ContainerFilename;
+                    })
+                    .ToArray();
+
+                if (!(directoryBeatmaps == databaseBeatmaps))
+                {
+                    recursiveBeatmaps(BeatmapPath);
+                    Console.WriteLine("Changes detected, refreshing list.");
+                }
             }
             else
 #endif

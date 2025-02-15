@@ -87,6 +87,10 @@ namespace osum.GameModes.Options
             buttonEasyMode = new pButton(LocalisationManager.GetString(OsuString.DefaultToEasyMode), new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { DisplayEasyModeDialog(); });
             smd.Add(buttonEasyMode);
 
+            vPos += 70;
+            buttonMapperMode = new pButton("Mapper mode", new Vector2(button_x_offset, vPos), new Vector2(280, 50), Color4.SkyBlue, delegate { DisplayMapperModeDialog(); });
+            smd.Add(buttonMapperMode);
+            
             vPos += 60;
 
             text = new pText(LocalisationManager.GetString(OsuString.Audio), 36, new Vector2(header_x_offset, vPos), 1, true, Color4.White) { Bold = true, TextShadow = true };
@@ -273,6 +277,7 @@ namespace osum.GameModes.Options
         private pButton buttonFingerGuides;
         private pButton buttonEasyMode;
         private pSprite s_Header;
+        private pButton buttonMapperMode;
 
         internal static void DisplayFingerGuideDialog()
         {
@@ -291,6 +296,7 @@ namespace osum.GameModes.Options
         {
             buttonEasyMode.SetStatus(GameBase.Config.GetValue(@"EasyMode", false));
             buttonFingerGuides.SetStatus(GameBase.Config.GetValue(@"GuideFingers", false));
+            buttonMapperMode.SetStatus(GameBase.Config.GetValue(@"MapperMode", false));
         }
 
         internal static void DisplayEasyModeDialog()
@@ -303,6 +309,31 @@ namespace osum.GameModes.Options
 
                     if (Director.CurrentMode is Options o) o.UpdateButtons();
                 });
+            GameBase.Notify(notification);
+        }
+        internal static void DisplayMapperModeDialog()
+        {
+            bool initialValue = GameBase.Config.GetValue(@"MapperMode", false);
+            Notification notification = new Notification(
+                "Mapper Mode",
+                "Enable Mapper mode? This will enable features specifically for mapping purposes and may not be suitable for normal gameplay.",
+                NotificationStyle.YesNo,
+                delegate(bool yes)
+                {
+                    GameBase.Config.SetValue(@"MapperMode", yes);
+
+                    if (Director.CurrentMode is Options o) o.UpdateButtons();
+                    
+                    if (!initialValue && yes)
+                        GameBase.Notify(
+                            new Notification(
+                                "Restart required",
+                                "You will need to restart osu!stream for this change to take effect.",
+                                NotificationStyle.Okay,
+                                delegate (bool resp) { Environment.Exit(0); })
+                        );
+                });
+
             GameBase.Notify(notification);
         }
 

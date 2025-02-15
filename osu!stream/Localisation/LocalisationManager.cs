@@ -207,6 +207,7 @@ namespace osum.Localisation
         TwitterSuccess,
         TwitterSuccessDetails,
         UniversalOffset,
-        UniversalOffsetDetails
+        UniversalOffsetDetails,
+        EnableMapper
     }
 }
