@@ -63,6 +63,7 @@ namespace osum.GameModes.Options
             "Natsuuki, Hector980 - Spanish",
             "Xgor - Swedish",
             "Kharl, RuRu - Thai",
+            "michioxd - Vietnamese",
             "*Thanks to",
             "Nuudles - Developing the cydia osu! release which is still standing strong",
             "Testers - Special thanks to Cyclone, Doddler, dvorak, Guy-kun, James, mattyu007, nekodex, PJMS, Saphier, tobebuta and my mum (i'm serious)",
