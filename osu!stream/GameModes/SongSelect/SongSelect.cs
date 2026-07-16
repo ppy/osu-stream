@@ -506,12 +506,16 @@ namespace osum.GameModes.SongSelect
                                                 if (!AudioEngine.Music.IsElapsing)
                                                     playFromPreview();
 
-                                                SelectedPanelHoverGlow.Alpha = 1;
-                                                SelectedPanelHoverGlow.Colour = Color4.White;
-                                                SelectedPanelHoverGlow.FadeOut(500, 0.8f);
-                                                SelectedPanelHoverGlow.Transformations[0].Looping = true;
-                                                SelectedPanelHoverGlowLockedIn = SelectedPanelHoverGlow;
-                                                SelectedPanelHoverGlow = null;
+                                                if (SelectedPanelHoverGlow != null)
+                                                {
+                                                    SelectedPanelHoverGlow.Alpha = 1;
+                                                    SelectedPanelHoverGlow.Colour = Color4.White;
+                                                    SelectedPanelHoverGlow.FadeOut(500, 0.8f);
+                                                    SelectedPanelHoverGlow.Transformations[0].Looping = true;
+                                                    SelectedPanelHoverGlowLockedIn = SelectedPanelHoverGlow;
+                                                    SelectedPanelHoverGlow = null;
+                                                }
+                                                
                                                 PreviewingPanel = panel;
                                                 PreviewingPanel.Add(SelectedPanelHoverGlowLockedIn);
                                             }

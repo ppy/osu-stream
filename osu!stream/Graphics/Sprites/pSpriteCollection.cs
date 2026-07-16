@@ -49,7 +49,11 @@ namespace osum.Graphics.Sprites
         internal void MoveTo(Vector2 location, int duration)
         {
             //todo: this is horribly inefficient.
-            Sprites.ForEach(s => s.MoveTo(location, duration, EasingTypes.In));
+            Sprites.ForEach(s =>
+            {
+                if (s == null) return;
+                s.MoveTo(location, duration, EasingTypes.In);
+            });
         }
     }
 }
