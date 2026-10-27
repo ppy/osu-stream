@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel;
-using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -13,11 +10,47 @@ using osum.GameplayElements;
 using osum.GameplayElements.Scoring;
 using osum.Graphics;
 using osum.Helpers;
+using osum.Input;
+using osum.Input.Sources;
+using System;
+using System.ComponentModel;
+using System.Drawing;
 
 namespace osum.Support.Desktop
 {
     public class GameWindowDesktop : GameWindow
     {
+
+        private void TriggerMouseTap()
+        {
+            if (InputManager.RegisteredSources.Count == 0)
+                return;
+
+            InputSource source = InputManager.RegisteredSources[0];
+
+            TrackingPoint point = new TrackingPoint(
+                new PointF(Mouse.X, Mouse.Y),
+                "keyboard"
+            );
+
+            source.GetType()
+                .BaseType
+                .GetMethod(
+                    "TriggerOnDown",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic
+                )
+                .Invoke(source, new object[] { point });
+
+            source.GetType()
+                .BaseType
+                .GetMethod(
+                    "TriggerOnUp",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic
+                )
+                .Invoke(source, new object[] { point });
+        }
         /// <summary>Creates a 1280x720 window with the specified title.</summary>
         public GameWindowDesktop()
             : base(1280, 720, GraphicsMode.Default, "osu!stream")
@@ -61,7 +94,8 @@ namespace osum.Support.Desktop
                     TextureManager.ReloadAll();
                     break;
                 case 'z':
-                    TextureManager.DisposeAll();
+                    //TextureManager.DisposeAll();
+                    TriggerMouseTap();
                     break;
                 case 'o':
                     Director.ChangeMode(OsuMode.Options);
@@ -90,10 +124,11 @@ namespace osum.Support.Desktop
                         ClientSize = new Size(960, 640);
                     break;
                 case 'x':
-                    if (ClientSize.Width == 1218)
-                        ClientSize = new Size(2436, 1125);
-                    else
-                        ClientSize = new Size(1218, 562);
+                    TriggerMouseTap();
+                    //if (ClientSize.Width == 1218)
+                    //ClientSize = new Size(2436, 1125);
+                    //else
+                    //ClientSize = new Size(1218, 562);
                     break;
                 case 'i':
                     ClientSize = new Size(1024, 768);
